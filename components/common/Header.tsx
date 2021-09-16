@@ -15,18 +15,18 @@ export default function Header({}){
                 {/* user authenticated */}
                 <div className="navbar-nav">
                     <Link href="/resources">
-                        <a className="nav-link" href="/login">Resources</a>
+                        <a className="nav-link">Resources</a>
                     </Link>
                     <Link href="/progress">
-                        <a className="nav-link" href="/login">Progress</a>
+                        <a className="nav-link">Progress</a>
                     </Link>
                     <Link href="/account">
-                        <a className="nav-link " href="/login">My Account</a>
+                        <a className="nav-link ">My Account</a>
                     </Link>
                     
                 </div>
-                <Link href="/login">
-                        <a className="nav-link" href="/login">Login</a>
+                <Link href="/auth/login">
+                        <a className="nav-link">Login</a>
                 </Link>
 
                 </div>
