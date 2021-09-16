@@ -1,9 +1,14 @@
+
+
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: 'Montserrat', sans-serif;
 }
+
+$cl-blue      : #2651ED;
+$cl-darktext  : #070452;
 
 a {
   color: inherit;
@@ -14,6 +19,14 @@ a {
   box-sizing: border-box;
 }
 
+
 .cl-blue{
-  color: #2651ED;
+  color: $cl-blue;
 }
+
+.cl-darktext{
+  color: $cl-darktext
+}
+
+
+
