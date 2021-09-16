@@ -82,3 +82,18 @@ input[type="password"] {
   font-weight: 600;
   font-size: 0.8em;
 }
+.resources-tab-nav-btn {
+  outline: none;
+  background: transparent;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4em;
+  border: 1px solid transparent;
+  border-radius: 2.5px;
+  width: 30%;
+  &:hover {
+    background: rgba($color: #000000, $alpha: 0.1);
+  }
+}
