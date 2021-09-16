@@ -1,8 +1,7 @@
-// my accounts page
 export default function resources (){
     return(
         <div>
-            This is the my accounts page
+            This is the resource page
         </div>
     )
 }
