@@ -1,14 +1,16 @@
-
+@import "../node_modules/bootstrap/scss/bootstrap";
 
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
-$cl-blue      : #2651ED;
-$cl-darktext  : #070452;
+$cl-blue: #2651ed;
+$cl-darktext: #070452;
+$cl-light-gray: #f2f2f7;
+$cl-mid-gray: #656565;
 
 a {
   color: inherit;
@@ -19,14 +21,64 @@ a {
   box-sizing: border-box;
 }
 
-
-.cl-blue{
+.cl-blue {
   color: $cl-blue;
 }
-
-.cl-darktext{
-  color: $cl-darktext
+.cl-mid-gray {
+  color: $cl-mid-gray;
+}
+.cl-light-gray {
+  color: $cl-light-gray;
+}
+.cl-darktext {
+  color: $cl-darktext;
 }
 
-
-
+.cl-btn-blue {
+  @include button-size(
+    $padding-x: 1.5vw,
+    $padding-y: 1.5vh,
+    $font-size: 0.9em,
+    $border-radius: 15px
+  );
+  box-shadow: none;
+  background-color: $cl-blue;
+  border: 1px solid $cl-blue;
+  &:active,
+  &:focus,
+  &:checked {
+    box-shadow: none;
+  }
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+    filter: brightness(130%);
+  }
+}
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  @extend .px-3;
+  @extend .py-3;
+  border-radius: 15px;
+  &:active,
+  &:focus {
+    box-shadow: none;
+  }
+}
+.auth-bottom-nav {
+  @extend .mt-3;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.split-input {
+  width: 47%;
+}
+.forgot-password-btn {
+  color: $cl-mid-gray;
+  font-weight: 600;
+  font-size: 0.8em;
+}
