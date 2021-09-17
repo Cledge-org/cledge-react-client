@@ -5,10 +5,14 @@ import "../styles/components.scss";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import Layout from "../components/common/Layout";
+import {store} from '../utils/store';
+import {Provider} from 'react-redux';
+
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Layout>
+    <Provider store= {store}>
+      <Layout>
       <Head>
         <title>Cledge</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -27,6 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <Component {...pageProps} />
     </Layout>
+    </Provider>
   );
 }
 export default MyApp;

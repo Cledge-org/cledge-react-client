@@ -1,9 +1,21 @@
 // my accounts page
 import Link from "next/link";
+import {Dispatch, SetStateAction, useState} from 'react';
+
+
 export default function login() {
+  var [formData, setFormData]= useState({
+    email : "",
+    password: "",
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log(formData)
+  }
+
   return (
-    <div className="container-fluid">
-      <div className="col w-md-25 d-md-flex mx-auto mt-5 flex-column justify-content-center align-items-center w-25">
+    <div className="container">
+      <div className="col-md-5 d-md-flex mx-auto mt-5 flex-column justify-content-center align-items-center">
         <div className="fs-1 fw-bold cl-darktext">Sign in</div>
         <div className="form-group mt-3 w-100">
           <label
@@ -14,6 +26,8 @@ export default function login() {
             Email address
           </label>
           <input
+            value = {formData.email}
+            onChange={(e)=> setFormData({...formData, email: e.target.value})}
             type="email"
             className="px-3 form-control"
             id="email"
@@ -30,6 +44,8 @@ export default function login() {
             Password
           </label>
           <input
+            value = {formData.password}
+            onChange={(e)=> setFormData({...formData, password: e.target.value})}
             type="password"
             className="px-3 form-control"
             id="password"
@@ -52,6 +68,7 @@ export default function login() {
             <button
               type="button"
               className="btn btn-primary rounded- cl-btn-blue"
+              onClick={handleSubmit}
             >
               Log in
             </button>
