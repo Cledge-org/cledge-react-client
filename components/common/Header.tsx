@@ -1,6 +1,13 @@
 import Link from 'next/link'
+import { RootState } from '../../utils/store'
+import { useSelector, useDispatch } from 'react-redux'
+import { toggleAuthenticated } from '../../utils/authstate';
 
 export default function Header({}){
+    const authenticated = useSelector((state: RootState) => state.authstate.authenticated);
+    const dispatch = useDispatch();
+
+
     return (
         <nav className='navbar cl-blue sticky-top navbar-expand-md bg-white px-3'>
             <div className="container-fluid">
@@ -25,9 +32,16 @@ export default function Header({}){
                     </Link>
                     
                 </div>
-                <Link href="/auth/login">
+                {
+                    authenticated ? 
+                    <Link href="/auth/login">
+                        <a className="nav-link" >Logout</a>
+                    </Link>
+                    :
+                    <Link href="/auth/logout">
                         <a className="nav-link">Login</a>
-                </Link>
+                    </Link>
+                }
 
                 </div>
             </div>
