@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.6.1",
     "bootstrap": "^5.0.0-beta3",
     "next": "^11.1.2",
     "react": "17.0.2",
