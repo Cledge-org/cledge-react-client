@@ -7,10 +7,14 @@ body {
   font-family: "Montserrat", sans-serif;
 }
 
+$cl-white: #ffffff;
+$cl-translucent-white: #ffffff66;
 $cl-blue: #2651ed;
+$cl-dark-blue: #0b1142;
 $cl-darktext: #070452;
 $cl-light-gray: #f2f2f7;
 $cl-mid-gray: #656565;
+$cl-dark-gray: #222222;
 
 a {
   color: inherit;
@@ -21,6 +25,16 @@ a {
   box-sizing: border-box;
 }
 
+.bg-dark-blue {
+  background-color: $cl-dark-blue;
+}
+
+.cl-white {
+  color: $cl-white;
+}
+.cl-translucent-white {
+  color: $cl-translucent-white;
+}
 .cl-blue {
   color: $cl-blue;
 }
@@ -82,18 +96,26 @@ input[type="password"] {
   font-weight: 600;
   font-size: 0.8em;
 }
-.resources-tab-nav-btn {
-  outline: none;
-  background: transparent;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4em;
-  border: 1px solid transparent;
-  border-radius: 2.5px;
-  width: 30%;
-  &:hover {
-    background: rgba($color: #000000, $alpha: 0.1);
-  }
-}
+
+$spacers: (
+  0: 0,
+  1: (
+    $spacer * 0.25,
+  ),
+  2: (
+    $spacer * 0.5,
+  ),
+  3: $spacer,
+  4: (
+    $spacer * 1.5,
+  ),
+  5: (
+    $spacer * 3,
+  ),
+  6: (
+    $spacer * 5,
+  ),
+  7: (
+    $spacer * 10,
+  ),
+);
