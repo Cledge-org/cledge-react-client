@@ -2,12 +2,12 @@
 import Link from "next/link";
 export default function signup() {
   return (
-    <div className="container-fluid">
-      <div className="col w-md-25 w-25 d-md-flex mx-auto mt-5 flex-column justify-content-center align-items-center">
-        <div className="fs-2 fw-bold cl-darktext">
-          Create your <span className="cl-blue">cledge.</span> account
+    <div className="container">
+      <div className="col-md-5 d-md-flex mx-auto mt-5 flex-column justify-content-center align-middle">
+        <div className="fs-1 fw-bold cl-darktext">
+          Create your <span className="cl-blue">cledge</span> account
         </div>
-        <div className="d-flex flex-row justify-content-between align-items-center">
+        <div className="d-flex flex-row justify-content-between align-items-center mx-0 px-0">
           <div className="form-group mt-3 split-input">
             <label
               style={{ fontSize: "0.9em" }}
@@ -39,6 +39,7 @@ export default function signup() {
             />
           </div>
         </div>
+        
         <div className="form-group mt-3 w-100">
           <label
             style={{ fontSize: "0.9em" }}
@@ -96,7 +97,7 @@ export default function signup() {
           <div className="px-0">
             <button
               type="button"
-              className="btn btn-primary rounded- cl-btn-blue"
+              className="btn btn-primary cl-btn-blue"
             >
               Sign Up
             </button>
