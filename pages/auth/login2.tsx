@@ -16,7 +16,7 @@ export default function login({providers}:{providers: Provider}) {
 
   return (
     <div className="container">
-      <div className="col-md-5 d-md-flex mx-auto mt-5 flex-column justify-content-center align-items-center">
+      <div className="col col-md-5 d-flex mx-auto flex-column justify-content-center align-items-center" style={{height: '80vh'}}>
         <div className="fs-1 fw-bold cl-darktext">Sign in</div>
         { 
           Object.values(providers).map((provider) => (        
