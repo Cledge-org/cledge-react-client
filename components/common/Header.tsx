@@ -1,11 +1,8 @@
+import { useSession ,signIn, signOut} from 'next-auth/react';
 import Link from 'next/link'
-import { RootState } from '../../utils/store'
-import { useSelector, useDispatch } from 'react-redux'
-import { toggleAuthenticated } from '../../utils/authstate';
 
 export default function Header({}){
-    const authenticated = useSelector((state: RootState) => state.authstate.authenticated);
-    const dispatch = useDispatch();
+    const { data: session, status } = useSession();
 
 
     return (
@@ -19,28 +16,23 @@ export default function Header({}){
             </button>
 
             <div className="fs-7 collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-                {/* user authenticated */}
-                <div className="navbar-nav">
-                    <Link href="/resources">
-                        <a className="nav-link">Resources</a>
-                    </Link>
-                    <Link href="/progress">
-                        <a className="nav-link">Progress</a>
-                    </Link>
-                    <Link href="/account">
-                        <a className="nav-link ">My Account</a>
-                    </Link>
-                    
-                </div>
                 {
-                    authenticated ? 
-                    <Link href="/auth/login">
-                        <a className="nav-link" >Logout</a>
-                    </Link>
+                    status === 'authenticated' ? 
+
+                    <div className="navbar-nav">
+                        <Link href="/resources">
+                            <a className="nav-link">Resources</a>
+                        </Link>
+                        <Link href="/progress">
+                            <a className="nav-link">Progress</a>
+                        </Link>
+                        <Link href="/account">
+                            <a className="nav-link ">My Account</a>
+                        </Link>
+                        <a className="nav-link" href="http://localhost:3000/api/auth/signout/google" >Logout</a>
+                    </div>
                     :
-                    <Link href="/auth/logout">
-                        <a className="nav-link">Login</a>
-                    </Link>
+                    <a className="nav-link" href="http://localhost:3000/api/auth/signin/google">Login</a>
                 }
 
                 </div>
