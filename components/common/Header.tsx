@@ -29,10 +29,14 @@ export default function Header({}){
                         <Link href="/account">
                             <a className="nav-link ">My Account</a>
                         </Link>
-                        <a className="nav-link" href="http://localhost:3000/api/auth/signout/google" >Logout</a>
+                        <Link href="/api/auth/signout">
+                            <a className="nav-link" href="">Logout</a>
+                        </Link>
                     </div>
                     :
-                    <a className="nav-link" href="http://localhost:3000/api/auth/signin/google">Login</a>
+                    <Link href="/api/auth/signin">
+                        <a className="nav-link" href="">Log In</a>
+                    </Link>
                 }
 
                 </div>
