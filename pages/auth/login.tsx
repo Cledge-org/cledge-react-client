@@ -1,9 +1,10 @@
 // my accounts page
 import Link from "next/link";
 import {Dispatch, SetStateAction, useState} from 'react';
+import { getProviders, signIn } from "next-auth/react"
+import type {Provider} from 'next-auth/providers';
 
-
-export default function login() {
+export default function login({providers}:{providers: Provider}) {
   var [formData, setFormData]= useState({
     email : "",
     password: "",
@@ -26,6 +27,7 @@ export default function login() {
             Email address
           </label>
           <input
+            disabled
             value = {formData.email}
             onChange={(e)=> setFormData({...formData, email: e.target.value})}
             type="email"
@@ -44,6 +46,7 @@ export default function login() {
             Password
           </label>
           <input
+            disabled
             value = {formData.password}
             onChange={(e)=> setFormData({...formData, password: e.target.value})}
             type="password"
@@ -52,6 +55,16 @@ export default function login() {
             placeholder="Enter Password"
           />
         </div>
+        { 
+          Object.values(providers).map((provider) => (        
+          <div key={provider.name} className='w-100'>          
+            <button className='btn btn-light cl-btn shadow-sm my-3 w-100 fw-bold' onClick={() => signIn(provider.id)}>            
+            Sign in with {provider.name}          
+            </button>        
+            </div>      
+            )
+          )
+        }
         <div className="px-0 align-self-start mt-3">
           <Link href="/auth/reset_password">
             <a className="forgot-password-btn">Forgot Password</a>
@@ -67,7 +80,7 @@ export default function login() {
           <div className="px-0">
             <button
               type="button"
-              className="btn btn-primary rounded- cl-btn-blue"
+              className="btn btn-primary cl-btn-blue"
               onClick={handleSubmit}
             >
               Log in
@@ -77,4 +90,12 @@ export default function login() {
       </div>
     </div>
   );
+}
+
+
+export async function getServerSideProps(context) {  
+  const providers = await getProviders()  
+  return {    
+    props: { providers },  
+  }
 }
