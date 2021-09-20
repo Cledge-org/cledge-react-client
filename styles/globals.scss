@@ -5,6 +5,7 @@ body {
   padding: 0;
   margin: 0;
   font-family: "Montserrat", sans-serif;
+  height: 100%;
 }
 
 $cl-blue: #2651ed;
@@ -71,8 +72,6 @@ a {
     $border-radius: 15px
   );
   box-shadow: none;
-  background-color: $cl-blue;
-  border: 1px solid $cl-blue;
   &:active,
   &:focus,
   &:checked {
@@ -84,6 +83,13 @@ a {
     filter: brightness(130%);
   }
 }
+
+.cl-btn-blue {
+  @extend .cl-btn;
+  background-color: $cl-blue;
+  border: 1px solid $cl-blue;
+}
+
 input[type="text"],
 input[type="email"],
 input[type="password"] {

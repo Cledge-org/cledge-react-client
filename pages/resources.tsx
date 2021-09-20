@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CardComponent from "../components/common/CardComponent";
 
-export default function resources() {
+export default function Resources() {
   const cledgeBlue = "#2651ed";
   const [currTab, setCurrTab] = useState("resources");
   return (
@@ -73,3 +73,5 @@ export default function resources() {
     </div>
   );
 }
+
+Resources.requireAuth = true;
