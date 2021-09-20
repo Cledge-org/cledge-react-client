@@ -6,6 +6,7 @@ body {
   margin: 0;
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
+  height: 100%;
 }
 
 $cl-white: #ffffff;
@@ -49,7 +50,20 @@ a {
   color: $cl-darktext;
 }
 
-.cl-btn-blue {
+.center-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cl-btn-gray {
+  @extend .cl-btn;
+  background-color: $cl-light-gray;
+  color: $cl-darktext;
+  border: 1px solid $cl-light-gray;
+}
+
+.cl-btn {
   @include button-size(
     $padding-x: 1.5vw,
     $padding-y: 1.5vh,
@@ -57,8 +71,6 @@ a {
     $border-radius: 15px
   );
   box-shadow: none;
-  background-color: $cl-blue;
-  border: 1px solid $cl-blue;
   &:active,
   &:focus,
   &:checked {
@@ -70,6 +82,13 @@ a {
     filter: brightness(130%);
   }
 }
+
+.cl-btn-blue {
+  @extend .cl-btn;
+  background-color: $cl-blue;
+  border: 1px solid $cl-blue;
+}
+
 input[type="text"],
 input[type="email"],
 input[type="password"] {
@@ -117,6 +136,7 @@ input[type="password"] {
   width: 30%;
   color: $cl-mid-gray;
   &:hover {
+    cursor: pointer;
     background: rgba($color: #000000, $alpha: 0.1);
   }
 }
