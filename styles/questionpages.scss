@@ -1,0 +1,72 @@
+@import "../node_modules/bootstrap/scss/bootstrap";
+@import "./globals.scss";
+
+.progress-dropdown-container {
+  transition: height 1s;
+  height: fit-content;
+}
+.progress-dropdown-btn {
+  @include button-size(
+    $padding-x: 1.5vw,
+    $padding-y: 1.5vh,
+    $font-size: 0.9em,
+    $border-radius: 0
+  );
+  background-color: $cl-light-gray;
+  border: none;
+  border-bottom: 2px solid $cl-mid-gray;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  box-shadow: none;
+  &:active,
+  &:focus,
+  &:checked {
+    box-shadow: none;
+  }
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+  }
+}
+.progress-dropdown-menu-closed {
+  background-color: $cl-light-gray;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation-name: close;
+  animation-duration: 600ms;
+  height: 0;
+}
+@keyframes close {
+  0% {
+    height: 10vh;
+  }
+  100% {
+    height: 0;
+  }
+}
+
+@keyframes expand {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: 10vh;
+  }
+}
+.progress-dropdown-menu-expanded {
+  background-color: $cl-light-gray;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation-name: expand;
+  animation-duration: 600ms;
+}
+.progress-dropdown-menu-btn {
+  width: 100%;
+  outline: none;
+  border: none;
+  height: 5vh;
+  background-color: $cl-light-gray;
+}

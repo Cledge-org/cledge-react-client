@@ -40,31 +40,17 @@ a {
   align-items: center;
   justify-content: center;
 }
-
+.bg-light-gray {
+  background-color: $cl-light-gray;
+}
 .cl-btn-gray {
-  @include button-size(
-    $padding-x: 1.5vw,
-    $padding-y: 1.5vh,
-    $font-size: 0.9em,
-    $border-radius: 15px
-  );
-  box-shadow: none;
+  @extend .cl-btn;
   color: $cl-darktext;
   background-color: $cl-light-gray;
   border: 1px solid $cl-light-gray;
-  &:active,
-  &:focus,
-  &:checked {
-    box-shadow: none;
-  }
-  &:hover,
-  &:active:hover {
-    box-shadow: none;
-    filter: brightness(130%);
-  }
 }
 
-.cl-btn-blue {
+.cl-btn {
   @include button-size(
     $padding-x: 1.5vw,
     $padding-y: 1.5vh,

@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.15",
     "@next-auth/firebase-adapter": "^0.1.2-pr.183-76202b42.8",
     "@reduxjs/toolkit": "^1.6.1",
     "bootstrap": "^5.0.0-beta3",
