@@ -141,6 +141,17 @@ input[type="password"] {
   }
 }
 
+.resources-tab-pane {
+  @extend .container-fluid;
+  display: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+.resources-active {
+  @extend .resources-tab-pane;
+  display: flex;
+}
 $spacers: (
   0: 0,
   1: (

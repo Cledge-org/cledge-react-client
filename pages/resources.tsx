@@ -3,27 +3,54 @@ import CardComponent from "../components/common/CardComponent";
 // import bootstrap from "bootstrap";
 
 export default function resources() {
+  const [currTab, setCurrTab] = useState("resources");
   return (
     <div
       className="d-flex flex-column container-fluid"
-      style={{ height: "92vh" }}
+      style={{ minHeight: "92vh" }}
     >
       <ul
-        className="nav nav-tabs justify-content-evenly"
+        className="nav justify-content-evenly"
         role="tablist"
         style={{ width: "45%" }}
       >
-        <TabNavBtn name="Resources" />
-        <TabNavBtn name="Articles" />
-        <TabNavBtn name="Videos" />
+        <TabNavBtn
+          name="Resources"
+          currTab={currTab}
+          setCurrTab={setCurrTab.bind(this)}
+        />
+        <TabNavBtn
+          name="Articles"
+          currTab={currTab}
+          setCurrTab={setCurrTab.bind(this)}
+        />
+        <TabNavBtn
+          name="Videos"
+          currTab={currTab}
+          setCurrTab={setCurrTab.bind(this)}
+        />
       </ul>
       <div className="tab-content">
         <div
-          className="tab-pane active"
+          className={
+            currTab === "resources"
+              ? "resources-tab-pane resources-active"
+              : "resources-tab-pane"
+          }
           id="resources"
-          role="tabpanel"
-          aria-labelledby="resources-tab"
         >
+          <CardComponent
+            url=""
+            title="Junior Developers"
+            titleGradients="normal"
+            variant="titleWithImg"
+          />
+          <CardComponent
+            url=""
+            title="Junior Developers"
+            titleGradients="normal"
+            variant="titleWithImg"
+          />
           <CardComponent
             url=""
             title="Junior Developers"
@@ -32,11 +59,27 @@ export default function resources() {
           />
         </div>
         <div
-          className="tab-pane"
+          className={
+            currTab === "articles"
+              ? "resources-tab-pane resources-active"
+              : "resources-tab-pane"
+          }
           id="articles"
-          role="tabpanel"
-          aria-labelledby="articles-tab"
         >
+          <CardComponent
+            url=""
+            title="SAT Vocabulary III"
+            titleGradients="dark"
+            centerText="It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+            variant="article"
+          />
+          <CardComponent
+            url=""
+            title="SAT Vocabulary III"
+            titleGradients="dark"
+            centerText="It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+            variant="article"
+          />
           <CardComponent
             url=""
             title="SAT Vocabulary III"
@@ -46,11 +89,25 @@ export default function resources() {
           />
         </div>
         <div
-          className="tab-pane"
+          className={
+            currTab === "videos"
+              ? "resources-tab-pane resources-active"
+              : "resources-tab-pane"
+          }
           id="videos"
-          role="tabpanel"
-          aria-labelledby="videos-tab"
         >
+          <CardComponent
+            url=""
+            title="Junior Developers"
+            titleGradients="normal"
+            variant="titleWithVid"
+          />
+          <CardComponent
+            url=""
+            title="Junior Developers"
+            titleGradients="normal"
+            variant="titleWithVid"
+          />
           <CardComponent
             url=""
             title="Junior Developers"
@@ -62,47 +119,34 @@ export default function resources() {
     </div>
   );
 }
-function TabNavBtn(props) {
+function TabNavBtn({ currTab, setCurrTab, name }) {
   const cledgeBlue = "#2651ed";
   const midGray = "#656565";
-  const lowerCaseName = props.name.toLowerCase();
+  const lowerCaseName = name.toLowerCase();
   return (
-    <li className="nav-item">
-      <button
-        className="resources-tab-nav-btn"
-        id={lowerCaseName + "-tab"}
-        data-bs-toggle="tab"
-        data-bs-target={"#" + lowerCaseName}
-        type="button"
-        role="tab"
-        aria-controls={lowerCaseName}
-        aria-selected={lowerCaseName == "resources"}
-        onClick={() => {
-          // var trigger = document.querySelector("#" + lowerCaseName);
-          // var tab = new bootstrap.Tab(trigger);
-          // tab.show();
+    <li
+      className="resources-tab-nav-btn"
+      id={lowerCaseName + "-tab"}
+      onClick={() => {
+        setCurrTab(lowerCaseName);
+      }}
+    >
+      <div
+        style={{
+          width: "fit-content",
+          color: currTab === lowerCaseName ? cledgeBlue : midGray,
+          fontWeight: currTab === lowerCaseName ? 700 : 500,
         }}
       >
+        {name}
         <div
           style={{
-            width: "fit-content",
-            color:
-              props.currTab === props.name.toLowerCase() ? cledgeBlue : midGray,
-            fontWeight: props.currTab === props.name.toLowerCase() ? 700 : 500,
+            height: "3px",
+            backgroundColor:
+              currTab === lowerCaseName ? cledgeBlue : "transparent",
           }}
-        >
-          {props.name}
-          <div
-            style={{
-              height: "3px",
-              backgroundColor:
-                props.currTab === props.name.toLowerCase()
-                  ? cledgeBlue
-                  : "transparent",
-            }}
-          />
-        </div>
-      </button>
+        />
+      </div>
     </li>
   );
 }
