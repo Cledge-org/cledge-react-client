@@ -7,17 +7,59 @@
 }
 .progress-dropdown-btn {
   @include button-size(
-    $padding-x: 1.5vw,
-    $padding-y: 1.5vh,
+    $padding-x: 1vw,
+    $padding-y: 2.5vh,
     $font-size: 0.9em,
     $border-radius: 0
   );
+  .text {
+    font-weight: bold;
+    font-size: 1.25em;
+    .percentage {
+      font-weight: normal;
+      color: $cl-secondary-text;
+      font-size: 0.85em;
+      @extend .ms-3;
+    }
+  }
+  .icon {
+    animation-name: rotateReverse;
+    animation-duration: 600ms;
+    animation-fill-mode: forwards;
+  }
+  @keyframes rotateReverse {
+    0% {
+      color: $cl-blue;
+      transform: rotate(180deg);
+    }
+    100% {
+      color: $cl-mid-gray;
+      transform: rotate(0deg);
+    }
+  }
+  @keyframes rotate {
+    0% {
+      color: $cl-mid-gray;
+      transform: rotate(0deg);
+    }
+    100% {
+      color: $cl-blue;
+      transform: rotate(180deg);
+    }
+  }
+  .icon-open {
+    animation-fill-mode: forwards;
+    animation-name: rotate;
+    transform-origin: center;
+    animation-duration: 600ms;
+  }
   background-color: $cl-light-gray;
   border: none;
-  border-bottom: 2px solid $cl-mid-gray;
+  border-bottom: 2px solid rgba($color: $cl-secondary-text, $alpha: 0.7);
   display: flex;
   width: 100%;
   justify-content: space-between;
+  align-items: center;
   box-shadow: none;
   &:active,
   &:focus,
@@ -34,25 +76,25 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  max-height: 0;
   animation-name: close;
   animation-duration: 600ms;
-  height: 0;
-}
-@keyframes close {
-  0% {
-    height: 10vh;
-  }
-  100% {
-    height: 0;
-  }
 }
 
-@keyframes expand {
+@keyframes close {
   0% {
-    height: 0;
+    max-height: 30vh;
   }
   100% {
-    height: 10vh;
+    max-height: 0;
+  }
+}
+@keyframes expand {
+  0% {
+    max-height: 0;
+  }
+  100% {
+    max-height: 50vh;
   }
 }
 .progress-dropdown-menu-expanded {
@@ -67,6 +109,15 @@
   width: 100%;
   outline: none;
   border: none;
+  display: flex;
+  align-items: center;
   height: 5vh;
   background-color: $cl-light-gray;
+  .text {
+    @extend .ps-4;
+  }
+  .icon {
+    color: $cl-mid-gray;
+    @extend .ps-3;
+  }
 }

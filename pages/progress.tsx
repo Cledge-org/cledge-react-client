@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown, faSortDown } from "@fortawesome/free-solid-svg-icons";
-
+import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 //profile progress/ question summary page
 export default function Progress() {
   return (
@@ -25,8 +25,18 @@ function DropDownTab() {
           setIsExpanded(!isExpanded);
         }}
       >
-        <div>Extracurriculars</div>
-        <FontAwesomeIcon icon={faSortDown} color="#000000" size="xs" />
+        <div className="text">
+          Extracurriculars
+          <span className="percentage">67%</span>
+        </div>
+        <div
+          className={
+            isExpanded ? "center-child icon-open" : "center-child icon"
+          }
+          style={{ width: "12px", height: "12px" }}
+        >
+          <FontAwesomeIcon icon={faSortDown} />
+        </div>
       </button>
       <div
         className={
@@ -35,8 +45,24 @@ function DropDownTab() {
             : "progress-dropdown-menu-closed"
         }
       >
-        <button className="progress-dropdown-menu-btn">Hello</button>
-        <button className="progress-dropdown-menu-btn">Hello 2</button>
+        <button className="progress-dropdown-menu-btn">
+          <div
+            className="center-child icon"
+            style={{ width: "36px", height: "36px" }}
+          >
+            <FontAwesomeIcon icon={faFileAlt} />
+          </div>
+          <div className="text">Academic Achievement</div>
+        </button>
+        <button className="progress-dropdown-menu-btn">
+          <div
+            className="center-child icon"
+            style={{ width: "36px", height: "36px" }}
+          >
+            <FontAwesomeIcon icon={faFileAlt} />
+          </div>
+          <div className="text">Volunteer Experience</div>
+        </button>
       </div>
     </div>
   );
