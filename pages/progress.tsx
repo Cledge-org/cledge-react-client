@@ -1,13 +1,16 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown, faSortDown } from "@fortawesome/free-solid-svg-icons";
 import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 import { AppProps } from "next/dist/shared/lib/router/router";
 import QuestionSummaryPage from "./questionPages/questionSummaryPage";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
+import { TabNavBtn } from "./resources";
+import CardComponent from "../components/common/CardComponent";
 //profile progress/ question summary page
 export default function Progress() {
   const [currPage, setCurrPage] = useState("all");
+  const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
   return (
     <div className="container-fluid vh-100 d-flex flex-row px-0">
       <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
@@ -32,15 +35,15 @@ export default function Progress() {
         {currPage === "all" ? (
           <div className="container-fluid h-100">
             <div
-              className="d-flex flex-row justify-content-between align-items-center"
+              className="d-flex flex-row justify-content-between align-items-center px-3"
               style={{ height: "15%" }}
             >
-              <div>
-                Profile Completion <br />
-                <span>
+              <div className="question-subpage-title">
+                Profile Completion
+                <div className="sub-text">
                   Complete these sections to get the most relevant admissions
                   advice
-                </span>
+                </div>
               </div>
               <div style={{ width: "10vh" }}>
                 <CircularProgressbar
@@ -53,6 +56,52 @@ export default function Progress() {
                   })}
                   value={67}
                   text={"67%"}
+                />
+              </div>
+            </div>
+            <ul
+              className="nav justify-content-evenly"
+              role="tablist"
+              style={{ width: "45%" }}
+            >
+              {" "}
+              <TabNavBtn
+                currTab={currAllSectionTab}
+                setCurrTab={setCurrAllSectionTab.bind(this)}
+                name={"Upcoming"}
+              />
+              <TabNavBtn
+                currTab={currAllSectionTab}
+                setCurrTab={setCurrAllSectionTab.bind(this)}
+                name={"Finished"}
+              />
+            </ul>
+            <div className="tab-content">
+              <div
+                className={
+                  currAllSectionTab === "upcoming"
+                    ? "resources-tab-pane resources-active"
+                    : "resources-tab-pane"
+                }
+                id="resources"
+              >
+                <CardComponent
+                  url=""
+                  title="Junior Developers"
+                  titleGradients="normal"
+                  variant="titleWithImg"
+                />
+                <CardComponent
+                  url=""
+                  title="Junior Developers"
+                  titleGradients="normal"
+                  variant="titleWithImg"
+                />
+                <CardComponent
+                  url=""
+                  title="Junior Developers"
+                  titleGradients="normal"
+                  variant="titleWithImg"
                 />
               </div>
             </div>

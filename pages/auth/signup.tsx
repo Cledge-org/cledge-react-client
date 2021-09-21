@@ -2,21 +2,21 @@
 import Link from "next/link";
 import { useState } from "react";
 export default function signup() {
-  var [formData, setFormData]= useState({
-    firstName:"",
-    lastName:"",
+  var [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
     password1: "",
-    password2: ""
+    password2: "",
   });
   const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(formData)
-  }
+    e.preventDefault();
+    console.log(formData);
+  };
   return (
     <div className="container">
       <div className="col-md-5 d-md-flex mx-auto mt-5 flex-column justify-content-center align-middle">
-        <div className="fs-1 fw-bold cl-darktext">
+        <div className="fs-1 fw-bold cl-dark-text">
           Create your <span className="cl-blue">cledge</span> account
         </div>
         <div className="d-flex flex-row justify-content-between align-items-center mx-0 px-0">
@@ -29,8 +29,10 @@ export default function signup() {
               First Name
             </label>
             <input
-              value = {formData.firstName}
-              onChange={(e)=> setFormData({...formData, firstName: e.target.value})}
+              value={formData.firstName}
+              onChange={(e) =>
+                setFormData({ ...formData, firstName: e.target.value })
+              }
               type="text"
               className="px-3 form-control"
               id="firstName"
@@ -46,8 +48,10 @@ export default function signup() {
               Last Name
             </label>
             <input
-              value = {formData.lastName}
-              onChange={(e)=> setFormData({...formData, lastName: e.target.value})}
+              value={formData.lastName}
+              onChange={(e) =>
+                setFormData({ ...formData, lastName: e.target.value })
+              }
               type="text"
               className="px-3 form-control"
               id="lastName"
@@ -55,7 +59,7 @@ export default function signup() {
             />
           </div>
         </div>
-        
+
         <div className="form-group mt-3 w-100">
           <label
             style={{ fontSize: "0.9em" }}
@@ -65,8 +69,10 @@ export default function signup() {
             Email Address
           </label>
           <input
-            value = {formData.email}
-            onChange={(e)=> setFormData({...formData, email: e.target.value})}
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
             type="email"
             className="px-3 form-control"
             id="email"
@@ -83,8 +89,10 @@ export default function signup() {
             Password
           </label>
           <input
-            value = {formData.password1}
-            onChange={(e)=> setFormData({...formData, password1: e.target.value})}
+            value={formData.password1}
+            onChange={(e) =>
+              setFormData({ ...formData, password1: e.target.value })
+            }
             type="password"
             className="px-3 form-control"
             id="password"
@@ -100,8 +108,10 @@ export default function signup() {
             Confirm Password
           </label>
           <input
-            value = {formData.password2}
-            onChange={(e)=> setFormData({...formData, password2: e.target.value})}
+            value={formData.password2}
+            onChange={(e) =>
+              setFormData({ ...formData, password2: e.target.value })
+            }
             type="password"
             className="px-3 form-control"
             id="confirmpassword"
@@ -120,7 +130,7 @@ export default function signup() {
             <button
               type="button"
               className="btn btn-primary cl-btn-blue"
-              onClick ={handleSubmit}
+              onClick={handleSubmit}
             >
               Sign Up
             </button>

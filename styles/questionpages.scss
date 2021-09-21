@@ -121,3 +121,14 @@
     @extend .ps-3;
   }
 }
+.question-subpage-title {
+  font-weight: 800;
+  color: $cl-dark-text;
+  font-size: 2.2em;
+  height: fit-content;
+  .sub-text {
+    font-size: 0.4em;
+    font-weight: normal;
+    color: $cl-mid-gray;
+  }
+}
