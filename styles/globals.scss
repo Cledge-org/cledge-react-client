@@ -5,12 +5,18 @@ body {
   padding: 0;
   margin: 0;
   font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  height: 100%;
 }
 
+$cl-white: #ffffff;
+$cl-translucent-white: #ffffff66;
 $cl-blue: #2651ed;
+$cl-dark-blue: #0b1142;
 $cl-darktext: #070452;
 $cl-light-gray: #f2f2f7;
 $cl-mid-gray: #656565;
+$cl-dark-gray: #222222;
 
 a {
   color: inherit;
@@ -21,6 +27,16 @@ a {
   box-sizing: border-box;
 }
 
+.bg-dark-blue {
+  background-color: $cl-dark-blue;
+}
+
+.cl-white {
+  color: $cl-white;
+}
+.cl-translucent-white {
+  color: $cl-translucent-white;
+}
 .cl-blue {
   color: $cl-blue;
 }
@@ -34,7 +50,20 @@ a {
   color: $cl-darktext;
 }
 
-.cl-btn-blue {
+.center-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cl-btn-gray {
+  @extend .cl-btn;
+  background-color: $cl-light-gray;
+  color: $cl-darktext;
+  border: 1px solid $cl-light-gray;
+}
+
+.cl-btn {
   @include button-size(
     $padding-x: 1.5vw,
     $padding-y: 1.5vh,
@@ -42,8 +71,6 @@ a {
     $border-radius: 15px
   );
   box-shadow: none;
-  background-color: $cl-blue;
-  border: 1px solid $cl-blue;
   &:active,
   &:focus,
   &:checked {
@@ -55,6 +82,13 @@ a {
     filter: brightness(130%);
   }
 }
+
+.cl-btn-blue {
+  @extend .cl-btn;
+  background-color: $cl-blue;
+  border: 1px solid $cl-blue;
+}
+
 input[type="text"],
 input[type="email"],
 input[type="password"] {
@@ -82,17 +116,59 @@ input[type="password"] {
   font-weight: 600;
   font-size: 0.8em;
 }
-.resources-tab-nav-btn {
-  outline: none;
-  background: transparent;
-  font-weight: 600;
+
+.center-child {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4em;
+}
+
+.resources-tab-nav-btn {
+  transition: 500ms;
+  outline: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
   border: 1px solid transparent;
   border-radius: 2.5px;
   &:hover {
+    cursor: pointer;
     background: rgba($color: #000000, $alpha: 0.1);
   }
 }
+
+.resources-tab-pane {
+  @extend .container-fluid;
+  display: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+.resources-active {
+  @extend .resources-tab-pane;
+  display: flex;
+}
+$spacers: (
+  0: 0,
+  1: (
+    $spacer * 0.25,
+  ),
+  2: (
+    $spacer * 0.5,
+  ),
+  3: $spacer,
+  4: (
+    $spacer * 1.5,
+  ),
+  5: (
+    $spacer * 3,
+  ),
+  6: (
+    $spacer * 5,
+  ),
+  7: (
+    $spacer * 10,
+  ),
+);

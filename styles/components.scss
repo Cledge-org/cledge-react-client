@@ -11,9 +11,14 @@
 .card-title {
   @extend .ms-3;
   @extend .mt-3;
-  @include gradient-text($fromColor: #ff6060, $toColor: #2651ed);
   font-weight: 900;
   font-size: 2.25em;
+}
+.red-purple-text-gradient {
+  @include gradient-text($fromColor: #ff6060, $toColor: #2651ed);
+}
+.blue-purple-text-gradient {
+  @include gradient-text($fromColor: #3b68df, $toColor: #8d32d4);
 }
 .card-container {
   border-radius: 20px;
@@ -21,5 +26,16 @@
   width: 100%;
   &:hover {
     cursor: pointer;
+  }
+}
+.article-btn {
+  outline: none;
+  color: $cl-blue;
+  width: fit-content;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  &:hover {
+    background-color: rgba($color: $cl-blue, $alpha: 15%);
   }
 }

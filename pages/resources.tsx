@@ -51,3 +51,34 @@ export default function resources() {
     </div>
   );
 }
+function TabNavBtn({ currTab, setCurrTab, name }) {
+  const cledgeBlue = "#2651ed";
+  const midGray = "#656565";
+  const lowerCaseName = name.toLowerCase();
+  return (
+    <li
+      className="resources-tab-nav-btn"
+      id={lowerCaseName + "-tab"}
+      onClick={() => {
+        setCurrTab(lowerCaseName);
+      }}
+    >
+      <div
+        style={{
+          width: "fit-content",
+          color: currTab === lowerCaseName ? cledgeBlue : midGray,
+          fontWeight: currTab === lowerCaseName ? 700 : 500,
+        }}
+      >
+        {name}
+        <div
+          style={{
+            height: "3px",
+            backgroundColor:
+              currTab === lowerCaseName ? cledgeBlue : "transparent",
+          }}
+        />
+      </div>
+    </li>
+  );
+}
