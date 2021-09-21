@@ -1,74 +1,52 @@
 import { useState } from "react";
-import CardComponent from "../components/common/CardComponent";
+import Card from "../components/common/Card";
+import CardVideo from "../components/common/Card_Video";
+import CardText from "../components/common/Card_Text";
+import TabButton from "../components/common/TabButton";
 
 export default function resources() {
-  const cledgeBlue = "#2651ed";
+
   const [currTab, setCurrTab] = useState("resources");
   return (
     <div className="d-flex flex-column">
-      <div
-        className="d-flex flex-row align-items-center justify-content-evenly"
-        style={{ width: "35%" }}
-      >
-        <button
+      <div className="row">
+        <TabButton 
           onClick={() => {
             setCurrTab("resources");
           }}
-          className="resources-tab-nav-btn"
-        >
-          <div style={{ width: "fit-content" }}>
-            Resources
-            <div
-              style={{
-                height: "3px",
-                backgroundColor:
-                  currTab === "resources" ? cledgeBlue : "transparent",
-              }}
-            />
-          </div>
-        </button>
-        <button
+          title = "Resources"
+          currTab={currTab}
+        />
+        <TabButton 
           onClick={() => {
             setCurrTab("articles");
           }}
-          className="resources-tab-nav-btn"
-        >
-          <div style={{ width: "fit-content" }}>
-            Articles
-            <div
-              style={{
-                height: "3px",
-                backgroundColor:
-                  currTab === "articles" ? cledgeBlue : "transparent",
-              }}
-            />
-          </div>
-        </button>
-        <button
+          title = "Articles"
+          currTab={currTab}
+        />
+        <TabButton 
           onClick={() => {
             setCurrTab("videos");
           }}
-          className="resources-tab-nav-btn"
-        >
-          <div style={{ width: "fit-content" }}>
-            Videos
-            <div
-              style={{
-                height: "3px",
-                backgroundColor:
-                  currTab === "videos" ? cledgeBlue : "transparent",
-              }}
-            />
-          </div>
-        </button>
+          title = "Videos"
+          currTab={currTab}
+        />
       </div>
-      <div className="align-self-center d-flex flex-row flex-wrap w-100 justify-content-evenly">
-        <CardComponent />
-        <CardComponent />
-        <CardComponent />
-        <CardComponent />
-        <CardComponent />
-        <CardComponent />
+
+
+      <div className="container align-self-center mx-0 col vw-100 justify-content-evenly">
+        <div className='row'>
+          <Card title={"Base card"} child={<div>hello world\asdfasdfasdfasdfasdasdfasdfasdfaaaaaaaaaaaaaaaaaaaa</div>} />
+          <CardVideo title={"Video card"} child={<div>hello world</div>} url={new URL("https://www.youtube.com/watch?v=ZGYSVyWdSRk")}/>
+          <CardText title={"Text Card"} child={<div>hello world</div>} snippet={"hello world\asdfasdfasdfasdfasdasdfasdfasdfaaaaaaaaaaaaaaaaaaaa"}/>
+          <Card title={"SAT"} child={<div>hello world</div>}/>
+          <Card title={"SAT"} child={<div>hello world</div>}/>
+          <Card title={"SAT"} child={<div>hello world</div>}/>
+          <Card title={"SAT"} child={<div>hello world</div>}/>
+          <Card title={"SAT"} child={<div>hello world</div>}/>
+          <Card title={"SAT"} child={<div>hello world</div>}/>
+        </div>
+        
       </div>
     </div>
   );
