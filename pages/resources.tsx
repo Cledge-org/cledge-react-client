@@ -1,120 +1,52 @@
 import { useState } from "react";
-import CardComponent from "../components/common/CardComponent";
-// import bootstrap from "bootstrap";
+import Card from "../components/common/Card";
+import CardVideo from "../components/common/Card_Video";
+import CardText from "../components/common/Card_Text";
+import TabButton from "../components/common/TabButton";
 
 export default function resources() {
+
   const [currTab, setCurrTab] = useState("resources");
   return (
-    <div
-      className="d-flex flex-column container-fluid"
-      style={{ minHeight: "92vh" }}
-    >
-      <ul
-        className="nav justify-content-evenly"
-        role="tablist"
-        style={{ width: "45%" }}
-      >
-        <TabNavBtn
-          name="Resources"
+    <div className="d-flex flex-column">
+      <div className="row">
+        <TabButton 
+          onClick={() => {
+            setCurrTab("resources");
+          }}
+          title = "Resources"
           currTab={currTab}
-          setCurrTab={setCurrTab.bind(this)}
         />
-        <TabNavBtn
-          name="Articles"
+        <TabButton 
+          onClick={() => {
+            setCurrTab("articles");
+          }}
+          title = "Articles"
           currTab={currTab}
-          setCurrTab={setCurrTab.bind(this)}
         />
-        <TabNavBtn
-          name="Videos"
+        <TabButton 
+          onClick={() => {
+            setCurrTab("videos");
+          }}
+          title = "Videos"
           currTab={currTab}
-          setCurrTab={setCurrTab.bind(this)}
         />
-      </ul>
-      <div className="tab-content">
-        <div
-          className={
-            currTab === "resources"
-              ? "resources-tab-pane resources-active"
-              : "resources-tab-pane"
-          }
-          id="resources"
-        >
-          <CardComponent
-            url=""
-            title="Junior Developers"
-            titleGradients="normal"
-            variant="titleWithImg"
-          />
-          <CardComponent
-            url=""
-            title="Junior Developers"
-            titleGradients="normal"
-            variant="titleWithImg"
-          />
-          <CardComponent
-            url=""
-            title="Junior Developers"
-            titleGradients="normal"
-            variant="titleWithImg"
-          />
+      </div>
+
+
+      <div className="container align-self-center mx-0 col vw-100 justify-content-evenly">
+        <div className='row'>
+          <Card title={"Base card"} child={<div>hello world\asdfasdfasdfasdfasdasdfasdfasdfaaaaaaaaaaaaaaaaaaaa</div>} />
+          <CardVideo title={"Video card"} child={<div>hello world</div>} url={new URL("https://www.youtube.com/watch?v=ZGYSVyWdSRk")}/>
+          <CardText title={"Text Card"} child={<div>hello world</div>} snippet={"hello world\asdfasdfasdfasdfasdasdfasdfasdfaaaaaaaaaaaaaaaaaaaa"}/>
+          <Card title={"SAT"} child={<div>hello world</div>}/>
+          <Card title={"SAT"} child={<div>hello world</div>}/>
+          <Card title={"SAT"} child={<div>hello world</div>}/>
+          <Card title={"SAT"} child={<div>hello world</div>}/>
+          <Card title={"SAT"} child={<div>hello world</div>}/>
+          <Card title={"SAT"} child={<div>hello world</div>}/>
         </div>
-        <div
-          className={
-            currTab === "articles"
-              ? "resources-tab-pane resources-active"
-              : "resources-tab-pane"
-          }
-          id="articles"
-        >
-          <CardComponent
-            url=""
-            title="SAT Vocabulary III"
-            titleGradients="dark"
-            centerText="It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            variant="article"
-          />
-          <CardComponent
-            url=""
-            title="SAT Vocabulary III"
-            titleGradients="dark"
-            centerText="It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            variant="article"
-          />
-          <CardComponent
-            url=""
-            title="SAT Vocabulary III"
-            titleGradients="dark"
-            centerText="It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            variant="article"
-          />
-        </div>
-        <div
-          className={
-            currTab === "videos"
-              ? "resources-tab-pane resources-active"
-              : "resources-tab-pane"
-          }
-          id="videos"
-        >
-          <CardComponent
-            url=""
-            title="Junior Developers"
-            titleGradients="normal"
-            variant="titleWithVid"
-          />
-          <CardComponent
-            url=""
-            title="Junior Developers"
-            titleGradients="normal"
-            variant="titleWithVid"
-          />
-          <CardComponent
-            url=""
-            title="Junior Developers"
-            titleGradients="normal"
-            variant="titleWithVid"
-          />
-        </div>
+        
       </div>
     </div>
   );

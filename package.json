@@ -30,6 +30,7 @@
     "react-inlinesvg": "^2.3.0",
     "react-redux": "^7.2.5",
     "redux": "^4.1.1",
+    "react-iframe": "^1.8.0",
     "sass": "^1.41.0"
   },
   "devDependencies": {
