@@ -7,12 +7,14 @@ export default function YoutubeEmbed(props) {
   return (
     <div className="center-child" style={{ width: "90%", height: "95%" }}>
       <iframe
-        className="w-100 h-100"
+        // className="w-100 h-100"
         src={"https://www.youtube.com/embed/" + props.videoId}
         frameBorder="0"
         allow="autoplay; encrypted-media"
         allowFullScreen
         title="video"
+        height="55%"
+        width="100%"
       />
     </div>
   );

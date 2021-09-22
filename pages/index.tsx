@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import Welcome from "./welcome";
 import Footer from "../components/common/Footer";
 import styles from "../styles/Home.module.css";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
@@ -11,7 +12,10 @@ const Home: NextPage = () => {
   if (status === "authenticated") {
     return <p>Signed in as {session.user.email}</p>;
   }
-  return <a href="/api/auth/signin">Sign in</a>;
+  return (
+    <Welcome>
+    </Welcome>
+  );
 };
 
 export default Home;
