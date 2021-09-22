@@ -28,9 +28,6 @@ export default function Header({}) {
         >
           {/* user authenticated */}
           <div className="navbar-nav">
-            <Link href="/resources">
-              <a className="nav-link">Resources</a>
-            </Link>
             <button
               className="navbar-toggler"
               type="button"
