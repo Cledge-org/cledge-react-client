@@ -6,23 +6,26 @@ import { faLinkedin, faFacebookSquare, faInstagramSquare } from '@fortawesome/fr
 export default function Footer({}) {
   return (
     <footer
-      className="bg-dark-blue cl-light-gray container-fluid px-6 mt-4"
+      className="bg-dark-blue cl-light-gray container-fluid px-6"
       style={{ padding: 60, width: "100%" }}
     >
       <div className="row mt-2 cl-translucent-white">
-        <div className="col-4">
+        <div className="col-12 col-md-4">
           <Link href="#">
             <h4 className="cl-white title" style={{ fontWeight: 600, fontFamily: 'Montserrat', }}>cledge.</h4>
           </Link>
           support us at...
           <br />
-          <a href="https://www.linkedin.com/company/cledge/"><FontAwesomeIcon icon={faLinkedin} className="social-icon" /></a>
-          <a href="https://www.facebook.com/cledge.org"><FontAwesomeIcon icon={faFacebookSquare} className="social-icon" /></a>
-          <a href="https://www.instagram.com/hello.cledge/"><FontAwesomeIcon icon={faInstagramSquare} className="social-icon" /></a>
+            <div className='mt-3'>
+              <a href="https://www.linkedin.com/company/cledge/"><FontAwesomeIcon icon={faLinkedin} className="social-icon" /></a>
+              <a href="https://www.facebook.com/cledge.org"><FontAwesomeIcon icon={faFacebookSquare} className="social-icon" /></a>
+              <a href="https://www.instagram.com/hello.cledge/"><FontAwesomeIcon icon={faInstagramSquare} className="social-icon" /></a>
+            </div>
           <br />
           © 2021 Cledge
         </div>
-        <div className="col-3 mx-auto">
+
+        <div className="col-12 col-md-3 mx-auto mt-5 mt-md-0">
           <h6 className="title mb-4">FEATURES</h6>
           <ul className="list-unstyled">
             <li className="mt-2">
@@ -39,7 +42,7 @@ export default function Footer({}) {
             </li>
           </ul>
         </div>
-        <div className="col-3">
+        <div className="col-12 col-md-3  mt-5 mt-md-0">
           <h6 className="title mb-4">MORE</h6>
           <a href="mailto:ayan@cledge.org" className="cl-white">
             Get in Touch
