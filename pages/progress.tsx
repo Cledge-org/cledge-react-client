@@ -3,10 +3,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown, faSortDown } from "@fortawesome/free-solid-svg-icons";
 import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 import { AppProps } from "next/dist/shared/lib/router/router";
-import QuestionSummaryPage from "./questionPages/questionSummaryPage";
-import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
-import { TabNavBtn } from "./resources";
-import CardComponent from "../components/common/CardComponent";
+import QuestionSummaryPage from "./questionPages/questionSummarySubpage";
+import {
+  buildStyles,
+  CircularProgressbar,
+  CircularProgressbarWithChildren,
+} from "react-circular-progressbar";
+import TabButton from "../components/common/TabButton";
+import CardText from "../components/common/Card_Text";
+import CardCheckIn from "../components/common/Card_CheckIn";
+import QuestionSubPageHeader from "../components/common/QuestionSubPage_Header";
 //profile progress/ question summary page
 export default function Progress() {
   const [currPage, setCurrPage] = useState("all");
@@ -17,16 +23,19 @@ export default function Progress() {
         <DropDownTab
           isAll
           chunkList={[]}
+          onClick={() => setCurrPage("all")}
           title="All Sections"
           percentComplete={undefined}
         />
         <DropDownTab
           chunkList={["Academic Achievement", "Volunteer Experience"]}
+          onClick={() => setCurrPage("extracurricular")}
           title="Extracurricular"
           percentComplete={67}
         />
         <DropDownTab
           chunkList={["Academic Achievement", "Volunteer Experience"]}
+          onClick={() => setCurrPage("extracurricular")}
           title="Extracurricular"
           percentComplete={67}
         />
@@ -34,46 +43,21 @@ export default function Progress() {
       <div className="d-flex" style={{ flex: 3 }}>
         {currPage === "all" ? (
           <div className="container-fluid h-100">
-            <div
-              className="d-flex flex-row justify-content-between align-items-center px-3"
-              style={{ height: "15%" }}
-            >
-              <div className="question-subpage-title">
-                Profile Completion
-                <div className="sub-text">
-                  Complete these sections to get the most relevant admissions
-                  advice
-                </div>
-              </div>
-              <div style={{ width: "10vh" }}>
-                <CircularProgressbar
-                  styles={buildStyles({
-                    textSize: "16px",
-                    pathTransitionDuration: 0.5,
-                    pathColor: "#2651ed",
-                    trailColor: "#d6d6d6",
-                    backgroundColor: "#3e98c7",
-                  })}
-                  value={67}
-                  text={"67%"}
-                />
-              </div>
-            </div>
-            <ul
-              className="nav justify-content-evenly"
-              role="tablist"
-              style={{ width: "45%" }}
-            >
-              {" "}
-              <TabNavBtn
+            <QuestionSubPageHeader
+              title="Profile Completion"
+              percentage={67}
+              subText="This is just a placeholder"
+            />
+            <ul className="nav" role="tablist">
+              <TabButton
                 currTab={currAllSectionTab}
-                setCurrTab={setCurrAllSectionTab.bind(this)}
-                name={"Upcoming"}
+                onClick={setCurrAllSectionTab.bind(this)}
+                title={"Upcoming"}
               />
-              <TabNavBtn
+              <TabButton
                 currTab={currAllSectionTab}
-                setCurrTab={setCurrAllSectionTab.bind(this)}
-                name={"Finished"}
+                onClick={setCurrAllSectionTab.bind(this)}
+                title={"Finished"}
               />
             </ul>
             <div className="tab-content">
@@ -85,23 +69,17 @@ export default function Progress() {
                 }
                 id="resources"
               >
-                <CardComponent
-                  url=""
+                <CardCheckIn
+                  url={undefined}
                   title="Junior Developers"
-                  titleGradients="normal"
-                  variant="titleWithImg"
+                  textGradient="light"
+                  snippet={""}
                 />
-                <CardComponent
-                  url=""
+                <CardCheckIn
+                  url={undefined}
                   title="Junior Developers"
-                  titleGradients="normal"
-                  variant="titleWithImg"
-                />
-                <CardComponent
-                  url=""
-                  title="Junior Developers"
-                  titleGradients="normal"
-                  variant="titleWithImg"
+                  textGradient="light"
+                  snippet={""}
                 />
               </div>
             </div>
@@ -119,11 +97,13 @@ function DropDownTab({
   title,
   percentComplete,
   isAll,
+  onClick,
 }: {
   chunkList: Array<any>;
   title: string;
   isAll?: boolean;
   percentComplete: number;
+  onClick: Function;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
@@ -159,7 +139,12 @@ function DropDownTab({
         }
       >
         {chunkList.map((chunkTitle: string) => (
-          <button className="progress-dropdown-menu-btn">
+          <button
+            onClick={() => {
+              onClick();
+            }}
+            className="progress-dropdown-menu-btn"
+          >
             <div
               className="center-child icon"
               style={{ width: "36px", height: "36px" }}

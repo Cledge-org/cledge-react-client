@@ -11,6 +11,7 @@ body {
 
 $cl-white: #ffffff;
 $cl-translucent-white: #ffffff66;
+$cl-light-blue: #d9e1fc;
 $cl-blue: #2651ed;
 $cl-dark-blue: #0b1142;
 $cl-dark-text: #070452;
@@ -18,6 +19,7 @@ $cl-light-gray: #f2f2f7;
 $cl-mid-gray: #656565;
 $cl-secondary-text: #b7b7b7;
 $cl-dark-gray: #222222;
+$cl-black: #000000;
 
 a {
   color: inherit;
@@ -30,6 +32,9 @@ a {
 
 .bg-dark-blue {
   background-color: $cl-dark-blue;
+}
+.bg-light-blue {
+  background-color: $cl-light-blue;
 }
 
 .cl-white {
@@ -49,6 +54,9 @@ a {
 }
 .cl-dark-text {
   color: $cl-dark-text;
+}
+.cl-black {
+  color: $cl-black;
 }
 
 .center-child {
@@ -90,6 +98,7 @@ a {
 .cl-btn-blue {
   @extend .cl-btn;
   background-color: $cl-blue;
+  color: white;
   border: 1px solid $cl-blue;
 }
 
@@ -121,12 +130,6 @@ input[type="password"] {
   font-size: 0.8em;
 }
 
-.center-child {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .resources-tab-nav-btn {
   transition: 500ms;
   outline: none;
@@ -137,12 +140,39 @@ input[type="password"] {
   font-size: 1.5em;
   border: 1px solid transparent;
   border-radius: 2.5px;
-  width: 30%;
-  color: $cl-mid-gray;
   &:hover {
     cursor: pointer;
     background: rgba($color: #000000, $alpha: 0.1);
   }
+}
+
+.landing-page-white-text,
+.landing-page-white-text p {
+  color: $cl-white;
+}
+
+.landing-page-gray-text p {
+  color: $cl-light-gray;
+}
+
+h1 {
+  font-family: "Montserrat", sans-serif;
+}
+h2 {
+  font-family: "Montserrat", sans-serif;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+.w-60 {
+  max-width: 60%;
+}
+
+.footer {
+  background-color: pink;
+  margin-top: auto;
 }
 
 .resources-tab-pane {

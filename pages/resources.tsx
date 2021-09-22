@@ -1,152 +1,102 @@
 import { useState } from "react";
-import CardComponent from "../components/common/CardComponent";
-// import bootstrap from "bootstrap";
+import Card from "../components/common/Card";
+import CardVideo from "../components/common/Card_Video";
+import CardText from "../components/common/Card_Text";
+import TabButton from "../components/common/TabButton";
 
 export default function resources() {
   const [currTab, setCurrTab] = useState("resources");
   return (
-    <div
-      className="d-flex flex-column container-fluid"
-      style={{ minHeight: "92vh" }}
-    >
-      <ul
-        className="nav justify-content-evenly"
-        role="tablist"
-        style={{ width: "45%" }}
-      >
-        <TabNavBtn
-          name="Resources"
+    <div className="d-flex flex-column vh-100">
+      <div className="row">
+        <TabButton
+          onClick={() => {
+            setCurrTab("resources");
+          }}
+          title="Resources"
           currTab={currTab}
-          setCurrTab={setCurrTab.bind(this)}
         />
-        <TabNavBtn
-          name="Articles"
+        <TabButton
+          onClick={() => {
+            setCurrTab("articles");
+          }}
+          title="Articles"
           currTab={currTab}
-          setCurrTab={setCurrTab.bind(this)}
         />
-        <TabNavBtn
-          name="Videos"
+        <TabButton
+          onClick={() => {
+            setCurrTab("videos");
+          }}
+          title="Videos"
           currTab={currTab}
-          setCurrTab={setCurrTab.bind(this)}
         />
-      </ul>
-      <div className="tab-content">
-        <div
-          className={
-            currTab === "resources"
-              ? "resources-tab-pane resources-active"
-              : "resources-tab-pane"
-          }
-          id="resources"
-        >
-          <CardComponent
-            url=""
-            title="Junior Developers"
-            titleGradients="normal"
-            variant="titleWithImg"
-          />
-          <CardComponent
-            url=""
-            title="Junior Developers"
-            titleGradients="normal"
-            variant="titleWithImg"
-          />
-          <CardComponent
-            url=""
-            title="Junior Developers"
-            titleGradients="normal"
-            variant="titleWithImg"
-          />
-        </div>
-        <div
-          className={
-            currTab === "articles"
-              ? "resources-tab-pane resources-active"
-              : "resources-tab-pane"
-          }
-          id="articles"
-        >
-          <CardComponent
-            url=""
-            title="SAT Vocabulary III"
-            titleGradients="dark"
-            centerText="It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            variant="article"
-          />
-          <CardComponent
-            url=""
-            title="SAT Vocabulary III"
-            titleGradients="dark"
-            centerText="It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            variant="article"
-          />
-          <CardComponent
-            url=""
-            title="SAT Vocabulary III"
-            titleGradients="dark"
-            centerText="It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            variant="article"
-          />
-        </div>
-        <div
-          className={
-            currTab === "videos"
-              ? "resources-tab-pane resources-active"
-              : "resources-tab-pane"
-          }
-          id="videos"
-        >
-          <CardComponent
-            url=""
-            title="Junior Developers"
-            titleGradients="normal"
-            variant="titleWithVid"
-          />
-          <CardComponent
-            url=""
-            title="Junior Developers"
-            titleGradients="normal"
-            variant="titleWithVid"
-          />
-          <CardComponent
-            url=""
-            title="Junior Developers"
-            titleGradients="normal"
-            variant="titleWithVid"
-          />
-        </div>
+      </div>
+
+      <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
+        {currTab === "resources" ? (
+          <div className="row jusify-content-evenly">
+            <Card
+              textGradient="light"
+              title={"Base card"}
+              child={<div>hello world</div>}
+            />
+            <CardVideo
+              textGradient="light"
+              title={"Video card"}
+              child={<div>hello world</div>}
+              videoId="ZGYSVyWdSRk"
+            />
+            <CardText
+              textGradient="dark"
+              title={"Text Card"}
+              child={<div>hello world</div>}
+              snippet={"hello world"}
+            />
+          </div>
+        ) : null}
+        {currTab === "articles" ? (
+          <div className="row">
+            <Card
+              textGradient="light"
+              title={"Base card"}
+              child={<div>hello world</div>}
+            />
+            <CardVideo
+              textGradient="light"
+              title={"Video card"}
+              child={<div>hello world</div>}
+              videoId="ZGYSVyWdSRk"
+            />
+            <CardText
+              textGradient="dark"
+              title={"Text Card"}
+              child={<div>hello world</div>}
+              snippet={"hello world"}
+            />
+          </div>
+        ) : null}
+        {currTab === "videos" ? (
+          <div className="row">
+            <Card
+              textGradient="light"
+              title={"Base card"}
+              child={<div>hello world</div>}
+            />
+            <CardVideo
+              textGradient="light"
+              title={"Video card"}
+              child={<div>hello world</div>}
+              videoId="ZGYSVyWdSRk"
+            />
+            <CardText
+              textGradient="dark"
+              title={"Text Card"}
+              child={<div>hello world</div>}
+              snippet={"hello world"}
+            />
+          </div>
+        ) : null}
       </div>
     </div>
-  );
-}
-export function TabNavBtn({ currTab, setCurrTab, name }) {
-  const cledgeBlue = "#2651ed";
-  const midGray = "#656565";
-  const lowerCaseName = name.toLowerCase();
-  return (
-    <li
-      className="resources-tab-nav-btn"
-      id={lowerCaseName + "-tab"}
-      onClick={() => {
-        setCurrTab(lowerCaseName);
-      }}
-    >
-      <div
-        style={{
-          width: "fit-content",
-          color: currTab === lowerCaseName ? cledgeBlue : midGray,
-          fontWeight: currTab === lowerCaseName ? 700 : 500,
-        }}
-      >
-        {name}
-        <div
-          style={{
-            height: "3px",
-            backgroundColor:
-              currTab === lowerCaseName ? cledgeBlue : "transparent",
-          }}
-        />
-      </div>
-    </li>
   );
 }
