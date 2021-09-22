@@ -203,3 +203,13 @@ $spacers: (
     $spacer * 10,
   ),
 );
+
+.nav-regular{
+  color: $cl-blue;
+  background-color: white
+}
+
+.nav-transparent{
+  color: white;
+  background-color: transparent
+}

@@ -1,11 +1,48 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from 'next/router'
+import { useEffect, useState } from "react";
 
-export default function Header({}) {
+export default function Header({props}) {
   const { data: session, status } = useSession();
+  const router = useRouter();
+  console.log();
 
-  return (
-    <nav className="navbar cl-blue sticky-top navbar-expand-md bg-white px-3">
+  let listener = null
+  const [scrollState, setScrollState] = useState("top")
+  const [colors, setColors] = useState('')
+  var navclass = '';
+
+
+  if(router.pathname == '/welcome'){
+    navclass = 'position-fixed fixed-top'
+  }else{
+    navclass='nav-regular'
+  }
+
+  useEffect(() => {
+    
+
+    listener = document.addEventListener("scroll", e => {
+      var scrolled = document.scrollingElement.scrollTop
+      if (scrolled >= 120) {
+        if (scrollState !== "scrolling") {
+          setScrollState("scrolling");
+        }
+      } else {
+        if (scrollState !== "top") {
+          setScrollState("top")
+          setColors('nav-transparent')
+        }
+      }
+    })
+    return () => {
+      document.removeEventListener("scroll", listener)
+    }
+  }, [scrollState, router])
+
+  return (  
+    <nav className= {`navbar cl-blue sticky-top navbar-expand-md px-3 ${navclass} ${(scrollState !== "scrolling" && router.pathname ==='/welcome') ? "nav-transparent" : 'nav-regular'}`}>
       <div className="container-fluid">
         <Link href="/">
           <a className="navbar-brand mx-4">cledge</a>
