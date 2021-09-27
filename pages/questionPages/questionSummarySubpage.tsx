@@ -1,6 +1,6 @@
-import React from "react";
-import QuestionSubPageHeader from "../../components/common/QuestionSubPage_Header";
-import QuestionSummaryCard from "../../components/common/Question_Summary_Card";
+import React, { useState } from "react";
+import QuestionSubPageHeader from "../../components/question_components/QuestionSubPage_Header";
+import QuestionSummaryCard from "../../components/question_components/Question_Summary_Card";
 
 export default function QuestionSummarySubpage() {
   return (

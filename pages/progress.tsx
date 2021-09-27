@@ -12,7 +12,7 @@ import {
 import TabButton from "../components/common/TabButton";
 import CardText from "../components/common/Card_Text";
 import CardCheckIn from "../components/common/Card_CheckIn";
-import QuestionSubPageHeader from "../components/common/QuestionSubPage_Header";
+import QuestionSubPageHeader from "../components/question_components/QuestionSubPage_Header";
 //profile progress/ question summary page
 export default function Progress() {
   const [currPage, setCurrPage] = useState("all");

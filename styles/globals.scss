@@ -165,7 +165,19 @@ h2 {
 a {
   text-decoration: none !important;
 }
-
+.general-submit-btn {
+  @extend .cl-dark-text;
+  @extend .py-2;
+  @extend .px-4;
+  font-weight: bold;
+  outline: none;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background-color: transparent;
+  &:hover {
+    background-color: $cl-light-blue;
+  }
+}
 .w-60 {
   max-width: 60%;
 }

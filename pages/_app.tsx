@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "../styles/globals.scss";
 import "../styles/questionpages.scss";
 import "../styles/components.scss";
+import "../styles/question_components.scss";
 
 import { SessionProvider as AuthProvider } from "next-auth/react";
 import type { AppProps } from "next/app";

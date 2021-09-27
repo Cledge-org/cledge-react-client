@@ -1,0 +1,20 @@
+@import "../node_modules/bootstrap/scss/bootstrap";
+@import "./globals.scss";
+
+.mcq-answer-btn {
+  @extend .py-3;
+  @extend .cl-dark-text;
+  @extend .my-2;
+  @extend .ps-2;
+  font-weight: bold;
+  font-size: 0.9em;
+  text-align: start;
+  width: 90%;
+  background-color: $cl-light-gray;
+  outline: none;
+  border-radius: 15px;
+  border: 1px solid transparent;
+  &:hover {
+    background-color: rgba($color: $cl-mid-gray, $alpha: 0.2);
+  }
+}
