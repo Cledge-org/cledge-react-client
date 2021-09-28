@@ -205,11 +205,15 @@ $spacers: (
 );
 
 .nav-regular{
-  color: $cl-blue;
-  background-color: white
+  @extend .shadow-sm;
+  @extend .navbar-light;
+  color: $cl-blue !important;
+  background-color: white;
+  
 }
 
 .nav-transparent{
+  @extend .navbar-dark;
   color: white;
   background-color: transparent
 }
@@ -230,3 +234,16 @@ $spacers: (
     color:black;
   }
 }
+
+#landing-main{
+  background-image: url('/images/landing_bg.svg');
+  background-position: 'center';
+  background-size: 'cover';
+  background-repeat: 'no-repeat';
+  z-index:999;
+  height: 100%;
+  @media (min-width: 992px) {
+    height: 100vh;
+  }
+}
+

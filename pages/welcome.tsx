@@ -10,19 +10,15 @@ export default function Welcome (props){
 
     return(
         
-        <div className="container-fluid vh-100 vw-100 p-0 " 
+        <div className="container-fluid  vw-100 p-0 " 
             style={{ 
-                backgroundImage: "url('/images/landing_bg.svg')",
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                zIndex:999,
+                
                 transform:'translate(0,0)'
                 }}>
-            <div className="vh-100 row align-items-center m-0">
+            <div className="row align-items-center m-0" id='landing-main'>
                 <div className="row col-12 col-lg-6 justify-content-center landing-page-white-text mt-5 mt-lg-0 pt-5 pt-lg-0 mx-0 px-0">
                     <div className="px-5 mx-5">
-                        <button className='pb-3 btn btn-sm p-0 m-0' >
+                        <button className='mb-3 btn btn-sm p-0 m-0' >
                             <div className='d-flex flex-row'>
                                 <div className='px-2 py-1'
                                 style={{
@@ -53,7 +49,7 @@ export default function Welcome (props){
                         
                     </div>
                 </div>
-                <div className="row col-12 col-lg-6 h-25 px-5 align-self-center ">
+                <div className="row col-12 col-lg-6 h-100 justify-content-center p-5 ">
                     <YoutubeEmbed videoId="Bly0QbY3fV4"/>
                 </div>
 
@@ -68,8 +64,8 @@ export default function Welcome (props){
             <div className="row align-items-center justify-content-center bg-dark-blue m-0 py-5">
                 <div className="col-11 col-md-6 pb-3 pt-0 landing-page-white-text">
                     <br />
-                    <h2>The Best in Counseling Combined with Powerful Data Insights</h2>
-                    <br />
+                    <h2 className='pb-4'>The Best in Counseling Combined with Powerful Data Insights</h2>
+                    <br/>
                     <div className='row'>
                     <div className="col-12 col-md-6  pb-4 landing-page-gray-text">
                             <img src="/images/landing_icon_early.svg" width="20%"/>
