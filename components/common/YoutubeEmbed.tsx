@@ -5,7 +5,7 @@ export default function YoutubeEmbed(props) {
     console.error(props.videoId);
   }, []);
   return (
-    <div className="d-inline m-0 p-0 h-auto">
+    <div className="center-child m-0 p-0 h-auto">
       <iframe
         // className="w-100 h-100"
         src={"https://www.youtube.com/embed/" + props.videoId}
@@ -13,8 +13,13 @@ export default function YoutubeEmbed(props) {
         allow="autoplay; encrypted-media"
         allowFullScreen
         title="video"
-        height="200%"
+        height="50%"
         width="100%"
+        style={{
+          maxWidth: '100vw',
+          minWidth:'480px',
+          minHeight:'320px'
+        }}
       />
     </div>
   );
