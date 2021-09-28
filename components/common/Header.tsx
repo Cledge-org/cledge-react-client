@@ -25,7 +25,7 @@ export default function Header({props}) {
 
     listener = document.addEventListener("scroll", e => {
       var scrolled = document.scrollingElement.scrollTop
-      if (scrolled >= 120) {
+      if (scrolled >= 70) {
         if (scrollState !== "scrolling") {
           setScrollState("scrolling");
         }
