@@ -5,7 +5,7 @@ import QuestionSummaryCard from "../../components/question_components/Question_S
 export default function MCQQuestion() {
   return (
     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
-      <span className="pt-4" style={{ fontSize: "1.4em" }}>
+      <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
         Interested Area of Study
       </span>
       <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">

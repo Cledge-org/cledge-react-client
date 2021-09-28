@@ -3,6 +3,7 @@ import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "react-modal";
 import MCQQuestion from "./mcq_question";
+import CheckBoxQuestion from "./checkbox_question";
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 export default function QuestionSummaryCard() {
   const [displayingQuestion, setDisplayingQuestion] = useState(false);
@@ -38,7 +39,7 @@ export default function QuestionSummaryCard() {
         }}
         isOpen={displayingQuestion}
       >
-        <MCQQuestion />
+        <CheckBoxQuestion />
       </Modal>
     </div>
   );
