@@ -19,9 +19,8 @@ export default function Header({props}) {
   }else{
     navclass='nav-regular'
   }
-
   useEffect(() => {
-    
+    typeof document !== undefined ? require('bootstrap/dist/js/bootstrap') : null
 
     listener = document.addEventListener("scroll", e => {
       var scrolled = document.scrollingElement.scrollTop
@@ -42,7 +41,7 @@ export default function Header({props}) {
   }, [scrollState, router])
 
   return (  
-    <nav className= {`navbar cl-blue sticky-top navbar-expand-md px-3 ${navclass} ${(scrollState !== "scrolling" && router.pathname ==='/welcome') ? "nav-transparent" : 'nav-regular'}`}>
+    <nav className= {`navbar navbar-expand-sm cl-blue sticky-top px-3 ${navclass} ${(scrollState !== "scrolling" && router.pathname ==='/welcome') ? "nav-transparent" : 'nav-regular'} `}>
       <div className="container-fluid">
         <Link href="/">
           <a className="navbar-brand mx-4">cledge</a>
@@ -56,27 +55,10 @@ export default function Header({props}) {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon"></span>
+          <div className="navbar-toggler-icon"></div>
         </button>
 
-        <div
-          className="fs-7 collapse navbar-collapse justify-content-end"
-          id="navbarNavAltMarkup"
-        >
-          {/* user authenticated */}
-          <div className="navbar-nav">
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNavAltMarkup"
-              aria-controls="navbarNavAltMarkup"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-
+   
             <div
               className="fs-7 collapse navbar-collapse justify-content-end"
               id="navbarNavAltMarkup"
@@ -107,8 +89,6 @@ export default function Header({props}) {
               )}
             </div>
           </div>
-        </div>
-      </div>
     </nav>
   );
 }
