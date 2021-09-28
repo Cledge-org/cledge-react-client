@@ -49,7 +49,7 @@ export default function Welcome (props){
                         
                     </div>
                 </div>
-                <div className="row col-12 col-lg-6 h-100 justify-content-center p-5 ">
+                <div className="row col-12 col-lg-6 h-100 justify-content-center p-5 mx-auto">
                     <YoutubeEmbed videoId="Bly0QbY3fV4"/>
                 </div>
 

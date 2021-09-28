@@ -16,9 +16,9 @@ export default function YoutubeEmbed(props) {
         height="50%"
         width="100%"
         style={{
-          maxWidth: '100vw',
-          minWidth:'480px',
-          minHeight:'320px'
+          maxWidth: '90vw',
+          minWidth:'300px',
+          minHeight:'200px'
         }}
       />
     </div>
