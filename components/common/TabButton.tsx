@@ -1,30 +1,39 @@
-
 import { useEffect } from "react";
 
-interface TabButtonProps{
-  onClick: Function,
-  title: String,
-  currTab: String,
+interface TabButtonProps {
+  onClick: Function;
+  title: String;
+  currTab: String;
 }
 const cledgeBlue = "#2651ed";
-export default function TabButton({onClick, title, currTab}:TabButtonProps) {
-
-  useEffect(() => {}, []);
+export default function TabButton({ onClick, title, currTab }: TabButtonProps) {
+  const cledgeBlue = "#2651ed";
+  const midGray = "#656565";
+  const lowerCaseName = title.toLowerCase();
   return (
-    <button
-          onClick={()=>onClick()}
-          className="resources-tab-nav-btn col-4  col-lg-2"
-        >
-          <div>
-            {title}
-            <div
-              style={{
-                height: "3px",
-                backgroundColor:
-                  currTab.toLowerCase() === title.toLowerCase() ? cledgeBlue : "transparent",
-              }}
-            />
-          </div>
-        </button>
+    <li
+      className="resources-tab-nav-btn col-3 col-lg-2"
+      id={lowerCaseName + "-tab"}
+      onClick={() => {
+        onClick(lowerCaseName);
+      }}
+    >
+      <div
+        style={{
+          width: "fit-content",
+          color: currTab === lowerCaseName ? cledgeBlue : midGray,
+          fontWeight: currTab === lowerCaseName ? 700 : 500,
+        }}
+      >
+        {title}
+        <div
+          style={{
+            height: "3px",
+            backgroundColor:
+              currTab === lowerCaseName ? cledgeBlue : "transparent",
+          }}
+        />
+      </div>
+    </li>
   );
 }
