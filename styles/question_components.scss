@@ -18,12 +18,26 @@
     background-color: rgba($color: $cl-mid-gray, $alpha: 0.2);
   }
 }
+.mcq-answer-btn-selected {
+  @extend .mcq-answer-btn;
+  background-color: $cl-orange;
+  &:hover {
+    background-color: $cl-orange;
+  }
+}
 .checkbox-mcq-variant {
   @extend .mcq-answer-btn;
   @extend .px-4;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.checkbox-mcq-variant-selected {
+  @extend .checkbox-mcq-variant;
+  background-color: $cl-orange;
+  &:hover {
+    background-color: $cl-orange;
+  }
 }
 .checkbox-container {
   @extend .center-child;
