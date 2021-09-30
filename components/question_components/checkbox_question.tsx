@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import QuestionSubPageHeader from "../../components/question_components/QuestionSubPage_Header";
-import QuestionSummaryCard from "../../components/question_components/Question_Summary_Card";
+import QuestionSubPageHeader from "./question_subpage_header";
+import QuestionSummaryCard from "./question_summary_card";
 import CheckBox from "../common/CheckBox";
 
 export default function CheckBoxQuestion() {

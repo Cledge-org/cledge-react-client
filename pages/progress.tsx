@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown, faSortDown } from "@fortawesome/free-solid-svg-icons";
 import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 import { AppProps } from "next/dist/shared/lib/router/router";
-import QuestionSummaryPage from "./questionPages/questionSummarySubpage";
+import QuestionSummaryPage from "./questionPages/question_summary_subpage";
 import {
   buildStyles,
   CircularProgressbar,
@@ -12,7 +12,8 @@ import {
 import TabButton from "../components/common/TabButton";
 import CardText from "../components/common/Card_Text";
 import CardCheckIn from "../components/common/Card_CheckIn";
-import QuestionSubPageHeader from "../components/question_components/QuestionSubPage_Header";
+import QuestionSubPageHeader from "../components/question_components/question_subpage_header";
+import QuestionECSubpage from "./questionPages/question_ec_subpage";
 //profile progress/ question summary page
 export default function Progress() {
   const [currPage, setCurrPage] = useState("all");
@@ -29,7 +30,7 @@ export default function Progress() {
         />
         <DropDownTab
           chunkList={["Academic Achievement", "Volunteer Experience"]}
-          onClick={() => setCurrPage("extracurricular")}
+          onClick={() => setCurrPage("test")}
           title="Extracurricular"
           percentComplete={67}
         />
@@ -84,8 +85,10 @@ export default function Progress() {
               </div>
             </div>
           </div>
-        ) : (
+        ) : currPage === "test" ? (
           <QuestionSummaryPage />
+        ) : (
+          <QuestionECSubpage />
         )}
       </div>
     </div>
