@@ -4,6 +4,7 @@ import Image from "next/image";
 import YoutubeEmbed from "../components/common/YoutubeEmbed";
 import MsftSVG from "../public/images/landing_msft.svg";
 import OpenAISVG from "../public/images/landing_openai.svg";
+import FeatureCarousel from "../components/common/FeatureCarousel";
 
 //landing page
 export default function Welcome (props){
@@ -12,7 +13,6 @@ export default function Welcome (props){
         
         <div className="container-fluid  vw-100 p-0 " 
             style={{ 
-                
                 transform:'translate(0,0)'
                 }}>
             <div className="row align-items-center m-0" id='landing-main'>
@@ -55,11 +55,7 @@ export default function Welcome (props){
 
             </div>
 
-            <div className="page-container-100 row align-items-center justify-content-center m-0">
-                <div className="text-center">
-                    <h2>Features Placeholder</h2>
-                </div>
-            </div>
+            <FeatureCarousel/>
 
             <div className="row align-items-center justify-content-center bg-dark-blue m-0 py-5">
                 <div className="col-11 col-md-6 pb-3 pt-0 landing-page-white-text">
