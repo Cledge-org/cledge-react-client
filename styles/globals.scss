@@ -247,3 +247,23 @@ $spacers: (
   }
 }
 
+.feature-tabbar{
+  border-radius: 10px;
+}
+
+
+
+.feature-tab{
+  cursor: pointer;
+  padding: 1em;
+  margin: 0.5em;
+  border: 2px solid ;
+  border-radius: 12px;
+}
+
+@include media-breakpoint-up(lg){
+  .feature-tabbar{
+    transform: translate(0, -5em);
+    margin-bottom: -5em;
+  }
+}
