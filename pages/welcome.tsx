@@ -1,14 +1,15 @@
-
 import Footer from "../components/common/Footer";
 import Image from "next/image";
 import YoutubeEmbed from "../components/common/YoutubeEmbed";
 import MsftSVG from "../public/images/landing_msft.svg";
 import OpenAISVG from "../public/images/landing_openai.svg";
 import FeatureCarousel from "../components/common/FeatureCarousel";
+import { useState } from "react";
+import WaitlistForm from "../components/common/WaitlistForm";
 
 //landing page
 export default function Welcome (props){
-
+   
     return(
         
         <div className="container-fluid  vw-100 p-0 " 
@@ -58,7 +59,7 @@ export default function Welcome (props){
             <FeatureCarousel/>
 
             <div className="row align-items-center justify-content-center bg-dark-blue m-0 py-5">
-                <div className="col-11 col-md-6 pb-3 pt-0 landing-page-white-text">
+                <div className="col-11 col-lg-6 pb-3 pt-0 landing-page-white-text">
                     <br />
                     <h2 className='pb-4'>The Best in Counseling Combined with Powerful Data Insights</h2>
                     <br/>
@@ -100,12 +101,9 @@ export default function Welcome (props){
                         With the support of these companies, we are excited to empower every student with the latest technologies to drive their college counseling experience.
                     </p>
             </div>
-            <div className="page-container-50 row align-items-center justify-content-center m-0 bg-light-blue">
-                <div className="text-center w-75 p-3">
-                <h2>Join Our Waitlist</h2>
-                <div>FORM PLACEHOLDER</div>
-                </div>
-            </div>
+            
+            <WaitlistForm/>
+            
             <Footer/>
         </div>
     )
