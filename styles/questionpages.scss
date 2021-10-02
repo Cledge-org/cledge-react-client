@@ -22,10 +22,11 @@
       @extend .ms-3;
     }
   }
-  .icon {
+  .icon-close {
     animation-name: rotateReverse;
     animation-duration: 600ms;
     animation-fill-mode: forwards;
+    transform-origin: 6px 8px;
   }
   @keyframes rotateReverse {
     0% {
@@ -50,7 +51,7 @@
   .icon-open {
     animation-fill-mode: forwards;
     animation-name: rotate;
-    transform-origin: center;
+    transform-origin: 6px 8px;
     animation-duration: 600ms;
   }
   background-color: $cl-light-gray;

@@ -126,7 +126,7 @@ function DropDownTab({
         {isAll ? null : (
           <div
             className={
-              isExpanded ? "center-child icon-open" : "center-child icon"
+              isExpanded ? "center-child icon-open" : "center-child icon-close"
             }
             style={{ width: "12px", height: "12px" }}
           >
