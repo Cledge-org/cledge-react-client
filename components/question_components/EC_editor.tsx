@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
 import QuestionSummaryCard from "../../components/question_components/question_summary_card";
 import ECDropDown from "./ec_dropdown_question";
+import ECTextInputQuestion from "./ec_textinput_question";
 
 export default function ECEditor() {
   return (
@@ -22,6 +23,7 @@ export default function ECEditor() {
           Adding a New Experience
         </span>
         <ECDropDown />
+        <ECTextInputQuestion />
       </div>
     </div>
   );
