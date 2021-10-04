@@ -8,7 +8,7 @@ export default function ECTextInputQuestion() {
       <span>Name</span>
       <input
         type="text"
-        className="form-control w-75 ec-text-input"
+        className="form-control ec-text-input"
         placeholder="Your response..."
       />
     </div>
