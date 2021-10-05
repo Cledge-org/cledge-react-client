@@ -225,3 +225,76 @@ $spacers: (
     $spacer * 10,
   ),
 );
+
+.nav-regular {
+  color: $cl-blue;
+  background-color: white;
+}
+
+.nav-transparent {
+  color: white;
+  background-color: transparent;
+}
+
+.landing-update-button {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  border-width: 0;
+  color: black;
+  padding-left: calc(1.5em + 10px);
+  padding-right: 1.5em;
+  max-lines: 1;
+  max-width: 75vw;
+  transform: translate(-15px, 0);
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+    color: black;
+  }
+}
+
+.myaccount-blob {
+  @extend .px-3;
+  @extend .py-3;
+  @extend .mb-3;
+  border: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.3);
+  border-radius: 15px;
+  height: fit-content;
+  .title {
+    @extend .cl-dark-text;
+    font-size: 1.1em;
+  }
+  div:last-of-type {
+    border-bottom: none;
+  }
+}
+.myaccount-info-section {
+  @extend .py-3;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.3);
+  .name {
+    display: flex;
+    color: $cl-mid-gray;
+    font-size: 0.85em;
+    font-weight: 600;
+    flex: 0.6;
+  }
+  .info-container {
+    @extend .cl-dark-text;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 2;
+    .icon-btn {
+      background-color: transparent;
+      outline: none;
+      border: 1px solid transparent;
+      width: 3vw;
+      height: 3vw;
+      border-radius: 1.5vw;
+      &:hover {
+        background-color: rgba($color: $cl-light-gray, $alpha: 0.5);
+      }
+    }
+  }
+}
