@@ -19,10 +19,8 @@ const Home: NextPage = () => {
     );
   }
   return (
-    // <Welcome>
-    // </Welcome>
-    <Dashboard>
-    </Dashboard>
+    <Welcome>
+    </Welcome>
   );
 };
 
