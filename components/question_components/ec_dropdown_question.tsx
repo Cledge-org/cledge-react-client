@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import Dropdown from "react-dropdown";
 import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
-import QuestionSummaryCard from "../../components/question_components/question_summary_card";
 
 interface ECDropDownProps {
   isConcatenable?: boolean;
@@ -23,24 +22,34 @@ export default function ECDropDown({
   placeholder,
 }: ECDropDownProps) {
   const [chosen, setChosen] = useState(isConcatenable ? [] : "");
-  const changeChosen = (value) =>
+  const changeChosen = (value: string) => {
     setChosen((prevChosen) => {
       if (!isConcatenable) {
         return value;
       }
       let prevChosenArr = prevChosen instanceof Array ? prevChosen : [];
       if (prevChosenArr.includes(value)) {
-        prevChosenArr.splice(prevChosen.indexOf(value));
+        prevChosenArr.splice(prevChosen.indexOf(" " + value));
         return prevChosenArr;
       }
-      prevChosenArr.push(value);
+      prevChosenArr.push(" " + value);
       return prevChosenArr;
     });
+  };
+  const itemIsPicked = (itemName: string) => {
+    if (isConcatenable) {
+      return chosen.includes(" " + itemName);
+    }
+    return chosen === itemName;
+  };
   useEffect(() => {
     typeof document !== undefined
       ? require("bootstrap/dist/js/bootstrap")
       : null;
   }, []);
+  useEffect(() => {
+    console.log(chosen);
+  }, [chosen]);
   return (
     <div className="w-100 d-flex flex-column justify-content-evenly">
       <span>Achievements</span>
@@ -56,27 +65,39 @@ export default function ECDropDown({
             ? placeholder
             : !isConcatenable
             ? chosen
-            : chosen.toString().substring(1, chosen.toString().length - 1)}
+            : chosen.toString()}
         </button>
         <ul
           className="dropdown-menu dropdown-menu-end"
           aria-labelledby="ec-dropdown-menu"
         >
           <li
-            onClick={() => changeChosen("Customize")}
-            className="dropdown-item"
+            onClick={() => changeChosen("Customize ")}
+            className={
+              itemIsPicked("Customize")
+                ? "dropdown-item-picked"
+                : "dropdown-item"
+            }
           >
             Customize
           </li>
           <li
             onClick={() => changeChosen("Government")}
-            className="dropdown-item"
+            className={
+              itemIsPicked("Government")
+                ? "dropdown-item-picked"
+                : "dropdown-item"
+            }
           >
             Government
           </li>
           <li
             onClick={() => changeChosen("Children")}
-            className="dropdown-item"
+            className={
+              itemIsPicked("Children")
+                ? "dropdown-item-picked"
+                : "dropdown-item"
+            }
           >
             Children
           </li>

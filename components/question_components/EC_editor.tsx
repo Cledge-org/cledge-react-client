@@ -2,14 +2,22 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
-import QuestionSummaryCard from "../../components/question_components/question_summary_card";
 import ECDropDown from "./ec_dropdown_question";
 import ECTextInputQuestion from "./ec_textinput_question";
 
-export default function ECEditor() {
+interface ECEditorProps {
+  onSave: Function;
+}
+
+export default function ECEditor({ onSave }: ECEditorProps) {
   return (
     <div className="container-fluid h-100 d-flex flex-row align-items-center justify-content-center position-relative">
-      <button className="ec-editor-btn-back">
+      <button
+        onClick={() => {
+          onSave();
+        }}
+        className="ec-editor-btn-back"
+      >
         <FontAwesomeIcon icon={faArrowLeft} color="#000000" />
       </button>
       <div
@@ -22,7 +30,7 @@ export default function ECEditor() {
         >
           Adding a New Experience
         </span>
-        <ECDropDown />
+        <ECDropDown isConcatenable />
         <ECTextInputQuestion />
       </div>
     </div>

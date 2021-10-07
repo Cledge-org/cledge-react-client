@@ -17,7 +17,7 @@ export default function QuestionSubPageHeader({
 }: QuestionSubPageHeaderProps) {
   return (
     <div
-      className="d-flex flex-row justify-content-between align-items-center px-3"
+      className="d-flex flex-row justify-content-between align-items-center px-5 mx-5"
       style={{ height: "15%" }}
     >
       <div className="question-subpage-title">
