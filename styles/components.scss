@@ -15,7 +15,7 @@
   font-size: 2.25em;
 }
 .red-purple-text-gradient {
-  @include gradient-text($fromColor: #ff6060, $toColor: #2651ed);
+  @include gradient-text($fromColor: $cl-red, $toColor: $cl-blue);
 }
 .blue-purple-text-gradient {
   @include gradient-text($fromColor: #3b68df, $toColor: #8d32d4);

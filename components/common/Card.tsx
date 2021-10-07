@@ -11,9 +11,9 @@ export interface CardProps {
 export default function Card({ title, child, url, textGradient }: CardProps) {
   useEffect(() => {}, []);
   return (
-    <div className="col-12 col-md-6 col-lg-4  p-3">
+    <div className="col-12 col-md-6 col-lg-4 p-3">
       <div
-        className="card-container w-100 shadow"
+        className="card-container px-4 w-100 shadow"
         onClick={() => alert(url?.toString())}
       >
         <div

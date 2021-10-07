@@ -13,7 +13,7 @@ const Home: NextPage = () => {
   const { data: session, status } = useSession();
   if (status === "authenticated") {
     return (
-      <Dashboard>
+      <Dashboard name={session.user.name}>
       <p>Signed in as {session.user.email}</p>
       </Dashboard>
     );

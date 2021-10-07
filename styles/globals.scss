@@ -20,6 +20,8 @@ $cl-light-gray: #f2f2f7;
 $cl-mid-gray: #656565;
 $cl-dark-gray: #222222;
 $cl-black: #000000;
+$cl-yellow: #f7bc76;
+$cl-red: #ff6060;
 
 a {
   color: inherit;
@@ -57,6 +59,12 @@ a {
 }
 .cl-black {
   color: $cl-black;
+}
+.cl-yellow {
+  color: $cl-yellow;
+}
+.cl-red {
+  color: $cl-red;
 }
 
 .center-child {
@@ -97,8 +105,6 @@ a {
   background-color: $cl-blue;
   border: 1px solid $cl-blue;
 }
-
-
 
 input[type="text"],
 input[type="email"],
@@ -207,22 +213,20 @@ $spacers: (
   ),
 );
 
-.nav-regular{
+.nav-regular {
   @extend .shadow-sm;
   @extend .navbar-light;
   color: $cl-blue !important;
   background-color: white;
-  
 }
 
-.nav-transparent{
+.nav-transparent {
   @extend .navbar-dark;
   color: white;
-  background-color: transparent
+  background-color: transparent;
 }
 
-
-.landing-update-button{
+.landing-update-button {
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 10px;
   border-width: 0;
@@ -232,40 +236,38 @@ $spacers: (
   max-lines: 1;
   max-width: 75vw;
   transform: translate(-15px, 0);
-  &:hover{
+  &:hover {
     background-color: rgba(255, 255, 255, 0.6);
-    color:black;
+    color: black;
   }
 }
 
-#landing-main{
-  background-image: url('/images/landing_bg.svg');
-  background-position: 'center';
-  background-size: 'cover';
-  background-repeat: 'no-repeat';
-  z-index:999;
+#landing-main {
+  background-image: url("/images/landing_bg.svg");
+  background-position: "center";
+  background-size: "cover";
+  background-repeat: "no-repeat";
+  z-index: 999;
   height: 100%;
   @media (min-width: 992px) {
     height: 100vh;
   }
 }
 
-.feature-tabbar{
+.feature-tabbar {
   border-radius: 10px;
 }
 
-
-
-.feature-tab{
+.feature-tab {
   cursor: pointer;
   padding: 1em;
   margin: 0.5em;
-  border: 2px solid ;
+  border: 2px solid;
   border-radius: 12px;
 }
 
-@include media-breakpoint-up(lg){
-  .feature-tabbar{
+@include media-breakpoint-up(lg) {
+  .feature-tabbar {
     transform: translate(0, -5em);
     margin-bottom: -5em;
   }
