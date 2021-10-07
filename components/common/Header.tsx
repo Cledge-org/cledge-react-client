@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from 'next/router'
 import { useEffect, useState } from "react";
 
-export default function Header({props}) {
+export default function Header() {
   const { data: session, status } = useSession();
   const router = useRouter();
   console.log();
