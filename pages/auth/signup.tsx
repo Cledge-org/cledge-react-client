@@ -1,7 +1,7 @@
 // my accounts page
 import Link from "next/link";
 import { useState } from "react";
-export default function signup() {
+export default function Signup() {
   var [formData, setFormData] = useState({
     firstName: "",
     lastName: "",

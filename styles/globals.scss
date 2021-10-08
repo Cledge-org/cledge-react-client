@@ -102,8 +102,8 @@ a {
 
 .cl-btn-blue {
   @extend .cl-btn;
-  background-color: $cl-blue;
-  color: white;
+  background-color: $cl-blue !important;
+  color: white !important;
   border: 1px solid $cl-blue;
 }
 
