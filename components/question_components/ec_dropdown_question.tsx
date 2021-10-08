@@ -11,15 +11,23 @@ import QuestionSubPageHeader from "../../components/question_components/question
 interface ECDropDownProps {
   isConcatenable?: boolean;
   placeholder: string;
+  forCalendar?: boolean;
+  defaultValue?: string | string[];
+  valuesList: string[];
 }
 const defaultProps: ECDropDownProps = {
   isConcatenable: false,
   placeholder: "Pick some tags...",
+  forCalendar: false,
+  valuesList: ["Sike"],
 };
 
 export default function ECDropDown({
   isConcatenable,
   placeholder,
+  forCalendar,
+  defaultValue,
+  valuesList,
 }: ECDropDownProps) {
   const [chosen, setChosen] = useState(isConcatenable ? [] : "");
   const changeChosen = (value: string) => {
@@ -52,7 +60,7 @@ export default function ECDropDown({
   }, [chosen]);
   return (
     <div className="w-100 d-flex flex-column justify-content-evenly">
-      <span>Achievements</span>
+      {!forCalendar ? <span>Achievements</span> : null}
       <div className="dropdown">
         <button
           className="btn btn-secondary dropdown-toggle"
@@ -61,46 +69,28 @@ export default function ECDropDown({
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
-          {chosen.length === 0
-            ? placeholder
-            : !isConcatenable
-            ? chosen
-            : chosen.toString()}
+          {!forCalendar
+            ? chosen.length === 0
+              ? placeholder
+              : !isConcatenable
+              ? chosen
+              : chosen.toString()
+            : defaultValue}
         </button>
         <ul
           className="dropdown-menu dropdown-menu-end"
           aria-labelledby="ec-dropdown-menu"
         >
-          <li
-            onClick={() => changeChosen("Customize ")}
-            className={
-              itemIsPicked("Customize")
-                ? "dropdown-item-picked"
-                : "dropdown-item"
-            }
-          >
-            Customize
-          </li>
-          <li
-            onClick={() => changeChosen("Government")}
-            className={
-              itemIsPicked("Government")
-                ? "dropdown-item-picked"
-                : "dropdown-item"
-            }
-          >
-            Government
-          </li>
-          <li
-            onClick={() => changeChosen("Children")}
-            className={
-              itemIsPicked("Children")
-                ? "dropdown-item-picked"
-                : "dropdown-item"
-            }
-          >
-            Children
-          </li>
+          {valuesList.map((name) => (
+            <li
+              onClick={() => changeChosen(name)}
+              className={
+                itemIsPicked(name) ? "dropdown-item-picked" : "dropdown-item"
+              }
+            >
+              {name}
+            </li>
+          ))}
         </ul>
       </div>
     </div>

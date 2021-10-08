@@ -2,6 +2,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
+import ECCalendarDropDown from "./ec_calendar_dropdown";
 import ECDropDown from "./ec_dropdown_question";
 import ECTextInputQuestion from "./ec_textinput_question";
 
@@ -32,6 +33,7 @@ export default function ECEditor({ onSave }: ECEditorProps) {
         </span>
         <ECDropDown isConcatenable />
         <ECTextInputQuestion />
+        <ECCalendarDropDown />
       </div>
     </div>
   );
