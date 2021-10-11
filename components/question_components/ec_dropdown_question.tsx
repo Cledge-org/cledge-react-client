@@ -14,12 +14,14 @@ interface ECDropDownProps {
   forCalendar?: boolean;
   defaultValue?: string | string[];
   valuesList: string[];
+  key: String;
 }
 const defaultProps: ECDropDownProps = {
   isConcatenable: false,
   placeholder: "Pick some tags...",
   forCalendar: false,
   valuesList: ["Sike"],
+  key: "",
 };
 
 export default function ECDropDown({
@@ -28,6 +30,7 @@ export default function ECDropDown({
   forCalendar,
   defaultValue,
   valuesList,
+  key,
 }: ECDropDownProps) {
   const [chosen, setChosen] = useState(isConcatenable ? [] : "");
   const changeChosen = (value: string) => {
@@ -59,13 +62,20 @@ export default function ECDropDown({
     console.log(chosen);
   }, [chosen]);
   return (
-    <div className="w-100 d-flex flex-column justify-content-evenly">
-      {!forCalendar ? <span>Achievements</span> : null}
+    <div className="w-100 d-flex flex-column justify-content-evenly pt-5">
+      {!forCalendar ? (
+        <div
+          className="fw-bold cl-dark-text pb-3"
+          style={{ fontSize: "1.4em" }}
+        >
+          Achievements
+        </div>
+      ) : null}
       <div className="dropdown">
         <button
           className="btn btn-secondary dropdown-toggle"
           type="button"
-          id="ec-dropdown"
+          id={"ec-dropdown" + key}
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >

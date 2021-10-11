@@ -76,6 +76,12 @@ a {
   background-color: $cl-light-gray;
   color: $cl-dark-text;
   border: 1px solid $cl-light-gray;
+  &:hover,
+  &:active:hover {
+    font-weight: 500;
+    box-shadow: none;
+    background-color: rgba($color: $cl-light-gray, $alpha: 0.7);
+  }
 }
 
 .cl-btn {

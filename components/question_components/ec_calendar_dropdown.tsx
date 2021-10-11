@@ -70,55 +70,54 @@ export default function ECCalendarDropDown() {
     console.log(chosen);
   }, [chosen]);
   return (
-    <div className="w-100 d-flex flex-column justify-content-evenly">
-      <span>Achievements</span>
-      <div className="dropdown">
-        <button
-          className="btn btn-secondary"
-          type="button"
-          id="ec-dropdown"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <span className="cl-dark-text" style={{ fontWeight: 600 }}>
-            {chosen.toString()}
-          </span>
-          <div style={{ width: "20px" }} className="cl-mid-text">
-            <FontAwesomeIcon icon={faCalendarAlt} />
+    <div className="dropdown">
+      <button
+        className="btn btn-secondary"
+        type="button"
+        id="ec-dropdown-calendar"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        <span className="cl-dark-text" style={{ fontWeight: 600 }}>
+          {chosen.toString()}
+        </span>
+        <div style={{ width: "20px" }} className="cl-mid-text">
+          <FontAwesomeIcon icon={faCalendarAlt} />
+        </div>
+      </button>
+      <div
+        className="dropdown-menu"
+        aria-labelledby="ec-calendar-dropdown-menu"
+      >
+        <div className="d-flex justify-content-center align-items-center">
+          <div className="me-2" style={{ width: "25%" }}>
+            <ECDropDown
+              key={"-months"}
+              forCalendar
+              defaultValue={"October"}
+              valuesList={["October"]}
+            ></ECDropDown>
           </div>
-        </button>
-        <div
-          className="dropdown-menu"
-          aria-labelledby="ec-calendar-dropdown-menu"
-        >
-          <div className="d-flex justify-content-center align-items-center">
-            <div className="me-2" style={{ width: "30%" }}>
-              <ECDropDown
-                forCalendar
-                defaultValue={"October"}
-                valuesList={["October"]}
-              ></ECDropDown>
-            </div>
-            <div className="ms-2" style={{ width: "30%" }}>
-              <ECDropDown
-                forCalendar
-                defaultValue={"2021"}
-                valuesList={["2021", "2022"]}
-              ></ECDropDown>
-            </div>
+          <div className="ms-2" style={{ width: "25%" }}>
+            <ECDropDown
+              forCalendar
+              key={"-years"}
+              defaultValue={"2021"}
+              valuesList={["2021", "2022"]}
+            ></ECDropDown>
           </div>
-          <div className="d-flex flex-column justify-content-evenly align-items-center pt-3">
-            <div className="d-flex w-100 justify-content-evenly align-items-center">
-              <div className="weekday-titles">Mo</div>
-              <div className="weekday-titles">Tu</div>
-              <div className="weekday-titles">We</div>
-              <div className="weekday-titles">Th</div>
-              <div className="weekday-titles">Fr</div>
-              <div className="weekday-titles">Sa</div>
-              <div className="weekday-titles">Su</div>
-            </div>
-            {buildDays()}
+        </div>
+        <div className="d-flex flex-column justify-content-evenly align-items-center pt-3">
+          <div className="d-flex w-100 justify-content-evenly align-items-center">
+            <div className="weekday-titles">Mo</div>
+            <div className="weekday-titles">Tu</div>
+            <div className="weekday-titles">We</div>
+            <div className="weekday-titles">Th</div>
+            <div className="weekday-titles">Fr</div>
+            <div className="weekday-titles">Sa</div>
+            <div className="weekday-titles">Su</div>
           </div>
+          {buildDays()}
         </div>
       </div>
     </div>
