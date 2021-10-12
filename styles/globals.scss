@@ -83,7 +83,17 @@ a {
     background-color: rgba($color: $cl-light-gray, $alpha: 0.7);
   }
 }
-
+.cl-btn-gray-selected {
+  @extend .cl-btn-gray;
+  background-color: $cl-orange;
+  border: 1px solid $cl-orange;
+  &:hover,
+  &:active:hover {
+    font-weight: 500;
+    box-shadow: none;
+    background-color: $cl-light-gray;
+  }
+}
 .cl-btn {
   font-weight: 500;
   @include button-size(

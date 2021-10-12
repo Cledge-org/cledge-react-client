@@ -17,6 +17,7 @@ interface ECCalendarDropDownProps {}
 const defaultProps: ECCalendarDropDownProps = {};
 
 export default function ECTimeFrame() {
+  const [progress, setProgress] = useState("none");
   useEffect(() => {
     typeof document !== undefined
       ? require("bootstrap/dist/js/bootstrap")
@@ -30,19 +31,31 @@ export default function ECTimeFrame() {
       </div>
       <div className="d-flex w-100 flex-row justify-content-between align-items-center pb-3">
         <button
-          className="cl-btn-gray"
+          onClick={() => {
+            setProgress("finished");
+          }}
+          className={
+            progress === "finished" ? "cl-btn-gray-selected" : "cl-btn-gray"
+          }
           style={{ width: "47%", fontSize: "1.1em" }}
         >
           Finished
         </button>
         <button
-          className="cl-btn-gray"
+          onClick={() => {
+            setProgress("ongoing");
+          }}
+          className={
+            progress === "ongoing" ? "cl-btn-gray-selected" : "cl-btn-gray"
+          }
           style={{ width: "47%", fontSize: "1.1em" }}
         >
           Ongoing
         </button>
       </div>
       <ECCalendarDropDown />
+      <div className="py-2" />
+      {progress === "finished" ? <ECCalendarDropDown /> : null}
     </div>
   );
 }

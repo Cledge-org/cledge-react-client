@@ -62,7 +62,13 @@ export default function ECDropDown({
     console.log(chosen);
   }, [chosen]);
   return (
-    <div className="w-100 d-flex flex-column justify-content-evenly pt-5">
+    <div
+      className={
+        !forCalendar
+          ? "w-100 d-flex flex-column justify-content-evenly pt-5"
+          : "w-100 d-flex flex-column justify-content-evenly"
+      }
+    >
       {!forCalendar ? (
         <div
           className="fw-bold cl-dark-text pb-3"
@@ -71,7 +77,7 @@ export default function ECDropDown({
           Achievements
         </div>
       ) : null}
-      <div className="dropdown">
+      <div className={!forCalendar ? "dropdown" : "btn-group"}>
         <button
           className="btn btn-secondary dropdown-toggle"
           type="button"

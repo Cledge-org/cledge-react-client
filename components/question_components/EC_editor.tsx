@@ -42,11 +42,12 @@ export default function ECEditor({ onSave }: ECEditorProps) {
         <ECDropDown isConcatenable key="-tags3" />
         <button
           onClick={() => onSave()}
-          className="cl-btn-blue align-self-center mt-3"
+          className="cl-btn-blue align-self-center mt-5"
+          style={{ transform: "scale(1.2)" }}
         >
           Save
         </button>
-        <div className="py-2" />
+        <div className="py-4" />
       </div>
     </div>
   );

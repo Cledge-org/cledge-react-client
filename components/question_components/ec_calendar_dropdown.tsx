@@ -89,7 +89,7 @@ export default function ECCalendarDropDown() {
         className="dropdown-menu"
         aria-labelledby="ec-calendar-dropdown-menu"
       >
-        <div className="d-flex justify-content-center align-items-center">
+        <div className="d-flex justify-content-center align-items-center pt-2">
           <div className="me-2" style={{ width: "25%" }}>
             <ECDropDown
               key={"-months"}
