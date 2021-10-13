@@ -241,3 +241,15 @@ $spacers: (
     $spacer * 10,
   ),
 );
+.dropdown-container {
+  position: relative;
+  height: 5vh;
+}
+
+.dropdown-menu-custom {
+  position: absolute;
+  top: 130%;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}

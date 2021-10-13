@@ -103,7 +103,7 @@
   }
 }
 //EC Dropdown COMPONENT STYLES -->
-button[type="button"] {
+.ec-dropdown-btn {
   @extend .cl-mid-gray;
   @extend .px-3;
   @extend .py-3;
@@ -131,61 +131,52 @@ button[type="button"] {
     @extend .cl-mid-gray;
   }
 }
-ul[aria-labelledby="ec-dropdown-menu"] {
-  li:first-of-type {
+.ec-dropdown-menu {
+  div:first-of-type {
     border: 1px solid transparent;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
   }
-  li:last-of-type {
+  div:last-of-type {
     border: 1px solid transparent;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
   }
-  padding-top: 0;
-  padding-bottom: 0;
   border: 1px solid transparent;
   border-radius: 10px;
+  right: 0;
   box-shadow: 0px 30px 84px rgba(19, 10, 46, 0.08),
     0px 8px 32px rgba(19, 10, 46, 0.07), 0px 3px 14px rgba(19, 10, 46, 0.03),
     0px 1px 3px rgba(19, 10, 46, 0.13);
   width: fit-content;
-  li[class="dropdown-item"] {
+  background-color: white;
+  .ec-dropdown-item {
     @extend .py-2;
+    @extend .px-3;
     @extend .cl-dark-text;
     font-size: 0.95em;
     font-weight: 500;
     transition: background-color 200ms;
-    &:active {
-      @extend .bg-light-gray;
-    }
     &:hover {
+      @extend .bg-light-gray;
       cursor: pointer;
     }
   }
-  li[class="dropdown-item-picked"] {
+  .ec-dropdown-item-picked {
     @extend .dropdown-item;
+    @extend .px-3;
     @extend .py-2;
     font-size: 0.95em;
     color: white;
     font-weight: 500;
     transition: background-color 200ms;
     background-color: $cl-blue;
-    &:active {
-      color: $cl-blue;
-    }
     &:hover {
+      color: $cl-blue;
       cursor: pointer;
       color: $cl-blue;
     }
   }
-}
-.dropdown-toggle[aria-expanded="true"] .caret {
-  transform: rotate(180deg);
-  transition: all ease 0.5s;
-}
-.dropdown-toggle .caret {
-  transition: all ease 0.5s;
 }
 //EC Text Input COMPONENT STYLES -->
 .ec-text-input {
@@ -242,9 +233,10 @@ ul[aria-labelledby="ec-dropdown-menu"] {
   height: 45px;
   text-align: center;
 }
-div[aria-labelledby="ec-calendar-dropdown-menu"] {
+.ec-calendar-dropdown-menu {
   width: 100%;
   border: 1px solid transparent;
+  background-color: white;
   border-radius: 10px;
   box-shadow: 0px 30px 84px rgba(19, 10, 46, 0.08),
     0px 8px 32px rgba(19, 10, 46, 0.07), 0px 3px 14px rgba(19, 10, 46, 0.03),

@@ -7,16 +7,30 @@ import {
   faSortUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Dropdown from "react-dropdown";
 import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
 import ECDropDown from "./ec_dropdown_question";
 
 interface ECCalendarDropDownProps {}
 const defaultProps: ECCalendarDropDownProps = {};
-
+function useOutsideAlerter(ref, handleClickOutside) {
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref]);
+}
 export default function ECCalendarDropDown() {
   const [chosen, setChosen] = useState(new Date());
+  const [isOpen, setIsOpen] = useState(false);
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef, (event) => {
+    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  });
   const changeChosen = (value: Date) => {
     setChosen(value);
   };
@@ -70,14 +84,8 @@ export default function ECCalendarDropDown() {
     console.log(chosen);
   }, [chosen]);
   return (
-    <div className="dropdown">
-      <button
-        className="btn btn-secondary"
-        type="button"
-        id="ec-dropdown-calendar"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      >
+    <div className="dropdown-container">
+      <button className="ec-dropdown-btn" onClick={() => setIsOpen(!isOpen)}>
         <span className="cl-dark-text" style={{ fontWeight: 600 }}>
           {chosen.toString()}
         </span>
@@ -86,8 +94,9 @@ export default function ECCalendarDropDown() {
         </div>
       </button>
       <div
-        className="dropdown-menu"
-        aria-labelledby="ec-calendar-dropdown-menu"
+        ref={wrapperRef}
+        className="dropdown-menu-custom ec-calendar-dropdown-menu"
+        style={{ display: isOpen ? "flex" : "none" }}
       >
         <div className="d-flex justify-content-center align-items-center pt-2">
           <div className="me-2" style={{ width: "25%" }}>

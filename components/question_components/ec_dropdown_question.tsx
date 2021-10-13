@@ -4,7 +4,7 @@ import {
   faSortUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Dropdown from "react-dropdown";
 import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
 
@@ -23,7 +23,14 @@ const defaultProps: ECDropDownProps = {
   valuesList: ["Sike"],
   key: "",
 };
-
+function useOutsideAlerter(ref, handleClickOutside) {
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref]);
+}
 export default function ECDropDown({
   isConcatenable,
   placeholder,
@@ -33,6 +40,13 @@ export default function ECDropDown({
   key,
 }: ECDropDownProps) {
   const [chosen, setChosen] = useState(isConcatenable ? [] : "");
+  const [isOpen, setIsOpen] = useState(false);
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef, (event) => {
+    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  });
   const changeChosen = (value: string) => {
     setChosen((prevChosen) => {
       if (!isConcatenable) {
@@ -77,14 +91,8 @@ export default function ECDropDown({
           Achievements
         </div>
       ) : null}
-      <div className={!forCalendar ? "dropdown" : "btn-group"}>
-        <button
-          className="btn btn-secondary dropdown-toggle"
-          type="button"
-          id={"ec-dropdown" + key}
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
+      <div className="dropdown-container">
+        <button className="ec-dropdown-btn" onClick={() => setIsOpen(!isOpen)}>
           {!forCalendar
             ? chosen.length === 0
               ? placeholder
@@ -92,22 +100,33 @@ export default function ECDropDown({
               ? chosen
               : chosen.toString()
             : defaultValue}
+          <div
+            // className={
+            //   isExpanded ? "center-child icon-open" : "center-child icon-close"
+            // }
+            style={{ width: "12px", height: "12px" }}
+          >
+            <FontAwesomeIcon icon={faSortDown} />
+          </div>
         </button>
-        <ul
-          className="dropdown-menu dropdown-menu-end"
-          aria-labelledby="ec-dropdown-menu"
+        <div
+          ref={wrapperRef}
+          className="dropdown-menu-custom ec-dropdown-menu"
+          style={{ display: isOpen ? "flex" : "none" }}
         >
           {valuesList.map((name) => (
-            <li
+            <div
               onClick={() => changeChosen(name)}
               className={
-                itemIsPicked(name) ? "dropdown-item-picked" : "dropdown-item"
+                itemIsPicked(name)
+                  ? "ec-dropdown-item-picked"
+                  : "ec-dropdown-item"
               }
             >
               {name}
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
