@@ -58,7 +58,7 @@ export default function ECCalendarDropDown() {
                 chosen.getDay() === copy ? "day-btn-chosen" : "day-btn"
               }
             >
-              {k + 1}
+              {copy}
             </button>
           );
           currDate = new Date(chosen.getFullYear(), chosen.getMonth(), k + 2);

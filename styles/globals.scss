@@ -74,13 +74,12 @@ a {
   @extend .cl-btn;
   color: $cl-dark-text;
   background-color: $cl-light-gray;
-  color: $cl-dark-text;
   border: 1px solid $cl-light-gray;
   &:hover,
   &:active:hover {
-    font-weight: 500;
     box-shadow: none;
-    background-color: rgba($color: $cl-light-gray, $alpha: 0.7);
+    background-color: rgba($color: $cl-light-gray, $alpha: 0.9);
+    border-color: rgba($color: $cl-light-gray, $alpha: 0.9);
   }
 }
 .cl-btn-gray-selected {
@@ -89,7 +88,6 @@ a {
   border: 1px solid $cl-orange;
   &:hover,
   &:active:hover {
-    font-weight: 500;
     box-shadow: none;
     background-color: $cl-light-gray;
   }

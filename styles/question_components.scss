@@ -107,6 +107,38 @@
   @extend .cl-mid-gray;
   @extend .px-3;
   @extend .py-3;
+  .icon-close {
+    animation-name: rotateReverse;
+    animation-duration: 600ms;
+    animation-fill-mode: forwards;
+    transform-origin: 6px 8px;
+  }
+  @keyframes rotateReverse {
+    0% {
+      color: $cl-blue;
+      transform: rotate(180deg);
+    }
+    100% {
+      color: $cl-mid-gray;
+      transform: rotate(0deg);
+    }
+  }
+  @keyframes rotate {
+    0% {
+      color: $cl-mid-gray;
+      transform: rotate(0deg);
+    }
+    100% {
+      color: $cl-blue;
+      transform: rotate(180deg);
+    }
+  }
+  .icon-open {
+    animation-fill-mode: forwards;
+    animation-name: rotate;
+    transform-origin: 6px 8px;
+    animation-duration: 600ms;
+  }
   border: 1px solid $cl-light-gray;
   background-color: $cl-light-gray;
   border-radius: 15px;
@@ -148,7 +180,7 @@
   box-shadow: 0px 30px 84px rgba(19, 10, 46, 0.08),
     0px 8px 32px rgba(19, 10, 46, 0.07), 0px 3px 14px rgba(19, 10, 46, 0.03),
     0px 1px 3px rgba(19, 10, 46, 0.13);
-  width: fit-content;
+  width: 30%;
   background-color: white;
   .ec-dropdown-item {
     @extend .py-2;

@@ -14,6 +14,7 @@ interface ECDropDownProps {
   forCalendar?: boolean;
   defaultValue?: string | string[];
   valuesList: string[];
+  onChange: Function;
   key: String;
 }
 const defaultProps: ECDropDownProps = {
@@ -22,6 +23,7 @@ const defaultProps: ECDropDownProps = {
   forCalendar: false,
   valuesList: ["Sike"],
   key: "",
+  onChange: () => {},
 };
 function useOutsideAlerter(ref, handleClickOutside) {
   useEffect(() => {
@@ -38,6 +40,7 @@ export default function ECDropDown({
   defaultValue,
   valuesList,
   key,
+  onChange,
 }: ECDropDownProps) {
   const [chosen, setChosen] = useState(isConcatenable ? [] : "");
   const [isOpen, setIsOpen] = useState(false);
@@ -101,10 +104,10 @@ export default function ECDropDown({
               : chosen.toString()
             : defaultValue}
           <div
-            // className={
-            //   isExpanded ? "center-child icon-open" : "center-child icon-close"
-            // }
-            style={{ width: "12px", height: "12px" }}
+            className={
+              isOpen ? "center-child icon-open" : "center-child icon-close"
+            }
+            style={{ width: "12px", height: "10px" }}
           >
             <FontAwesomeIcon icon={faSortDown} />
           </div>
@@ -112,15 +115,26 @@ export default function ECDropDown({
         <div
           ref={wrapperRef}
           className="dropdown-menu-custom ec-dropdown-menu"
-          style={{ display: isOpen ? "flex" : "none" }}
+          style={
+            !forCalendar
+              ? { display: isOpen ? "flex" : "none" }
+              : { width: "100%", display: isOpen ? "flex" : "none" }
+          }
         >
           {valuesList.map((name) => (
             <div
-              onClick={() => changeChosen(name)}
+              onClick={() => {
+                changeChosen(name);
+                onChange();
+              }}
               className={
                 itemIsPicked(name)
-                  ? "ec-dropdown-item-picked"
-                  : "ec-dropdown-item"
+                  ? !forCalendar
+                    ? "ec-dropdown-item-picked"
+                    : "ec-dropdown-item-picked center-child"
+                  : !forCalendar
+                  ? "ec-dropdown-item"
+                  : "ec-dropdown-item center-child"
               }
             >
               {name}
