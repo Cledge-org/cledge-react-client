@@ -26,7 +26,7 @@ export default function QuestionECSubpage() {
       />
       <div
         className="d-flex flex-column justify-content-evenly align-self-center"
-        style={{ width: "85%" }}
+        style={{ width: "91%" }}
       >
         <ECQuestionSummaryCard />
       </div>

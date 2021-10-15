@@ -26,6 +26,28 @@ export default function ECCalendarDropDown() {
   const [chosen, setChosen] = useState(new Date());
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  let years = [];
+  useEffect(() => {
+    let yearsList: string[] = [];
+    for (let i = 0; i < 4; i++) {
+      yearsList.push((chosen.getFullYear() - i).toString());
+    }
+    years = yearsList;
+  }, []);
   useOutsideAlerter(wrapperRef, (event) => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
       setIsOpen(false);
@@ -87,7 +109,7 @@ export default function ECCalendarDropDown() {
     <div className="dropdown-container">
       <button className="ec-dropdown-btn" onClick={() => setIsOpen(!isOpen)}>
         <span className="cl-dark-text" style={{ fontWeight: 600 }}>
-          {chosen.toString()}
+          {months[chosen.getMonth()] + " " + chosen.getFullYear()}
         </span>
         <div style={{ width: "20px" }} className="cl-mid-text">
           <FontAwesomeIcon icon={faCalendarAlt} />
@@ -103,16 +125,17 @@ export default function ECCalendarDropDown() {
             <ECDropDown
               key={"-months"}
               forCalendar
-              defaultValue={"October"}
-              valuesList={["October"]}
+              onChange={() => {}}
+              defaultValue={months[chosen.getMonth() - 1]}
+              valuesList={months}
             ></ECDropDown>
           </div>
           <div className="ms-2" style={{ width: "25%" }}>
             <ECDropDown
               forCalendar
               key={"-years"}
-              defaultValue={"2021"}
-              valuesList={["2021", "2022"]}
+              defaultValue={chosen.getFullYear().toString()}
+              valuesList={years}
             ></ECDropDown>
           </div>
         </div>

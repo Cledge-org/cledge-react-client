@@ -8,7 +8,7 @@ export default function QuestionSummarySubpage() {
       <QuestionSubPageHeader title="9th Grade" percentage={67} />
       <div
         className="d-flex flex-column justify-content-evenly align-self-center"
-        style={{ width: "85%" }}
+        style={{ width: "91%" }}
       >
         <span className="pt-3 cl-dark-text fw-bold">
           9th Grade - 1st Quarter Check-in

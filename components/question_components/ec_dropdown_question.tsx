@@ -94,7 +94,7 @@ export default function ECDropDown({
           Achievements
         </div>
       ) : null}
-      <div className="dropdown-container">
+      <div ref={wrapperRef} className="dropdown-container">
         <button className="ec-dropdown-btn" onClick={() => setIsOpen(!isOpen)}>
           {!forCalendar
             ? chosen.length === 0
@@ -113,7 +113,6 @@ export default function ECDropDown({
           </div>
         </button>
         <div
-          ref={wrapperRef}
           className="dropdown-menu-custom ec-dropdown-menu"
           style={
             !forCalendar

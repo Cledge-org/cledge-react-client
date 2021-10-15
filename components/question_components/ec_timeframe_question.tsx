@@ -53,8 +53,16 @@ export default function ECTimeFrame() {
           Ongoing
         </button>
       </div>
+      <div className="cl-mid-gray pb-2" style={{ fontSize: "0.9em" }}>
+        Start:
+      </div>
       <ECCalendarDropDown />
-      <div className="py-2" />
+      {progress === "finished" ? <div className="py-3" /> : null}
+      {progress === "finished" ? (
+        <div className="cl-mid-gray pb-2" style={{ fontSize: "0.9em" }}>
+          Finish:
+        </div>
+      ) : null}
       {progress === "finished" ? <ECCalendarDropDown /> : null}
     </div>
   );

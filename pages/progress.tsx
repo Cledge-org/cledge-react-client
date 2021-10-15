@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown, faSortDown } from "@fortawesome/free-solid-svg-icons";
 import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
@@ -18,15 +18,21 @@ import QuestionECSubpage from "./questionPages/question_ec_subpage";
 export default function Progress() {
   const [currPage, setCurrPage] = useState("all");
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
+  useEffect(() => {
+    console.log(currPage);
+  }, [currPage]);
   return (
-    <div className="container-fluid vh-100 d-flex flex-row px-0">
+    <div
+      className="container-fluid d-flex flex-row px-0"
+      style={{ height: "94vh" }}
+    >
       <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
         <DropDownTab
           isAll
           chunkList={[]}
           onClick={() => setCurrPage("all")}
           title="All Sections"
-          percentComplete={undefined}
+          percentComplete={67}
         />
         <DropDownTab
           chunkList={["Academic Achievement", "Volunteer Experience"]}
@@ -49,7 +55,7 @@ export default function Progress() {
               percentage={67}
               subText="This is just a placeholder"
             />
-            <ul className="nav" role="tablist">
+            <ul className="nav ms-5" role="tablist">
               <TabButton
                 currTab={currAllSectionTab}
                 onClick={setCurrAllSectionTab.bind(this)}
@@ -114,6 +120,9 @@ function DropDownTab({
       <button
         className="progress-dropdown-btn"
         onClick={() => {
+          if (isAll) {
+            onClick();
+          }
           setIsExpanded(!isExpanded);
         }}
       >
