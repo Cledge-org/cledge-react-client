@@ -36,7 +36,7 @@ export default function ECEditor({ onSave }: ECEditorProps) {
           Adding a New Experience
         </span>
         <ECDropDown isConcatenable key="-tags" />
-        <ECTextInputQuestion />
+        <ECTextInputQuestion title="Title" placeholder="Type here..." />
         <ECTimeFrame />
         <ECDropDown isConcatenable key="-tags2" />
         <ECDropDown isConcatenable key="-tags3" />

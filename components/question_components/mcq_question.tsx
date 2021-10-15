@@ -59,7 +59,7 @@ export default function MCQQuestion() {
           Undecided
         </button>
       </div>
-      <button className="general-submit-btn">SUBMIT</button>
+      {/* <button className="general-submit-btn">SUBMIT</button> */}
     </div>
   );
 }

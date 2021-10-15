@@ -22,6 +22,7 @@ const Home: NextPage = () => {
     <Questionnaire></Questionnaire>
     // <Signup></Signup>
     // <Progress></Progress>
+    // <QuestionSummarySubpage></QuestionSummarySubpage>
   );
 };
 

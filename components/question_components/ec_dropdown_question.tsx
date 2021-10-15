@@ -10,6 +10,7 @@ import QuestionSubPageHeader from "../../components/question_components/question
 
 interface ECDropDownProps {
   isConcatenable?: boolean;
+  title: string;
   placeholder: string;
   forCalendar?: boolean;
   defaultValue?: string | string[];
@@ -19,6 +20,7 @@ interface ECDropDownProps {
 }
 const defaultProps: ECDropDownProps = {
   isConcatenable: false,
+  title: "Achievements",
   placeholder: "Pick some tags...",
   forCalendar: false,
   valuesList: ["Sike"],
@@ -35,6 +37,7 @@ function useOutsideAlerter(ref, handleClickOutside) {
 }
 export default function ECDropDown({
   isConcatenable,
+  title,
   placeholder,
   forCalendar,
   defaultValue,
@@ -91,7 +94,7 @@ export default function ECDropDown({
           className="fw-bold cl-dark-text pb-3"
           style={{ fontSize: "1.4em" }}
         >
-          Achievements
+          {title}
         </div>
       ) : null}
       <div ref={wrapperRef} className="dropdown-container">
