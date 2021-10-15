@@ -74,10 +74,24 @@ a {
   @extend .cl-btn;
   color: $cl-dark-text;
   background-color: $cl-light-gray;
-  color: $cl-dark-text;
   border: 1px solid $cl-light-gray;
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+    background-color: rgba($color: $cl-light-gray, $alpha: 0.9);
+    border-color: rgba($color: $cl-light-gray, $alpha: 0.9);
+  }
 }
-
+.cl-btn-gray-selected {
+  @extend .cl-btn-gray;
+  background-color: $cl-orange;
+  border: 1px solid $cl-orange;
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+    background-color: $cl-light-gray;
+  }
+}
 .cl-btn {
   font-weight: 500;
   @include button-size(
@@ -225,3 +239,15 @@ $spacers: (
     $spacer * 10,
   ),
 );
+.dropdown-container {
+  position: relative;
+  height: 5vh;
+}
+
+.dropdown-menu-custom {
+  position: absolute;
+  top: 130%;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}

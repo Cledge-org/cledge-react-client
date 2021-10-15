@@ -17,7 +17,7 @@ export default function QuestionSubPageHeader({
 }: QuestionSubPageHeaderProps) {
   return (
     <div
-      className="d-flex flex-row justify-content-between align-items-center px-5 mx-5"
+      className="d-flex flex-row justify-content-between align-items-center px-3 mx-5"
       style={{ height: "15%" }}
     >
       <div className="question-subpage-title">
@@ -35,6 +35,7 @@ export default function QuestionSubPageHeader({
       ) : (
         <div style={{ width: "10vh" }}>
           <CircularProgressbarWithChildren
+            strokeWidth={10}
             children={
               <div
                 style={{ fontWeight: "bold", fontSize: "1.3em" }}

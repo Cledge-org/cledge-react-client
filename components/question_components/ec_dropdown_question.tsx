@@ -4,24 +4,52 @@ import {
   faSortUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Dropdown from "react-dropdown";
 import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
 
 interface ECDropDownProps {
   isConcatenable?: boolean;
   placeholder: string;
+  forCalendar?: boolean;
+  defaultValue?: string | string[];
+  valuesList: string[];
+  onChange: Function;
+  key: String;
 }
 const defaultProps: ECDropDownProps = {
   isConcatenable: false,
   placeholder: "Pick some tags...",
+  forCalendar: false,
+  valuesList: ["Sike"],
+  key: "",
+  onChange: () => {},
 };
-
+function useOutsideAlerter(ref, handleClickOutside) {
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref]);
+}
 export default function ECDropDown({
   isConcatenable,
   placeholder,
+  forCalendar,
+  defaultValue,
+  valuesList,
+  key,
+  onChange,
 }: ECDropDownProps) {
   const [chosen, setChosen] = useState(isConcatenable ? [] : "");
+  const [isOpen, setIsOpen] = useState(false);
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef, (event) => {
+    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  });
   const changeChosen = (value: string) => {
     setChosen((prevChosen) => {
       if (!isConcatenable) {
@@ -51,57 +79,67 @@ export default function ECDropDown({
     console.log(chosen);
   }, [chosen]);
   return (
-    <div className="w-100 d-flex flex-column justify-content-evenly">
-      <span>Achievements</span>
-      <div className="dropdown">
-        <button
-          className="btn btn-secondary dropdown-toggle"
-          type="button"
-          id="ec-dropdown"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
+    <div
+      className={
+        !forCalendar
+          ? "w-100 d-flex flex-column justify-content-evenly pt-5"
+          : "w-100 d-flex flex-column justify-content-evenly"
+      }
+    >
+      {!forCalendar ? (
+        <div
+          className="fw-bold cl-dark-text pb-3"
+          style={{ fontSize: "1.4em" }}
         >
-          {chosen.length === 0
-            ? placeholder
-            : !isConcatenable
-            ? chosen
-            : chosen.toString()}
+          Achievements
+        </div>
+      ) : null}
+      <div ref={wrapperRef} className="dropdown-container">
+        <button className="ec-dropdown-btn" onClick={() => setIsOpen(!isOpen)}>
+          {!forCalendar
+            ? chosen.length === 0
+              ? placeholder
+              : !isConcatenable
+              ? chosen
+              : chosen.toString()
+            : defaultValue}
+          <div
+            className={
+              isOpen ? "center-child icon-open" : "center-child icon-close"
+            }
+            style={{ width: "12px", height: "10px" }}
+          >
+            <FontAwesomeIcon icon={faSortDown} />
+          </div>
         </button>
-        <ul
-          className="dropdown-menu dropdown-menu-end"
-          aria-labelledby="ec-dropdown-menu"
+        <div
+          className="dropdown-menu-custom ec-dropdown-menu"
+          style={
+            !forCalendar
+              ? { display: isOpen ? "flex" : "none" }
+              : { width: "100%", display: isOpen ? "flex" : "none" }
+          }
         >
-          <li
-            onClick={() => changeChosen("Customize ")}
-            className={
-              itemIsPicked("Customize")
-                ? "dropdown-item-picked"
-                : "dropdown-item"
-            }
-          >
-            Customize
-          </li>
-          <li
-            onClick={() => changeChosen("Government")}
-            className={
-              itemIsPicked("Government")
-                ? "dropdown-item-picked"
-                : "dropdown-item"
-            }
-          >
-            Government
-          </li>
-          <li
-            onClick={() => changeChosen("Children")}
-            className={
-              itemIsPicked("Children")
-                ? "dropdown-item-picked"
-                : "dropdown-item"
-            }
-          >
-            Children
-          </li>
-        </ul>
+          {valuesList.map((name) => (
+            <div
+              onClick={() => {
+                changeChosen(name);
+                onChange();
+              }}
+              className={
+                itemIsPicked(name)
+                  ? !forCalendar
+                    ? "ec-dropdown-item-picked"
+                    : "ec-dropdown-item-picked center-child"
+                  : !forCalendar
+                  ? "ec-dropdown-item"
+                  : "ec-dropdown-item center-child"
+              }
+            >
+              {name}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
