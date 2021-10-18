@@ -30,7 +30,6 @@ export default function login({ providers }: { providers: Provider }) {
             Email address
           </label>
           <input
-            disabled
             value={formData.email}
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
@@ -51,7 +50,6 @@ export default function login({ providers }: { providers: Provider }) {
             Password
           </label>
           <input
-            disabled
             value={formData.password}
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
@@ -79,7 +77,7 @@ export default function login({ providers }: { providers: Provider }) {
         </div>
         <div className="auth-bottom-nav">
           <div className="px-0">
-            <Link href="/auth/signup">
+            <Link href="api/auth/signup">
               <a className="cl-blue">Create Account</a>
             </Link>
           </div>

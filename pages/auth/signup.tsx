@@ -1,7 +1,9 @@
 // my accounts page
 import Link from "next/link";
 import { useState } from "react";
-export default function signup() {
+import { getProviders, signIn } from "next-auth/react";
+import type { Provider } from "next-auth/providers";
+export default function signup({ providers }: { providers: Provider }) {
   var [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -16,8 +18,8 @@ export default function signup() {
   return (
     <div className="container">
       <div className="col-md-5 d-md-flex mx-auto mt-5 flex-column justify-content-center align-middle">
-        <div className="fs-1 fw-bold cl-dark-text">
-          Create your <span className="cl-blue">cledge</span> account
+        <div className="fw-bold cl-dark-text" style={{ fontSize: "2.25em" }}>
+          Create your <span className="cl-blue">cledge.</span> account
         </div>
         <div className="d-flex flex-row justify-content-between align-items-center mx-0 px-0">
           <div className="form-group mt-3 split-input">
@@ -118,10 +120,19 @@ export default function signup() {
             placeholder="Confirm Password"
           />
         </div>
-
+        {Object.values(providers).map((provider) => (
+          <div key={provider.name} className="w-100">
+            <button
+              className="btn btn-light cl-btn shadow-sm my-3 w-100 fw-bold"
+              onClick={() => signIn(provider.id)}
+            >
+              Sign Up with {provider.name}
+            </button>
+          </div>
+        ))}
         <div className="auth-bottom-nav">
           <div className="px-0">
-            <Link href="/auth/login">
+            <Link href="api/auth/login">
               <a className="cl-blue">Already have an Account?</a>
             </Link>
           </div>
