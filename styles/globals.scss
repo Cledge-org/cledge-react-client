@@ -40,6 +40,9 @@ a {
 .bg-light-gray {
   background-color: $cl-light-gray;
 }
+.bg-cl-blue {
+  background-color: $cl-blue;
+}
 .cl-white {
   color: $cl-white;
 }
@@ -252,18 +255,17 @@ $spacers: (
   z-index: 1000;
 }
 
-.nav-regular{
+.nav-regular {
   color: $cl-blue;
-  background-color: white
+  background-color: white;
 }
 
-.nav-transparent{
+.nav-transparent {
   color: white;
-  background-color: transparent
+  background-color: transparent;
 }
 
-
-.landing-update-button{
+.landing-update-button {
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 10px;
   border-width: 0;
@@ -273,8 +275,59 @@ $spacers: (
   max-lines: 1;
   max-width: 75vw;
   transform: translate(-15px, 0);
-  &:hover{
+  &:hover {
     background-color: rgba(255, 255, 255, 0.6);
-    color:black;
+    color: black;
+  }
+}
+
+.myaccount-blob {
+  @extend .px-4;
+  @extend .py-4;
+  @extend .mb-3;
+  border: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.3);
+  border-radius: 20px;
+  height: fit-content;
+  .title {
+    @extend .cl-dark-text;
+    font-size: 1em;
+    font-weight: 600;
+  }
+  div:last-of-type {
+    border-bottom: none;
+  }
+}
+.myaccount-info-section {
+  font-size: 0.9em;
+  @extend .pt-1;
+  @extend .pb-3;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.3);
+  .name {
+    display: flex;
+    color: $cl-mid-gray;
+    font-size: 0.85em;
+    font-weight: 600;
+    flex: 0.8;
+  }
+  .info-container {
+    @extend .cl-dark-text;
+    display: flex;
+    font-weight: 600;
+    align-items: center;
+    justify-content: space-between;
+    flex: 2;
+    .icon-btn {
+      background-color: transparent;
+      outline: none;
+      border: 1px solid transparent;
+      width: 3vw;
+      height: 3vw;
+      border-radius: 1.5vw;
+      &:hover {
+        background-color: rgba($color: $cl-light-gray, $alpha: 0.5);
+      }
+    }
   }
 }
