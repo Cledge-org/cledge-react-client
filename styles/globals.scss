@@ -251,3 +251,30 @@ $spacers: (
   flex-direction: column;
   z-index: 1000;
 }
+
+.nav-regular{
+  color: $cl-blue;
+  background-color: white
+}
+
+.nav-transparent{
+  color: white;
+  background-color: transparent
+}
+
+
+.landing-update-button{
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  border-width: 0;
+  color: black;
+  padding-left: calc(1.5em + 10px);
+  padding-right: 1.5em;
+  max-lines: 1;
+  max-width: 75vw;
+  transform: translate(-15px, 0);
+  &:hover{
+    background-color: rgba(255, 255, 255, 0.6);
+    color:black;
+  }
+}
