@@ -10,7 +10,9 @@ export default function Header({ props }) {
 
   let listener = null;
   const [scrollState, setScrollState] = useState("top");
-  const [colors, setColors] = useState("cl-white");
+  const [colors, setColors] = useState(
+    router.pathname === "/" ? "cl-white" : "cl-blue"
+  );
   var navclass = "";
 
   if (router.pathname == "/welcome") {
@@ -31,7 +33,9 @@ export default function Header({ props }) {
       } else {
         if (scrollState !== "top") {
           setScrollState("top");
-          setColors("cl-white");
+          if (router.pathname === "/") {
+            setColors("cl-white");
+          }
         }
       }
     });

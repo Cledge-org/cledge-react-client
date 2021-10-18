@@ -77,7 +77,7 @@ export default function login({ providers }: { providers: Provider }) {
         </div>
         <div className="auth-bottom-nav">
           <div className="px-0">
-            <Link href="api/auth/signup">
+            <Link href="/auth/signup">
               <a className="cl-blue">Create Account</a>
             </Link>
           </div>

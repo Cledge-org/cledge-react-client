@@ -3,7 +3,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { getProviders, signIn } from "next-auth/react";
 import type { Provider } from "next-auth/providers";
-export default function signup({ providers }: { providers: Provider }) {
+import GoogleProvider from "next-auth/providers/google";
+
+export default function signup() {
   var [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -120,16 +122,15 @@ export default function signup({ providers }: { providers: Provider }) {
             placeholder="Confirm Password"
           />
         </div>
-        {Object.values(providers).map((provider) => (
-          <div key={provider.name} className="w-100">
-            <button
-              className="btn btn-light cl-btn shadow-sm my-3 w-100 fw-bold"
-              onClick={() => signIn(provider.id)}
-            >
-              Sign Up with {provider.name}
-            </button>
-          </div>
-        ))}
+
+        <div key={GoogleProvider.name} className="w-100">
+          <button
+            className="btn btn-light cl-btn shadow-sm my-3 w-100 fw-bold"
+            onClick={() => {}}
+          >
+            Sign Up with {GoogleProvider.name}
+          </button>
+        </div>
         <div className="auth-bottom-nav">
           <div className="px-0">
             <Link href="api/auth/login">
