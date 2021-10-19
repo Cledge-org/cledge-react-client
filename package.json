@@ -19,6 +19,7 @@
     "@reduxjs/toolkit": "^1.6.1",
     "@svgr/webpack": "^5.5.0",
     "@types/react-modal": "^3.12.1",
+    "@types/react-fontawesome": "^1.6.5",
     "bootstrap": "^5.0.0-beta3",
     "dotenv": "^10.0.0",
     "firebase": "^9.0.2",
@@ -34,7 +35,9 @@
     "react-iframe": "^1.8.0",
     "react-modal": "^3.14.3",
     "react-redux": "^7.2.5",
-    "sass": "^1.41.0"
+    "react-slick": "^0.28.1",
+    "sass": "^1.41.0",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@types/react": "17.0.20",

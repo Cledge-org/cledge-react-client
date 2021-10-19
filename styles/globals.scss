@@ -7,8 +7,12 @@ body {
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
   height: 100%;
+  width: 100vw;
 }
-
+div,
+button {
+  font-family: "Montserrat", sans-serif;
+}
 $cl-white: #ffffff;
 $cl-translucent-white: #ffffff66;
 $cl-light-blue: #d9e1fc;
@@ -22,6 +26,8 @@ $cl-dark-gray: #222222;
 $cl-black: #000000;
 $cl-orange: #f7bc76;
 $font-family-base: "Montserrat", sans-serif;
+$cl-yellow: #f7bc76;
+$cl-red: #ff6060;
 
 a {
   color: inherit;
@@ -64,6 +70,12 @@ a {
 }
 .cl-black {
   color: $cl-black;
+}
+.cl-yellow {
+  color: $cl-yellow;
+}
+.cl-red {
+  color: $cl-red;
 }
 
 .center-child {
@@ -257,11 +269,14 @@ $spacers: (
 }
 
 .nav-regular {
-  color: $cl-blue;
+  @extend .shadow-sm;
+  @extend .navbar-light;
+  color: $cl-blue !important;
   background-color: white;
 }
 
 .nav-transparent {
+  @extend .navbar-dark;
   color: white;
   background-color: transparent;
 }
@@ -298,6 +313,7 @@ $spacers: (
     border-bottom: none;
   }
 }
+
 .myaccount-info-section {
   font-size: 0.9em;
   @extend .pt-1;
@@ -330,5 +346,36 @@ $spacers: (
         background-color: rgba($color: $cl-light-gray, $alpha: 0.5);
       }
     }
+  }
+}
+
+#landing-main {
+  background-image: url("/images/landing_bg.svg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 999;
+  height: 100%;
+  @media (min-width: 992px) {
+    height: 100vh;
+  }
+}
+
+.feature-tabbar {
+  border-radius: 10px;
+}
+
+.feature-tab {
+  cursor: pointer;
+  padding: 1em;
+  margin: 0.5em;
+  border: 2px solid;
+  border-radius: 12px;
+}
+
+@include media-breakpoint-up(lg) {
+  .feature-tabbar {
+    transform: translate(0, -5em);
+    margin-bottom: -5em;
   }
 }

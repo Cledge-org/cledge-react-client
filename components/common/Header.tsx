@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-export default function Header({ props }) {
+export default function Header() {
   const { data: session, status } = useSession();
   const router = useRouter();
   console.log();
@@ -20,14 +20,11 @@ export default function Header({ props }) {
   } else {
     navclass = "nav-regular";
   }
+  useEffect(() => {
+    typeof document !== undefined ? require('bootstrap/dist/js/bootstrap') : null
 
-  useEffect(() => {
-    console.log(router.pathname);
-  }, [router]);
-  useEffect(() => {
-    document.removeEventListener("scroll", listener);
-    listener = document.addEventListener("scroll", (e) => {
-      var scrolled = document.scrollingElement.scrollTop;
+    listener = document.addEventListener("scroll", e => {
+      var scrolled = document.scrollingElement.scrollTop
       if (scrolled > 5) {
         if (scrollState !== "scrolling") {
           setScrollState("scrolling");
@@ -74,27 +71,10 @@ export default function Header({ props }) {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon"></span>
+          <div className="navbar-toggler-icon"></div>
         </button>
 
-        <div
-          className="fs-7 collapse navbar-collapse justify-content-end"
-          id="navbarNavAltMarkup"
-        >
-          {/* user authenticated */}
-          <div className="navbar-nav">
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNavAltMarkup"
-              aria-controls="navbarNavAltMarkup"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-
+   
             <div
               className="fs-7 collapse navbar-collapse justify-content-end"
               id="navbarNavAltMarkup"
@@ -158,8 +138,6 @@ export default function Header({ props }) {
               )}
             </div>
           </div>
-        </div>
-      </div>
     </nav>
   );
 }
