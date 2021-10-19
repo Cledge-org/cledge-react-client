@@ -15,7 +15,7 @@ export default function Header({ props }) {
   );
   var navclass = "";
 
-  if (router.pathname == "/welcome") {
+  if (router.pathname == "/") {
     navclass = "position-fixed fixed-top";
   } else {
     navclass = "nav-regular";
@@ -23,6 +23,9 @@ export default function Header({ props }) {
 
   useEffect(() => {
     console.log(router.pathname);
+  }, [router]);
+  useEffect(() => {
+    document.removeEventListener("scroll", listener);
     listener = document.addEventListener("scroll", (e) => {
       var scrolled = document.scrollingElement.scrollTop;
       if (scrolled > 5) {
