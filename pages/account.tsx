@@ -1,11 +1,28 @@
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { GetServerSidePropsContext, NextPage } from "next";
 import { useState } from "react";
 import Modal from "react-modal";
 import TextInputQuestion from "../components/question_components/textinput_question";
+import { NextApplicationPage } from "./_app";
+import { getAccountInfo } from "./api/get-account-info";
 
-// my accounts page
-export default function Account() {
+// account page
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  try {
+    return { props: { accountInfo: await getAccountInfo("testUser") } };
+  } catch (err) {
+    console.log(err);
+    ctx.res.end();
+    return { props: {} as never };
+  }
+};
+
+const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
+  accountInfo,
+}) => {
+  console.log(accountInfo);
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className="container-fluid h-100 center-child">
@@ -111,7 +128,7 @@ export default function Account() {
       </Modal>
     </div>
   );
-}
+};
 interface InfoSectionProps {
   name: string;
   value: any;
@@ -130,4 +147,5 @@ function InfoSection({ name, value, onEdit }: InfoSectionProps) {
     </div>
   );
 }
-Account.requireAuth = false;
+AccountPage.requireAuth = false;
+export default AccountPage;
