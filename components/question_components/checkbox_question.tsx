@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import QuestionSubPageHeader from "./question_subpage_header";
 import QuestionSummaryCard from "./question_summary_card";
 import CheckBox from "../common/CheckBox";
@@ -13,19 +13,12 @@ export default function CheckBoxQuestion({
   valuesList=["Computer Science", "Engineering", "Business", "Pre-Med", "Liberal Arts", "Undecided", "Other"],
   key
 }: CheckBoxQuestionProps) {
-  const [selected, setSelected] = useState([0]);
-  useEffect(() => {
-    console.log(selected);
-  }, [selected]);
+  const [selected, setSelected] = useState([]);
   const changeSelected = (value: number) => {
-    setSelected((selectedCopy): number[] => {
-      if (selectedCopy.includes(value)) {
-        selectedCopy.splice(selectedCopy.indexOf(value), 1);
-      } else {
-        selectedCopy.push(value);
-      }
-      return selectedCopy;
-    });
+    let selectedCopy: number[] = [...selected];
+    if (selectedCopy.includes(value)) selectedCopy.splice(selected.indexOf(value), 1);
+    else selectedCopy.push(value);
+    setSelected(selectedCopy);
   };
   return (
     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
@@ -46,7 +39,7 @@ export default function CheckBoxQuestion({
                 : "checkbox-mcq-variant"
             }
           >
-            {option}
+            {option} {index}
             <CheckBox
               selected={selected.includes(index)}
               setSelected={changeSelected.bind(this)}
