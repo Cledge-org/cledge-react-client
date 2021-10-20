@@ -7,6 +7,7 @@ import styles from "../styles/Home.module.css";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import QuestionSummarySubpage from "./questionPages/question_summary_subpage";
 import Questionnaire from "./questionnaire";
+import QuestionECSubpage from "./questionPages/question_ec_subpage";
 import Progress from "./progress"
 import { useSession } from "next-auth/react";
 import Signup from "./auth/signup";
@@ -22,6 +23,7 @@ const Home: NextPage = () => {
     <Questionnaire></Questionnaire>
     // <Signup></Signup>
     // <Progress></Progress>
+    // <QuestionECSubpage></QuestionECSubpage>
     // <QuestionSummarySubpage></QuestionSummarySubpage>
   );
 };

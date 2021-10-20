@@ -23,7 +23,7 @@ const defaultProps: ECDropDownProps = {
   title: "Achievements",
   placeholder: "Pick some tags...",
   forCalendar: false,
-  valuesList: ["Sike"],
+  valuesList: ["None"],
   key: "",
   onChange: () => {},
 };

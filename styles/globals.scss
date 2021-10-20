@@ -9,6 +9,12 @@ body {
   height: 100%;
 }
 
+#__next,
+#__next > div,
+main {
+  height: 95%;
+}
+
 $cl-white: #ffffff;
 $cl-translucent-white: #ffffff66;
 $cl-light-blue: #d9e1fc;
@@ -197,9 +203,6 @@ a {
     background-color: $cl-light-blue;
   }
 }
-.w-60 {
-  max-width: 60%;
-}
 
 .footer {
   background-color: pink;
@@ -250,4 +253,16 @@ $spacers: (
   display: flex;
   flex-direction: column;
   z-index: 1000;
+}
+
+.questionnaire-container {
+  height: 80%;
+}
+
+.questionnaire-question {
+  transform: scale(0.8, 0.8);
+  -ms-transform: scale(0.8, 0.8); /* IE 9 */
+  -webkit-transform: scale(0.8, 0.8); /* Safari and Chrome */
+  -o-transform: scale(0.8, 0.8); /* Opera */
+  -moz-transform: scale(0.8, 0.8); /* Firefox */
 }
