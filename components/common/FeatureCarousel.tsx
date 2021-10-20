@@ -17,7 +17,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const settings = {
-  dots: true,
   infinite: true,
   speed: 1000,
   slidesToShow: 1,
@@ -40,7 +39,10 @@ export default () => {
   const [index, setIndex] = useState(0);
 
   return (
-    <div className="pt-0 pt-md-4 bg-light-gray">
+    <div
+      className="pt-0 pt-md-4 pb-0"
+      style={{ backgroundColor: "#f5f5f5", height: "90vh" }}
+    >
       <div className="row">
         <div className="shadow-sm text-center col-12 col-md-11 col-lg-9 bg-white rounded-lg feature-tabbar mx-auto">
           <h2 className="pt-3 fs-4 fw-bold">Features</h2>
@@ -84,9 +86,9 @@ export default () => {
           </div>
         </div>
       </div>
-      <Slider className="" {...settings} ref={sliderRef}>
+      <Slider className="pb-0" {...settings} ref={sliderRef}>
         <FeatureCard
-          title={"PERSONALIZATION QUIZES"}
+          title={"PERSONALIZATION QUIZZES"}
           description={
             "Discover schools that match what’s important to you – location, majors, campus life, cost."
           }
@@ -128,7 +130,6 @@ interface FeatureTabProps {
 
 const FeatureTab = ({ icon, title, onClick, curr, index }: FeatureTabProps) => {
   const borderColor = curr == index ? "#2651ed" : "#f2f2f7";
-
   return (
     <div
       className="feature-tab d-flex flex-column justify-content-between"

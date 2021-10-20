@@ -21,11 +21,12 @@ export default function Header() {
     navclass = "nav-regular";
   }
   useEffect(() => {
-    typeof document !== undefined ? require('bootstrap/dist/js/bootstrap') : null
-
-    listener = document.addEventListener("scroll", e => {
-      var scrolled = document.scrollingElement.scrollTop
-      if (scrolled > 5) {
+    typeof document !== undefined
+      ? require("bootstrap/dist/js/bootstrap")
+      : null;
+    listener = document.addEventListener("scroll", (e) => {
+      var scrolled = document.scrollingElement.scrollTop;
+      if (scrolled > 0) {
         if (scrollState !== "scrolling") {
           setScrollState("scrolling");
           setColors("cl-blue");
@@ -56,10 +57,10 @@ export default function Header() {
       <div className="container-fluid">
         <Link href="/">
           <a
-            className={`navbar-brand mx-4 ${colors}`}
+            className={`navbar-brand mx-4`}
             style={{ fontSize: "1.5em", fontWeight: 600 }}
           >
-            cledge.
+            <span className={`${colors}`}>cledge.</span>
           </a>
         </Link>
         <button
@@ -73,71 +74,49 @@ export default function Header() {
         >
           <div className="navbar-toggler-icon"></div>
         </button>
-
-   
-            <div
-              className="fs-7 collapse navbar-collapse justify-content-end"
-              id="navbarNavAltMarkup"
-            >
-              {status === "authenticated" ? (
-                <div className="navbar-nav">
-                  <Link href="/resources">
-                    <a
-                      className={`nav-link ${colors}`}
-                      style={{ fontWeight: 600 }}
-                    >
-                      Resources
-                    </a>
-                  </Link>
-                  <Link href="/progress">
-                    <a
-                      className={`nav-link ${colors}`}
-                      style={{ fontWeight: 600 }}
-                    >
-                      Progress
-                    </a>
-                  </Link>
-                  <Link href="/account">
-                    <a
-                      className={`nav-link ${colors}`}
-                      style={{ fontWeight: 600 }}
-                    >
-                      My Account
-                    </a>
-                  </Link>
-                  <Link href="/api/auth/signout">
-                    <a
-                      className={`nav-link ${colors}`}
-                      style={{ fontWeight: 600 }}
-                      href=""
-                    >
-                      Logout
-                    </a>
-                  </Link>
-                </div>
-              ) : (
-                <div className="navbar-nav">
-                  <Link href="/resources">
-                    <a
-                      className={`nav-link ${colors}`}
-                      style={{ fontWeight: 600 }}
-                    >
-                      Resources
-                    </a>
-                  </Link>
-                  <Link href="/api/auth/signin">
-                    <a
-                      className={`nav-link ${colors}`}
-                      style={{ fontWeight: 600 }}
-                      href=""
-                    >
-                      Log In
-                    </a>
-                  </Link>
-                </div>
-              )}
+        <div
+          className="fs-7 collapse navbar-collapse justify-content-end"
+          id="navbarNavAltMarkup"
+        >
+          {status === "authenticated" ? (
+            <div className="navbar-nav">
+              <Link href="/resources">
+                <a className="nav-link" style={{ fontWeight: 600 }}>
+                  <span className={`${colors}`}>Resources</span>
+                </a>
+              </Link>
+              <Link href="/progress">
+                <a className="nav-link" style={{ fontWeight: 600 }}>
+                  <span className={`${colors}`}>Progress</span>
+                </a>
+              </Link>
+              <Link href="/account">
+                <a className="nav-link" style={{ fontWeight: 600 }}>
+                  <span className={`${colors}`}>My Account</span>
+                </a>
+              </Link>
+              <Link href="/api/auth/signout">
+                <a className="nav-link" style={{ fontWeight: 600 }} href="">
+                  <span className={`${colors}`}>Log Out</span>
+                </a>
+              </Link>
             </div>
-          </div>
+          ) : (
+            <div className="navbar-nav">
+              <Link href="/resources">
+                <a className="nav-link" style={{ fontWeight: 600 }}>
+                  <span className={`${colors}`}>Resources</span>
+                </a>
+              </Link>
+              <Link href="/api/auth/signin">
+                <a className="nav-link" style={{ fontWeight: 600 }} href="">
+                  <span className={`${colors}`}>Log In</span>
+                </a>
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
     </nav>
   );
 }
