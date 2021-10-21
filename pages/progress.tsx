@@ -14,8 +14,22 @@ import CardText from "../components/common/Card_Text";
 import CardCheckIn from "../components/common/Card_CheckIn";
 import QuestionSubPageHeader from "../components/question_components/question_subpage_header";
 import QuestionECSubpage from "./questionPages/question_ec_subpage";
+import { GetServerSidePropsContext } from "next";
+import { getProgressInfo } from "./api/get-progress-info";
+import { NextApplicationPage } from "./_app";
 //profile progress/ question summary page
-export default function Progress() {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  try {
+    return { props: { progressInfo: await getProgressInfo("testUser") } };
+  } catch (err) {
+    console.log(err);
+    ctx.res.end();
+    return { props: {} as never };
+  }
+};
+const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
+  progressInfo,
+}) => {
   const [currPage, setCurrPage] = useState("all");
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
   useEffect(() => {
@@ -99,7 +113,7 @@ export default function Progress() {
       </div>
     </div>
   );
-}
+};
 
 function DropDownTab({
   chunkList,

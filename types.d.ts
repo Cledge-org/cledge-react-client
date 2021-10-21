@@ -8,6 +8,10 @@ interface AccountInfo {
 interface UserProgress {
   responses: any[];
 }
+interface ProgressInfo {
+  userProgress: UserProgress;
+  questionData: QuestionHierarchy;
+}
 interface QuestionHierarchy {
   questionList: QuestionList[];
 }
@@ -18,7 +22,7 @@ interface QuestionChunk {
   title: string;
   questions: string[];
 }
-interface CardData {
+interface ResourcesInfo {
   videoList: CardVideo[];
   articles: CardArticle[];
   resources: CardResource[];

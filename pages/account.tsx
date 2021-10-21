@@ -22,7 +22,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
   accountInfo,
 }) => {
-  console.log(accountInfo);
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className="container-fluid h-100 center-child">
@@ -60,21 +59,21 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
           </div>
           <InfoSection
             name="NAME"
-            value="John Cena"
+            value={accountInfo.name}
             onEdit={() => {
               setModalOpen(true);
             }}
           />
           <InfoSection
             name="BIRTHDAY"
-            value="2021-09-13"
+            value={accountInfo.birthday}
             onEdit={() => {
               setModalOpen(true);
             }}
           />
           <InfoSection
             name="ADDRESS"
-            value="null"
+            value={accountInfo.address}
             onEdit={() => {
               setModalOpen(true);
             }}
@@ -91,7 +90,7 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
           <span className="title">Contact Info</span>
           <InfoSection
             name="Email"
-            value="yousefgomaa@hotmail.com"
+            value={accountInfo.email}
             onEdit={() => {
               setModalOpen(true);
             }}
@@ -101,7 +100,7 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
           <span className="title">Academic Info</span>
           <InfoSection
             name="Grade"
-            value="10"
+            value={accountInfo.grade}
             onEdit={() => {
               setModalOpen(true);
             }}
