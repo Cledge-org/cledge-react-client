@@ -35,6 +35,32 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
   useEffect(() => {
     console.log(currPage);
   }, [currPage]);
+  const isNotEmpty = (element: any) => {
+    return element !== null && element !== "" && element !== [];
+  };
+  const calculatePercentComplete = (chunks: QuestionChunk[]): number => {
+    let total: number = 0;
+    let finished: number = 0;
+    chunks.map((chunk) => {
+      total += chunk.questions.length;
+      chunk.questions.forEach((question) => {
+        let userQuestionIds: string[] = progressInfo.userProgress.responses.map(
+          ({ questionId }) => questionId
+        );
+        if (
+          userQuestionIds.includes(question.id) &&
+          isNotEmpty(
+            progressInfo.userProgress.responses[
+              userQuestionIds.indexOf(question.id)
+            ].response
+          )
+        ) {
+          finished++;
+        }
+      });
+    });
+    return Math.round((finished / total) * 100);
+  };
   return (
     <div
       className="container-fluid d-flex flex-row px-0"
@@ -48,18 +74,16 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
           title="All Sections"
           percentComplete={67}
         />
-        <DropDownTab
-          chunkList={["Academic Achievement", "Volunteer Experience"]}
-          onClick={() => setCurrPage("test")}
-          title="Extracurricular"
-          percentComplete={67}
-        />
-        <DropDownTab
-          chunkList={["Academic Achievement", "Volunteer Experience"]}
-          onClick={() => setCurrPage("extracurricular")}
-          title="Extracurricular"
-          percentComplete={67}
-        />
+        {progressInfo.questionData.questionList.map((list) => {
+          return (
+            <DropDownTab
+              chunkList={list.chunks.map((chunk) => chunk.title)}
+              onClick={() => setCurrPage(list.title)}
+              title={list.title}
+              percentComplete={calculatePercentComplete(list.chunks)}
+            />
+          );
+        })}
       </div>
       <div className="d-flex" style={{ flex: 3 }}>
         {currPage === "all" ? (
@@ -89,26 +113,29 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                     : "resources-tab-pane"
                 }
                 id="resources"
-              >
-                <CardCheckIn
-                  url={undefined}
-                  title="Junior Developers"
-                  textGradient="light"
-                  snippet={""}
-                />
-                <CardCheckIn
-                  url={undefined}
-                  title="Junior Developers"
-                  textGradient="light"
-                  snippet={""}
-                />
-              </div>
+              ></div>
             </div>
           </div>
-        ) : currPage === "test" ? (
-          <QuestionSummaryPage />
         ) : (
-          <QuestionECSubpage />
+          progressInfo.questionData.questionList.map((list) => {
+            if (list.title === "Extracurriculars") {
+              return (
+                <QuestionECSubpage
+                  isShowing={currPage === list.title}
+                  chunks={list.chunks}
+                />
+              );
+            }
+            return (
+              <QuestionSummaryPage
+                isShowing={currPage === list.title}
+                listTitle={list.title}
+                chunks={list.chunks}
+                userAnswers={progressInfo.userProgress}
+                percentComplete={calculatePercentComplete(list.chunks)}
+              />
+            );
+          })
         )}
       </div>
     </div>
@@ -186,3 +213,4 @@ function DropDownTab({
 }
 
 Progress.requireAuth = false;
+export default Progress;

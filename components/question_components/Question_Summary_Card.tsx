@@ -6,12 +6,21 @@ import MCQQuestion from "./mcq_question";
 import CheckBoxQuestion from "./checkbox_question";
 import TextInputQuestion from "./textinput_question";
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
-export default function QuestionSummaryCard() {
+
+interface QuestionSummaryCardProps {
+  question: Question;
+  userAnswer: string;
+}
+
+export default function QuestionSummaryCard({
+  question,
+  userAnswer,
+}: QuestionSummaryCardProps) {
   const [displayingQuestion, setDisplayingQuestion] = useState(false);
   return (
     <div className="w-100 d-flex flex-column justify-content-evenly qsummary-card-container mt-3">
       <div className="d-flex justify-content-between align-items-center px-4 pt-3 question-text">
-        What Grade are you in?
+        {question.question}
         <button className="icon-btn center-child">
           <div
             onClick={() => {
@@ -23,7 +32,7 @@ export default function QuestionSummaryCard() {
           </div>
         </button>
       </div>
-      <span className="ps-4 pb-4">11</span>
+      <span className="ps-4 pb-4">{userAnswer}</span>
       <Modal
         style={{
           content: {

@@ -3,10 +3,20 @@ import ECQuestionSummaryCard from "../../components/question_components/ec_quest
 import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
 import QuestionSummaryCard from "../../components/question_components/question_summary_card";
 import ECEditor from "../../components/question_components/ec_editor";
+interface QuestionECSubpageProps {
+  chunks: QuestionChunk[];
+  isShowing: boolean;
+}
 
-export default function QuestionECSubpage() {
+export default function QuestionECSubpage({
+  chunks,
+  isShowing,
+}: QuestionECSubpageProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  if (!isShowing) {
+    return null;
+  }
   return isAdding || isEditing ? (
     <ECEditor
       onSave={() => {
