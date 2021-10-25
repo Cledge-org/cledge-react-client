@@ -12,7 +12,13 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
 export async function getProgressInfo(userId: string): Promise<ProgressInfo> {
   const dummyData: Promise<ProgressInfo> = Promise.resolve({
-    userProgress: { responses: [{ questionId: "JohnCena", response: "11" }] },
+    userProgress: {
+      responses: [
+        { questionId: "JohnCena", response: "11" },
+        { questionId: "TheChosenOne", response: "SOC" },
+        { questionId: "ThePickedOne", response: ["SOC", "Computers"] },
+      ],
+    },
     questionData: {
       questionList: [
         {
@@ -25,6 +31,28 @@ export async function getProgressInfo(userId: string): Promise<ProgressInfo> {
                   question: "How Old Are YOU?",
                   type: "TextInput",
                   id: "JohnCena",
+                },
+                {
+                  question: "Choose the correct answer",
+                  type: "MCQ",
+                  data: [
+                    { op: "Computers", tag: "Computers" },
+                    { op: "Things", tag: "Things" },
+                    { op: "SOC", tag: "SOC" },
+                    { op: "CPU", tag: "CPU" },
+                  ],
+                  id: "TheChosenOne",
+                },
+                {
+                  question: "Choose the correct answer",
+                  type: "CheckBox",
+                  data: [
+                    { op: "Computers", tag: "Computers" },
+                    { op: "Things", tag: "Things" },
+                    { op: "SOC", tag: "SOC" },
+                    { op: "CPU", tag: "CPU" },
+                  ],
+                  id: "ThePickedOne",
                 },
               ],
             },
