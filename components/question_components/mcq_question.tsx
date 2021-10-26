@@ -6,15 +6,17 @@ interface MCQProps {
   title?: string;
   defaultValue?: string;
   valuesList?: string[];
+  onChange: Function;
   key?: any;
 }
 export default function MCQQuestion({
   title=undefined,
-  defaultValue,
+  defaultValue=null,
   valuesList=["Computer Science", "Engineering", "Business", "Pre-Med", "Liberal Arts", "Undecided", "Other"],
+  onChange,
   key
 }: MCQProps) {
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState(defaultValue);
   return (
     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
       {typeof title !== 'undefined' &&
@@ -23,12 +25,11 @@ export default function MCQQuestion({
         </span>
       }
       <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
-        {valuesList.map((option, index) => (
+        {valuesList.map((option) => (
           <button
-            onClick={() => setSelected(index)}
-            className={
-              selected === index ? "mcq-answer-btn-selected" : "mcq-answer-btn"
-            }
+            key={option}
+            onClick={() => {setSelected(option); onChange(option)}}
+            className={ selected === option ? "mcq-answer-btn-selected" : "mcq-answer-btn" }
           >
             {option}
           </button>

@@ -127,8 +127,9 @@ export default function ECDropDown({
             <div
               onClick={() => {
                 changeChosen(name);
-                onChange();
+                onChange(name);
               }}
+              key={name}
               className={
                 itemIsPicked(name)
                   ? !forCalendar

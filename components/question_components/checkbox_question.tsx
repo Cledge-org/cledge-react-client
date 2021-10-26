@@ -6,19 +6,24 @@ import CheckBox from "../common/CheckBox";
 interface CheckBoxQuestionProps {
   title?: string;
   valuesList?: string[];
+  defaultSelected?: string[];
+  onChange: Function;
   key?: any;
 }
 export default function CheckBoxQuestion({
   title=undefined,
   valuesList=["Computer Science", "Engineering", "Business", "Pre-Med", "Liberal Arts", "Undecided", "Other"],
+  defaultSelected=[],
+  onChange,
   key
 }: CheckBoxQuestionProps) {
-  const [selected, setSelected] = useState([]);
-  const changeSelected = (value: number) => {
-    let selectedCopy: number[] = [...selected];
+  const [selected, setSelected] = useState(defaultSelected);
+  const changeSelected = (value: string) => {
+    let selectedCopy: string[] = [...selected];
     if (selectedCopy.includes(value)) selectedCopy.splice(selected.indexOf(value), 1);
     else selectedCopy.push(value);
     setSelected(selectedCopy);
+    onChange(selectedCopy);
   };
   return (
     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
@@ -29,19 +34,19 @@ export default function CheckBoxQuestion({
       }
 
       <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
-        {valuesList.map((option, index) => (
+        {valuesList.map((option) => (
           <button
-            key={index}
-            onClick={() => changeSelected(index)}
+            key={option}
+            onClick={() => changeSelected(option)}
             className={
-              selected.includes(index)
+              selected.includes(option)
                 ? "checkbox-mcq-variant-selected"
                 : "checkbox-mcq-variant"
             }
           >
-            {option} {index}
+            {option}
             <CheckBox
-              selected={selected.includes(index)}
+              selected={selected.includes(option)}
               setSelected={changeSelected.bind(this)}
             />
           </button>

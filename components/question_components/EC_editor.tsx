@@ -8,10 +8,11 @@ import ECTextInputQuestion from "./ec_textinput_question";
 import ECTimeFrame from "./ec_timeframe_question";
 
 interface ECEditorProps {
+  title?: string;
   onSave: Function;
 }
 
-export default function ECEditor({ onSave }: ECEditorProps) {
+export default function ECEditor({ title="Adding a New Experience", onSave }: ECEditorProps) {
   return (
     <div
       className="container-fluid h-100 d-flex flex-row align-items-center justify-content-center position-relative"
@@ -33,7 +34,7 @@ export default function ECEditor({ onSave }: ECEditorProps) {
           className="cl-dark-text"
           style={{ fontSize: "1.8em", fontWeight: 800 }}
         >
-          Adding a New Experience
+          {title}
         </span>
         <ECDropDown isConcatenable key="-tags" />
         <ECTextInputQuestion title="Title" placeholder="Type here..." />

@@ -6,6 +6,7 @@ interface SliderProps {
     max: string;
     displayValue?: string;
     step?: string;
+    plus?: boolean;
     onChange: Function;
 }
 export default function Slider({
@@ -14,6 +15,7 @@ export default function Slider({
     max,
     displayValue = min,
     step = "1",
+    plus = false,
     onChange,
 }: SliderProps) {
   var [sliderData, setSliderData] = useState(displayValue);
@@ -34,7 +36,7 @@ export default function Slider({
           defaultValue={displayValue}
           onChange={(e) => {onChange(e); setSliderData(e.target.value)}} />
         <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-          {sliderData}
+          {sliderData}{plus && sliderData == max && "+"}
         </span>
     </div>
   );
