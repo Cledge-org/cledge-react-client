@@ -14,6 +14,7 @@ interface ECDropDownProps {
   forCalendar?: boolean;
   defaultValue?: string | string[];
   valuesList: string[];
+  questionTitle: string;
   onChange: Function;
   key: String;
 }
@@ -23,6 +24,7 @@ const defaultProps: ECDropDownProps = {
   forCalendar: false,
   valuesList: ["Sike"],
   key: "",
+  questionTitle: "",
   onChange: () => {},
 };
 function useOutsideAlerter(ref, handleClickOutside) {
@@ -40,6 +42,7 @@ export default function ECDropDown({
   defaultValue,
   valuesList,
   key,
+  questionTitle,
   onChange,
 }: ECDropDownProps) {
   const [chosen, setChosen] = useState(isConcatenable ? [] : "");
@@ -91,7 +94,7 @@ export default function ECDropDown({
           className="fw-bold cl-dark-text pb-3"
           style={{ fontSize: "1.4em" }}
         >
-          Achievements
+          {questionTitle}
         </div>
       ) : null}
       <div ref={wrapperRef} className="dropdown-container">

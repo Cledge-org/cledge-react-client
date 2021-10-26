@@ -4,13 +4,15 @@ import QuestionSubPageHeader from "../../components/question_components/question
 import QuestionSummaryCard from "../../components/question_components/question_summary_card";
 import ECEditor from "../../components/question_components/ec_editor";
 interface QuestionECSubpageProps {
-  chunks: QuestionChunk[];
+  userECResponses: any[];
   isShowing: boolean;
+  chunk: QuestionChunk;
 }
 
 export default function QuestionECSubpage({
-  chunks,
+  userECResponses,
   isShowing,
+  chunk,
 }: QuestionECSubpageProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -23,6 +25,7 @@ export default function QuestionECSubpage({
         setIsAdding(false);
         setIsEditing(false);
       }}
+      chunkQuestions={chunk.questions}
     />
   ) : (
     <div className="container-fluid h-100 d-flex flex-column">
@@ -32,13 +35,23 @@ export default function QuestionECSubpage({
           setIsAdding(true);
         }}
         title="Academic Achievement"
-        percentage={67}
+        percentage={undefined}
       />
       <div
         className="d-flex flex-column justify-content-evenly align-self-center"
         style={{ width: "91%" }}
       >
-        <ECQuestionSummaryCard />
+        {userECResponses.map((response) => {
+          return (
+            <ECQuestionSummaryCard
+              response={response}
+              chunkQuestions={chunk.questions}
+              onClick={() => {
+                setIsEditing(true);
+              }}
+            />
+          );
+        })}
       </div>
     </div>
   );

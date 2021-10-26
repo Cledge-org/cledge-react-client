@@ -56,4 +56,5 @@ interface Question {
   helpVid?: string;
   helpText?: string;
   data?: any[];
+  isConcatenable?: boolean;
 }

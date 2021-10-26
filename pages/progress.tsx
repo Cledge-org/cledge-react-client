@@ -77,8 +77,9 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
         {progressInfo.questionData.questionList.map((list) => {
           return (
             <DropDownTab
+              isExtracurricular={list.title === "Extracurriculars"}
               chunkList={list.chunks.map((chunk) => chunk.title)}
-              onClick={() => setCurrPage(list.title)}
+              onClick={(chunk) => setCurrPage(chunk ?? list.title)}
               title={list.title}
               percentComplete={calculatePercentComplete(list.chunks)}
             />
@@ -117,25 +118,41 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
             </div>
           </div>
         ) : (
-          progressInfo.questionData.questionList.map((list) => {
-            if (list.title === "Extracurriculars") {
-              return (
-                <QuestionECSubpage
-                  isShowing={currPage === list.title}
-                  chunks={list.chunks}
-                />
-              );
-            }
-            return (
-              <QuestionSummaryPage
-                isShowing={currPage === list.title}
-                listTitle={list.title}
-                chunks={list.chunks}
-                userAnswers={progressInfo.userProgress}
-                percentComplete={calculatePercentComplete(list.chunks)}
-              />
-            );
-          })
+          progressInfo.questionData.questionList
+            .map((list) => {
+              if (list.title !== "Extracurriculars") {
+                return (
+                  <QuestionSummaryPage
+                    isShowing={currPage === list.title}
+                    listTitle={list.title}
+                    chunks={list.chunks}
+                    userAnswers={progressInfo.userProgress}
+                    percentComplete={calculatePercentComplete(list.chunks)}
+                  />
+                );
+              }
+            })
+            .concat(
+              progressInfo.questionData.questionList
+                .find(({ title }) => title === "Extracurriculars")
+                .chunks.map((chunk) => {
+                  return (
+                    <QuestionECSubpage
+                      userECResponses={
+                        progressInfo.userProgress.responses.find(
+                          ({ questionId }) => questionId === chunk.title
+                        ) !== undefined
+                          ? progressInfo.userProgress.responses.find(
+                              ({ questionId }) => questionId === chunk.title
+                            ).response
+                          : []
+                      }
+                      chunk={chunk}
+                      isShowing={currPage === chunk.title}
+                    />
+                  );
+                })
+            )
         )}
       </div>
     </div>
@@ -148,12 +165,14 @@ function DropDownTab({
   percentComplete,
   isAll,
   onClick,
+  isExtracurricular,
 }: {
   chunkList: Array<any>;
   title: string;
   isAll?: boolean;
   percentComplete: number;
   onClick: Function;
+  isExtracurricular?: boolean;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
@@ -194,6 +213,10 @@ function DropDownTab({
         {chunkList.map((chunkTitle: string) => (
           <button
             onClick={() => {
+              if (isExtracurricular) {
+                onClick(chunkTitle);
+                return;
+              }
               onClick();
             }}
             className="progress-dropdown-menu-btn"

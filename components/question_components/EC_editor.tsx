@@ -9,9 +9,10 @@ import ECTimeFrame from "./ec_timeframe_question";
 
 interface ECEditorProps {
   onSave: Function;
+  chunkQuestions: Question[];
 }
 
-export default function ECEditor({ onSave }: ECEditorProps) {
+export default function ECEditor({ onSave, chunkQuestions }: ECEditorProps) {
   return (
     <div
       className="container-fluid h-100 d-flex flex-row align-items-center justify-content-center position-relative"
@@ -35,11 +36,28 @@ export default function ECEditor({ onSave }: ECEditorProps) {
         >
           Adding a New Experience
         </span>
-        <ECDropDown isConcatenable key="-tags" />
-        <ECTextInputQuestion />
-        <ECTimeFrame />
-        <ECDropDown isConcatenable key="-tags2" />
-        <ECDropDown isConcatenable key="-tags3" />
+        {chunkQuestions.map(({ question, type, id, isConcatenable, data }) => {
+          if (type === "ECDropDown") {
+            return (
+              <ECDropDown
+                isConcatenable={isConcatenable}
+                valuesList={data}
+                key={id}
+                questionTitle={question}
+                defaultValue={""}
+              />
+            );
+          }
+          if (type === "ECTextInput") {
+            return (
+              <ECTextInputQuestion questionTitle={question} userResponse={""} />
+            );
+          }
+          if (type === "ECTimeFrame") {
+            return <ECTimeFrame />;
+          }
+          return null;
+        })}
         <button
           onClick={() => onSave()}
           className="cl-btn-blue align-self-center mt-5"

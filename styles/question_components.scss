@@ -257,6 +257,11 @@
     @extend .cl-dark-text;
   }
 }
+.ecsummary-info-container {
+  div:last-of-type {
+    border-bottom: none;
+  }
+}
 //EC Calendar Drop Down COMPONENT STYLES -->
 .day-btn {
   @extend .center-child;

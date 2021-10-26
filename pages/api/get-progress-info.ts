@@ -17,6 +17,16 @@ export async function getProgressInfo(userId: string): Promise<ProgressInfo> {
         { questionId: "JohnCena", response: "11" },
         { questionId: "TheChosenOne", response: "SOC" },
         { questionId: "ThePickedOne", response: ["SOC", "Computers"] },
+        {
+          questionId: "Academic Achievement",
+          response: [
+            [
+              { questionId: "Breh", response: "Hello There" },
+              { questionId: "Breh2", response: "Children, Government" },
+            ],
+            [],
+          ],
+        },
       ],
     },
     questionData: {
@@ -63,7 +73,10 @@ export async function getProgressInfo(userId: string): Promise<ProgressInfo> {
           chunks: [
             {
               title: "Academic Achievement",
-              questions: [{ question: "", type: "", id: "JohnCena" }],
+              questions: [
+                { question: "Title", type: "ECTextInput", id: "Breh" },
+                { question: "Tags", type: "ECDropDown", id: "Breh2" },
+              ],
             },
           ],
         },
