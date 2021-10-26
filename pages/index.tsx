@@ -18,13 +18,8 @@ const Home: NextPage = () => {
     return <p>Signed in as {session.user.email}</p>;
   }
   return (
-    // <Welcome>
-    // </Welcome>
-    // <Signup></Signup>
-    // <Progress></Progress>
-    <Questionnaire></Questionnaire>
-    // <QuestionECSubpage></QuestionECSubpage>
-    // <QuestionSummarySubpage></QuestionSummarySubpage>
+    <Welcome>
+    </Welcome>
   );
 };
 
