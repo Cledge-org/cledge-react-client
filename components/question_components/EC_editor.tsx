@@ -1,4 +1,4 @@
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faUnderline } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import QuestionSubPageHeader from "./question_subpage_header";
@@ -10,9 +10,19 @@ import ECTimeFrame from "./ec_timeframe_question";
 interface ECEditorProps {
   onSave: Function;
   chunkQuestions: Question[];
+  userResponses: any[];
+  isEditing: boolean;
+  index: number;
 }
 
-export default function ECEditor({ onSave, chunkQuestions }: ECEditorProps) {
+export default function ECEditor({
+  onSave,
+  chunkQuestions,
+  isEditing,
+  userResponses,
+  index,
+}: ECEditorProps) {
+  console.log(userResponses[index]);
   return (
     <div
       className="container-fluid h-100 d-flex flex-row align-items-center justify-content-center position-relative"
@@ -34,7 +44,7 @@ export default function ECEditor({ onSave, chunkQuestions }: ECEditorProps) {
           className="cl-dark-text"
           style={{ fontSize: "1.8em", fontWeight: 800 }}
         >
-          Adding a New Experience
+          {isEditing ? "Editing Experience" : "Adding a New Experience"}
         </span>
         {chunkQuestions.map(({ question, type, id, isConcatenable, data }) => {
           if (type === "ECDropDown") {
@@ -44,13 +54,34 @@ export default function ECEditor({ onSave, chunkQuestions }: ECEditorProps) {
                 valuesList={data}
                 key={id}
                 questionTitle={question}
-                defaultValue={""}
+                defaultValue={
+                  isEditing &&
+                  userResponses[index].find(
+                    ({ questionId }) => questionId === id
+                  ) !== undefined
+                    ? userResponses[index].find(
+                        ({ questionId }) => questionId === id
+                      ).response
+                    : []
+                }
               />
             );
           }
           if (type === "ECTextInput") {
             return (
-              <ECTextInputQuestion questionTitle={question} userResponse={""} />
+              <ECTextInputQuestion
+                questionTitle={question}
+                userResponse={
+                  isEditing &&
+                  userResponses[index].find(
+                    ({ questionId }) => questionId === id
+                  ) !== undefined
+                    ? userResponses[index].find(
+                        ({ questionId }) => questionId === id
+                      ).response
+                    : ""
+                }
+              />
             );
           }
           if (type === "ECTimeFrame") {

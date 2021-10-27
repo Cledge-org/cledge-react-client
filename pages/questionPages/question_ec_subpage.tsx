@@ -16,16 +16,20 @@ export default function QuestionECSubpage({
 }: QuestionECSubpageProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [currECIndex, setCurrECIndex] = useState(userECResponses.length);
   if (!isShowing) {
     return null;
   }
   return isAdding || isEditing ? (
     <ECEditor
+      index={currECIndex}
+      isEditing={isEditing}
       onSave={() => {
         setIsAdding(false);
         setIsEditing(false);
       }}
       chunkQuestions={chunk.questions}
+      userResponses={userECResponses}
     />
   ) : (
     <div className="container-fluid h-100 d-flex flex-column">
@@ -41,12 +45,13 @@ export default function QuestionECSubpage({
         className="d-flex flex-column justify-content-evenly align-self-center"
         style={{ width: "91%" }}
       >
-        {userECResponses.map((response) => {
+        {userECResponses.map((response, index) => {
           return (
             <ECQuestionSummaryCard
               response={response}
               chunkQuestions={chunk.questions}
               onClick={() => {
+                setCurrECIndex(index);
                 setIsEditing(true);
               }}
             />

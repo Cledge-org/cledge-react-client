@@ -99,7 +99,7 @@ export default function ECDropDown({
       ) : null}
       <div ref={wrapperRef} className="dropdown-container">
         <button className="ec-dropdown-btn" onClick={() => setIsOpen(!isOpen)}>
-          {!forCalendar
+          {!forCalendar && (defaultValue === "" || defaultValue === [])
             ? chosen.length === 0
               ? placeholder
               : !isConcatenable

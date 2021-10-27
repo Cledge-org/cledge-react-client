@@ -22,7 +22,7 @@ export async function getProgressInfo(userId: string): Promise<ProgressInfo> {
           response: [
             [
               { questionId: "Breh", response: "Hello There" },
-              { questionId: "Breh2", response: "Children, Government" },
+              { questionId: "Breh2", response: ["Children", "Government"] },
             ],
             [],
           ],
