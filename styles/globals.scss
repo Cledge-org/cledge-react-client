@@ -283,7 +283,12 @@ $spacers: (
 }
 
 .landing-update-button {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.3
+  ); //why is the bg-colour not visible??
   border-radius: 10px;
   border-width: 0;
   color: black;

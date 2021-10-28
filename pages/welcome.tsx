@@ -11,10 +11,10 @@ import WaitlistForm from "../components/common/WaitlistForm";
 export default function Welcome(props) {
   return (
     <div
-      className="container-fluid ps-0 p-0 pe-0"
+      className="container-fluid ps-0 p-0 pe-0" //After removing ps-0 p-0 pe-0, why does it have padding?
       style={{
         overflow: "hidden",
-        transform: "translate(0,0)",
+        transform: "translate(0,0)", //what is the use of translate here??
       }}
     >
       <div className="row align-items-center m-0" id="landing-main">
