@@ -380,3 +380,8 @@ $spacers: (
     margin-bottom: -5em;
   }
 }
+.pathway-description {
+  @extend .pb-2;
+  width: 90%;
+  border-bottom: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.7);
+}

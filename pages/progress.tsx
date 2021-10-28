@@ -14,6 +14,7 @@ import CardText from "../components/common/Card_Text";
 import CardCheckIn from "../components/common/Card_CheckIn";
 import QuestionSubPageHeader from "../components/question_components/question_subpage_header";
 import QuestionECSubpage from "./questionPages/question_ec_subpage";
+import DropDownTab from "../components/common/DropDown_Tab";
 //profile progress/ question summary page
 export default function Progress() {
   const [currPage, setCurrPage] = useState("all");
@@ -96,76 +97,6 @@ export default function Progress() {
         ) : (
           <QuestionECSubpage />
         )}
-      </div>
-    </div>
-  );
-}
-
-function DropDownTab({
-  chunkList,
-  title,
-  percentComplete,
-  isAll,
-  onClick,
-}: {
-  chunkList: Array<any>;
-  title: string;
-  isAll?: boolean;
-  percentComplete: number;
-  onClick: Function;
-}) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  return (
-    <div className="progress-dropdown-container">
-      <button
-        className="progress-dropdown-btn"
-        onClick={() => {
-          if (isAll) {
-            onClick();
-          }
-          setIsExpanded(!isExpanded);
-        }}
-      >
-        <div className="text">
-          {title}
-          {isAll ? null : (
-            <span className="percentage">{percentComplete}%</span>
-          )}
-        </div>
-        {isAll ? null : (
-          <div
-            className={
-              isExpanded ? "center-child icon-open" : "center-child icon-close"
-            }
-            style={{ width: "12px", height: "12px" }}
-          >
-            <FontAwesomeIcon icon={faSortDown} />
-          </div>
-        )}
-      </button>
-      <div
-        className={
-          isExpanded
-            ? "progress-dropdown-menu-expanded"
-            : "progress-dropdown-menu-closed"
-        }
-      >
-        {chunkList.map((chunkTitle: string) => (
-          <button
-            onClick={() => {
-              onClick();
-            }}
-            className="progress-dropdown-menu-btn"
-          >
-            <div
-              className="center-child icon"
-              style={{ width: "36px", height: "36px" }}
-            >
-              <FontAwesomeIcon icon={faFileAlt} />
-            </div>
-            <div className="text">{chunkTitle}</div>
-          </button>
-        ))}
       </div>
     </div>
   );
