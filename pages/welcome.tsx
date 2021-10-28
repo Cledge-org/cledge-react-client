@@ -11,9 +11,9 @@ import WaitlistForm from "../components/common/WaitlistForm";
 export default function Welcome(props) {
   return (
     <div
-      className="container-fluid vw-100 px-0 "
+      className="container-fluid ps-0 p-0 pe-0"
       style={{
-        overflowY: "scroll",
+        overflow: "hidden",
         transform: "translate(0,0)",
       }}
     >
@@ -34,7 +34,7 @@ export default function Welcome(props) {
                 >
                   beta
                 </div>
-                <div className="btn btn-sm landing-update-button text-nowrap overflow-hidden">
+                <div className="btn btn-sm landing-update-button text-nowrap overflow-hidden ps-4">
                   <div>Get the latest update on our features</div>
                 </div>
               </div>
@@ -65,17 +65,13 @@ export default function Welcome(props) {
           <YoutubeEmbed videoId="Bly0QbY3fV4" />
         </div>
       </div>
-
       <FeatureCarousel />
-
-      <div className="row align-items-center justify-content-center bg-dark-blue m-0 py-5">
-        <div className="col-11 col-lg-6 pb-3 pt-0 landing-page-white-text">
-          <br />
-          <h2 className="pb-4">
+      <div className="row d-flex align-items-center justify-content-center bg-dark-blue m-0 py-5">
+        <div className="w-100 pb-3 pt-0 landing-page-white-text d-flex flex-wrap pe-0 me-0">
+          <h2 className="pb-4 ps-2 w-50">
             The Best in Counseling Combined with Powerful Data Insights
           </h2>
-          <br />
-          <div className="row">
+          <div className="row w-50">
             <div className="col-12 col-md-6  pb-4 landing-page-gray-text">
               <img src="/images/landing_icon_early.svg" width="20%" />
               <h2 className="pt-3">Start Early</h2>
