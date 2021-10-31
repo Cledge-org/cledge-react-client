@@ -1,4 +1,6 @@
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import assert from "assert";
 
 export const config = {
   api: {
@@ -7,19 +9,33 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  // TODO: authentication, pull data from database
-  // const { userToken } = req.body;
-
-  return resolve.status(200).send(getAccountInfo("TEST_USER_ID"));
+  // TODO: authentication, grab user id from token validation (probably)
+  const { userToken, userId } = req.body;
+  return userId
+    ? resolve.status(200).send(getAccountInfo(userId))
+    : resolve.status(400).send("No user id provided");
 };
 
-export async function getAccountInfo(userId: string): Promise<AccountInfo> {
-  const dummyData: Promise<AccountInfo> = Promise.resolve({
-    name: "John Smith",
-    address: "12345th Street Seattle, WA",
-    grade: 10,
-    birthday: JSON.stringify(new Date("12/12/2004")),
-    email: "test@email.com",
+export const getAccountInfo = async (userId: string): Promise<AccountInfo> => {
+  return new Promise((res, err) => {
+    MongoClient.connect(
+      MONGO_CONNECTION_STRING,
+      async (connection_err, client) => {
+        assert.equal(connection_err, null);
+        const user_db = client.db("users");
+        const users_collection = user_db.collection("users");
+        users_collection.findOne({ _id: userId }, (document_err, user_info) => {
+          document_err
+            ? err(document_err)
+            : res({
+                name: user_info.name,
+                address: user_info.address,
+                grade: user_info.grade,
+                birthday: user_info.birthday,
+                email: user_info.email,
+              });
+        });
+      }
+    );
   });
-  return dummyData;
-}
+};
