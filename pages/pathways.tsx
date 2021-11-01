@@ -3,6 +3,7 @@ import YoutubeEmbed from "../components/common/YoutubeEmbed";
 import DropDownTab from "../components/common/DropDown_Tab";
 
 //profile progress/ question summary page
+
 export default function Pathways() {
   const [currPage, setCurrPage] = useState("");
   useEffect(() => {

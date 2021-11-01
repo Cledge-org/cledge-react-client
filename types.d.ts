@@ -58,3 +58,36 @@ interface Question {
   data?: any[];
   isConcatenable?: boolean;
 }
+//Learning Pathways Types -->
+interface Pathways {
+  userName: string;
+  userTags: string[];
+  pathways: Course[];
+}
+interface Course {
+  title: string;
+  modules: CourseModule[];
+  tags: string[];
+}
+interface CourseModule {
+  title: string;
+  presetContent: PresetContent[];
+  personalizedContent: PersonalizedContent[];
+  tags: string[];
+}
+interface PresetContent {
+  priority: number;
+  title: string;
+  type: string;
+  url: string;
+  content?: string;
+}
+interface PersonalizedContent {
+  priority: number;
+  tagConfigs: string[][];
+  tags: string[];
+  title: string;
+  type: string;
+  url: string;
+  content?: string;
+}
