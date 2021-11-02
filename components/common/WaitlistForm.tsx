@@ -32,11 +32,11 @@ export default () => {
           />
 
           <div className="d-flex flex-row pt-4 pb-3 justify-content-between align-items-center">
-            <div className="text-muted">I AM A...</div>
-            <div className="dropdown mx-3">
+            <div className="text-muted ">I AM A...</div>
+            <div className="dropdown ml-3 w-100">
               <button
                 style={{}}
-                className="btn btn-light cl-btn dropdown-toggle text-muted"
+                className="btn btn-light cl-btn dropdown-toggle text-muted w-100 rounded-15 waitlist-buttons" //rounded-15 not able to override bootstrap radius style
                 type="button"
                 id="dropdownCategory"
                 data-bs-toggle="dropdown"
@@ -44,7 +44,10 @@ export default () => {
               >
                 {waitlistForm.category}
               </button>
-              <ul className="dropdown-menu" aria-labelledby="dropdownCategory">
+              <ul
+                className="dropdown-menu w-100"
+                aria-labelledby="dropdownCategory"
+              >
                 <li>
                   <a
                     className="dropdown-item"
@@ -135,10 +138,10 @@ export default () => {
           />
 
           <div className="d-flex flex-row justify-content-between align-items-center pt-4 pb-5">
-            <div className="text-muted">I AM INTERESTED IN STUDYING...</div>
-            <div className="dropdown">
+            <div className="text-muted ">I AM INTERESTED IN STUDYING...</div>
+            <div className="dropdown w-100 ml-3">
               <button
-                className="btn btn-light cl-btn dropdown-toggle text-muted"
+                className="btn btn-light cl-btn dropdown-toggle text-muted w-100 text-left waitlist-buttons"
                 type="button"
                 id="dropdownField"
                 data-bs-toggle="dropdown"
@@ -146,7 +149,10 @@ export default () => {
               >
                 {waitlistForm.field}
               </button>
-              <ul className="dropdown-menu" aria-labelledby="dropdownCategory">
+              <ul
+                className="dropdown-menu w-100"
+                aria-labelledby="dropdownCategory"
+              >
                 <li>
                   <a
                     className="dropdown-item"
