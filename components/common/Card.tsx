@@ -3,19 +3,32 @@ import { ComponentProps, ComponentPropsWithoutRef, useEffect } from "react";
 
 export interface CardProps {
   title: String;
-  url?: URL;
+  url?: string;
+  onClick?: Function;
   child?: any;
   textGradient: "light" | "dark";
 }
 
-export default function Card({ title, child, url, textGradient }: CardProps) {
+export default function Card({
+  title,
+  child,
+  url,
+  textGradient,
+  onClick,
+}: CardProps) {
   useEffect(() => {}, []);
   return (
-    <div className="col-12 col-md-6 col-lg-4 p-3">
-      <div
-        className="card-container px-4 w-100 shadow"
-        onClick={() => alert(url?.toString())}
-      >
+    <div
+      className="col-12 col-md-6 col-lg-4 p-3"
+      onClick={() => {
+        if (onClick === undefined) {
+          location.href = url;
+        } else {
+          onClick();
+        }
+      }}
+    >
+      <div className="card-container px-4 w-100 shadow">
         <div
           className={
             textGradient === "light"
