@@ -18,7 +18,7 @@ export async function getAccountInfo(userId: string): Promise<AccountInfo> {
     name: "John Smith",
     address: "12345th Street Seattle, WA",
     grade: 10,
-    birthday: JSON.stringify(new Date("12/12/2004")),
+    birthday: new Date("2004-12-12T00:00:00"),
     email: "test@email.com",
   });
   return dummyData;
