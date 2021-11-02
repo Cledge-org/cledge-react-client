@@ -12,7 +12,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userToken, userId } = req.body;
   return userId
-    ? resolve.status(200).send(getAccountInfo(userId))
+    ? resolve.status(200).send(await getAccountInfo(userId))
     : resolve.status(400).send("No user id provided");
 };
 
