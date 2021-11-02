@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import Welcome from "./welcome";
 import Dashboard from "./dashboard";
+import Resources from "./resources";
 import resources from "./resources";
 import Footer from "../components/common/Footer";
 import styles from "../styles/Home.module.css";

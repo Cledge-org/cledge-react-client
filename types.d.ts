@@ -26,13 +26,14 @@ interface CardResource {
   title: string;
 }
 //Dashboard (Logged in Homepage) Types -->
-interface TasksInfo {
-
+interface DashboardInfo {
+  name: string;
+  tasks: string[];
 }
 interface CardTask {
   title: string;
   url: string;
-  source: Object;
+  subtasks: string[];
 }
 //Progress Page Types -->
 interface UserProgress {

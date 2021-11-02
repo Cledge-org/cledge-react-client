@@ -75,7 +75,6 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Pathways }> = ({
       <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
         {currTab === "currentTasks" ? (
           <div className="row justify-content-evenly">
-            <div>{/* dsfdsf */}x upcoming tasks in next 6 months</div>
             {pathwaysInfo.pathways.map(({ modules, title }, index) => {
               let subtasks = {};
               modules.forEach(({ title }) => {
@@ -97,23 +96,23 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Pathways }> = ({
         ) : null}
         {currTab === "finishedTasks" ? (
           <div className="row justify-content-evenly">
-            <Card
-              textGradient="light"
-              title={"Base card"}
-              child={<div>hello world</div>}
-            />
-            <CardVideo
-              textGradient="light"
-              title={"Video card"}
-              child={<div>hello world</div>}
-              videoId="ZGYSVyWdSRk"
-            />
-            <CardText
-              textGradient="dark"
-              title={"Text Card"}
-              child={<div>hello world</div>}
-              snippet={"hello world"}
-            />
+            {pathwaysInfo.pathways.map(({ modules, title }, index) => { // needs some way to differentiate from completed (percentComplete)
+              let subtasks = {};
+              modules.forEach(({ title }) => {
+                subtasks[title] = false;
+              });
+              return (
+                <CardTask
+                  onClick={() => {
+                    setCourseIndex(index);
+                    setShowingPathways(true);
+                  }}
+                  textGradient="light"
+                  title={title}
+                  subtasks={subtasks}
+                />
+              );
+            })}
           </div>
         ) : null}
       </div>
