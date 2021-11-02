@@ -31,8 +31,14 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Pathways }> = ({
 }) => {
   const [currTab, setCurrTab] = useState("currentTasks");
   const [showingPathways, setShowingPathways] = useState(false);
+  const [courseIndex, setCourseIndex] = useState(-1);
   if (showingPathways) {
-    return <Pathways />;
+    return (
+      <Pathways
+        pathway={pathwaysInfo.pathways[courseIndex]}
+        userTags={pathwaysInfo.userTags}
+      />
+    );
   }
   return (
     <div className="container-fluid p-5">
@@ -70,7 +76,7 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Pathways }> = ({
         {currTab === "currentTasks" ? (
           <div className="row justify-content-evenly">
             <div>{/* dsfdsf */}x upcoming tasks in next 6 months</div>
-            {pathwaysInfo.pathways.map(({ modules, title }) => {
+            {pathwaysInfo.pathways.map(({ modules, title }, index) => {
               let subtasks = {};
               modules.forEach(({ title }) => {
                 subtasks[title] = false;
@@ -78,6 +84,7 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Pathways }> = ({
               return (
                 <CardTask
                   onClick={() => {
+                    setCourseIndex(index);
                     setShowingPathways(true);
                   }}
                   textGradient="light"
