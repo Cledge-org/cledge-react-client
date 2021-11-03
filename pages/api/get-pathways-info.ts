@@ -25,8 +25,14 @@ export async function getPathwaysInfo(userId: string): Promise<Pathways> {
             title: "ACT",
             presetContent: [
               {
-                priority: 1,
+                priority: 5,
                 title: "Preset Video",
+                type: "video",
+                url: "https://www.youtube.com/embed/T4S_LwhK8xE",
+              },
+              {
+                priority: 4,
+                title: "Preset Video 2",
                 type: "video",
                 url: "https://www.youtube.com/embed/T4S_LwhK8xE",
               },
@@ -37,6 +43,14 @@ export async function getPathwaysInfo(userId: string): Promise<Pathways> {
                 priority: 3,
                 tags: ["engineering", "public"],
                 title: "Engineering, Public OR Private",
+                type: "video",
+                url: "https://www.youtube.com/embed/g2mLOVHZ2u4",
+              },
+              {
+                tagConfigs: [["engineering", "public"]],
+                priority: 2,
+                tags: ["engineering", "public"],
+                title: "Engineering, Public AND Private",
                 type: "video",
                 url: "https://www.youtube.com/embed/g2mLOVHZ2u4",
               },
