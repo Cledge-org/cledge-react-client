@@ -25,7 +25,16 @@ interface CardResource {
   source: string;
   title: string;
 }
-interface CardTask {}
+//Dashboard (Logged in Homepage) Types -->
+interface DashboardInfo {
+  name: string;
+  tasks: string[];
+}
+interface CardTask {
+  title: string;
+  url: string;
+  subtasks: string[];
+}
 //Progress Page Types -->
 interface UserProgress {
   responses: UserResponse[];
@@ -57,6 +66,31 @@ interface Question {
   helpText?: string;
   data?: any[];
   isConcatenable?: boolean;
+}
+//Questionnaire Types -->
+interface UserData {
+  firstName: string;
+  lastName: string;
+  highSchool: string;
+  gradeLevel: string;
+  address: string;
+  gpa: string;
+  testScores: string;
+  ecList: any[];
+  schoolTranscript: null;
+  applicantType: string;
+  areaOfStudy: string;
+  areasOfInterest: string;
+  planToPay: string[];
+  tuitionBudget: number;
+  inOutOfState: string;
+  schoolRegion: string[];
+  privatePublic: string;
+  schoolSize: string[];
+  liberalArtsRegular: string;
+  religiousAffiliation: string;
+  typeOfCollegeList: string;
+  numberOfApplications: string;
 }
 //Learning Pathways Types -->
 interface Pathways {
