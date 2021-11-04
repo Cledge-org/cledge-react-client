@@ -62,7 +62,23 @@ interface Question {
 interface Pathways {
   userName: string;
   userTags: string[];
+  userProgress: CourseProgress[];
   pathways: Course[];
+}
+interface CourseProgress {
+  finished: boolean;
+  title: string;
+  moduleProgress: ModuleProgress[];
+}
+interface ModuleProgress {
+  finished: boolean;
+  title: string;
+  contentProgress: ContentProgress[];
+}
+interface ContentProgress {
+  finished: boolean;
+  title: string;
+  videoTime?: string;
 }
 interface Course {
   title: string;

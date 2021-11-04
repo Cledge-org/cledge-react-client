@@ -20,6 +20,7 @@ export default function Card({
   return (
     <div
       className="col-12 col-md-6 col-lg-4 p-3"
+      style={{ height: "35vh" }}
       onClick={() => {
         if (onClick === undefined) {
           location.href = url;
@@ -28,7 +29,7 @@ export default function Card({
         }
       }}
     >
-      <div className="card-container px-4 w-100 shadow">
+      <div className="card-container px-4 w-100 h-100 shadow">
         <div
           className={
             textGradient === "light"
@@ -38,7 +39,7 @@ export default function Card({
         >
           {title}
         </div>
-        <div className="w-100 wrap overflow-hidden p-3">{child}</div>
+        <div className="w-100 h-75 wrap overflow-hidden p-3">{child}</div>
       </div>
     </div>
   );

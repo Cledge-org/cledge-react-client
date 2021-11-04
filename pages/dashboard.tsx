@@ -25,13 +25,73 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return { props: {} as never };
   }
 };
+
 // logged in landing page
 const Dashboard: NextApplicationPage<{ pathwaysInfo: Pathways }> = ({
   pathwaysInfo,
 }) => {
-  const [currTab, setCurrTab] = useState("currentTasks");
+  const [currTab, setCurrTab] = useState("current tasks");
   const [showingPathways, setShowingPathways] = useState(false);
   const [courseIndex, setCourseIndex] = useState(-1);
+  const getCurrentTasks = () => {
+    return pathwaysInfo.pathways
+      .filter(({ title }) => {
+        let courseTitle = title;
+        return !pathwaysInfo.userProgress.find(
+          ({ title }) => courseTitle === title
+        ).finished;
+      })
+      .map(({ modules, title }, index) => {
+        let subtasks = {};
+        let courseTitle = title;
+        let courseProgress = pathwaysInfo.userProgress.find(
+          ({ title }) => courseTitle === title
+        );
+        modules.forEach(({ title }) => {
+          let moduleTitle = title;
+          subtasks[title] = courseProgress.moduleProgress.find(
+            ({ title }) => title === moduleTitle
+          ).finished;
+        });
+        return (
+          <CardTask
+            onClick={() => {
+              setCourseIndex(index);
+              setShowingPathways(true);
+            }}
+            textGradient="light"
+            title={title}
+            subtasks={subtasks}
+          />
+        );
+      });
+  };
+  const getFinishedTasks = () => {
+    return pathwaysInfo.pathways
+      .filter(({ title }) => {
+        let courseTitle = title;
+        return pathwaysInfo.userProgress.find(
+          ({ title }) => courseTitle === title
+        ).finished;
+      })
+      .map(({ modules, title }, index) => {
+        let subtasks = {};
+        modules.forEach(({ title }) => {
+          subtasks[title] = true;
+        });
+        return (
+          <CardTask
+            onClick={() => {
+              setCourseIndex(index);
+              setShowingPathways(true);
+            }}
+            textGradient="light"
+            title={title}
+            subtasks={subtasks}
+          />
+        );
+      });
+  };
   if (showingPathways) {
     return (
       <Pathways
@@ -43,78 +103,43 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Pathways }> = ({
   return (
     <div className="container-fluid p-5">
       <div className="row">
-        <h1 className="pt-2 blue-purple-text-gradient">
+        <h1 className="pt-2 red-purple-text-gradient fw-bold">
           <strong>
             Welcome back, {pathwaysInfo.userName}
             <br />
             This is your home page.
             <br />
-            Keep track of your progress here.
           </strong>
         </h1>
       </div>
       <br />
       <br />
-      <div className="row justify-content-evenly">
+      <div className="d-flex flex-row w-100">
         <TabButton
           onClick={() => {
-            setCurrTab("currentTasks");
+            setCurrTab("current tasks");
           }}
           title="Current Tasks"
           currTab={currTab}
         />
+        <div className="px-2" />
         <TabButton
           onClick={() => {
-            setCurrTab("finishedTasks");
+            setCurrTab("finished tasks");
           }}
           title="Finished Tasks"
           currTab={currTab}
         />
       </div>
-
       <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
-        {currTab === "currentTasks" ? (
-          <div className="row justify-content-evenly">
-            <div>{/* dsfdsf */}x upcoming tasks in next 6 months</div>
-            {pathwaysInfo.pathways.map(({ modules, title }, index) => {
-              let subtasks = {};
-              modules.forEach(({ title }) => {
-                subtasks[title] = false;
-              });
-              return (
-                <CardTask
-                  onClick={() => {
-                    setCourseIndex(index);
-                    setShowingPathways(true);
-                  }}
-                  textGradient="light"
-                  title={title}
-                  subtasks={subtasks}
-                />
-              );
-            })}
+        {currTab === "current tasks" ? (
+          <div className="row">
+            {/* {x upcoming tasks in next 6 months</div> */}
+            {getCurrentTasks()}
           </div>
         ) : null}
-        {currTab === "finishedTasks" ? (
-          <div className="row justify-content-evenly">
-            <Card
-              textGradient="light"
-              title={"Base card"}
-              child={<div>hello world</div>}
-            />
-            <CardVideo
-              textGradient="light"
-              title={"Video card"}
-              child={<div>hello world</div>}
-              videoId="ZGYSVyWdSRk"
-            />
-            <CardText
-              textGradient="dark"
-              title={"Text Card"}
-              child={<div>hello world</div>}
-              snippet={"hello world"}
-            />
-          </div>
+        {currTab === "finished tasks" ? (
+          <div className="row">{getFinishedTasks()}</div>
         ) : null}
       </div>
     </div>

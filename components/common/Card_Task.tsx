@@ -34,15 +34,17 @@ export default function CardTask({
     else boxColor = "cl-red";
 
     return (
-      <div className="row">
+      <div className="d-flex flex-row align-items-center">
         <div className="col-1">
           <FontAwesomeIcon
             icon={checkIcon}
-            style={{ height: "1.6em", margin: "5%" }}
+            style={{ height: "2.5em", margin: "5%" }}
             className={boxColor}
           />
         </div>
-        <div className="col-11 cl-mid-gray">{subtask}</div>
+        <div className="col-11 ps-3 cl-mid-gray" style={{ fontSize: "1.4em" }}>
+          {subtask}
+        </div>
       </div>
     );
   });
@@ -50,12 +52,7 @@ export default function CardTask({
     <Card
       textGradient={textGradient}
       title={title}
-      child={
-        <div className="d-flex flex-column justify-content-evenly ms-3">
-          {subtasksList}
-          <button className="article-btn">View all</button>
-        </div>
-      }
+      child={<div className="d-flex flex-column h-100">{subtasksList}</div>}
       url={url}
       onClick={onClick}
     />
