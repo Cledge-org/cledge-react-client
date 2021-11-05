@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import YoutubeEmbed from "../../components/common/YoutubeEmbed";
 import DropDownTab from "../../components/common/DropDown_Tab";
 import { GetServerSidePropsContext } from "next";
-import { getPathwayInfo } from "../api/get-pathways-info";
+import { getPathwayInfo } from "../api/get-pathway-info";
 import { NextApplicationPage } from "../_app";
 import { useRouter } from "next/router";
 

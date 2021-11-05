@@ -53,7 +53,7 @@ export default function CardTask({
   console.log(correctUrl);
   return (
     <Link href={url} as={correctUrl}>
-      <span>
+      <span style={{ display: "block" }}>
         <Card
           isCardTask
           textGradient={textGradient}
