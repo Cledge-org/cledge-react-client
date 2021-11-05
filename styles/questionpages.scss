@@ -122,6 +122,10 @@
     @extend .ps-3;
   }
 }
+.progress-dropdown-menu-btn-selected {
+  @extend .progress-dropdown-menu-btn;
+  background-color: $cl-light-blue;
+}
 .question-subpage-title {
   font-weight: 800;
   color: $cl-dark-text;

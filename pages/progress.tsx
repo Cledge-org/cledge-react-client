@@ -14,13 +14,54 @@ import CardText from "../components/common/Card_Text";
 import CardCheckIn from "../components/common/Card_CheckIn";
 import QuestionSubPageHeader from "../components/question_components/question_subpage_header";
 import QuestionECSubpage from "./questionPages/question_ec_subpage";
+import { GetServerSidePropsContext } from "next";
+import { getProgressInfo } from "./api/get-progress-info";
+import { NextApplicationPage } from "./_app";
+import DropDownTab from "../components/common/DropDown_Tab";
 //profile progress/ question summary page
-export default function Progress() {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  try {
+    return { props: { progressInfo: await getProgressInfo("testUser") } };
+  } catch (err) {
+    console.log(err);
+    ctx.res.end();
+    return { props: {} as never };
+  }
+};
+const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
+  progressInfo,
+}) => {
   const [currPage, setCurrPage] = useState("all");
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
   useEffect(() => {
     console.log(currPage);
   }, [currPage]);
+  const isNotEmpty = (element: any) => {
+    return element !== null && element !== "" && element !== [];
+  };
+  const calculatePercentComplete = (chunks: QuestionChunk[]): number => {
+    let total: number = 0;
+    let finished: number = 0;
+    chunks.map((chunk) => {
+      total += chunk.questions.length;
+      chunk.questions.forEach((question) => {
+        let userQuestionIds: string[] = progressInfo.userProgress.responses.map(
+          ({ questionId }) => questionId
+        );
+        if (
+          userQuestionIds.includes(question.id) &&
+          isNotEmpty(
+            progressInfo.userProgress.responses[
+              userQuestionIds.indexOf(question.id)
+            ].response
+          )
+        ) {
+          finished++;
+        }
+      });
+    });
+    return Math.round((finished / total) * 100);
+  };
   return (
     <div
       className="container-fluid d-flex flex-row px-0"
@@ -34,18 +75,17 @@ export default function Progress() {
           title="All Sections"
           percentComplete={67}
         />
-        <DropDownTab
-          chunkList={["Academic Achievement", "Volunteer Experience"]}
-          onClick={() => setCurrPage("test")}
-          title="Extracurricular"
-          percentComplete={67}
-        />
-        <DropDownTab
-          chunkList={["Academic Achievement", "Volunteer Experience"]}
-          onClick={() => setCurrPage("extracurricular")}
-          title="Extracurricular"
-          percentComplete={67}
-        />
+        {progressInfo.questionData.questionList.map((list) => {
+          return (
+            <DropDownTab
+              isExtracurricular={list.title === "Extracurriculars"}
+              chunkList={list.chunks.map((chunk) => chunk.title)}
+              onClick={(chunk) => setCurrPage(chunk ?? list.title)}
+              title={list.title}
+              percentComplete={calculatePercentComplete(list.chunks)}
+            />
+          );
+        })}
       </div>
       <div className="d-flex" style={{ flex: 3 }}>
         {currPage === "all" ? (
@@ -75,100 +115,50 @@ export default function Progress() {
                     : "resources-tab-pane"
                 }
                 id="resources"
-              >
-                <CardCheckIn
-                  url={undefined}
-                  title="Junior Developers"
-                  textGradient="light"
-                  snippet={""}
-                />
-                <CardCheckIn
-                  url={undefined}
-                  title="Junior Developers"
-                  textGradient="light"
-                  snippet={""}
-                />
-              </div>
+              ></div>
             </div>
           </div>
-        ) : currPage === "test" ? (
-          <QuestionSummaryPage />
         ) : (
-          <QuestionECSubpage />
+          progressInfo.questionData.questionList
+            .map((list) => {
+              if (list.title !== "Extracurriculars") {
+                return (
+                  <QuestionSummaryPage
+                    isShowing={currPage === list.title}
+                    listTitle={list.title}
+                    chunks={list.chunks}
+                    userAnswers={progressInfo.userProgress}
+                    percentComplete={calculatePercentComplete(list.chunks)}
+                  />
+                );
+              }
+            })
+            .concat(
+              progressInfo.questionData.questionList
+                .find(({ title }) => title === "Extracurriculars")
+                .chunks.map((chunk) => {
+                  return (
+                    <QuestionECSubpage
+                      userECResponses={
+                        progressInfo.userProgress.responses.find(
+                          ({ questionId }) => questionId === chunk.title
+                        ) !== undefined
+                          ? progressInfo.userProgress.responses.find(
+                              ({ questionId }) => questionId === chunk.title
+                            ).response
+                          : []
+                      }
+                      chunk={chunk}
+                      isShowing={currPage === chunk.title}
+                    />
+                  );
+                })
+            )
         )}
       </div>
     </div>
   );
-}
-
-function DropDownTab({
-  chunkList,
-  title,
-  percentComplete,
-  isAll,
-  onClick,
-}: {
-  chunkList: Array<any>;
-  title: string;
-  isAll?: boolean;
-  percentComplete: number;
-  onClick: Function;
-}) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  return (
-    <div className="progress-dropdown-container">
-      <button
-        className="progress-dropdown-btn"
-        onClick={() => {
-          if (isAll) {
-            onClick();
-          }
-          setIsExpanded(!isExpanded);
-        }}
-      >
-        <div className="text">
-          {title}
-          {isAll ? null : (
-            <span className="percentage">{percentComplete}%</span>
-          )}
-        </div>
-        {isAll ? null : (
-          <div
-            className={
-              isExpanded ? "center-child icon-open" : "center-child icon-close"
-            }
-            style={{ width: "12px", height: "12px" }}
-          >
-            <FontAwesomeIcon icon={faSortDown} />
-          </div>
-        )}
-      </button>
-      <div
-        className={
-          isExpanded
-            ? "progress-dropdown-menu-expanded"
-            : "progress-dropdown-menu-closed"
-        }
-      >
-        {chunkList.map((chunkTitle: string) => (
-          <button
-            onClick={() => {
-              onClick();
-            }}
-            className="progress-dropdown-menu-btn"
-          >
-            <div
-              className="center-child icon"
-              style={{ width: "36px", height: "36px" }}
-            >
-              <FontAwesomeIcon icon={faFileAlt} />
-            </div>
-            <div className="text">{chunkTitle}</div>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
+};
 
 Progress.requireAuth = false;
+export default Progress;

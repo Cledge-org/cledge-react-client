@@ -1,11 +1,27 @@
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { GetServerSidePropsContext, NextPage } from "next";
 import { useState } from "react";
 import Modal from "react-modal";
 import TextInputQuestion from "../components/question_components/textinput_question";
+import { NextApplicationPage } from "./_app";
+import { getAccountInfo } from "./api/get-account-info";
 
-// my accounts page
-export default function Account() {
+// account page
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  try {
+    return { props: { accountInfo: await getAccountInfo("testUser") } };
+  } catch (err) {
+    console.log(err);
+    ctx.res.end();
+    return { props: {} as never };
+  }
+};
+
+const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
+  accountInfo,
+}) => {
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className="container-fluid h-100 center-child">
@@ -43,21 +59,21 @@ export default function Account() {
           </div>
           <InfoSection
             name="NAME"
-            value="John Cena"
+            value={accountInfo.name}
             onEdit={() => {
               setModalOpen(true);
             }}
           />
           <InfoSection
             name="BIRTHDAY"
-            value="2021-09-13"
+            value={accountInfo.birthday}
             onEdit={() => {
               setModalOpen(true);
             }}
           />
           <InfoSection
             name="ADDRESS"
-            value="null"
+            value={accountInfo.address}
             onEdit={() => {
               setModalOpen(true);
             }}
@@ -74,7 +90,7 @@ export default function Account() {
           <span className="title">Contact Info</span>
           <InfoSection
             name="Email"
-            value="yousefgomaa@hotmail.com"
+            value={accountInfo.email}
             onEdit={() => {
               setModalOpen(true);
             }}
@@ -84,7 +100,7 @@ export default function Account() {
           <span className="title">Academic Info</span>
           <InfoSection
             name="Grade"
-            value="10"
+            value={accountInfo.grade}
             onEdit={() => {
               setModalOpen(true);
             }}
@@ -111,7 +127,7 @@ export default function Account() {
       </Modal>
     </div>
   );
-}
+};
 interface InfoSectionProps {
   name: string;
   value: any;
@@ -130,4 +146,5 @@ function InfoSection({ name, value, onEdit }: InfoSectionProps) {
     </div>
   );
 }
-Account.requireAuth = false;
+AccountPage.requireAuth = false;
+export default AccountPage;
