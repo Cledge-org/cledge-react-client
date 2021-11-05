@@ -11,11 +11,8 @@ import { useSession } from "next-auth/react";
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
   if (status === "authenticated") {
-    return (
-      <Dashboard>
-        <p>Signed in as {session.user.email}</p>
-      </Dashboard>
-    );
+    window.location.href = "/dashboard";
+    return null;
   }
   return <Welcome></Welcome>;
 };

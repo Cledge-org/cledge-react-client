@@ -25,16 +25,6 @@ interface CardResource {
   source: string;
   title: string;
 }
-//Dashboard (Logged in Homepage) Types -->
-interface DashboardInfo {
-  name: string;
-  tasks: string[];
-}
-interface CardTask {
-  title: string;
-  url: string;
-  subtasks: string[];
-}
 //Progress Page Types -->
 interface UserProgress {
   responses: UserResponse[];
@@ -93,15 +83,20 @@ interface UserData {
   numberOfApplications: string;
 }
 //Learning Pathways Types -->
-interface Pathways {
+interface Dashboard {
   userName: string;
   userTags: string[];
   userProgress: CourseProgress[];
-  pathways: Course[];
+}
+interface Pathway {
+  pathway: Course;
+  userTags: string[];
+  userCourseProgress: CourseProgress;
 }
 interface CourseProgress {
   finished: boolean;
   title: string;
+  id: string;
   moduleProgress: ModuleProgress[];
 }
 interface ModuleProgress {
@@ -116,6 +111,7 @@ interface ContentProgress {
 }
 interface Course {
   title: string;
+  id: string;
   modules: CourseModule[];
   tags: string[];
 }

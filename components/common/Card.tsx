@@ -4,17 +4,17 @@ import { ComponentProps, ComponentPropsWithoutRef, useEffect } from "react";
 export interface CardProps {
   title: String;
   url?: string;
-  onClick?: Function;
   child?: any;
   textGradient: "light" | "dark";
+  isCardTask?: boolean;
 }
 
 export default function Card({
+  isCardTask,
   title,
   child,
   url,
   textGradient,
-  onClick,
 }: CardProps) {
   useEffect(() => {}, []);
   return (
@@ -22,10 +22,8 @@ export default function Card({
       className="col-12 col-md-6 col-lg-4 p-3"
       style={{ height: "35vh" }}
       onClick={() => {
-        if (onClick === undefined) {
+        if (isCardTask !== undefined && !isCardTask) {
           location.href = url;
-        } else {
-          onClick();
         }
       }}
     >

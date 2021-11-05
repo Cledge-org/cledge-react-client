@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import Card from "./Card";
 import { CardProps } from "./Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,17 +10,19 @@ import {
   IconName,
   IconPrefix,
 } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 interface CardTaskProps extends CardProps {
   subtasks: any;
+  correctUrl: string;
 }
 
 export default function CardTask({
   title,
   url,
   subtasks,
-  onClick,
   textGradient,
+  correctUrl,
 }: CardTaskProps) {
   useEffect(() => {}, []);
   var subtasksList = Object.keys(subtasks).map(function (subtask, index) {
@@ -48,13 +50,17 @@ export default function CardTask({
       </div>
     );
   });
+  console.log(correctUrl);
   return (
-    <Card
-      textGradient={textGradient}
-      title={title}
-      child={<div className="d-flex flex-column h-100">{subtasksList}</div>}
-      url={url}
-      onClick={onClick}
-    />
+    <Link href={url} as={correctUrl}>
+      <span>
+        <Card
+          isCardTask
+          textGradient={textGradient}
+          title={title}
+          child={<div className="d-flex flex-column h-100">{subtasksList}</div>}
+        />
+      </span>
+    </Link>
   );
 }

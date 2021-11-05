@@ -11,14 +11,14 @@ import CardVideo from "../components/common/Card_Video";
 import CardText from "../components/common/Card_Text";
 import CardTask from "../components/common/Card_Task";
 import TabButton from "../components/common/TabButton";
-import { getPathwaysInfo } from "./api/get-pathways-info";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "./_app";
 import Pathways from "./pathways";
+import { getDashboardInfo } from "./api/get-dashboard-info";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    return { props: { pathwaysInfo: await getPathwaysInfo("testUser") } };
+    return { props: { pathwaysInfo: await getDashboardInfo("testUser") } };
   } catch (err) {
     console.log(err);
     ctx.res.end();
@@ -27,38 +27,27 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 
 // logged in landing page
-const Dashboard: NextApplicationPage<{ pathwaysInfo: Pathways }> = ({
+const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
   pathwaysInfo,
 }) => {
   const [currTab, setCurrTab] = useState("current tasks");
-  const [showingPathways, setShowingPathways] = useState(false);
-  const [courseIndex, setCourseIndex] = useState(-1);
   const getCurrentTasks = () => {
-    return pathwaysInfo.pathways
-      .filter(({ title }) => {
-        let courseTitle = title;
-        return !pathwaysInfo.userProgress.find(
-          ({ title }) => courseTitle === title
-        ).finished;
+    return pathwaysInfo.userProgress
+      .filter(({ finished }) => {
+        return !finished;
       })
-      .map(({ modules, title }, index) => {
+      .map(({ moduleProgress, title, id }) => {
         let subtasks = {};
-        let courseTitle = title;
-        let courseProgress = pathwaysInfo.userProgress.find(
-          ({ title }) => courseTitle === title
-        );
-        modules.forEach(({ title }) => {
+        moduleProgress.forEach(({ title }) => {
           let moduleTitle = title;
-          subtasks[title] = courseProgress.moduleProgress.find(
+          subtasks[title] = moduleProgress.find(
             ({ title }) => title === moduleTitle
           ).finished;
         });
         return (
           <CardTask
-            onClick={() => {
-              setCourseIndex(index);
-              setShowingPathways(true);
-            }}
+            url={"/pathways/[id]"}
+            correctUrl={`/pathways/${id}`}
             textGradient="light"
             title={title}
             subtasks={subtasks}
@@ -67,24 +56,19 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Pathways }> = ({
       });
   };
   const getFinishedTasks = () => {
-    return pathwaysInfo.pathways
-      .filter(({ title }) => {
-        let courseTitle = title;
-        return pathwaysInfo.userProgress.find(
-          ({ title }) => courseTitle === title
-        ).finished;
+    return pathwaysInfo.userProgress
+      .filter(({ finished }) => {
+        return finished;
       })
-      .map(({ modules, title }, index) => {
+      .map(({ moduleProgress, title, id }) => {
         let subtasks = {};
-        modules.forEach(({ title }) => {
+        moduleProgress.forEach(({ title }) => {
           subtasks[title] = true;
         });
         return (
           <CardTask
-            onClick={() => {
-              setCourseIndex(index);
-              setShowingPathways(true);
-            }}
+            url={"/pathways/[id]"}
+            correctUrl={`/pathways/${id}`}
             textGradient="light"
             title={title}
             subtasks={subtasks}
@@ -92,14 +76,6 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Pathways }> = ({
         );
       });
   };
-  if (showingPathways) {
-    return (
-      <Pathways
-        pathway={pathwaysInfo.pathways[courseIndex]}
-        userTags={pathwaysInfo.userTags}
-      />
-    );
-  }
   return (
     <div className="container-fluid p-5">
       <div className="row">
