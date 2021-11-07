@@ -30,10 +30,8 @@ export const createUser = async (user: AccountInfo): Promise<void> => {
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const user_db = client.db("users");
-        const users_collection = user_db.collection("users");
         try {
-          await users_collection.insertOne(user);
+          await client.db("users").collection("users").insertOne(user);
           res();
         } catch (e) {
           err(e);

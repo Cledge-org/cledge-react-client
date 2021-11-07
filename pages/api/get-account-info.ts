@@ -22,19 +22,20 @@ export const getAccountInfo = async (userId: string): Promise<AccountInfo> => {
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const user_db = client.db("users");
-        const users_collection = user_db.collection("users");
-        users_collection.findOne({ _id: userId }, (document_err, user_info) => {
-          document_err
-            ? err(document_err)
-            : res({
-                name: user_info.name,
-                address: user_info.address,
-                grade: user_info.grade,
-                birthday: user_info.birthday,
-                email: user_info.email,
-              });
-        });
+        client
+          .db("users")
+          .collection("users")
+          .findOne({ _id: userId }, (document_err, user_info) => {
+            document_err
+              ? err(document_err)
+              : res({
+                  name: user_info.name,
+                  address: user_info.address,
+                  grade: user_info.grade,
+                  birthday: user_info.birthday,
+                  email: user_info.email,
+                });
+          });
       }
     );
   });

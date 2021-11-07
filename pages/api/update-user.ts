@@ -37,15 +37,16 @@ export const updateUser = async (
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const user_db = client.db("users");
-        const users_collection = user_db.collection("users");
         try {
           // Remove undefined and null fields in user as to not delete them
           for (const propName in user) {
             if (user[propName] === null || user[propName] === undefined)
               delete user[propName];
           }
-          await users_collection.updateOne({ _id: id }, { $set: user });
+          await client
+            .db("users")
+            .collection("users")
+            .updateOne({ _id: id }, { $set: user });
           res();
         } catch (e) {
           err(e);

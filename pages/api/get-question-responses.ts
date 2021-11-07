@@ -25,16 +25,12 @@ export const getQuestionResponses = async (
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const user_db = client.db("users");
-        const question_response_collection = user_db.collection("question-responses");
-        question_response_collection.findOne(
-          { _id: userId },
-          (document_err, user_responses) => {
-            document_err
-              ? err(document_err)
-              : res(user_responses.responses);
-          }
-        );
+        client
+          .db("users")
+          .collection("question-responses")
+          .findOne({ _id: userId }, (document_err, user_responses) => {
+            document_err ? err(document_err) : res(user_responses.responses);
+          });
       }
     );
   });

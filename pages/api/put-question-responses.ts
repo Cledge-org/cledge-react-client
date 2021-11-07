@@ -26,15 +26,15 @@ export const putQuestionResponses = async (
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const user_db = client.db("users");
-        const question_response_collection =
-          user_db.collection("question-responses");
         try {
-          await question_response_collection.updateOne(
-            { _id: userId },
-            { $set: { responses } },
-            { upsert: true }
-          );
+          await client
+            .db("users")
+            .collection("question-responses")
+            .updateOne(
+              { _id: userId },
+              { $set: { responses } },
+              { upsert: true }
+            );
           res();
         } catch (e) {
           err(e);
