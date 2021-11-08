@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ECDropDown from "../question_components/ec_dropdown_question";
 
 export default () => {
   const [waitlistForm, updateWaitlistForm] = useState({
@@ -33,72 +34,16 @@ export default () => {
 
           <div className="d-flex flex-row pt-4 pb-3 justify-content-between align-items-center">
             <div className="text-muted ">I AM A...</div>
-            <div className="dropdown ml-3 w-100">
-              <button
-                style={{}}
-                className="btn btn-light cl-btn dropdown-toggle text-muted w-100 rounded-15 waitlist-buttons" //rounded-15 not able to override bootstrap radius style
-                type="button"
-                id="dropdownCategory"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                {waitlistForm.category}
-              </button>
-              <ul
-                className="dropdown-menu w-100"
-                aria-labelledby="dropdownCategory"
-              >
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={(e) =>
-                      updateWaitlistForm({
-                        ...waitlistForm,
-                        category: "Student",
-                      })
-                    }
-                  >
-                    Student
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={(e) =>
-                      updateWaitlistForm({
-                        ...waitlistForm,
-                        category: "Parent",
-                      })
-                    }
-                  >
-                    Parent
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={(e) =>
-                      updateWaitlistForm({
-                        ...waitlistForm,
-                        category: "Educator",
-                      })
-                    }
-                  >
-                    Educator
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={(e) =>
-                      updateWaitlistForm({ ...waitlistForm, category: "Other" })
-                    }
-                  >
-                    Other
-                  </a>
-                </li>
-              </ul>
-            </div>
+            <ECDropDown
+              defaultValue="Student"
+              valuesList={["Student", "Parent", "Educator", "Other"]}
+              onChange={(value) => {
+                updateWaitlistForm({
+                  ...waitlistForm,
+                  category: value,
+                });
+              }}
+            />
           </div>
 
           <label
