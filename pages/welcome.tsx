@@ -56,6 +56,8 @@ export default function Welcome(props) {
                 color: "white",
                 fontWeight: "bold",
               }}
+              onClick={() => document.getElementById("waitlist-form").scrollIntoView({ behavior: 'smooth' })}
+                // window.location.href="#waitlist-form"}
             >
               Join the Waitlist
             </button>
@@ -68,11 +70,12 @@ export default function Welcome(props) {
       <FeatureCarousel />
       <div className="row d-flex align-items-center justify-content-center bg-dark-blue m-0 py-5">
         <div className="w-100 pb-3 pt-0 landing-page-white-text d-flex flex-wrap pe-0 me-0">
-          <h2 className="pb-4 ps-2 w-50">
+          <div className="row mx-auto col-md-6 col-xs-12">
+          <h2 className="pb-4 ps-2 w-100">
             The Best in Counseling Combined with Powerful Data Insights
           </h2>
-          <div className="row w-50">
-            <div className="col-12 col-md-6  pb-4 landing-page-gray-text">
+          <div className="row w-100">
+            <div className="col-12 col-md-6 pb-4 landing-page-gray-text">
               <img src="/images/landing_icon_early.svg" width="20%" />
               <h2 className="pt-3">Start Early</h2>
               <p>
@@ -110,6 +113,8 @@ export default function Welcome(props) {
               </p>
             </div>
           </div>
+          </div>
+          
         </div>
       </div>
       <div className="row align-items-center justify-content-center  m-0">
@@ -135,7 +140,7 @@ export default function Welcome(props) {
           their college counseling experience.
         </p>
       </div>
-
+      <div id="waitlist-form"></div>
       <WaitlistForm />
 
       <Footer />
