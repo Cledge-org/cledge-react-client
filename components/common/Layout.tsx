@@ -1,15 +1,15 @@
-import { Router } from "next/router";
+import { Router, useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Header from "./Header";
 
 export default function Layout({ children }) {
-  const [header, setHeader] = useState(<Header />);
+  const router = useRouter();
+  const [header, setHeader] = useState(<Header key="initial" />);
   useEffect(() => {
-    Router.events.on("routeChangeStart", () => {
-      setHeader(null);
-    });
+    let numTimes = 1;
     Router.events.on("routeChangeComplete", () => {
-      setHeader(<Header />);
+      numTimes++;
+      setHeader(<Header key={numTimes.toString()} />);
     });
   }, []);
   return (

@@ -6,6 +6,11 @@ import OpenAISVG from "../public/images/landing_openai.svg";
 import FeatureCarousel from "../components/common/FeatureCarousel";
 import { useState } from "react";
 import WaitlistForm from "../components/common/WaitlistForm";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 //landing page
 export default function Welcome(props) {
@@ -23,7 +28,7 @@ export default function Welcome(props) {
             <button className="mb-3 btn btn-sm p-0 m-0">
               <div className="d-flex flex-row">
                 <div
-                  className="px-2 py-1"
+                  className="px-2 py-1 fw-bold"
                   style={{
                     backgroundColor: "#F7BC76",
                     borderRadius: 10,
@@ -34,8 +39,16 @@ export default function Welcome(props) {
                 >
                   beta
                 </div>
-                <div className="btn btn-sm landing-update-button text-nowrap overflow-hidden ps-4">
-                  <div>Get the latest update on our features</div>
+                <div className="d-flex flex-row btn btn-sm landing-update-button text-nowrap overflow-hidden ps-4 align-items-center">
+                  <div className="cl-white h-100">
+                    Get the latest update on our features
+                  </div>
+                  <div
+                    className="cl-white ms-2"
+                    style={{ height: "100%", width: "10px" }}
+                  >
+                    <FontAwesomeIcon icon={faChevronRight} />
+                  </div>
                 </div>
               </div>
             </button>
@@ -50,14 +63,17 @@ export default function Welcome(props) {
               actionable insights.
             </p>
             <button
-              className="btn btn-lg position-sticky px-5 py-3 border-white border-2"
+              className="btn btn-lg position-sticky px-5 py-3 border-white border-2 shadow-none"
               style={{
                 backgroundColor: "#7B95F4",
                 color: "white",
                 fontWeight: "bold",
               }}
-              onClick={() => document.getElementById("waitlist-form").scrollIntoView({ behavior: 'smooth' })}
-                // window.location.href="#waitlist-form"}
+              onClick={() =>
+                document
+                  .getElementById("waitlist-form")
+                  .scrollIntoView({ behavior: "smooth" })
+              }
             >
               Join the Waitlist
             </button>
@@ -71,50 +87,51 @@ export default function Welcome(props) {
       <div className="row d-flex align-items-center justify-content-center bg-dark-blue m-0 py-5">
         <div className="w-100 pb-3 pt-0 landing-page-white-text d-flex flex-wrap pe-0 me-0">
           <div className="row mx-auto col-md-6 col-xs-12">
-          <h2 className="pb-4 ps-2 w-100">
-            The Best in Counseling Combined with Powerful Data Insights
-          </h2>
-          <div className="row w-100">
-            <div className="col-12 col-md-6 pb-4 landing-page-gray-text">
-              <img src="/images/landing_icon_early.svg" width="20%" />
-              <h2 className="pt-3">Start Early</h2>
-              <p>
-                We help students starting in 9th grade plan for college. Data
-                shows, the earlier you start preparing, the better success
-                students have in achieving their higher education goals.
-              </p>
-              <p>But don’t worry, if you join later we'll get you caught up.</p>
-              <br />
-            </div>
-            <div className="col-12 col-md-6 pb-4 landing-page-gray-text">
-              <img src="/images/landing_icon_analyze.svg" width="20%" />
-              <h2 className="pt-3">Analyze</h2>
-              <p>
-                Cledge analyzes historical students data, past placements, and
-                holistic information to create custom learning plans for each
-                individual.
-              </p>
-              <br />
-            </div>
-            <div className="col-12 col-md-6 pb-4 landing-page-gray-text">
-              <img src="/images/landing_icon_ai.svg" width="20%" />
-              <h2 className="pt-3">AI Powered</h2>
-              <p>
-                Our AI will provide insights beyond college prestige to guide
-                students in picking a college that is the right fit for them.
-              </p>
-            </div>
-            <div className="col-12 col-md-6 pb-4 landing-page-gray-text">
-              <img src="/images/landing_icon_privacy.svg" width="20%" />
-              <h2 className="pt-3">Privacy</h2>
-              <p>
-                We will never sell or share your data with colleges or 3rd party
-                institutions. Period.
-              </p>
+            <h2 className="pb-4 ps-2 w-100">
+              The Best in Counseling Combined with Powerful Data Insights
+            </h2>
+            <div className="row w-100">
+              <div className="col-12 col-md-6 pb-4 landing-page-gray-text">
+                <img src="/images/landing_icon_early.svg" width="20%" />
+                <h2 className="pt-3">Start Early</h2>
+                <p>
+                  We help students starting in 9th grade plan for college. Data
+                  shows, the earlier you start preparing, the better success
+                  students have in achieving their higher education goals.
+                </p>
+                <p>
+                  But don’t worry, if you join later we'll get you caught up.
+                </p>
+                <br />
+              </div>
+              <div className="col-12 col-md-6 pb-4 landing-page-gray-text">
+                <img src="/images/landing_icon_analyze.svg" width="20%" />
+                <h2 className="pt-3">Analyze</h2>
+                <p>
+                  Cledge analyzes historical students data, past placements, and
+                  holistic information to create custom learning plans for each
+                  individual.
+                </p>
+                <br />
+              </div>
+              <div className="col-12 col-md-6 pb-4 landing-page-gray-text">
+                <img src="/images/landing_icon_ai.svg" width="20%" />
+                <h2 className="pt-3">AI Powered</h2>
+                <p>
+                  Our AI will provide insights beyond college prestige to guide
+                  students in picking a college that is the right fit for them.
+                </p>
+              </div>
+              <div className="col-12 col-md-6 pb-4 landing-page-gray-text">
+                <img src="/images/landing_icon_privacy.svg" width="20%" />
+                <h2 className="pt-3">Privacy</h2>
+                <p>
+                  We will never sell or share your data with colleges or 3rd
+                  party institutions. Period.
+                </p>
+              </div>
             </div>
           </div>
-          </div>
-          
         </div>
       </div>
       <div className="row align-items-center justify-content-center  m-0">

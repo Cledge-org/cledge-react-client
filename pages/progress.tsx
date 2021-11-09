@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown, faSortDown } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 import { AppProps } from "next/dist/shared/lib/router/router";
 import QuestionSummaryPage from "./questionPages/question_summary_subpage";
@@ -62,6 +62,14 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
     });
     return Math.round((finished / total) * 100);
   };
+  const calculateTotalPercent = (questionList: QuestionList[]) => {
+    let finished = 0;
+    let total = questionList.length * 100;
+    questionList.forEach((item, index) => {
+      finished += calculatePercentComplete(item.chunks);
+    });
+    return Math.round((finished / total) * 100);
+  };
   return (
     <div
       className="container-fluid d-flex flex-row px-0"
@@ -73,7 +81,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
           chunkList={[]}
           onClick={() => setCurrPage("all")}
           title="All Sections"
-          percentComplete={67}
+          percentComplete={undefined}
         />
         {progressInfo.questionData.questionList.map((list) => {
           return (
@@ -92,7 +100,9 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
           <div className="container-fluid h-100">
             <QuestionSubPageHeader
               title="Profile Completion"
-              percentage={67}
+              percentage={calculateTotalPercent(
+                progressInfo.questionData.questionList
+              )}
               subText="This is just a placeholder"
             />
             <ul className="nav ms-5" role="tablist">

@@ -26,7 +26,6 @@
     animation-name: rotateReverse;
     animation-duration: 600ms;
     animation-fill-mode: forwards;
-    transform-origin: 6px 8px;
   }
   @keyframes rotateReverse {
     0% {
@@ -51,7 +50,6 @@
   .icon-open {
     animation-fill-mode: forwards;
     animation-name: rotate;
-    transform-origin: 6px 8px;
     animation-duration: 600ms;
   }
   background-color: $cl-light-gray;

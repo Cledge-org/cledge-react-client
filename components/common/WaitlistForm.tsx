@@ -32,9 +32,15 @@ export default () => {
             placeholder="Enter Name"
           />
 
-          <div className="d-flex flex-row pt-4 pb-3 justify-content-between align-items-center">
-            <div className="text-muted ">I AM A...</div>
+          <div className="d-flex flex-row pt-3 pb-3 justify-content-between align-items-center">
+            <div
+              className="text-muted"
+              style={{ width: "20%", height: "100%" }}
+            >
+              I AM A...
+            </div>
             <ECDropDown
+              isForWaitlist
               defaultValue="Student"
               valuesList={["Student", "Parent", "Educator", "Other"]}
               onChange={(value) => {
@@ -84,111 +90,26 @@ export default () => {
 
           <div className="d-flex flex-row justify-content-between align-items-center pt-4 pb-5">
             <div className="text-muted ">I AM INTERESTED IN STUDYING...</div>
-            <div className="dropdown w-100 ml-3">
-              <button
-                className="btn btn-light cl-btn dropdown-toggle text-muted w-100 text-left waitlist-buttons"
-                type="button"
-                id="dropdownField"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                {waitlistForm.field}
-              </button>
-              <ul
-                className="dropdown-menu w-100"
-                aria-labelledby="dropdownCategory"
-              >
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={(e) =>
-                      updateWaitlistForm({ ...waitlistForm, field: "General" })
-                    }
-                  >
-                    General
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={(e) =>
-                      updateWaitlistForm({ ...waitlistForm, field: "Arts" })
-                    }
-                  >
-                    Arts
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={(e) =>
-                      updateWaitlistForm({
-                        ...waitlistForm,
-                        field: "Engineering",
-                      })
-                    }
-                  >
-                    Engineering
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={(e) =>
-                      updateWaitlistForm({
-                        ...waitlistForm,
-                        field: "Medical/Public Health",
-                      })
-                    }
-                  >
-                    Medical/Public Health
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={(e) =>
-                      updateWaitlistForm({
-                        ...waitlistForm,
-                        field: "Computer Science",
-                      })
-                    }
-                  >
-                    Computer Science
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={(e) =>
-                      updateWaitlistForm({ ...waitlistForm, field: "Business" })
-                    }
-                  >
-                    Business
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={(e) =>
-                      updateWaitlistForm({ ...waitlistForm, field: "Law" })
-                    }
-                  >
-                    Law
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={(e) =>
-                      updateWaitlistForm({ ...waitlistForm, field: "Others" })
-                    }
-                  >
-                    Others
-                  </a>
-                </li>
-              </ul>
-            </div>
+            <ECDropDown
+              isForWaitlist
+              defaultValue="General"
+              valuesList={[
+                "General",
+                "Arts",
+                "Engineering",
+                "Medical/Public Health",
+                "Computer Science",
+                "Business",
+                "Law",
+                "Others",
+              ]}
+              onChange={(value) => {
+                updateWaitlistForm({
+                  ...waitlistForm,
+                  field: value,
+                });
+              }}
+            />
           </div>
         </div>
         <button className="cl-btn-blue text-white fs-5 fw-bold">

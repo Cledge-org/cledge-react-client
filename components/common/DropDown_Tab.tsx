@@ -1,5 +1,5 @@
 import {
-  faSortDown,
+  faChevronDown,
   faFileAlt,
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
@@ -50,7 +50,7 @@ export default function DropDownTab({
             }
             style={{ width: "12px", height: "12px" }}
           >
-            <FontAwesomeIcon icon={faSortDown} />
+            <FontAwesomeIcon icon={faChevronDown} />
           </div>
         )}
       </button>
