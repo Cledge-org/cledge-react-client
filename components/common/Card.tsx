@@ -1,3 +1,4 @@
+import { auto } from "@popperjs/core";
 import { AppProps } from "next/dist/shared/lib/router/router";
 import { ComponentProps, ComponentPropsWithoutRef, useEffect } from "react";
 
@@ -19,12 +20,10 @@ export default function Card({
   useEffect(() => {}, []);
   return (
     <div
-      className="col-12 col-md-6 col-lg-4 p-3"
-      style={{ height: "35vh" }}
+      className="col-lg-4 col-md-6 col-xs-12 p-3"
+      style={{ height: "max-content" }}
       onClick={() => {
-        if (isCardTask !== undefined && !isCardTask) {
-          location.href = url;
-        }
+        if (isCardTask !== undefined && !isCardTask) { location.href = url; }
       }}
     >
       <div className="card-container px-4 w-100 h-100 shadow">

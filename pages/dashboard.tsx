@@ -110,7 +110,6 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
       <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
         {currTab === "current tasks" ? (
           <div className="row w-100">
-            {/* {x upcoming tasks in next 6 months</div> */}
             {getCurrentTasks()}
           </div>
         ) : null}
