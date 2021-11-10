@@ -53,14 +53,12 @@ export default function CardTask({
   console.log(correctUrl);
   return (
     <Link href={url} as={correctUrl}>
-      <span style={{ display: "block" }}>
         <Card
           isCardTask
           textGradient={textGradient}
           title={title}
           child={<div className="d-flex flex-column h-100">{subtasksList}</div>}
         />
-      </span>
     </Link>
   );
 }

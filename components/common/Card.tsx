@@ -20,7 +20,7 @@ export default function Card({
   useEffect(() => {}, []);
   return (
     <div
-      className="col-lg-4 col-md-6 col-xs-12 p-3"
+      className="col-lg-4 col-md-6 col-xs-12 p-3 px-4"
       style={{ height: "max-content" }}
       onClick={() => {
         if (isCardTask !== undefined && !isCardTask) { location.href = url; }
