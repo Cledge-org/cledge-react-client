@@ -1,4 +1,8 @@
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getAccountInfo } from "./get-account-info";
+import { getQuestionResponses } from "./get-question-responses";
+import assert from "assert";
 
 export const config = {
   api: {
@@ -11,77 +15,71 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 export async function getProgressInfo(userId: string): Promise<ProgressInfo> {
-  const dummyData: Promise<ProgressInfo> = Promise.resolve({
-    userProgress: {
-      responses: [
-        { questionId: "JohnCena", response: "11" },
-        { questionId: "TheChosenOne", response: "SOC" },
-        { questionId: "ThePickedOne", response: ["SOC", "Computers"] },
-        {
-          questionId: "Academic Achievement",
-          response: [
-            [
-              { questionId: "Breh", response: "Hello There" },
-              { questionId: "Breh2", response: ["Children", "Government"] },
-            ],
-            [],
-          ],
-        },
-      ],
-    },
-    questionData: {
-      questionList: [
-        {
-          title: "9th Grade",
-          chunks: [
+  const [userResponses, userInfo] = await Promise.all([
+    getQuestionResponses(userId),
+    getAccountInfo(userId),
+  ]);
+
+  return new Promise((res, err) => {
+    MongoClient.connect(
+      MONGO_CONNECTION_STRING,
+      async (connection_err, client) => {
+        assert.equal(connection_err, null);
+        const questionsDb = client.db("questions");
+        const gradeQuestionHiearchy: QuestionHierarchy = (await questionsDb
+          .collection("question-hierarchies")
+          .findOne({ name: "_" + userInfo.grade })) as QuestionHierarchy;
+        const gradeQuestionLists: QuestionList[] = (await Promise.all(
+          gradeQuestionHiearchy.lists.map((listName) => {
+            return new Promise(async (res1, err) => {
+              try {
+                // Question list chunks are currently just chunk ids, populate later
+                const gradeQuestionList: QuestionList = (await questionsDb
+                  .collection("question-lists")
+                  .findOne({ name: listName })) as QuestionList;
+                const gradeQuestionChunks: QuestionChunk[] = (await Promise.all(
+                  gradeQuestionList.chunks.map((chunkName) => {
+                    return new Promise(async (res2, err) => {
+                      try {
+                        // Chunk questions are currently just question ids, populate later
+                        const chunk: QuestionChunk = (await questionsDb
+                          .collection("question-chunks")
+                          .findOne({ name: chunkName })) as QuestionChunk;
+                        const chunkQuestions: Question[] = (await Promise.all(
+                          chunk.questions.map((questionId) =>
+                            questionsDb
+                              .collection("question-data")
+                              .findOne({ _id: questionId })
+                          )
+                        )) as Question[];
+                        // Populate questions into question chunks. Now the question chunk is finished
+                        chunk.questions = chunkQuestions;
+                        res2(chunk);
+                      } catch (e) {
+                        err(e);
+                      }
+                    });
+                  })
+                )) as QuestionChunk[];
+                // Populate question list chunks
+                gradeQuestionList.chunks = gradeQuestionChunks;
+                res1(gradeQuestionList);
+              } catch (e) {
+                err(e);
+              }
+            });
+          })
+        )) as QuestionList[];
+        res({
+          userProgress: { responses: userResponses },
+          questionData: [
             {
-              title: "9th Grade - 1st Quarter Check-in",
-              questions: [
-                {
-                  question: "How Old Are YOU?",
-                  type: "TextInput",
-                  id: "JohnCena",
-                },
-                {
-                  question: "Choose the correct answer",
-                  type: "MCQ",
-                  data: [
-                    { op: "Computers", tag: "Computers" },
-                    { op: "Things", tag: "Things" },
-                    { op: "SOC", tag: "SOC" },
-                    { op: "CPU", tag: "CPU" },
-                  ],
-                  id: "TheChosenOne",
-                },
-                {
-                  question: "Choose the correct answer",
-                  type: "CheckBox",
-                  data: [
-                    { op: "Computers", tag: "Computers" },
-                    { op: "Things", tag: "Things" },
-                    { op: "SOC", tag: "SOC" },
-                    { op: "CPU", tag: "CPU" },
-                  ],
-                  id: "ThePickedOne",
-                },
-              ],
+              name: gradeQuestionHiearchy.name,
+              lists: gradeQuestionLists,
             },
           ],
-        },
-        {
-          title: "Extracurriculars",
-          chunks: [
-            {
-              title: "Academic Achievement",
-              questions: [
-                { question: "Title", type: "ECTextInput", id: "Breh" },
-                { question: "Tags", type: "ECDropDown", id: "Breh2" },
-              ],
-            },
-          ],
-        },
-      ],
-    },
+        });
+      }
+    );
   });
-  return dummyData;
 }
