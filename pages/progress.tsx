@@ -18,6 +18,7 @@ import { GetServerSidePropsContext } from "next";
 import { getProgressInfo } from "./api/get-progress-info";
 import { NextApplicationPage } from "./_app";
 import DropDownTab from "../components/common/DropDown_Tab";
+import CardTask from "../components/common/Card_Task";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -33,9 +34,20 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
 }) => {
   const [currPage, setCurrPage] = useState("all");
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
+  const [percentageData, setPercentageData] = useState({
+    allLists: 0,
+    lists: [],
+  });
+
   useEffect(() => {
-    console.log(currPage);
-  }, [currPage]);
+    setPercentageData({
+      allLists: calculateTotalPercent(progressInfo.questionData.questionList),
+      lists: progressInfo.questionData.questionList.map(({ chunks }) => {
+        return calculatePercentComplete(chunks);
+      }),
+    });
+  }, []);
+
   const isNotEmpty = (element: any) => {
     return element !== null && element !== "" && element !== [];
   };
@@ -83,14 +95,14 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
           title="All Sections"
           percentComplete={undefined}
         />
-        {progressInfo.questionData.questionList.map((list) => {
+        {progressInfo.questionData.questionList.map((list, index) => {
           return (
             <DropDownTab
               isExtracurricular={list.title === "Extracurriculars"}
               chunkList={list.chunks.map((chunk) => chunk.title)}
               onClick={(chunk) => setCurrPage(chunk ?? list.title)}
               title={list.title}
-              percentComplete={calculatePercentComplete(list.chunks)}
+              percentComplete={percentageData.lists[index]}
             />
           );
         })}
@@ -100,9 +112,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
           <div className="container-fluid h-100">
             <QuestionSubPageHeader
               title="Profile Completion"
-              percentage={calculateTotalPercent(
-                progressInfo.questionData.questionList
-              )}
+              percentage={percentageData.allLists}
               subText="This is just a placeholder"
             />
             <ul className="nav ms-5" role="tablist">
@@ -124,7 +134,27 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                     ? "resources-tab-pane resources-active"
                     : "resources-tab-pane"
                 }
-                id="resources"
+                id="upcoming"
+              >
+                {progressInfo.questionData.questionList
+                  .filter(({ chunks }, index) => {
+                    return percentageData.lists[index] < 100;
+                  })
+                  .map(({ title }) => (
+                    <CardCheckIn
+                      snippet={"OH CRAP"}
+                      title={title}
+                      textGradient={"light"}
+                    />
+                  ))}
+              </div>
+              <div
+                className={
+                  currAllSectionTab === "finished"
+                    ? "resources-tab-pane resources-active"
+                    : "resources-tab-pane"
+                }
+                id="finished"
               ></div>
             </div>
           </div>

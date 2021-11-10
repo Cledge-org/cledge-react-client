@@ -40,7 +40,7 @@ export default () => {
 
   return (
     <div
-      className="pt-0 pt-md-4 pb-0 h-100"
+      className="pt-0 pt-md-4 pb-0"
       style={{ backgroundColor: "#f5f5f5", height: "90vh" }}
     >
       <div className="row">
