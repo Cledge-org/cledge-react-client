@@ -22,8 +22,9 @@ export default function Welcome(props) {
         transform: "translate(0,0)", //what is the use of translate here??
       }}
     >
-      <div className="row align-items-center m-0 px-5" id="landing-main">
-        <div className="row col-12 col-lg-6 justify-content-center landing-page-white-text mt-5 mt-lg-0 pt-5 pt-lg-0 mx-0 px-0">
+      <div className="row align-items-center m-0" id="landing-main">
+        <div className="col-lg-1"></div>
+        <div className="row col-12 col-lg-5 justify-content-center landing-page-white-text mt-5 mt-lg-0 pt-5 pt-lg-0 mx-0 px-0">
           <div className="px-5 mx-5">
             <button className="mb-3 btn btn-sm p-0 m-0">
               <div className="d-flex flex-row">
@@ -79,9 +80,10 @@ export default function Welcome(props) {
             </button>
           </div>
         </div>
-        <div className="row col-12 col-lg-6 h-100 justify-content-center p-5 mx-auto">
+        <div className="row col-12 col-lg-5 h-100 justify-content-center p-5 mx-auto">
           <YoutubeEmbed videoId="Bly0QbY3fV4" />
         </div>
+        <div className="col-lg-1"></div>
       </div>
       <FeatureCarousel />
       <div className="row d-flex align-items-center justify-content-center bg-dark-blue m-0 py-5">
