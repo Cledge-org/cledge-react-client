@@ -73,7 +73,9 @@ export default function ECDropDown({
     if (isConcatenable) {
       return chosen.includes(" " + itemName);
     }
-    return chosen === itemName;
+    return chosen === "" || chosen === []
+      ? defaultValue === itemName
+      : chosen === itemName;
   };
   useEffect(() => {
     typeof document !== undefined

@@ -129,11 +129,13 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
             </ul>
             <div className="tab-content">
               <div
-                className={
-                  currAllSectionTab === "upcoming"
-                    ? "resources-tab-pane resources-active"
-                    : "resources-tab-pane"
-                }
+                className={`resources-tab-pane flex-row justify-content-start align-items-center
+                  ${
+                    currAllSectionTab === "upcoming"
+                      ? " resources-active  d-flex "
+                      : ""
+                  }
+                `}
                 id="upcoming"
               >
                 {progressInfo.questionData.questionList
@@ -145,17 +147,35 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                       snippet={"OH CRAP"}
                       title={title}
                       textGradient={"light"}
+                      percentComplete={0}
+                      isFinished={false}
                     />
                   ))}
               </div>
               <div
-                className={
-                  currAllSectionTab === "finished"
-                    ? "resources-tab-pane resources-active"
-                    : "resources-tab-pane"
-                }
+                className={`resources-tab-pane flex-row justify-content-start align-items-center
+                  ${
+                    currAllSectionTab === "finished"
+                      ? " resources-active  d-flex "
+                      : ""
+                  }
+                `}
                 id="finished"
-              ></div>
+              >
+                {progressInfo.questionData.questionList
+                  .filter(({ chunks }, index) => {
+                    return percentageData.lists[index] < 100;
+                  })
+                  .map(({ title }) => (
+                    <CardCheckIn
+                      snippet={"OH CRAP"}
+                      title={title}
+                      textGradient={"light"}
+                      percentComplete={0}
+                      isFinished={false}
+                    />
+                  ))}
+              </div>
             </div>
           </div>
         ) : (

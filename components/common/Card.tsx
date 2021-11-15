@@ -16,17 +16,17 @@ export default function Card({
   title,
   child,
   url,
-  classNames="col-lg-4 col-md-6 col-xs-12 p-3 px-4",
+  classNames = "col-lg-4 col-md-6 col-xs-12 p-3 px-4",
   textGradient,
 }: CardProps) {
   useEffect(() => {}, []);
   return (
     <div
       className={classNames}
-      style={{ height: "max-content" }}
+      style={{ height: "35vh" }}
       onClick={() => {
-        if (isCardTask !== undefined && !isCardTask) { 
-          location.href = url; 
+        if (isCardTask !== undefined && !isCardTask) {
+          location.href = url;
         }
       }}
     >
@@ -40,7 +40,9 @@ export default function Card({
         >
           {title}
         </div>
-        <div className="w-100 h-75 wrap overflow-hidden p-3">{child}</div>
+        <div className="w-100 h-75 wrap overflow-hidden p-3 d-flex flex-column justify-content-end">
+          {child}
+        </div>
       </div>
     </div>
   );
