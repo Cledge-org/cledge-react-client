@@ -30,25 +30,23 @@ export default function Welcome(props) {
             <button className="mb-3 btn btn-sm p-0 m-0">
               <div className="d-flex flex-row">
                 <div
-                  className="px-2 py-1 fw-bold"
+                  className="px-2 py-1"
                   style={{
                     backgroundColor: "#F7BC76",
                     borderRadius: 10,
                     borderWidth: 0,
+                    fontWeight: 700,
                     color: "black",
                     zIndex: 5,
                   }}
                 >
                   beta
                 </div>
-                <div className="d-flex flex-row btn btn-sm landing-update-button text-nowrap overflow-hidden ps-4 align-items-center">
-                  <div className="cl-white h-100">
+                <div className="d-flex flex-row landing-update-button align-items-center text-nowrap">
+                  <div className="cl-white">
                     Get the latest update on our features
                   </div>
-                  <div
-                    className="cl-white ms-2"
-                    style={{ height: "100%", width: "10px" }}
-                  >
+                  <div className="cl-white ms-2" style={{ width: "10px" }}>
                     <FontAwesomeIcon icon={faChevronRight} />
                   </div>
                 </div>

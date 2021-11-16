@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.css";
 import "../styles/globals.scss";
-import "../styles/questionpages.scss";
+import "../styles/question_pages.scss";
+import "../styles/main_pages.scss";
 import "../styles/components.scss";
 import "../styles/question_components.scss";
 import "../styles/testing.css";
