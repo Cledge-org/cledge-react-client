@@ -79,9 +79,6 @@ interface CourseModule {
   presetContent: CourseModuleContent[];
   personalizedContent: CourseModulePersonalizedContent[];
 }
-interface CourseModulePersonalization_Db {
-  [moduleId: string]: CourseModulePersonalizedContent[];
-}
 interface CourseModuleContent {
   priority: number;
   title: string;
