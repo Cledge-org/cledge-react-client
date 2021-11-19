@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { Db, MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getAccountInfo } from "./get-account-info";
 import { getQuestionResponses } from "./get-question-responses";
@@ -30,45 +30,9 @@ export async function getProgressInfo(userId: string): Promise<ProgressInfo> {
           .collection("question-hierarchies")
           .findOne({ name: "_" + userInfo.grade })) as QuestionHierarchy;
         const gradeQuestionLists: QuestionList[] = (await Promise.all(
-          gradeQuestionHiearchy.lists.map((listName) => {
-            return new Promise(async (res1, err) => {
-              try {
-                // Question list chunks are currently just chunk ids, populate later
-                const gradeQuestionList: QuestionList = (await questionsDb
-                  .collection("question-lists")
-                  .findOne({ name: listName })) as QuestionList;
-                const gradeQuestionChunks: QuestionChunk[] = (await Promise.all(
-                  gradeQuestionList.chunks.map((chunkName) => {
-                    return new Promise(async (res2, err) => {
-                      try {
-                        // Chunk questions are currently just question ids, populate later
-                        const chunk: QuestionChunk = (await questionsDb
-                          .collection("question-chunks")
-                          .findOne({ name: chunkName })) as QuestionChunk;
-                        const chunkQuestions: Question[] = (await Promise.all(
-                          chunk.questions.map((questionId) =>
-                            questionsDb
-                              .collection("question-data")
-                              .findOne({ _id: questionId })
-                          )
-                        )) as Question[];
-                        // Populate questions into question chunks. Now the question chunk is finished
-                        chunk.questions = chunkQuestions;
-                        res2(chunk);
-                      } catch (e) {
-                        err(e);
-                      }
-                    });
-                  })
-                )) as QuestionChunk[];
-                // Populate question list chunks
-                gradeQuestionList.chunks = gradeQuestionChunks;
-                res1(gradeQuestionList);
-              } catch (e) {
-                err(e);
-              }
-            });
-          })
+          gradeQuestionHiearchy.lists.map((listName: any) =>
+            getQuestionList(listName, questionsDb)
+          )
         )) as QuestionList[];
         res({
           userProgress: { responses: userResponses },
@@ -83,3 +47,51 @@ export async function getProgressInfo(userId: string): Promise<ProgressInfo> {
     );
   });
 }
+
+const getQuestionList = (
+  listName: string,
+  questionsDb: Db
+): Promise<QuestionList> => {
+  return new Promise(async (res1, err) => {
+    try {
+      // Question list chunks are currently just chunk ids, populate later
+      const gradeQuestionList: QuestionList = (await questionsDb
+        .collection("question-lists")
+        .findOne({ name: listName })) as QuestionList;
+      const gradeQuestionChunks: QuestionChunk[] = (await Promise.all(
+        gradeQuestionList.chunks.map((chunkName: any) =>
+          getQuestionChunk(chunkName, questionsDb)
+        )
+      )) as QuestionChunk[];
+      // Populate question list chunks
+      gradeQuestionList.chunks = gradeQuestionChunks;
+      res1(gradeQuestionList);
+    } catch (e) {
+      err(e);
+    }
+  });
+};
+
+const getQuestionChunk = (
+  chunkName: string,
+  questionsDb: Db
+): Promise<QuestionChunk> => {
+  return new Promise(async (res2, err) => {
+    try {
+      // Chunk questions are currently just question ids, populate later
+      const chunk: QuestionChunk = (await questionsDb
+        .collection("question-chunks")
+        .findOne({ name: chunkName })) as QuestionChunk;
+      const chunkQuestions: Question[] = (await Promise.all(
+        chunk.questions.map((questionId) =>
+          questionsDb.collection("question-data").findOne({ _id: questionId })
+        )
+      )) as Question[];
+      // Populate questions into question chunks. Now the question chunk is finished
+      chunk.questions = chunkQuestions;
+      res2(chunk);
+    } catch (e) {
+      err(e);
+    }
+  });
+};
