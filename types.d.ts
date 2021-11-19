@@ -59,3 +59,42 @@ interface Question {
   data?: any[];
   isConcatenable?: boolean;
 }
+//Learning Pathway Types -->
+interface Course_Db {
+  tags: string[];
+  modules: string[]; // Module document IDs
+  title: string;
+}
+interface Course {
+  tags: string[];
+  modules: CourseModule[];
+  title;
+}
+interface CourseModule_Db {
+  title: string;
+  presetContent: CourseModuleContent[];
+}
+interface CourseModule {
+  title: string;
+  presetContent: CourseModuleContent[];
+  personalizedContent: CourseModulePersonalizedContent[];
+}
+interface CourseModulePersonalization_Db {
+  [moduleId: string]: CourseModulePersonalizedContent[];
+}
+interface CourseModuleContent {
+  priority: number;
+  title: string;
+  type: string;
+  url: string;
+  content?: string;
+}
+interface CourseModulePersonalizedContent {
+  priority: number;
+  title: string;
+  type: string;
+  url: string;
+  content?: string;
+  tags: string[];
+  tagConfigs: string[][];
+}
