@@ -11,7 +11,6 @@ export default function login({ providers }: { providers: Provider }) {
   });
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
   };
 
   return (

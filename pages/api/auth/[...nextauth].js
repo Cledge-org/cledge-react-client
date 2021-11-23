@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
-import AzureADB2CProvider from "next-auth/providers/azure-ad-b2c";
 import GoogleProvider from "next-auth/providers/google";
+import AuthFunctions, { useFirebaseAuth } from "./firebase-auth";
 
 export default NextAuth({
   debug: true,
@@ -17,15 +17,17 @@ export default NextAuth({
     //   primaryUserFlow: process.env.USER_FLOW_AUTH,
     //   authorization: { params: {scope: "offline_access openid"} }
     // }),
+    // useFirebaseAuth(),
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user, account, profile, email, credentials, password }) {
       const isAllowedToSignIn = true;
       if (isAllowedToSignIn) {
+        AuthFunctions.signInEmail(email, password);
         return true;
       } else {
         // Return false to display a default error message
