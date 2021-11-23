@@ -32,6 +32,9 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
 }) => {
   const [currTab, setCurrTab] = useState("current tasks");
   const getCurrentTasks = () => {
+    // if(pathwaysInfo.userProgress === undefined){
+    //   return
+    // }
     return pathwaysInfo.userProgress
       .filter(({ finished }) => {
         return !finished;
@@ -109,9 +112,7 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
       </div>
       <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
         {currTab === "current tasks" ? (
-          <div className="row w-100">
-            {getCurrentTasks()}
-          </div>
+          <div className="row w-100">{getCurrentTasks()}</div>
         ) : null}
         {currTab === "finished tasks" ? (
           <div className="row w-100">{getFinishedTasks()}</div>

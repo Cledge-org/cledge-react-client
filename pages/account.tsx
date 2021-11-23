@@ -11,7 +11,9 @@ import { getAccountInfo } from "./api/get-account-info";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    return { props: { accountInfo: await getAccountInfo("testUser") } };
+    let accountInfo: AccountInfo = await getAccountInfo("testUser");
+    accountInfo.birthday = accountInfo.birthday.toDateString(); //THIS WORKS -- IT'S A TEMPORARY SOLUTION
+    return { props: { accountInfo } };
   } catch (err) {
     console.log(err);
     ctx.res.end();
@@ -64,13 +66,13 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
               setModalOpen(true);
             }}
           />
-          <InfoSection
+          {/* <InfoSection
             name="BIRTHDAY"
-            value={accountInfo.birthday}
+            value={accountInfo.birthday.toString()}
             onEdit={() => {
               setModalOpen(true);
             }}
-          />
+          /> */}
           <InfoSection
             name="ADDRESS"
             value={accountInfo.address}
@@ -123,7 +125,7 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
         }}
         isOpen={modalOpen}
       >
-        <TextInputQuestion />
+        <TextInputQuestion question={undefined} userAnswer={""} />
       </Modal>
     </div>
   );
