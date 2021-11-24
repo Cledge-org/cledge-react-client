@@ -11,11 +11,12 @@ export default function login({ providers }: { providers: Provider }) {
   });
   const handleSubmit = (e) => {
     e.preventDefault();
+    // signIn({email:formData.email, password: formData.password})
   };
 
   return (
     <div className="container">
-      <div
+      <form
         className="col col-md-5 d-flex mx-auto flex-column justify-content-center align-items-center"
         style={{ height: "80vh" }}
       >
@@ -26,7 +27,7 @@ export default function login({ providers }: { providers: Provider }) {
             className="text-muted"
             htmlFor="email"
           >
-            Email address
+            Email Address
           </label>
           <input
             value={formData.email}
@@ -63,7 +64,18 @@ export default function login({ providers }: { providers: Provider }) {
           <div key={provider.name} className="w-100">
             <button
               className="btn btn-light cl-btn shadow-sm my-3 w-100 fw-bold"
-              onClick={() => signIn(provider.id)}
+              onClick={() =>
+                signIn(
+                  provider.id,
+                  provider.id === "credentials"
+                    ? {
+                        password: formData.password,
+                        email: formData.email,
+                        callbackUrl: `${window.location.origin}/`,
+                      }
+                    : {}
+                )
+              }
             >
               Sign in with {provider.name}
             </button>
@@ -91,7 +103,7 @@ export default function login({ providers }: { providers: Provider }) {
             </button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

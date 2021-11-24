@@ -8,47 +8,34 @@ const firebaseCreds = {
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
 };
 class AuthFunctions {
-  static googleProvider = new GoogleAuthProvider();
   static initFirebaseProj() {
     if (!firebase.getApps().length) {
-      firebase.initializeApp(firebaseCreds);
+      return firebase.initializeApp(firebaseCreds);
     }
-    this.googleProvider.addScope(
-      "https://www.googleapis.com/auth/contacts.readonly"
-    );
+    return null;
   }
   static async signInEmail(email: string, password: string) {
-    await firebaseAuth
+    console.log(email);
+    console.log(password);
+    return await firebaseAuth
       .signInWithEmailAndPassword(firebaseAuth.getAuth(), email, password)
       .catch((err) => {
-        Alert(err);
+        console.error(err);
       });
   }
-  static async signInGoogle() {
-    await firebaseAuth
-      .signInWithPopup(firebaseAuth.getAuth(), this.googleProvider)
-      .catch((err) => {
-        Alert(err);
-      });
-  }
+  static async createUser() {}
+  // static async signInGoogle() {
+  //   await firebaseAuth
+  //     .signInWithPopup(firebaseAuth.getAuth(), this.googleProvider)
+  //     .catch((err) => {
+  //       Alert(err);
+  //     });
+  // }
   static async signOut() {
     await firebaseAuth.signOut(firebaseAuth.getAuth()).catch((err) => {
       Alert(err);
     });
   }
 }
-export const useFirebaseAuth = () => {
-  const [currUser, setCurrUser] = useState(null);
-  useEffect(() => {
-    const unsub = firebaseAuth.onAuthStateChanged(
-      firebaseAuth.getAuth(),
-      async (authState) => {
-        setCurrUser(authState);
-      }
-    );
-    return () => unsub();
-  }, []);
-  return currUser;
-};
-AuthFunctions.initFirebaseProj();
+
 export default AuthFunctions;
