@@ -9,7 +9,7 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { id, name, address, grade, birthday, email } = req.body;
+  const { id, name, address, grade, birthday, email, tags } = req.body;
   if (!id) {
     resolve.status(400).send("User ID required (id)");
   } else {
@@ -20,6 +20,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         grade,
         birthday,
         email,
+        tags,
       });
       resolve.status(200).send("Success");
     } catch (e) {
@@ -28,6 +29,8 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   }
 };
 
+// Updates user of id with provided AccountInfo. If a field is not provided, it
+// will not be updated, so its old value will remain.
 export const updateUser = async (
   id: string,
   user: AccountInfo

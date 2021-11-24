@@ -5,6 +5,7 @@ interface AccountInfo {
   grade: number;
   birthday: Date;
   email: string;
+  tags: string[];
 }
 //Resource Page Types -->
 interface ResourcesInfo {
@@ -87,6 +88,7 @@ interface CourseModuleContent {
   content?: string;
 }
 interface CourseModulePersonalizedContent {
+  moduleId: string;
   priority: number;
   title: string;
   type: string;

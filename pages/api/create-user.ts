@@ -9,18 +9,27 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { name, address, grade, birthday, email } = req.body;
-  try {
-    await createUser({
-      name,
-      address,
-      grade,
-      birthday,
-      email,
-    });
-    resolve.status(200).send("Success");
-  } catch (e) {
-    resolve.status(500).send(e);
+  const { name, address, grade, birthday, email, tags } = req.body;
+  if (!name || !address || !grade || !birthday || !email || !tags) {
+    resolve
+      .status(400)
+      .send(
+        "User creation missing one of: name, address, grade, birthday, email, or tags."
+      );
+  } else {
+    try {
+      await createUser({
+        name,
+        address,
+        grade,
+        birthday,
+        email,
+        tags,
+      });
+      resolve.status(200).send("Success");
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
   }
 };
 

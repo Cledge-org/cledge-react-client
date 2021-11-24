@@ -25,12 +25,19 @@ export async function getProgressInfo(
         assert.equal(connection_err, null);
         const coursesDb = client.db("courses");
         const usersDb = client.db("users");
-        const course: Course_Db = (await coursesDb
-          .collection("courses")
-          .findOne({ _id: courseId })) as Course_Db;
+
+        const [course, accountInfo]: [Course_Db, AccountInfo] =
+          await Promise.all([
+            coursesDb
+              .collection("courses")
+              .findOne({ _id: courseId }) as Promise<Course_Db>,
+            usersDb
+              .collection("users")
+              .findOne({ _id: userId }) as Promise<AccountInfo>,
+          ]);
         const modules: CourseModule[] = await Promise.all(
           course.modules.map((moduleId) =>
-            getModule(moduleId, userId, coursesDb, usersDb)
+            getModule(moduleId, coursesDb, accountInfo.tags)
           )
         );
         res({ tags: course.tags, title: course.title, modules });
@@ -41,9 +48,8 @@ export async function getProgressInfo(
 
 const getModule = (
   moduleId: string,
-  userId: string,
   coursesDb: Db,
-  usersDb: Db
+  userTags: string[]
 ): Promise<CourseModule> => {
   return new Promise(async (res, err) => {
     try {
@@ -51,11 +57,15 @@ const getModule = (
       const module: CourseModule_Db = (await coursesDb
         .collection("modules")
         .findOne({ _id: moduleId })) as CourseModule_Db;
-      // TODO: Populate personalized content based on user
+      // Populate this module's personalized content based on user's tags
+      const personalizedContent = (await coursesDb
+        .collection("personalized-content")
+        .find({ tags: { $in: userTags }, moduleId })
+        .toArray()) as CourseModulePersonalizedContent[];
       res({
         title: module.title,
         presetContent: module.presetContent,
-        personalizedContent: [],
+        personalizedContent,
       });
     } catch (e) {
       err(e);
