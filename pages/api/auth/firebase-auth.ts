@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
-import firebaseAuth, { GoogleAuthProvider } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
 const firebaseCreds = {
@@ -7,23 +7,19 @@ const firebaseCreds = {
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
 };
+const firebaseApp = initializeApp(firebaseCreds);
+const firebaseAuth = getAuth(firebaseApp);
 class AuthFunctions {
-  static initFirebaseProj() {
-    if (!firebase.getApps().length) {
-      return firebase.initializeApp(firebaseCreds);
-    }
-    return null;
-  }
   static async signInEmail(email: string, password: string) {
-    console.log(email);
-    console.log(password);
-    return await firebaseAuth
-      .signInWithEmailAndPassword(firebaseAuth.getAuth(), email, password)
-      .catch((err) => {
-        console.error(err);
-      });
+    return await signInWithEmailAndPassword(
+      firebaseAuth,
+      email,
+      password
+    ).catch((err) => {
+      console.error(err);
+    });
   }
-  static async createUser() {}
+  static async createUser(initUserObj: JSON) {}
   // static async signInGoogle() {
   //   await firebaseAuth
   //     .signInWithPopup(firebaseAuth.getAuth(), this.googleProvider)
@@ -32,7 +28,7 @@ class AuthFunctions {
   //     });
   // }
   static async signOut() {
-    await firebaseAuth.signOut(firebaseAuth.getAuth()).catch((err) => {
+    await firebaseAuth.signOut().catch((err) => {
       Alert(err);
     });
   }

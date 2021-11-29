@@ -60,27 +60,18 @@ export default function login({ providers }: { providers: Provider }) {
             placeholder="Enter Password"
           />
         </div>
-        {Object.values(providers).map((provider) => (
-          <div key={provider.name} className="w-100">
-            <button
-              className="btn btn-light cl-btn shadow-sm my-3 w-100 fw-bold"
-              onClick={() =>
-                signIn(
-                  provider.id,
-                  provider.id === "credentials"
-                    ? {
-                        password: formData.password,
-                        email: formData.email,
-                        callbackUrl: `${window.location.origin}/`,
-                      }
-                    : {}
-                )
-              }
-            >
-              Sign in with {provider.name}
-            </button>
-          </div>
-        ))}
+        <div key={"Google"} className="w-100">
+          <button
+            className="btn btn-light cl-btn shadow-sm my-3 w-100 fw-bold"
+            onClick={() =>
+              signIn("google", {
+                callbackUrl: `${window.location.origin}/dashboard`,
+              })
+            }
+          >
+            Sign in with Google
+          </button>
+        </div>
         <div className="px-0 align-self-start mt-3">
           <Link href="/auth/reset_password">
             <a className="forgot-password-btn">Forgot Password</a>
@@ -97,7 +88,13 @@ export default function login({ providers }: { providers: Provider }) {
             <button
               type="button"
               className="btn btn-primary cl-btn-blue"
-              onClick={handleSubmit}
+              onClick={() => {
+                signIn("credentials", {
+                  password: formData.password,
+                  email: formData.email,
+                  callbackUrl: `${window.location.origin}/dashboard`,
+                });
+              }}
             >
               Log in
             </button>

@@ -14,8 +14,6 @@ export default NextAuth({
   providers: [
     CredentialsProvider({
       async authorize(credentials, req) {
-        // console.log(req);
-        console.log(req.body);
         return await AuthFunctions.signInEmail(
           credentials.email,
           credentials.password

@@ -13,6 +13,8 @@ import Layout from "../components/common/Layout";
 import { store } from "../utils/store";
 import { Provider } from "react-redux";
 import ProtectedComponent from "../components/common/ProtectedComponent";
+import AuthFunctions from "./api/auth/firebase-auth";
+import { useEffect } from "react";
 
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
   requireAuth?: boolean;

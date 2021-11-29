@@ -220,5 +220,5 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
   );
 };
 
-Progress.requireAuth = false;
+Progress.requireAuth = true;
 export default Progress;

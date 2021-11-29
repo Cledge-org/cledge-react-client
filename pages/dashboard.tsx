@@ -121,5 +121,5 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
     </div>
   );
 };
-Dashboard.requireAuth = false;
+Dashboard.requireAuth = true;
 export default Dashboard;

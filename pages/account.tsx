@@ -148,5 +148,5 @@ function InfoSection({ name, value, onEdit }: InfoSectionProps) {
     </div>
   );
 }
-AccountPage.requireAuth = false;
+AccountPage.requireAuth = true;
 export default AccountPage;

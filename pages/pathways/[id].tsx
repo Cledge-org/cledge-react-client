@@ -153,5 +153,5 @@ const Pathways: NextApplicationPage<{
   );
 };
 
-Pathways.requireAuth = false;
+Pathways.requireAuth = true;
 export default Pathways;
