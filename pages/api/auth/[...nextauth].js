@@ -26,6 +26,9 @@ export default NextAuth({
     }),
   ],
   callbacks: {
+    redirect({ url, baseUrl }) {
+      return baseUrl;
+    },
     session: async (session, user) => {
       session.id = user.id;
       return Promise.resolve(session);
