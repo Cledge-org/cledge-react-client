@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
 const firebaseCreds = {
@@ -19,7 +23,13 @@ class AuthFunctions {
       console.error(err);
     });
   }
-  static async createUser(initUserObj: JSON) {}
+  static async createUser(email: string, password: string, initUserObj) {
+    await createUserWithEmailAndPassword(firebaseAuth, email, password).catch(
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
   // static async signInGoogle() {
   //   await firebaseAuth
   //     .signInWithPopup(firebaseAuth.getAuth(), this.googleProvider)

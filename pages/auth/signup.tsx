@@ -4,6 +4,7 @@ import { useState } from "react";
 import { getProviders, signIn } from "next-auth/react";
 import type { Provider } from "next-auth/providers";
 import GoogleProvider from "next-auth/providers/google";
+import AuthFunctions from "../api/auth/firebase-auth";
 
 export default function signup() {
   var [formData, setFormData] = useState({
@@ -13,9 +14,17 @@ export default function signup() {
     password1: "",
     password2: "",
   });
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    await AuthFunctions.createUser(formData.email, formData.password1, {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+    });
+    signIn("credentials", {
+      password: formData.password1,
+      email: formData.email,
+      callbackUrl: `${window.location.origin}/dashboard`,
+    });
   };
   return (
     <div className="container">
@@ -126,7 +135,11 @@ export default function signup() {
         <div key={GoogleProvider.name} className="w-100">
           <button
             className="btn btn-light cl-btn shadow-sm my-3 w-100 fw-bold"
-            onClick={() => {}}
+            onClick={() => {
+              signIn("google", {
+                callbackUrl: `${window.location.origin}/dashboard`,
+              });
+            }}
           >
             Sign Up with {GoogleProvider.name}
           </button>

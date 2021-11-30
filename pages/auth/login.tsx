@@ -3,8 +3,9 @@ import Link from "next/link";
 import { Dispatch, SetStateAction, useState } from "react";
 import { getProviders, signIn } from "next-auth/react";
 import type { Provider } from "next-auth/providers";
+import GoogleProvider from "next-auth/providers/google";
 
-export default function login({ providers }: { providers: Provider }) {
+export default function login() {
   var [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -60,7 +61,7 @@ export default function login({ providers }: { providers: Provider }) {
             placeholder="Enter Password"
           />
         </div>
-        <div key={"Google"} className="w-100">
+        <div key={GoogleProvider.name} className="w-100">
           <button
             className="btn btn-light cl-btn shadow-sm my-3 w-100 fw-bold"
             onClick={() =>
@@ -69,7 +70,7 @@ export default function login({ providers }: { providers: Provider }) {
               })
             }
           >
-            Sign in with Google
+            Sign in with {GoogleProvider.name}
           </button>
         </div>
         <div className="px-0 align-self-start mt-3">
