@@ -1,9 +1,10 @@
 // my accounts page
 import Link from "next/link";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { getProviders, signIn } from "next-auth/react";
 import type { Provider } from "next-auth/providers";
 import GoogleProvider from "next-auth/providers/google";
+import AuthFunctions from "../api/auth/firebase-auth";
 
 export default function login() {
   var [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ export default function login() {
 
   return (
     <div className="container">
-      <form
+      <div
         className="col col-md-5 d-flex mx-auto flex-column justify-content-center align-items-center"
         style={{ height: "80vh" }}
       >
@@ -101,7 +102,7 @@ export default function login() {
             </button>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

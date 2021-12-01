@@ -29,9 +29,10 @@ export default NextAuth({
     redirect({ url, baseUrl }) {
       return baseUrl;
     },
-    session: async (session, user) => {
-      session.id = user.id;
-      return Promise.resolve(session);
+    async session({ session, token, user }) {
+      // Send properties to the client, like an access_token from a provider.
+      session.accessToken = token.accessToken;
+      return session;
     },
   },
 });
