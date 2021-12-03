@@ -14,10 +14,12 @@ export default NextAuth({
   providers: [
     CredentialsProvider({
       async authorize(credentials, req) {
-        return await AuthFunctions.signInEmail(
-          credentials.email,
-          credentials.password
-        );
+        return (
+          await AuthFunctions.signInEmail(
+            credentials.email,
+            credentials.password
+          )
+        ).user;
       },
     }),
     GoogleProvider({
@@ -29,10 +31,12 @@ export default NextAuth({
     redirect({ url, baseUrl }) {
       return baseUrl;
     },
-    async session({ session, token, user }) {
+    session: async ({ session, token, user }) => {
       // Send properties to the client, like an access_token from a provider.
+      // console.debug(user);
+      // session.user = user;
       session.accessToken = token.accessToken;
-      return session;
+      return Promise.resolve(session);
     },
   },
 });
