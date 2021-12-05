@@ -34,6 +34,7 @@ export const getAccountInfo = async (userId: string): Promise<AccountInfo> => {
                   grade: user_info.grade,
                   birthday: user_info.birthday,
                   email: user_info.email,
+                  tags: user_info.tags,
                 });
           });
       }

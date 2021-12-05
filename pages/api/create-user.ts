@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -9,7 +9,7 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { name, address, grade, birthday, email, tags } = req.body;
+  const { name, address, grade, birthday, email, userId, tags } = req.body;
   if (!name || !address || !grade || !birthday || !email || !tags) {
     resolve
       .status(400)
@@ -19,6 +19,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   } else {
     try {
       await createUser({
+        _id: new ObjectId(userId),
         name,
         address,
         grade,
@@ -33,14 +34,17 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   }
 };
 
-export const createUser = async (user: AccountInfo): Promise<void> => {
+export const createUser = async (user: AccountInfo_Db): Promise<void> => {
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         try {
-          await client.db("users").collection("users").insertOne(user);
+          await client
+            .db("users")
+            .collection("users")
+            .insertOne(user, { forceServerObjectId: false });
           res();
         } catch (e) {
           err(e);

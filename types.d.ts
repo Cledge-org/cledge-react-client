@@ -7,6 +7,15 @@ interface AccountInfo {
   email: string;
   tags: string[];
 }
+interface AccountInfo_Db {
+  _id: ObjectId;
+  name: string;
+  address: string;
+  grade: number;
+  birthday: Date;
+  email: string;
+  tags: string[];
+}
 //Resource Page Types -->
 interface ResourcesInfo {
   videoList: CardVideo[];
