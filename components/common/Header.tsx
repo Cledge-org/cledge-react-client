@@ -1,9 +1,9 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-export default function Header() {
+export default function Header({ key }: { key: string }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   console.log();
@@ -15,17 +15,19 @@ export default function Header() {
   );
   var navclass = "";
 
-  if (router.pathname == "/") {
+  if (router.pathname === "/") {
     navclass = "position-fixed fixed-top";
   } else {
     navclass = "nav-regular";
   }
+
   useEffect(() => {
     typeof document !== undefined
       ? require("bootstrap/dist/js/bootstrap")
       : null;
-    listener = document.addEventListener("scroll", (e) => {
-      var scrolled = document.scrollingElement.scrollTop;
+    document.removeEventListener("scroll", listener);
+    listener = document.body.addEventListener("scroll", (e) => {
+      var scrolled = document.body.scrollTop;
       if (scrolled > 0) {
         if (scrollState !== "scrolling") {
           setScrollState("scrolling");
@@ -43,13 +45,16 @@ export default function Header() {
     return () => {
       document.removeEventListener("scroll", listener);
     };
-  }, [scrollState, router]);
+  }, [scrollState]);
 
   return (
     <nav
+      key={key}
       className={`w-100 navbar cl-blue navbar-expand-md px-3 ${navclass} ${
         scrollState !== "scrolling" && router.pathname === "/"
           ? "position-absolute top-0 start-0 nav-transparent"
+          : scrollState !== "scrolling"
+          ? "sticky-top nav-regular shadow-none"
           : "sticky-top nav-regular"
       }`}
       style={{ zIndex: 2000 }}

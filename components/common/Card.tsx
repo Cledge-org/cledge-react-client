@@ -1,21 +1,36 @@
+import { auto } from "@popperjs/core";
 import { AppProps } from "next/dist/shared/lib/router/router";
 import { ComponentProps, ComponentPropsWithoutRef, useEffect } from "react";
 
 export interface CardProps {
   title: String;
-  url?: URL;
+  url?: string;
+  classNames?: string;
   child?: any;
   textGradient: "light" | "dark";
+  isCardTask?: boolean;
 }
 
-export default function Card({ title, child, url, textGradient }: CardProps) {
+export default function Card({
+  isCardTask,
+  title,
+  child,
+  url,
+  classNames = "col-lg-4 col-md-6 col-xs-12 p-3 px-4",
+  textGradient,
+}: CardProps) {
   useEffect(() => {}, []);
   return (
-    <div className="col-12 col-md-6 col-lg-4 p-3">
-      <div
-        className="card-container px-4 w-100 shadow"
-        onClick={() => alert(url?.toString())}
-      >
+    <div
+      className={classNames}
+      style={{ height: "35vh" }}
+      onClick={() => {
+        if (isCardTask !== undefined && !isCardTask) {
+          location.href = url;
+        }
+      }}
+    >
+      <div className="card-container px-4 w-100 h-100 shadow">
         <div
           className={
             textGradient === "light"
@@ -25,7 +40,9 @@ export default function Card({ title, child, url, textGradient }: CardProps) {
         >
           {title}
         </div>
-        <div className="w-100 wrap overflow-hidden p-3">{child}</div>
+        <div className="w-100 h-75 wrap overflow-hidden p-3 d-flex flex-column justify-content-end">
+          {child}
+        </div>
       </div>
     </div>
   );

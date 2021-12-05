@@ -1,5 +1,5 @@
 import {
-  faSortDown,
+  faChevronDown,
   faFileAlt,
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
@@ -14,6 +14,7 @@ export default function DropDownTab({
   onClick,
   isExtracurricular,
   isPathway,
+  currSelectedPath,
 }: {
   chunkList: Array<any>;
   title: string;
@@ -22,6 +23,7 @@ export default function DropDownTab({
   onClick: Function;
   isExtracurricular?: boolean;
   isPathway?: boolean;
+  currSelectedPath?: string;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
@@ -48,7 +50,7 @@ export default function DropDownTab({
             }
             style={{ width: "12px", height: "12px" }}
           >
-            <FontAwesomeIcon icon={faSortDown} />
+            <FontAwesomeIcon icon={faChevronDown} />
           </div>
         )}
       </button>
@@ -68,7 +70,11 @@ export default function DropDownTab({
               }
               onClick();
             }}
-            className="progress-dropdown-menu-btn"
+            className={
+              currSelectedPath === title + chunkTitle
+                ? "progress-dropdown-menu-btn-selected"
+                : "progress-dropdown-menu-btn"
+            }
           >
             <div
               className="center-child icon"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown, faSortDown } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 import { AppProps } from "next/dist/shared/lib/router/router";
 import QuestionSummaryPage from "./questionPages/question_summary_subpage";
@@ -18,6 +18,7 @@ import { GetServerSidePropsContext } from "next";
 import { getProgressInfo } from "./api/get-progress-info";
 import { NextApplicationPage } from "./_app";
 import DropDownTab from "../components/common/DropDown_Tab";
+import CardTask from "../components/common/Card_Task";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -33,9 +34,20 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
 }) => {
   const [currPage, setCurrPage] = useState("all");
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
+  const [percentageData, setPercentageData] = useState({
+    allLists: 0,
+    lists: [],
+  });
+
   useEffect(() => {
-    console.log(currPage);
-  }, [currPage]);
+    setPercentageData({
+      allLists: calculateTotalPercent(progressInfo.questionData.questionList),
+      lists: progressInfo.questionData.questionList.map(({ chunks }) => {
+        return calculatePercentComplete(chunks);
+      }),
+    });
+  }, []);
+
   const isNotEmpty = (element: any) => {
     return element !== null && element !== "" && element !== [];
   };
@@ -62,6 +74,14 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
     });
     return Math.round((finished / total) * 100);
   };
+  const calculateTotalPercent = (questionList: QuestionList[]) => {
+    let finished = 0;
+    let total = questionList.length * 100;
+    questionList.forEach((item, index) => {
+      finished += calculatePercentComplete(item.chunks);
+    });
+    return Math.round((finished / total) * 100);
+  };
   return (
     <div
       className="container-fluid d-flex flex-row px-0"
@@ -73,16 +93,16 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
           chunkList={[]}
           onClick={() => setCurrPage("all")}
           title="All Sections"
-          percentComplete={67}
+          percentComplete={undefined}
         />
-        {progressInfo.questionData.questionList.map((list) => {
+        {progressInfo.questionData.questionList.map((list, index) => {
           return (
             <DropDownTab
               isExtracurricular={list.title === "Extracurriculars"}
               chunkList={list.chunks.map((chunk) => chunk.title)}
               onClick={(chunk) => setCurrPage(chunk ?? list.title)}
               title={list.title}
-              percentComplete={calculatePercentComplete(list.chunks)}
+              percentComplete={percentageData.lists[index]}
             />
           );
         })}
@@ -92,7 +112,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
           <div className="container-fluid h-100">
             <QuestionSubPageHeader
               title="Profile Completion"
-              percentage={67}
+              percentage={percentageData.allLists}
               subText="This is just a placeholder"
             />
             <ul className="nav ms-5" role="tablist">
@@ -109,13 +129,53 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
             </ul>
             <div className="tab-content">
               <div
-                className={
-                  currAllSectionTab === "upcoming"
-                    ? "resources-tab-pane resources-active"
-                    : "resources-tab-pane"
-                }
-                id="resources"
-              ></div>
+                className={`resources-tab-pane flex-row justify-content-start align-items-center
+                  ${
+                    currAllSectionTab === "upcoming"
+                      ? " resources-active  d-flex "
+                      : ""
+                  }
+                `}
+                id="upcoming"
+              >
+                {progressInfo.questionData.questionList
+                  .filter(({ chunks }, index) => {
+                    return percentageData.lists[index] < 100;
+                  })
+                  .map(({ title }) => (
+                    <CardCheckIn
+                      snippet={"OH CRAP"}
+                      title={title}
+                      textGradient={"light"}
+                      percentComplete={0}
+                      isFinished={false}
+                    />
+                  ))}
+              </div>
+              <div
+                className={`resources-tab-pane flex-row justify-content-start align-items-center
+                  ${
+                    currAllSectionTab === "finished"
+                      ? " resources-active  d-flex "
+                      : ""
+                  }
+                `}
+                id="finished"
+              >
+                {progressInfo.questionData.questionList
+                  .filter(({ chunks }, index) => {
+                    return percentageData.lists[index] < 100;
+                  })
+                  .map(({ title }) => (
+                    <CardCheckIn
+                      snippet={"OH CRAP"}
+                      title={title}
+                      textGradient={"light"}
+                      percentComplete={0}
+                      isFinished={false}
+                    />
+                  ))}
+              </div>
             </div>
           </div>
         ) : (

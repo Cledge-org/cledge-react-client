@@ -20,7 +20,7 @@ export default function CardVideo({
       textGradient={textGradient}
       title={title}
       child={<YoutubeEmbed videoId={videoId} />}
-      url={new URL("https://www.youtube.com/watch?v=" + videoId)}
+      url={"https://www.youtube.com/watch?v=" + videoId}
     />
   );
 }

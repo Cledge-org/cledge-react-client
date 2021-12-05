@@ -149,47 +149,6 @@ input[type="password"] {
     box-shadow: none;
   }
 }
-.auth-bottom-nav {
-  @extend .mt-3;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-.split-input {
-  width: 47%;
-}
-.forgot-password-btn {
-  color: $cl-mid-gray;
-  font-weight: 600;
-  font-size: 0.8em;
-}
-
-.resources-tab-nav-btn {
-  transition: 500ms;
-  outline: none;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5em;
-  border: 1px solid transparent;
-  border-radius: 2.5px;
-  &:hover {
-    cursor: pointer;
-    background: rgba($color: #000000, $alpha: 0.1);
-  }
-}
-
-.landing-page-white-text,
-.landing-page-white-text p {
-  color: $cl-white;
-}
-
-.landing-page-gray-text p {
-  color: $cl-light-gray;
-}
 
 h1 {
   font-family: "Montserrat", sans-serif;
@@ -223,17 +182,6 @@ a {
   margin-top: auto;
 }
 
-.resources-tab-pane {
-  @extend .container-fluid;
-  display: none;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-}
-.resources-active {
-  @extend .resources-tab-pane;
-  display: flex;
-}
 $spacers: (
   0: 0,
   1: (
@@ -256,6 +204,8 @@ $spacers: (
     $spacer * 10,
   ),
 );
+
+//GLOBAL DROPDOWN STYLES -->
 .dropdown-container {
   position: relative;
   height: 5vh;
@@ -269,6 +219,7 @@ $spacers: (
   z-index: 1000;
 }
 
+//NAV STYLES -->
 .nav-regular {
   @extend .shadow-sm;
   @extend .navbar-light;
@@ -280,108 +231,4 @@ $spacers: (
   @extend .navbar-dark;
   color: white;
   background-color: transparent;
-}
-
-.landing-update-button {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
-  border-width: 0;
-  color: black;
-  padding-left: calc(1.5em + 10px);
-  padding-right: 1.5em;
-  max-lines: 1;
-  max-width: 75vw;
-  transform: translate(-15px, 0);
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.6);
-    color: black;
-  }
-}
-
-.myaccount-blob {
-  @extend .px-4;
-  @extend .py-4;
-  @extend .mb-3;
-  border: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.3);
-  border-radius: 20px;
-  height: fit-content;
-  .title {
-    @extend .cl-dark-text;
-    font-size: 1em;
-    font-weight: 600;
-  }
-  div:last-of-type {
-    border-bottom: none;
-  }
-}
-
-.myaccount-info-section {
-  font-size: 0.9em;
-  @extend .pt-1;
-  @extend .pb-3;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.3);
-  .name {
-    display: flex;
-    color: $cl-mid-gray;
-    font-size: 0.85em;
-    font-weight: 600;
-    flex: 0.8;
-  }
-  .info-container {
-    @extend .cl-dark-text;
-    display: flex;
-    font-weight: 600;
-    align-items: center;
-    justify-content: space-between;
-    flex: 2;
-    .icon-btn {
-      background-color: transparent;
-      outline: none;
-      border: 1px solid transparent;
-      width: 3vw;
-      height: 3vw;
-      border-radius: 1.5vw;
-      &:hover {
-        background-color: rgba($color: $cl-light-gray, $alpha: 0.5);
-      }
-    }
-  }
-}
-
-#landing-main {
-  background-image: url("/images/landing_bg.svg");
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  z-index: 999;
-  height: 100%;
-  @media (min-width: 992px) {
-    height: 100vh;
-  }
-}
-
-.feature-tabbar {
-  border-radius: 10px;
-}
-
-.feature-tab {
-  cursor: pointer;
-  padding: 1em;
-  margin: 0.5em;
-  border: 2px solid;
-  border-radius: 12px;
-}
-
-@include media-breakpoint-up(lg) {
-  .feature-tabbar {
-    transform: translate(0, -5em);
-    margin-bottom: -5em;
-  }
-}
-.pathway-description {
-  @extend .pb-2;
-  width: 90%;
-  border-bottom: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.7);
 }

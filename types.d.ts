@@ -35,7 +35,6 @@ interface CardResource {
   source: string;
   title: string;
 }
-interface CardTask {}
 //Progress Page Types -->
 interface UserProgress {
   responses: UserResponse[];
@@ -69,36 +68,65 @@ interface Question {
   data?: any[];
   isConcatenable?: boolean;
 }
-//Learning Pathway Types -->
+//Learning Pathways Types -->
+interface Dashboard {
+  userName: string;
+  userTags: string[];
+  userProgress: CourseProgress[];
+}
+interface Pathway {
+  pathway: Course;
+  userTags: string[];
+  userCourseProgress: CourseProgress;
+}
+interface CourseProgress {
+  finished: boolean;
+  title: string;
+  id: string;
+  moduleProgress: ModuleProgress[];
+}
+interface ModuleProgress {
+  finished: boolean;
+  title: string;
+  contentProgress: ContentProgress[];
+}
+interface ContentProgress {
+  finished: boolean;
+  title: string;
+  videoTime?: string;
+}
+interface Course {
+  title: string;
+  id: string;
+  modules: CourseModule[];
+  tags: string[];
+}
+interface CourseModule {
+  title: string;
+  presetContent: PresetContent[];
+  personalizedContent: PersonalizedContent[];
+  tags: string[];
+}
 interface Course_Db {
   tags: string[];
   modules: string[]; // Module document IDs
   title: string;
 }
-interface Course {
-  tags: string[];
-  modules: CourseModule[];
-  title;
-}
 interface CourseModule_Db {
   title: string;
   presetContent: CourseModuleContent[];
 }
-interface CourseModule {
-  title: string;
-  presetContent: CourseModuleContent[];
-  personalizedContent: CourseModulePersonalizedContent[];
-}
-interface CourseModuleContent {
+interface PresetContent {
   priority: number;
   title: string;
   type: string;
   url: string;
   content?: string;
 }
-interface CourseModulePersonalizedContent {
-  moduleId: string;
+interface PersonalizedContent {
   priority: number;
+  tagConfigs: string[][];
+  tags: string[];
   title: string;
   type: string;
   url: string;

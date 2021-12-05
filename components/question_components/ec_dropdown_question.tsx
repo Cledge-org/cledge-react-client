@@ -1,7 +1,7 @@
 import {
   faArrowLeft,
-  faSortDown,
-  faSortUp,
+  faChevronDown,
+  faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState, useRef } from "react";
@@ -15,6 +15,7 @@ interface ECDropDownProps {
   defaultValue?: string | string[];
   valuesList: string[];
   questionTitle: string;
+  isForWaitlist?: boolean;
   onChange: Function;
   key: String;
 }
@@ -42,6 +43,7 @@ export default function ECDropDown({
   defaultValue,
   valuesList,
   key,
+  isForWaitlist,
   questionTitle,
   onChange,
 }: ECDropDownProps) {
@@ -71,7 +73,9 @@ export default function ECDropDown({
     if (isConcatenable) {
       return chosen.includes(" " + itemName);
     }
-    return chosen === itemName;
+    return chosen === "" || chosen === []
+      ? defaultValue === itemName
+      : chosen === itemName;
   };
   useEffect(() => {
     typeof document !== undefined
@@ -84,12 +88,12 @@ export default function ECDropDown({
   return (
     <div
       className={
-        !forCalendar
+        !forCalendar && !isForWaitlist
           ? "w-100 d-flex flex-column justify-content-evenly pt-5"
           : "w-100 d-flex flex-column justify-content-evenly"
       }
     >
-      {!forCalendar ? (
+      {!forCalendar && !isForWaitlist ? (
         <div
           className="fw-bold cl-dark-text pb-3"
           style={{ fontSize: "1.4em" }}
@@ -98,27 +102,32 @@ export default function ECDropDown({
         </div>
       ) : null}
       <div ref={wrapperRef} className="dropdown-container">
-        <button className="ec-dropdown-btn" onClick={() => setIsOpen(!isOpen)}>
+        <button
+          className={`ec-dropdown-btn ${isForWaitlist ? "bg-white" : ""}`}
+          onClick={() => setIsOpen(!isOpen)}
+        >
           {!forCalendar && (defaultValue === "" || defaultValue === [])
             ? chosen.length === 0
               ? placeholder
               : !isConcatenable
               ? chosen
               : chosen.toString()
-            : defaultValue}
+            : chosen === "" || chosen === []
+            ? defaultValue
+            : chosen.toString()}
           <div
             className={
               isOpen ? "center-child icon-open" : "center-child icon-close"
             }
             style={{ width: "12px", height: "10px" }}
           >
-            <FontAwesomeIcon icon={faSortDown} />
+            <FontAwesomeIcon icon={faChevronDown} />
           </div>
         </button>
         <div
           className="dropdown-menu-custom ec-dropdown-menu"
           style={
-            !forCalendar
+            !forCalendar && !isForWaitlist
               ? { display: isOpen ? "flex" : "none" }
               : { width: "100%", display: isOpen ? "flex" : "none" }
           }
