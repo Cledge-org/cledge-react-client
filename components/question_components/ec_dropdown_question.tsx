@@ -55,6 +55,7 @@ export default function ECDropDown({
       setIsOpen(false);
     }
   });
+
   const changeChosen = (value: string) => {
     setChosen((prevChosen) => {
       if (!isConcatenable) {
@@ -68,6 +69,7 @@ export default function ECDropDown({
       prevChosenArr.push(" " + value);
       return prevChosenArr;
     });
+    onChange(value);
   };
   const itemIsPicked = (itemName: string) => {
     if (isConcatenable) {
@@ -82,9 +84,6 @@ export default function ECDropDown({
       ? require("bootstrap/dist/js/bootstrap")
       : null;
   }, []);
-  useEffect(() => {
-    console.log(chosen);
-  }, [chosen]);
   return (
     <div
       className={
@@ -136,7 +135,6 @@ export default function ECDropDown({
             <div
               onClick={() => {
                 changeChosen(name);
-                onChange();
               }}
               className={
                 itemIsPicked(name)

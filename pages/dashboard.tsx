@@ -90,7 +90,7 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
           onClick={() => {
             router.push({
               pathname: "/upload-page",
-              query: { type: "resources" },
+              query: { type: "learning-pathways" },
             });
           }}
         >
@@ -110,7 +110,7 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
           onClick={() => {
             router.push({
               pathname: "/upload-page",
-              query: { type: "resources" },
+              query: { type: "progress-questions" },
             });
           }}
         >
