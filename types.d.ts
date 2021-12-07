@@ -108,13 +108,15 @@ interface CourseModule {
   tags: string[];
 }
 interface Course_Db {
+  id: string;
   tags: string[];
   modules: string[]; // Module document IDs
   title: string;
 }
 interface CourseModule_Db {
   title: string;
-  presetContent: CourseModuleContent[];
+  presetContent: PresetContent[];
+  tags: string[];
 }
 interface PresetContent {
   priority: number;

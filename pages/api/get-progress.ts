@@ -1,6 +1,6 @@
 import { Db, MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getAccountInfo } from "./get-account-info";
+import { getAccountInfo } from "./get-account";
 import { getQuestionResponses } from "./get-question-responses";
 import assert from "assert";
 

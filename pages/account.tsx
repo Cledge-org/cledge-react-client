@@ -5,7 +5,7 @@ import { useState } from "react";
 import Modal from "react-modal";
 import TextInputQuestion from "../components/question_components/textinput_question";
 import { NextApplicationPage } from "./_app";
-import { getAccountInfo } from "./api/get-account-info";
+import { getAccountInfo } from "./api/get-account";
 
 // account page
 

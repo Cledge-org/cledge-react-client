@@ -15,7 +15,7 @@ import CardCheckIn from "../components/common/Card_CheckIn";
 import QuestionSubPageHeader from "../components/question_components/question_subpage_header";
 import QuestionECSubpage from "./questionPages/question_ec_subpage";
 import { GetServerSidePropsContext } from "next";
-import { getProgressInfo } from "./api/get-progress-info";
+import { getProgressInfo } from "./api/get-progress";
 import { NextApplicationPage } from "./_app";
 import DropDownTab from "../components/common/DropDown_Tab";
 import CardTask from "../components/common/Card_Task";

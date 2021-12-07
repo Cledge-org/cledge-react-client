@@ -11,10 +11,10 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   return resolve
     .status(200)
-    .send(getProgressInfo("TEST_USER_ID", "TEST_COURSE_ID"));
+    .send(getCourseInfo("TEST_USER_ID", "TEST_COURSE_ID"));
 };
 
-export async function getProgressInfo(
+export async function getCourseInfo(
   userId: string,
   courseId: string
 ): Promise<Course> {
@@ -40,7 +40,7 @@ export async function getProgressInfo(
             getModule(moduleId, coursesDb, accountInfo.tags)
           )
         );
-        res({ tags: course.tags, title: course.title, modules });
+        res({ tags: course.tags, title: course.title, id: course.id, modules });
       }
     );
   });
@@ -61,10 +61,11 @@ const getModule = (
       const personalizedContent = (await coursesDb
         .collection("personalized-content")
         .find({ tags: { $in: userTags }, moduleId })
-        .toArray()) as CourseModulePersonalizedContent[];
+        .toArray()) as PersonalizedContent[];
       res({
         title: module.title,
         presetContent: module.presetContent,
+        tags: module.tags,
         personalizedContent,
       });
     } catch (e) {

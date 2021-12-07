@@ -14,7 +14,7 @@ import TabButton from "../components/common/TabButton";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "./_app";
 import Pathways from "./pathways";
-import { getDashboardInfo } from "./api/get-dashboard-info";
+import { getDashboardInfo } from "./api/get-dashboard";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
