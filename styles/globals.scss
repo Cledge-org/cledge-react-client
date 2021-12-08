@@ -140,7 +140,8 @@ a {
 
 input[type="text"],
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="number"] {
   @extend .px-3;
   @extend .py-3;
   border-radius: 15px;
