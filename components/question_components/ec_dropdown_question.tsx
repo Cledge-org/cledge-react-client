@@ -105,7 +105,8 @@ export default function ECDropDown({
           className={`ec-dropdown-btn ${isForWaitlist ? "bg-white" : ""}`}
           onClick={() => setIsOpen(!isOpen)}
         >
-          {!forCalendar && (defaultValue === "" || defaultValue === [])
+          {!forCalendar &&
+          (defaultValue === "" || defaultValue === [] || !defaultValue)
             ? chosen.length === 0
               ? placeholder
               : !isConcatenable
