@@ -22,7 +22,6 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
   resourcesInfo,
 }) => {
   const [currTab, setCurrTab] = useState("resources");
-  console.log(resourcesInfo);
   return (
     <div className="d-flex flex-column vh-100">
       <div className="row">

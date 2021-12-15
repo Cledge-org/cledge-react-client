@@ -110,7 +110,7 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
           onClick={() => {
             router.push({
               pathname: "/upload-page",
-              query: { type: "progress-questions" },
+              query: { type: "questions" },
             });
           }}
         >
