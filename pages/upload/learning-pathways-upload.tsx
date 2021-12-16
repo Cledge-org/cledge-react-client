@@ -1,11 +1,23 @@
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GetServerSidePropsContext } from "next";
-import { useEffect, useState } from "react";
-import { getLearningPathways } from "../../pages/api/get-learning-pathways";
-import { NextApplicationPage } from "../../pages/_app";
-import ECDropDown from "../question_components/ec_dropdown_question";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { getLearningPathways } from "../api/get-learning-pathways";
+import { NextApplicationPage } from "../_app";
+import ECDropDown from "../../components/question_components/ec_dropdown_question";
+import UploadPage from "../../components/common/upload-page";
 
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  try {
+    return {
+      props: { allCourses: await getLearningPathways() },
+    };
+  } catch (err) {
+    console.log(err);
+    ctx.res.end();
+    return { props: {} as never };
+  }
+};
 // logged in landing page
 const LearningPathwaysUploadPage: NextApplicationPage<{
   allCourses: Course[];
@@ -14,7 +26,11 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
   const courseTitles = allCourses
     .map(({ title }) => title)
     .concat("NEW COURSE");
-  const [currCourseData, setCurrCourseData] = useState({
+  const [currCourseData, setCurrCourseData]: [
+    currCourseData: Course,
+    setCurrCourseData: Dispatch<SetStateAction<Course>>
+  ] = useState({
+    id: "",
     title: "",
     modules: [
       {
@@ -48,7 +64,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
     console.log(allCourses);
   }, []);
   return (
-    <>
+    <UploadPage>
       <div className="mt-4 d-flex flex-column w-100">
         <div className="form-group">
           <label
@@ -63,6 +79,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             onChange={(value) => {
               if (value === "NEW COURSE") {
                 setCurrCourseData({
+                  id: "",
                   title: "",
                   modules: [
                     {
@@ -94,7 +111,6 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 });
                 return;
               }
-              //DO NOT FIX THIS LINE!! IT WORKS JUST LIKE IT IS FOR NOW
               setCurrCourseData(allCourses[courseTitles.indexOf(value)]);
             }}
             defaultValue={"NEW COURSE"}
@@ -767,7 +783,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           </div>
         </div>
       </div>
-    </>
+    </UploadPage>
   );
 };
 export default LearningPathwaysUploadPage;

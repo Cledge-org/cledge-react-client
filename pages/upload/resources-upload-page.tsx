@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { GetServerSidePropsContext } from "next";
-import { NextApplicationPage } from "../../pages/_app";
-import ECDropDown from "../question_components/ec_dropdown_question";
+import { NextApplicationPage } from "../_app";
+import ECDropDown from "../../components/question_components/ec_dropdown_question";
+import UploadPage from "../../components/common/upload-page";
 
 // logged in landing page
 const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
@@ -13,7 +14,7 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
   });
 
   return (
-    <>
+    <UploadPage>
       <ECDropDown
         isForWaitlist
         onChange={(value) => {
@@ -93,7 +94,7 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
           </div>
         ) : null}
       </div>
-    </>
+    </UploadPage>
   );
 };
 export default ResourcesUploadPage;
