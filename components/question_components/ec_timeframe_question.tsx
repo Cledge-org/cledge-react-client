@@ -3,8 +3,8 @@ import {
   faArrowLeft,
   faCalendar,
   faCalendarDay,
-  faSortDown,
-  faSortUp,
+  faChevronDown,
+  faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
@@ -13,10 +13,16 @@ import QuestionSubPageHeader from "../../components/question_components/question
 import ECCalendarDropDown from "./ec_calendar_dropdown";
 import ECDropDown from "./ec_dropdown_question";
 
-interface ECCalendarDropDownProps {}
+interface ECCalendarDropDownProps {
+  defaultStart?: Date;
+  defaultEnd?: Date;
+}
 const defaultProps: ECCalendarDropDownProps = {};
 
-export default function ECTimeFrame() {
+export default function ECTimeFrame({
+  defaultEnd,
+  defaultStart,
+}: ECCalendarDropDownProps) {
   const [progress, setProgress] = useState("none");
   useEffect(() => {
     typeof document !== undefined

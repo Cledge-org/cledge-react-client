@@ -7,14 +7,13 @@ body {
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
   height: 100%;
+  width: 100vw;
+  overflow-x: hidden;
 }
-
-#__next,
-#__next > div,
-main {
-  height: 95%;
+div,
+button {
+  font-family: "Montserrat", sans-serif;
 }
-
 $cl-white: #ffffff;
 $cl-translucent-white: #ffffff66;
 $cl-light-blue: #d9e1fc;
@@ -27,6 +26,9 @@ $cl-secondary-text: #b7b7b7;
 $cl-dark-gray: #222222;
 $cl-black: #000000;
 $cl-orange: #f7bc76;
+$font-family-base: "Montserrat", sans-serif;
+$cl-yellow: #f7bc76;
+$cl-red: #ff6060;
 
 a {
   color: inherit;
@@ -45,6 +47,9 @@ a {
 }
 .bg-light-gray {
   background-color: $cl-light-gray;
+}
+.bg-cl-blue {
+  background-color: $cl-blue;
 }
 .cl-white {
   color: $cl-white;
@@ -66,6 +71,12 @@ a {
 }
 .cl-black {
   color: $cl-black;
+}
+.cl-yellow {
+  color: $cl-yellow;
+}
+.cl-red {
+  color: $cl-red;
 }
 
 .center-child {
@@ -129,7 +140,8 @@ a {
 
 input[type="text"],
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="number"] {
   @extend .px-3;
   @extend .py-3;
   border-radius: 15px;
@@ -137,47 +149,6 @@ input[type="password"] {
   &:focus {
     box-shadow: none;
   }
-}
-.auth-bottom-nav {
-  @extend .mt-3;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-.split-input {
-  width: 47%;
-}
-.forgot-password-btn {
-  color: $cl-mid-gray;
-  font-weight: 600;
-  font-size: 0.8em;
-}
-
-.resources-tab-nav-btn {
-  transition: 500ms;
-  outline: none;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5em;
-  border: 1px solid transparent;
-  border-radius: 2.5px;
-  &:hover {
-    cursor: pointer;
-    background: rgba($color: #000000, $alpha: 0.1);
-  }
-}
-
-.landing-page-white-text,
-.landing-page-white-text p {
-  color: $cl-white;
-}
-
-.landing-page-gray-text p {
-  color: $cl-light-gray;
 }
 
 h1 {
@@ -209,17 +180,6 @@ a {
   margin-top: auto;
 }
 
-.resources-tab-pane {
-  @extend .container-fluid;
-  display: none;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-}
-.resources-active {
-  @extend .resources-tab-pane;
-  display: flex;
-}
 $spacers: (
   0: 0,
   1: (
@@ -242,6 +202,8 @@ $spacers: (
     $spacer * 10,
   ),
 );
+
+//GLOBAL DROPDOWN STYLES -->
 .dropdown-container {
   position: relative;
   height: 5vh;
@@ -265,4 +227,17 @@ $spacers: (
   -webkit-transform: scale(0.8, 0.8); /* Safari and Chrome */
   -o-transform: scale(0.8, 0.8); /* Opera */
   -moz-transform: scale(0.8, 0.8); /* Firefox */
+}
+//NAV STYLES -->
+.nav-regular {
+  @extend .shadow-sm;
+  @extend .navbar-light;
+  color: $cl-blue !important;
+  background-color: white;
+}
+
+.nav-transparent {
+  @extend .navbar-dark;
+  color: white;
+  background-color: transparent;
 }

@@ -5,7 +5,6 @@ interface TabButtonProps {
   title: String;
   currTab: String;
 }
-const cledgeBlue = "#2651ed";
 export default function TabButton({ onClick, title, currTab }: TabButtonProps) {
   const cledgeBlue = "#2651ed";
   const midGray = "#656565";

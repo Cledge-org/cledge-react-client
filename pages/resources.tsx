@@ -3,8 +3,24 @@ import Card from "../components/common/Card";
 import CardVideo from "../components/common/Card_Video";
 import CardText from "../components/common/Card_Text";
 import TabButton from "../components/common/TabButton";
+import { NextApplicationPage } from "./_app";
+import CardImage from "../components/common/Card_Image";
+import { GetServerSidePropsContext } from "next";
+import { getResourcesInfo } from "./api/get-resources-info";
 
-export default function resources() {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  try {
+    return { props: { resourcesInfo: await getResourcesInfo("testUser") } };
+  } catch (err) {
+    console.log(err);
+    ctx.res.end();
+    return { props: {} as never };
+  }
+};
+
+const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
+  resourcesInfo,
+}) => {
   const [currTab, setCurrTab] = useState("resources");
   return (
     <div className="d-flex flex-column vh-100">
@@ -35,68 +51,39 @@ export default function resources() {
       <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
         {currTab === "resources" ? (
           <div className="row jusify-content-evenly">
-            <Card
-              textGradient="light"
-              title={"Base card"}
-              child={<div>hello world</div>}
-            />
-            <CardVideo
-              textGradient="light"
-              title={"Video card"}
-              child={<div>hello world</div>}
-              videoId="ZGYSVyWdSRk"
-            />
-            <CardText
-              textGradient="dark"
-              title={"Text Card"}
-              child={<div>hello world</div>}
-              snippet={"hello world"}
-            />
+            {resourcesInfo.resources.map((element) => (
+              <CardImage
+                snippet=""
+                title={element.title}
+                textGradient={"light"}
+              />
+            ))}
           </div>
         ) : null}
         {currTab === "articles" ? (
           <div className="row">
-            <Card
-              textGradient="light"
-              title={"Base card"}
-              child={<div>hello world</div>}
-            />
-            <CardVideo
-              textGradient="light"
-              title={"Video card"}
-              child={<div>hello world</div>}
-              videoId="ZGYSVyWdSRk"
-            />
-            <CardText
-              textGradient="dark"
-              title={"Text Card"}
-              child={<div>hello world</div>}
-              snippet={"hello world"}
-            />
+            {resourcesInfo.articles.map((element) => (
+              <CardText
+                snippet=""
+                title={element.title}
+                textGradient={"light"}
+              />
+            ))}
           </div>
         ) : null}
         {currTab === "videos" ? (
           <div className="row">
-            <Card
-              textGradient="light"
-              title={"Base card"}
-              child={<div>hello world</div>}
-            />
-            <CardVideo
-              textGradient="light"
-              title={"Video card"}
-              child={<div>hello world</div>}
-              videoId="ZGYSVyWdSRk"
-            />
-            <CardText
-              textGradient="dark"
-              title={"Text Card"}
-              child={<div>hello world</div>}
-              snippet={"hello world"}
-            />
+            {resourcesInfo.videoList.map((element) => (
+              <CardVideo
+                title={element.title}
+                textGradient={"light"}
+                videoId={element.source}
+              />
+            ))}
           </div>
         ) : null}
       </div>
     </div>
   );
-}
+};
+export default Resources;

@@ -1,58 +1,60 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import QuestionSubPageHeader from "./question_subpage_header";
-import QuestionSummaryCard from "./question_summary_card";
 import CheckBox from "../common/CheckBox";
 
 interface CheckBoxQuestionProps {
-  title?: string;
-  valuesList?: string[];
-  defaultSelected?: string[];
+  question: Question;
+  userAnswers: string[];
   onChange: Function;
-  key?: any;
 }
+
 export default function CheckBoxQuestion({
-  title=undefined,
-  valuesList=["Computer Science", "Engineering", "Business", "Pre-Med", "Liberal Arts", "Undecided", "Other"],
-  defaultSelected=[],
+  question,
+  userAnswers,
   onChange,
-  key
 }: CheckBoxQuestionProps) {
-  const [selected, setSelected] = useState(defaultSelected);
-  const changeSelected = (value: string) => {
-    let selectedCopy: string[] = [...selected];
-    if (selectedCopy.includes(value)) selectedCopy.splice(selected.indexOf(value), 1);
-    else selectedCopy.push(value);
-    setSelected(selectedCopy);
-    onChange(selectedCopy);
+  const [selected, setSelected] = useState([0]);
+  useEffect(() => {
+    console.log(selected);
+  }, [selected]);
+  const changeSelected = (value: number) => {
+    setSelected((selectedCopy): number[] => {
+      if (selectedCopy.includes(value)) {
+        selectedCopy.splice(selectedCopy.indexOf(value), 1);
+      } else {
+        selectedCopy.push(value);
+      }
+      return selectedCopy;
+    });
+    onChange(value);
   };
   return (
     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
-      {typeof title !== 'undefined' &&
-        <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-          {title}
-        </span>
-      }
-
+      <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
+        {question.question}
+      </span>
       <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
-        {valuesList.map((option) => (
-          <button
-            key={option}
-            onClick={() => changeSelected(option)}
-            className={
-              selected.includes(option)
-                ? "checkbox-mcq-variant-selected"
-                : "checkbox-mcq-variant"
-            }
-          >
-            {option}
-            <CheckBox
-              selected={selected.includes(option)}
-              setSelected={changeSelected.bind(this)}
-            />
-          </button>
-        ))}
+        {question.data.map(({ op, tag }) => {
+          return (
+            <button
+              key={op}
+              onClick={() => {}}
+              className={
+                userAnswers.includes(tag)
+                  ? "checkbox-mcq-variant-selected"
+                  : "checkbox-mcq-variant"
+              }
+            >
+              {op}
+              <CheckBox
+                selected={userAnswers.includes(tag)}
+                setSelected={changeSelected.bind(this)}
+              />
+            </button>
+          );
+        })}
       </div>
-      {/* <button className="general-submit-btn">SUBMIT</button> */}
+      <button className="general-submit-btn">SUBMIT</button>
     </div>
   );
 }

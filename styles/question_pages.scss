@@ -26,7 +26,6 @@
     animation-name: rotateReverse;
     animation-duration: 600ms;
     animation-fill-mode: forwards;
-    transform-origin: 6px 8px;
   }
   @keyframes rotateReverse {
     0% {
@@ -51,7 +50,6 @@
   .icon-open {
     animation-fill-mode: forwards;
     animation-name: rotate;
-    transform-origin: 6px 8px;
     animation-duration: 600ms;
   }
   background-color: $cl-light-gray;
@@ -121,6 +119,10 @@
     color: $cl-mid-gray;
     @extend .ps-3;
   }
+}
+.progress-dropdown-menu-btn-selected {
+  @extend .progress-dropdown-menu-btn;
+  background-color: $cl-light-blue;
 }
 .question-subpage-title {
   font-weight: 800;

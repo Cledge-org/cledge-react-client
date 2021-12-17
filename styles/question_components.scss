@@ -111,7 +111,6 @@
     animation-name: rotateReverse;
     animation-duration: 600ms;
     animation-fill-mode: forwards;
-    transform-origin: 6px 8px;
   }
   @keyframes rotateReverse {
     0% {
@@ -136,7 +135,6 @@
   .icon-open {
     animation-fill-mode: forwards;
     animation-name: rotate;
-    transform-origin: 6px 8px;
     animation-duration: 600ms;
   }
   border: 1px solid $cl-light-gray;
@@ -255,6 +253,11 @@
   }
   .value {
     @extend .cl-dark-text;
+  }
+}
+.ecsummary-info-container {
+  div:last-of-type {
+    border-bottom: none;
   }
 }
 //EC Calendar Drop Down COMPONENT STYLES -->

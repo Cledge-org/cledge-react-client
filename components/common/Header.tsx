@@ -1,14 +1,72 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import { Router, useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-export default function Header({}) {
+export default function Header({ key }: { key: string }) {
   const { data: session, status } = useSession();
+  const router = useRouter();
+  console.log();
+
+  let listener = null;
+  const [scrollState, setScrollState] = useState("top");
+  const [colors, setColors] = useState(
+    router.pathname === "/" ? "cl-white" : "cl-blue"
+  );
+  var navclass = "";
+
+  if (router.pathname === "/") {
+    navclass = "position-fixed fixed-top";
+  } else {
+    navclass = "nav-regular";
+  }
+
+  useEffect(() => {
+    typeof document !== undefined
+      ? require("bootstrap/dist/js/bootstrap")
+      : null;
+    document.removeEventListener("scroll", listener);
+    listener = document.body.addEventListener("scroll", (e) => {
+      var scrolled = document.body.scrollTop;
+      if (scrolled > 0) {
+        if (scrollState !== "scrolling") {
+          setScrollState("scrolling");
+          setColors("cl-blue");
+        }
+      } else {
+        if (scrollState !== "top") {
+          setScrollState("top");
+          if (router.pathname === "/") {
+            setColors("cl-white");
+          }
+        }
+      }
+    });
+    return () => {
+      document.removeEventListener("scroll", listener);
+    };
+  }, [scrollState]);
 
   return (
-    <nav className="navbar cl-blue sticky-top navbar-expand-md bg-white px-3">
+    <nav
+      key={key}
+      className={`w-100 navbar cl-blue navbar-expand-md px-3 ${navclass} ${
+        scrollState !== "scrolling" && router.pathname === "/"
+          ? "position-absolute top-0 start-0 nav-transparent"
+          : scrollState !== "scrolling"
+          ? "sticky-top nav-regular shadow-none"
+          : "sticky-top nav-regular"
+      }`}
+      style={{ zIndex: 2000 }}
+    >
       <div className="container-fluid">
         <Link href="/">
-          <a className="navbar-brand mx-4">cledge</a>
+          <a
+            className={`navbar-brand mx-4`}
+            style={{ fontSize: "1.5em", fontWeight: 600 }}
+          >
+            <span className={`${colors}`}>cledge.</span>
+          </a>
         </Link>
         <button
           className="navbar-toggler"
@@ -19,60 +77,49 @@ export default function Header({}) {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon"></span>
+          <div className="navbar-toggler-icon"></div>
         </button>
-
         <div
           className="fs-7 collapse navbar-collapse justify-content-end"
           id="navbarNavAltMarkup"
         >
-          {/* user authenticated */}
-          <div className="navbar-nav">
-            <Link href="/resources">
-              <a className="nav-link">Resources</a>
-            </Link>
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNavAltMarkup"
-              aria-controls="navbarNavAltMarkup"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-
-            <div
-              className="fs-7 collapse navbar-collapse justify-content-end"
-              id="navbarNavAltMarkup"
-            >
-              {status === "authenticated" ? (
-                <div className="navbar-nav">
-                  <Link href="/resources">
-                    <a className="nav-link">Resources</a>
-                  </Link>
-                  <Link href="/progress">
-                    <a className="nav-link">Progress</a>
-                  </Link>
-                  <Link href="/account">
-                    <a className="nav-link ">My Account</a>
-                  </Link>
-                  <Link href="/api/auth/signout">
-                    <a className="nav-link" href="">
-                      Logout
-                    </a>
-                  </Link>
-                </div>
-              ) : (
-                <Link href="/api/auth/signin">
-                  <a className="nav-link" href="">
-                    Log In
-                  </a>
-                </Link>
-              )}
+          {status === "authenticated" ? (
+            <div className="navbar-nav">
+              <Link href="/resources">
+                <a className="nav-link" style={{ fontWeight: 600 }}>
+                  <span className={`${colors}`}>Resources</span>
+                </a>
+              </Link>
+              <Link href="/progress">
+                <a className="nav-link" style={{ fontWeight: 600 }}>
+                  <span className={`${colors}`}>Progress</span>
+                </a>
+              </Link>
+              <Link href="/account">
+                <a className="nav-link" style={{ fontWeight: 600 }}>
+                  <span className={`${colors}`}>My Account</span>
+                </a>
+              </Link>
+              <Link href="/api/auth/signout">
+                <a className="nav-link" style={{ fontWeight: 600 }} href="">
+                  <span className={`${colors}`}>Log Out</span>
+                </a>
+              </Link>
             </div>
-          </div>
+          ) : (
+            <div className="navbar-nav">
+              <Link href="/resources">
+                <a className="nav-link" style={{ fontWeight: 600 }}>
+                  <span className={`${colors}`}>Resources</span>
+                </a>
+              </Link>
+              <Link href="/api/auth/signin">
+                <a className="nav-link" style={{ fontWeight: 600 }} href="">
+                  <span className={`${colors}`}>Log In</span>
+                </a>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </nav>

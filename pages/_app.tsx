@@ -1,8 +1,10 @@
 import "bootstrap/dist/css/bootstrap.css";
 import "../styles/globals.scss";
-import "../styles/questionpages.scss";
+import "../styles/question_pages.scss";
+import "../styles/main_pages.scss";
 import "../styles/components.scss";
 import "../styles/question_components.scss";
+import "../styles/testing.css";
 import { SessionProvider as AuthProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { NextPage } from "next";
@@ -11,6 +13,8 @@ import Layout from "../components/common/Layout";
 import { store } from "../utils/store";
 import { Provider } from "react-redux";
 import ProtectedComponent from "../components/common/ProtectedComponent";
+import AuthFunctions from "./api/auth/firebase-auth";
+import { useEffect } from "react";
 
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
   requireAuth?: boolean;
@@ -30,6 +34,17 @@ function MyApp({
           <Head>
             <title>Cledge</title>
             <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link
+              rel="stylesheet"
+              type="text/css"
+              charSet="UTF-8"
+              href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
+            />
+            <link
+              rel="stylesheet"
+              type="text/css"
+              href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
+            />
             <link
               rel="preconnect"
               href="https://fonts.gstatic.com"

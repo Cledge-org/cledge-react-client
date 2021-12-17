@@ -8,25 +8,29 @@ import TextInputQuestion from "./textinput_question";
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface ECQuestionSummaryCardProps {
-  title: string;
-  tags?: string[];
-  accomplishment?: string[];
-  time?: string[];
-  hours?: string[];
+  response: UserResponse[];
+  chunkQuestions: Question[];
+  onClick: Function;
 }
+
 export default function ECQuestionSummaryCard({
-  title="Experience Title",
-  tags=["Volunteer", "Children", "Hospital"],
-  accomplishment=["Volunteer", "Children", "Hospital"],
-  time=["Volunteer", "Children", "Hospital"],
-  hours=["Volunteer", "Children", "Hospital"]
+  response,
+  chunkQuestions,
+  onClick,
 }: ECQuestionSummaryCardProps) {
   const [displayingQuestion, setDisplayingQuestion] = useState(false);
+  const titleQuestion = response.find(
+    ({ questionId }) =>
+      questionId ===
+      chunkQuestions.find(({ question }) => question === "Title").id
+  );
   return (
     <div className="w-100 d-flex flex-column justify-content-evenly qsummary-card-container mt-3">
       <div className="d-flex justify-content-between align-items-center px-4 pt-3 question-text">
-        {title}
-        <button className="icon-btn center-child">
+        {titleQuestion !== undefined
+          ? titleQuestion.response
+          : "No Title Given"}
+        <button onClick={() => onClick()} className="icon-btn center-child">
           <div
             onClick={() => {
               setDisplayingQuestion(true);
@@ -37,21 +41,21 @@ export default function ECQuestionSummaryCard({
           </div>
         </button>
       </div>
-      <div className="ecsummary-info-section justify-content-between">
-        <div className="name">TAGS</div>
-        <div className="value">{tags.join(", ")}</div>
-      </div>
-      <div className="ecsummary-info-section justify-content-between">
-        <div className="name">ACCOMPLISHMENT</div>
-        <div className="value">{accomplishment.join(", ")}</div>
-      </div>
-      <div className="ecsummary-info-section justify-content-between">
-        <div className="name">TIME</div>
-        <div className="value">{time.join(", ")}</div>
-      </div>
-      <div className="ecsummary-info-section justify-content-between">
-        <div className="name">HOURS</div>
-        <div className="value">{hours.join(", ")}</div>
+      <div className="w-100 d-flex align-items-center justify-content-center ecsummary-info-container">
+        {chunkQuestions.map(({ question, type, id }) =>
+          question !== "Title" ? (
+            <div className="ecsummary-info-section">
+              <div className="name">{question.toLocaleUpperCase()}</div>
+              <div className="value">
+                {response.find(({ questionId }) => id === questionId) !==
+                undefined
+                  ? response.find(({ questionId }) => id === questionId)
+                      .response
+                  : "Not Answered"}
+              </div>
+            </div>
+          ) : null
+        )}
       </div>
     </div>
   );
