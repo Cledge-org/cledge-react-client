@@ -10,18 +10,20 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
-  const { userToken, userId, contentProgress } = req.body;
-  return contentProgress
-    ? resolve.status(200).send(await addCourseProgress(userId, contentProgress))
-    : resolve.status(400).send("No course content progress provided");
+  const { userToken, courseModuleId, courseModule } = req.body;
+  return courseModule
+    ? resolve
+        .status(200)
+        .send(await putCourseModule(courseModuleId, courseModule))
+    : resolve.status(400).send("No pathway module data provided");
 };
 
-// Sets course content progress for a user. Updates course content if already
-// present. If an course content progress in the database is not provided in the
-// map, it will not be updated
-export const addCourseProgress = async (
-  userId: string,
-  contentProgress: Record<string, ContentProgress> // Map between content ID and content progress
+// Admin API. Creates or updates a pathway - if no ID provided, will create
+// pathway, otherwise will attempt to update given ID. Returns ID of upserted
+// pathway document
+export const putCourseModule = async (
+  courseModuleId: string | undefined,
+  courseModule: PathwayModule_Db
 ): Promise<string> => {
   return new Promise((res, err) => {
     MongoClient.connect(
@@ -31,10 +33,10 @@ export const addCourseProgress = async (
         try {
           let updateResult = await client
             .db("courses")
-            .collection("progress-by-user")
+            .collection("modules")
             .updateOne(
-              { _id: userId },
-              { $set: contentProgress },
+              { _id: courseModuleId },
+              { $set: courseModule },
               { upsert: true }
             );
           res(updateResult.upsertedId.toString());

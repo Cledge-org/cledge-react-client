@@ -72,14 +72,15 @@ interface Question {
 interface Dashboard {
   userName: string;
   userTags: string[];
-  userProgress: CourseProgress[];
+  userProgress: PathwayProgress[];
 }
-interface Pathway {
+interface UserPathway {
   pathway: Course;
   userTags: string[];
-  userCourseProgress: CourseProgress;
+  userCourseProgress: PathwayProgress;
 }
-interface CourseProgress {
+
+interface PathwayProgress {
   finished: boolean;
   title: string;
   id: string;
@@ -88,34 +89,36 @@ interface CourseProgress {
 interface ModuleProgress {
   finished: boolean;
   title: string;
-  contentProgress: ContentProgress[];
+  contentProgress: Record<string, boolean>; // Map between content ID and whether that content is finished
 }
+
 interface ContentProgress {
   finished: boolean;
   title: string;
   videoTime?: string;
 }
-interface Course {
+interface Pathway {
   title: string;
   id: string;
-  modules: CourseModule[];
+  modules: PathwayModule[];
   tags: string[];
 }
-interface CourseModule {
+interface PathwayModule {
   title: string;
   presetContent: PresetContent[];
   personalizedContent: PersonalizedContent[];
   tags: string[];
 }
-interface Course_Db {
+interface Pathway_Db {
   id: string;
   tags: string[];
   modules: string[]; // Module document IDs
   title: string;
 }
-interface CourseModule_Db {
+interface PathwayModule_Db {
   title: string;
-  presetContent: PresetContent[];
+  presetContent: string[]; // Preset content document IDs
+  personalizedContent: string[];
   tags: string[];
 }
 interface PresetContent {

@@ -15,14 +15,14 @@ import CardCheckIn from "../components/common/Card_CheckIn";
 import QuestionSubPageHeader from "../components/question_components/question_subpage_header";
 import QuestionECSubpage from "./questionPages/question_ec_subpage";
 import { GetServerSidePropsContext } from "next";
-import { getProgressInfo } from "./api/get-progress";
+import { getQuestionProgress } from "./api/get-question-progress";
 import { NextApplicationPage } from "./_app";
 import DropDownTab from "../components/common/DropDown_Tab";
 import CardTask from "../components/common/Card_Task";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    return { props: { progressInfo: await getProgressInfo("testUser") } };
+    return { props: { progressInfo: await getQuestionProgress("testUser") } };
   } catch (err) {
     console.log(err);
     ctx.res.end();

@@ -11,10 +11,11 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve.status(200).send(getProgressInfo("TEST_USER_ID"));
+  return resolve.status(200).send(getQuestionProgress("TEST_USER_ID"));
 };
 
-export async function getProgressInfo(userId: string): Promise<ProgressInfo> {
+// Gets all user responses to relevant questions
+export async function getQuestionProgress(userId: string): Promise<ProgressInfo> {
   const [userResponses, userInfo] = await Promise.all([
     getQuestionResponses(userId),
     getAccountInfo(userId),

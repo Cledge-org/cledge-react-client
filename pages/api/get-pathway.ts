@@ -11,13 +11,14 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   return resolve
     .status(200)
-    .send(getCourseInfo("TEST_USER_ID", "TEST_COURSE_ID"));
+    .send(getPathway("TEST_USER_ID", "TEST_COURSE_ID"));
 };
 
-export async function getCourseInfo(
+// Gets all the pathway modules and content for a pathway ID and specific user
+export async function getPathway(
   userId: string,
   courseId: string
-): Promise<Course> {
+): Promise<Pathway> {
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
@@ -26,21 +27,21 @@ export async function getCourseInfo(
         const coursesDb = client.db("courses");
         const usersDb = client.db("users");
 
-        const [course, accountInfo]: [Course_Db, AccountInfo] =
+        const [pathway, accountInfo]: [Pathway_Db, AccountInfo] =
           await Promise.all([
             coursesDb
               .collection("courses")
-              .findOne({ _id: courseId }) as Promise<Course_Db>,
+              .findOne({ _id: courseId }) as Promise<Pathway_Db>,
             usersDb
               .collection("users")
               .findOne({ _id: userId }) as Promise<AccountInfo>,
           ]);
-        const modules: CourseModule[] = await Promise.all(
-          course.modules.map((moduleId) =>
+        const modules: PathwayModule[] = await Promise.all(
+          pathway.modules.map((moduleId) =>
             getModule(moduleId, coursesDb, accountInfo.tags)
           )
         );
-        res({ tags: course.tags, title: course.title, id: course.id, modules });
+        res({ tags: pathway.tags, title: pathway.title, id: pathway.id, modules });
       }
     );
   });
@@ -50,13 +51,13 @@ const getModule = (
   moduleId: string,
   coursesDb: Db,
   userTags: string[]
-): Promise<CourseModule> => {
+): Promise<PathwayModule> => {
   return new Promise(async (res, err) => {
     try {
       // Get module with preset content
-      const module: CourseModule_Db = (await coursesDb
+      const module: PathwayModule_Db = (await coursesDb
         .collection("modules")
-        .findOne({ _id: moduleId })) as CourseModule_Db;
+        .findOne({ _id: moduleId })) as PathwayModule_Db;
       // Populate this module's personalized content based on user's tags
       const personalizedContent = (await coursesDb
         .collection("personalized-content")

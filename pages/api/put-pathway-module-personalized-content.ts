@@ -10,20 +10,20 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
-  const { userToken, courseModuleId, courseModule } = req.body;
-  return courseModule
+  const { userToken, contentId, content } = req.body;
+  return content
     ? resolve
         .status(200)
-        .send(await putCourseModule(courseModuleId, courseModule))
-    : resolve.status(400).send("No course module data provided");
+        .send(await putPathwayModulePersonalizedContent(contentId, content))
+    : resolve.status(400).send("No pathway module data provided");
 };
 
-// Admin API. Creates or updates a course - if no ID provided, will create
-// course, otherwise will attempt to update given ID. Returns ID of upserted
-// course document
-export const putCourseModule = async (
-  courseModuleId: string | undefined,
-  courseModule: CourseModule_Db
+// Admin API. Creates or updates personalized content for a pathway module. If a
+// document ID for the content is provided, that document will be overriden. If
+// no ID is provided, the content will be uploaded as a new document.
+export const putPathwayModulePersonalizedContent = async (
+  contentId: string | undefined,
+  content: PersonalizedContent
 ): Promise<string> => {
   return new Promise((res, err) => {
     MongoClient.connect(
@@ -34,11 +34,7 @@ export const putCourseModule = async (
           let updateResult = await client
             .db("courses")
             .collection("modules")
-            .updateOne(
-              { _id: courseModuleId },
-              { $set: courseModule },
-              { upsert: true }
-            );
+            .updateOne({ _id: contentId }, { $set: content }, { upsert: true });
           res(updateResult.upsertedId.toString());
         } catch (e) {
           err(e);

@@ -10,18 +10,18 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
-  const { userToken, courseId, course } = req.body;
-  return course
-    ? resolve.status(200).send(await putCourse(courseId, course))
-    : resolve.status(400).send("No course data provided");
+  const { userToken, courseId, pathway } = req.body;
+  return pathway
+    ? resolve.status(200).send(await putCourse(courseId, pathway))
+    : resolve.status(400).send("No pathway data provided");
 };
 
-// Admin API. Creates or updates a course - if no ID provided, will create
-// course, otherwise will attempt to update given ID. Returns ID of upserted
-// course document
+// Admin API. Creates or updates a pathway - if no ID provided, will create
+// pathway, otherwise will attempt to update given ID. Returns ID of upserted
+// pathway document
 export const putCourse = async (
   courseId: string | undefined,
-  course: Course_Db
+  pathway: Pathway_Db
 ): Promise<string> => {
   return new Promise((res, err) => {
     MongoClient.connect(
@@ -32,7 +32,7 @@ export const putCourse = async (
           let updateResult = await client
             .db("courses")
             .collection("courses")
-            .updateOne({ _id: courseId }, { $set: course }, { upsert: true });
+            .updateOne({ _id: courseId }, { $set: pathway }, { upsert: true });
           res(updateResult.upsertedId.toString());
         } catch (e) {
           err(e);
