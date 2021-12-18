@@ -13,7 +13,7 @@ import CardTask from "./Card_Task";
 import TabButton from "./TabButton";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "../../pages/_app";
-import { getDashboardInfo } from "../../pages/api/get-dashboard-info";
+import { getDashboardInfo } from "../../pages/api/get-dashboard";
 import { useRouter } from "next/router";
 import ECDropDown from "../question_components/ec_dropdown_question";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -10,8 +10,8 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   return resolve.status(200).send(getLearningPathways());
 };
 
-export async function getLearningPathways(): Promise<Course[]> {
-  const dummyData: Promise<Course[]> = Promise.resolve([
+export async function getLearningPathways(): Promise<Pathway[]> {
+  const dummyData: Promise<Pathway[]> = Promise.resolve([
     {
       id: "standardized-tests",
       title: "Standardized Tests",

@@ -13,7 +13,7 @@ import CardTask from "../components/common/Card_Task";
 import TabButton from "../components/common/TabButton";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "./_app";
-import { getDashboardInfo } from "./api/get-dashboard-info";
+import { getDashboardInfo } from "./api/get-dashboard";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -82,8 +82,8 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
         );
       });
   };
-  console.log(session.data.user.email);
-  if (session.data.user.email === "yousefgomaa@hotmail.com") {
+  if (session.data.user.email === "") {
+    //"yousefgomaa@hotmail.com") {
     return (
       <div className="container-fluid p-5 d-flex flex-row justify-content-between">
         <button
