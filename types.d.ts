@@ -5,6 +5,16 @@ interface AccountInfo {
   grade: number;
   birthday: Date;
   email: string;
+  tags: string[];
+}
+interface AccountInfo_Db {
+  _id: ObjectId;
+  name: string;
+  address: string;
+  grade: number;
+  birthday: Date;
+  email: string;
+  tags: string[];
 }
 //Resource Page Types -->
 interface ResourcesInfo {
@@ -35,17 +45,14 @@ interface UserResponse {
 }
 interface ProgressInfo {
   userProgress: UserProgress;
-  questionData: QuestionHierarchy;
-}
-interface QuestionHierarchy {
-  questionList: QuestionList[];
+  questionData: QuestionList[];
 }
 interface QuestionList {
-  title: string;
+  name: string;
   chunks: QuestionChunk[];
 }
 interface QuestionChunk {
-  title: string;
+  name: string;
   questions: Question[];
 }
 interface Question {
@@ -57,43 +64,19 @@ interface Question {
   data?: any[];
   isConcatenable?: boolean;
 }
-//Questionnaire Types -->
-interface UserData {
-  firstName: string;
-  lastName: string;
-  highSchool: string;
-  gradeLevel: string;
-  address: string;
-  gpa: string;
-  testScores: string;
-  ecList: any[];
-  schoolTranscript: null;
-  applicantType: string;
-  areaOfStudy: string;
-  areasOfInterest: string;
-  planToPay: string[];
-  tuitionBudget: number;
-  inOutOfState: string;
-  schoolRegion: string[];
-  privatePublic: string;
-  schoolSize: string[];
-  liberalArtsRegular: string;
-  religiousAffiliation: string;
-  typeOfCollegeList: string;
-  numberOfApplications: string;
-}
 //Learning Pathways Types -->
 interface Dashboard {
   userName: string;
   userTags: string[];
-  userProgress: CourseProgress[];
+  userProgress: PathwayProgress[];
 }
-interface Pathway {
+interface UserPathway {
   pathway: Course;
   userTags: string[];
-  userCourseProgress: CourseProgress;
+  userCourseProgress: PathwayProgress;
 }
-interface CourseProgress {
+
+interface PathwayProgress {
   finished: boolean;
   title: string;
   id: string;
@@ -102,23 +85,36 @@ interface CourseProgress {
 interface ModuleProgress {
   finished: boolean;
   title: string;
-  contentProgress: ContentProgress[];
+  contentProgress: Record<string, boolean>; // Map between content ID and whether that content is finished
 }
+
 interface ContentProgress {
   finished: boolean;
   title: string;
   videoTime?: string;
 }
-interface Course {
+interface Pathway {
   title: string;
   id: string;
-  modules: CourseModule[];
+  modules: PathwayModule[];
   tags: string[];
 }
-interface CourseModule {
+interface PathwayModule {
   title: string;
   presetContent: PresetContent[];
   personalizedContent: PersonalizedContent[];
+  tags: string[];
+}
+interface Pathway_Db {
+  id: string;
+  tags: string[];
+  modules: string[]; // Module document IDs
+  title: string;
+}
+interface PathwayModule_Db {
+  title: string;
+  presetContent: string[]; // Preset content document IDs
+  personalizedContent: string[];
   tags: string[];
 }
 interface PresetContent {
@@ -136,4 +132,6 @@ interface PersonalizedContent {
   type: string;
   url: string;
   content?: string;
+  tags: string[];
+  tagConfigs: string[][];
 }
