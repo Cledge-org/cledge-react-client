@@ -6,11 +6,11 @@ import TabButton from "../components/common/TabButton";
 import { NextApplicationPage } from "./_app";
 import CardImage from "../components/common/Card_Image";
 import { GetServerSidePropsContext } from "next";
-import { getResourcesInfo } from "./api/get-resources-info";
+import { getResourcesInfo } from "./api/get-resources";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    return { props: { resourcesInfo: await getResourcesInfo("testUser") } };
+    return { props: { resourcesInfo: await getResourcesInfo() } };
   } catch (err) {
     console.log(err);
     ctx.res.end();
@@ -22,7 +22,6 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
   resourcesInfo,
 }) => {
   const [currTab, setCurrTab] = useState("resources");
-  console.log(resourcesInfo);
   return (
     <div className="d-flex flex-column vh-100">
       <div className="row">

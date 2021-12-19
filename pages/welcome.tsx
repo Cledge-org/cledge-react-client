@@ -52,7 +52,9 @@ export default function Welcome(props) {
                 </div>
               </div>
             </button>
-            <h1 className="cl-white">Meet the Future of College Counseling</h1>
+            <h1 className="cl-white fw-bold">
+              Meet the Future of College Counseling
+            </h1>
             <p>
               Cledge is the world's first accessible online College Counseling
               platform.
@@ -68,6 +70,7 @@ export default function Welcome(props) {
                 backgroundColor: "#7B95F4",
                 color: "white",
                 fontWeight: "bold",
+                borderRadius: "15px",
               }}
               onClick={() =>
                 document

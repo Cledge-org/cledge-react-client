@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import YoutubeEmbed from "../../components/common/YoutubeEmbed";
 import DropDownTab from "../../components/common/DropDown_Tab";
 import { GetServerSidePropsContext } from "next";
-import { getPathwayInfo } from "../api/get-pathway-info";
+import { getPathway } from "../api/get-pathway";
 import { NextApplicationPage } from "../_app";
 import { useRouter } from "next/router";
+import { getAccountInfo } from "../api/get-account";
 
 //profile progress/ question summary page
 
@@ -12,7 +13,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
-        pathwayInfo: await getPathwayInfo("testUser", ctx.query.id as string),
+        pathwayInfo: await getPathway("testUser", ctx.query.id as string),
+        userTags: (await getAccountInfo("testUser")).tags,
       },
     };
   } catch (err) {
@@ -23,16 +25,17 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
-}> = ({ pathwayInfo }) => {
+  userTags: string[];
+}> = ({ pathwayInfo, userTags }) => {
   const [currPage, setCurrPage] = useState(null);
   const [currSelected, setCurrSelected] = useState("");
 
   useEffect(() => {
     let currContent = getSortedContent(
-      pathwayInfo.pathway.modules[0].presetContent,
-      pathwayInfo.pathway.modules[0].personalizedContent
+      pathwayInfo.modules[0].presetContent,
+      pathwayInfo.modules[0].personalizedContent
     )[0];
-    setCurrSelected(pathwayInfo.pathway.modules[0].title + currContent.title);
+    setCurrSelected(pathwayInfo.modules[0].title + currContent.title);
     setCurrPage(
       <div className="d-flex flex-column" style={{ flex: 3 }}>
         <div className="w-100" style={{ height: "55%" }}>
@@ -69,9 +72,7 @@ const Pathways: NextApplicationPage<{
           k++
         ) {
           if (
-            !pathwayInfo.userTags.includes(
-              modulePersonalizedContent[i].tagConfigs[j][k]
-            )
+            !userTags.includes(modulePersonalizedContent[i].tagConfigs[j][k])
           ) {
             containsAll = false;
           }
@@ -99,7 +100,7 @@ const Pathways: NextApplicationPage<{
         style={{ height: "94vh" }}
       >
         <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
-          {pathwayInfo.pathway.modules.map(
+          {pathwayInfo.modules.map(
             ({ title, presetContent, personalizedContent }) => (
               <DropDownTab
                 currSelectedPath={currSelected}
@@ -153,5 +154,5 @@ const Pathways: NextApplicationPage<{
   );
 };
 
-Pathways.requireAuth = false;
+Pathways.requireAuth = true;
 export default Pathways;

@@ -1,4 +1,4 @@
-import {
+import React, {
   JSXElementConstructor,
   ReactElement,
   ReactNodeArray,
@@ -13,8 +13,9 @@ import CardTask from "../components/common/Card_Task";
 import TabButton from "../components/common/TabButton";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "./_app";
-import Pathways from "./pathways";
-import { getDashboardInfo } from "./api/get-dashboard-info";
+import { getDashboardInfo } from "./api/get-dashboard";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -30,6 +31,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
   pathwaysInfo,
 }) => {
+  const router = useRouter();
+  const session = useSession();
   const [currTab, setCurrTab] = useState("current tasks");
   const getCurrentTasks = () => {
     // if(pathwaysInfo.userProgress === undefined){
@@ -79,6 +82,40 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
         );
       });
   };
+  if (session.data.user.email === "") {
+    //"yousefgomaa@hotmail.com") {
+    return (
+      <div className="container-fluid p-5 d-flex flex-row justify-content-between">
+        <button
+          onClick={() => {
+            router.push({
+              pathname: "/upload/learning-pathways-upload",
+            });
+          }}
+        >
+          Learning Pathways
+        </button>
+        <button
+          onClick={() => {
+            router.push({
+              pathname: "/upload/resources-upload",
+            });
+          }}
+        >
+          Resources
+        </button>
+        <button
+          onClick={() => {
+            router.push({
+              pathname: "/upload/question-upload",
+            });
+          }}
+        >
+          User Progress Questions
+        </button>
+      </div>
+    );
+  }
   return (
     <div className="container-fluid p-5">
       <div className="row">
@@ -121,5 +158,5 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
     </div>
   );
 };
-Dashboard.requireAuth = false;
+Dashboard.requireAuth = true;
 export default Dashboard;
