@@ -41,7 +41,7 @@ export async function getPathway(
             getModule(moduleId, coursesDb, accountInfo.tags)
           )
         );
-        res({ tags: pathway.tags, title: pathway.title, id: pathway.id, modules });
+        res({ tags: pathway.tags, title: pathway.title, id: pathway._id, modules });
       }
     );
   });

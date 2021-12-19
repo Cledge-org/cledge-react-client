@@ -85,14 +85,14 @@ interface PathwayProgress {
 interface ModuleProgress {
   finished: boolean;
   title: string;
-  contentProgress: Record<string, boolean>; // Map between content ID and whether that content is finished
+  contentProgress: ContentProgress[];
 }
-
 interface ContentProgress {
   finished: boolean;
   title: string;
   videoTime?: string;
 }
+
 interface Pathway {
   title: string;
   id: string;
@@ -106,14 +106,14 @@ interface PathwayModule {
   tags: string[];
 }
 interface Pathway_Db {
-  id: string;
+  _id: string;
   tags: string[];
   modules: string[]; // Module document IDs
   title: string;
 }
 interface PathwayModule_Db {
   title: string;
-  presetContent: string[]; // Preset content document IDs
+  presetContent: PresetContent[];
   personalizedContent: string[];
   tags: string[];
 }
