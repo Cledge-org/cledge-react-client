@@ -15,7 +15,9 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 // Gets all user responses to relevant questions
-export async function getQuestionProgress(userId: string): Promise<ProgressInfo> {
+export async function getQuestionProgress(
+  userId: string
+): Promise<ProgressInfo> {
   const [userResponses, userInfo] = await Promise.all([
     getQuestionResponses(userId),
     getAccountInfo(userId),
@@ -27,22 +29,14 @@ export async function getQuestionProgress(userId: string): Promise<ProgressInfo>
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         const questionsDb = client.db("questions");
-        const gradeQuestionHiearchy: QuestionHierarchy = (await questionsDb
-          .collection("question-hierarchies")
-          .findOne({ name: "_" + userInfo.grade })) as QuestionHierarchy;
-        const gradeQuestionLists: QuestionList[] = (await Promise.all(
-          gradeQuestionHiearchy.lists.map((listName: any) =>
-            getQuestionList(listName, questionsDb)
-          )
-        )) as QuestionList[];
+        // TODO: Fetch other lists for user
+        const gradeQuestionList: QuestionList = await getQuestionList(
+          `${userInfo.grade}th Grade`,
+          questionsDb
+        );
         res({
           userProgress: { responses: userResponses },
-          questionData: [
-            {
-              name: gradeQuestionHiearchy.name,
-              lists: gradeQuestionLists,
-            },
-          ],
+          questionData: [gradeQuestionList],
         });
       }
     );

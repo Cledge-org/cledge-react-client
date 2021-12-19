@@ -45,11 +45,7 @@ interface UserResponse {
 }
 interface ProgressInfo {
   userProgress: UserProgress;
-  questionData: QuestionHierarchy[];
-}
-interface QuestionHierarchy {
-  name: string;
-  lists: QuestionList[];
+  questionData: QuestionList[];
 }
 interface QuestionList {
   name: string;
