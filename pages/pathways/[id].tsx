@@ -64,23 +64,14 @@ const Pathways: NextApplicationPage<{
   ) => {
     let personalizedContent: PersonalizedContent[] = [];
     for (let i = 0; i < modulePersonalizedContent.length; i++) {
-      for (let j = 0; j < modulePersonalizedContent[i].tagConfigs.length; j++) {
-        let containsAll = true;
-        for (
-          let k = 0;
-          k < modulePersonalizedContent[i].tagConfigs[j].length;
-          k++
-        ) {
-          if (
-            !userTags.includes(modulePersonalizedContent[i].tagConfigs[j][k])
-          ) {
-            containsAll = false;
-          }
+      let containsNum = 0;
+      for (let j = 0; j < modulePersonalizedContent[i].tags.length; j++) {
+        if (userTags.includes(modulePersonalizedContent[i].tags[j])) {
+          containsNum++;
         }
-        if (containsAll) {
-          personalizedContent.push(modulePersonalizedContent[i]);
-          break;
-        }
+      }
+      if (containsNum >= 2) {
+        personalizedContent.push(modulePersonalizedContent[i]);
       }
     }
     return personalizedContent;
