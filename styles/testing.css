@@ -1,4 +1,4 @@
 .waitlist-buttons {
-  text-align: left;
-  border-radius: 15px;
+  text-align: left !important;
+  border-radius: 15px !important;
 }

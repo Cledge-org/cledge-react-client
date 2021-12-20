@@ -85,7 +85,7 @@ interface PathwayProgress {
 interface ModuleProgress {
   finished: boolean;
   title: string;
-  contentProgress: Record<string, boolean>; // Map between content ID and whether that content is finished
+  contentProgress: ContentProgress[]; // Map between content ID and whether that content is finished
 }
 
 interface ContentProgress {
@@ -133,5 +133,4 @@ interface PersonalizedContent {
   url: string;
   content?: string;
   tags: string[];
-  tagConfigs: string[][];
 }
