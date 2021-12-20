@@ -69,6 +69,7 @@ interface Dashboard {
   userName: string;
   userTags: string[];
   userProgress: PathwayProgress[];
+  isWhiteListed: boolean;
 }
 interface UserPathway {
   pathway: Course;

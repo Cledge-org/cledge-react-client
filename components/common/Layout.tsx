@@ -14,7 +14,7 @@ export default function Layout({ children }) {
   }, []);
   return (
     <div>
-      {header}
+      {router.pathname === "/questionnaire" ? null : header}
       <main>{children}</main>
     </div>
   );

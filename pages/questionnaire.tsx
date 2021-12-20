@@ -7,12 +7,27 @@ import Slider from "../components/question_components/slider";
 import CheckBoxQuestion from "../components/question_components/checkbox_question";
 import QuestionECSubpage from "./questionPages/question_ec_subpage";
 import ECQuestionSummaryCard from "../components/question_components/ec_question_summary_card";
-import { ProgressBar } from "react-bootstrap";
+import { Button, ProgressBar } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import ECEditor from "../components/question_components/EC_editor";
+import { NextApplicationPage } from "./_app";
+import { getQuestionnaire } from "./api/get-questionnaire";
+import { GetServerSidePropsContext } from "next";
 
-export default function Questionnaire() {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  try {
+    return { props: { progressInfo: await getQuestionnaire("testUser") } };
+  } catch (err) {
+    console.log(err);
+    ctx.res.end();
+    return { props: {} as never };
+  }
+};
+
+const Questionnaire: NextApplicationPage<{ questionnaireData: Question[] }> = ({
+  questionnaireData,
+}) => {
   var [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -37,7 +52,8 @@ export default function Questionnaire() {
     typeOfCollegeList: "",
     numberOfApplications: "1",
   });
-
+  const [isShowingContinue, setIsShowingContinue] = useState(true);
+  const [isShowingStart, setIsShowingStart] = useState(false);
   const [progress, changeProgress] = useState(0);
   const [page, changePage] = useState(0);
   const [isAdding, setIsAdding] = useState(false);
@@ -74,9 +90,7 @@ export default function Questionnaire() {
         placeholder={
           formData["firstName"] === "" ? "Type here..." : formData["firstName"]
         }
-        onChange={(e: any) =>
-          setFormData({ ...formData, firstName: e.target.value })
-        }
+        onChange={(e: any) => setFormData({ ...formData, firstName: e })}
         userResponse={""}
       />
       <ECTextInputQuestion
@@ -84,9 +98,7 @@ export default function Questionnaire() {
         placeholder={
           formData["lastName"] === "" ? "Type here..." : formData["lastName"]
         }
-        onChange={(e: any) =>
-          setFormData({ ...formData, lastName: e.target.value })
-        }
+        onChange={(e: any) => setFormData({ ...formData, lastName: e })}
         userResponse={""}
       />
     </div>,
@@ -99,9 +111,7 @@ export default function Questionnaire() {
             ? "Type your high school name here..."
             : formData["highSchool"]
         }
-        onChange={(e: any) =>
-          setFormData({ ...formData, highSchool: e.target.value })
-        }
+        onChange={(e: any) => setFormData({ ...formData, highSchool: e })}
         userResponse={""}
       />
       <div className="col-12 pt-3">
@@ -110,18 +120,14 @@ export default function Questionnaire() {
       <ECTextInputQuestion
         questionTitle="Street Address:"
         placeholder="Type here..."
-        onChange={(e: any) =>
-          setFormData({ ...formData, address: e.target.value })
-        }
+        onChange={(e: any) => setFormData({ ...formData, address: e })}
         userResponse={""}
       />
       <div className="col-6">
         <ECTextInputQuestion
           questionTitle="State:"
           placeholder="Type here..."
-          onChange={(e: any) =>
-            setFormData({ ...formData, address: e.target.value })
-          }
+          onChange={(e: any) => setFormData({ ...formData, address: e })}
           userResponse={""}
         />
       </div>
@@ -129,9 +135,7 @@ export default function Questionnaire() {
         <ECTextInputQuestion
           questionTitle="Zip Code:"
           placeholder="Type here..."
-          onChange={(e: any) =>
-            setFormData({ ...formData, address: e.target.value })
-          }
+          onChange={(e: any) => setFormData({ ...formData, address: e })}
           userResponse={""}
         />
       </div>
@@ -143,9 +147,7 @@ export default function Questionnaire() {
         min="9"
         max="12"
         step="1"
-        onChange={(e: any) =>
-          setFormData({ ...formData, gradeLevel: e.target.value })
-        }
+        onChange={(e: any) => setFormData({ ...formData, gradeLevel: e })}
       />
     </div>,
     <div className="row">
@@ -155,26 +157,20 @@ export default function Questionnaire() {
       <ECTextInputQuestion
         questionTitle="Street Address:"
         placeholder="Type here..."
-        onChange={(e: any) =>
-          setFormData({ ...formData, address: e.target.value })
-        }
+        onChange={(e: any) => setFormData({ ...formData, address: e })}
         userResponse={""}
       />
       <ECTextInputQuestion
         questionTitle="Apt or Unit Number:"
         placeholder="Type here..."
-        onChange={(e: any) =>
-          setFormData({ ...formData, address: e.target.value })
-        }
+        onChange={(e: any) => setFormData({ ...formData, address: e })}
         userResponse={""}
       />
       <div className="col-6">
         <ECTextInputQuestion
           questionTitle="State:"
           placeholder="Type here..."
-          onChange={(e: any) =>
-            setFormData({ ...formData, address: e.target.value })
-          }
+          onChange={(e: any) => setFormData({ ...formData, address: e })}
           userResponse={""}
         />
       </div>
@@ -182,9 +178,7 @@ export default function Questionnaire() {
         <ECTextInputQuestion
           questionTitle="Zip Code:"
           placeholder="Type here..."
-          onChange={(e: any) =>
-            setFormData({ ...formData, address: e.target.value })
-          }
+          onChange={(e: any) => setFormData({ ...formData, address: e })}
           userResponse={""}
         />
       </div>
@@ -194,13 +188,13 @@ export default function Questionnaire() {
       <ECTextInputQuestion
         questionTitle="Weighted"
         placeholder="Type here..."
-        onChange={(e: any) => setFormData({ ...formData, gpa: e.target.value })}
+        onChange={(e: any) => setFormData({ ...formData, gpa: e })}
         userResponse={""}
       />
       <ECTextInputQuestion
         questionTitle="Unweighted"
         placeholder="Type here..."
-        onChange={(e: any) => setFormData({ ...formData, gpa: e.target.value })}
+        onChange={(e: any) => setFormData({ ...formData, gpa: e })}
         userResponse={""}
       />
     </div>,
@@ -209,17 +203,13 @@ export default function Questionnaire() {
       <ECTextInputQuestion
         questionTitle="SAT"
         placeholder="Your SAT score (400-1600)"
-        onChange={(e: any) =>
-          setFormData({ ...formData, testScores: e.target.value })
-        }
+        onChange={(e: any) => setFormData({ ...formData, testScores: e })}
         userResponse={""}
       />
       <ECTextInputQuestion
         questionTitle="ACT"
         placeholder="Your ACT score (1-36)"
-        onChange={(e: any) =>
-          setFormData({ ...formData, testScores: e.target.value })
-        }
+        onChange={(e: any) => setFormData({ ...formData, testScores: e })}
         userResponse={""}
       />
     </div>,
@@ -289,7 +279,10 @@ export default function Questionnaire() {
             name="file"
             ref={hiddenFileInput}
             onChange={(e) =>
-              setFormData({ ...formData, schoolTranscript: e.target.files[0] })
+              setFormData({
+                ...formData,
+                schoolTranscript: e.target.files[0],
+              })
             }
             style={{ display: "none" }}
           />
@@ -338,9 +331,7 @@ export default function Questionnaire() {
         max="150000"
         step="1000"
         plus={true}
-        onChange={(e: any) =>
-          setFormData({ ...formData, tuitionBudget: e.target.value })
-        }
+        onChange={(e: any) => setFormData({ ...formData, tuitionBudget: e })}
       />
     </div>,
     <div>
@@ -419,12 +410,71 @@ export default function Questionnaire() {
         step="1"
         plus={true}
         onChange={(e: any) =>
-          setFormData({ ...formData, numberOfApplications: e.target.value })
+          setFormData({ ...formData, numberOfApplications: e })
         }
       />
     </div>,
   ];
-
+  if (isShowingContinue) {
+    return (
+      <div className="container-fluid d-flex flex-column bg-cl-blue justify-content-center align-items-center vh-100">
+        <span style={{ color: "white", fontWeight: "bold", fontSize: "2em" }}>
+          Welcome to Cledge!
+        </span>
+        <span style={{ color: "white", fontSize: "1.8em" }}>
+          Before we get started, tell us a little more about yourself
+        </span>
+        <button
+          onClick={() => {
+            setIsShowingContinue(false);
+            setIsShowingStart(true);
+          }}
+          className="btn btn-light mt-3 cl-blue"
+        >
+          Click here to continue
+        </button>
+      </div>
+    );
+  }
+  if (isShowingStart) {
+    return (
+      <div className="container-fluid d-flex flex-column justify-content-center align-items-center vh-100">
+        <div
+          style={{ width: "60%" }}
+          className="vh-50 d-flex flex-row justify-content-between align-items-center"
+        >
+          <div
+            className="cl-dark-text d-flex flex-column"
+            style={{ fontSize: "1em", width: "40%" }}
+          >
+            <span className="fw-bold mb-3" style={{ fontSize: "2.4em" }}>
+              Start the questionnaire
+            </span>
+            Help us help you better! <br />
+            Tell us about yourself and we'll show you content and suggestions
+            that relevant to you
+            <br />
+            <br />
+            Be sure to answer carefully and accurately. You can always access
+            this questionnaire again through the home page to make changes.
+            <button
+              className="btn cl-btn-blue mt-3"
+              style={{ fontSize: "1.1em", width: "30%" }}
+              onClick={() => {
+                setIsShowingStart(false);
+              }}
+            >
+              Start
+            </button>
+          </div>
+          <img
+            style={{ width: "60%" }}
+            src="images/questionLandingGraphic.png"
+          />
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="questionnaire-container container-fluid d-flex flex-column overflow-auto bg-light-blue">
       <div className="row col-md-5 d-md-flex mx-auto mt-5 flex-column justify-content-center text-center questionnaire-question">
@@ -471,4 +521,6 @@ export default function Questionnaire() {
       </div>
     </div>
   );
-}
+};
+Questionnaire.requireAuth = true;
+export default Questionnaire;

@@ -15,7 +15,8 @@ import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "./_app";
 import { getDashboardInfo } from "./api/get-dashboard";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
+import { redirect } from "next/dist/server/api-utils";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -82,6 +83,11 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
         );
       });
   };
+  if (pathwaysInfo.isWhiteListed) {
+    router.push({
+      pathname: "/questionnaire",
+    });
+  }
   if (session.data.user.email === "") {
     //"yousefgomaa@hotmail.com") {
     return (
