@@ -13,19 +13,18 @@ export default function CheckBoxQuestion({
   userAnswers,
   onChange,
 }: CheckBoxQuestionProps) {
-  const [selected, setSelected] = useState([0]);
+  const [selected, setSelected] = useState(userAnswers ?? []);
   useEffect(() => {
     console.log(selected);
   }, [selected]);
-  const changeSelected = (value: number) => {
-    setSelected((selectedCopy): number[] => {
-      if (selectedCopy.includes(value)) {
-        selectedCopy.splice(selectedCopy.indexOf(value), 1);
-      } else {
-        selectedCopy.push(value);
-      }
-      return selectedCopy;
-    });
+  let changeSelected = (value: string) => {
+    let selectedCopy = selected.slice();
+    if (selectedCopy.includes(value)) {
+      selectedCopy.splice(selectedCopy.indexOf(value), 1);
+    } else {
+      selectedCopy.push(value);
+    }
+    setSelected(selectedCopy);
     onChange(value);
   };
   return (
@@ -38,23 +37,28 @@ export default function CheckBoxQuestion({
           return (
             <button
               key={op}
-              onClick={() => {}}
+              onClick={() => {
+                console.log(tag);
+                changeSelected(tag);
+              }}
               className={
-                userAnswers.includes(tag)
+                selected.includes(tag)
                   ? "checkbox-mcq-variant-selected"
                   : "checkbox-mcq-variant"
               }
             >
               {op}
               <CheckBox
-                selected={userAnswers.includes(tag)}
-                setSelected={changeSelected.bind(this)}
+                selected={selected.includes(tag)}
+                setSelected={() => {
+                  changeSelected(tag);
+                }}
               />
             </button>
           );
         })}
       </div>
-      <button className="general-submit-btn">SUBMIT</button>
+      {/* <button className="general-submit-btn">SUBMIT</button> */}
     </div>
   );
 }

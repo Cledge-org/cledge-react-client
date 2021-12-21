@@ -28,7 +28,7 @@ export default function QuestionSummarySubpage({
           className="d-flex flex-column justify-content-evenly align-self-center"
           style={{ width: "91%" }}
         >
-          <span className="pt-3 cl-dark-text fw-bold">{chunk.title}</span>
+          <span className="pt-3 cl-dark-text fw-bold">{chunk.name}</span>
           {chunk.questions.map((question) => (
             <QuestionSummaryCard
               question={question}

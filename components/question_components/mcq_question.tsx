@@ -12,6 +12,7 @@ export default function MCQQuestion({
   userAnswer,
   onChange,
 }: MCQQuestionProps) {
+  const [selected, setSelected] = useState(userAnswer);
   return (
     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
       <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
@@ -22,12 +23,11 @@ export default function MCQQuestion({
           return (
             <button
               onClick={() => {
-                onChange(op);
+                setSelected(tag);
+                onChange(tag);
               }}
               className={
-                userAnswer === tag
-                  ? "mcq-answer-btn-selected"
-                  : "mcq-answer-btn"
+                selected === tag ? "mcq-answer-btn-selected" : "mcq-answer-btn"
               }
             >
               {op}

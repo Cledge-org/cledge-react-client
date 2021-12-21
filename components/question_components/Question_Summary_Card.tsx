@@ -20,14 +20,20 @@ export default function QuestionSummaryCard({
 
   const getQuestionType = (): JSX.Element => {
     if (question.type === "TextInput") {
-      return <TextInputQuestion question={question} userAnswer={userAnswer} />;
+      return (
+        <TextInputQuestion
+          question={question}
+          userAnswer={userAnswer}
+          onChange={() => {}}
+        />
+      );
     }
     if (question.type === "MCQ") {
       return (
         <MCQQuestion
           question={question}
           userAnswer={userAnswer}
-          onChange={undefined}
+          onChange={() => {}}
         />
       );
     }
@@ -84,6 +90,7 @@ export default function QuestionSummaryCard({
         isOpen={displayingQuestion}
       >
         {getQuestionType()}
+        <button className="general-submit-btn mt-2">SUBMIT</button>
       </Modal>
     </div>
   );
