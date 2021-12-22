@@ -1,4 +1,4 @@
-import { Db, MongoClient } from "mongodb";
+import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -35,13 +35,13 @@ export async function getPathwayProgress(
         ] = await Promise.all([
           courseDb
             .collection("courses")
-            .findOne({ _id: pathwayId }) as Promise<Pathway_Db>,
+            .findOne({ _id: new ObjectId(pathwayId) }) as Promise<Pathway_Db>,
           usersDb
             .collection("users")
-            .findOne({ _id: userId }) as Promise<AccountInfo>,
+            .findOne({ _id: new ObjectId(userId) }) as Promise<AccountInfo>,
           courseDb
             .collection("progress-by-user")
-            .findOne({ _id: userId }) as Promise<
+            .findOne({ _id: new ObjectId(userId) }) as Promise<
             Record<string, ContentProgress[]>
           >,
         ]);
@@ -101,9 +101,9 @@ async function getSpecificModuleProgress(
         PathwayModule_Db,
         PersonalizedContent[]
       ] = await Promise.all([
-        courseDb
-          .collection("modules")
-          .findOne({ _id: moduleId }) as Promise<PathwayModule_Db>,
+        courseDb.collection("modules").findOne({
+          _id: new ObjectId(moduleId),
+        }) as Promise<PathwayModule_Db>,
         courseDb
           .collection("personalized-content")
           .find({ tags: { $in: userTags }, moduleId })

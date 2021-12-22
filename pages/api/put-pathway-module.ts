@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -35,7 +35,7 @@ export const putCourseModule = async (
             .db("courses")
             .collection("modules")
             .updateOne(
-              { _id: courseModuleId },
+              { _id: new ObjectId(courseModuleId) },
               { $set: courseModule },
               { upsert: true }
             );

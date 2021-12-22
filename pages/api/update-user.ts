@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -45,7 +45,7 @@ export const updateUser = async (
           await client
             .db("users")
             .collection("users")
-            .updateOne({ _id: id }, { $set: user });
+            .updateOne({ _id: new ObjectId(id) }, { $set: user });
           res();
         } catch (e) {
           err(e);

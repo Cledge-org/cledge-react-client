@@ -1,4 +1,4 @@
-import { Db, MongoClient } from "mongodb";
+import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 import { getSpecificPathwayProgress } from "./get-pathway-progress";
@@ -36,10 +36,10 @@ export async function getAllPathwayProgress(
           >,
           usersDb
             .collection("users")
-            .findOne({ _id: userId }) as Promise<AccountInfo>,
+            .findOne({ _id: new ObjectId(userId) }) as Promise<AccountInfo>,
           courseDb
             .collection("progress-by-user")
-            .findOne({ _id: userId }) as Promise<
+            .findOne({ _id: new ObjectId(userId) }) as Promise<
             Record<string, ContentProgress[]>
           >,
         ]);

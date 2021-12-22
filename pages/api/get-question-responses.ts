@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -28,7 +28,7 @@ export const getQuestionResponses = async (
         client
           .db("users")
           .collection("question-responses")
-          .findOne({ _id: userId }, (document_err, user_responses) => {
+          .findOne({ _id: new ObjectId(userId) }, (document_err, user_responses) => {
             document_err ? err(document_err) : res(user_responses.responses);
           });
       }

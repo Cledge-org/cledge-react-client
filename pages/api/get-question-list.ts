@@ -1,4 +1,4 @@
-import { Db, MongoClient } from "mongodb";
+import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getAccountInfo } from "./get-account";
 import { getQuestionResponses } from "./get-question-responses";
@@ -35,18 +35,37 @@ export const getQuestionListWithDatabase = (
 ): Promise<QuestionList> => {
   return new Promise(async (res, err) => {
     try {
-      // Question list chunks are currently just chunk ids, populate later
-      const gradeQuestionList: QuestionList = (await questionsDb
+      const gradeQuestionList: QuestionList_Db = (await questionsDb
         .collection("question-lists")
-        .findOne({ name: listName })) as QuestionList;
+        .findOne({ name: listName })) as QuestionList_Db;
+      // Question list chunks are currently just chunk ids, we need to fetch from database
       const gradeQuestionChunks: QuestionChunk[] = (await Promise.all(
         gradeQuestionList.chunks.map((chunkName: any) =>
           getQuestionChunk(chunkName, questionsDb)
         )
       )) as QuestionChunk[];
       // Populate question list chunks
-      gradeQuestionList.chunks = gradeQuestionChunks;
-      res(gradeQuestionList);
+      res({ _id: gradeQuestionList._id, name: gradeQuestionList.name, chunks: gradeQuestionChunks });
+    } catch (e) {
+      err(e);
+    }
+  });
+};
+
+// Gets and populates list given its database document and database
+export const getQuestionListWithDocumentAndDatabase = (
+  list: QuestionList_Db,
+  questionsDb: Db
+): Promise<QuestionList> => {
+  return new Promise(async (res, err) => {
+    try {
+      const gradeQuestionChunks: QuestionChunk[] = (await Promise.all(
+        list.chunks.map((chunkName: any) =>
+          getQuestionChunk(chunkName, questionsDb)
+        )
+      )) as QuestionChunk[];
+      // Populate question list chunks
+      res({ _id: list._id, name: list.name, chunks: gradeQuestionChunks });
     } catch (e) {
       err(e);
     }
@@ -60,18 +79,18 @@ const getQuestionChunk = (
 ): Promise<QuestionChunk> => {
   return new Promise(async (res, err) => {
     try {
-      // Chunk questions are currently just question ids, populate later
-      const chunk: QuestionChunk = (await questionsDb
+      const chunk: QuestionChunk_Db = (await questionsDb
         .collection("question-chunks")
-        .findOne({ name: chunkName })) as QuestionChunk;
+        .findOne({ name: chunkName })) as QuestionChunk_Db;
+      // Chunk questions are currently just question ids, we need to fetch from database
       const chunkQuestions: Question[] = (await Promise.all(
         chunk.questions.map((questionId) =>
-          questionsDb.collection("question-data").findOne({ _id: questionId })
+          questionsDb
+            .collection("question-data")
+            .findOne({ _id: new ObjectId(questionId) })
         )
       )) as Question[];
-      // Populate questions into question chunks. Now the question chunk is finished
-      chunk.questions = chunkQuestions;
-      res(chunk);
+      res({ _id: chunk._id, name: chunk.name, questions: chunkQuestions });
     } catch (e) {
       err(e);
     }

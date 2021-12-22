@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -34,7 +34,7 @@ export const putPathwayModulePersonalizedContent = async (
           let updateResult = await client
             .db("courses")
             .collection("modules")
-            .updateOne({ _id: contentId }, { $set: content }, { upsert: true });
+            .updateOne({ _id: new ObjectId(contentId) }, { $set: content }, { upsert: true });
           res(updateResult.upsertedId.toString());
         } catch (e) {
           err(e);

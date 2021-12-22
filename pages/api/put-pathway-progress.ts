@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -34,7 +34,7 @@ export const putPathwayProgress = async (
             .db("courses")
             .collection("progress-by-user")
             .updateOne(
-              { _id: userId },
+              { _id: new ObjectId(userId) },
               { $set: contentProgress },
               { upsert: true }
             );

@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -26,7 +26,7 @@ export const getAccountInfo = async (userId: string): Promise<AccountInfo> => {
           (await client
             .db("users")
             .collection("users")
-            .findOne({ _id: userId })) as AccountInfo
+            .findOne({ _id: new ObjectId(userId) })) as AccountInfo
         );
       }
     );

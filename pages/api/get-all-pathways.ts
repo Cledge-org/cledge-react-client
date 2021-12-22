@@ -1,4 +1,4 @@
-import { Db, MongoClient } from "mongodb";
+import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -48,7 +48,7 @@ export async function getSpecificPathway(
     );
     res({
       title: pathway.title,
-      id: pathway._id,
+      _id: pathway._id,
       modules,
       tags: pathway.tags,
     });
@@ -66,15 +66,16 @@ async function getSpecificModule(
         PathwayModule_Db,
         PersonalizedContent[]
       ] = await Promise.all([
-        courseDb
-          .collection("modules")
-          .findOne({ _id: moduleId }) as Promise<PathwayModule_Db>,
+        courseDb.collection("modules").findOne({
+          _id: new ObjectId(moduleId),
+        }) as Promise<PathwayModule_Db>,
         courseDb
           .collection("personalized-content")
           .find({ moduleId })
           .toArray() as Promise<PersonalizedContent[]>,
       ]);
       res({
+        _id: module._id,
         title: module.title,
         presetContent: module.presetContent,
         personalizedContent: modulePersonalizedContent,

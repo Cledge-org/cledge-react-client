@@ -35,7 +35,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   }
 };
 
-export const createUser = async (user: AccountInfo_Db): Promise<void> => {
+export const createUser = async (user: AccountInfo): Promise<void> => {
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,

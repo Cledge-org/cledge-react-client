@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -34,7 +34,7 @@ export const putQuestionChunk = async (
             .db("questions")
             .collection("question-chunks")
             .updateOne(
-              { _id: questionChunkId },
+              { _id: new ObjectId(questionChunkId) },
               { $set: questionChunk },
               { upsert: true }
             );
