@@ -116,7 +116,6 @@ interface Pathway_Db {
 interface PathwayModule_Db {
   title: string;
   presetContent: PresetContent[];
-  personalizedContent: string[];
   tags: string[];
 }
 interface PresetContent {
