@@ -1,20 +1,13 @@
 //Account Page Types -->
-interface AccountInfo {
+interface AccountInfo extends WithId<Document> {
+  _id?: ObjectId;
   name: string;
   address: string;
   grade: number;
   birthday: Date;
   email: string;
   tags: string[];
-}
-interface AccountInfo_Db {
-  _id: ObjectId;
-  name: string;
-  address: string;
-  grade: number;
-  birthday: Date;
-  email: string;
-  tags: string[];
+  checkIns: string[];
 }
 //Resource Page Types -->
 interface ResourcesInfo {
@@ -47,16 +40,28 @@ interface ProgressInfo {
   userProgress: UserProgress;
   questionData: QuestionList[];
 }
-interface QuestionList {
+interface QuestionList extends WithId<Document> {
+  _id: ObjectId;
   name: string;
   chunks: QuestionChunk[];
 }
-interface QuestionChunk {
+interface QuestionList_Db extends WithId<Document> {
+  _id: ObjectId;
+  name: string;
+  chunks: string[]; // Document IDs of chunks
+}
+interface QuestionChunk extends WithId<Document> {
+  _id: ObjectId;
   name: string;
   questions: Question[];
 }
-interface Question {
-  id: string;
+interface QuestionChunk_Db extends WithId<Document> {
+  _id: ObjectId;
+  name: string;
+  questions: string[]; // Document IDs of question data
+}
+interface Question extends WithId<Document> {
+  _id?: ObjectId;
   question: string;
   type: string;
   helpVid?: string;
@@ -78,9 +83,9 @@ interface UserPathway {
 }
 
 interface PathwayProgress {
+  id: string; // ID of the pathway this progress belongs to, NOT database ID of the progress itself
   finished: boolean;
   title: string;
-  id: string;
   moduleProgress: ModuleProgress[];
 }
 interface ModuleProgress {
@@ -88,34 +93,35 @@ interface ModuleProgress {
   title: string;
   contentProgress: ContentProgress[]; // Map between content ID and whether that content is finished
 }
-
 interface ContentProgress {
   finished: boolean;
   title: string;
   videoTime?: string;
 }
+
 interface Pathway {
+  _id: ObjectId;
   title: string;
-  id: string;
   modules: PathwayModule[];
   tags: string[];
 }
 interface PathwayModule {
+  _id: ObjectId;
   title: string;
   presetContent: PresetContent[];
   personalizedContent: PersonalizedContent[];
   tags: string[];
 }
-interface Pathway_Db {
-  id: string;
+interface Pathway_Db extends WithId<Document> {
+  _id: ObjectId;
   tags: string[];
   modules: string[]; // Module document IDs
   title: string;
 }
-interface PathwayModule_Db {
+interface PathwayModule_Db extends WithId<Document> {
+  _id: ObjectId;
   title: string;
-  presetContent: string[]; // Preset content document IDs
-  personalizedContent: string[];
+  presetContent: PresetContent[];
   tags: string[];
 }
 interface PresetContent {
@@ -125,13 +131,13 @@ interface PresetContent {
   url: string;
   content?: string;
 }
-interface PersonalizedContent {
+interface PersonalizedContent extends WithId<Document> {
+  _id: ObjectId;
+  moduleId: string;
   priority: number;
-  tagConfigs: string[][];
   tags: string[];
   title: string;
   type: string;
   url: string;
   content?: string;
-  tags: string[];
 }

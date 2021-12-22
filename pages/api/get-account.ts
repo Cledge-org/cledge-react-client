@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -22,21 +22,12 @@ export const getAccountInfo = async (userId: string): Promise<AccountInfo> => {
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        client
-          .db("users")
-          .collection("users")
-          .findOne({ _id: userId }, (document_err, user_info) => {
-            document_err
-              ? err(document_err)
-              : res({
-                  name: user_info.name,
-                  address: user_info.address,
-                  grade: user_info.grade,
-                  birthday: user_info.birthday,
-                  email: user_info.email,
-                  tags: user_info.tags,
-                });
-          });
+        res(
+          (await client
+            .db("users")
+            .collection("users")
+            .findOne({ _id: new ObjectId(userId) })) as AccountInfo
+        );
       }
     );
   });

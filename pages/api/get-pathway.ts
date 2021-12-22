@@ -1,4 +1,4 @@
-import { Db, MongoClient } from "mongodb";
+import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -9,9 +9,7 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve
-    .status(200)
-    .send(getPathway("TEST_USER_ID", "TEST_COURSE_ID"));
+  return resolve.status(200).send(getPathway("TEST_USER_ID", "TEST_COURSE_ID"));
 };
 
 // Gets all the pathway modules and content for a pathway ID and specific user
@@ -31,17 +29,22 @@ export async function getPathway(
           await Promise.all([
             coursesDb
               .collection("courses")
-              .findOne({ _id: courseId }) as Promise<Pathway_Db>,
-            usersDb
-              .collection("users")
-              .findOne({ _id: userId }) as Promise<AccountInfo>,
+              .findOne({ _id: new ObjectId(courseId) }) as Promise<Pathway_Db>,
+            usersDb.collection("users").findOne({
+              _id: new ObjectId(userId),
+            }) as Promise<AccountInfo>,
           ]);
         const modules: PathwayModule[] = await Promise.all(
           pathway.modules.map((moduleId) =>
             getModule(moduleId, coursesDb, accountInfo.tags)
           )
         );
-        res({ tags: pathway.tags, title: pathway.title, id: pathway.id, modules });
+        res({
+          tags: pathway.tags,
+          title: pathway.title,
+          _id: pathway._id,
+          modules,
+        });
       }
     );
   });
@@ -57,13 +60,14 @@ const getModule = (
       // Get module with preset content
       const module: PathwayModule_Db = (await coursesDb
         .collection("modules")
-        .findOne({ _id: moduleId })) as PathwayModule_Db;
+        .findOne({ _id: new ObjectId(moduleId) })) as PathwayModule_Db;
       // Populate this module's personalized content based on user's tags
       const personalizedContent = (await coursesDb
         .collection("personalized-content")
         .find({ tags: { $in: userTags }, moduleId })
         .toArray()) as PersonalizedContent[];
       res({
+        _id: module._id,
         title: module.title,
         presetContent: module.presetContent,
         tags: module.tags,

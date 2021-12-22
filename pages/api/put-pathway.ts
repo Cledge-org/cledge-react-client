@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -32,7 +32,7 @@ export const putCourse = async (
           let updateResult = await client
             .db("courses")
             .collection("courses")
-            .updateOne({ _id: courseId }, { $set: pathway }, { upsert: true });
+            .updateOne({ _id: new ObjectId(courseId) }, { $set: pathway }, { upsert: true });
           res(updateResult.upsertedId.toString());
         } catch (e) {
           err(e);

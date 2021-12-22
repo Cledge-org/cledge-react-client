@@ -125,7 +125,11 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
         }}
         isOpen={modalOpen}
       >
-        <TextInputQuestion question={undefined} userAnswer={""} />
+        <TextInputQuestion
+          question={undefined}
+          userAnswer={""}
+          onChange={() => {}}
+        />
       </Modal>
     </div>
   );

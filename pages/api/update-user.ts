@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -8,20 +8,16 @@ export const config = {
   },
 };
 
+// Sets a user in the database given their user ID to the given AccountInfo
+// object
+// TODO: validate AccountInfo object (userInfo) is valid
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { id, name, address, grade, birthday, email, tags } = req.body;
+  const { id, userInfo } = req.body;
   if (!id) {
     resolve.status(400).send("User ID required (id)");
   } else {
     try {
-      await updateUser(id, {
-        name,
-        address,
-        grade,
-        birthday,
-        email,
-        tags,
-      });
+      await updateUser(id, userInfo);
       resolve.status(200).send("Success");
     } catch (e) {
       resolve.status(500).send(e);
@@ -49,7 +45,7 @@ export const updateUser = async (
           await client
             .db("users")
             .collection("users")
-            .updateOne({ _id: id }, { $set: user });
+            .updateOne({ _id: new ObjectId(id) }, { $set: user });
           res();
         } catch (e) {
           err(e);

@@ -13,14 +13,27 @@ import CardTask from "../components/common/Card_Task";
 import TabButton from "../components/common/TabButton";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "./_app";
-import { getDashboardInfo } from "./api/get-dashboard";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
 import { redirect } from "next/dist/server/api-utils";
+import { getAccountInfo } from "./api/get-account";
+import { getPathwayProgress } from "./api/get-pathway-progress";
+import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const user = await getAccountInfo("TEST");
+  const userProgress = await getAllPathwayProgress("TEST");
   try {
-    return { props: { pathwaysInfo: await getDashboardInfo("testUser") } };
+    return {
+      props: {
+        dashboardInfo: {
+          userTags: user.tags,
+          userProgress,
+          userName: user.name,
+          checkIns: user.checkIns,
+        },
+      },
+    };
   } catch (err) {
     console.log(err);
     ctx.res.end();
@@ -29,17 +42,17 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 
 // logged in landing page
-const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
-  pathwaysInfo,
+const Dashboard: NextApplicationPage<{ dashboardInfo: Dashboard }> = ({
+  dashboardInfo,
 }) => {
   const router = useRouter();
   const session = useSession();
   const [currTab, setCurrTab] = useState("current tasks");
   const getCurrentTasks = () => {
-    // if(pathwaysInfo.userProgress === undefined){
+    // if(dashboardInfo.userProgress === undefined){
     //   return
     // }
-    return pathwaysInfo.userProgress
+    return dashboardInfo.userProgress
       .filter(({ finished }) => {
         return !finished;
       })
@@ -63,7 +76,7 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
       });
   };
   const getFinishedTasks = () => {
-    return pathwaysInfo.userProgress
+    return dashboardInfo.userProgress
       .filter(({ finished }) => {
         return finished;
       })
@@ -83,10 +96,10 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
         );
       });
   };
-  if (pathwaysInfo.checkIns.length > 0) {
+  if (dashboardInfo.checkIns.length > 0) {
     router.push({
       pathname: "/[questionnaire]",
-      query: { questionnaire: pathwaysInfo.checkIns[0] },
+      query: { questionnaire: dashboardInfo.checkIns[0] },
     });
   }
   if (session.data.user.email === "") {
@@ -128,7 +141,7 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
       <div className="row">
         <h1 className="pt-2 red-purple-text-gradient fw-bold">
           <strong>
-            Welcome back, {pathwaysInfo.userName}
+            Welcome back, {dashboardInfo.userName}
             <br />
             This is your home page.
             <br />

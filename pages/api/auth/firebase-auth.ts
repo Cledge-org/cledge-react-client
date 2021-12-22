@@ -6,6 +6,7 @@ import {
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
+import { createUser } from "../create-user";
 const firebaseCreds = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -23,12 +24,19 @@ class AuthFunctions {
       console.error(err);
     });
   }
-  static async createUser(email: string, password: string, initUserObj) {
-    await createUserWithEmailAndPassword(firebaseAuth, email, password).catch(
-      (err) => {
+  static async createUser(
+    email: string,
+    password: string,
+    initUserObj: AccountInfo
+  ) {
+    await createUserWithEmailAndPassword(firebaseAuth, email, password)
+      .then((res) => {
+        const user = res.user;
+        //createUser(res.user.uid, initUserObj)
+      })
+      .catch((err) => {
         console.log(err);
-      }
-    );
+      });
   }
   // static async signInGoogle() {
   //   await firebaseAuth

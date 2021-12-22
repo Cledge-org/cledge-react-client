@@ -61,10 +61,10 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
           ({ questionId }) => questionId
         );
         if (
-          userQuestionIds.includes(question.id) &&
+          userQuestionIds.includes(question._id) &&
           isNotEmpty(
             progressInfo.userProgress.responses[
-              userQuestionIds.indexOf(question.id)
+              userQuestionIds.indexOf(question._id)
             ].response
           )
         ) {

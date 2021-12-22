@@ -12,21 +12,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import ECEditor from "../components/question_components/EC_editor";
 import { NextApplicationPage } from "./_app";
-import { getQuestionnaire } from "./api/get-questionnaire";
 import { GetServerSidePropsContext } from "next";
 import YesNoQuestion from "../components/question_components/yes-no-question";
 import TextInputQuestion from "../components/question_components/textinput_question";
 import { useRouter } from "next/router";
+import { getQuestionList } from "./api/get-question-list";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  console.log(ctx.query.questionnaire);
   try {
+    let questionnaireChunks = (
+      await getQuestionList(ctx.query.questionnaire as string)
+    ).chunks;
+    let questionnaireData = questionnaireChunks[0].questions;
+    for (let i = 1; i < questionnaireChunks.length; i++) {
+      questionnaireData = questionnaireData.concat(
+        questionnaireChunks[i].questions
+      );
+    }
     return {
       props: {
-        questionnaireData: await getQuestionnaire(
-          "testUser",
-          ctx.query.questionnaire as string
-        ),
+        questionnaireData,
       },
     };
   } catch (err) {
