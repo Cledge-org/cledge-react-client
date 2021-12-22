@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getAccountInfo } from "./get-account";
 import { getQuestionResponses } from "./get-question-responses";
 import assert from "assert";
+import { getQuestionListWithDatabase } from "./get-question-list";
 
 export const config = {
   api: {
@@ -30,10 +31,11 @@ export async function getQuestionProgress(
         assert.equal(connection_err, null);
         const questionsDb = client.db("questions");
         // TODO: Fetch other lists for user
-        const gradeQuestionList: QuestionList = await getQuestionList(
-          `${userInfo.grade}th Grade`,
-          questionsDb
-        );
+        const gradeQuestionList: QuestionList =
+          await getQuestionListWithDatabase(
+            `${userInfo.grade}th Grade`,
+            questionsDb
+          );
         res({
           userProgress: { responses: userResponses },
           questionData: [gradeQuestionList],
@@ -42,51 +44,3 @@ export async function getQuestionProgress(
     );
   });
 }
-
-const getQuestionList = (
-  listName: string,
-  questionsDb: Db
-): Promise<QuestionList> => {
-  return new Promise(async (res1, err) => {
-    try {
-      // Question list chunks are currently just chunk ids, populate later
-      const gradeQuestionList: QuestionList = (await questionsDb
-        .collection("question-lists")
-        .findOne({ name: listName })) as QuestionList;
-      const gradeQuestionChunks: QuestionChunk[] = (await Promise.all(
-        gradeQuestionList.chunks.map((chunkName: any) =>
-          getQuestionChunk(chunkName, questionsDb)
-        )
-      )) as QuestionChunk[];
-      // Populate question list chunks
-      gradeQuestionList.chunks = gradeQuestionChunks;
-      res1(gradeQuestionList);
-    } catch (e) {
-      err(e);
-    }
-  });
-};
-
-const getQuestionChunk = (
-  chunkName: string,
-  questionsDb: Db
-): Promise<QuestionChunk> => {
-  return new Promise(async (res2, err) => {
-    try {
-      // Chunk questions are currently just question ids, populate later
-      const chunk: QuestionChunk = (await questionsDb
-        .collection("question-chunks")
-        .findOne({ name: chunkName })) as QuestionChunk;
-      const chunkQuestions: Question[] = (await Promise.all(
-        chunk.questions.map((questionId) =>
-          questionsDb.collection("question-data").findOne({ _id: questionId })
-        )
-      )) as Question[];
-      // Populate questions into question chunks. Now the question chunk is finished
-      chunk.questions = chunkQuestions;
-      res2(chunk);
-    } catch (e) {
-      err(e);
-    }
-  });
-};
