@@ -16,12 +16,17 @@ import { getQuestionnaire } from "./api/get-questionnaire";
 import { GetServerSidePropsContext } from "next";
 import YesNoQuestion from "../components/question_components/yes-no-question";
 import TextInputQuestion from "../components/question_components/textinput_question";
+import { useRouter } from "next/router";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  console.log(ctx.query.questionnaire);
   try {
     return {
       props: {
-        questionnaireData: await getQuestionnaire("testUser", "Onboarding"),
+        questionnaireData: await getQuestionnaire(
+          "testUser",
+          ctx.query.questionnaire as string
+        ),
       },
     };
   } catch (err) {
@@ -47,20 +52,23 @@ const Questionnaire: NextApplicationPage<{ questionnaireData: Question[] }> = ({
     hiddenFileInput.current.click();
   };
 
+  const router = useRouter();
+
   const goBack = (e) => {
     e.preventDefault();
-    changeProgress(progress - 100 / questionnaireData.length);
+    changeProgress(progress - 100 / (questionnaireData.length - 1));
     if (page > 0) changePage(page - 1);
   };
 
   const goForward = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    changeProgress(progress + 100 / questionnaireData.length);
+    changeProgress(progress + 100 / (questionnaireData.length - 1));
     if (page < questionnaireData.length - 1) changePage(page + 1);
   };
 
   const submitForm = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
+    //REMOVE CHECK IN FROM LIST AND UPLOAD DATA
+    router.push({ pathname: "/dashboard" });
   };
 
   const questionnairePages = questionnaireData.map((question) => {
@@ -187,7 +195,7 @@ const Questionnaire: NextApplicationPage<{ questionnaireData: Question[] }> = ({
         </div>
 
         <div className="px-0">
-          {page < 20 && (
+          {page < questionnairePages.length - 1 && (
             <button
               type="button"
               className="btn cl-btn-blue"
@@ -196,7 +204,7 @@ const Questionnaire: NextApplicationPage<{ questionnaireData: Question[] }> = ({
               Next
             </button>
           )}
-          {page === 20 && (
+          {page === questionnairePages.length - 1 && (
             <button
               type="button"
               className="btn cl-btn-blue"

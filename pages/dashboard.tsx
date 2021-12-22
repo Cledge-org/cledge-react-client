@@ -83,9 +83,10 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
         );
       });
   };
-  if (pathwaysInfo.isWhiteListed) {
+  if (pathwaysInfo.checkIns.length > 0) {
     router.push({
-      pathname: "/questionnaire",
+      pathname: "/[questionnaire]",
+      query: { questionnaire: pathwaysInfo.checkIns[0] },
     });
   }
   if (session.data.user.email === "") {

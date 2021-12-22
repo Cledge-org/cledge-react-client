@@ -16,7 +16,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export async function getDashboardInfo(userId: string): Promise<Dashboard> {
   const dummyData: Promise<Dashboard> = Promise.resolve({
     userName: "Johnny",
-    isWhiteListed: true,
+    checkIns: ["Onboarding Questions"],
     userTags: ["engineering", "public"],
     userProgress: [
       {
