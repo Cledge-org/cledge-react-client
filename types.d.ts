@@ -125,13 +125,11 @@ interface PresetContent {
   content?: string;
 }
 interface PersonalizedContent {
+  moduleId: string;
   priority: number;
-  tagConfigs: string[][];
   tags: string[];
   title: string;
   type: string;
   url: string;
   content?: string;
-  tags: string[];
-  tagConfigs: string[][];
 }
