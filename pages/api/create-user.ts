@@ -26,6 +26,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         birthday,
         email,
         tags,
+        checkIns: ["Onboarding Questions"]
       });
       resolve.status(200).send("Success");
     } catch (e) {

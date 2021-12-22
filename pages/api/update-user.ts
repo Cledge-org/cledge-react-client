@@ -8,20 +8,16 @@ export const config = {
   },
 };
 
+// Sets a user in the database given their user ID to the given AccountInfo
+// object
+// TODO: validate AccountInfo object (userInfo) is valid
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { id, name, address, grade, birthday, email, tags } = req.body;
+  const { id, userInfo } = req.body;
   if (!id) {
     resolve.status(400).send("User ID required (id)");
   } else {
     try {
-      await updateUser(id, {
-        name,
-        address,
-        grade,
-        birthday,
-        email,
-        tags,
-      });
+      await updateUser(id, userInfo);
       resolve.status(200).send("Success");
     } catch (e) {
       resolve.status(500).send(e);

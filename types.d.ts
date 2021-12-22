@@ -6,6 +6,7 @@ interface AccountInfo {
   birthday: Date;
   email: string;
   tags: string[];
+  checkIns: string[];
 }
 interface AccountInfo_Db {
   _id: ObjectId;
@@ -15,6 +16,7 @@ interface AccountInfo_Db {
   birthday: Date;
   email: string;
   tags: string[];
+  checkIns: string[];
 }
 //Resource Page Types -->
 interface ResourcesInfo {
