@@ -4,6 +4,7 @@ import { getAccountInfo } from "./get-account";
 import { getQuestionResponses } from "./get-question-responses";
 import assert from "assert";
 import { getQuestionListWithDatabase } from "./get-question-list";
+import { MONGO_CONNECTION_STRING } from "../../secrets";
 
 export const config = {
   api: {

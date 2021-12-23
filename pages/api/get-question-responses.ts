@@ -1,6 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
+import { MONGO_CONNECTION_STRING } from "../../secrets";
 
 export const config = {
   api: {
@@ -28,9 +29,12 @@ export const getQuestionResponses = async (
         client
           .db("users")
           .collection("question-responses")
-          .findOne({ _id: new ObjectId(userId) }, (document_err, user_responses) => {
-            document_err ? err(document_err) : res(user_responses.responses);
-          });
+          .findOne(
+            { _id: new ObjectId(userId) },
+            (document_err, user_responses) => {
+              document_err ? err(document_err) : res(user_responses.responses);
+            }
+          );
       }
     );
   });

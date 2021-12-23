@@ -1,6 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
+import { MONGO_CONNECTION_STRING } from "../../secrets";
 
 export const config = {
   api: {
@@ -34,7 +35,11 @@ export const putPathwayModulePersonalizedContent = async (
           let updateResult = await client
             .db("courses")
             .collection("modules")
-            .updateOne({ _id: new ObjectId(contentId) }, { $set: content }, { upsert: true });
+            .updateOne(
+              { _id: new ObjectId(contentId) },
+              { $set: content },
+              { upsert: true }
+            );
           res(updateResult.upsertedId.toString());
         } catch (e) {
           err(e);

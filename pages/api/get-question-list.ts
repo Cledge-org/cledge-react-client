@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getAccountInfo } from "./get-account";
 import { getQuestionResponses } from "./get-question-responses";
 import assert from "assert";
+import { MONGO_CONNECTION_STRING } from "../../secrets";
 
 export const config = {
   api: {
@@ -45,7 +46,11 @@ export const getQuestionListWithDatabase = (
         )
       )) as QuestionChunk[];
       // Populate question list chunks
-      res({ _id: gradeQuestionList._id, name: gradeQuestionList.name, chunks: gradeQuestionChunks });
+      res({
+        _id: gradeQuestionList._id,
+        name: gradeQuestionList.name,
+        chunks: gradeQuestionChunks,
+      });
     } catch (e) {
       err(e);
     }

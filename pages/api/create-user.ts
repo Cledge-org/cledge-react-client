@@ -1,6 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
+import { MONGO_CONNECTION_STRING } from "../../secrets";
 
 export const config = {
   api: {
@@ -26,7 +27,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         birthday,
         email,
         tags,
-        checkIns: ["Onboarding Questions"]
+        checkIns: ["Onboarding Questions"],
       });
       resolve.status(200).send("Success");
     } catch (e) {

@@ -17,8 +17,13 @@ export default function signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await AuthFunctions.createUser(formData.email, formData.password1, {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
+      name: formData.firstName + " " + formData.lastName,
+      address: "",
+      birthday: new Date(),
+      grade: -1,
+      email: formData.email,
+      tags: [],
+      checkIns: ["Onboarding Questions"],
     });
     signIn("credentials", {
       password: formData.password1,

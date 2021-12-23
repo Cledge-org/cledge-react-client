@@ -6,12 +6,19 @@ import Modal from "react-modal";
 import TextInputQuestion from "../components/question_components/textinput_question";
 import { NextApplicationPage } from "./_app";
 import { getAccountInfo } from "./api/get-account";
+import { useSession } from "next-auth/react";
+import AuthFunctions from "./api/auth/firebase-auth";
 
 // account page
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    let accountInfo: AccountInfo = await getAccountInfo("testUser");
+    let accountInfo: AccountInfo = await (
+      await fetch("http://localhost:3000/api/get-account", {
+        method: "POST",
+        body: JSON.stringify({ userId: AuthFunctions.userId }),
+      })
+    ).json();
     accountInfo.birthday = accountInfo.birthday.toDateString(); //THIS WORKS -- IT'S A TEMPORARY SOLUTION
     return { props: { accountInfo } };
   } catch (err) {

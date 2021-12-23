@@ -1,6 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
+import { MONGO_CONNECTION_STRING } from "../../secrets";
 
 export const config = {
   api: {
@@ -12,7 +13,9 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
   const { userToken, userId, contentProgress } = req.body;
   return contentProgress
-    ? resolve.status(200).send(await putPathwayProgress(userId, contentProgress))
+    ? resolve
+        .status(200)
+        .send(await putPathwayProgress(userId, contentProgress))
     : resolve.status(400).send("No pathway content progress provided");
 };
 

@@ -6,7 +6,7 @@ import {
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
-import { createUser } from "../create-user";
+import createUser from "../create-user";
 const firebaseCreds = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -15,14 +15,15 @@ const firebaseCreds = {
 const firebaseApp = initializeApp(firebaseCreds);
 const firebaseAuth = getAuth(firebaseApp);
 class AuthFunctions {
+  static userId = firebaseAuth.currentUser.uid ?? null;
   static async signInEmail(email: string, password: string) {
-    return await signInWithEmailAndPassword(
-      firebaseAuth,
-      email,
-      password
-    ).catch((err) => {
-      console.error(err);
-    });
+    return await signInWithEmailAndPassword(firebaseAuth, email, password)
+      .then((res) => {
+        this.userId = res.user.uid;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
   static async createUser(
     email: string,
@@ -32,10 +33,17 @@ class AuthFunctions {
     await createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((res) => {
         const user = res.user;
-        //createUser(res.user.uid, initUserObj)
+        this.userId = user.uid;
+        fetch("/api/create-user", {
+          method: "POST",
+          body: JSON.stringify({ ...initUserObj, userId: user.uid }),
+        }).then(async (res) => {
+          const resObj = await res.json();
+          console.log(resObj);
+        });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   }
   // static async signInGoogle() {
