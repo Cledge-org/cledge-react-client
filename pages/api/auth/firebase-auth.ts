@@ -15,7 +15,8 @@ const firebaseCreds = {
 const firebaseApp = initializeApp(firebaseCreds);
 const firebaseAuth = getAuth(firebaseApp);
 class AuthFunctions {
-  static userId = firebaseAuth.currentUser.uid ?? null;
+  static userId =
+    firebaseAuth.currentUser === null ? null : firebaseAuth.currentUser.uid;
   static async signInEmail(email: string, password: string) {
     return await signInWithEmailAndPassword(firebaseAuth, email, password)
       .then((res) => {
@@ -32,14 +33,15 @@ class AuthFunctions {
   ) {
     await createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((res) => {
+        console.error(res);
         const user = res.user;
         this.userId = user.uid;
-        fetch("/api/create-user", {
+        console.error(user);
+        fetch("http://localhost:3000/api/create-user", {
           method: "POST",
           body: JSON.stringify({ ...initUserObj, userId: user.uid }),
         }).then(async (res) => {
-          const resObj = await res.json();
-          console.log(resObj);
+          console.error(res.status);
         });
       })
       .catch((err) => {
