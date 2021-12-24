@@ -4,7 +4,6 @@ import { NextApplicationPage } from "../_app";
 import ECDropDown from "../../components/question_components/ec_dropdown_question";
 import CheckBox from "../../components/common/CheckBox";
 import UploadPage from "../../components/common/upload-page";
-import { getProgressInfo } from "../api/get-progress-info";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
@@ -12,7 +11,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
-        questionMetadata: (await getProgressInfo("")).questionData.questionList,
+        questionMetadata: (await fetch("/api/get-all-questions")).json(),
       },
     };
   } catch (err) {
@@ -26,13 +25,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const QuestionUploadPage: NextApplicationPage<{
   questionMetadata: QuestionList[];
 }> = ({ questionMetadata }) => {
-  const questionListTitles = questionMetadata.map(({ title }) => title);
+  const questionListTitles = questionMetadata.map(({ name }) => name);
   const [currQuestionList, setCurrQuestionList] = useState({
-    title: questionMetadata[0].title,
+    name: questionMetadata[0].name,
     index: 0,
   });
   const [currQuestionChunk, setCurrQuestionChunk] = useState({
-    title: questionMetadata[0].chunks[0].title,
+    name: questionMetadata[0].chunks[0].name,
     index: 0,
   });
   const [currQuestion, setCurrQuestion]: [
@@ -73,11 +72,11 @@ const QuestionUploadPage: NextApplicationPage<{
             isForWaitlist
             onChange={(value) => {
               setCurrQuestionList({
-                title: value,
+                name: value,
                 index: questionListTitles.indexOf(value),
               });
             }}
-            defaultValue={currQuestionList.title}
+            defaultValue={currQuestionList.name}
             valuesList={questionListTitles}
           />
         </div>
@@ -89,15 +88,15 @@ const QuestionUploadPage: NextApplicationPage<{
             isForWaitlist
             onChange={(value) => {
               setCurrQuestionChunk({
-                title: value,
+                name: value,
                 index: questionMetadata[
                   currQuestionList.index
-                ].chunks.findIndex(({ title }) => title === value),
+                ].chunks.findIndex(({ name }) => name === value),
               });
             }}
-            defaultValue={currQuestionChunk.title}
+            defaultValue={currQuestionChunk.name}
             valuesList={questionMetadata[currQuestionList.index].chunks.map(
-              ({ title }) => title
+              ({ name }) => name
             )}
           />
         </div>
@@ -129,11 +128,11 @@ const QuestionUploadPage: NextApplicationPage<{
             Id:
           </label>
           <input
-            value={currQuestion.id}
+            value={currQuestion._id}
             onChange={(e) =>
               setCurrQuestion({
                 ...currQuestion,
-                id: e.target.value,
+                _id: e.target.value,
               })
             }
             type="text"

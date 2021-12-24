@@ -17,13 +17,15 @@ class AuthFunctions {
   static userId =
     firebaseAuth.currentUser === null ? null : firebaseAuth.currentUser.uid;
   static async signInEmail(email: string, password: string) {
-    return await signInWithEmailAndPassword(firebaseAuth, email, password)
-      .then((res) => {
-        this.userId = res.user.uid;
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    try {
+      let user = (
+        await signInWithEmailAndPassword(firebaseAuth, email, password)
+      ).user;
+      this.userId = user.uid;
+      return user;
+    } catch (err) {
+      console.error(err);
+    }
   }
   static async createUser(
     email: string,
@@ -42,7 +44,7 @@ class AuthFunctions {
             email: email,
           }),
         }).then(async (res) => {
-          console.error(res.status);
+          console.log(res.status);
         });
       })
       .catch((err) => {

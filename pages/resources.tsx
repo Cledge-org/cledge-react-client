@@ -10,7 +10,13 @@ import { getResourcesInfo } from "./api/get-resources";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    return { props: { resourcesInfo: await getResourcesInfo() } };
+    return {
+      props: {
+        resourcesInfo: await (
+          await fetch("/api/get-resources", { method: "GET" })
+        ).json(),
+      },
+    };
   } catch (err) {
     console.log(err);
     ctx.res.end();

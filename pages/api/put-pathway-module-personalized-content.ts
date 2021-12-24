@@ -11,7 +11,7 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
-  const { userToken, contentId, content } = req.body;
+  const { userToken, contentId, content } = JSON.parse(req.body);
   return content
     ? resolve
         .status(200)

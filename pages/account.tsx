@@ -19,7 +19,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         body: JSON.stringify({ userId: AuthFunctions.userId }),
       })
     ).json();
-    accountInfo.birthday = accountInfo.birthday.toDateString(); //THIS WORKS -- IT'S A TEMPORARY SOLUTION
+    // accountInfo.birthday = accountInfo.birthday.toDateString(); //THIS WORKS -- IT'S A TEMPORARY SOLUTION
     return { props: { accountInfo } };
   } catch (err) {
     console.log(err);

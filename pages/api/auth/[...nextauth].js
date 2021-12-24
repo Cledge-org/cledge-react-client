@@ -14,12 +14,10 @@ export default NextAuth({
   providers: [
     CredentialsProvider({
       async authorize(credentials, req) {
-        return (
-          await AuthFunctions.signInEmail(
-            credentials.email,
-            credentials.password
-          )
-        ).user;
+        return await AuthFunctions.signInEmail(
+          credentials.email,
+          credentials.password
+        );
       },
     }),
     GoogleProvider({

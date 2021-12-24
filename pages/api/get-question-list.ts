@@ -10,7 +10,10 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve.status(200).send(getQuestionList("TEST_LIST_NAME"));
+  const { listName } = JSON.parse(req.body);
+  return !listName
+    ? resolve.status(400).send("No list name provided")
+    : resolve.status(200).send(getQuestionList("TEST_LIST_NAME"));
 };
 
 // Gets a question list with its chunks populated

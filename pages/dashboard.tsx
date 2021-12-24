@@ -16,13 +16,20 @@ import { NextApplicationPage } from "./_app";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
 import { redirect } from "next/dist/server/api-utils";
-import { getAccountInfo } from "./api/get-account";
+import getAccountInfo from "./api/get-account";
 import { getPathwayProgress } from "./api/get-pathway-progress";
 import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const user = await getAccountInfo("TEST");
-  const userProgress = await getAllPathwayProgress("TEST");
+  const user = await (
+    await fetch("/api/get-account", {
+      method: "POST",
+      body: JSON.stringify({}),
+    })
+  ).json();
+  const userProgress = await (
+    await fetch("./api/get-all-pathway-progress", { method: "GET" })
+  ).json();
   try {
     return {
       props: {

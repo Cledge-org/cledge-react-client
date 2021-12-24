@@ -16,6 +16,7 @@ export default function signup() {
   });
   const handleSubmit = async (e) => {
     e.preventDefault();
+    //WORKS DO NOT FIX
     await AuthFunctions.createUser(formData.email, formData.password1, {
       name: formData.firstName + " " + formData.lastName,
       address: "",
@@ -25,11 +26,11 @@ export default function signup() {
       tags: [],
       checkIns: ["Onboarding Questions"],
     });
-    // signIn("credentials", {
-    //   password: formData.password1,
-    //   email: formData.email,
-    //   callbackUrl: `${window.location.origin}/dashboard`,
-    // });
+    signIn("credentials", {
+      password: formData.password1,
+      email: formData.email,
+      callbackUrl: `${window.location.origin}/dashboard`,
+    });
   };
   return (
     <div className="container">

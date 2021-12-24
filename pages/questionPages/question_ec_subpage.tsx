@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import ECQuestionSummaryCard from "../../components/question_components/ec_question_summary_card";
 import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
-import QuestionSummaryCard from "../../components/question_components/question_summary_card";
 import ECEditor from "../../components/question_components/ec_editor";
 interface QuestionECSubpageProps {
   userECResponses: any[];

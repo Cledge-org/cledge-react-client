@@ -10,7 +10,10 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve.status(200).send(getPathway("TEST_USER_ID", "TEST_COURSE_ID"));
+  const { userId, pathwayId } = JSON.parse(req.body);
+  return !userId || !pathwayId
+    ? resolve.status(400).send("No userId or courseId provided")
+    : resolve.status(200).send(getPathway(userId, pathwayId));
 };
 
 // Gets all the pathway modules and content for a pathway ID and specific user

@@ -19,10 +19,20 @@ import { getQuestionProgress } from "./api/get-question-progress";
 import { NextApplicationPage } from "./_app";
 import DropDownTab from "../components/common/DropDown_Tab";
 import CardTask from "../components/common/Card_Task";
+import AuthFunctions from "./api/auth/firebase-auth";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    return { props: { progressInfo: await getQuestionProgress("testUser") } };
+    return {
+      props: {
+        progressInfo: await (
+          await fetch("/api/get-question-progress", {
+            method: "POST",
+            body: JSON.stringify({ userId: AuthFunctions.userId }),
+          })
+        ).json(),
+      },
+    };
   } catch (err) {
     console.log(err);
     ctx.res.end();

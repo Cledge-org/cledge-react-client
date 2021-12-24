@@ -11,7 +11,7 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
-  const { userToken, courseId, pathway } = req.body;
+  const { userToken, courseId, pathway } = JSON.parse(req.body);
   return pathway
     ? resolve.status(200).send(await putCourse(courseId, pathway))
     : resolve.status(400).send("No pathway data provided");

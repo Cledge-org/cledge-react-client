@@ -11,7 +11,7 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
-  const { userToken, questionChunkId, questionChunk } = req.body;
+  const { userToken, questionChunkId, questionChunk } = JSON.parse(req.body);
   return questionChunk
     ? resolve
         .status(200)
