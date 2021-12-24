@@ -1,4 +1,4 @@
-import { Db, MongoClient, ObjectId } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 import { getSpecificPathwayProgress } from "./get-pathway-progress";

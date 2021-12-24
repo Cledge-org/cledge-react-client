@@ -1,7 +1,5 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getAccountInfo } from "./get-account";
-import { getQuestionResponses } from "./get-question-responses";
 import assert from "assert";
 
 export const config = {
