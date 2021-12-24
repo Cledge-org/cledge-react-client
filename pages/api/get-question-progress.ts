@@ -1,4 +1,4 @@
-import { Db, MongoClient } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getAccountInfo } from "./get-account";
 import { getQuestionResponses } from "./get-question-responses";
