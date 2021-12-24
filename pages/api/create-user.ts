@@ -10,8 +10,17 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { name, address, grade, birthday, email, userId, tags } = req.body;
-  if (!name || !address || !grade || !birthday || !email || !tags) {
+  const { name, address, grade, birthday, email, userId, tags } = JSON.parse(
+    req.body
+  );
+  if (
+    !name ||
+    address === undefined ||
+    grade === undefined ||
+    !birthday ||
+    !email ||
+    !tags
+  ) {
     resolve
       .status(400)
       .send(
@@ -31,6 +40,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
       });
       resolve.status(200).send("Success");
     } catch (e) {
+      console.log(e);
       resolve.status(500).send(e);
     }
   }

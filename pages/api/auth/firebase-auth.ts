@@ -6,7 +6,6 @@ import {
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
-import createUser from "../create-user";
 const firebaseCreds = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -33,13 +32,15 @@ class AuthFunctions {
   ) {
     await createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((res) => {
-        console.error(res);
         const user = res.user;
         this.userId = user.uid;
-        console.error(user);
-        fetch("http://localhost:3000/api/create-user", {
+        fetch("/api/create-user", {
           method: "POST",
-          body: JSON.stringify({ ...initUserObj, userId: user.uid }),
+          body: JSON.stringify({
+            ...initUserObj,
+            userId: user.uid,
+            email: email,
+          }),
         }).then(async (res) => {
           console.error(res.status);
         });

@@ -25,11 +25,11 @@ export default function signup() {
       tags: [],
       checkIns: ["Onboarding Questions"],
     });
-    signIn("credentials", {
-      password: formData.password1,
-      email: formData.email,
-      callbackUrl: `${window.location.origin}/dashboard`,
-    });
+    // signIn("credentials", {
+    //   password: formData.password1,
+    //   email: formData.email,
+    //   callbackUrl: `${window.location.origin}/dashboard`,
+    // });
   };
   return (
     <div className="container">
