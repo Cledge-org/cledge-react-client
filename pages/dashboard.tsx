@@ -19,16 +19,19 @@ import { redirect } from "next/dist/server/api-utils";
 import getAccountInfo from "./api/get-account";
 import { getPathwayProgress } from "./api/get-pathway-progress";
 import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
+import { ORIGIN_URL } from "../config";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const user = await (
-    await fetch("/api/get-account", {
+    await fetch(`${ORIGIN_URL}/api/get-account`, {
       method: "POST",
       body: JSON.stringify({}),
     })
   ).json();
   const userProgress = await (
-    await fetch("./api/get-all-pathway-progress", { method: "GET" })
+    await fetch(`${ORIGIN_URL}/api/get-all-pathway-progress`, {
+      method: "GET",
+    })
   ).json();
   try {
     return {

@@ -1,7 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
-import { MONGO_CONNECTION_STRING } from "../../secrets";
+import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -11,9 +11,9 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
-  const { userToken, courseId, pathway } = JSON.parse(req.body);
+  const { userToken, pathwayId, pathway } = JSON.parse(req.body);
   return pathway
-    ? resolve.status(200).send(await putCourse(courseId, pathway))
+    ? resolve.status(200).send(await putCourse(pathwayId, pathway))
     : resolve.status(400).send("No pathway data provided");
 };
 
@@ -21,7 +21,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // pathway, otherwise will attempt to update given ID. Returns ID of upserted
 // pathway document
 export const putCourse = async (
-  courseId: string | undefined,
+  pathwayId: string | undefined,
   pathway: Pathway_Db
 ): Promise<string> => {
   return new Promise((res, err) => {
@@ -34,7 +34,7 @@ export const putCourse = async (
             .db("courses")
             .collection("courses")
             .updateOne(
-              { _id: new ObjectId(courseId) },
+              { _id: new ObjectId(pathwayId) },
               { $set: pathway },
               { upsert: true }
             );

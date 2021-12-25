@@ -8,13 +8,14 @@ import { NextApplicationPage } from "./_app";
 import { getAccountInfo } from "./api/get-account";
 import { useSession } from "next-auth/react";
 import AuthFunctions from "./api/auth/firebase-auth";
+import { ORIGIN_URL } from "../config";
 
 // account page
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     let accountInfo: AccountInfo = await (
-      await fetch("http://localhost:3000/api/get-account", {
+      await fetch(`${ORIGIN_URL}/api/get-account`, {
         method: "POST",
         body: JSON.stringify({ userId: AuthFunctions.userId }),
       })

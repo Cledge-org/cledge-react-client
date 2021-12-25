@@ -6,6 +6,7 @@ import { getLearningPathways } from "../api/get-learning-pathways";
 import { NextApplicationPage } from "../_app";
 import ECDropDown from "../../components/question_components/ec_dropdown_question";
 import UploadPage from "../../components/common/upload-page";
+import { ORIGIN_URL } from "../../config";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -29,14 +30,17 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
     .map(({ title }) => title)
     .concat("NEW COURSE");
   //WORKS DO NOT FIX
-  const [currPathwayData, setCurrPathwayData]: [
-    currPathwayData: Pathway,
-    setCurrPathwayData: Dispatch<SetStateAction<Pathway>>
+  const [currPersonalizedContent, setCurrPersonalizedContent] = useState();
+  const [currPathwayModules, setCurrPathwayModules] = useState();
+  const [currPathway, setCurrPathway]: [
+    currPathwayData: Pathway_Db,
+    setCurrPathwayData: Dispatch<SetStateAction<Pathway_Db>>
   ] = useState({
-    id: "",
+    _id: null,
     title: "",
     modules: [
       {
+        _id: null,
         title: "",
         presetContent: [
           {
@@ -49,7 +53,8 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
         ],
         personalizedContent: [
           {
-            tagConfigs: [["", ""]],
+            _id: null,
+            moduleId: null,
             priority: -1,
             content: "",
             tags: ["", ""],
@@ -67,7 +72,14 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
     console.log(allPathways);
   }, []);
   return (
-    <UploadPage>
+    <UploadPage
+      onUpload={async () => {
+        await fetch(`${ORIGIN_URL}/api/put-pathway`, {
+          method: "POST",
+          // body: JSON.stringify({pathwayId: , pathway: currPathwayData}),
+        });
+      }}
+    >
       <div className="mt-4 d-flex flex-column w-100">
         <div className="form-group">
           <label
@@ -82,10 +94,11 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             onChange={(value) => {
               if (value === "NEW COURSE") {
                 setCurrPathwayData({
-                  id: "",
+                  _id: null,
                   title: "",
                   modules: [
                     {
+                      _id: null,
                       title: "",
                       presetContent: [
                         {
@@ -97,8 +110,9 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                         },
                       ],
                       personalizedContent: [
-                        //WORKS DO NOT FIX
                         {
+                          _id: null,
+                          moduleId: null,
                           priority: -1,
                           content: "",
                           tags: ["", ""],
