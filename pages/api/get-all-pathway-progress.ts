@@ -11,7 +11,10 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve.status(200).send(getAllPathwayProgress("TEST_USER_ID"));
+  const { userId } = JSON.parse(req.body);
+  return !userId
+    ? resolve.status(400).send("No userId provided")
+    : resolve.status(200).send(await getAllPathwayProgress(userId));
 };
 
 // Gets gets progress info for user for every learning pathway
@@ -35,12 +38,12 @@ export async function getAllPathwayProgress(
           courseDb.collection("courses").find().toArray() as Promise<
             Pathway_Db[]
           >,
-          usersDb
-            .collection("users")
-            .findOne({ _id: new ObjectId(userId) }) as Promise<AccountInfo>,
+          usersDb.collection("users").findOne({
+            firebaseId: userId,
+          }) as Promise<AccountInfo>,
           courseDb
             .collection("progress-by-user")
-            .findOne({ _id: new ObjectId(userId) }) as Promise<
+            .findOne({ firebaseId: userId }) as Promise<
             Record<string, ContentProgress[]>
           >,
         ]);

@@ -2,7 +2,6 @@ import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GetServerSidePropsContext } from "next";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { getLearningPathways } from "../api/get-learning-pathways";
 import { NextApplicationPage } from "../_app";
 import ECDropDown from "../../components/question_components/ec_dropdown_question";
 import UploadPage from "../../components/common/upload-page";
@@ -12,7 +11,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
-        allPathways: await (await fetch("get-learning-pathways")).json(),
+        allPathways: await (
+          await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
+        ).json(),
       },
     };
   } catch (err) {
@@ -29,14 +30,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
   const courseTitles = allPathways
     .map(({ title }) => title)
     .concat("NEW COURSE");
-  //WORKS DO NOT FIX
-  const [currPersonalizedContent, setCurrPersonalizedContent] = useState();
-  const [currPathwayModules, setCurrPathwayModules] = useState();
-  const [currPathway, setCurrPathway]: [
-    currPathwayData: Pathway_Db,
-    setCurrPathwayData: Dispatch<SetStateAction<Pathway_Db>>
+  const [currCourseIndex, setCurrCourseIndex] = useState(allPathways.length);
+  const [currPathwayData, setCurrPathwayData]: [
+    currPathwayData: Pathway,
+    setCurrPathwayData: Dispatch<SetStateAction<Pathway>>
   ] = useState({
-    _id: null,
+    _id: "",
     title: "",
     modules: [
       {
@@ -52,9 +51,10 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           },
         ],
         personalizedContent: [
+          //WORKS DO NOT FIX
           {
-            _id: null,
             moduleId: null,
+            _id: null,
             priority: -1,
             content: "",
             tags: ["", ""],
@@ -73,11 +73,83 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
   }, []);
   return (
     <UploadPage
-      onUpload={async () => {
-        await fetch(`${ORIGIN_URL}/api/put-pathway`, {
-          method: "POST",
-          // body: JSON.stringify({pathwayId: , pathway: currPathwayData}),
-        });
+      onUpload={() => {
+        console.log("WE'RE IN!");
+        let shouldChangeIds =
+          currPathwayData.modules[0]._id === null ||
+          currPathwayData._id !== allPathways[currCourseIndex]._id;
+        let personalizedContentUpload: PersonalizedContent[] =
+          currPathwayData.modules[0].personalizedContent.map(
+            (personalizedContent, index) => {
+              return {
+                ...personalizedContent,
+                _id: shouldChangeIds
+                  ? currPathwayData.modules[0]._id + `-personalized-${index}`
+                  : personalizedContent._id,
+              };
+            }
+          );
+        for (let i = 1; i < currPathwayData.modules.length; i++) {
+          personalizedContentUpload = personalizedContentUpload.concat(
+            currPathwayData.modules[i].personalizedContent.map(
+              (personalizedContent, index) => {
+                return {
+                  ...personalizedContent,
+                  _id: shouldChangeIds
+                    ? currPathwayData.modules[i]._id + `-personalized-${index}`
+                    : personalizedContent._id,
+                };
+              }
+            )
+          );
+        }
+        Promise.all([
+          fetch("/api/put-pathway", {
+            method: "POST",
+            body: JSON.stringify({
+              pathwayId: currPathwayData._id,
+              pathway: {
+                _id: currPathwayData._id,
+                tags: currPathwayData.tags,
+                modules: currPathwayData.modules.map(({ _id }) => _id),
+                title: currPathwayData.title,
+              },
+            }),
+          }),
+          ...currPathwayData.modules.map((module, index) =>
+            fetch("/api/put-pathway-module", {
+              method: "POST",
+              body: JSON.stringify({
+                pathwayModuleId: shouldChangeIds
+                  ? currPathwayData._id + `-module-${index}`
+                  : module._id,
+                pathwayModule: {
+                  _id: shouldChangeIds
+                    ? currPathwayData._id + `-module-${index}`
+                    : module._id,
+                  title: module.title,
+                  presetContent: module.presetContent,
+                  tags: module.tags,
+                },
+              }),
+            })
+          ),
+          ...personalizedContentUpload.map((personalizedContent) =>
+            fetch("/api/put-pathway-module-personalized-content", {
+              method: "POST",
+              body: JSON.stringify({
+                contentId: personalizedContent._id,
+                content: personalizedContent,
+              }),
+            })
+          ),
+        ])
+          .then((values) => {
+            values.forEach((value, index) => {
+              console.log(index + " " + value.status);
+            });
+          })
+          .catch((err) => console.error(err));
       }}
     >
       <div className="mt-4 d-flex flex-column w-100">
@@ -87,14 +159,14 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             className="text-muted"
             htmlFor="course-title"
           >
-            CURRENT COURSE:
+            CURRENT PATHWAY:
           </label>
           <ECDropDown
             isForWaitlist
             onChange={(value) => {
               if (value === "NEW COURSE") {
                 setCurrPathwayData({
-                  _id: null,
+                  _id: "",
                   title: "",
                   modules: [
                     {
@@ -110,9 +182,10 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                         },
                       ],
                       personalizedContent: [
+                        //WORKS DO NOT FIX
                         {
-                          _id: null,
                           moduleId: null,
+                          _id: null,
                           priority: -1,
                           content: "",
                           tags: ["", ""],
@@ -126,9 +199,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                   ],
                   tags: ["", ""],
                 });
+                setCurrCourseIndex(allPathways.length + 1);
                 return;
               }
-              setCurrPathwayData(allPathways[courseTitles.indexOf(value)]);
+              let courseIndex = courseTitles.indexOf(value);
+              setCurrCourseIndex(courseIndex);
+              setCurrPathwayData(allPathways[courseIndex]);
             }}
             defaultValue={"NEW COURSE"}
             valuesList={courseTitles}
@@ -149,6 +225,24 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               setCurrPathwayData({
                 ...currPathwayData,
                 title: e.target.value,
+              })
+            }
+            type="text"
+            className="px-3 form-control"
+            id="course-title"
+            placeholder="Enter course title"
+          />
+        </div>
+        <div className="form-group">
+          <label style={{ fontSize: "0.9em" }} className="text-muted">
+            Id:
+          </label>
+          <input
+            value={currPathwayData._id}
+            onChange={(e) =>
+              setCurrPathwayData({
+                ...currPathwayData,
+                _id: e.target.value,
               })
             }
             type="text"
@@ -742,13 +836,14 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                       onClick={() => {
                         let course = currPathwayData;
                         course.modules[index].personalizedContent.push({
+                          moduleId: null,
+                          _id: null,
                           priority: -1,
                           title: "",
                           type: "",
                           url: "",
                           content: "",
                           tags: [""],
-                          tagConfigs: [[]],
                         });
                         setCurrPathwayData({
                           ...currPathwayData,
@@ -759,46 +854,48 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                       Add Another Personalized Content
                     </button>
                   </div>
-                  <button
-                    onClick={() => {
-                      let course = currPathwayData;
-                      course.modules.push({
-                        title: "",
-                        presetContent: [
-                          {
-                            priority: -1,
-                            title: "",
-                            type: "",
-                            url: "",
-                            content: "",
-                          },
-                        ],
-                        personalizedContent: [
-                          {
-                            priority: -1,
-                            title: "",
-                            type: "",
-                            url: "",
-                            content: "",
-                            tags: [""],
-                            tagConfigs: [[]],
-                          },
-                        ],
-                        tags: ["", ""],
-                      });
-                      setCurrPathwayData({
-                        ...currPathwayData,
-                        modules: course.modules,
-                      });
-                    }}
-                  >
-                    Add Another Module
-                  </button>
                 </>
               );
             })}
           </div>
         </div>
+        <button
+          onClick={() => {
+            let course = currPathwayData;
+            course.modules.push({
+              title: "",
+              _id: null,
+              presetContent: [
+                {
+                  priority: -1,
+                  title: "",
+                  type: "",
+                  url: "",
+                  content: "",
+                },
+              ],
+              personalizedContent: [
+                {
+                  moduleId: null,
+                  _id: null,
+                  priority: -1,
+                  title: "",
+                  type: "",
+                  url: "",
+                  content: "",
+                  tags: [""],
+                },
+              ],
+              tags: ["", ""],
+            });
+            setCurrPathwayData({
+              ...currPathwayData,
+              modules: course.modules,
+            });
+          }}
+        >
+          Add Another Module
+        </button>
       </div>
     </UploadPage>
   );

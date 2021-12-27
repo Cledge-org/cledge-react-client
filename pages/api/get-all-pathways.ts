@@ -10,7 +10,7 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve.status(200).send(getAllPathways());
+  return resolve.status(200).send(await getAllPathways());
 };
 
 // Admin API. Gets all pathways and their modules, with all their preset and

@@ -20,17 +20,20 @@ import getAccountInfo from "./api/get-account";
 import { getPathwayProgress } from "./api/get-pathway-progress";
 import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
 import { ORIGIN_URL } from "../config";
+import AuthFunctions from "./api/auth/firebase-auth";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  console.error(AuthFunctions.userId);
   const user = await (
     await fetch(`${ORIGIN_URL}/api/get-account`, {
       method: "POST",
-      body: JSON.stringify({}),
+      body: JSON.stringify({ userId: AuthFunctions.userId }),
     })
   ).json();
   const userProgress = await (
     await fetch(`${ORIGIN_URL}/api/get-all-pathway-progress`, {
-      method: "GET",
+      method: "POST",
+      body: JSON.stringify({ userId: AuthFunctions.userId }),
     })
   ).json();
   try {
@@ -112,8 +115,7 @@ const Dashboard: NextApplicationPage<{ dashboardInfo: Dashboard }> = ({
       query: { questionnaire: dashboardInfo.checkIns[0] },
     });
   }
-  if (session.data.user.email === "") {
-    //"yousefgomaa@hotmail.com") {
+  if (session.data.user.email === "test31@gmail.com") {
     return (
       <div className="container-fluid p-5 d-flex flex-row justify-content-between">
         <button
