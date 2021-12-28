@@ -6,12 +6,15 @@ import CheckBox from "../../components/common/CheckBox";
 import UploadPage from "../../components/common/upload-page";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { ORIGIN_URL } from "../../config";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
-        questionMetadata: (await fetch("/api/get-all-questions")).json(),
+        questionMetadata: await (
+          await fetch(`${ORIGIN_URL}/api/get-all-questions`)
+        ).json(),
       },
     };
   } catch (err) {
@@ -38,7 +41,7 @@ const QuestionUploadPage: NextApplicationPage<{
     currQuestion: Question,
     setCurrQuestion: Dispatch<SetStateAction<Question>>
   ] = useState({
-    id: "",
+    _id: "",
     question: "",
     type: "",
     helpVid: "",
@@ -62,7 +65,19 @@ const QuestionUploadPage: NextApplicationPage<{
     return question;
   };
   return (
-    <UploadPage>
+    <UploadPage
+      onUpload={() => {
+        fetch(`${ORIGIN_URL}/api/put-question`, {
+          method: "POST",
+          body: JSON.stringify({
+            question: currQuestion,
+            questionId: currQuestion._id,
+          }),
+        }).then((res) => {
+          console.log(res.status);
+        });
+      }}
+    >
       <div className="mt-4 d-flex flex-column w-100">
         <div className="form-group mb-2">
           <label style={{ fontSize: "0.9em" }} className="text-muted">

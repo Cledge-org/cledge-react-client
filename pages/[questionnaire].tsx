@@ -16,12 +16,19 @@ import { GetServerSidePropsContext } from "next";
 import YesNoQuestion from "../components/question_components/yes-no-question";
 import TextInputQuestion from "../components/question_components/textinput_question";
 import { useRouter } from "next/router";
-import { getQuestionList } from "./api/get-question-list";
+import { ORIGIN_URL } from "../config";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     let questionnaireChunks = (
-      await getQuestionList(ctx.query.questionnaire as string)
+      await (
+        await fetch(`${ORIGIN_URL}/api/get-question-list`, {
+          method: "POST",
+          body: JSON.stringify({
+            listName: ctx.query.questionnaire as string,
+          }),
+        })
+      ).json()
     ).chunks;
     let questionnaireData = questionnaireChunks[0].questions;
     for (let i = 1; i < questionnaireChunks.length; i++) {

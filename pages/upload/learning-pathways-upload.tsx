@@ -77,7 +77,8 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
         console.log("WE'RE IN!");
         let shouldChangeIds =
           currPathwayData.modules[0]._id === null ||
-          currPathwayData._id !== allPathways[currCourseIndex]._id;
+          `ObjectId("${currPathwayData._id}")` !==
+            allPathways[currCourseIndex]._id.toString();
         let personalizedContentUpload: PersonalizedContent[] =
           currPathwayData.modules[0].personalizedContent.map(
             (personalizedContent, index) => {
@@ -248,7 +249,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             type="text"
             className="px-3 form-control"
             id="course-title"
-            placeholder="Enter course title"
+            placeholder="Enter course id"
           />
         </div>
         <div className="form-group">

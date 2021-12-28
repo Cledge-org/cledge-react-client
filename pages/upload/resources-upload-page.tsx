@@ -3,6 +3,7 @@ import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "../_app";
 import ECDropDown from "../../components/question_components/ec_dropdown_question";
 import UploadPage from "../../components/common/upload-page";
+import { ORIGIN_URL } from "../../config";
 
 // logged in landing page
 const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
@@ -14,7 +15,19 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
   });
 
   return (
-    <UploadPage>
+    <UploadPage
+      onUpload={() => {
+        fetch(`${ORIGIN_URL}/api/put-resource`, {
+          method: "POST",
+          body: JSON.stringify({
+            resource: resourceData,
+            resourceId: "",
+          }),
+        }).then((res) => {
+          console.log(res.status);
+        });
+      }}
+    >
       <ECDropDown
         isForWaitlist
         onChange={(value) => {

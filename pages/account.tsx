@@ -33,6 +33,15 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
   accountInfo,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [currUserData, setCurrUserData] = useState(accountInfo);
+  const updateUserData = async () => {
+    await fetch(`${ORIGIN_URL}/api/update-user`, {
+      method: "POST",
+      body: JSON.stringify({ id: AuthFunctions.userId, userInfo: accountInfo }),
+    }).then((res) => {
+      console.log(res.status);
+    });
+  };
   return (
     <div className="container-fluid h-100 center-child">
       <div style={{ width: "40%" }}>

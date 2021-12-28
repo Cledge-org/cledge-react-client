@@ -16,16 +16,19 @@ interface ResourcesInfo {
   articles: CardArticle[];
   resources: CardResource[];
 }
-interface CardVideo {
+interface CardVideo extends WithId<Document> {
   source: string;
   title: string;
+  _id: ObjectId;
 }
-interface CardArticle {
+interface CardArticle extends WithId<Document> {
+  _id: ObjectId;
   description: string;
   source: string;
   title: string;
 }
-interface CardResource {
+interface CardResource extends WithId<Document> {
+  _id: ObjectId;
   source: string;
   title: string;
 }

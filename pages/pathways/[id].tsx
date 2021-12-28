@@ -7,6 +7,7 @@ import { NextApplicationPage } from "../_app";
 import { useRouter } from "next/router";
 import { getAccountInfo } from "../api/get-account";
 import AuthFunctions from "../api/auth/firebase-auth";
+import { ORIGIN_URL } from "../../config";
 
 //profile progress/ question summary page
 
@@ -15,7 +16,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return {
       props: {
         pathwayInfo: await (
-          await fetch("/api/get-pathway", {
+          await fetch(`${ORIGIN_URL}/api/get-pathway`, {
             method: "POST",
             body: JSON.stringify({
               userId: AuthFunctions.userId,
@@ -24,7 +25,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
           })
         ).json(),
         userTags: await (
-          await fetch("/api/get-account", {
+          await fetch(`${ORIGIN_URL}/api/get-account`, {
             method: "POST",
             body: JSON.stringify({ userId: AuthFunctions.userId }),
           })

@@ -20,17 +20,23 @@ import { NextApplicationPage } from "./_app";
 import DropDownTab from "../components/common/DropDown_Tab";
 import CardTask from "../components/common/Card_Task";
 import AuthFunctions from "./api/auth/firebase-auth";
+import { ORIGIN_URL } from "../config";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
-        progressInfo: await (
-          await fetch("/api/get-question-progress", {
-            method: "POST",
-            body: JSON.stringify({ userId: AuthFunctions.userId }),
-          })
-        ).json(),
+        progressInfo: {
+          userProgress: await (
+            await fetch(`${ORIGIN_URL}/api/get-question-progress`, {
+              method: "POST",
+              body: JSON.stringify({ userId: AuthFunctions.userId }),
+            })
+          ).json(),
+          questionData: await (
+            await fetch(`${ORIGIN_URL}/api/get-all-questions`)
+          ).json(),
+        },
       },
     };
   } catch (err) {

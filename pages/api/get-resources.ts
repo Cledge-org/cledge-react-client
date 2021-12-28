@@ -23,7 +23,7 @@ export const getResourcesInfo = async (): Promise<ResourcesInfo> => {
         const videoList: CardVideo[] = (
           await resource_db.collection("videos").find().toArray()
         ).map((x) => {
-          return { source: x.source, title: x.title };
+          return { source: x.source, title: x.title, _id: x._id };
         });
         const articles: CardArticle[] = (
           await resource_db.collection("articles").find().toArray()
@@ -32,12 +32,13 @@ export const getResourcesInfo = async (): Promise<ResourcesInfo> => {
             description: x.description,
             source: x.source,
             title: x.title,
+            _id: x._id,
           };
         });
         const resources: CardResource[] = (
           await resource_db.collection("resources").find().toArray()
         ).map((x) => {
-          return { source: x.source, title: x.title };
+          return { source: x.source, title: x.title, _id: x._id };
         });
         res({ videoList, articles, resources });
       }

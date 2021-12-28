@@ -36,9 +36,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       body: JSON.stringify({ userId: AuthFunctions.userId }),
     })
   ).json();
+  const allPathways = await (
+    await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
+  ).json();
   try {
     return {
       props: {
+        allPathways,
         dashboardInfo: {
           userTags: user.tags,
           userProgress,
@@ -55,38 +59,56 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 
 // logged in landing page
-const Dashboard: NextApplicationPage<{ dashboardInfo: Dashboard }> = ({
-  dashboardInfo,
-}) => {
+const Dashboard: NextApplicationPage<{
+  dashboardInfo: Dashboard;
+  allPathways: Pathway[];
+}> = ({ dashboardInfo, allPathways }) => {
   const router = useRouter();
   const session = useSession();
   const [currTab, setCurrTab] = useState("current tasks");
   const getCurrentTasks = () => {
-    // if(dashboardInfo.userProgress === undefined){
-    //   return
-    // }
-    return dashboardInfo.userProgress
-      .filter(({ finished }) => {
-        return !finished;
-      })
-      .map(({ moduleProgress, title, id }) => {
-        let subtasks = {};
-        moduleProgress.forEach(({ title }) => {
-          let moduleTitle = title;
-          subtasks[title] = moduleProgress.find(
-            ({ title }) => title === moduleTitle
-          ).finished;
-        });
-        return (
+    let noProgress = [];
+    allPathways.forEach((pathway) => {
+      if (
+        !dashboardInfo.userProgress.find(({ id }) => {
+          id === pathway._id;
+        })
+      ) {
+        noProgress.push(
           <CardTask
             url={"/pathways/[id]"}
-            correctUrl={`/pathways/${id}`}
+            correctUrl={`/pathways/${pathway._id}`}
             textGradient="light"
-            title={title}
-            subtasks={subtasks}
+            title={pathway.title}
+            subtasks={pathway.modules.map(() => false)}
           />
         );
-      });
+      }
+    });
+    return noProgress.concat(
+      dashboardInfo.userProgress
+        .filter(({ finished }) => {
+          return !finished;
+        })
+        .map(({ moduleProgress, title, id }) => {
+          let subtasks = {};
+          moduleProgress.forEach(({ title }) => {
+            let moduleTitle = title;
+            subtasks[title] = moduleProgress.find(
+              ({ title }) => title === moduleTitle
+            ).finished;
+          });
+          return (
+            <CardTask
+              url={"/pathways/[id]"}
+              correctUrl={`/pathways/${id}`}
+              textGradient="light"
+              title={title}
+              subtasks={subtasks}
+            />
+          );
+        })
+    );
   };
   const getFinishedTasks = () => {
     return dashboardInfo.userProgress
