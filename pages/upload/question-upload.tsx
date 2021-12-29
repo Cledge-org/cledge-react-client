@@ -41,7 +41,6 @@ const QuestionUploadPage: NextApplicationPage<{
     currQuestion: Question,
     setCurrQuestion: Dispatch<SetStateAction<Question>>
   ] = useState({
-    _id: "",
     question: "",
     type: "",
     helpVid: "",
@@ -71,7 +70,6 @@ const QuestionUploadPage: NextApplicationPage<{
           method: "POST",
           body: JSON.stringify({
             question: currQuestion,
-            questionId: currQuestion._id,
           }),
         }).then((res) => {
           console.log(res.status);
@@ -136,24 +134,6 @@ const QuestionUploadPage: NextApplicationPage<{
             ].questions
               .map(({ question }) => question)
               .concat("ADDING NEW")}
-          />
-        </div>
-        <div className="form-group">
-          <label style={{ fontSize: "0.9em" }} className="text-muted">
-            Id:
-          </label>
-          <input
-            value={currQuestion._id}
-            onChange={(e) =>
-              setCurrQuestion({
-                ...currQuestion,
-                _id: e.target.value,
-              })
-            }
-            type="text"
-            className="px-3 form-control"
-            id="id"
-            placeholder="Enter Id"
           />
         </div>
         <div className="form-group">

@@ -84,9 +84,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             (personalizedContent, index) => {
               return {
                 ...personalizedContent,
-                _id: shouldChangeIds
-                  ? currPathwayData.modules[0]._id + `-personalized-${index}`
-                  : personalizedContent._id,
+                _id: shouldChangeIds ? undefined : personalizedContent._id,
               };
             }
           );
@@ -96,38 +94,19 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               (personalizedContent, index) => {
                 return {
                   ...personalizedContent,
-                  _id: shouldChangeIds
-                    ? currPathwayData.modules[i]._id + `-personalized-${index}`
-                    : personalizedContent._id,
+                  _id: shouldChangeIds ? undefined : personalizedContent._id,
                 };
               }
             )
           );
         }
         Promise.all([
-          fetch("/api/put-pathway", {
-            method: "POST",
-            body: JSON.stringify({
-              pathwayId: currPathwayData._id,
-              pathway: {
-                _id: currPathwayData._id,
-                tags: currPathwayData.tags,
-                modules: currPathwayData.modules.map(({ _id }) => _id),
-                title: currPathwayData.title,
-              },
-            }),
-          }),
           ...currPathwayData.modules.map((module, index) =>
             fetch("/api/put-pathway-module", {
               method: "POST",
               body: JSON.stringify({
-                pathwayModuleId: shouldChangeIds
-                  ? currPathwayData._id + `-module-${index}`
-                  : module._id,
+                pathwayModuleId: shouldChangeIds ? undefined : module._id,
                 pathwayModule: {
-                  _id: shouldChangeIds
-                    ? currPathwayData._id + `-module-${index}`
-                    : module._id,
                   title: module.title,
                   presetContent: module.presetContent,
                   tags: module.tags,
@@ -135,20 +114,38 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               }),
             })
           ),
-          ...personalizedContentUpload.map((personalizedContent) =>
-            fetch("/api/put-pathway-module-personalized-content", {
-              method: "POST",
-              body: JSON.stringify({
-                contentId: personalizedContent._id,
-                content: personalizedContent,
-              }),
-            })
-          ),
         ])
-          .then((values) => {
-            values.forEach((value, index) => {
-              console.log(index + " " + value.status);
-            });
+          .then(async (resArr) => {
+            let jsonArr = await Promise.all(resArr.map((res) => res.json()));
+            Promise.all([
+              fetch("/api/put-pathway", {
+                method: "POST",
+                body: JSON.stringify({
+                  pathwayId: shouldChangeIds ? undefined : currPathwayData._id,
+                  pathway: {
+                    _id: shouldChangeIds ? undefined : currPathwayData._id,
+                    tags: currPathwayData.tags,
+                    modules: currPathwayData.modules.map(({ _id }) => _id),
+                    title: currPathwayData.title,
+                  },
+                }),
+              }),
+              ...personalizedContentUpload.map((personalizedContent) =>
+                fetch("/api/put-pathway-module-personalized-content", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    contentId: personalizedContent._id,
+                    content: personalizedContent,
+                  }),
+                })
+              ),
+            ])
+              .then((values) => {
+                values.forEach((value, index) => {
+                  console.log(index + " " + value.status);
+                });
+              })
+              .catch((err) => console.error(err));
           })
           .catch((err) => console.error(err));
       }}
@@ -232,24 +229,6 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             className="px-3 form-control"
             id="course-title"
             placeholder="Enter course title"
-          />
-        </div>
-        <div className="form-group">
-          <label style={{ fontSize: "0.9em" }} className="text-muted">
-            Id:
-          </label>
-          <input
-            value={currPathwayData._id}
-            onChange={(e) =>
-              setCurrPathwayData({
-                ...currPathwayData,
-                _id: e.target.value,
-              })
-            }
-            type="text"
-            className="px-3 form-control"
-            id="course-title"
-            placeholder="Enter course id"
           />
         </div>
         <div className="form-group">

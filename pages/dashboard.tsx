@@ -30,22 +30,22 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       body: JSON.stringify({ userId: AuthFunctions.userId }),
     })
   ).json();
-  const userProgress = await (
-    await fetch(`${ORIGIN_URL}/api/get-all-pathway-progress`, {
-      method: "POST",
-      body: JSON.stringify({ userId: AuthFunctions.userId }),
-    })
-  ).json();
-  const allPathways = await (
-    await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
-  ).json();
+  // const userProgress = await (
+  //   await fetch(`${ORIGIN_URL}/api/get-all-pathway-progress`, {
+  //     method: "POST",
+  //     body: JSON.stringify({ userId: AuthFunctions.userId }),
+  //   })
+  // ).json();
+  // const allPathways = await (
+  //   await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
+  // ).json();
   try {
     return {
       props: {
-        allPathways,
+        // allPathways,
         dashboardInfo: {
           userTags: user.tags,
-          userProgress,
+          // userProgress,
           userName: user.name,
           checkIns: user.checkIns,
         },
@@ -131,12 +131,13 @@ const Dashboard: NextApplicationPage<{
         );
       });
   };
-  if (dashboardInfo.checkIns.length > 0) {
-    router.push({
-      pathname: "/[questionnaire]",
-      query: { questionnaire: dashboardInfo.checkIns[0] },
-    });
-  }
+  // UNCOMMENT THIS ONCE TESTING IS FINISHED
+  // if (dashboardInfo.checkIns.length > 0) {
+  //   router.push({
+  //     pathname: "/[questionnaire]",
+  //     query: { questionnaire: dashboardInfo.checkIns[0] },
+  //   });
+  // }
   if (session.data.user.email === "test31@gmail.com") {
     return (
       <div className="container-fluid p-5 d-flex flex-row justify-content-between">

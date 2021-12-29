@@ -20,8 +20,8 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
         fetch(`${ORIGIN_URL}/api/put-resource`, {
           method: "POST",
           body: JSON.stringify({
+            type: resourceType.toLowerCase() + "s",
             resource: resourceData,
-            resourceId: "",
           }),
         }).then((res) => {
           console.log(res.status);

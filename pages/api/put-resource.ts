@@ -10,10 +10,10 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { type, resource } = JSON.parse(req.body);
-  return !type || !resource
+  const { type, resource, resourceId } = JSON.parse(req.body);
+  return !type || !resource || !resourceId
     ? resolve.status(400).send("Information missing")
-    : resolve.status(200).send(await putResource(type, resource, ""));
+    : resolve.status(200).send(await putResource(type, resource, resourceId));
 };
 
 export const putResource = async (
