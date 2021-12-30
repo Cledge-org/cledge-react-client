@@ -12,6 +12,7 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
   const { userToken, pathwayId, pathway } = JSON.parse(req.body);
+  console.log(pathwayId);
   return pathway
     ? resolve.status(200).send(await putCourse(pathwayId, pathway))
     : resolve.status(400).send("No pathway data provided");
@@ -31,8 +32,8 @@ export const putCourse = async (
         assert.equal(connection_err, null);
         try {
           let updateResult = await client
-            .db("courses")
-            .collection("courses")
+            .db("pathways")
+            .collection("pathways")
             .updateOne(
               { _id: new ObjectId(pathwayId) },
               { $set: pathway },

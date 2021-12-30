@@ -33,8 +33,8 @@ export const putPathwayModulePersonalizedContent = async (
         assert.equal(connection_err, null);
         try {
           let updateResult = await client
-            .db("courses")
-            .collection("modules")
+            .db("pathways")
+            .collection("personalized-content")
             .updateOne(
               { _id: new ObjectId(contentId) },
               { $set: content },

@@ -25,7 +25,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putPathwayModule = async (
   pathwayModuleId: string | undefined,
   pathwayModule: PathwayModule_Db
-): Promise<string> => {
+): Promise<{ moduleId: string }> => {
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
@@ -40,7 +40,14 @@ export const putPathwayModule = async (
               { $set: pathwayModule },
               { upsert: true }
             );
-          res(updateResult.upsertedId.toString());
+          let moduleObjectId = updateResult.upsertedId.toString();
+          console.log(moduleObjectId);
+          res({
+            moduleId: moduleObjectId.substring(
+              moduleObjectId.indexOf("(") + 1,
+              moduleObjectId.length
+            ),
+          });
         } catch (e) {
           err(e);
         }

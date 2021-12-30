@@ -6,6 +6,7 @@ import { NextApplicationPage } from "../_app";
 import ECDropDown from "../../components/question_components/ec_dropdown_question";
 import UploadPage from "../../components/common/upload-page";
 import { ORIGIN_URL } from "../../config";
+import router from "next/router";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -35,7 +36,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
     currPathwayData: Pathway,
     setCurrPathwayData: Dispatch<SetStateAction<Pathway>>
   ] = useState({
-    _id: "",
+    _id: null,
     title: "",
     modules: [
       {
@@ -51,7 +52,6 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           },
         ],
         personalizedContent: [
-          //WORKS DO NOT FIX
           {
             moduleId: null,
             _id: null,
@@ -74,32 +74,8 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
   return (
     <UploadPage
       onUpload={() => {
-        console.log("WE'RE IN!");
-        let shouldChangeIds =
-          currPathwayData.modules[0]._id === null ||
-          `ObjectId("${currPathwayData._id}")` !==
-            allPathways[currCourseIndex]._id.toString();
-        let personalizedContentUpload: PersonalizedContent[] =
-          currPathwayData.modules[0].personalizedContent.map(
-            (personalizedContent, index) => {
-              return {
-                ...personalizedContent,
-                _id: shouldChangeIds ? undefined : personalizedContent._id,
-              };
-            }
-          );
-        for (let i = 1; i < currPathwayData.modules.length; i++) {
-          personalizedContentUpload = personalizedContentUpload.concat(
-            currPathwayData.modules[i].personalizedContent.map(
-              (personalizedContent, index) => {
-                return {
-                  ...personalizedContent,
-                  _id: shouldChangeIds ? undefined : personalizedContent._id,
-                };
-              }
-            )
-          );
-        }
+        let shouldChangeIds = currPathwayData._id === null;
+        console.log(shouldChangeIds);
         Promise.all([
           ...currPathwayData.modules.map((module, index) =>
             fetch("/api/put-pathway-module", {
@@ -107,6 +83,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               body: JSON.stringify({
                 pathwayModuleId: shouldChangeIds ? undefined : module._id,
                 pathwayModule: {
+                  _id: shouldChangeIds ? undefined : module._id,
                   title: module.title,
                   presetContent: module.presetContent,
                   tags: module.tags,
@@ -116,7 +93,38 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           ),
         ])
           .then(async (resArr) => {
-            let jsonArr = await Promise.all(resArr.map((res) => res.json()));
+            let jsonArr = await Promise.all(
+              resArr.map(async (res) => await res.json())
+            );
+            let personalizedContentUpload: PersonalizedContent[] =
+              currPathwayData.modules[0].personalizedContent.map(
+                (personalizedContent, index) => {
+                  return {
+                    ...personalizedContent,
+                    _id: shouldChangeIds ? undefined : personalizedContent._id,
+                    moduleId: shouldChangeIds
+                      ? jsonArr[0].moduleId
+                      : personalizedContent.moduleId,
+                  };
+                }
+              );
+            for (let i = 1; i < currPathwayData.modules.length; i++) {
+              personalizedContentUpload = personalizedContentUpload.concat(
+                currPathwayData.modules[i].personalizedContent.map(
+                  (personalizedContent, index) => {
+                    return {
+                      ...personalizedContent,
+                      _id: shouldChangeIds
+                        ? undefined
+                        : personalizedContent._id,
+                      moduleId: shouldChangeIds
+                        ? jsonArr[i].moduleId
+                        : personalizedContent.moduleId,
+                    };
+                  }
+                )
+              );
+            }
             Promise.all([
               fetch("/api/put-pathway", {
                 method: "POST",
@@ -125,25 +133,37 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                   pathway: {
                     _id: shouldChangeIds ? undefined : currPathwayData._id,
                     tags: currPathwayData.tags,
-                    modules: currPathwayData.modules.map(({ _id }) => _id),
+                    modules: jsonArr.map(({ moduleId }) => moduleId),
                     title: currPathwayData.title,
                   },
                 }),
               }),
-              ...personalizedContentUpload.map((personalizedContent) =>
-                fetch("/api/put-pathway-module-personalized-content", {
-                  method: "POST",
-                  body: JSON.stringify({
-                    contentId: personalizedContent._id,
-                    content: personalizedContent,
-                  }),
-                })
+              ...personalizedContentUpload.map(
+                async (personalizedContent) =>
+                  await fetch("/api/put-pathway-module-personalized-content", {
+                    method: "POST",
+                    body: JSON.stringify({
+                      contentId: personalizedContent._id,
+                      content: personalizedContent,
+                    }),
+                  })
               ),
             ])
               .then((values) => {
+                let unsuccessful = false;
                 values.forEach((value, index) => {
                   console.log(index + " " + value.status);
+                  if (value.status !== 200) {
+                    unsuccessful = true;
+                    alert(
+                      "Upload Unsuccessful! (should probably talk to Yousef or Bryan)"
+                    );
+                  }
                 });
+                if (!unsuccessful) {
+                  alert("Upload Successful!");
+                }
+                //router.push({ pathname: "/dashboard" });
               })
               .catch((err) => console.error(err));
           })
@@ -164,7 +184,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             onChange={(value) => {
               if (value === "NEW COURSE") {
                 setCurrPathwayData({
-                  _id: "",
+                  _id: null,
                   title: "",
                   modules: [
                     {

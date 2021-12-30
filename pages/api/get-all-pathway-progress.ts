@@ -27,7 +27,7 @@ export async function getAllPathwayProgress(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const courseDb = client.db("courses");
+        const pathwaysDb = client.db("pathways");
         const usersDb = client.db("users");
 
         const [pathways, userInfo, progressByModule]: [
@@ -35,13 +35,13 @@ export async function getAllPathwayProgress(
           AccountInfo,
           Record<string, ContentProgress[]>
         ] = await Promise.all([
-          courseDb.collection("courses").find().toArray() as Promise<
+          pathwaysDb.collection("pathways").find().toArray() as Promise<
             Pathway_Db[]
           >,
           usersDb.collection("users").findOne({
             firebaseId: userId,
           }) as Promise<AccountInfo>,
-          courseDb
+          pathwaysDb
             .collection("progress-by-user")
             .findOne({ firebaseId: userId }) as Promise<
             Record<string, ContentProgress[]>
@@ -53,7 +53,7 @@ export async function getAllPathwayProgress(
               getSpecificPathwayProgress(
                 userInfo.tags,
                 pathway,
-                courseDb,
+                pathwaysDb,
                 progressByModule
               )
             )

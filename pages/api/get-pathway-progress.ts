@@ -27,7 +27,7 @@ export async function getPathwayProgress(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const courseDb = client.db("courses");
+        const pathwaysDb = client.db("pathways");
         const usersDb = client.db("users");
 
         const [pathway, userInfo, progressByModule]: [
@@ -35,13 +35,13 @@ export async function getPathwayProgress(
           AccountInfo,
           Record<string, ContentProgress[]>
         ] = await Promise.all([
-          courseDb
-            .collection("courses")
+          pathwaysDb
+            .collection("pathways")
             .findOne({ _id: new ObjectId(pathwayId) }) as Promise<Pathway_Db>,
           usersDb
             .collection("users")
             .findOne({ firebaseId: userId }) as Promise<AccountInfo>,
-          courseDb
+          pathwaysDb
             .collection("progress-by-user")
             .findOne({ firebaseId: userId }) as Promise<
             Record<string, ContentProgress[]>
@@ -51,7 +51,7 @@ export async function getPathwayProgress(
           (await getSpecificPathwayProgress(
             userInfo.tags,
             pathway,
-            courseDb,
+            pathwaysDb,
             progressByModule
           )) as PathwayProgress
         );
@@ -65,7 +65,7 @@ export async function getPathwayProgress(
 export async function getSpecificPathwayProgress(
   userTags: string[],
   pathway: Pathway_Db,
-  courseDb: Db,
+  pathwaysDb: Db,
   progressByModule: Record<string, ContentProgress[]>
 ): Promise<PathwayProgress> {
   return new Promise(async (res, err) => {
@@ -75,7 +75,7 @@ export async function getSpecificPathwayProgress(
           userTags,
           progressByModule,
           moduleId,
-          courseDb
+          pathwaysDb
         )
       )
     );
@@ -95,7 +95,7 @@ async function getSpecificModuleProgress(
   userTags: string[],
   progressByModule: Record<string, ContentProgress[]>,
   moduleId: string,
-  courseDb: Db
+  pathwaysDb: Db
 ): Promise<ModuleProgress> {
   return new Promise(async (res, err) => {
     try {
@@ -103,10 +103,10 @@ async function getSpecificModuleProgress(
         PathwayModule_Db,
         PersonalizedContent[]
       ] = await Promise.all([
-        courseDb.collection("modules").findOne({
+        pathwaysDb.collection("modules").findOne({
           _id: new ObjectId(moduleId),
         }) as Promise<PathwayModule_Db>,
-        courseDb
+        pathwaysDb
           .collection("personalized-content")
           .find({ tags: { $in: userTags }, moduleId })
           .toArray() as Promise<PersonalizedContent[]>,

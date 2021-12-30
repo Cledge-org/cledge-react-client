@@ -36,16 +36,16 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   //     body: JSON.stringify({ userId: AuthFunctions.userId }),
   //   })
   // ).json();
-  // const allPathways = await (
-  //   await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
-  // ).json();
+  const allPathways = await (
+    await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
+  ).json();
   try {
     return {
       props: {
-        // allPathways,
+        allPathways,
         dashboardInfo: {
           userTags: user.tags,
-          // userProgress,
+          userProgress: [],
           userName: user.name,
           checkIns: user.checkIns,
         },

@@ -34,7 +34,7 @@ export const putPathwayProgress = async (
         assert.equal(connection_err, null);
         try {
           let updateResult = await client
-            .db("courses")
+            .db("pathways")
             .collection("progress-by-user")
             .updateOne(
               { _id: new ObjectId(userId) },

@@ -21,15 +21,19 @@ export async function getAllPathways(): Promise<Pathway[]> {
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const courseDb = client.db("courses");
-        const pathways: Pathway_Db[] = (await courseDb
-          .collection("courses")
+        const pathwaysDb = client.db("pathways");
+        console.error(await pathwaysDb.collection("modules").find().toArray());
+        console.error(
+          await pathwaysDb.collection("personalized-content").find().toArray()
+        );
+        const pathways: Pathway_Db[] = (await pathwaysDb
+          .collection("pathways")
           .find()
           .toArray()) as Pathway_Db[];
         res(
           (await Promise.all(
             pathways.map((pathway: Pathway_Db) =>
-              getSpecificPathway(pathway, courseDb)
+              getSpecificPathway(pathway, pathwaysDb)
             )
           )) as Pathway[]
         );
@@ -41,11 +45,11 @@ export async function getAllPathways(): Promise<Pathway[]> {
 // Takes a pathway document and its database and populates its modules
 export async function getSpecificPathway(
   pathway: Pathway_Db,
-  courseDb: Db
+  pathwaysDb: Db
 ): Promise<Pathway> {
   return new Promise(async (res, err) => {
     const modules = await Promise.all(
-      pathway.modules.map((moduleId) => getSpecificModule(moduleId, courseDb))
+      pathway.modules.map((moduleId) => getSpecificModule(moduleId, pathwaysDb))
     );
     res({
       title: pathway.title,
@@ -59,22 +63,42 @@ export async function getSpecificPathway(
 // Gets specific module given its id and database
 async function getSpecificModule(
   moduleId: string,
-  courseDb: Db
+  pathwaysDb: Db
 ): Promise<PathwayModule> {
   return new Promise(async (res, err) => {
+    if (moduleId === null) {
+      res({
+        _id: null,
+        title: "NULL MODULE ID",
+        presetContent: [],
+        personalizedContent: [],
+        tags: [],
+      });
+      return;
+    }
     try {
       const [module, modulePersonalizedContent]: [
         PathwayModule_Db,
         PersonalizedContent[]
       ] = await Promise.all([
-        courseDb.collection("modules").findOne({
+        pathwaysDb.collection("modules").findOne({
           _id: new ObjectId(moduleId),
         }) as Promise<PathwayModule_Db>,
-        courseDb
+        pathwaysDb
           .collection("personalized-content")
           .find({ moduleId })
           .toArray() as Promise<PersonalizedContent[]>,
       ]);
+      if (module === null) {
+        res({
+          _id: null,
+          title: "NULL MODULE",
+          presetContent: [],
+          personalizedContent: modulePersonalizedContent,
+          tags: [],
+        });
+        return;
+      }
       res({
         _id: module._id,
         title: module.title,

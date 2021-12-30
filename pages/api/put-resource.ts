@@ -11,7 +11,7 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { type, resource, resourceId } = JSON.parse(req.body);
-  return !type || !resource || !resourceId
+  return !type || !resource
     ? resolve.status(400).send("Information missing")
     : resolve.status(200).send(await putResource(type, resource, resourceId));
 };
@@ -19,7 +19,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putResource = async (
   type: string,
   resource: CardVideo | CardArticle | CardResource,
-  resourceId: string
+  resourceId: string | undefined
 ): Promise<void> => {
   return new Promise((res, err) => {
     MongoClient.connect(

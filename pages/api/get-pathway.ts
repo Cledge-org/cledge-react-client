@@ -26,13 +26,13 @@ export async function getPathway(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const coursesDb = client.db("courses");
+        const pathwaysDb = client.db("pathways");
         const usersDb = client.db("users");
 
         const [pathway, accountInfo]: [Pathway_Db, AccountInfo] =
           await Promise.all([
-            coursesDb
-              .collection("courses")
+            pathwaysDb
+              .collection("pathways")
               .findOne({ _id: new ObjectId(courseId) }) as Promise<Pathway_Db>,
             usersDb.collection("users").findOne({
               _id: new ObjectId(userId),
@@ -40,7 +40,7 @@ export async function getPathway(
           ]);
         const modules: PathwayModule[] = await Promise.all(
           pathway.modules.map((moduleId) =>
-            getModule(moduleId, coursesDb, accountInfo.tags)
+            getModule(moduleId, pathwaysDb, accountInfo.tags)
           )
         );
         res({
@@ -56,17 +56,17 @@ export async function getPathway(
 
 const getModule = (
   moduleId: string,
-  coursesDb: Db,
+  pathwaysDb: Db,
   userTags: string[]
 ): Promise<PathwayModule> => {
   return new Promise(async (res, err) => {
     try {
       // Get module with preset content
-      const module: PathwayModule_Db = (await coursesDb
+      const module: PathwayModule_Db = (await pathwaysDb
         .collection("modules")
         .findOne({ _id: new ObjectId(moduleId) })) as PathwayModule_Db;
       // Populate this module's personalized content based on user's tags
-      const personalizedContent = (await coursesDb
+      const personalizedContent = (await pathwaysDb
         .collection("personalized-content")
         .find({ tags: { $in: userTags }, moduleId })
         .toArray()) as PersonalizedContent[];
