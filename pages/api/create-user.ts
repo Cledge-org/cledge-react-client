@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 
@@ -19,14 +19,14 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   } else {
     try {
       await createUser({
-        _id: new ObjectId(userId),
+        firebaseId: userId,
         name,
         address,
         grade,
         birthday,
         email,
         tags,
-        checkIns: ["Onboarding Questions"]
+        checkIns: ["Onboarding Questions"],
       });
       resolve.status(200).send("Success");
     } catch (e) {
@@ -42,10 +42,7 @@ export const createUser = async (user: AccountInfo): Promise<void> => {
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         try {
-          await client
-            .db("users")
-            .collection("users")
-            .insertOne(user, { forceServerObjectId: false });
+          await client.db("users").collection("users").insertOne(user);
           res();
         } catch (e) {
           err(e);
