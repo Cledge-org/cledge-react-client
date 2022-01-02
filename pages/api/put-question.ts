@@ -1,6 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
+import { MONGO_CONNECTION_STRING } from "../../secrets";
 
 export const config = {
   api: {
@@ -19,7 +20,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // Admin API. Creates or updates a question - if no ID provided, will create
 // question, otherwise will attempt to update given ID
 export const putQuestion = async (
-  questionId: string,
+  questionId: string | undefined,
   question: Question
 ): Promise<void> => {
   return new Promise((res, err) => {
@@ -38,6 +39,7 @@ export const putQuestion = async (
             );
           res();
         } catch (e) {
+          console.log("ERROR: " + e)
           err(e);
         }
       }
