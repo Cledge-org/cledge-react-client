@@ -23,7 +23,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // create question list, otherwise will attempt to update given ID
 export const putQuestionList = async (
   questionListId: string | undefined,
-  questionList: Question
+  questionList: QuestionList_Db
 ): Promise<void> => {
   return new Promise((res, err) => {
     MongoClient.connect(

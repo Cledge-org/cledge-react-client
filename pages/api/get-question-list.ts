@@ -13,11 +13,12 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { listName } = JSON.parse(req.body);
   return !listName
     ? resolve.status(400).send("No list name provided")
-    : resolve.status(200).send(getQuestionList("TEST_LIST_NAME"));
+    : resolve.status(200).send(await getQuestionList(listName));
 };
 
 // Gets a question list with its chunks populated
 export async function getQuestionList(listName: string): Promise<QuestionList> {
+  console.error(listName);
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
@@ -88,6 +89,10 @@ const getQuestionChunk = (
       const chunk: QuestionChunk_Db = (await questionsDb
         .collection("question-chunks")
         .findOne({ name: chunkName })) as QuestionChunk_Db;
+      if (chunk === null) {
+        res({ _id: null, name: "NULL CHUNK", questions: [] });
+        return;
+      }
       // Chunk questions are currently just question ids, we need to fetch from database
       const chunkQuestions: Question[] = (await Promise.all(
         chunk.questions.map((questionId) =>

@@ -39,7 +39,11 @@ export const putCourse = async (
               { $set: pathway },
               { upsert: true }
             );
-          res(updateResult.upsertedId.toString());
+          res(
+            updateResult.upsertedId === null
+              ? pathwayId
+              : updateResult.upsertedId.toString()
+          );
         } catch (e) {
           err(e);
         }

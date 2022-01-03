@@ -22,14 +22,14 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putQuestion = async (
   questionId: string,
   question: Question
-): Promise<void> => {
+): Promise<{ questionId: string }> => {
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         try {
-          await client
+          let updateResult = await client
             .db("questions")
             .collection("question-data")
             .updateOne(
@@ -37,7 +37,13 @@ export const putQuestion = async (
               { $set: question },
               { upsert: true }
             );
-          res();
+          let questionObjectId =
+            updateResult.upsertedId === null
+              ? questionId
+              : updateResult.upsertedId.toString();
+          res({
+            questionId: questionObjectId,
+          });
         } catch (e) {
           err(e);
         }

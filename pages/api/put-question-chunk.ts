@@ -24,14 +24,14 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putQuestionChunk = async (
   questionChunkId: string | undefined,
   questionChunk: Question
-): Promise<void> => {
+): Promise<{ chunkId: string }> => {
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         try {
-          await client
+          let updateResult = await client
             .db("questions")
             .collection("question-chunks")
             .updateOne(
@@ -39,7 +39,13 @@ export const putQuestionChunk = async (
               { $set: questionChunk },
               { upsert: true }
             );
-          res();
+          let chunkObjectId =
+            updateResult.upsertedId === null
+              ? questionChunkId
+              : updateResult.upsertedId.toString();
+          res({
+            chunkId: chunkObjectId,
+          });
         } catch (e) {
           err(e);
         }

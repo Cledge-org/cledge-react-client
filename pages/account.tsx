@@ -1,7 +1,7 @@
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GetServerSidePropsContext, NextPage } from "next";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Modal from "react-modal";
 import TextInputQuestion from "../components/question_components/textinput_question";
 import { NextApplicationPage } from "./_app";
@@ -33,15 +33,34 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
   accountInfo,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [currUserData, setCurrUserData] = useState(accountInfo);
+  const [currUserData, setCurrUserData]: [
+    AccountInfo,
+    Dispatch<SetStateAction<AccountInfo>>
+  ] = useState(accountInfo);
+  const [currQuestion, setCurrQuestion] = useState({
+    userAnswer: "",
+    _id: null,
+    question: "",
+    type: "",
+    helpVid: "",
+    helpText: "",
+    data: [],
+    isConcatenable: false,
+  });
   const updateUserData = async () => {
     await fetch(`${ORIGIN_URL}/api/update-user`, {
       method: "POST",
-      body: JSON.stringify({ id: AuthFunctions.userId, userInfo: accountInfo }),
+      body: JSON.stringify({
+        id: AuthFunctions.userId,
+        userInfo: currUserData,
+      }),
     }).then((res) => {
       console.log(res.status);
     });
   };
+  useEffect(() => {
+    setModalOpen(true);
+  }, [currQuestion]);
   return (
     <div className="container-fluid h-100 center-child">
       <div style={{ width: "40%" }}>
@@ -78,9 +97,13 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
           </div>
           <InfoSection
             name="NAME"
-            value={accountInfo.name}
+            value={currUserData.name}
             onEdit={() => {
-              setModalOpen(true);
+              setCurrQuestion({
+                userAnswer: currUserData.name,
+                question: "NAME",
+                ...currQuestion,
+              });
             }}
           />
           {/* <InfoSection
@@ -92,26 +115,28 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
           /> */}
           <InfoSection
             name="ADDRESS"
-            value={accountInfo.address}
+            value={currUserData.address}
             onEdit={() => {
-              setModalOpen(true);
+              setCurrQuestion({
+                userAnswer: currUserData.address,
+                question: "ADDRESS",
+                ...currQuestion,
+              });
             }}
           />
-          <InfoSection
-            name="PASSWORD"
-            value="******"
-            onEdit={() => {
-              setModalOpen(true);
-            }}
-          />
+          <InfoSection name="PASSWORD" value="******" onEdit={() => {}} />
         </div>
         <div className="myaccount-blob">
           <span className="title">Contact Info</span>
           <InfoSection
             name="Email"
-            value={accountInfo.email}
+            value={currUserData.email}
             onEdit={() => {
-              setModalOpen(true);
+              setCurrQuestion({
+                userAnswer: currUserData.email,
+                question: "Email",
+                ...currQuestion,
+              });
             }}
           />
         </div>
@@ -119,9 +144,13 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
           <span className="title">Academic Info</span>
           <InfoSection
             name="Grade"
-            value={accountInfo.grade}
+            value={currUserData.grade}
             onEdit={() => {
-              setModalOpen(true);
+              setCurrQuestion({
+                userAnswer: currUserData.grade,
+                question: "Academic Info",
+                ...currQuestion,
+              });
             }}
           />
         </div>
@@ -143,10 +172,22 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
         isOpen={modalOpen}
       >
         <TextInputQuestion
-          question={undefined}
-          userAnswer={""}
-          onChange={() => {}}
+          question={currQuestion}
+          userAnswer={currQuestion.userAnswer}
+          onChange={() => {
+            setCurrUserData({ ...currUserData });
+          }}
         />
+        <button
+          className="general-submit-btn mt-2"
+          onClick={() => {
+            updateUserData().catch((err) => {
+              console.error(err);
+            });
+          }}
+        >
+          SUBMIT
+        </button>
       </Modal>
     </div>
   );

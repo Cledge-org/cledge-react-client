@@ -74,16 +74,29 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
   return (
     <UploadPage
       onUpload={() => {
-        let shouldChangeIds = currPathwayData._id === null;
-        console.log(shouldChangeIds);
+        let sendPathwayData = currPathwayData;
+        sendPathwayData.tags = sendPathwayData.tags.filter((tag) => {
+          return tag !== "";
+        });
+        sendPathwayData.modules.forEach((module, index) => {
+          sendPathwayData.modules[index].tags = module.tags.filter((tag) => {
+            return tag !== "";
+          });
+          module.personalizedContent.forEach(({ tags }, contentIndex) => {
+            sendPathwayData.modules[index].personalizedContent[
+              contentIndex
+            ].tags = tags.filter((tag) => {
+              return tag !== "";
+            });
+          });
+        });
         Promise.all([
-          ...currPathwayData.modules.map((module, index) =>
+          ...sendPathwayData.modules.map((module, index) =>
             fetch("/api/put-pathway-module", {
               method: "POST",
               body: JSON.stringify({
-                pathwayModuleId: shouldChangeIds ? undefined : module._id,
+                pathwayModuleId: module._id === null ? undefined : module._id,
                 pathwayModule: {
-                  _id: shouldChangeIds ? undefined : module._id,
                   title: module.title,
                   presetContent: module.presetContent,
                   tags: module.tags,
@@ -97,29 +110,27 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               resArr.map(async (res) => await res.json())
             );
             let personalizedContentUpload: PersonalizedContent[] =
-              currPathwayData.modules[0].personalizedContent.map(
+              sendPathwayData.modules[0].personalizedContent.map(
                 (personalizedContent, index) => {
                   return {
                     ...personalizedContent,
-                    _id: shouldChangeIds ? undefined : personalizedContent._id,
-                    moduleId: shouldChangeIds
-                      ? jsonArr[0].moduleId
-                      : personalizedContent.moduleId,
+                    moduleId:
+                      personalizedContent.moduleId === null
+                        ? jsonArr[0].moduleId
+                        : personalizedContent.moduleId,
                   };
                 }
               );
-            for (let i = 1; i < currPathwayData.modules.length; i++) {
+            for (let i = 1; i < sendPathwayData.modules.length; i++) {
               personalizedContentUpload = personalizedContentUpload.concat(
-                currPathwayData.modules[i].personalizedContent.map(
+                sendPathwayData.modules[i].personalizedContent.map(
                   (personalizedContent, index) => {
                     return {
                       ...personalizedContent,
-                      _id: shouldChangeIds
-                        ? undefined
-                        : personalizedContent._id,
-                      moduleId: shouldChangeIds
-                        ? jsonArr[i].moduleId
-                        : personalizedContent.moduleId,
+                      moduleId:
+                        personalizedContent.moduleId === null
+                          ? jsonArr[i].moduleId
+                          : personalizedContent.moduleId,
                     };
                   }
                 )
@@ -129,12 +140,14 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               fetch("/api/put-pathway", {
                 method: "POST",
                 body: JSON.stringify({
-                  pathwayId: shouldChangeIds ? undefined : currPathwayData._id,
+                  pathwayId:
+                    sendPathwayData._id === null
+                      ? undefined
+                      : sendPathwayData._id,
                   pathway: {
-                    _id: shouldChangeIds ? undefined : currPathwayData._id,
-                    tags: currPathwayData.tags,
+                    tags: sendPathwayData.tags,
                     modules: jsonArr.map(({ moduleId }) => moduleId),
-                    title: currPathwayData.title,
+                    title: sendPathwayData.title,
                   },
                 }),
               }),
@@ -143,8 +156,11 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                   await fetch("/api/put-pathway-module-personalized-content", {
                     method: "POST",
                     body: JSON.stringify({
-                      contentId: personalizedContent._id,
-                      content: personalizedContent,
+                      contentId:
+                        personalizedContent._id === null
+                          ? undefined
+                          : personalizedContent._id,
+                      content: { ...personalizedContent, _id: undefined },
                     }),
                   })
               ),
@@ -163,7 +179,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 if (!unsuccessful) {
                   alert("Upload Successful!");
                 }
-                //router.push({ pathname: "/dashboard" });
+                router.push({ pathname: "/dashboard" });
               })
               .catch((err) => console.error(err));
           })

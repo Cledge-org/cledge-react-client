@@ -40,7 +40,11 @@ export const putPathwayModulePersonalizedContent = async (
               { $set: content },
               { upsert: true }
             );
-          res(updateResult.upsertedId.toString());
+          res(
+            updateResult.upsertedId === null
+              ? contentId
+              : updateResult.upsertedId.toString()
+          );
         } catch (e) {
           err(e);
         }

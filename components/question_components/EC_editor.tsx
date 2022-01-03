@@ -47,21 +47,21 @@ export default function ECEditor({
         >
           {isEditing ? "Editing Experience" : "Adding a New Experience"}
         </span>
-        {chunkQuestions.map(({ question, type, id, isConcatenable, data }) => {
+        {chunkQuestions.map(({ question, type, _id, isConcatenable, data }) => {
           if (type === "ECDropDown") {
             return (
               <ECDropDown
                 isConcatenable={isConcatenable}
                 valuesList={data}
-                key={id}
+                key={_id}
                 questionTitle={question}
                 defaultValue={
                   isEditing &&
                   userResponses[index].find(
-                    ({ questionId }) => questionId === id
+                    ({ questionId }) => questionId === _id
                   ) !== undefined
                     ? userResponses[index].find(
-                        ({ questionId }) => questionId === id
+                        ({ questionId }) => questionId === _id
                       ).response
                     : []
                 }
@@ -75,10 +75,10 @@ export default function ECEditor({
                 userResponse={
                   isEditing &&
                   userResponses[index].find(
-                    ({ questionId }) => questionId === id
+                    ({ questionId }) => questionId === _id
                   ) !== undefined
                     ? userResponses[index].find(
-                        ({ questionId }) => questionId === id
+                        ({ questionId }) => questionId === _id
                       ).response
                     : ""
                 }

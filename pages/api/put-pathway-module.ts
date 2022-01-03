@@ -40,13 +40,12 @@ export const putPathwayModule = async (
               { $set: pathwayModule },
               { upsert: true }
             );
-          let moduleObjectId = updateResult.upsertedId.toString();
-          console.log(moduleObjectId);
+          let moduleObjectId =
+            updateResult.upsertedId === null
+              ? pathwayModuleId
+              : updateResult.upsertedId.toString();
           res({
-            moduleId: moduleObjectId.substring(
-              moduleObjectId.indexOf("(") + 1,
-              moduleObjectId.length
-            ),
+            moduleId: moduleObjectId,
           });
         } catch (e) {
           err(e);

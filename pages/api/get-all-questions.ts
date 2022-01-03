@@ -26,6 +26,14 @@ export async function getAllQuestionLists(): Promise<QuestionList[]> {
           .collection("question-lists")
           .find()
           .toArray()) as QuestionList_Db[];
+        let indexOfUnclean = allQuestionLists.findIndex(
+          ({ chunks }) => !chunks
+        );
+        while (indexOfUnclean !== -1) {
+          allQuestionLists.splice(indexOfUnclean, 1);
+          indexOfUnclean = allQuestionLists.findIndex(({ chunks }) => !chunks);
+        }
+        console.error(allQuestionLists);
         res(
           (await Promise.all(
             allQuestionLists.map((list) =>
