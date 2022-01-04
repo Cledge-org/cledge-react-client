@@ -30,12 +30,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       body: JSON.stringify({ userId: AuthFunctions.userId }),
     })
   ).json();
-  // const userProgress = await (
-  //   await fetch(`${ORIGIN_URL}/api/get-all-pathway-progress`, {
-  //     method: "POST",
-  //     body: JSON.stringify({ userId: AuthFunctions.userId }),
-  //   })
-  // ).json();
+  const userProgress = await (
+    await fetch(`${ORIGIN_URL}/api/get-all-pathway-progress`, {
+      method: "POST",
+      body: JSON.stringify({ userId: AuthFunctions.userId }),
+    })
+  ).json();
   const allPathways = await (
     await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
   ).json();
@@ -45,7 +45,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         allPathways,
         dashboardInfo: {
           userTags: user.tags,
-          userProgress: [],
+          userProgress,
           userName: user.name,
           checkIns: user.checkIns,
         },
@@ -74,41 +74,44 @@ const Dashboard: NextApplicationPage<{
           id === pathway._id;
         })
       ) {
+        let subtasks = {};
+        pathway.modules.forEach(({ title }) => {
+          subtasks[title] = false;
+        });
         noProgress.push(
           <CardTask
             url={"/pathways/[id]"}
             correctUrl={`/pathways/${pathway._id}`}
             textGradient="light"
             title={pathway.title}
-            subtasks={pathway.modules.map(() => false)}
+            subtasks={subtasks}
           />
         );
       }
     });
-    return noProgress.concat(
-      dashboardInfo.userProgress
-        .filter(({ finished }) => {
-          return !finished;
-        })
-        .map(({ moduleProgress, title, id }) => {
-          let subtasks = {};
-          moduleProgress.forEach(({ title }) => {
-            let moduleTitle = title;
-            subtasks[title] = moduleProgress.find(
-              ({ title }) => title === moduleTitle
-            ).finished;
-          });
-          return (
-            <CardTask
-              url={"/pathways/[id]"}
-              correctUrl={`/pathways/${id}`}
-              textGradient="light"
-              title={title}
-              subtasks={subtasks}
-            />
-          );
-        })
-    );
+    return dashboardInfo.userProgress
+      .filter(({ finished }) => {
+        return !finished;
+      })
+      .map(({ moduleProgress, title, id }) => {
+        let subtasks = {};
+        moduleProgress.forEach(({ title }) => {
+          let moduleTitle = title;
+          subtasks[title] = moduleProgress.find(
+            ({ title }) => title === moduleTitle
+          ).finished;
+        });
+        return (
+          <CardTask
+            url={"/pathways/[id]"}
+            correctUrl={`/pathways/${id}`}
+            textGradient="light"
+            title={title}
+            subtasks={subtasks}
+          />
+        );
+      })
+      .concat(noProgress);
   };
   const getFinishedTasks = () => {
     return dashboardInfo.userProgress
@@ -131,46 +134,46 @@ const Dashboard: NextApplicationPage<{
         );
       });
   };
-  // UNCOMMENT THIS ONCE TESTING IS FINISHED
+  //UNCOMMENT THIS ONCE TESTING IS FINISHED
   // if (dashboardInfo.checkIns.length > 0) {
   //   router.push({
   //     pathname: "/[questionnaire]",
-  //     query: { questionnaire: dashboardInfo.checkIns[0] },
+  //     query: { questionnaire: dashboardInfo.checkIns },
   //   });
   // }
-  if (session.data.user.email === "test31@gmail.com") {
-    return (
-      <div className="container-fluid p-5 d-flex flex-row justify-content-between">
-        <button
-          onClick={() => {
-            router.push({
-              pathname: "/upload/learning-pathways-upload",
-            });
-          }}
-        >
-          Learning Pathways
-        </button>
-        <button
-          onClick={() => {
-            router.push({
-              pathname: "/upload/resources-upload",
-            });
-          }}
-        >
-          Resources
-        </button>
-        <button
-          onClick={() => {
-            router.push({
-              pathname: "/upload/question-upload",
-            });
-          }}
-        >
-          User Progress Questions
-        </button>
-      </div>
-    );
-  }
+  // if (session.data.user.email === "test31@gmail.com") {
+  //   return (
+  //     <div className="container-fluid p-5 d-flex flex-row justify-content-between">
+  //       <button
+  //         onClick={() => {
+  //           router.push({
+  //             pathname: "/upload/learning-pathways-upload",
+  //           });
+  //         }}
+  //       >
+  //         Learning Pathways
+  //       </button>
+  //       <button
+  //         onClick={() => {
+  //           router.push({
+  //             pathname: "/upload/resources-upload",
+  //           });
+  //         }}
+  //       >
+  //         Resources
+  //       </button>
+  //       <button
+  //         onClick={() => {
+  //           router.push({
+  //             pathname: "/upload/question-upload",
+  //           });
+  //         }}
+  //       >
+  //         User Progress Questions
+  //       </button>
+  //     </div>
+  //   );
+  // }
   return (
     <div className="container-fluid p-5">
       <div className="row">

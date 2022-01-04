@@ -41,7 +41,11 @@ export const putPathwayProgress = async (
               { $set: contentProgress },
               { upsert: true }
             );
-          res(updateResult.upsertedId.toString());
+          res(
+            updateResult.upsertedId === null
+              ? userId
+              : updateResult.upsertedId.toString()
+          );
         } catch (e) {
           err(e);
         }

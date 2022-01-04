@@ -29,7 +29,6 @@ export async function getAllPathwayProgress(
         assert.equal(connection_err, null);
         const pathwaysDb = client.db("pathways");
         const usersDb = client.db("users");
-
         const [pathways, userInfo, progressByModule]: [
           Pathway_Db[],
           AccountInfo,
@@ -47,6 +46,10 @@ export async function getAllPathwayProgress(
             Record<string, ContentProgress[]>
           >,
         ]);
+        if (!progressByModule) {
+          res([]);
+          return;
+        }
         res(
           (await Promise.all(
             pathways.map((pathway: Pathway_Db) =>

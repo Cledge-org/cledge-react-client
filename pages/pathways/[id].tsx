@@ -12,24 +12,18 @@ import { ORIGIN_URL } from "../../config";
 //profile progress/ question summary page
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  let fetchedData = await fetch(`${ORIGIN_URL}/api/get-pathway`, {
+    method: "POST",
+    body: JSON.stringify({
+      userId: AuthFunctions.userId,
+      pathwayId: ctx.query.id as string,
+    }),
+  });
+  console.error(fetchedData.status);
   try {
     return {
       props: {
-        pathwayInfo: await (
-          await fetch(`${ORIGIN_URL}/api/get-pathway`, {
-            method: "POST",
-            body: JSON.stringify({
-              userId: AuthFunctions.userId,
-              pathwayId: ctx.query.id as string,
-            }),
-          })
-        ).json(),
-        userTags: await (
-          await fetch(`${ORIGIN_URL}/api/get-account`, {
-            method: "POST",
-            body: JSON.stringify({ userId: AuthFunctions.userId }),
-          })
-        ).json(),
+        pathwayInfo: await fetchedData.json(),
       },
     };
   } catch (err) {
@@ -40,8 +34,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
-  userTags: string[];
-}> = ({ pathwayInfo, userTags }) => {
+}> = ({ pathwayInfo }) => {
   const [currPage, setCurrPage] = useState(null);
   const [currSelected, setCurrSelected] = useState("");
 
@@ -50,6 +43,9 @@ const Pathways: NextApplicationPage<{
       pathwayInfo.modules[0].presetContent,
       pathwayInfo.modules[0].personalizedContent
     )[0];
+    console.log(
+      currContent.url.substring(currContent.url.lastIndexOf("v=") + 2)
+    );
     setCurrSelected(pathwayInfo.modules[0].title + currContent.title);
     setCurrPage(
       <div className="d-flex flex-column" style={{ flex: 3 }}>
@@ -57,7 +53,7 @@ const Pathways: NextApplicationPage<{
           <YoutubeEmbed
             isPathway
             videoId={currContent.url.substring(
-              currContent.url.lastIndexOf("/") + 1
+              currContent.url.lastIndexOf("v=") + 2
             )}
           />
         </div>
@@ -74,27 +70,8 @@ const Pathways: NextApplicationPage<{
       </div>
     );
   }, []);
-  const getPersonalizedContent = (
-    modulePersonalizedContent: PersonalizedContent[]
-  ) => {
-    let personalizedContent: PersonalizedContent[] = [];
-    for (let i = 0; i < modulePersonalizedContent.length; i++) {
-      let containsNum = 0;
-      for (let j = 0; j < modulePersonalizedContent[i].tags.length; j++) {
-        if (userTags.includes(modulePersonalizedContent[i].tags[j])) {
-          containsNum++;
-        }
-      }
-      if (containsNum >= 2) {
-        personalizedContent.push(modulePersonalizedContent[i]);
-      }
-    }
-    return personalizedContent;
-  };
   const getSortedContent = (presetContent, personalizedContent) => {
-    let allContent = presetContent.concat(
-      getPersonalizedContent(personalizedContent)
-    );
+    let allContent = presetContent.concat(personalizedContent);
     console.log(allContent);
     allContent.sort((a, b) => a.priority - b.priority);
     return allContent;
@@ -130,7 +107,7 @@ const Pathways: NextApplicationPage<{
                         <YoutubeEmbed
                           isPathway
                           videoId={currContent.url.substring(
-                            currContent.url.lastIndexOf("/") + 1
+                            currContent.url.lastIndexOf("v=") + 2
                           )}
                         />
                       </div>

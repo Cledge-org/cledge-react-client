@@ -17,6 +17,7 @@ import YesNoQuestion from "../components/question_components/yes-no-question";
 import TextInputQuestion from "../components/question_components/textinput_question";
 import { useRouter } from "next/router";
 import { ORIGIN_URL } from "../config";
+import AuthFunctions from "./api/auth/firebase-auth";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -25,7 +26,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         await fetch(`${ORIGIN_URL}/api/get-question-list`, {
           method: "POST",
           body: JSON.stringify({
-            listName: ctx.query.questionnaire as string,
+            listName: ctx.query.questionnaire[0] as string,
           }),
         })
       ).json()
@@ -78,8 +79,23 @@ const Questionnaire: NextApplicationPage<{ questionnaireData: Question[] }> = ({
     if (page < questionnaireData.length - 1) changePage(page + 1);
   };
 
-  const submitForm = (e: { preventDefault: () => void }) => {
+  const submitForm = async (e: { preventDefault: () => void }) => {
     //REMOVE CHECK IN FROM LIST AND UPLOAD DATA
+    let checkInList = router.query.questionnaire.slice();
+    checkInList.splice(0, 1);
+    await Promise.all([
+      fetch(`${ORIGIN_URL}/api/update-user`, {
+        method: "POST",
+        body: JSON.stringify({
+          id: AuthFunctions.userId,
+          userInfo: { checkIns: checkInList },
+        }),
+      }),
+      fetch(`${ORIGIN_URL}/api/`, {
+        method: "POST",
+        body: JSON.stringify({}),
+      }),
+    ]);
     router.push({ pathname: "/dashboard" });
   };
 

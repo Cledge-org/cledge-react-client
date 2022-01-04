@@ -24,18 +24,18 @@ import { ORIGIN_URL } from "../config";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
+    let userProgress = await fetch(`${ORIGIN_URL}/api/get-question-progress`, {
+      method: "POST",
+      body: JSON.stringify({ userId: AuthFunctions.userId }),
+    });
+    let userProgressJSON = await userProgress.json();
+    console.error(userProgressJSON);
+    console.error(userProgress.status);
     return {
       props: {
         progressInfo: {
-          userProgress: await (
-            await fetch(`${ORIGIN_URL}/api/get-question-progress`, {
-              method: "POST",
-              body: JSON.stringify({ userId: AuthFunctions.userId }),
-            })
-          ).json(),
-          questionData: await (
-            await fetch(`${ORIGIN_URL}/api/get-all-questions`)
-          ).json(),
+          userProgress: userProgressJSON.userProgress,
+          questionData: userProgressJSON.questionData,
         },
       },
     };

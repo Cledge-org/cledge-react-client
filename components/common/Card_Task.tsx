@@ -28,7 +28,7 @@ export default function CardTask({
   var subtasksList = Object.keys(subtasks).map(function (subtask, index) {
     let checkIcon: IconLookup | [IconPrefix, IconName];
     let boxColor: string;
-    if (subtasks[subtask]) checkIcon = faCheckSquare;
+    if (!subtasks[subtask]) checkIcon = faCheckSquare;
     else checkIcon = faSquare;
 
     if (index % 3 === 0) boxColor = "cl-blue";
@@ -37,13 +37,11 @@ export default function CardTask({
 
     return (
       <div className="d-flex flex-row align-items-center">
-        <div className="col-1">
-          <FontAwesomeIcon
-            icon={checkIcon}
-            style={{ height: "2.5em", margin: "5%" }}
-            className={boxColor}
-          />
-        </div>
+        <FontAwesomeIcon
+          style={{ fontSize: "1.75em" }}
+          icon={checkIcon}
+          className={boxColor}
+        />
         <div className="col-11 ps-3 cl-mid-gray" style={{ fontSize: "1.4em" }}>
           {subtask}
         </div>
