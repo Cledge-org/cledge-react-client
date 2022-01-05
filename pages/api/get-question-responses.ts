@@ -17,7 +17,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     : resolve.status(400).send("No user id provided");
 };
 
-// Gets a user's question responses
+// Gets a user's question responses by a user's firebaseId
 export const getQuestionResponses = async (
   userId: string
 ): Promise<UserResponse[]> => {
@@ -29,9 +29,12 @@ export const getQuestionResponses = async (
         client
           .db("users")
           .collection("question-responses")
-          .findOne({ _id: new ObjectId(userId) }, (document_err, user_responses) => {
-            document_err ? err(document_err) : res(user_responses.responses);
-          });
+          .findOne(
+            { _id: new ObjectId(userId) },
+            (document_err, user_responses) => {
+              document_err ? err(document_err) : res(user_responses.responses);
+            }
+          );
       }
     );
   });

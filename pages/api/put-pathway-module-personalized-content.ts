@@ -23,20 +23,28 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // document ID for the content is provided, that document will be overriden. If
 // no ID is provided, the content will be uploaded as a new document.
 export const putPathwayModulePersonalizedContent = async (
-  contentId: string | undefined,
+  contentId: ObjectId | undefined,
   content: PersonalizedContent
-): Promise<string> => {
+): Promise<void> => {
+  if (content._id) {
+    // Document should not have _id field when sent to database
+    delete content._id;
+  }
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         try {
-          let updateResult = await client
-            .db("courses")
-            .collection("modules")
-            .updateOne({ _id: new ObjectId(contentId) }, { $set: content }, { upsert: true });
-          res(updateResult.upsertedId.toString());
+          if (!contentId) {
+            await client.db("courses").collection("modules").insertOne(content);
+          } else {
+            await client
+              .db("courses")
+              .collection("modules")
+              .updateOne({ _id: contentId }, { $set: content });
+          }
+          res();
         } catch (e) {
           err(e);
         }

@@ -11,36 +11,42 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
-  const { userToken, courseModuleId, courseModule } = req.body;
-  return courseModule
+  const { userToken, pathwayModuleId, pathwayModule } = req.body;
+  return pathwayModule
     ? resolve
         .status(200)
-        .send(await putCourseModule(courseModuleId, courseModule))
+        .send(await putPathwayModule(pathwayModuleId, pathwayModule))
     : resolve.status(400).send("No pathway module data provided");
 };
 
 // Admin API. Creates or updates a pathway - if no ID provided, will create
-// pathway, otherwise will attempt to update given ID. Returns ID of upserted
-// pathway document
-export const putCourseModule = async (
-  courseModuleId: string | undefined,
-  courseModule: PathwayModule_Db
-): Promise<string> => {
+// pathway, otherwise will attempt to update given ID
+export const putPathwayModule = async (
+  pathwayModuleId: ObjectId | undefined,
+  pathwayModule: PathwayModule_Db
+): Promise<void> => {
+  if (pathwayModule._id) {
+    // Document should not have _id field when sent to database
+    delete pathwayModule._id;
+  }
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         try {
-          let updateResult = await client
-            .db("courses")
-            .collection("modules")
-            .updateOne(
-              { _id: new ObjectId(courseModuleId) },
-              { $set: courseModule },
-              { upsert: true }
-            );
-          res(updateResult.upsertedId.toString());
+          if (!pathwayModuleId) {
+            await client
+              .db("courses")
+              .collection("modules")
+              .insertOne(pathwayModule);
+          } else {
+            await client
+              .db("courses")
+              .collection("modules")
+              .updateOne({ _id: pathwayModuleId }, { $set: pathwayModule });
+          }
+          res();
         } catch (e) {
           err(e);
         }

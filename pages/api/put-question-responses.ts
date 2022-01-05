@@ -17,7 +17,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     : resolve.status(400).send("No user id provided");
 };
 
-// Creates or updates a user's question responses
+// Creates or updates a user's question responses by their firebase Id (string)
 export const putQuestionResponses = async (
   userId: string,
   responses: UserResponse[]

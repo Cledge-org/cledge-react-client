@@ -10,7 +10,11 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve.status(200).send(getQuestionList("TEST_LIST_NAME"));
+  // TODO: authentication, grab user id from token validation (probably)
+  const { userToken, listName } = req.body;
+  return listName
+    ? resolve.status(200).send(await getQuestionList(listName))
+    : resolve.status(400).send("listName required");
 };
 
 // Gets a question list with its chunks populated
@@ -44,7 +48,11 @@ export const getQuestionListWithDatabase = (
         )
       )) as QuestionChunk[];
       // Populate question list chunks
-      res({ _id: gradeQuestionList._id, name: gradeQuestionList.name, chunks: gradeQuestionChunks });
+      res({
+        _id: gradeQuestionList._id,
+        name: gradeQuestionList.name,
+        chunks: gradeQuestionChunks,
+      });
     } catch (e) {
       err(e);
     }

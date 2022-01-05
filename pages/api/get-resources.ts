@@ -20,25 +20,20 @@ export const getResourcesInfo = async (): Promise<ResourcesInfo> => {
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         const resource_db = client.db("resources");
-        const videoList: CardVideo[] = (
-          await resource_db.collection("videos").find().toArray()
-        ).map((x) => {
-          return { source: x.source, title: x.title };
-        });
-        const articles: CardArticle[] = (
-          await resource_db.collection("articles").find().toArray()
-        ).map((x) => {
-          return {
-            description: x.description,
-            source: x.source,
-            title: x.title,
-          };
-        });
-        const resources: CardResource[] = (
-          await resource_db.collection("resources").find().toArray()
-        ).map((x) => {
-          return { source: x.source, title: x.title };
-        });
+        const videoList: CardVideo[] = (await resource_db
+          .collection("videos")
+          .find()
+          .toArray()) as CardVideo[];
+
+        const articles: CardArticle[] = (await resource_db
+          .collection("articles")
+          .find()
+          .toArray()) as CardArticle[];
+
+        const resources: CardResource[] = (await resource_db
+          .collection("resources")
+          .find()
+          .toArray()) as CardResource[];
         res({ videoList, articles, resources });
       }
     );

@@ -20,26 +20,33 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // Admin API. Creates or updates a question - if no ID provided, will create
 // question, otherwise will attempt to update given ID
 export const putQuestion = async (
-  questionId: string | undefined,
+  questionId: ObjectId | undefined,
   question: Question
 ): Promise<void> => {
+  if (question._id) {
+    // Document should not have _id field when sent to database
+    delete question._id;
+  }
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         try {
-          await client
-            .db("questions")
-            .collection("question-data")
-            .updateOne(
-              { _id: new ObjectId(questionId) },
-              { $set: question },
-              { upsert: true }
-            );
+          if (!questionId) {
+            await client
+              .db("questions")
+              .collection("question-data")
+              .insertOne(question);
+          } else {
+            await client
+              .db("questions")
+              .collection("question-data")
+              .updateOne({ _id: questionId }, { $set: question });
+          }
           res();
         } catch (e) {
-          console.log("ERROR: " + e)
+          console.log("ERROR: " + e);
           err(e);
         }
       }

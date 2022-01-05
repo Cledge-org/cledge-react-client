@@ -16,7 +16,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   return resolve.status(200).send(getQuestionProgress("TEST_USER_ID"));
 };
 
-// Gets all user responses to relevant questions
+// Gets all user responses to relevant questions by a user's firebaseId
 export async function getQuestionProgress(
   userId: string
 ): Promise<ProgressInfo> {

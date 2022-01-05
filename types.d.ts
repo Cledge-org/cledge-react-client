@@ -10,6 +10,7 @@ interface AccountInfo extends WithId<Document> {
   tags: string[];
   checkIns: string[];
 }
+
 //Resource Page Types -->
 interface ResourcesInfo {
   videoList: CardVideo[];
@@ -17,18 +18,22 @@ interface ResourcesInfo {
   resources: CardResource[];
 }
 interface CardVideo {
+  _id?: ObjectId;
   source: string;
   title: string;
 }
 interface CardArticle {
+  _id?: ObjectId;
   description: string;
   source: string;
   title: string;
 }
 interface CardResource {
+  _id?: ObjectId;
   source: string;
   title: string;
 }
+
 //Progress Page Types -->
 interface UserProgress {
   responses: UserResponse[];
@@ -70,6 +75,7 @@ interface Question extends WithId<Document> {
   data?: any[];
   isConcatenable?: boolean;
 }
+
 //Learning Pathways Types -->
 interface Dashboard {
   userName: string;
@@ -84,7 +90,7 @@ interface UserPathway {
 }
 
 interface PathwayProgress {
-  id: string; // ID of the pathway this progress belongs to, NOT database ID of the progress itself
+  pathwayId: string; // ID of the pathway this progress belongs to, NOT database ID of the progress itself
   finished: boolean;
   title: string;
   moduleProgress: ModuleProgress[];
@@ -99,12 +105,17 @@ interface ContentProgress {
   title: string;
   videoTime?: string;
 }
-
 interface Pathway {
   _id: ObjectId;
   title: string;
   modules: PathwayModule[];
   tags: string[];
+}
+interface Pathway_Db extends WithId<Document> {
+  _id: ObjectId;
+  tags: string[];
+  modules: ObjectId[]; // Module document IDs
+  title: string;
 }
 interface PathwayModule {
   _id: ObjectId;
@@ -112,12 +123,6 @@ interface PathwayModule {
   presetContent: PresetContent[];
   personalizedContent: PersonalizedContent[];
   tags: string[];
-}
-interface Pathway_Db extends WithId<Document> {
-  _id: ObjectId;
-  tags: string[];
-  modules: string[]; // Module document IDs
-  title: string;
 }
 interface PathwayModule_Db extends WithId<Document> {
   _id: ObjectId;
@@ -134,7 +139,7 @@ interface PresetContent {
 }
 interface PersonalizedContent extends WithId<Document> {
   _id: ObjectId;
-  moduleId: string;
+  moduleId: ObjectId;
   priority: number;
   tags: string[];
   title: string;

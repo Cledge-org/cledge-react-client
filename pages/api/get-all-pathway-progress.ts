@@ -11,7 +11,11 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve.status(200).send(getAllPathwayProgress("TEST_USER_ID"));
+  // TODO: authentication, grab user id from token validation (probably)
+  const { userToken, userId } = req.body;
+  return userId
+    ? resolve.status(200).send(await getAllPathwayProgress(userId))
+    : resolve.status(400).send("userId required");
 };
 
 // Gets gets progress info for user for every learning pathway
