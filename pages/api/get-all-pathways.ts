@@ -21,9 +21,9 @@ export async function getAllPathways(): Promise<Pathway[]> {
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const courseDb = client.db("courses");
+        const courseDb = client.db("pathways");
         const pathways: Pathway_Db[] = (await courseDb
-          .collection("courses")
+          .collection("pathways")
           .find()
           .toArray()) as Pathway_Db[];
         res(

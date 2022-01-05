@@ -37,10 +37,13 @@ export const putPathwayModulePersonalizedContent = async (
         assert.equal(connection_err, null);
         try {
           if (!contentId) {
-            await client.db("courses").collection("modules").insertOne(content);
+            await client
+              .db("pathways")
+              .collection("modules")
+              .insertOne(content);
           } else {
             await client
-              .db("courses")
+              .db("pathways")
               .collection("modules")
               .updateOne({ _id: contentId }, { $set: content });
           }

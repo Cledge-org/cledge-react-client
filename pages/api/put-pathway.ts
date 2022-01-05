@@ -34,11 +34,14 @@ export const putCourse = async (
         assert.equal(connection_err, null);
         try {
           if (!pathwayId) {
-            await client.db("courses").collection("courses").insertOne(pathway);
+            await client
+              .db("pathways")
+              .collection("pathways")
+              .insertOne(pathway);
           } else {
             await client
-              .db("courses")
-              .collection("courses")
+              .db("pathways")
+              .collection("pathways")
               .updateOne({ _id: pathwayId }, { $set: pathway });
           }
           res();

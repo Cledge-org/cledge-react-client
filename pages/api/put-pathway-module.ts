@@ -37,12 +37,12 @@ export const putPathwayModule = async (
         try {
           if (!pathwayModuleId) {
             await client
-              .db("courses")
+              .db("pathways")
               .collection("modules")
               .insertOne(pathwayModule);
           } else {
             await client
-              .db("courses")
+              .db("pathways")
               .collection("modules")
               .updateOne({ _id: pathwayModuleId }, { $set: pathwayModule });
           }
