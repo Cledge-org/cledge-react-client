@@ -20,8 +20,12 @@ export default function QuestionSummarySubpage({
   if (!isShowing) {
     return null;
   }
+  console.log(chunks);
   return (
-    <div className="container-fluid h-100 d-flex flex-column">
+    <div
+      className="container-fluid h-100 d-flex flex-column"
+      style={{ overflowY: "auto" }}
+    >
       <QuestionSubPageHeader title={listTitle} percentage={percentComplete} />
       {chunks.map((chunk) => (
         <div
@@ -34,8 +38,12 @@ export default function QuestionSummarySubpage({
               question={question}
               userAnswer={
                 userAnswers.responses.find((response) => {
-                  return response.questionId === question.id;
-                }).response
+                  return response.questionId === question._id;
+                })
+                  ? userAnswers.responses.find((response) => {
+                      return response.questionId === question._id;
+                    }).response
+                  : null
               }
             />
           ))}

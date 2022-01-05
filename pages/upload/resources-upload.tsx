@@ -17,12 +17,12 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
   return (
     <UploadPage
       onUpload={() => {
-        fetch(`${ORIGIN_URL}/api/put-resource`, {
+        let resourceSendData = {};
+        resourceSendData[resourceType.toLowerCase()] = resourceData;
+        console.log(resourceSendData);
+        fetch(`${ORIGIN_URL}/api/put-resource-${resourceType.toLowerCase()}`, {
           method: "POST",
-          body: JSON.stringify({
-            type: resourceType.toLowerCase() + "s",
-            resource: resourceData,
-          }),
+          body: JSON.stringify(resourceSendData),
         }).then((res) => {
           console.log(res.status);
         });

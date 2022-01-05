@@ -15,38 +15,48 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   return pathwayModule
     ? resolve
         .status(200)
-        .send(await putPathwayModule(pathwayModuleId, pathwayModule))
+        .send(
+          await putPathwayModule(
+            pathwayModuleId ? new ObjectId(pathwayModuleId) : undefined,
+            pathwayModule
+          )
+        )
     : resolve.status(400).send("No pathway module data provided");
 };
 
 // Admin API. Creates or updates a pathway - if no ID provided, will create
-// pathway, otherwise will attempt to update given ID. Returns ID of upserted
-// pathway document
+// pathway, otherwise will attempt to update given ID
 export const putPathwayModule = async (
-  pathwayModuleId: string | undefined,
+  pathwayModuleId: ObjectId | undefined,
   pathwayModule: PathwayModule_Db
 ): Promise<{ moduleId: string }> => {
+  if (pathwayModule._id) {
+    // Document should not have _id field when sent to database
+    delete pathwayModule._id;
+  }
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         try {
-          let updateResult = await client
-            .db("pathways")
-            .collection("modules")
-            .updateOne(
-              { _id: new ObjectId(pathwayModuleId) },
-              { $set: pathwayModule },
-              { upsert: true }
-            );
-          let moduleObjectId =
-            updateResult.upsertedId === null
-              ? pathwayModuleId
-              : updateResult.upsertedId.toString();
-          res({
-            moduleId: moduleObjectId,
-          });
+          if (!pathwayModuleId) {
+            let insertedDoc = await client
+              .db("pathways")
+              .collection("modules")
+              .insertOne(pathwayModule);
+            res({
+              moduleId: insertedDoc.insertedId.toString(),
+            });
+          } else {
+            await client
+              .db("pathways")
+              .collection("modules")
+              .updateOne({ _id: pathwayModuleId }, { $set: pathwayModule });
+            res({
+              moduleId: pathwayModuleId.toString(),
+            });
+          }
         } catch (e) {
           err(e);
         }

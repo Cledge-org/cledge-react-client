@@ -20,7 +20,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     : resolve.status(200).send(await getQuestionProgress("TEST_USER_ID"));
 };
 
-// Gets all user responses to relevant questions
+// Gets all user responses to relevant questions by a user's firebaseId
 export async function getQuestionProgress(
   userId: string
 ): Promise<ProgressInfo> {
@@ -33,28 +33,4 @@ export async function getQuestionProgress(
     userProgress: { responses: userResponses },
     questionData,
   };
-  // return new Promise((res, err) => {
-  //   MongoClient.connect(
-  //     MONGO_CONNECTION_STRING,
-  //     async (connection_err, client) => {
-  //       assert.equal(connection_err, null);
-  //       // const questionsDb = client.db("questions");
-  //       // TODO: Fetch other lists for user
-  //       // const gradeQuestionList: QuestionList =
-  //       //   await getQuestionListWithDatabase(
-  //       //     `${userInfo.grade}th Grade`,
-  //       //     questionsDb
-  //       //   );
-  //       // res({
-  //       //   userProgress: { responses: userResponses },
-  //       //   questionData: [gradeQuestionList],
-  //       // });
-  //       const questionLists: QuestionList[] = await getAllQuestionLists();
-  //       res({
-  //         userProgress: { responses: !userResponses ? [] : userResponses },
-  //         questionData: questionLists,
-  //       });
-  //     }
-  //   );
-  // });
 }

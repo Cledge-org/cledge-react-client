@@ -84,7 +84,7 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
               <CardVideo
                 title={element.title}
                 textGradient={"light"}
-                videoId={element.source}
+                videoUrl={element.source}
               />
             ))}
           </div>

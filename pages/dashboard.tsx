@@ -70,8 +70,8 @@ const Dashboard: NextApplicationPage<{
     let noProgress = [];
     allPathways.forEach((pathway) => {
       if (
-        !dashboardInfo.userProgress.find(({ id }) => {
-          id === pathway._id;
+        !dashboardInfo.userProgress.find(({ pathwayId }) => {
+          pathwayId === pathway._id;
         })
       ) {
         let subtasks = {};
@@ -93,7 +93,7 @@ const Dashboard: NextApplicationPage<{
       .filter(({ finished }) => {
         return !finished;
       })
-      .map(({ moduleProgress, title, id }) => {
+      .map(({ moduleProgress, title, pathwayId }) => {
         let subtasks = {};
         moduleProgress.forEach(({ title }) => {
           let moduleTitle = title;
@@ -104,7 +104,7 @@ const Dashboard: NextApplicationPage<{
         return (
           <CardTask
             url={"/pathways/[id]"}
-            correctUrl={`/pathways/${id}`}
+            correctUrl={`/pathways/${pathwayId}`}
             textGradient="light"
             title={title}
             subtasks={subtasks}
@@ -118,7 +118,7 @@ const Dashboard: NextApplicationPage<{
       .filter(({ finished }) => {
         return finished;
       })
-      .map(({ moduleProgress, title, id }) => {
+      .map(({ moduleProgress, title, pathwayId }) => {
         let subtasks = {};
         moduleProgress.forEach(({ title }) => {
           subtasks[title] = true;
@@ -126,7 +126,7 @@ const Dashboard: NextApplicationPage<{
         return (
           <CardTask
             url={"/pathways/[id]"}
-            correctUrl={`/pathways/${id}`}
+            correctUrl={`/pathways/${pathwayId}`}
             textGradient="light"
             title={title}
             subtasks={subtasks}
@@ -141,39 +141,39 @@ const Dashboard: NextApplicationPage<{
   //     query: { questionnaire: dashboardInfo.checkIns },
   //   });
   // }
-  // if (session.data.user.email === "test31@gmail.com") {
-  //   return (
-  //     <div className="container-fluid p-5 d-flex flex-row justify-content-between">
-  //       <button
-  //         onClick={() => {
-  //           router.push({
-  //             pathname: "/upload/learning-pathways-upload",
-  //           });
-  //         }}
-  //       >
-  //         Learning Pathways
-  //       </button>
-  //       <button
-  //         onClick={() => {
-  //           router.push({
-  //             pathname: "/upload/resources-upload",
-  //           });
-  //         }}
-  //       >
-  //         Resources
-  //       </button>
-  //       <button
-  //         onClick={() => {
-  //           router.push({
-  //             pathname: "/upload/question-upload",
-  //           });
-  //         }}
-  //       >
-  //         User Progress Questions
-  //       </button>
-  //     </div>
-  //   );
-  // }
+  if (session.data.user.email === "test31@gmail.com") {
+    return (
+      <div className="container-fluid p-5 d-flex flex-row justify-content-between">
+        <button
+          onClick={() => {
+            router.push({
+              pathname: "/upload/learning-pathways-upload",
+            });
+          }}
+        >
+          Learning Pathways
+        </button>
+        <button
+          onClick={() => {
+            router.push({
+              pathname: "/upload/resources-upload",
+            });
+          }}
+        >
+          Resources
+        </button>
+        <button
+          onClick={() => {
+            router.push({
+              pathname: "/upload/question-upload",
+            });
+          }}
+        >
+          User Progress Questions
+        </button>
+      </div>
+    );
+  }
   return (
     <div className="container-fluid p-5">
       <div className="row">

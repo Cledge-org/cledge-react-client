@@ -10,17 +10,19 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId, pathwayId } = JSON.parse(req.body);
-  console.error(userId + " " + pathwayId);
-  return !userId || !pathwayId
-    ? resolve.status(400).send("No userId or pathwayId provided")
-    : resolve.status(200).send(await getPathway(userId, pathwayId));
+  // TODO: authentication, grab user id from token validation (probably)
+  const { userToken, userId, pathwayId } = JSON.parse(req.body);
+  return userId && pathwayId
+    ? resolve
+        .status(200)
+        .send(await getPathway(userId, new ObjectId(pathwayId)))
+    : resolve.status(400).send("Both user and pathway IDs required");
 };
 
-// Gets all the pathway modules and content for a pathway ID and specific user
+// Gets all the pathway modules and content for a pathway ID and specific user (firebaseId)
 export async function getPathway(
   userId: string,
-  pathwayId: string
+  pathwayId: ObjectId
 ): Promise<Pathway> {
   return new Promise((res, err) => {
     MongoClient.connect(
@@ -33,7 +35,7 @@ export async function getPathway(
           await Promise.all([
             pathwaysDb
               .collection("pathways")
-              .findOne({ _id: new ObjectId(pathwayId) }) as Promise<Pathway_Db>,
+              .findOne({ _id: pathwayId }) as Promise<Pathway_Db>,
             usersDb.collection("users").findOne({
               firebaseId: userId,
             }) as Promise<AccountInfo>,

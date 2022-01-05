@@ -12,12 +12,12 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userToken, userId, responses } = JSON.parse(req.body);
-  return userId
+  return userId || responses
     ? resolve.status(200).send(await putQuestionResponses(userId, responses))
-    : resolve.status(400).send("No user id provided");
+    : resolve.status(400).send("No user id or responses provided");
 };
 
-// Creates or updates a user's question responses
+// Creates or updates a user's question responses by their firebase Id (string)
 export const putQuestionResponses = async (
   userId: string,
   responses: UserResponse[]
@@ -32,7 +32,7 @@ export const putQuestionResponses = async (
             .db("users")
             .collection("question-responses")
             .updateOne(
-              { _id: new ObjectId(userId) },
+              { firebaseId: userId },
               { $set: { responses } },
               { upsert: true }
             );

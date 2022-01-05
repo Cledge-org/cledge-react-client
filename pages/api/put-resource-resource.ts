@@ -11,28 +11,28 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
-  const { userToken, questionListId, questionList } = JSON.parse(req.body);
-  return questionList
+  const { userToken, resourceId, resource } = JSON.parse(req.body);
+  return resource
     ? resolve
         .status(200)
         .send(
-          await putQuestionList(
-            questionListId ? new ObjectId(questionListId) : undefined,
-            questionList
+          await putResourceResource(
+            resourceId ? new ObjectId(resourceId) : undefined,
+            resource
           )
         )
-    : resolve.status(400).send("No question chunk data provided");
+    : resolve.status(400).send("No video provided");
 };
 
-// Admin API. Creates or updates a question list - if no ID provided, will
-// create question list, otherwise will attempt to update given ID
-export const putQuestionList = async (
-  questionListId: ObjectId | undefined,
-  questionList: QuestionList_Db
+// Admin API. Creates or updates a resource - if no ID provided, will create
+// resource, otherwise will attempt to update given ID
+export const putResourceResource = async (
+  resourceId: ObjectId | undefined,
+  resource: CardResource
 ): Promise<void> => {
-  if (questionList._id) {
+  if (resource._id) {
     // Document should not have _id field when sent to database
-    delete questionList._id;
+    delete resource._id;
   }
   return new Promise((res, err) => {
     MongoClient.connect(
@@ -40,16 +40,16 @@ export const putQuestionList = async (
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         try {
-          if (!questionListId) {
+          if (!resourceId) {
             await client
-              .db("questions")
-              .collection("question-lists")
-              .insertOne(questionList);
+              .db("resources")
+              .collection("videos")
+              .insertOne(resource);
           } else {
             await client
-              .db("questions")
-              .collection("question-lists")
-              .updateOne({ _id: questionListId }, { $set: questionList });
+              .db("resources")
+              .collection("videos")
+              .updateOne({ _id: resourceId }, { $set: resource });
           }
           res();
         } catch (e) {

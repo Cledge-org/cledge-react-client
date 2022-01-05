@@ -29,7 +29,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // Updates user of id with provided AccountInfo. If a field is not provided, it
 // will not be updated, so its old value will remain.
 export const updateUser = async (
-  id: string,
+  firebaseId: string,
   user: AccountInfo
 ): Promise<void> => {
   return new Promise((res, err) => {
@@ -46,7 +46,7 @@ export const updateUser = async (
           await client
             .db("users")
             .collection("users")
-            .updateOne({ firebaseId: id }, { $set: user });
+            .updateOne({ firebaseId }, { $set: user });
           res();
         } catch (e) {
           err(e);

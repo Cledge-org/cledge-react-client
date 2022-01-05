@@ -19,10 +19,11 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     : resolve.status(400).send("No pathway content progress provided");
 };
 
-// Sets pathway content progress for a user. Batch update between module ID and
-// ContentProgress[]. If a module is in the map, the value in the database will
-// be set to its corresponding value in the map provided. If a module is not
-// provided, it will not be updated in the database
+// Sets pathway content progress for a user by their firebase ID (string). Batch
+// update between module ID as a string and ContentProgress[]. If a module is in
+// the map, the value in the database will be set to its corresponding value in
+// the map provided. If a module is not provided, it will not be updated in the
+// database
 export const putPathwayProgress = async (
   userId: string,
   contentProgress: Record<string, ContentProgress[]> // Map between module ID and a list of ContentProgress for that module

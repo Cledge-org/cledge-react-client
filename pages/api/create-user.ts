@@ -46,6 +46,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   }
 };
 
+// Creates a new user with specified account info
 export const createUser = async (user: AccountInfo): Promise<void> => {
   return new Promise((res, err) => {
     MongoClient.connect(

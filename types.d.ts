@@ -10,28 +10,30 @@ interface AccountInfo extends WithId<Document> {
   tags: string[];
   checkIns: string[];
 }
+
 //Resource Page Types -->
 interface ResourcesInfo {
   videoList: CardVideo[];
   articles: CardArticle[];
   resources: CardResource[];
 }
-interface CardVideo extends WithId<Document> {
+interface CardVideo {
+  _id?: ObjectId;
   source: string;
   title: string;
-  _id: ObjectId;
 }
-interface CardArticle extends WithId<Document> {
-  _id: ObjectId;
+interface CardArticle {
+  _id?: ObjectId;
   description: string;
   source: string;
   title: string;
 }
-interface CardResource extends WithId<Document> {
-  _id: ObjectId;
+interface CardResource {
+  _id?: ObjectId;
   source: string;
   title: string;
 }
+
 //Progress Page Types -->
 interface UserProgress {
   responses: UserResponse[];
@@ -52,7 +54,7 @@ interface QuestionList extends WithId<Document> {
 interface QuestionList_Db extends WithId<Document> {
   _id: ObjectId;
   name: string;
-  chunks: string[]; // Document IDs of chunks
+  chunks: ObjectId[]; // Document IDs of chunks
 }
 interface QuestionChunk extends WithId<Document> {
   _id: ObjectId;
@@ -62,7 +64,7 @@ interface QuestionChunk extends WithId<Document> {
 interface QuestionChunk_Db extends WithId<Document> {
   _id: ObjectId;
   name: string;
-  questions: string[]; // Document IDs of question data
+  questions: ObjectId[]; // Document IDs of question data
 }
 interface Question extends WithId<Document> {
   _id?: ObjectId;
@@ -73,6 +75,7 @@ interface Question extends WithId<Document> {
   data?: any[];
   isConcatenable?: boolean;
 }
+
 //Learning Pathways Types -->
 interface Dashboard {
   userName: string;
@@ -87,7 +90,7 @@ interface UserPathway {
 }
 
 interface PathwayProgress {
-  id: string; // ID of the pathway this progress belongs to, NOT database ID of the progress itself
+  pathwayId: string; // ID of the pathway this progress belongs to, NOT database ID of the progress itself
   finished: boolean;
   title: string;
   moduleProgress: ModuleProgress[];
@@ -102,12 +105,17 @@ interface ContentProgress {
   title: string;
   videoTime?: string;
 }
-
 interface Pathway {
   _id: ObjectId;
   title: string;
   modules: PathwayModule[];
   tags: string[];
+}
+interface Pathway_Db extends WithId<Document> {
+  _id: ObjectId;
+  tags: string[];
+  modules: ObjectId[]; // Module document IDs
+  title: string;
 }
 interface PathwayModule {
   _id: ObjectId;
@@ -115,12 +123,6 @@ interface PathwayModule {
   presetContent: PresetContent[];
   personalizedContent: PersonalizedContent[];
   tags: string[];
-}
-interface Pathway_Db extends WithId<Document> {
-  _id: ObjectId;
-  tags: string[];
-  modules: string[]; // Module document IDs
-  title: string;
 }
 interface PathwayModule_Db extends WithId<Document> {
   _id: ObjectId;
@@ -137,7 +139,7 @@ interface PresetContent {
 }
 interface PersonalizedContent extends WithId<Document> {
   _id: ObjectId;
-  moduleId: string;
+  moduleId: ObjectId;
   priority: number;
   tags: string[];
   title: string;

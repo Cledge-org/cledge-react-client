@@ -23,7 +23,7 @@ export default function Card({
   return (
     <div
       className={classNames}
-      style={{ height: "35vh" }}
+      style={{ height: "fit-content" }}
       onClick={() => {
         if (isCardTask !== undefined && !isCardTask) {
           location.href = url;

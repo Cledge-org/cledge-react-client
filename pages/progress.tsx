@@ -99,11 +99,11 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
     return Math.round((finished / total) * 100);
   };
   return (
-    <div
-      className="container-fluid d-flex flex-row px-0"
-      style={{ height: "94vh" }}
-    >
-      <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
+    <div className="container-fluid d-flex flex-row px-0">
+      <div
+        className="d-flex flex-column bg-light-gray"
+        style={{ flex: 1, overflowY: "auto" }}
+      >
         <DropDownTab
           isAll
           chunkList={[]}
@@ -123,7 +123,12 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
           );
         })}
       </div>
-      <div className="d-flex" style={{ flex: 3 }}>
+      <div
+        className="d-flex"
+        style={{
+          flex: 3,
+        }}
+      >
         {currPage === "all" ? (
           <div className="container-fluid h-100">
             <QuestionSubPageHeader
@@ -160,7 +165,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                   })
                   .map(({ name }) => (
                     <CardCheckIn
-                      snippet={"OH CRAP"}
+                      snippet={"HI THERE!"}
                       title={name}
                       textGradient={"light"}
                       percentComplete={0}
@@ -210,25 +215,29 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
               }
             })
             .concat(
-              progressInfo.questionData
-                .find(({ name }) => name === "Extracurriculars")
-                .chunks.map((chunk) => {
-                  return (
-                    <QuestionECSubpage
-                      userECResponses={
-                        progressInfo.userProgress.responses.find(
-                          ({ questionId }) => questionId === chunk.name
-                        ) !== undefined
-                          ? progressInfo.userProgress.responses.find(
+              progressInfo.questionData.find(
+                ({ name }) => name === "Extracurriculars"
+              )
+                ? progressInfo.questionData
+                    .find(({ name }) => name === "Extracurriculars")
+                    .chunks.map((chunk) => {
+                      return (
+                        <QuestionECSubpage
+                          userECResponses={
+                            progressInfo.userProgress.responses.find(
                               ({ questionId }) => questionId === chunk.name
-                            ).response
-                          : []
-                      }
-                      chunk={chunk}
-                      isShowing={currPage === chunk.name}
-                    />
-                  );
-                })
+                            ) !== undefined
+                              ? progressInfo.userProgress.responses.find(
+                                  ({ questionId }) => questionId === chunk.name
+                                ).response
+                              : []
+                          }
+                          chunk={chunk}
+                          isShowing={currPage === chunk.name}
+                        />
+                      );
+                    })
+                : []
             )
         )}
       </div>

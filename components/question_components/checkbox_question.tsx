@@ -25,7 +25,7 @@ export default function CheckBoxQuestion({
       selectedCopy.push(value);
     }
     setSelected(selectedCopy);
-    onChange(value);
+    onChange(selectedCopy);
   };
   return (
     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">

@@ -49,16 +49,17 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 };
 
-const Questionnaire: NextApplicationPage<{ questionnaireData: Question[] }> = ({
-  questionnaireData,
-}) => {
+const Questionnaire: NextApplicationPage<{
+  questionnaireData: Question[];
+  userResponses: UserResponse[];
+}> = ({ questionnaireData, userResponses }) => {
   const [isShowingContinue, setIsShowingContinue] = useState(true);
   const [isShowingStart, setIsShowingStart] = useState(false);
   const [progress, changeProgress] = useState(0);
   const [page, changePage] = useState(0);
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
+  const [newUserResponses, setNewUserResponses] = useState(userResponses);
   const hiddenFileInput = React.useRef(null);
 
   const transcriptUpload = () => {
@@ -91,27 +92,48 @@ const Questionnaire: NextApplicationPage<{ questionnaireData: Question[] }> = ({
           userInfo: { checkIns: checkInList },
         }),
       }),
-      fetch(`${ORIGIN_URL}/api/`, {
+      fetch(`${ORIGIN_URL}/api/put-question-responses`, {
         method: "POST",
-        body: JSON.stringify({}),
+        body: JSON.stringify({
+          responses: newUserResponses,
+          userId: AuthFunctions.userId,
+        }),
       }),
     ]);
     router.push({ pathname: "/dashboard" });
   };
 
   const questionnairePages = questionnaireData.map((question) => {
+    const updateFunc = (value) => {
+      newUserResponses.find(
+        (questionResponse) => questionResponse.questionId === question._id
+      )
+        ? (newUserResponses[
+            newUserResponses.findIndex(
+              (questionResponse) => questionResponse.questionId === question._id
+            )
+          ]["response"] = value)
+        : newUserResponses.push({
+            questionId: question._id,
+            response: value,
+          });
+    };
     if (question.type === "TextInput") {
       return (
         <TextInputQuestion
           question={question}
           userAnswer={""}
-          onChange={() => {}}
+          onChange={updateFunc}
         />
       );
     }
     if (question.type === "MCQ") {
       return (
-        <MCQQuestion question={question} userAnswer={""} onChange={() => {}} />
+        <MCQQuestion
+          question={question}
+          userAnswer={""}
+          onChange={updateFunc}
+        />
       );
     }
     if (question.type === "CheckBox") {
@@ -119,7 +141,7 @@ const Questionnaire: NextApplicationPage<{ questionnaireData: Question[] }> = ({
         <CheckBoxQuestion
           question={question}
           userAnswers={[]}
-          onChange={() => {}}
+          onChange={updateFunc}
         />
       );
     }
@@ -128,7 +150,7 @@ const Questionnaire: NextApplicationPage<{ questionnaireData: Question[] }> = ({
         <YesNoQuestion
           question={question}
           userAnswer={undefined}
-          onChange={() => {}}
+          onChange={updateFunc}
         />
       );
     }

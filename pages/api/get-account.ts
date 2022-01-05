@@ -18,6 +18,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     : resolve.status(400).send("No user id provided");
 };
 
+// Get account info by a user's account info by their firebaseId
 export const getAccountInfo = async (userId: string): Promise<AccountInfo> => {
   return new Promise((res, err) => {
     MongoClient.connect(
