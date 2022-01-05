@@ -10,16 +10,18 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve
-    .status(200)
-    .send(getPathwayProgress("TEST PATHWAY ID", "TEST_USER_ID"));
+  // TODO: authentication, grab user id from token validation (probably)
+  const { userToken, userId, pathwayId } = req.body;
+  return userId && pathwayId
+    ? resolve.status(200).send(await getPathwayProgress(userId, pathwayId))
+    : resolve.status(400).send("Both user and pathway IDs required");
 };
 
 // Gets gets progress info for a specific learning pathway given pathway
 // document id and a user id
 export async function getPathwayProgress(
-  pathwayId: string,
-  userId: string
+  userId: string,
+  pathwayId: ObjectId
 ): Promise<PathwayProgress> {
   return new Promise((res, err) => {
     MongoClient.connect(
@@ -36,13 +38,13 @@ export async function getPathwayProgress(
         ] = await Promise.all([
           courseDb
             .collection("courses")
-            .findOne({ _id: new ObjectId(pathwayId) }) as Promise<Pathway_Db>,
+            .findOne({ _id: pathwayId }) as Promise<Pathway_Db>,
           usersDb
             .collection("users")
-            .findOne({ _id: new ObjectId(userId) }) as Promise<AccountInfo>,
+            .findOne({ firebaseId: userId }) as Promise<AccountInfo>,
           courseDb
             .collection("progress-by-user")
-            .findOne({ _id: new ObjectId(userId) }) as Promise<
+            .findOne({ firebaseId: userId }) as Promise<
             Record<string, ContentProgress[]>
           >,
         ]);

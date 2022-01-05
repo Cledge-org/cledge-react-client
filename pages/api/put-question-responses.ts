@@ -32,7 +32,7 @@ export const putQuestionResponses = async (
             .db("users")
             .collection("question-responses")
             .updateOne(
-              { _id: new ObjectId(userId) },
+              { firebaseId: userId },
               { $set: { responses } },
               { upsert: true }
             );

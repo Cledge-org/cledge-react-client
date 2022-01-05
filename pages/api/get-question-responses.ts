@@ -29,12 +29,9 @@ export const getQuestionResponses = async (
         client
           .db("users")
           .collection("question-responses")
-          .findOne(
-            { _id: new ObjectId(userId) },
-            (document_err, user_responses) => {
-              document_err ? err(document_err) : res(user_responses.responses);
-            }
-          );
+          .findOne({ firebaseId: userId }, (document_err, user_responses) => {
+            document_err ? err(document_err) : res(user_responses.responses);
+          });
       }
     );
   });
