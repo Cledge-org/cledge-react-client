@@ -38,7 +38,7 @@ export const putPathwayProgress = async (
             .db("pathways")
             .collection("progress-by-user")
             .updateOne(
-              { _id: new ObjectId(userId) },
+              { firebaseId: userId },
               { $set: contentProgress },
               { upsert: true }
             );

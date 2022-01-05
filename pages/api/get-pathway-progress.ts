@@ -19,8 +19,8 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // Gets gets progress info for a specific learning pathway given pathway
 // document id and a user id
 export async function getPathwayProgress(
-  pathwayId: string,
-  userId: string
+  userId: string,
+  pathwayId: ObjectId
 ): Promise<PathwayProgress> {
   return new Promise((res, err) => {
     MongoClient.connect(

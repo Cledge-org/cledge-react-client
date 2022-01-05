@@ -22,10 +22,6 @@ export async function getAllPathways(): Promise<Pathway[]> {
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         const pathwaysDb = client.db("pathways");
-        console.error(await pathwaysDb.collection("modules").find().toArray());
-        console.error(
-          await pathwaysDb.collection("personalized-content").find().toArray()
-        );
         const pathways: Pathway_Db[] = (await pathwaysDb
           .collection("pathways")
           .find()
