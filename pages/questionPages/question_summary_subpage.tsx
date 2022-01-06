@@ -36,15 +36,7 @@ export default function QuestionSummarySubpage({
           {chunk.questions.map((question) => (
             <QuestionSummaryCard
               question={question}
-              userAnswer={
-                userAnswers.responses.find((response) => {
-                  return response.questionId === question._id;
-                })
-                  ? userAnswers.responses.find((response) => {
-                      return response.questionId === question._id;
-                    }).response
-                  : null
-              }
+              userAnswers={userAnswers.responses}
             />
           ))}
         </div>

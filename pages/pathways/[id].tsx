@@ -106,6 +106,7 @@ const Pathways: NextApplicationPage<{
                       <div className="w-100" style={{ height: "55%" }}>
                         <YoutubeEmbed
                           isPathway
+                          onVideoFinish={() => {}}
                           videoId={currContent.url.substring(
                             currContent.url.lastIndexOf("v=") + 2
                           )}

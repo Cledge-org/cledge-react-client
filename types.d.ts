@@ -103,7 +103,7 @@ interface ModuleProgress {
 interface ContentProgress {
   finished: boolean;
   title: string;
-  videoTime?: string;
+  videoTime: number;
 }
 interface Pathway {
   _id: ObjectId;

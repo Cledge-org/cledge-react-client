@@ -18,28 +18,45 @@ import TextInputQuestion from "../components/question_components/textinput_quest
 import { useRouter } from "next/router";
 import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
+import { useSession } from "next-auth/react";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    let questionnaireChunks = (
-      await (
-        await fetch(`${ORIGIN_URL}/api/get-question-list`, {
-          method: "POST",
-          body: JSON.stringify({
-            listName: ctx.query.questionnaire[0] as string,
-          }),
-        })
-      ).json()
-    ).chunks;
-    let questionnaireData = questionnaireChunks[0].questions;
-    for (let i = 1; i < questionnaireChunks.length; i++) {
+    let firstQuestionnaire = ctx.query.questionnaire.indexOf(",");
+    let userResponses = await (
+      await fetch(`${ORIGIN_URL}/api/get-question-responses`, {
+        method: "POST",
+        body: JSON.stringify({
+          //THIS WORKS
+          userId: AuthFunctions.userId,
+        }),
+      })
+    ).json();
+    let questionnaire = await (
+      await fetch(`${ORIGIN_URL}/api/get-question-list`, {
+        method: "POST",
+        body: JSON.stringify({
+          //THIS WORKS
+          listName: ctx.query.questionnaire.substring(
+            0,
+            firstQuestionnaire === -1
+              ? ctx.query.questionnaire.length
+              : firstQuestionnaire
+          ) as string,
+        }),
+      })
+    ).json();
+    //console.error(questionnaireChunks);
+    let questionnaireData = questionnaire.chunks[0].questions;
+    for (let i = 1; i < questionnaire.chunks.length; i++) {
       questionnaireData = questionnaireData.concat(
-        questionnaireChunks[i].questions
+        questionnaire.chunks[i].questions
       );
     }
     return {
       props: {
         questionnaireData,
+        userResponses,
       },
     };
   } catch (err) {
@@ -65,7 +82,7 @@ const Questionnaire: NextApplicationPage<{
   const transcriptUpload = () => {
     hiddenFileInput.current.click();
   };
-
+  const session = useSession();
   const router = useRouter();
 
   const goBack = (e) => {
@@ -82,13 +99,21 @@ const Questionnaire: NextApplicationPage<{
 
   const submitForm = async (e: { preventDefault: () => void }) => {
     //REMOVE CHECK IN FROM LIST AND UPLOAD DATA
-    let checkInList = router.query.questionnaire.slice();
+    let checkInList = [];
+    let queriedList = router.query.questionnaire.slice();
+    //THESE WORK
+    while (queriedList.indexOf(",") !== -1) {
+      checkInList.push(queriedList.substring(0, queriedList.indexOf(",")));
+      queriedList = queriedList.substring(queriedList.indexOf(",") + 1);
+    }
+    checkInList.push(queriedList);
     checkInList.splice(0, 1);
+    console.log(AuthFunctions.userId);
     await Promise.all([
       fetch(`${ORIGIN_URL}/api/update-user`, {
         method: "POST",
         body: JSON.stringify({
-          id: AuthFunctions.userId,
+          userId: AuthFunctions.userId,
           userInfo: { checkIns: checkInList },
         }),
       }),
@@ -99,7 +124,11 @@ const Questionnaire: NextApplicationPage<{
           userId: AuthFunctions.userId,
         }),
       }),
-    ]);
+    ]).then((values) => {
+      values.forEach((value) => {
+        console.log(value.status);
+      });
+    });
     router.push({ pathname: "/dashboard" });
   };
 

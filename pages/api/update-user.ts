@@ -13,12 +13,17 @@ export const config = {
 // object
 // TODO: validate AccountInfo object (userInfo) is valid
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { id, userInfo } = JSON.parse(req.body);
-  if (!id) {
-    resolve.status(400).send("User ID required (id)");
+  const { userId, userInfo } = JSON.parse(req.body);
+  if (!userId || !userInfo) {
+    console.error("GRERERWEREWREWRWE");
+    console.error(userId);
+    console.error(userInfo);
+    resolve
+      .status(400)
+      .send("User ID required (userId) and User Info (userInfo)");
   } else {
     try {
-      await updateUser(id, userInfo);
+      await updateUser(userId, userInfo);
       resolve.status(200).send("Success");
     } catch (e) {
       resolve.status(500).send(e);

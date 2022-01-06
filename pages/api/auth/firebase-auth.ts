@@ -3,6 +3,9 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  setPersistence,
+  browserSessionPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
@@ -13,6 +16,7 @@ const firebaseCreds = {
 };
 const firebaseApp = initializeApp(firebaseCreds);
 const firebaseAuth = getAuth(firebaseApp);
+setPersistence(firebaseAuth, browserLocalPersistence);
 class AuthFunctions {
   static userId =
     firebaseAuth.currentUser === null ? null : firebaseAuth.currentUser.uid;

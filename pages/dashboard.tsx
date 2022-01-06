@@ -141,39 +141,39 @@ const Dashboard: NextApplicationPage<{
   //     query: { questionnaire: dashboardInfo.checkIns },
   //   });
   // }
-  if (session.data.user.email === "test31@gmail.com") {
-    return (
-      <div className="container-fluid p-5 d-flex flex-row justify-content-between">
-        <button
-          onClick={() => {
-            router.push({
-              pathname: "/upload/learning-pathways-upload",
-            });
-          }}
-        >
-          Learning Pathways
-        </button>
-        <button
-          onClick={() => {
-            router.push({
-              pathname: "/upload/resources-upload",
-            });
-          }}
-        >
-          Resources
-        </button>
-        <button
-          onClick={() => {
-            router.push({
-              pathname: "/upload/question-upload",
-            });
-          }}
-        >
-          User Progress Questions
-        </button>
-      </div>
-    );
-  }
+  // if (session.data.user.email === "test31@gmail.com") {
+  //   return (
+  //     <div className="container-fluid p-5 d-flex flex-row justify-content-between">
+  //       <button
+  //         onClick={() => {
+  //           router.push({
+  //             pathname: "/upload/learning-pathways-upload",
+  //           });
+  //         }}
+  //       >
+  //         Learning Pathways
+  //       </button>
+  //       <button
+  //         onClick={() => {
+  //           router.push({
+  //             pathname: "/upload/resources-upload",
+  //           });
+  //         }}
+  //       >
+  //         Resources
+  //       </button>
+  //       <button
+  //         onClick={() => {
+  //           router.push({
+  //             pathname: "/upload/question-upload",
+  //           });
+  //         }}
+  //       >
+  //         User Progress Questions
+  //       </button>
+  //     </div>
+  //   );
+  // }
   return (
     <div className="container-fluid p-5">
       <div className="row">

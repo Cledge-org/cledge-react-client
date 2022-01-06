@@ -18,7 +18,6 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
 // Gets a question list with its chunks populated
 export async function getQuestionList(listName: string): Promise<QuestionList> {
-  console.error(listName);
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,

@@ -1,30 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "react-modal";
 import MCQQuestion from "./mcq_question";
 import CheckBoxQuestion from "./checkbox_question";
 import TextInputQuestion from "./textinput_question";
+import { ORIGIN_URL } from "../../config";
+import AuthFunctions from "../../pages/api/auth/firebase-auth";
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface QuestionSummaryCardProps {
   question: Question;
-  userAnswer: any;
+  userAnswers: UserResponse[];
 }
 
 export default function QuestionSummaryCard({
   question,
-  userAnswer,
+  userAnswers,
 }: QuestionSummaryCardProps) {
   const [displayingQuestion, setDisplayingQuestion] = useState(false);
-
+  const [userAnswer, setUserAnswer]: [
+    UserResponse,
+    Dispatch<SetStateAction<UserResponse>>
+  ] = useState(
+    userAnswers.find((response) => {
+      return response.questionId === question._id;
+    })
+      ? userAnswers.find((response) => {
+          return response.questionId === question._id;
+        })
+      : { questionId: question._id, response: null }
+  );
   const getQuestionType = (): JSX.Element => {
     if (question.type === "TextInput") {
       return (
         <TextInputQuestion
           question={question}
-          userAnswer={userAnswer}
-          onChange={() => {}}
+          userAnswer={userAnswer?.response}
+          onChange={(answer) => {
+            setUserAnswer({ ...userAnswer, response: answer });
+          }}
         />
       );
     }
@@ -32,8 +47,10 @@ export default function QuestionSummaryCard({
       return (
         <MCQQuestion
           question={question}
-          userAnswer={userAnswer}
-          onChange={() => {}}
+          userAnswer={userAnswer?.response}
+          onChange={(answer) => {
+            setUserAnswer({ ...userAnswer, response: answer });
+          }}
         />
       );
     }
@@ -41,8 +58,10 @@ export default function QuestionSummaryCard({
       return (
         <CheckBoxQuestion
           question={question}
-          userAnswers={userAnswer}
-          onChange={() => {}}
+          userAnswers={userAnswer?.response}
+          onChange={(answer) => {
+            setUserAnswer({ ...userAnswer, response: answer });
+          }}
         />
       );
     }
@@ -52,7 +71,7 @@ export default function QuestionSummaryCard({
           {question.question}
         </span>
         <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
-          <div className="w-75">{userAnswer}</div>
+          <div className="w-75">{userAnswer.response ?? "No answer"}</div>
         </div>
       </div>
     );
@@ -72,7 +91,7 @@ export default function QuestionSummaryCard({
           </div>
         </button>
       </div>
-      <span className="ps-4 pb-4">{userAnswer}</span>
+      <span className="ps-4 pb-4">{userAnswer.response ?? "No answer"}</span>
       <Modal
         style={{
           content: {
@@ -90,7 +109,35 @@ export default function QuestionSummaryCard({
         isOpen={displayingQuestion}
       >
         {getQuestionType()}
-        <button className="general-submit-btn mt-2">SUBMIT</button>
+        <div className="center-child w-100">
+          <button
+            onClick={() => {
+              let newUserResponses = userAnswers;
+              let indexOfResponse = newUserResponses.findIndex(
+                ({ questionId }) => {
+                  questionId === userAnswer.questionId;
+                }
+              );
+              if (indexOfResponse !== -1) {
+                newUserResponses[indexOfResponse] = userAnswer;
+              } else {
+                newUserResponses.push(userAnswer);
+              }
+              fetch(`${ORIGIN_URL}/api/put-question-responses`, {
+                method: "POST",
+                body: JSON.stringify({
+                  responses: newUserResponses,
+                  userId: AuthFunctions.userId,
+                }),
+              }).then((res) => {
+                console.log(res.status);
+              });
+            }}
+            className="general-submit-btn mt-2"
+          >
+            SUBMIT
+          </button>
+        </div>
       </Modal>
     </div>
   );
