@@ -47,20 +47,28 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
     data: [],
     isConcatenable: false,
   });
+  const [iteratedFirst, setIteratedFirst] = useState(false);
   const updateUserData = async () => {
     await fetch(`${ORIGIN_URL}/api/update-user`, {
       method: "POST",
       body: JSON.stringify({
-        id: AuthFunctions.userId,
-        userInfo: currUserData,
+        userId: (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()).uid,
+        userInfo: { ...currUserData, _id: undefined },
       }),
-    }).then((res) => {
+    }).then(async (res) => {
       console.log(res.status);
     });
   };
   useEffect(() => {
-    setModalOpen(true);
+    if (!iteratedFirst) {
+      setIteratedFirst(true);
+    } else {
+      setModalOpen(true);
+    }
   }, [currQuestion]);
+  useEffect(() => {
+    console.log(currUserData);
+  }, [currUserData]);
   return (
     <div className="container-fluid h-100 center-child">
       <div style={{ width: "40%" }}>
@@ -100,9 +108,9 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
             value={currUserData.name}
             onEdit={() => {
               setCurrQuestion({
+                ...currQuestion,
                 userAnswer: currUserData.name,
                 question: "NAME",
-                ...currQuestion,
               });
             }}
           />
@@ -118,9 +126,9 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
             value={currUserData.address}
             onEdit={() => {
               setCurrQuestion({
+                ...currQuestion,
                 userAnswer: currUserData.address,
                 question: "ADDRESS",
-                ...currQuestion,
               });
             }}
           />
@@ -133,9 +141,9 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
             value={currUserData.email}
             onEdit={() => {
               setCurrQuestion({
+                ...currQuestion,
                 userAnswer: currUserData.email,
                 question: "Email",
-                ...currQuestion,
               });
             }}
           />
@@ -147,9 +155,9 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
             value={currUserData.grade}
             onEdit={() => {
               setCurrQuestion({
-                userAnswer: currUserData.grade,
-                question: "Academic Info",
                 ...currQuestion,
+                userAnswer: currUserData.grade.toString(),
+                question: "Grade",
               });
             }}
           />
@@ -174,20 +182,27 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
         <TextInputQuestion
           question={currQuestion}
           userAnswer={currQuestion.userAnswer}
-          onChange={() => {
-            setCurrUserData({ ...currUserData });
+          onChange={(value) => {
+            let newUserData = currUserData;
+            newUserData[currQuestion.question.toLowerCase()] =
+              currQuestion.question.toLowerCase() === "grade"
+                ? parseInt(value)
+                : value;
+            setCurrUserData({ ...newUserData });
           }}
         />
-        <button
-          className="general-submit-btn mt-2"
-          onClick={() => {
-            updateUserData().catch((err) => {
-              console.error(err);
-            });
-          }}
-        >
-          SUBMIT
-        </button>
+        <div className="w-100 center-child">
+          <button
+            className="general-submit-btn mt-2"
+            onClick={() => {
+              updateUserData().catch((err) => {
+                console.error(err);
+              });
+            }}
+          >
+            SUBMIT
+          </button>
+        </div>
       </Modal>
     </div>
   );

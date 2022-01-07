@@ -93,6 +93,7 @@ export default function QuestionSummaryCard({
       </div>
       <span className="ps-4 pb-4">{userAnswer.response ?? "No answer"}</span>
       <Modal
+        ariaHideApp={false}
         style={{
           content: {
             top: "30%",
@@ -111,7 +112,7 @@ export default function QuestionSummaryCard({
         {getQuestionType()}
         <div className="center-child w-100">
           <button
-            onClick={() => {
+            onClick={async () => {
               let newUserResponses = userAnswers;
               let indexOfResponse = newUserResponses.findIndex(
                 ({ questionId }) => {
@@ -127,10 +128,13 @@ export default function QuestionSummaryCard({
                 method: "POST",
                 body: JSON.stringify({
                   responses: newUserResponses,
-                  userId: AuthFunctions.userId,
+                  userId: (
+                    await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()
+                  ).uid,
                 }),
               }).then((res) => {
                 console.log(res.status);
+                setDisplayingQuestion(false);
               });
             }}
             className="general-submit-btn mt-2"

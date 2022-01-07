@@ -108,12 +108,12 @@ const Questionnaire: NextApplicationPage<{
     }
     checkInList.push(queriedList);
     checkInList.splice(0, 1);
-    console.log(AuthFunctions.userId);
+    let uid = (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()).uid;
     await Promise.all([
       fetch(`${ORIGIN_URL}/api/update-user`, {
         method: "POST",
         body: JSON.stringify({
-          userId: AuthFunctions.userId,
+          userId: uid,
           userInfo: { checkIns: checkInList },
         }),
       }),
@@ -121,7 +121,7 @@ const Questionnaire: NextApplicationPage<{
         method: "POST",
         body: JSON.stringify({
           responses: newUserResponses,
-          userId: AuthFunctions.userId,
+          userId: uid,
         }),
       }),
     ]).then((values) => {

@@ -12,6 +12,12 @@ import { ORIGIN_URL } from "../../config";
 //profile progress/ question summary page
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const userProgress = await (
+    await fetch(`${ORIGIN_URL}/api/get-all-pathway-progress`, {
+      method: "POST",
+      body: JSON.stringify({ userId: AuthFunctions.userId }),
+    })
+  ).json();
   let fetchedData = await fetch(`${ORIGIN_URL}/api/get-pathway`, {
     method: "POST",
     body: JSON.stringify({
@@ -24,6 +30,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return {
       props: {
         pathwayInfo: await fetchedData.json(),
+        pathwayProgress: userProgress,
       },
     };
   } catch (err) {
@@ -34,9 +41,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
-}> = ({ pathwayInfo }) => {
+  pathwayProgress: PathwayProgress[];
+}> = ({ pathwayInfo, pathwayProgress }) => {
   const [currPage, setCurrPage] = useState(null);
   const [currSelected, setCurrSelected] = useState("");
+  const [allPathwayProgress, setAllPathwayProgress] = useState(pathwayProgress);
 
   useEffect(() => {
     let currContent = getSortedContent(
@@ -84,7 +93,7 @@ const Pathways: NextApplicationPage<{
       >
         <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
           {pathwayInfo.modules.map(
-            ({ title, presetContent, personalizedContent }) => (
+            ({ title, presetContent, personalizedContent }, moduleIndex) => (
               <DropDownTab
                 currSelectedPath={currSelected}
                 chunkList={getSortedContent(
@@ -106,7 +115,14 @@ const Pathways: NextApplicationPage<{
                       <div className="w-100" style={{ height: "55%" }}>
                         <YoutubeEmbed
                           isPathway
-                          onVideoFinish={() => {}}
+                          onVideoTimeUpdate={(player) => {
+                            // if(player){
+                            //   let pathwayProgress = allPathwayProgress.find(({pathwayId}) => pathwayId === pathwayInfo._id);
+                            // if(player.getDuration() - player.getCurrentTime() < 10){
+                            //   pathwayProgress.moduleProgress[moduleIndex].contentProgress.indexOf(currContent)
+                            // }
+                            // setAllPathwayProgress()
+                          }}
                           videoId={currContent.url.substring(
                             currContent.url.lastIndexOf("v=") + 2
                           )}

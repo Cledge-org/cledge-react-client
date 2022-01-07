@@ -6,6 +6,7 @@ import {
   setPersistence,
   browserSessionPersistence,
   browserLocalPersistence,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
@@ -16,17 +17,22 @@ const firebaseCreds = {
 };
 const firebaseApp = initializeApp(firebaseCreds);
 const firebaseAuth = getAuth(firebaseApp);
-setPersistence(firebaseAuth, browserLocalPersistence);
+onAuthStateChanged(firebaseAuth, (user) => {
+  console.log(user?.uid);
+  AuthFunctions.userId = user?.uid;
+});
 class AuthFunctions {
-  static userId =
-    firebaseAuth.currentUser === null ? null : firebaseAuth.currentUser.uid;
+  static userId = firebaseAuth.currentUser?.uid;
   static async signInEmail(email: string, password: string) {
     try {
-      let user = (
-        await signInWithEmailAndPassword(firebaseAuth, email, password)
-      ).user;
-      this.userId = user.uid;
-      return user;
+      let user = await setPersistence(
+        firebaseAuth,
+        browserLocalPersistence
+      ).then(() => {
+        return signInWithEmailAndPassword(firebaseAuth, email, password);
+      });
+      this.userId = user.user.uid;
+      return user.user;
     } catch (err) {
       console.error(err);
     }

@@ -19,11 +19,10 @@ export default function Card({
   classNames = "col-lg-4 col-md-6 col-xs-12 p-3 px-4",
   textGradient,
 }: CardProps) {
-  useEffect(() => {}, []);
   return (
     <div
       className={classNames}
-      style={{ minHeight: "fit-content", height: "35vh" }}
+      style={{ height: "35vh" }}
       onClick={() => {
         if (isCardTask !== undefined && !isCardTask) {
           location.href = url;

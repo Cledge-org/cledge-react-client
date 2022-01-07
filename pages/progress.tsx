@@ -21,6 +21,7 @@ import DropDownTab from "../components/common/DropDown_Tab";
 import CardTask from "../components/common/Card_Task";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { ORIGIN_URL } from "../config";
+import { useSession } from "next-auth/react";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -48,6 +49,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
   progressInfo,
 }) => {
+  const session = useSession();
   const [currPage, setCurrPage] = useState("all");
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
   const [percentageData, setPercentageData] = useState({
@@ -56,6 +58,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
   });
 
   useEffect(() => {
+    console.log(session.data.user);
     setPercentageData({
       allLists: calculateTotalPercent(progressInfo.questionData),
       lists: progressInfo.questionData.map(({ chunks }) => {

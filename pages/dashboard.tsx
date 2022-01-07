@@ -135,12 +135,12 @@ const Dashboard: NextApplicationPage<{
       });
   };
   //UNCOMMENT THIS ONCE TESTING IS FINISHED
-  // if (dashboardInfo.checkIns.length > 0) {
-  //   router.push({
-  //     pathname: "/[questionnaire]",
-  //     query: { questionnaire: dashboardInfo.checkIns },
-  //   });
-  // }
+  if (dashboardInfo.checkIns.length > 0) {
+    router.push({
+      pathname: "/[questionnaire]",
+      query: { questionnaire: dashboardInfo.checkIns },
+    });
+  }
   // if (session.data.user.email === "test31@gmail.com") {
   //   return (
   //     <div className="container-fluid p-5 d-flex flex-row justify-content-between">
