@@ -13,15 +13,20 @@ export default function YoutubeEmbed({
 }) {
   //****************NOTE*************:
   //THIS ALL WORKS EVEN THOUGH IT DOESN'T LOOK LIKE IT DOES!
-  const [currTime, setCurrTime] = useState(videoTime ? videoTime : 0);
+  //*************************************
   const [player, setPlayer] = useState(null);
-  setInterval(() => {
-    setPlayer((player) => {
-      onVideoTimeUpdate(player);
-      return player;
-    });
-  }, 10000);
+  const [intervalId, setIntervalId] = useState(null);
   useEffect(() => {
+    if (isPathway && intervalId === null) {
+      setIntervalId(
+        setInterval(() => {
+          setPlayer((player) => {
+            onVideoTimeUpdate(player);
+            return player;
+          });
+        }, 10000)
+      );
+    }
     if (!window.YT) {
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
@@ -33,6 +38,7 @@ export default function YoutubeEmbed({
         setPlayer(
           new window.YT.Player(videoId, {
             videoId,
+            start: videoTime ? videoTime : 0,
           })
         );
       };
@@ -41,10 +47,13 @@ export default function YoutubeEmbed({
       setPlayer(
         new window.YT.Player(videoId, {
           videoId,
+          start: videoTime ? videoTime : 0,
         })
       );
     }
-    return () => {};
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   return (

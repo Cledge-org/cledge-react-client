@@ -46,7 +46,195 @@ const Pathways: NextApplicationPage<{
   const [currPage, setCurrPage] = useState(null);
   const [currSelected, setCurrSelected] = useState("");
   const [allPathwayProgress, setAllPathwayProgress] = useState(pathwayProgress);
-
+  const checkIfModuleFinished = (
+    newPathwayProgress: PathwayProgress[],
+    pathwayIndex,
+    moduleIndex
+  ) => {
+    let currModuleProgress =
+      newPathwayProgress[pathwayIndex].moduleProgress[moduleIndex];
+    let pathwayModuleIndex = pathwayInfo.modules.findIndex(({ title }) => {
+      return currModuleProgress.title === title;
+    });
+    if (
+      currModuleProgress.contentProgress.length <
+      pathwayInfo.modules[pathwayModuleIndex].personalizedContent.length +
+        pathwayInfo.modules[pathwayModuleIndex].presetContent.length
+    ) {
+      return false;
+    }
+    let allContentFinished = true;
+    currModuleProgress.contentProgress.forEach(({ finished }) => {
+      if (!finished) {
+        allContentFinished = false;
+      }
+    });
+    currModuleProgress.finished = allContentFinished;
+    return allContentFinished;
+  };
+  const checkIfPathwayFinished = (
+    newPathwayProgress: PathwayProgress[],
+    pathwayIndex
+  ) => {
+    let currPathwayProgress = newPathwayProgress[pathwayIndex];
+    if (
+      currPathwayProgress.moduleProgress.length < pathwayInfo.modules.length
+    ) {
+      return;
+    }
+    let allContentFinished = true;
+    currPathwayProgress.moduleProgress.forEach((moduleProgress, index) => {
+      let finished = checkIfModuleFinished(
+        newPathwayProgress,
+        pathwayIndex,
+        index
+      );
+      if (!finished) {
+        allContentFinished = false;
+      }
+    });
+    currPathwayProgress.finished = allContentFinished;
+    return;
+  };
+  const addNewPathwayProgress = (
+    newPathwayProgress: PathwayProgress[],
+    moduleTitle,
+    currContent,
+    player
+  ) => {
+    newPathwayProgress.push({
+      pathwayId: pathwayInfo._id,
+      title: pathwayInfo.title,
+      moduleProgress: [
+        {
+          title: moduleTitle,
+          contentProgress: [
+            {
+              title: currContent.title,
+              finished: player.getDuration() - player.getCurrentTime() < 10,
+              videoTime: player.getCurrentTime(),
+            },
+          ],
+          finished: false,
+        },
+      ],
+      finished: false,
+    });
+    checkIfPathwayFinished(newPathwayProgress, newPathwayProgress.length - 1);
+    setAllPathwayProgress(newPathwayProgress);
+  };
+  const addNewModuleProgress = (
+    newPathwayProgress: PathwayProgress[],
+    pathwayIndex,
+    moduleTitle,
+    currContent,
+    player
+  ) => {
+    newPathwayProgress[pathwayIndex].moduleProgress.push({
+      title: moduleTitle,
+      contentProgress: [
+        {
+          title: currContent.title,
+          finished: player.getDuration() - player.getCurrentTime() < 10,
+          videoTime: player.getCurrentTime(),
+        },
+      ],
+      finished: false,
+    });
+    checkIfPathwayFinished(newPathwayProgress, pathwayIndex);
+    setAllPathwayProgress(newPathwayProgress);
+  };
+  const addNewContentProgress = (
+    newPathwayProgress: PathwayProgress[],
+    pathwayIndex,
+    moduleIndex,
+    currContent,
+    player
+  ) => {
+    newPathwayProgress[pathwayIndex].moduleProgress[
+      moduleIndex
+    ].contentProgress.push({
+      title: currContent.title,
+      finished: player.getDuration() - player.getCurrentTime() < 10,
+      videoTime: player.getCurrentTime(),
+    });
+    checkIfPathwayFinished(newPathwayProgress, pathwayIndex);
+    setAllPathwayProgress(newPathwayProgress);
+  };
+  const onVideoTimeUpdate = (player, currContent, moduleTitle) => {
+    if (player) {
+      let pathwayProgress = allPathwayProgress.find(
+        ({ pathwayId }) => pathwayId === pathwayInfo._id
+      );
+      if (!pathwayProgress) {
+        let newPathwayProgress = allPathwayProgress.slice();
+        addNewPathwayProgress(
+          newPathwayProgress,
+          moduleTitle,
+          currContent,
+          player
+        );
+      } else {
+        let indexOfModule = pathwayProgress.moduleProgress.findIndex(
+          (moduleProgress) => {
+            return moduleProgress.title === moduleTitle;
+          }
+        );
+        console.log(moduleTitle);
+        console.log(indexOfModule);
+        if (indexOfModule === -1) {
+          let newPathwayProgress = allPathwayProgress.slice();
+          addNewModuleProgress(
+            newPathwayProgress,
+            newPathwayProgress.indexOf(pathwayProgress),
+            moduleTitle,
+            currContent,
+            player
+          );
+        } else {
+          let indexOfContent = pathwayProgress.moduleProgress[
+            indexOfModule
+          ].contentProgress.findIndex((contentProgress) => {
+            return contentProgress.title === currContent.title;
+          });
+          if (indexOfContent === -1) {
+            let newPathwayProgress = allPathwayProgress.slice();
+            addNewContentProgress(
+              newPathwayProgress,
+              newPathwayProgress.indexOf(pathwayProgress),
+              indexOfModule,
+              currContent,
+              player
+            );
+          } else {
+            if (player.getDuration() - player.getCurrentTime() < 10) {
+              pathwayProgress.moduleProgress[indexOfModule].contentProgress[
+                indexOfContent
+              ] = {
+                ...pathwayProgress.moduleProgress[indexOfModule]
+                  .contentProgress[indexOfContent],
+                finished: true,
+              };
+            }
+            pathwayProgress.moduleProgress[indexOfModule].contentProgress[
+              indexOfContent
+            ] = {
+              ...pathwayProgress.moduleProgress[indexOfModule].contentProgress[
+                indexOfContent
+              ],
+              videoTime: player.getCurrentTime(),
+            };
+            let newPathwayProgress = allPathwayProgress.slice();
+            checkIfPathwayFinished(
+              newPathwayProgress,
+              newPathwayProgress.indexOf(pathwayProgress)
+            );
+            setAllPathwayProgress(newPathwayProgress);
+          }
+        }
+      }
+    }
+  };
   useEffect(() => {
     let currContent = getSortedContent(
       pathwayInfo.modules[0].presetContent,
@@ -61,6 +249,17 @@ const Pathways: NextApplicationPage<{
         <div className="w-100" style={{ height: "55%" }}>
           <YoutubeEmbed
             isPathway
+            key={`youtube-container-${currContent.url.substring(
+              currContent.url.lastIndexOf("v=") + 2
+            )}`}
+            ///videoTime={}
+            onVideoTimeUpdate={(player) =>
+              onVideoTimeUpdate(
+                player,
+                currContent,
+                pathwayInfo.modules[0].title
+              )
+            }
             videoId={currContent.url.substring(
               currContent.url.lastIndexOf("v=") + 2
             )}
@@ -81,10 +280,12 @@ const Pathways: NextApplicationPage<{
   }, []);
   const getSortedContent = (presetContent, personalizedContent) => {
     let allContent = presetContent.concat(personalizedContent);
-    console.log(allContent);
     allContent.sort((a, b) => a.priority - b.priority);
     return allContent;
   };
+  useEffect(() => {
+    console.log(allPathwayProgress);
+  }, [allPathwayProgress]);
   return (
     <>
       <div
@@ -115,14 +316,13 @@ const Pathways: NextApplicationPage<{
                       <div className="w-100" style={{ height: "55%" }}>
                         <YoutubeEmbed
                           isPathway
-                          onVideoTimeUpdate={(player) => {
-                            // if(player){
-                            //   let pathwayProgress = allPathwayProgress.find(({pathwayId}) => pathwayId === pathwayInfo._id);
-                            // if(player.getDuration() - player.getCurrentTime() < 10){
-                            //   pathwayProgress.moduleProgress[moduleIndex].contentProgress.indexOf(currContent)
-                            // }
-                            // setAllPathwayProgress()
-                          }}
+                          key={`youtube-container-${currContent.url.substring(
+                            currContent.url.lastIndexOf("v=") + 2
+                          )}`}
+                          ///videoTime={}
+                          onVideoTimeUpdate={(player) =>
+                            onVideoTimeUpdate(player, currContent, title)
+                          }
                           videoId={currContent.url.substring(
                             currContent.url.lastIndexOf("v=") + 2
                           )}
