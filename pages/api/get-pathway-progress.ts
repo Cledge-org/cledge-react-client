@@ -69,7 +69,7 @@ export async function getSpecificPathwayProgress(
   progressByModule: Record<string, ContentProgress[]>
 ): Promise<PathwayProgress> {
   return new Promise(async (res, err) => {
-    const moduleProgress = await Promise.all(
+    let moduleProgress = await Promise.all(
       pathway.modules.map((moduleId) =>
         getSpecificModuleProgress(
           userTags,
@@ -79,10 +79,13 @@ export async function getSpecificPathwayProgress(
         )
       )
     );
+    moduleProgress = moduleProgress.filter(({ title }) => {
+      return title !== "NULL MODULE";
+    });
     res({
       finished: moduleProgress.reduce(
         (prev: boolean, cur: ModuleProgress) => prev && cur.finished,
-        true
+        false
       ),
       moduleProgress,
       title: pathway.title,
@@ -104,37 +107,61 @@ async function getSpecificModuleProgress(
         PersonalizedContent[]
       ] = await Promise.all([
         pathwaysDb.collection("modules").findOne({
-          _id: moduleId,
+          _id: new ObjectId(moduleId),
         }) as Promise<PathwayModule_Db>,
         pathwaysDb
           .collection("personalized-content")
           .find({ tags: { $in: userTags }, moduleId })
           .toArray() as Promise<PersonalizedContent[]>,
       ]);
-      const moduleProgress: ContentProgress[] = progressByModule[module.title];
-      const titles: Set<string> = new Set();
-      moduleProgress.forEach((progress) => {
-        titles.add(progress.title);
-      });
-      // Iterate through preset and presonalized contents and find contents not in progress, add them as unfinished
-      module.presetContent.forEach((content) => {
-        if (!titles.has(content.title)) {
-          moduleProgress.push({ title: content.title, finished: false });
+      if (module) {
+        let moduleContentProgress: ContentProgress[] =
+          progressByModule[module._id];
+        if (!moduleContentProgress) {
+          moduleContentProgress = [];
         }
-      });
-      modulePersonalizedContent.forEach((content) => {
-        if (!titles.has(content.title)) {
-          moduleProgress.push({ title: content.title, finished: false });
+        const titles: Set<string> = new Set();
+        moduleContentProgress.forEach((progress) => {
+          titles.add(progress.title);
+        });
+        // Iterate through preset and presonalized contents and find contents not in progress, add them as unfinished
+        if (module.presetContent) {
+          module.presetContent.forEach((content) => {
+            if (!titles.has(content.title)) {
+              moduleContentProgress.push({
+                title: content.title,
+                finished: false,
+                videoTime: 0,
+              });
+            }
+          });
         }
-      });
-      res({
-        finished: moduleProgress.reduce(
-          (prev, cur) => prev && cur.finished,
-          true
-        ),
-        contentProgress: moduleProgress,
-        title: module.title,
-      });
+        if (modulePersonalizedContent) {
+          modulePersonalizedContent.forEach((content) => {
+            if (!titles.has(content.title)) {
+              moduleContentProgress.push({
+                title: content.title,
+                finished: false,
+                videoTime: 0,
+              });
+            }
+          });
+        }
+        res({
+          finished: moduleContentProgress.reduce(
+            (prev, cur) => prev && cur.finished,
+            true
+          ),
+          contentProgress: moduleContentProgress,
+          title: module.title,
+        });
+      } else {
+        res({
+          finished: false,
+          contentProgress: [],
+          title: "NULL MODULE",
+        });
+      }
     } catch (e) {
       err(e);
     }

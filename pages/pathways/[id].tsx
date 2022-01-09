@@ -31,6 +31,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       props: {
         pathwayInfo: await fetchedData.json(),
         pathwayProgress: userProgress,
+        uid: AuthFunctions.userId,
       },
     };
   } catch (err) {
@@ -42,7 +43,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwayProgress: PathwayProgress[];
-}> = ({ pathwayInfo, pathwayProgress }) => {
+  uid: string;
+}> = ({ pathwayInfo, pathwayProgress, uid }) => {
   const [currPage, setCurrPage] = useState(null);
   const [currSelected, setCurrSelected] = useState("");
   const [allPathwayProgress, setAllPathwayProgress] = useState(pathwayProgress);
@@ -252,7 +254,16 @@ const Pathways: NextApplicationPage<{
             key={`youtube-container-${currContent.url.substring(
               currContent.url.lastIndexOf("v=") + 2
             )}`}
-            ///videoTime={}
+            videoTime={
+              allPathwayProgress
+                .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
+                .moduleProgress.find(
+                  ({ title }) => title === pathwayInfo.modules[0].title
+                )
+                .contentProgress.find(
+                  ({ title }) => title === currContent.title
+                ).videoTime
+            }
             onVideoTimeUpdate={(player) =>
               onVideoTimeUpdate(
                 player,
@@ -284,8 +295,59 @@ const Pathways: NextApplicationPage<{
     return allContent;
   };
   useEffect(() => {
-    console.log(allPathwayProgress);
+    let contentProgress: Record<string, ContentProgress[]> = {};
+    let pathwayProgress = allPathwayProgress.find(
+      (pathwayProgress) => pathwayProgress.pathwayId === pathwayInfo._id
+    );
+    if (pathwayProgress) {
+      pathwayProgress.moduleProgress.forEach((moduleProgress, index) => {
+        let actualModule = pathwayInfo.modules.find((module) => {
+          return module.title === moduleProgress.title;
+        });
+        contentProgress[actualModule._id] = moduleProgress.contentProgress;
+      });
+      console.log(contentProgress);
+      window.onbeforeunload = (e) => {
+        fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
+          method: "POST",
+          body: JSON.stringify({
+            userId: uid,
+            contentProgress,
+          }),
+        }).then((res) => {
+          console.log(res.status);
+        });
+      };
+    }
   }, [allPathwayProgress]);
+  useEffect(() => {
+    return () => {
+      setAllPathwayProgress((allPathwayProgress) => {
+        let contentProgress: Record<string, ContentProgress[]> = {};
+        let pathwayProgress = allPathwayProgress.find(
+          (pathwayProgress) => pathwayProgress.pathwayId === pathwayInfo._id
+        );
+        if (pathwayProgress) {
+          pathwayProgress.moduleProgress.forEach((moduleProgress, index) => {
+            let actualModule = pathwayInfo.modules.find((module) => {
+              return module.title === moduleProgress.title;
+            });
+            contentProgress[actualModule._id] = moduleProgress.contentProgress;
+          });
+          fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
+            method: "POST",
+            body: JSON.stringify({
+              userId: uid,
+              contentProgress,
+            }),
+          }).then((res) => {
+            console.log(res.status);
+          });
+        }
+        return allPathwayProgress;
+      });
+    };
+  }, []);
   return (
     <>
       <div
@@ -319,7 +381,19 @@ const Pathways: NextApplicationPage<{
                           key={`youtube-container-${currContent.url.substring(
                             currContent.url.lastIndexOf("v=") + 2
                           )}`}
-                          ///videoTime={}
+                          videoTime={
+                            allPathwayProgress
+                              .find(
+                                ({ pathwayId }) => pathwayId === pathwayInfo._id
+                              )
+                              .moduleProgress.find(
+                                (moduleProgress) =>
+                                  title === moduleProgress.title
+                              )
+                              .contentProgress.find(
+                                ({ title }) => title === currContent.title
+                              ).videoTime
+                          }
                           onVideoTimeUpdate={(player) =>
                             onVideoTimeUpdate(player, currContent, title)
                           }

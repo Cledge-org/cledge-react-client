@@ -28,7 +28,7 @@ export default function CardTask({
   var subtasksList = Object.keys(subtasks).map(function (subtask, index) {
     let checkIcon: IconLookup | [IconPrefix, IconName];
     let boxColor: string;
-    if (!subtasks[subtask]) checkIcon = faCheckSquare;
+    if (subtasks[subtask]) checkIcon = faCheckSquare;
     else checkIcon = faSquare;
 
     if (index % 3 === 0) boxColor = "cl-blue";

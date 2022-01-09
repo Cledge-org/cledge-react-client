@@ -39,6 +39,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const allPathways = await (
     await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
   ).json();
+  console.error(userProgress);
   try {
     return {
       props: {
@@ -71,7 +72,7 @@ const Dashboard: NextApplicationPage<{
     allPathways.forEach((pathway) => {
       if (
         !dashboardInfo.userProgress.find(({ pathwayId }) => {
-          pathwayId === pathway._id;
+          return pathwayId === pathway._id;
         })
       ) {
         let subtasks = {};

@@ -16,11 +16,16 @@ export default function YoutubeEmbed({
   //*************************************
   const [player, setPlayer] = useState(null);
   const [intervalId, setIntervalId] = useState(null);
+  console.log(videoTime);
+  useEffect(() => {
+    console.log("UPDATING");
+  }, [intervalId]);
   useEffect(() => {
     if (isPathway && intervalId === null) {
       setIntervalId(
         setInterval(() => {
           setPlayer((player) => {
+            console.log(videoId);
             onVideoTimeUpdate(player);
             return player;
           });
@@ -34,25 +39,28 @@ export default function YoutubeEmbed({
       const firstScriptTag = document.getElementsByTagName("script")[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       window.onYouTubeIframeAPIReady = () => {
-        console.log("GRRR");
         setPlayer(
           new window.YT.Player(videoId, {
             videoId,
-            start: videoTime ? videoTime : 0,
+            playerVars: JSON.stringify({ start: videoTime ? videoTime : 0 }),
           })
         );
       };
     } else {
-      console.log("ARRG");
       setPlayer(
         new window.YT.Player(videoId, {
           videoId,
-          start: videoTime ? videoTime : 0,
+          playerVars: JSON.stringify({ start: videoTime ? videoTime : 0 }),
         })
       );
     }
     return () => {
-      clearInterval(intervalId);
+      let retreivedIntervalId = null;
+      setIntervalId((intervalId) => {
+        retreivedIntervalId = intervalId;
+        return intervalId;
+      });
+      clearInterval(retreivedIntervalId);
     };
   }, []);
 

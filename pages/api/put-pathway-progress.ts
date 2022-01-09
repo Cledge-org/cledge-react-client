@@ -16,7 +16,9 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     ? resolve
         .status(200)
         .send(await putPathwayProgress(userId, contentProgress))
-    : resolve.status(400).send("No pathway content progress provided");
+    : resolve
+        .status(400)
+        .send("No pathway content progress or userId provided");
 };
 
 // Sets pathway content progress for a user by their firebase ID (string). Batch
@@ -27,7 +29,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putPathwayProgress = async (
   userId: string,
   contentProgress: Record<string, ContentProgress[]> // Map between module ID and a list of ContentProgress for that module
-): Promise<string> => {
+): Promise<boolean> => {
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
@@ -42,11 +44,7 @@ export const putPathwayProgress = async (
               { $set: contentProgress },
               { upsert: true }
             );
-          res(
-            updateResult.upsertedId === null
-              ? userId
-              : updateResult.upsertedId.toString()
-          );
+          res(updateResult.acknowledged);
         } catch (e) {
           err(e);
         }
