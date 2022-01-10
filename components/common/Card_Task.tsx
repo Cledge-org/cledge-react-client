@@ -48,7 +48,6 @@ export default function CardTask({
       </div>
     );
   });
-  console.log(correctUrl);
   return (
     <Link href={url} as={correctUrl}>
       <span className="col-lg-4 col-md-6 col-xs-12">
@@ -57,7 +56,11 @@ export default function CardTask({
           textGradient={textGradient}
           classNames="col-12 p-3 px-4"
           title={title}
-          child={<div className="d-flex flex-column h-100">{subtasksList}</div>}
+          child={
+            <div className="d-flex flex-column h-100 justify-content-start">
+              {subtasksList}
+            </div>
+          }
         />
       </span>
     </Link>

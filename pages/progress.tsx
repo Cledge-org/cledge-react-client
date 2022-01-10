@@ -65,10 +65,16 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
         return calculatePercentComplete(chunks);
       }),
     });
+    console.log(percentageData.lists);
   }, []);
 
   const isNotEmpty = (element: any) => {
-    return element !== null && element !== "" && element !== [];
+    return (
+      element !== undefined &&
+      element !== null &&
+      element !== "" &&
+      element !== []
+    );
   };
   const calculatePercentComplete = (chunks: QuestionChunk[]): number => {
     let total: number = 0;
@@ -91,7 +97,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
         }
       });
     });
-    return Math.round((finished / total) * 100);
+    return Math.round(total === 0 ? 0 : (finished / total) * 100);
   };
   const calculateTotalPercent = (lists: QuestionList[]) => {
     let finished = 0;
@@ -101,8 +107,12 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
     });
     return Math.round((finished / total) * 100);
   };
+  console.log(percentageData.lists);
   return (
-    <div className="container-fluid d-flex flex-row px-0">
+    <div
+      className="container-fluid d-flex flex-row px-0"
+      style={{ overflowY: "auto" }}
+    >
       <div
         className="d-flex flex-column bg-light-gray"
         style={{ flex: 1, overflowY: "auto" }}
@@ -121,7 +131,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
               chunkList={list.chunks.map((chunk) => chunk.name)}
               onClick={(chunk) => setCurrPage(chunk ?? list.name)}
               title={list.name}
-              percentComplete={percentageData[index]}
+              percentComplete={percentageData.lists[index]}
             />
           );
         })}
@@ -164,12 +174,15 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
               >
                 {progressInfo.questionData
                   .filter(({ chunks }, index) => {
-                    return percentageData[index] < 100;
+                    return percentageData.lists[index] < 100;
                   })
                   .map(({ name }) => (
                     <CardCheckIn
-                      snippet={"HI THERE!"}
+                      snippet={""}
                       title={name}
+                      onCardClick={() => {
+                        setCurrPage(name);
+                      }}
                       textGradient={"light"}
                       percentComplete={0}
                       isFinished={false}
@@ -188,15 +201,18 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
               >
                 {progressInfo.questionData
                   .filter(({ chunks }, index) => {
-                    return percentageData[index] < 100;
+                    return percentageData.lists[index] === 100;
                   })
                   .map(({ name }) => (
                     <CardCheckIn
-                      snippet={"OH CRAP"}
+                      snippet={""}
                       title={name}
+                      onCardClick={() => {
+                        setCurrPage(name);
+                      }}
                       textGradient={"light"}
-                      percentComplete={0}
-                      isFinished={false}
+                      percentComplete={100}
+                      isFinished={true}
                     />
                   ))}
               </div>

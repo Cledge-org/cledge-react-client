@@ -6,6 +6,7 @@ interface CardCheckInProps extends CardProps {
   snippet: String;
   percentComplete: number;
   isFinished: boolean;
+  onCardClick: Function;
 }
 
 export default function CardCheckIn({
@@ -15,6 +16,7 @@ export default function CardCheckIn({
   textGradient,
   percentComplete,
   isFinished,
+  onCardClick,
 }: CardCheckInProps) {
   useEffect(() => {}, []);
   return (
@@ -22,13 +24,23 @@ export default function CardCheckIn({
       textGradient={textGradient}
       title={title}
       child={
-        <div className="d-flex flex-column justify-content-between h-100 ms-1">
-          <div className="cl-mid-gray">{snippet}</div>
-          <div className="d-flex justify-content-between align-items-center">
-            <button className="cl-btn-blue">
-              {isFinished ? "Edit" : "Start"}
-            </button>
-            {percentComplete}%
+        <div
+          className="d-flex flex-column justify-content-end"
+          style={{ flex: 1 }}
+        >
+          <div className="d-flex flex-column justify-content-between h-100 ms-1">
+            <div className="cl-mid-gray">{snippet}</div>
+            <div className="d-flex justify-content-between align-items-center">
+              <button
+                onClick={() => {
+                  onCardClick();
+                }}
+                className="cl-btn-blue"
+              >
+                {isFinished ? "Edit" : "Start"}
+              </button>
+              {percentComplete}%
+            </div>
           </div>
         </div>
       }

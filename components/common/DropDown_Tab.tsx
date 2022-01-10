@@ -31,7 +31,7 @@ export default function DropDownTab({
   currSelectedPath?: string;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  console.log(isFinishedModule);
+  console.log(percentComplete);
   return (
     <div className="progress-dropdown-container">
       <button
@@ -96,8 +96,10 @@ export default function DropDownTab({
                     : ""
                 }`}
                 style={
-                  isFinishedModule || isFinishedContent[index]
-                    ? { fontSize: "1.3em" }
+                  isPathway
+                    ? isFinishedModule || isFinishedContent[index]
+                      ? { fontSize: "1.3em" }
+                      : {}
                     : {}
                 }
                 icon={
