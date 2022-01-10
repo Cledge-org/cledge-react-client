@@ -11,6 +11,8 @@ export default function YoutubeEmbed({
   onVideoTimeUpdate?: Function;
   videoTime?: number;
 }) {
+  //**********************************
+  //**********************************
   //****************NOTE*************:
   //THIS ALL WORKS EVEN THOUGH IT DOESN'T LOOK LIKE IT DOES!
   //*************************************
@@ -42,7 +44,7 @@ export default function YoutubeEmbed({
         setPlayer(
           new window.YT.Player(videoId, {
             videoId,
-            playerVars: JSON.stringify({ start: videoTime ? videoTime : 0 }),
+            playerVars: { start: videoTime ? videoTime : 0 },
           })
         );
       };
@@ -50,7 +52,7 @@ export default function YoutubeEmbed({
       setPlayer(
         new window.YT.Player(videoId, {
           videoId,
-          playerVars: JSON.stringify({ start: videoTime ? videoTime : 0 }),
+          playerVars: { start: videoTime ? videoTime : 0 },
         })
       );
     }

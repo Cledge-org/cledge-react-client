@@ -114,7 +114,7 @@ const Pathways: NextApplicationPage<{
             {
               title: currContent.title,
               finished: player.getDuration() - player.getCurrentTime() < 10,
-              videoTime: player.getCurrentTime(),
+              videoTime: Math.round(player.getCurrentTime()),
             },
           ],
           finished: false,
@@ -138,7 +138,7 @@ const Pathways: NextApplicationPage<{
         {
           title: currContent.title,
           finished: player.getDuration() - player.getCurrentTime() < 10,
-          videoTime: player.getCurrentTime(),
+          videoTime: Math.round(player.getCurrentTime()),
         },
       ],
       finished: false,
@@ -158,7 +158,7 @@ const Pathways: NextApplicationPage<{
     ].contentProgress.push({
       title: currContent.title,
       finished: player.getDuration() - player.getCurrentTime() < 10,
-      videoTime: player.getCurrentTime(),
+      videoTime: Math.round(player.getCurrentTime()),
     });
     checkIfPathwayFinished(newPathwayProgress, pathwayIndex);
     setAllPathwayProgress(newPathwayProgress);
@@ -224,7 +224,7 @@ const Pathways: NextApplicationPage<{
               ...pathwayProgress.moduleProgress[indexOfModule].contentProgress[
                 indexOfContent
               ],
-              videoTime: player.getCurrentTime(),
+              videoTime: Math.round(player.getCurrentTime()),
             };
             let newPathwayProgress = allPathwayProgress.slice();
             checkIfPathwayFinished(
@@ -358,6 +358,19 @@ const Pathways: NextApplicationPage<{
           {pathwayInfo.modules.map(
             ({ title, presetContent, personalizedContent }, moduleIndex) => (
               <DropDownTab
+                isFinishedModule={
+                  allPathwayProgress
+                    .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
+                    .moduleProgress.find(
+                      (moduleProgress) => title === moduleProgress.title
+                    ).finished
+                }
+                isFinishedContent={allPathwayProgress
+                  .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
+                  .moduleProgress.find(
+                    (moduleProgress) => title === moduleProgress.title
+                  )
+                  .contentProgress.map(({ finished }) => finished)}
                 currSelectedPath={currSelected}
                 chunkList={getSortedContent(
                   presetContent,

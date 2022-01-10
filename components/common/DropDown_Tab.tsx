@@ -1,3 +1,4 @@
+import { faCheckCircle } from "@fortawesome/free-regular-svg-icons";
 import {
   faChevronDown,
   faFileAlt,
@@ -15,6 +16,8 @@ export default function DropDownTab({
   isExtracurricular,
   isPathway,
   currSelectedPath,
+  isFinishedModule,
+  isFinishedContent,
 }: {
   chunkList: Array<any>;
   title: string;
@@ -23,9 +26,12 @@ export default function DropDownTab({
   onClick: Function;
   isExtracurricular?: boolean;
   isPathway?: boolean;
+  isFinishedContent?: boolean[];
+  isFinishedModule?: boolean;
   currSelectedPath?: string;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  console.log(isFinishedModule);
   return (
     <div className="progress-dropdown-container">
       <button
@@ -36,6 +42,7 @@ export default function DropDownTab({
           }
           setIsExpanded(!isExpanded);
         }}
+        style={isFinishedModule ? { borderBottomColor: "#2651ed" } : {}}
       >
         <div className="text">
           {title}
@@ -61,7 +68,7 @@ export default function DropDownTab({
             : "progress-dropdown-menu-closed"
         }
       >
-        {chunkList.map((chunkTitle: string) => (
+        {chunkList.map((chunkTitle: string, index) => (
           <button
             onClick={() => {
               if (isExtracurricular || isPathway) {
@@ -78,9 +85,29 @@ export default function DropDownTab({
           >
             <div
               className="center-child icon"
-              style={{ width: "36px", height: "36px" }}
+              style={{ width: `36px`, height: `36px` }}
             >
-              <FontAwesomeIcon icon={isPathway ? faVideo : faFileAlt} />
+              <FontAwesomeIcon
+                className={`${
+                  isPathway
+                    ? isFinishedModule || isFinishedContent[index]
+                      ? "cl-blue"
+                      : ""
+                    : ""
+                }`}
+                style={
+                  isFinishedModule || isFinishedContent[index]
+                    ? { fontSize: "1.3em" }
+                    : {}
+                }
+                icon={
+                  isPathway
+                    ? isFinishedModule || isFinishedContent[index]
+                      ? faCheckCircle
+                      : faVideo
+                    : faFileAlt
+                }
+              />
             </div>
             <div className="text">{chunkTitle}</div>
           </button>

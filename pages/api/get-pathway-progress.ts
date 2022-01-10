@@ -85,7 +85,7 @@ export async function getSpecificPathwayProgress(
     res({
       finished: moduleProgress.reduce(
         (prev: boolean, cur: ModuleProgress) => prev && cur.finished,
-        false
+        true
       ),
       moduleProgress,
       title: pathway.title,
