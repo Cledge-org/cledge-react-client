@@ -71,11 +71,11 @@ export default function DropDownTab({
         {chunkList.map((chunkTitle: string, index) => (
           <button
             onClick={() => {
-              if (isExtracurricular || isPathway) {
-                onClick(chunkTitle);
-                return;
-              }
-              onClick();
+              // if (isExtracurricular || isPathway) {
+              //   onClick(chunkTitle);
+              //   return;
+              // }
+              onClick(chunkTitle);
             }}
             className={
               currSelectedPath === title + chunkTitle

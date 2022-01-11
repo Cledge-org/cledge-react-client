@@ -113,7 +113,7 @@ const Pathways: NextApplicationPage<{
           contentProgress: [
             {
               title: currContent.title,
-              finished: player.getDuration() - player.getCurrentTime() < 10,
+              finished: player.getDuration() - player.getCurrentTime() < 30,
               videoTime: Math.round(player.getCurrentTime()),
             },
           ],
@@ -137,7 +137,7 @@ const Pathways: NextApplicationPage<{
       contentProgress: [
         {
           title: currContent.title,
-          finished: player.getDuration() - player.getCurrentTime() < 10,
+          finished: player.getDuration() - player.getCurrentTime() < 30,
           videoTime: Math.round(player.getCurrentTime()),
         },
       ],
@@ -157,7 +157,7 @@ const Pathways: NextApplicationPage<{
       moduleIndex
     ].contentProgress.push({
       title: currContent.title,
-      finished: player.getDuration() - player.getCurrentTime() < 10,
+      finished: player.getDuration() - player.getCurrentTime() < 30,
       videoTime: Math.round(player.getCurrentTime()),
     });
     checkIfPathwayFinished(newPathwayProgress, pathwayIndex);
@@ -209,7 +209,7 @@ const Pathways: NextApplicationPage<{
               player
             );
           } else {
-            if (player.getDuration() - player.getCurrentTime() < 10) {
+            if (player.getDuration() - player.getCurrentTime() < 30) {
               pathwayProgress.moduleProgress[indexOfModule].contentProgress[
                 indexOfContent
               ] = {
@@ -238,6 +238,11 @@ const Pathways: NextApplicationPage<{
     }
   };
   useEffect(() => {
+    const currModuleProgress = allPathwayProgress
+      .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
+      .moduleProgress.find(
+        ({ title }) => title === pathwayInfo.modules[0].title
+      );
     let currContent = getSortedContent(
       pathwayInfo.modules[0].presetContent,
       pathwayInfo.modules[0].personalizedContent
@@ -254,15 +259,15 @@ const Pathways: NextApplicationPage<{
             key={`youtube-container-${currContent.url.substring(
               currContent.url.lastIndexOf("v=") + 2
             )}`}
+            isVideoFinished={
+              currModuleProgress.contentProgress.find(
+                ({ title }) => title === currContent.title
+              ).finished
+            }
             videoTime={
-              allPathwayProgress
-                .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
-                .moduleProgress.find(
-                  ({ title }) => title === pathwayInfo.modules[0].title
-                )
-                .contentProgress.find(
-                  ({ title }) => title === currContent.title
-                ).videoTime
+              currModuleProgress.contentProgress.find(
+                ({ title }) => title === currContent.title
+              ).videoTime
             }
             onVideoTimeUpdate={(player) =>
               onVideoTimeUpdate(
@@ -276,7 +281,7 @@ const Pathways: NextApplicationPage<{
             )}
           />
         </div>
-        <div className="container-fluid center-child py-5">
+        <div className="container-fluid center-child flex-column py-5">
           <div className="pathway-description">
             <span
               className="fw-bold cl-dark-text"
@@ -284,6 +289,9 @@ const Pathways: NextApplicationPage<{
             >
               {currContent.title}
             </span>
+          </div>
+          <div className="ms-5 mt-3">
+            <div className="ms-4">{currContent.content}</div>
           </div>
         </div>
       </div>
@@ -356,83 +364,90 @@ const Pathways: NextApplicationPage<{
       >
         <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
           {pathwayInfo.modules.map(
-            ({ title, presetContent, personalizedContent }, moduleIndex) => (
-              <DropDownTab
-                isFinishedModule={
-                  allPathwayProgress
+            ({ title, presetContent, personalizedContent }, moduleIndex) => {
+              let currModuleProgress = allPathwayProgress
+                .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
+                .moduleProgress.find(
+                  (moduleProgress) => title === moduleProgress.title
+                );
+              return (
+                <DropDownTab
+                  isFinishedModule={
+                    allPathwayProgress
+                      .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
+                      .moduleProgress.find(
+                        (moduleProgress) => title === moduleProgress.title
+                      ).finished
+                  }
+                  isFinishedContent={allPathwayProgress
                     .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
                     .moduleProgress.find(
                       (moduleProgress) => title === moduleProgress.title
-                    ).finished
-                }
-                isFinishedContent={allPathwayProgress
-                  .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
-                  .moduleProgress.find(
-                    (moduleProgress) => title === moduleProgress.title
-                  )
-                  .contentProgress.map(({ finished }) => finished)}
-                currSelectedPath={currSelected}
-                chunkList={getSortedContent(
-                  presetContent,
-                  personalizedContent
-                ).map(({ title }) => title)}
-                onClick={(contentTitle) => {
-                  let currContent = presetContent.find(
-                    ({ title }) => title === contentTitle
-                  );
-                  if (currContent === undefined) {
-                    currContent = personalizedContent.find(
+                    )
+                    .contentProgress.map(({ finished }) => finished)}
+                  currSelectedPath={currSelected}
+                  chunkList={getSortedContent(
+                    presetContent,
+                    personalizedContent
+                  ).map(({ title }) => title)}
+                  onClick={(contentTitle) => {
+                    let currContent = presetContent.find(
                       ({ title }) => title === contentTitle
                     );
-                  }
-                  setCurrSelected(title + contentTitle);
-                  setCurrPage(
-                    <div className="d-flex flex-column" style={{ flex: 3 }}>
-                      <div className="w-100" style={{ height: "55%" }}>
-                        <YoutubeEmbed
-                          isPathway
-                          key={`youtube-container-${currContent.url.substring(
-                            currContent.url.lastIndexOf("v=") + 2
-                          )}`}
-                          videoTime={
-                            allPathwayProgress
-                              .find(
-                                ({ pathwayId }) => pathwayId === pathwayInfo._id
-                              )
-                              .moduleProgress.find(
-                                (moduleProgress) =>
-                                  title === moduleProgress.title
-                              )
-                              .contentProgress.find(
+                    if (currContent === undefined) {
+                      currContent = personalizedContent.find(
+                        ({ title }) => title === contentTitle
+                      );
+                    }
+                    setCurrSelected(title + contentTitle);
+                    setCurrPage(
+                      <div className="d-flex flex-column" style={{ flex: 3 }}>
+                        <div className="w-100" style={{ height: "55%" }}>
+                          <YoutubeEmbed
+                            isPathway
+                            key={`youtube-container-${currContent.url.substring(
+                              currContent.url.lastIndexOf("v=") + 2
+                            )}`}
+                            isVideoFinished={
+                              currModuleProgress.contentProgress.find(
+                                ({ title }) => title === currContent.title
+                              ).finished
+                            }
+                            videoTime={
+                              currModuleProgress.contentProgress.find(
                                 ({ title }) => title === currContent.title
                               ).videoTime
-                          }
-                          onVideoTimeUpdate={(player) =>
-                            onVideoTimeUpdate(player, currContent, title)
-                          }
-                          videoId={currContent.url.substring(
-                            currContent.url.lastIndexOf("v=") + 2
-                          )}
-                        />
-                      </div>
-                      <div className="container-fluid center-child py-5">
-                        <div className="pathway-description">
-                          <span
-                            className="fw-bold cl-dark-text"
-                            style={{ fontSize: "1.7em" }}
-                          >
-                            {currContent.title}
-                          </span>
+                            }
+                            onVideoTimeUpdate={(player) =>
+                              onVideoTimeUpdate(player, currContent, title)
+                            }
+                            videoId={currContent.url.substring(
+                              currContent.url.lastIndexOf("v=") + 2
+                            )}
+                          />
+                        </div>
+                        <div className="container-fluid center-child flex-column py-5">
+                          <div className="pathway-description">
+                            <span
+                              className="fw-bold cl-dark-text"
+                              style={{ fontSize: "1.7em" }}
+                            >
+                              {currContent.title}
+                            </span>
+                          </div>
+                          <div className="ms-5 mt-3">
+                            <div className="ms-4">{currContent.content}</div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                }}
-                title={title}
-                isPathway
-                percentComplete={undefined}
-              />
-            )
+                    );
+                  }}
+                  title={title}
+                  isPathway
+                  percentComplete={undefined}
+                />
+              );
+            }
           )}
         </div>
         {currPage}

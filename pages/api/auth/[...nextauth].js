@@ -33,8 +33,11 @@ export default NextAuth({
       // Send properties to the client, like an access_token from a provider.
       // console.debug(user);
       // session.user = user;
-      session.accessToken = token.accessToken;
-      return Promise.resolve(session);
+      if (AuthFunctions.userId) {
+        session.accessToken = token.accessToken;
+        return Promise.resolve(session);
+      }
+      return null;
     },
   },
 });

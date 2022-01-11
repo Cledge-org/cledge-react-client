@@ -5,11 +5,13 @@ export default function YoutubeEmbed({
   isPathway,
   onVideoTimeUpdate,
   videoTime,
+  isVideoFinished,
 }: {
   videoId: string;
   isPathway?: boolean;
   onVideoTimeUpdate?: Function;
   videoTime?: number;
+  isVideoFinished?: boolean;
 }) {
   //**********************************
   //**********************************
@@ -34,6 +36,7 @@ export default function YoutubeEmbed({
         }, 10000)
       );
     }
+    console.log(videoId);
     if (!window.YT) {
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
@@ -44,7 +47,9 @@ export default function YoutubeEmbed({
         setPlayer(
           new window.YT.Player(videoId, {
             videoId,
-            playerVars: { start: videoTime ? videoTime : 0 },
+            playerVars: {
+              start: !isVideoFinished && videoTime ? videoTime : 0,
+            },
           })
         );
       };
@@ -52,7 +57,7 @@ export default function YoutubeEmbed({
       setPlayer(
         new window.YT.Player(videoId, {
           videoId,
-          playerVars: { start: videoTime ? videoTime : 0 },
+          playerVars: { start: !isVideoFinished && videoTime ? videoTime : 0 },
         })
       );
     }

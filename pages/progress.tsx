@@ -25,16 +25,26 @@ import { useSession } from "next-auth/react";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    let userProgress = await fetch(`${ORIGIN_URL}/api/get-question-progress`, {
-      method: "POST",
-      body: JSON.stringify({ userId: AuthFunctions.userId }),
-    });
+    const user = await (
+      await fetch(`${ORIGIN_URL}/api/get-account`, {
+        method: "POST",
+        body: JSON.stringify({ userId: AuthFunctions.userId }),
+      })
+    ).json();
+    const userProgress = await fetch(
+      `${ORIGIN_URL}/api/get-question-progress`,
+      {
+        method: "POST",
+        body: JSON.stringify({ userId: AuthFunctions.userId }),
+      }
+    );
     let userProgressJSON = await userProgress.json();
     console.error(userProgressJSON);
     console.error(userProgress.status);
     return {
       props: {
         progressInfo: {
+          userTags: user.tags,
           userProgress: userProgressJSON.userProgress,
           questionData: userProgressJSON.questionData,
         },
@@ -50,24 +60,25 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
   progressInfo,
 }) => {
   const session = useSession();
-  const [currPage, setCurrPage] = useState("all");
+  const [currPage, setCurrPage] = useState({ page: "all", chunk: "" });
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
   const [percentageData, setPercentageData] = useState({
     allLists: 0,
     lists: [],
   });
-
-  useEffect(() => {
-    console.log(session.data.user);
+  const onPercentageUpdate = () => {
     setPercentageData({
       allLists: calculateTotalPercent(progressInfo.questionData),
       lists: progressInfo.questionData.map(({ chunks }) => {
         return calculatePercentComplete(chunks);
       }),
     });
+  };
+  useEffect(() => {
+    console.log(session.data.user);
+    onPercentageUpdate();
     console.log(percentageData.lists);
   }, []);
-
   const isNotEmpty = (element: any) => {
     return (
       element !== undefined &&
@@ -113,14 +124,11 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
       className="container-fluid d-flex flex-row px-0"
       style={{ overflowY: "auto" }}
     >
-      <div
-        className="d-flex flex-column bg-light-gray"
-        style={{ flex: 1, overflowY: "auto" }}
-      >
+      <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
         <DropDownTab
           isAll
           chunkList={[]}
-          onClick={() => setCurrPage("all")}
+          onClick={() => setCurrPage({ page: "all", chunk: "" })}
           title="All Sections"
           percentComplete={undefined}
         />
@@ -129,7 +137,9 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
             <DropDownTab
               isExtracurricular={list.name === "Extracurriculars"}
               chunkList={list.chunks.map((chunk) => chunk.name)}
-              onClick={(chunk) => setCurrPage(chunk ?? list.name)}
+              onClick={(chunk) =>
+                setCurrPage({ page: list.name, chunk: chunk })
+              }
               title={list.name}
               percentComplete={percentageData.lists[index]}
             />
@@ -142,7 +152,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
           flex: 3,
         }}
       >
-        {currPage === "all" ? (
+        {currPage.page === "all" ? (
           <div className="container-fluid h-100">
             <QuestionSubPageHeader
               title="Profile Completion"
@@ -176,12 +186,12 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                   .filter(({ chunks }, index) => {
                     return percentageData.lists[index] < 100;
                   })
-                  .map(({ name }) => (
+                  .map(({ name, chunks }) => (
                     <CardCheckIn
                       snippet={""}
                       title={name}
                       onCardClick={() => {
-                        setCurrPage(name);
+                        setCurrPage({ page: name, chunk: chunks[0].name });
                       }}
                       textGradient={"light"}
                       percentComplete={0}
@@ -203,12 +213,12 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                   .filter(({ chunks }, index) => {
                     return percentageData.lists[index] === 100;
                   })
-                  .map(({ name }) => (
+                  .map(({ name, chunks }) => (
                     <CardCheckIn
                       snippet={""}
                       title={name}
                       onCardClick={() => {
-                        setCurrPage(name);
+                        setCurrPage({ page: name, chunk: chunks[0].name });
                       }}
                       textGradient={"light"}
                       percentComplete={100}
@@ -224,8 +234,11 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
               if (list.name !== "Extracurriculars") {
                 return (
                   <QuestionSummaryPage
-                    isShowing={currPage === list.name}
+                    userTags={progressInfo.userTags}
+                    viaChunk={currPage.chunk}
+                    isShowing={currPage.page === list.name}
                     listTitle={list.name}
+                    onPercentageUpdate={onPercentageUpdate}
                     chunks={list.chunks}
                     userAnswers={progressInfo.userProgress}
                     percentComplete={calculatePercentComplete(list.chunks)}
@@ -252,7 +265,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                               : []
                           }
                           chunk={chunk}
-                          isShowing={currPage === chunk.name}
+                          isShowing={currPage.chunk === chunk.name}
                         />
                       );
                     })

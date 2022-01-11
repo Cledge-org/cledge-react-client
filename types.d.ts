@@ -43,6 +43,7 @@ interface UserResponse {
   response: any;
 }
 interface ProgressInfo {
+  userTags: string[];
   userProgress: UserProgress;
   questionData: QuestionList[];
 }

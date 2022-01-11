@@ -6,14 +6,18 @@ interface CheckBoxQuestionProps {
   question: Question;
   userAnswers: string[];
   onChange: Function;
+  tags: string[];
 }
 
 export default function CheckBoxQuestion({
   question,
   userAnswers,
   onChange,
+  tags,
 }: CheckBoxQuestionProps) {
-  const [selected, setSelected] = useState(userAnswers ?? []);
+  const [selected, setSelected] = useState(
+    userAnswers !== null ? userAnswers.slice() : []
+  );
   useEffect(() => {
     console.log(selected);
   }, [selected]);
@@ -25,7 +29,19 @@ export default function CheckBoxQuestion({
       selectedCopy.push(value);
     }
     setSelected(selectedCopy);
-    onChange(selectedCopy);
+    onChange(
+      selectedCopy,
+      [
+        selectedCopy.map((checkedOp, index) => {
+          return question.data.find(({ tag, op }) => op === checkedOp).tag;
+        }),
+      ],
+      [
+        userAnswers.map((checkedOp, index) => {
+          return question.data.find(({ tag, op }) => op === checkedOp).tag;
+        }),
+      ]
+    );
   };
   return (
     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
@@ -39,7 +55,7 @@ export default function CheckBoxQuestion({
               key={op}
               onClick={() => {
                 console.log(tag);
-                changeSelected(tag);
+                changeSelected(op);
               }}
               className={
                 selected.includes(tag)
