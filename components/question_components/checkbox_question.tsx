@@ -28,19 +28,16 @@ export default function CheckBoxQuestion({
     } else {
       selectedCopy.push(value);
     }
+    let oldTags = userAnswers?.map((checkedOp, index) => {
+      return question.data.find(({ tag, op }) => op === checkedOp)?.tag;
+    });
     setSelected(selectedCopy);
     onChange(
       selectedCopy,
-      [
-        selectedCopy.map((checkedOp, index) => {
-          return question.data.find(({ tag, op }) => op === checkedOp).tag;
-        }),
-      ],
-      [
-        userAnswers.map((checkedOp, index) => {
-          return question.data.find(({ tag, op }) => op === checkedOp).tag;
-        }),
-      ]
+      selectedCopy.map((checkedOp, index) => {
+        return question.data.find(({ tag, op }) => op === checkedOp)?.tag;
+      }),
+      oldTags
     );
   };
   return (
@@ -58,16 +55,16 @@ export default function CheckBoxQuestion({
                 changeSelected(op);
               }}
               className={
-                selected.includes(tag)
+                selected.includes(op)
                   ? "checkbox-mcq-variant-selected"
                   : "checkbox-mcq-variant"
               }
             >
               {op}
               <CheckBox
-                selected={selected.includes(tag)}
+                selected={selected.includes(op)}
                 setSelected={() => {
-                  changeSelected(tag);
+                  changeSelected(op);
                 }}
               />
             </button>

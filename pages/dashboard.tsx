@@ -3,6 +3,7 @@ import React, {
   ReactElement,
   ReactNodeArray,
   ReactPortal,
+  useEffect,
   useState,
 } from "react";
 import { useSession } from "next-auth/react";
@@ -137,6 +138,18 @@ const Dashboard: NextApplicationPage<{
         );
       });
   };
+  const resetProgress = async () => {
+    fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
+      method: "POST",
+      body: JSON.stringify({
+        userId: (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()).uid,
+        contentProgress: {},
+      }),
+    });
+  };
+  useEffect(() => {
+    //resetProgress();
+  }, []);
   //UNCOMMENT THIS ONCE TESTING IS FINISHED
   if (dashboardInfo.checkIns.length > 0) {
     router.push({

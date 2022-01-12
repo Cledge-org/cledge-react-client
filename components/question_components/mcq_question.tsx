@@ -14,7 +14,7 @@ export default function MCQQuestion({
   onChange,
   tags,
 }: MCQQuestionProps) {
-  const [selected, setSelected] = useState(userAnswer.slice());
+  const [selected, setSelected] = useState(userAnswer?.slice());
   return (
     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
       <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
@@ -25,12 +25,11 @@ export default function MCQQuestion({
           return (
             <button
               onClick={() => {
-                setSelected(tag);
-                onChange(
-                  op,
-                  [tag],
-                  [question.data.find(({ op }) => userAnswer === op).tag]
-                );
+                let oldTag = question.data.find(
+                  ({ op }) => userAnswer === op
+                )?.tag;
+                setSelected(op);
+                onChange(op, [tag], oldTag ? [oldTag] : []);
               }}
               className={
                 selected === op ? "mcq-answer-btn-selected" : "mcq-answer-btn"

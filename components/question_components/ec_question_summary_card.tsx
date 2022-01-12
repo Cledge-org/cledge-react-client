@@ -22,7 +22,7 @@ export default function ECQuestionSummaryCard({
   const titleQuestion = response.find(
     ({ questionId }) =>
       questionId ===
-      chunkQuestions.find(({ question }) => question === "Title").id
+      chunkQuestions.find(({ question }) => question === "Title")._id
   );
   return (
     <div className="w-100 d-flex flex-column justify-content-evenly qsummary-card-container mt-3">
@@ -42,14 +42,14 @@ export default function ECQuestionSummaryCard({
         </button>
       </div>
       <div className="w-100 d-flex align-items-center justify-content-center ecsummary-info-container">
-        {chunkQuestions.map(({ question, type, id }) =>
+        {chunkQuestions.map(({ question, type, _id }) =>
           question !== "Title" ? (
             <div className="ecsummary-info-section">
               <div className="name">{question.toLocaleUpperCase()}</div>
               <div className="value">
-                {response.find(({ questionId }) => id === questionId) !==
+                {response.find(({ questionId }) => _id === questionId) !==
                 undefined
-                  ? response.find(({ questionId }) => id === questionId)
+                  ? response.find(({ questionId }) => _id === questionId)
                       .response
                   : "Not Answered"}
               </div>

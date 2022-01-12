@@ -307,7 +307,6 @@ const QuestionUploadPage: NextApplicationPage<{
                     valuesList={[
                       "CheckBox",
                       "MCQ",
-                      "YesNo",
                       "TextInput",
                       "ECTimeFrame",
                       "ECTextInput",

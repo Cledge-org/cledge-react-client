@@ -38,10 +38,10 @@ export default function QuestionSummaryCard({
       : { questionId: question._id, response: null }
   );
   const filterDuplicates = (toFilter: any[]) => {
-    return toFilter.filter(
-      (element, index, self) =>
-        index === self.findIndex((value) => value === element)
-    );
+    return toFilter.filter((element, index, self) => {
+      let indexOfDuplicate = self.findIndex((value) => value === element);
+      return indexOfDuplicate === -1 || index === indexOfDuplicate;
+    });
   };
   const getQuestionType = (): JSX.Element => {
     if (question.type === "TextInput") {
@@ -94,8 +94,10 @@ export default function QuestionSummaryCard({
       </div>
     );
   };
-  let stringAnswer =
-    userAnswer.response === null ? null : userAnswer.response.toString();
+  useEffect(() => {
+    console.warn(newTags);
+    console.log(oldTags);
+  }, [newTags, oldTags]);
   return (
     <div className="w-100 d-flex flex-column justify-content-evenly qsummary-card-container mt-3">
       <div className="d-flex justify-content-between align-items-center px-4 pt-3 question-text">
@@ -112,9 +114,11 @@ export default function QuestionSummaryCard({
         </button>
       </div>
       <span className="ps-4 pb-4">
-        {stringAnswer !== null
+        {userAnswer.response !== null
           ? userAnswer.response instanceof Array
-            ? stringAnswer.substring(1, stringAnswer.length - 1)
+            ? userAnswer.response.reduce((prev, curr) => {
+                return prev === "" ? curr : prev + ", " + curr;
+              }, "")
             : userAnswer.response
           : "No answer"}
       </span>
@@ -155,7 +159,11 @@ export default function QuestionSummaryCard({
                 await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()
               ).uid;
               userTags.filter((value) => !oldTags.includes(value));
-              userTags.concat(newTags);
+              userTags.length === 0
+                ? (userTags = newTags)
+                : (userTags = userTags.concat(newTags));
+              setNewTags([]);
+              setOldTags([]);
               Promise.all(
                 [
                   fetch(`${ORIGIN_URL}/api/put-question-responses`, {
@@ -182,7 +190,7 @@ export default function QuestionSummaryCard({
                 reses.forEach((res) => {
                   console.log(res.status);
                 });
-                onUpdate();
+                onUpdate(userTags);
                 setDisplayingQuestion(false);
               });
             }}

@@ -10,10 +10,9 @@ import ECQuestionSummaryCard from "../components/question_components/ec_question
 import { Button, ProgressBar } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
-import ECEditor from "../components/question_components/EC_editor";
+import ECEditor from "../components/question_components/ec-editor";
 import { NextApplicationPage } from "./_app";
 import { GetServerSidePropsContext } from "next";
-import YesNoQuestion from "../components/question_components/yes-no-question";
 import TextInputQuestion from "../components/question_components/textinput_question";
 import { useRouter } from "next/router";
 import { ORIGIN_URL } from "../config";
@@ -46,6 +45,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         }),
       })
     ).json();
+    const user = await (
+      await fetch(`${ORIGIN_URL}/api/get-account`, {
+        method: "POST",
+        body: JSON.stringify({ userId: AuthFunctions.userId }),
+      })
+    ).json();
     //console.error(questionnaireChunks);
     let questionnaireData = questionnaire.chunks[0].questions;
     for (let i = 1; i < questionnaire.chunks.length; i++) {
@@ -57,6 +62,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       props: {
         questionnaireData,
         userResponses,
+        userTags: user.tags,
       },
     };
   } catch (err) {
@@ -69,11 +75,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const Questionnaire: NextApplicationPage<{
   questionnaireData: Question[];
   userResponses: UserResponse[];
-}> = ({ questionnaireData, userResponses }) => {
+  userTags: string[];
+}> = ({ questionnaireData, userResponses, userTags }) => {
   const [isShowingContinue, setIsShowingContinue] = useState(true);
   const [isShowingStart, setIsShowingStart] = useState(false);
   const [progress, changeProgress] = useState(0);
   const [page, changePage] = useState(0);
+  const [newTags, setNewTags] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [newUserResponses, setNewUserResponses] = useState(userResponses);
@@ -109,6 +117,9 @@ const Questionnaire: NextApplicationPage<{
     checkInList.push(queriedList);
     checkInList.splice(0, 1);
     let uid = (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()).uid;
+    userTags.length === 0
+      ? (userTags = newTags)
+      : (userTags = userTags.concat(newTags));
     await Promise.all([
       fetch(`${ORIGIN_URL}/api/update-user`, {
         method: "POST",
@@ -124,6 +135,13 @@ const Questionnaire: NextApplicationPage<{
           userId: uid,
         }),
       }),
+      fetch(`${ORIGIN_URL}/api/update-user`, {
+        method: "POST",
+        body: JSON.stringify({
+          userInfo: { tags: userTags },
+          userId: uid,
+        }),
+      }),
     ]).then((values) => {
       values.forEach((value) => {
         console.log(value.status);
@@ -131,9 +149,14 @@ const Questionnaire: NextApplicationPage<{
     });
     router.push({ pathname: "/dashboard" });
   };
-
+  const filterDuplicates = (toFilter: any[]) => {
+    return toFilter.filter((element, index, self) => {
+      let indexOfDuplicate = self.findIndex((value) => value === element);
+      return indexOfDuplicate === -1 || index === indexOfDuplicate;
+    });
+  };
   const questionnairePages = questionnaireData.map((question) => {
-    const updateFunc = (value) => {
+    const updateFunc = (value, newQTags, oldTags) => {
       newUserResponses.find(
         (questionResponse) => questionResponse.questionId === question._id
       )
@@ -146,6 +169,7 @@ const Questionnaire: NextApplicationPage<{
             questionId: question._id,
             response: value,
           });
+      setNewTags(filterDuplicates(newTags.concat(newQTags)));
     };
     if (question.type === "TextInput") {
       return (
@@ -162,6 +186,7 @@ const Questionnaire: NextApplicationPage<{
           question={question}
           userAnswer={""}
           onChange={updateFunc}
+          tags={userTags}
         />
       );
     }
@@ -171,15 +196,7 @@ const Questionnaire: NextApplicationPage<{
           question={question}
           userAnswers={[]}
           onChange={updateFunc}
-        />
-      );
-    }
-    if (question.type === "YesNo") {
-      return (
-        <YesNoQuestion
-          question={question}
-          userAnswer={undefined}
-          onChange={updateFunc}
+          tags={userTags}
         />
       );
     }

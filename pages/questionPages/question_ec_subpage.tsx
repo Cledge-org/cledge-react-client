@@ -1,21 +1,27 @@
 import React, { useState } from "react";
 import ECQuestionSummaryCard from "../../components/question_components/ec_question_summary_card";
 import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
-import ECEditor from "../../components/question_components/ec_editor";
+import ECEditor from "../../components/question_components/ec-editor";
+import { ORIGIN_URL } from "../../config";
 interface QuestionECSubpageProps {
-  userECResponses: any[];
+  userResponses: any[];
   isShowing: boolean;
   chunk: QuestionChunk;
 }
 
 export default function QuestionECSubpage({
-  userECResponses,
+  userResponses,
   isShowing,
   chunk,
 }: QuestionECSubpageProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [currECIndex, setCurrECIndex] = useState(userECResponses.length);
+  const [currECIndex, setCurrECIndex] = useState(
+    userResponses["Extracurricular"] &&
+      userResponses["Extracurricular"][chunk.name]
+      ? userResponses["Extracurricular"][chunk.name].length
+      : 0
+  );
   if (!isShowing) {
     return null;
   }
@@ -23,12 +29,27 @@ export default function QuestionECSubpage({
     <ECEditor
       index={currECIndex}
       isEditing={isEditing}
-      onSave={() => {
+      onSave={async (newAnswers) => {
+        userResponses["Extracurricular"][chunk.name][currECIndex] = newAnswers;
+        fetch(`${ORIGIN_URL}/api/put-question-responses`, {
+          method: "POST",
+          body: JSON.stringify({
+            responses: [],
+            userId: (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json())
+              .uid,
+          }),
+        });
         setIsAdding(false);
         setIsEditing(false);
       }}
       chunkQuestions={chunk.questions}
-      userResponses={userECResponses}
+      userResponse={
+        userResponses["Extracurricular"] &&
+        userResponses["Extracurricular"][chunk.name] &&
+        userResponses["Extracurricular"][chunk.name][currECIndex]
+          ? userResponses["Extracurricular"][chunk.name][currECIndex]
+          : []
+      }
     />
   ) : (
     <div className="container-fluid h-100 d-flex flex-column">
@@ -44,18 +65,23 @@ export default function QuestionECSubpage({
         className="d-flex flex-column justify-content-evenly align-self-center"
         style={{ width: "91%" }}
       >
-        {userECResponses.map((response, index) => {
-          return (
-            <ECQuestionSummaryCard
-              response={response}
-              chunkQuestions={chunk.questions}
-              onClick={() => {
-                setCurrECIndex(index);
-                setIsEditing(true);
-              }}
-            />
-          );
-        })}
+        {userResponses["Extracurricular"] &&
+        userResponses["Extracurricular"][chunk.name]
+          ? userResponses["Extracurricular"][chunk.name].map(
+              (response, index) => {
+                return (
+                  <ECQuestionSummaryCard
+                    response={response}
+                    chunkQuestions={chunk.questions}
+                    onClick={() => {
+                      setCurrECIndex(index);
+                      setIsEditing(true);
+                    }}
+                  />
+                );
+              }
+            )
+          : []}
       </div>
     </div>
   );

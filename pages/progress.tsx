@@ -66,6 +66,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
     allLists: 0,
     lists: [],
   });
+  const [currUserTags, setCurrUserTags] = useState(progressInfo.userTags);
   const onPercentageUpdate = () => {
     setPercentageData({
       allLists: calculateTotalPercent(progressInfo.questionData),
@@ -74,8 +75,18 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
       }),
     });
   };
+  const resetResponses = async () => {
+    fetch(`${ORIGIN_URL}/api/put-question-responses`, {
+      method: "POST",
+      body: JSON.stringify({
+        responses: [],
+        userId: (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()).uid,
+      }),
+    });
+  };
   useEffect(() => {
     console.log(session.data.user);
+    //resetResponses();
     onPercentageUpdate();
     console.log(percentageData.lists);
   }, []);
@@ -186,15 +197,25 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                   .filter(({ chunks }, index) => {
                     return percentageData.lists[index] < 100;
                   })
-                  .map(({ name, chunks }) => (
+                  .map(({ name, chunks }, index) => (
                     <CardCheckIn
-                      snippet={""}
+                      snippet={
+                        <ul className="p-0 ps-3">
+                          {chunks.map(({ name }) => (
+                            <li>{name}</li>
+                          ))}
+                        </ul>
+                      }
                       title={name}
                       onCardClick={() => {
                         setCurrPage({ page: name, chunk: chunks[0].name });
                       }}
                       textGradient={"light"}
-                      percentComplete={0}
+                      percentComplete={
+                        percentageData.lists.filter((value) => value < 100)[
+                          index
+                        ]
+                      }
                       isFinished={false}
                     />
                   ))}
@@ -215,7 +236,13 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                   })
                   .map(({ name, chunks }) => (
                     <CardCheckIn
-                      snippet={""}
+                      snippet={
+                        <ul className="p-0 ps-3">
+                          {chunks.map(({ name }) => (
+                            <li>{name}</li>
+                          ))}
+                        </ul>
+                      }
                       title={name}
                       onCardClick={() => {
                         setCurrPage({ page: name, chunk: chunks[0].name });
@@ -231,14 +258,17 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
         ) : (
           progressInfo.questionData
             .map((list) => {
-              if (list.name !== "Extracurriculars") {
+              if (list.name !== "Extracurricular") {
                 return (
                   <QuestionSummaryPage
-                    userTags={progressInfo.userTags}
+                    userTags={currUserTags}
                     viaChunk={currPage.chunk}
                     isShowing={currPage.page === list.name}
                     listTitle={list.name}
-                    onPercentageUpdate={onPercentageUpdate}
+                    onPercentageUpdate={(newTags) => {
+                      onPercentageUpdate();
+                      setCurrUserTags(newTags);
+                    }}
                     chunks={list.chunks}
                     userAnswers={progressInfo.userProgress}
                     percentComplete={calculatePercentComplete(list.chunks)}
@@ -248,22 +278,15 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
             })
             .concat(
               progressInfo.questionData.find(
-                ({ name }) => name === "Extracurriculars"
+                ({ name }) => name === "Extracurricular"
               )
                 ? progressInfo.questionData
-                    .find(({ name }) => name === "Extracurriculars")
+                    .find(({ name }) => name === "Extracurricular")
                     .chunks.map((chunk) => {
                       return (
                         <QuestionECSubpage
-                          userECResponses={
-                            progressInfo.userProgress.responses.find(
-                              ({ questionId }) => questionId === chunk.name
-                            ) !== undefined
-                              ? progressInfo.userProgress.responses.find(
-                                  ({ questionId }) => questionId === chunk.name
-                                ).response
-                              : []
-                          }
+                          key={chunk.name}
+                          userResponses={progressInfo.userProgress.responses}
                           chunk={chunk}
                           isShowing={currPage.chunk === chunk.name}
                         />

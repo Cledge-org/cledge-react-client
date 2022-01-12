@@ -55,8 +55,8 @@ const Pathways: NextApplicationPage<{
   ) => {
     let currModuleProgress =
       newPathwayProgress[pathwayIndex].moduleProgress[moduleIndex];
-    let pathwayModuleIndex = pathwayInfo.modules.findIndex(({ title }) => {
-      return currModuleProgress.title === title;
+    let pathwayModuleIndex = pathwayInfo.modules.findIndex(({ _id }) => {
+      return currModuleProgress.moduleId === _id;
     });
     if (
       currModuleProgress.contentProgress.length <
@@ -101,7 +101,9 @@ const Pathways: NextApplicationPage<{
   const addNewPathwayProgress = (
     newPathwayProgress: PathwayProgress[],
     moduleTitle,
+    moduleId,
     currContent,
+    contentId,
     player
   ) => {
     newPathwayProgress.push({
@@ -109,9 +111,11 @@ const Pathways: NextApplicationPage<{
       title: pathwayInfo.title,
       moduleProgress: [
         {
+          moduleId,
           title: moduleTitle,
           contentProgress: [
             {
+              contentId,
               title: currContent.title,
               finished: player.getDuration() - player.getCurrentTime() < 30,
               videoTime: Math.round(player.getCurrentTime()),
@@ -129,13 +133,17 @@ const Pathways: NextApplicationPage<{
     newPathwayProgress: PathwayProgress[],
     pathwayIndex,
     moduleTitle,
+    moduleId,
+    contentId,
     currContent,
     player
   ) => {
     newPathwayProgress[pathwayIndex].moduleProgress.push({
+      moduleId,
       title: moduleTitle,
       contentProgress: [
         {
+          contentId,
           title: currContent.title,
           finished: player.getDuration() - player.getCurrentTime() < 30,
           videoTime: Math.round(player.getCurrentTime()),
@@ -150,12 +158,14 @@ const Pathways: NextApplicationPage<{
     newPathwayProgress: PathwayProgress[],
     pathwayIndex,
     moduleIndex,
+    contentId,
     currContent,
     player
   ) => {
     newPathwayProgress[pathwayIndex].moduleProgress[
       moduleIndex
     ].contentProgress.push({
+      contentId,
       title: currContent.title,
       finished: player.getDuration() - player.getCurrentTime() < 30,
       videoTime: Math.round(player.getCurrentTime()),
@@ -163,7 +173,13 @@ const Pathways: NextApplicationPage<{
     checkIfPathwayFinished(newPathwayProgress, pathwayIndex);
     setAllPathwayProgress(newPathwayProgress);
   };
-  const onVideoTimeUpdate = (player, currContent, moduleTitle) => {
+  const onVideoTimeUpdate = (
+    player,
+    currContent,
+    moduleTitle,
+    moduleId,
+    contentId
+  ) => {
     if (player) {
       let pathwayProgress = allPathwayProgress.find(
         ({ pathwayId }) => pathwayId === pathwayInfo._id
@@ -173,13 +189,15 @@ const Pathways: NextApplicationPage<{
         addNewPathwayProgress(
           newPathwayProgress,
           moduleTitle,
+          moduleId,
           currContent,
+          contentId,
           player
         );
       } else {
         let indexOfModule = pathwayProgress.moduleProgress.findIndex(
           (moduleProgress) => {
-            return moduleProgress.title === moduleTitle;
+            return moduleProgress.moduleId === moduleId;
           }
         );
         console.log(moduleTitle);
@@ -190,14 +208,17 @@ const Pathways: NextApplicationPage<{
             newPathwayProgress,
             newPathwayProgress.indexOf(pathwayProgress),
             moduleTitle,
+            moduleId,
+            contentId,
             currContent,
             player
           );
         } else {
           let indexOfContent = pathwayProgress.moduleProgress[
             indexOfModule
-          ].contentProgress.findIndex((contentProgress) => {
-            return contentProgress.title === currContent.title;
+          ].contentProgress.findIndex((contentProgress, index) => {
+            let compareTo = currContent._id ? currContent._id : index;
+            return contentProgress.contentId === compareTo;
           });
           if (indexOfContent === -1) {
             let newPathwayProgress = allPathwayProgress.slice();
@@ -205,6 +226,7 @@ const Pathways: NextApplicationPage<{
               newPathwayProgress,
               newPathwayProgress.indexOf(pathwayProgress),
               indexOfModule,
+              contentId,
               currContent,
               player
             );
@@ -241,7 +263,7 @@ const Pathways: NextApplicationPage<{
     const currModuleProgress = allPathwayProgress
       .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
       .moduleProgress.find(
-        ({ title }) => title === pathwayInfo.modules[0].title
+        ({ moduleId }) => moduleId === pathwayInfo.modules[0]._id
       );
     let currContent = getSortedContent(
       pathwayInfo.modules[0].presetContent,
@@ -261,19 +283,27 @@ const Pathways: NextApplicationPage<{
             )}`}
             isVideoFinished={
               currModuleProgress.contentProgress.find(
-                ({ title }) => title === currContent.title
+                (contentProgress, index) => {
+                  let compareTo = currContent._id ? currContent._id : index;
+                  return contentProgress.contentId === compareTo;
+                }
               ).finished
             }
             videoTime={
               currModuleProgress.contentProgress.find(
-                ({ title }) => title === currContent.title
+                (contentProgress, index) => {
+                  let compareTo = currContent._id ? currContent._id : index;
+                  return contentProgress.contentId === compareTo;
+                }
               ).videoTime
             }
             onVideoTimeUpdate={(player) =>
               onVideoTimeUpdate(
                 player,
                 currContent,
-                pathwayInfo.modules[0].title
+                pathwayInfo.modules[0].title,
+                pathwayInfo.modules[0]._id,
+                currContent._id ? currContent._id : 0
               )
             }
             videoId={currContent.url.substring(
@@ -310,7 +340,7 @@ const Pathways: NextApplicationPage<{
     if (pathwayProgress) {
       pathwayProgress.moduleProgress.forEach((moduleProgress, index) => {
         let actualModule = pathwayInfo.modules.find((module) => {
-          return module.title === moduleProgress.title;
+          return module._id === moduleProgress.moduleId;
         });
         contentProgress[actualModule._id] = moduleProgress.contentProgress;
       });
@@ -338,7 +368,7 @@ const Pathways: NextApplicationPage<{
         if (pathwayProgress) {
           pathwayProgress.moduleProgress.forEach((moduleProgress, index) => {
             let actualModule = pathwayInfo.modules.find((module) => {
-              return module.title === moduleProgress.title;
+              return module._id === moduleProgress.moduleId;
             });
             contentProgress[actualModule._id] = moduleProgress.contentProgress;
           });
@@ -364,27 +394,21 @@ const Pathways: NextApplicationPage<{
       >
         <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
           {pathwayInfo.modules.map(
-            ({ title, presetContent, personalizedContent }, moduleIndex) => {
+            (
+              { title, presetContent, personalizedContent, _id },
+              moduleIndex
+            ) => {
               let currModuleProgress = allPathwayProgress
                 .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
                 .moduleProgress.find(
-                  (moduleProgress) => title === moduleProgress.title
+                  (moduleProgress) => _id === moduleProgress.moduleId
                 );
               return (
                 <DropDownTab
-                  isFinishedModule={
-                    allPathwayProgress
-                      .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
-                      .moduleProgress.find(
-                        (moduleProgress) => title === moduleProgress.title
-                      ).finished
-                  }
-                  isFinishedContent={allPathwayProgress
-                    .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
-                    .moduleProgress.find(
-                      (moduleProgress) => title === moduleProgress.title
-                    )
-                    .contentProgress.map(({ finished }) => finished)}
+                  isFinishedModule={currModuleProgress.finished}
+                  isFinishedContent={currModuleProgress.contentProgress.map(
+                    ({ finished }) => finished
+                  )}
                   currSelectedPath={currSelected}
                   chunkList={getSortedContent(
                     presetContent,
@@ -394,6 +418,9 @@ const Pathways: NextApplicationPage<{
                     let currContent = presetContent.find(
                       ({ title }) => title === contentTitle
                     );
+                    let currContentIndex = currContent
+                      ? presetContent.indexOf(currContent)
+                      : null;
                     if (currContent === undefined) {
                       currContent = personalizedContent.find(
                         ({ title }) => title === contentTitle
@@ -410,16 +437,39 @@ const Pathways: NextApplicationPage<{
                             )}`}
                             isVideoFinished={
                               currModuleProgress.contentProgress.find(
-                                ({ title }) => title === currContent.title
+                                (contentProgress, index) => {
+                                  let compareTo = currContent._id
+                                    ? currContent._id
+                                    : index;
+                                  return (
+                                    contentProgress.contentId === compareTo
+                                  );
+                                }
                               ).finished
                             }
                             videoTime={
                               currModuleProgress.contentProgress.find(
-                                ({ title }) => title === currContent.title
+                                (contentProgress, index) => {
+                                  let compareTo = currContent._id
+                                    ? currContent._id
+                                    : index;
+                                  return (
+                                    contentProgress.contentId === compareTo
+                                  );
+                                }
                               ).videoTime
                             }
                             onVideoTimeUpdate={(player) =>
-                              onVideoTimeUpdate(player, currContent, title)
+                              //WORKS!!!!!!!!!!!!!!!
+                              onVideoTimeUpdate(
+                                player,
+                                currContent,
+                                title,
+                                _id,
+                                currContent._id
+                                  ? currContent._id
+                                  : currContentIndex
+                              )
                             }
                             videoId={currContent.url.substring(
                               currContent.url.lastIndexOf("v=") + 2

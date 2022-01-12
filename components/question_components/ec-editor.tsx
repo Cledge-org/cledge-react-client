@@ -11,7 +11,7 @@ interface ECEditorProps {
   title?: string;
   onSave: Function;
   chunkQuestions: Question[];
-  userResponses: any[];
+  userResponse: [];
   isEditing: boolean;
   index: number;
 }
@@ -20,10 +20,9 @@ export default function ECEditor({
   onSave,
   chunkQuestions,
   isEditing,
-  userResponses,
+  userResponse,
   index,
 }: ECEditorProps) {
-  console.log(userResponses[index]);
   return (
     <div
       className="container-fluid h-100 d-flex flex-row align-items-center justify-content-center position-relative"
@@ -57,13 +56,10 @@ export default function ECEditor({
                 questionTitle={question}
                 defaultValue={
                   isEditing &&
-                  userResponses[index].find(
-                    ({ questionId }) => questionId === _id
-                  ) !== undefined
-                    ? userResponses[index].find(
-                        ({ questionId }) => questionId === _id
-                      ).response
-                    : []
+                  userResponse &&
+                  userResponse.find(({ questionId }) => questionId === _id)
+                    ? userResponse.find(({ questionId }) => questionId === _id)
+                    : null
                 }
               />
             );
@@ -74,12 +70,9 @@ export default function ECEditor({
                 questionTitle={question}
                 userResponse={
                   isEditing &&
-                  userResponses[index].find(
-                    ({ questionId }) => questionId === _id
-                  ) !== undefined
-                    ? userResponses[index].find(
-                        ({ questionId }) => questionId === _id
-                      ).response
+                  userResponse &&
+                  userResponse.find(({ questionId }) => questionId === _id)
+                    ? userResponse.find(({ questionId }) => questionId === _id)
                     : ""
                 }
                 placeholder={""}

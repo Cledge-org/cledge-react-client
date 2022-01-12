@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
-import QuestionSummaryCard from "../../components/question_components/question_summary_card";
+import QuestionSummaryCard from "../../components/question_components/question-summary-card";
 
 interface QuestionSummarySubpageProps {
   listTitle: string;
@@ -44,7 +44,17 @@ export default function QuestionSummarySubpage({
       className="container-fluid h-100 d-flex flex-column"
       // style={{ overflowY: "auto" }}
     >
-      <QuestionSubPageHeader title={listTitle} percentage={percentComplete} />
+      <QuestionSubPageHeader
+        subText={
+          <ul className="p-0 ps-3">
+            {chunks.map(({ name }) => (
+              <li>{name}</li>
+            ))}
+          </ul>
+        }
+        title={listTitle}
+        percentage={percentComplete}
+      />
       {chunks.map((chunk) => (
         <div
           id={`chunk-name-${chunk.name}`}

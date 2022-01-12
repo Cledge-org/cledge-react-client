@@ -126,9 +126,10 @@ async function getSpecificModuleProgress(
         });
         // Iterate through preset and presonalized contents and find contents not in progress, add them as unfinished
         if (module.presetContent) {
-          module.presetContent.forEach((content) => {
+          module.presetContent.forEach((content, index) => {
             if (!titles.has(content.title)) {
               moduleContentProgress.push({
+                contentId: index,
                 title: content.title,
                 finished: false,
                 videoTime: 0,
@@ -140,6 +141,7 @@ async function getSpecificModuleProgress(
           modulePersonalizedContent.forEach((content) => {
             if (!titles.has(content.title)) {
               moduleContentProgress.push({
+                contentId: content._id,
                 title: content.title,
                 finished: false,
                 videoTime: 0,
@@ -148,6 +150,7 @@ async function getSpecificModuleProgress(
           });
         }
         res({
+          moduleId: moduleId.toString(),
           finished: moduleContentProgress.reduce(
             (prev, cur) => prev && cur.finished,
             true
@@ -157,6 +160,7 @@ async function getSpecificModuleProgress(
         });
       } else {
         res({
+          moduleId: moduleId.toString(),
           finished: false,
           contentProgress: [],
           title: "NULL MODULE",
