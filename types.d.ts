@@ -103,7 +103,6 @@ interface ModuleProgress {
   contentProgress: ContentProgress[]; // Map between content ID and whether that content is finished
 }
 interface ContentProgress {
-  contentId: string | number;
   finished: boolean;
   title: string;
   videoTime: number;

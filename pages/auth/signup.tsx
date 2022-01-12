@@ -137,8 +137,7 @@ export default function signup() {
             placeholder="Confirm Password"
           />
         </div>
-
-        <div key={GoogleProvider.name} className="w-100">
+        {/* <div key={GoogleProvider.name} className="w-100">
           <button
             className="btn btn-light cl-btn shadow-sm my-3 w-100 fw-bold"
             onClick={() => {
@@ -149,7 +148,7 @@ export default function signup() {
           >
             Sign Up with {GoogleProvider.name}
           </button>
-        </div>
+        </div> */}
         <div className="auth-bottom-nav">
           <div className="px-0">
             <Link href="api/auth/login">

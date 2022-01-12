@@ -6,7 +6,7 @@ import { CircularProgress } from "@mui/material";
 export default function LoadingScreen() {
   return (
     <div className="center-child vw-100 vh-100">
-      <CircularProgress className="bg-cl-blue" />
+      <CircularProgress className="cl-blue" />
     </div>
   );
 }

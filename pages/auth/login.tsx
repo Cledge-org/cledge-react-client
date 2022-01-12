@@ -62,7 +62,7 @@ export default function login() {
             placeholder="Enter Password"
           />
         </div>
-        <div key={GoogleProvider.name} className="w-100">
+        {/* <div key={GoogleProvider.name} className="w-100">
           <button
             className="btn btn-light cl-btn shadow-sm my-3 w-100 fw-bold"
             onClick={() =>
@@ -73,7 +73,7 @@ export default function login() {
           >
             Sign in with {GoogleProvider.name}
           </button>
-        </div>
+        </div> */}
         <div className="px-0 align-self-start mt-3">
           <Link href="/auth/reset_password">
             <a className="forgot-password-btn">Forgot Password</a>

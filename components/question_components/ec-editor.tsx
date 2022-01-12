@@ -10,8 +10,9 @@ import ECTimeFrame from "./ec_timeframe_question";
 interface ECEditorProps {
   title?: string;
   onSave: Function;
+  onAbort: Function;
   chunkQuestions: Question[];
-  userResponse: [];
+  userResponse: UserResponse[];
   isEditing: boolean;
   index: number;
 }
@@ -22,7 +23,11 @@ export default function ECEditor({
   isEditing,
   userResponse,
   index,
+  onAbort,
 }: ECEditorProps) {
+  const [newResponse, setNewResponse] = useState(
+    userResponse ? userResponse : []
+  );
   return (
     <div
       className="container-fluid h-100 d-flex flex-row align-items-center justify-content-center position-relative"
@@ -30,7 +35,7 @@ export default function ECEditor({
     >
       <button
         onClick={() => {
-          onSave();
+          onAbort();
         }}
         className="ec-editor-btn-back"
       >
@@ -47,11 +52,31 @@ export default function ECEditor({
           {isEditing ? "Editing Experience" : "Adding a New Experience"}
         </span>
         {chunkQuestions.map(({ question, type, _id, isConcatenable, data }) => {
+          console.log(userResponse);
           if (type === "ECDropDown") {
             return (
               <ECDropDown
                 isConcatenable={isConcatenable}
                 valuesList={data}
+                onChange={(value) => {
+                  let totallyNewResponse = newResponse.slice();
+                  console.log(value);
+                  if (
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id
+                    )
+                  ) {
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id
+                    ).response = value;
+                  } else {
+                    totallyNewResponse.push({
+                      questionId: _id,
+                      response: value,
+                    });
+                  }
+                  setNewResponse(totallyNewResponse);
+                }}
                 key={_id}
                 questionTitle={question}
                 defaultValue={
@@ -59,6 +84,7 @@ export default function ECEditor({
                   userResponse &&
                   userResponse.find(({ questionId }) => questionId === _id)
                     ? userResponse.find(({ questionId }) => questionId === _id)
+                        .response
                     : null
                 }
               />
@@ -73,20 +99,77 @@ export default function ECEditor({
                   userResponse &&
                   userResponse.find(({ questionId }) => questionId === _id)
                     ? userResponse.find(({ questionId }) => questionId === _id)
+                        .response
                     : ""
                 }
                 placeholder={""}
-                onChange={() => {}}
+                onChange={(value) => {
+                  let totallyNewResponse = newResponse.slice();
+                  if (
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id
+                    )
+                  ) {
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id
+                    ).response = value;
+                  } else {
+                    totallyNewResponse.push({
+                      questionId: _id,
+                      response: value,
+                    });
+                  }
+                  setNewResponse(totallyNewResponse);
+                }}
               />
             );
           }
           if (type === "ECTimeFrame") {
-            return <ECTimeFrame />;
+            let response =
+              isEditing &&
+              userResponse &&
+              userResponse.find(({ questionId }) => questionId === _id)
+                ? userResponse.find(({ questionId }) => questionId === _id)
+                    .response
+                : { progress: "", finished: new Date(), start: new Date() };
+            return (
+              <ECTimeFrame
+                defaultProgress={response.progress}
+                defaultStart={
+                  response.start instanceof Date
+                    ? response.start
+                    : new Date(response.start)
+                }
+                defaultEnd={
+                  response.finished instanceof Date
+                    ? response.finished
+                    : new Date(response.finished)
+                }
+                onChange={(value) => {
+                  let totallyNewResponse = newResponse.slice();
+                  if (
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id
+                    )
+                  ) {
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id
+                    ).response = value;
+                  } else {
+                    totallyNewResponse.push({
+                      questionId: _id,
+                      response: value,
+                    });
+                  }
+                  setNewResponse(totallyNewResponse);
+                }}
+              />
+            );
           }
           return null;
         })}
         <button
-          onClick={() => onSave()}
+          onClick={() => onSave(newResponse)}
           className="cl-btn-blue align-self-center mt-5"
           style={{ transform: "scale(1.2)" }}
         >

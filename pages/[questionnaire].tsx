@@ -174,6 +174,7 @@ const Questionnaire: NextApplicationPage<{
     if (question.type === "TextInput") {
       return (
         <TextInputQuestion
+          key={question._id}
           question={question}
           userAnswer={""}
           onChange={updateFunc}
@@ -184,6 +185,7 @@ const Questionnaire: NextApplicationPage<{
       return (
         <MCQQuestion
           question={question}
+          key={question._id}
           userAnswer={""}
           onChange={updateFunc}
           tags={userTags}
@@ -193,6 +195,7 @@ const Questionnaire: NextApplicationPage<{
     if (question.type === "CheckBox") {
       return (
         <CheckBoxQuestion
+          key={question._id}
           question={question}
           userAnswers={[]}
           onChange={updateFunc}

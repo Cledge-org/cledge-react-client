@@ -22,14 +22,12 @@ export default function ECQuestionSummaryCard({
   const titleQuestion = response.find(
     ({ questionId }) =>
       questionId ===
-      chunkQuestions.find(({ question }) => question === "Title")._id
+      chunkQuestions.find(({ question }) => question === "Title")?._id
   );
   return (
     <div className="w-100 d-flex flex-column justify-content-evenly qsummary-card-container mt-3">
       <div className="d-flex justify-content-between align-items-center px-4 pt-3 question-text">
-        {titleQuestion !== undefined
-          ? titleQuestion.response
-          : "No Title Given"}
+        {titleQuestion ? titleQuestion.response : "No Title Given"}
         <button onClick={() => onClick()} className="icon-btn center-child">
           <div
             onClick={() => {
@@ -50,7 +48,14 @@ export default function ECQuestionSummaryCard({
                 {response.find(({ questionId }) => _id === questionId) !==
                 undefined
                   ? response.find(({ questionId }) => _id === questionId)
-                      .response
+                      .response instanceof Array
+                    ? response
+                        .find(({ questionId }) => _id === questionId)
+                        .response.reduce((prev, curr) => {
+                          return prev === "" ? curr : prev + ", " + curr;
+                        }, "")
+                    : response.find(({ questionId }) => _id === questionId)
+                        .response
                   : "Not Answered"}
               </div>
             </div>

@@ -4,7 +4,7 @@ import QuestionSubPageHeader from "../../components/question_components/question
 import ECEditor from "../../components/question_components/ec-editor";
 import { ORIGIN_URL } from "../../config";
 interface QuestionECSubpageProps {
-  userResponses: any[];
+  userResponses: UserResponse[];
   isShowing: boolean;
   chunk: QuestionChunk;
 }
@@ -29,12 +29,39 @@ export default function QuestionECSubpage({
     <ECEditor
       index={currECIndex}
       isEditing={isEditing}
+      onAbort={() => {
+        setIsAdding(false);
+        setIsEditing(false);
+      }}
       onSave={async (newAnswers) => {
-        userResponses["Extracurricular"][chunk.name][currECIndex] = newAnswers;
+        if (
+          userResponses.find(({ questionId }) => {
+            return questionId === "Extracurricular";
+          }) === undefined
+        ) {
+          userResponses.push({
+            questionId: "Extracurricular",
+            response: {
+              [chunk.name]: [],
+            },
+          });
+        }
+        if (
+          userResponses.find(({ questionId }) => {
+            return questionId === "Extracurricular";
+          }).response[chunk.name] === undefined
+        ) {
+          userResponses.find(({ questionId }) => {
+            return questionId === "Extracurricular";
+          }).response[chunk.name] = [];
+        }
+        userResponses.find(({ questionId }) => {
+          return questionId === "Extracurricular";
+        }).response[chunk.name][currECIndex] = newAnswers;
         fetch(`${ORIGIN_URL}/api/put-question-responses`, {
           method: "POST",
           body: JSON.stringify({
-            responses: [],
+            responses: userResponses,
             userId: (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json())
               .uid,
           }),
@@ -44,10 +71,18 @@ export default function QuestionECSubpage({
       }}
       chunkQuestions={chunk.questions}
       userResponse={
-        userResponses["Extracurricular"] &&
-        userResponses["Extracurricular"][chunk.name] &&
-        userResponses["Extracurricular"][chunk.name][currECIndex]
-          ? userResponses["Extracurricular"][chunk.name][currECIndex]
+        userResponses.find(({ questionId }) => {
+          return questionId === "Extracurricular";
+        }) &&
+        userResponses.find(({ questionId }) => {
+          return questionId === "Extracurricular";
+        }).response[chunk.name] &&
+        userResponses.find(({ questionId }) => {
+          return questionId === "Extracurricular";
+        }).response[chunk.name][currECIndex]
+          ? userResponses.find(({ questionId }) => {
+              return questionId === "Extracurricular";
+            }).response[chunk.name][currECIndex]
           : []
       }
     />
@@ -58,17 +93,24 @@ export default function QuestionECSubpage({
         onAddNew={() => {
           setIsAdding(true);
         }}
-        title="Academic Achievement"
+        title={chunk.name}
         percentage={undefined}
       />
       <div
         className="d-flex flex-column justify-content-evenly align-self-center"
         style={{ width: "91%" }}
       >
-        {userResponses["Extracurricular"] &&
-        userResponses["Extracurricular"][chunk.name]
-          ? userResponses["Extracurricular"][chunk.name].map(
-              (response, index) => {
+        {userResponses.find(({ questionId }) => {
+          return questionId === "Extracurricular";
+        }) &&
+        userResponses.find(({ questionId }) => {
+          return questionId === "Extracurricular";
+        }).response[chunk.name]
+          ? userResponses
+              .find(({ questionId }) => {
+                return questionId === "Extracurricular";
+              })
+              .response[chunk.name].map((response, index) => {
                 return (
                   <ECQuestionSummaryCard
                     response={response}
@@ -79,8 +121,7 @@ export default function QuestionECSubpage({
                     }}
                   />
                 );
-              }
-            )
+              })
           : []}
       </div>
     </div>

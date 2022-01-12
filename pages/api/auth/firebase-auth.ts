@@ -7,9 +7,10 @@ import {
   browserSessionPersistence,
   browserLocalPersistence,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Alert } from "react-bootstrap";
 const firebaseCreds = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -17,6 +18,7 @@ const firebaseCreds = {
 };
 const firebaseApp = initializeApp(firebaseCreds);
 const firebaseAuth = getAuth(firebaseApp);
+const provider = new GoogleAuthProvider();
 onAuthStateChanged(firebaseAuth, (user) => {
   console.log(user?.uid);
   AuthFunctions.userId = user?.uid;
@@ -70,7 +72,7 @@ class AuthFunctions {
   // }
   static async signOut() {
     await firebaseAuth.signOut().catch((err) => {
-      Alert(err);
+      console.error(err);
     });
   }
 }

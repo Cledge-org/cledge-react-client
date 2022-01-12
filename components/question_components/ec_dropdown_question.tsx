@@ -50,7 +50,10 @@ export default function ECDropDown({
   questionTitle,
   onChange,
 }: ECDropDownProps) {
-  const [chosen, setChosen] = useState(isConcatenable ? [] : "");
+  const [chosen, setChosen] = useState(
+    //WORKS!!!
+    isConcatenable ? defaultValue.map((element) => " " + element) : ""
+  );
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef, (event) => {
@@ -62,21 +65,26 @@ export default function ECDropDown({
   const changeChosen = (value: string) => {
     setChosen((prevChosen) => {
       if (!isConcatenable) {
+        onChange(value);
         return value;
       }
-      let prevChosenArr = prevChosen instanceof Array ? prevChosen : [];
-      if (prevChosenArr.includes(value)) {
+      let prevChosenArr = prevChosen instanceof Array ? prevChosen.slice() : [];
+      console.log(prevChosenArr);
+      if (prevChosenArr.includes(" " + value)) {
         prevChosenArr.splice(prevChosen.indexOf(" " + value));
+        onChange(prevChosenArr.map((element) => element.substring(1)));
         return prevChosenArr;
       }
       prevChosenArr.push(" " + value);
+      onChange(prevChosenArr.map((element) => element.substring(1)));
       return prevChosenArr;
     });
-    onChange(value);
   };
   const itemIsPicked = (itemName: string) => {
     if (isConcatenable) {
-      return chosen.includes(" " + itemName);
+      return chosen.length === 0
+        ? defaultValue.includes(itemName)
+        : chosen.includes(" " + itemName);
     }
     return chosen === "" || chosen === []
       ? defaultValue === itemName
@@ -115,8 +123,12 @@ export default function ECDropDown({
               : !isConcatenable
               ? chosen
               : chosen.toString()
-            : chosen === "" || chosen === []
-            ? defaultValue
+            : chosen.length === 0
+            ? defaultValue instanceof Array
+              ? defaultValue.reduce((prev, curr) => {
+                  return prev === "" ? curr : prev + ", " + curr;
+                }, "")
+              : defaultValue
             : chosen.toString()}
           <div
             className={
@@ -139,7 +151,6 @@ export default function ECDropDown({
             <div
               onClick={() => {
                 changeChosen(name);
-                onChange(name);
               }}
               key={name}
               className={

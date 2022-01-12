@@ -23,6 +23,38 @@ export default NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
+      profile(profile) {
+        try {
+          fetch(`/api/get-account`, {
+            method: "POST",
+            body: JSON.stringify({ userId: profile.sub }),
+          });
+        } catch (err) {
+          fetch("/api/create-user", {
+            method: "POST",
+            body: JSON.stringify({
+              ...{
+                name: profile.name,
+                address: "",
+                birthday: new Date(),
+                grade: -1,
+                email: profile.email,
+                tags: [],
+                checkIns: ["Onboarding Questions"],
+              },
+              userId: profile.sub,
+              email: profile.email,
+            }),
+          }).then(async (res) => {
+            console.log(res.status);
+          });
+        }
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+        };
+      },
     }),
   ],
   callbacks: {

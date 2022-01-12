@@ -48,6 +48,34 @@ const Pathways: NextApplicationPage<{
   const [currPage, setCurrPage] = useState(null);
   const [currSelected, setCurrSelected] = useState("");
   const [allPathwayProgress, setAllPathwayProgress] = useState(pathwayProgress);
+  const checkForDiscrepancies = (pathwayProgress: PathwayProgress) => {
+    if (pathwayProgress.title !== pathwayInfo.title) {
+      pathwayProgress.title = pathwayInfo.title;
+    }
+    pathwayProgress.moduleProgress.forEach((progressModule, index) => {
+      const matchingModule = pathwayInfo.modules.find(
+        ({ _id }) => progressModule.moduleId === _id
+      );
+      if (matchingModule && matchingModule.title !== progressModule.title) {
+        pathwayProgress.moduleProgress[index].title = matchingModule.title;
+      }
+      progressModule.contentProgress.forEach(
+        (progressContent, contentIndex) => {
+          let matchingContent = matchingModule.presetContent.find(
+            ({ title }) => progressContent.title === title
+          );
+          if (!matchingContent) {
+            matchingContent = matchingModule.personalizedContent.find(
+              ({ title }) => progressContent.title === title
+            );
+          }
+          if (!matchingContent) {
+            progressModule.contentProgress.splice(contentIndex, 1);
+          }
+        }
+      );
+    });
+  };
   const checkIfModuleFinished = (
     newPathwayProgress: PathwayProgress[],
     pathwayIndex,
@@ -103,7 +131,6 @@ const Pathways: NextApplicationPage<{
     moduleTitle,
     moduleId,
     currContent,
-    contentId,
     player
   ) => {
     newPathwayProgress.push({
@@ -115,10 +142,15 @@ const Pathways: NextApplicationPage<{
           title: moduleTitle,
           contentProgress: [
             {
-              contentId,
               title: currContent.title,
-              finished: player.getDuration() - player.getCurrentTime() < 30,
-              videoTime: Math.round(player.getCurrentTime()),
+              finished:
+                currContent.type.toLowerCase() === "article"
+                  ? true
+                  : player.getDuration() - player.getCurrentTime() < 30,
+              videoTime:
+                currContent.type.toLowerCase() === "article"
+                  ? 0
+                  : Math.round(player.getCurrentTime()),
             },
           ],
           finished: false,
@@ -134,7 +166,6 @@ const Pathways: NextApplicationPage<{
     pathwayIndex,
     moduleTitle,
     moduleId,
-    contentId,
     currContent,
     player
   ) => {
@@ -143,10 +174,15 @@ const Pathways: NextApplicationPage<{
       title: moduleTitle,
       contentProgress: [
         {
-          contentId,
           title: currContent.title,
-          finished: player.getDuration() - player.getCurrentTime() < 30,
-          videoTime: Math.round(player.getCurrentTime()),
+          finished:
+            currContent.type.toLowerCase() === "article"
+              ? true
+              : player.getDuration() - player.getCurrentTime() < 30,
+          videoTime:
+            currContent.type.toLowerCase() === "article"
+              ? 0
+              : Math.round(player.getCurrentTime()),
         },
       ],
       finished: false,
@@ -158,28 +194,90 @@ const Pathways: NextApplicationPage<{
     newPathwayProgress: PathwayProgress[],
     pathwayIndex,
     moduleIndex,
-    contentId,
     currContent,
     player
   ) => {
     newPathwayProgress[pathwayIndex].moduleProgress[
       moduleIndex
     ].contentProgress.push({
-      contentId,
       title: currContent.title,
-      finished: player.getDuration() - player.getCurrentTime() < 30,
-      videoTime: Math.round(player.getCurrentTime()),
+      finished:
+        currContent.type.toLowerCase() === "article"
+          ? true
+          : player.getDuration() - player.getCurrentTime() < 30,
+      videoTime:
+        currContent.type.toLowerCase() === "article"
+          ? 0
+          : Math.round(player.getCurrentTime()),
     });
     checkIfPathwayFinished(newPathwayProgress, pathwayIndex);
     setAllPathwayProgress(newPathwayProgress);
   };
-  const onVideoTimeUpdate = (
-    player,
-    currContent,
-    moduleTitle,
-    moduleId,
-    contentId
-  ) => {
+  const setArticleToFinished = (currContent, moduleTitle, moduleId) => {
+    let pathwayProgress = allPathwayProgress.find(
+      ({ pathwayId }) => pathwayId === pathwayInfo._id
+    );
+    if (!pathwayProgress) {
+      let newPathwayProgress = allPathwayProgress.slice();
+      addNewPathwayProgress(
+        newPathwayProgress,
+        moduleTitle,
+        moduleId,
+        currContent,
+        undefined
+      );
+    } else {
+      let indexOfModule = pathwayProgress.moduleProgress.findIndex(
+        (moduleProgress) => {
+          return moduleProgress.moduleId === moduleId;
+        }
+      );
+      console.log(moduleTitle);
+      console.log(indexOfModule);
+      if (indexOfModule === -1) {
+        let newPathwayProgress = allPathwayProgress.slice();
+        addNewModuleProgress(
+          newPathwayProgress,
+          newPathwayProgress.indexOf(pathwayProgress),
+          moduleTitle,
+          moduleId,
+          currContent,
+          undefined
+        );
+      }
+      let indexOfContent = pathwayProgress.moduleProgress[
+        indexOfModule
+      ].contentProgress.findIndex((contentProgress, index) => {
+        return contentProgress.title === currContent.title;
+      });
+      if (indexOfContent === -1) {
+        let newPathwayProgress = allPathwayProgress.slice();
+        addNewContentProgress(
+          newPathwayProgress,
+          newPathwayProgress.indexOf(pathwayProgress),
+          indexOfModule,
+          currContent,
+          undefined
+        );
+      } else {
+        pathwayProgress.moduleProgress[indexOfModule].contentProgress[
+          indexOfContent
+        ] = {
+          ...pathwayProgress.moduleProgress[indexOfModule].contentProgress[
+            indexOfContent
+          ],
+          finished: true,
+        };
+        let newPathwayProgress = allPathwayProgress.slice();
+        checkIfPathwayFinished(
+          newPathwayProgress,
+          newPathwayProgress.indexOf(pathwayProgress)
+        );
+        setAllPathwayProgress(newPathwayProgress);
+      }
+    }
+  };
+  const onVideoTimeUpdate = (player, currContent, moduleTitle, moduleId) => {
     if (player) {
       let pathwayProgress = allPathwayProgress.find(
         ({ pathwayId }) => pathwayId === pathwayInfo._id
@@ -191,7 +289,6 @@ const Pathways: NextApplicationPage<{
           moduleTitle,
           moduleId,
           currContent,
-          contentId,
           player
         );
       } else {
@@ -209,7 +306,6 @@ const Pathways: NextApplicationPage<{
             newPathwayProgress.indexOf(pathwayProgress),
             moduleTitle,
             moduleId,
-            contentId,
             currContent,
             player
           );
@@ -217,8 +313,7 @@ const Pathways: NextApplicationPage<{
           let indexOfContent = pathwayProgress.moduleProgress[
             indexOfModule
           ].contentProgress.findIndex((contentProgress, index) => {
-            let compareTo = currContent._id ? currContent._id : index;
-            return contentProgress.contentId === compareTo;
+            return contentProgress.title === currContent.title;
           });
           if (indexOfContent === -1) {
             let newPathwayProgress = allPathwayProgress.slice();
@@ -226,7 +321,6 @@ const Pathways: NextApplicationPage<{
               newPathwayProgress,
               newPathwayProgress.indexOf(pathwayProgress),
               indexOfModule,
-              contentId,
               currContent,
               player
             );
@@ -260,11 +354,19 @@ const Pathways: NextApplicationPage<{
     }
   };
   useEffect(() => {
-    const currModuleProgress = allPathwayProgress
+    let currModuleProgress = allPathwayProgress
       .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
-      .moduleProgress.find(
+      ?.moduleProgress?.find(
         ({ moduleId }) => moduleId === pathwayInfo.modules[0]._id
       );
+    if (!currModuleProgress) {
+      currModuleProgress = {
+        contentProgress: [],
+        moduleId: pathwayInfo.modules[0]._id,
+        finished: false,
+        title: pathwayInfo.modules[0].title,
+      };
+    }
     let currContent = getSortedContent(
       pathwayInfo.modules[0].presetContent,
       pathwayInfo.modules[0].personalizedContent
@@ -272,63 +374,82 @@ const Pathways: NextApplicationPage<{
     console.log(
       currContent.url.substring(currContent.url.lastIndexOf("v=") + 2)
     );
+    if (currContent.type.toLowerCase() === "article") {
+      setArticleToFinished(
+        currContent,
+        pathwayInfo.modules[0].title,
+        pathwayInfo.modules[0]._id
+      );
+    }
     setCurrSelected(pathwayInfo.modules[0].title + currContent.title);
     setCurrPage(
       <div className="d-flex flex-column" style={{ flex: 3 }}>
-        <div className="w-100" style={{ height: "55%" }}>
-          <YoutubeEmbed
-            isPathway
-            key={`youtube-container-${currContent.url.substring(
-              currContent.url.lastIndexOf("v=") + 2
-            )}`}
-            isVideoFinished={
-              currModuleProgress.contentProgress.find(
-                (contentProgress, index) => {
-                  let compareTo = currContent._id ? currContent._id : index;
-                  return contentProgress.contentId === compareTo;
+        {currContent.type.toLowerCase() === "video" ? (
+          <>
+            <div className="w-100" style={{ height: "55%" }}>
+              <YoutubeEmbed
+                isPathway
+                key={`youtube-container-${currContent.url.substring(
+                  currContent.url.lastIndexOf("v=") + 2
+                )}`}
+                isVideoFinished={
+                  currModuleProgress.contentProgress.find(
+                    (contentProgress, index) => {
+                      return contentProgress.title === currContent.title;
+                    }
+                  )?.finished
                 }
-              ).finished
-            }
-            videoTime={
-              currModuleProgress.contentProgress.find(
-                (contentProgress, index) => {
-                  let compareTo = currContent._id ? currContent._id : index;
-                  return contentProgress.contentId === compareTo;
+                videoTime={
+                  currModuleProgress.contentProgress.find(
+                    (contentProgress, index) => {
+                      return contentProgress.title === currContent.title;
+                    }
+                  )?.videoTime
+                    ? currModuleProgress.contentProgress.find(
+                        (contentProgress, index) => {
+                          return contentProgress.title === currContent.title;
+                        }
+                      ).videoTime
+                    : 0
                 }
-              ).videoTime
-            }
-            onVideoTimeUpdate={(player) =>
-              onVideoTimeUpdate(
-                player,
-                currContent,
-                pathwayInfo.modules[0].title,
-                pathwayInfo.modules[0]._id,
-                currContent._id ? currContent._id : 0
-              )
-            }
-            videoId={currContent.url.substring(
-              currContent.url.lastIndexOf("v=") + 2
-            )}
-          />
-        </div>
-        <div className="container-fluid center-child flex-column py-5">
-          <div className="pathway-description">
-            <span
-              className="fw-bold cl-dark-text"
-              style={{ fontSize: "1.7em" }}
-            >
-              {currContent.title}
-            </span>
-          </div>
-          <div className="ms-5 mt-3">
-            <div className="ms-4">{currContent.content}</div>
-          </div>
-        </div>
+                onVideoTimeUpdate={(player) =>
+                  onVideoTimeUpdate(
+                    player,
+                    currContent,
+                    pathwayInfo.modules[0].title,
+                    pathwayInfo.modules[0]._id
+                  )
+                }
+                videoId={currContent.url.substring(
+                  currContent.url.lastIndexOf("v=") + 2
+                )}
+              />
+            </div>
+            <div className="container-fluid center-child flex-column py-5">
+              <div className="pathway-description">
+                <span
+                  className="fw-bold cl-dark-text"
+                  style={{ fontSize: "1.7em" }}
+                >
+                  {currContent.title}
+                </span>
+              </div>
+              <div className="ms-5 mt-3">
+                <div className="ms-4">{currContent.content}</div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <embed src={currContent.url} className="w-100 h-100" />
+        )}
       </div>
     );
   }, []);
   const getSortedContent = (presetContent, personalizedContent) => {
     let allContent = presetContent.concat(personalizedContent);
+    if (presetContent.length === 0) {
+      allContent = personalizedContent;
+    }
     allContent.sort((a, b) => a.priority - b.priority);
     return allContent;
   };
@@ -359,6 +480,17 @@ const Pathways: NextApplicationPage<{
     }
   }, [allPathwayProgress]);
   useEffect(() => {
+    if (
+      allPathwayProgress.find(
+        (pathwayProgress) => pathwayProgress.pathwayId === pathwayInfo._id
+      )
+    ) {
+      checkForDiscrepancies(
+        allPathwayProgress.find(
+          (pathwayProgress) => pathwayProgress.pathwayId === pathwayInfo._id
+        )
+      );
+    }
     return () => {
       setAllPathwayProgress((allPathwayProgress) => {
         let contentProgress: Record<string, ContentProgress[]> = {};
@@ -400,20 +532,30 @@ const Pathways: NextApplicationPage<{
             ) => {
               let currModuleProgress = allPathwayProgress
                 .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
-                .moduleProgress.find(
-                  (moduleProgress) => _id === moduleProgress.moduleId
+                ?.moduleProgress?.find(
+                  ({ moduleId }) => moduleId === pathwayInfo.modules[0]._id
                 );
+              if (!currModuleProgress) {
+                currModuleProgress = {
+                  contentProgress: [],
+                  moduleId: pathwayInfo.modules[0]._id,
+                  finished: false,
+                  title: pathwayInfo.modules[0].title,
+                };
+              }
               return (
                 <DropDownTab
-                  isFinishedModule={currModuleProgress.finished}
-                  isFinishedContent={currModuleProgress.contentProgress.map(
+                  isFinishedModule={currModuleProgress?.finished}
+                  isFinishedContent={currModuleProgress?.contentProgress?.map(
                     ({ finished }) => finished
                   )}
                   currSelectedPath={currSelected}
                   chunkList={getSortedContent(
                     presetContent,
                     personalizedContent
-                  ).map(({ title }) => title)}
+                  ).map(({ title, type }) => {
+                    return { title, type };
+                  })}
                   onClick={(contentTitle) => {
                     let currContent = presetContent.find(
                       ({ title }) => title === contentTitle
@@ -426,69 +568,85 @@ const Pathways: NextApplicationPage<{
                         ({ title }) => title === contentTitle
                       );
                     }
+                    if (currContent.type.toLowerCase() === "article") {
+                      setArticleToFinished(currContent, title, _id);
+                    }
                     setCurrSelected(title + contentTitle);
                     setCurrPage(
                       <div className="d-flex flex-column" style={{ flex: 3 }}>
-                        <div className="w-100" style={{ height: "55%" }}>
-                          <YoutubeEmbed
-                            isPathway
-                            key={`youtube-container-${currContent.url.substring(
-                              currContent.url.lastIndexOf("v=") + 2
-                            )}`}
-                            isVideoFinished={
-                              currModuleProgress.contentProgress.find(
-                                (contentProgress, index) => {
-                                  let compareTo = currContent._id
-                                    ? currContent._id
-                                    : index;
-                                  return (
-                                    contentProgress.contentId === compareTo
-                                  );
+                        {currContent.type.toLowerCase() === "video" ? (
+                          <>
+                            <div className="w-100" style={{ height: "55%" }}>
+                              <YoutubeEmbed
+                                isPathway
+                                key={`youtube-container-${currContent.url.substring(
+                                  currContent.url.lastIndexOf("v=") + 2
+                                )}`}
+                                isVideoFinished={
+                                  currModuleProgress.contentProgress.find(
+                                    (contentProgress, index) => {
+                                      return (
+                                        contentProgress.title ===
+                                        currContent.title
+                                      );
+                                    }
+                                  )?.finished
                                 }
-                              ).finished
-                            }
-                            videoTime={
-                              currModuleProgress.contentProgress.find(
-                                (contentProgress, index) => {
-                                  let compareTo = currContent._id
-                                    ? currContent._id
-                                    : index;
-                                  return (
-                                    contentProgress.contentId === compareTo
-                                  );
+                                videoTime={
+                                  currModuleProgress.contentProgress.find(
+                                    (contentProgress, index) => {
+                                      return (
+                                        contentProgress.title ===
+                                        currContent.title
+                                      );
+                                    }
+                                  )?.videoTime
+                                    ? currModuleProgress.contentProgress.find(
+                                        (contentProgress, index) => {
+                                          return (
+                                            contentProgress.title ===
+                                            currContent.title
+                                          );
+                                        }
+                                      ).videoTime
+                                    : 0
                                 }
-                              ).videoTime
-                            }
-                            onVideoTimeUpdate={(player) =>
-                              //WORKS!!!!!!!!!!!!!!!
-                              onVideoTimeUpdate(
-                                player,
-                                currContent,
-                                title,
-                                _id,
-                                currContent._id
-                                  ? currContent._id
-                                  : currContentIndex
-                              )
-                            }
-                            videoId={currContent.url.substring(
-                              currContent.url.lastIndexOf("v=") + 2
-                            )}
+                                onVideoTimeUpdate={(player) =>
+                                  //WORKS!!!!!!!!!!!!!!!
+                                  onVideoTimeUpdate(
+                                    player,
+                                    currContent,
+                                    title,
+                                    _id
+                                  )
+                                }
+                                videoId={currContent.url.substring(
+                                  currContent.url.lastIndexOf("v=") + 2
+                                )}
+                              />
+                            </div>
+                            <div className="container-fluid center-child flex-column py-5">
+                              <div className="pathway-description">
+                                <span
+                                  className="fw-bold cl-dark-text"
+                                  style={{ fontSize: "1.7em" }}
+                                >
+                                  {currContent.title}
+                                </span>
+                              </div>
+                              <div className="ms-5 mt-3">
+                                <div className="ms-4">
+                                  {currContent.content}
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          <embed
+                            src={currContent.url}
+                            className="w-100 h-100"
                           />
-                        </div>
-                        <div className="container-fluid center-child flex-column py-5">
-                          <div className="pathway-description">
-                            <span
-                              className="fw-bold cl-dark-text"
-                              style={{ fontSize: "1.7em" }}
-                            >
-                              {currContent.title}
-                            </span>
-                          </div>
-                          <div className="ms-5 mt-3">
-                            <div className="ms-4">{currContent.content}</div>
-                          </div>
-                        </div>
+                        )}
                       </div>
                     );
                   }}

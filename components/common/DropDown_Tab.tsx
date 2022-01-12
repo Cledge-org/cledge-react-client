@@ -68,17 +68,18 @@ export default function DropDownTab({
             : "progress-dropdown-menu-closed"
         }
       >
-        {chunkList.map((chunkTitle: string, index) => (
+        {chunkList.map((chunkTitle, index) => (
           <button
             onClick={() => {
               // if (isExtracurricular || isPathway) {
               //   onClick(chunkTitle);
               //   return;
               // }
-              onClick(chunkTitle);
+              onClick(isPathway ? chunkTitle.title : chunkTitle);
             }}
             className={
-              currSelectedPath === title + chunkTitle
+              currSelectedPath ===
+              title + (isPathway ? chunkTitle.title : chunkTitle)
                 ? "progress-dropdown-menu-btn-selected"
                 : "progress-dropdown-menu-btn"
             }
@@ -106,12 +107,16 @@ export default function DropDownTab({
                   isPathway
                     ? isFinishedModule || isFinishedContent[index]
                       ? faCheckCircle
+                      : chunkTitle.type.toLowerCase() === "article"
+                      ? faFileAlt
                       : faVideo
                     : faFileAlt
                 }
               />
             </div>
-            <div className="text">{chunkTitle}</div>
+            <div className="text">
+              {isPathway ? chunkTitle.title : chunkTitle}
+            </div>
           </button>
         ))}
       </div>
