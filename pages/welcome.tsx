@@ -4,7 +4,7 @@ import YoutubeEmbed from "../components/common/YoutubeEmbed";
 import MsftSVG from "../public/images/landing_msft.svg";
 import OpenAISVG from "../public/images/landing_openai.svg";
 import FeatureCarousel from "../components/common/FeatureCarousel";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import WaitlistForm from "../components/common/WaitlistForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,6 +15,7 @@ import { isMobile } from "react-device-detect";
 
 //landing page
 export default function Welcome(props) {
+  const slideShowRef = useRef(null);
   return (
     <div
       className="container-fluid ps-0 p-0 pe-0" //After removing ps-0 p-0 pe-0, why does it have padding?
@@ -87,7 +88,7 @@ export default function Welcome(props) {
         </div>
         <div className="col-lg-1"></div>
       </div>
-      <FeatureCarousel />
+      <FeatureCarousel ref={slideShowRef} />
       <div className="row d-flex align-items-center justify-content-center bg-dark-blue m-0 py-5">
         <div className="w-100 pb-3 pt-3 px-3 landing-page-white-text d-flex flex-wrap pe-0 me-0">
           <div className="d-flex flex-row w-100 mx-auto col-md-6 col-xs-12">
@@ -169,8 +170,16 @@ export default function Welcome(props) {
       </div>
       <div id="waitlist-form"></div>
       <WaitlistForm />
-
-      <Footer />
+      <Footer
+        onFeatureClick={(featureName) => {
+          document.body.scrollTo({
+            top:
+              slideShowRef.current.getBoundingClientRect().y +
+              window.pageYOffset,
+            behavior: "smooth",
+          });
+        }}
+      />
     </div>
   );
 }

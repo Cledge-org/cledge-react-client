@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, Ref, ReactText } from "react";
 import Slider from "react-slick";
 import FeatureCard from "./FeatureCard";
 import QuestionsIMG from "../../public/images/landing_questions.png";
@@ -28,7 +28,7 @@ const settings = {
   },
 };
 
-export default () => {
+export default React.forwardRef((props, ref) => {
   const sliderRef = useRef<Slider>();
 
   const handleOnClick = (index) => {
@@ -44,7 +44,10 @@ export default () => {
       style={{ backgroundColor: "#f5f5f5", height: "90vh" }}
     >
       <div className="row">
-        <div className="shadow-sm text-center col-12 col-md-11 col-lg-9 bg-white rounded-lg feature-tabbar mx-auto">
+        <div
+          ref={ref}
+          className="shadow-sm text-center col-12 col-md-11 col-lg-9 bg-white rounded-lg feature-tabbar mx-auto"
+        >
           <h2 className="pt-3 fs-4 fw-bold">Features</h2>
           <div className="row p-3 justify-content-evenly">
             <div className="col-6 col-lg-3">
@@ -118,7 +121,7 @@ export default () => {
       </Slider>
     </div>
   );
-};
+});
 
 interface FeatureTabProps {
   icon: any;
