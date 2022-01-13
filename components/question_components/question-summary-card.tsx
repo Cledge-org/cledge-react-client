@@ -37,6 +37,22 @@ export default function QuestionSummaryCard({
         })
       : { questionId: question._id, response: null }
   );
+  const [originalAnswer, setOriginalAnswer]: [
+    UserResponse,
+    Dispatch<SetStateAction<UserResponse>>
+  ] = useState(
+    JSON.parse(
+      JSON.stringify(
+        userAnswers.find((response) => {
+          return response.questionId === question._id;
+        })
+          ? userAnswers.find((response) => {
+              return response.questionId === question._id;
+            })
+          : { questionId: question._id, response: null }
+      )
+    )
+  );
   const filterDuplicates = (toFilter: any[]) => {
     return toFilter.filter((element, index, self) => {
       let indexOfDuplicate = self.findIndex((value) => value === element);
@@ -135,6 +151,10 @@ export default function QuestionSummaryCard({
           },
         }}
         onRequestClose={() => {
+          console.log(originalAnswer);
+          setUserAnswer(originalAnswer);
+          setNewTags([]);
+          setOldTags([]);
           setDisplayingQuestion(false);
         }}
         isOpen={displayingQuestion}
@@ -191,6 +211,7 @@ export default function QuestionSummaryCard({
                   console.log(res.status);
                 });
                 onUpdate(userTags);
+                setOriginalAnswer(userAnswer);
                 setDisplayingQuestion(false);
               });
             }}

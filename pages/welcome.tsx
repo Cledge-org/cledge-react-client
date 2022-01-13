@@ -16,6 +16,7 @@ import { isMobile } from "react-device-detect";
 //landing page
 export default function Welcome(props) {
   const slideShowRef = useRef(null);
+  const [currFeature, setCurrFeature] = useState(0);
   return (
     <div
       className="container-fluid ps-0 p-0 pe-0" //After removing ps-0 p-0 pe-0, why does it have padding?
@@ -88,7 +89,11 @@ export default function Welcome(props) {
         </div>
         <div className="col-lg-1"></div>
       </div>
-      <FeatureCarousel ref={slideShowRef} />
+      <FeatureCarousel
+        currPage={currFeature}
+        setCurrPage={setCurrFeature}
+        ref={slideShowRef}
+      />
       <div className="row d-flex align-items-center justify-content-center bg-dark-blue m-0 py-5">
         <div className="w-100 pb-3 pt-3 px-3 landing-page-white-text d-flex flex-wrap pe-0 me-0">
           <div className="d-flex flex-row w-100 mx-auto col-md-6 col-xs-12">
@@ -171,11 +176,11 @@ export default function Welcome(props) {
       <div id="waitlist-form"></div>
       <WaitlistForm />
       <Footer
-        onFeatureClick={(featureName) => {
+        onFeatureClick={(featureIndex) => {
+          setCurrFeature(featureIndex);
+          console.log(slideShowRef.current.offsetTop);
           document.body.scrollTo({
-            top:
-              slideShowRef.current.getBoundingClientRect().y +
-              window.pageYOffset,
+            top: slideShowRef.current.offsetTop,
             behavior: "smooth",
           });
         }}

@@ -164,6 +164,7 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
         </div>
       </div>
       <Modal
+        ariaHideApp={false}
         style={{
           content: {
             top: "30%",

@@ -131,10 +131,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
   };
   console.log(percentageData.lists);
   return (
-    <div
-      className="container-fluid d-flex flex-row px-0"
-      style={{ overflowY: "auto" }}
-    >
+    <div className="container-fluid d-flex flex-row px-0">
       <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
         <DropDownTab
           isAll
@@ -164,7 +161,10 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
         }}
       >
         {currPage.page === "all" ? (
-          <div className="container-fluid h-100">
+          <div
+            className="container-fluid d-flex flex-column"
+            style={{ flex: 1 }}
+          >
             <QuestionSubPageHeader
               title="Profile Completion"
               percentage={percentageData.allLists}
@@ -182,7 +182,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                 title={"Finished"}
               />
             </ul>
-            <div className="tab-content">
+            <div className="tab-content h-100">
               <div
                 className={`resources-tab-pane flex-row justify-content-start align-items-center
                   ${

@@ -1,4 +1,4 @@
-import React, { useState, useRef, Ref, ReactText } from "react";
+import React, { useState, useRef, Ref, ReactText, useEffect } from "react";
 import Slider from "react-slick";
 import FeatureCard from "./FeatureCard";
 import QuestionsIMG from "../../public/images/landing_questions.png";
@@ -28,100 +28,100 @@ const settings = {
   },
 };
 
-export default React.forwardRef((props, ref) => {
-  const sliderRef = useRef<Slider>();
-
-  const handleOnClick = (index) => {
-    sliderRef.current.slickGoTo(index);
-    setIndex(index);
-  };
-
-  const [index, setIndex] = useState(0);
-
-  return (
-    <div
-      className="pt-0 pt-md-4 pb-0"
-      style={{ backgroundColor: "#f5f5f5", height: "90vh" }}
-    >
-      <div className="row">
-        <div
-          ref={ref}
-          className="shadow-sm text-center col-12 col-md-11 col-lg-9 bg-white rounded-lg feature-tabbar mx-auto"
-        >
-          <h2 className="pt-3 fs-4 fw-bold">Features</h2>
-          <div className="row p-3 justify-content-evenly">
-            <div className="col-6 col-lg-3">
-              <FeatureTab
-                index={0}
-                curr={index}
-                title={"Personalization Quizes"}
-                icon={faEdit}
-                onClick={() => handleOnClick(0)}
-              />
-            </div>
-            <div className="col-6 col-lg-3">
-              <FeatureTab
-                index={1}
-                curr={index}
-                title={"Video Learning Pathway"}
-                icon={faChalkboardTeacher}
-                onClick={() => handleOnClick(1)}
-              />
-            </div>
-            <div className="col-6 col-lg-3">
-              <FeatureTab
-                index={2}
-                curr={index}
-                title={"AI Counselor"}
-                icon={faComments}
-                onClick={() => handleOnClick(2)}
-              />
-            </div>
-            <div className="col-6 col-lg-3">
-              <FeatureTab
-                index={3}
-                curr={index}
-                title={"College Search Tool"}
-                icon={faSearch}
-                onClick={() => handleOnClick(3)}
-              />
+export default React.forwardRef(
+  (props: { currPage: number; setCurrPage: Function }, ref) => {
+    const sliderRef = useRef<Slider>();
+    const handleOnClick = (index) => {
+      sliderRef.current.slickGoTo(index);
+      props.setCurrPage(index);
+    };
+    useEffect(() => {
+      sliderRef.current.slickGoTo(props.currPage);
+    }, [props.currPage]);
+    return (
+      <div
+        //WORKS!
+        ref={ref}
+        className="pt-0 pt-md-4 pb-0"
+        style={{ backgroundColor: "#f5f5f5", height: "90vh" }}
+      >
+        <div className="row">
+          <div className="shadow-sm text-center col-12 col-md-11 col-lg-9 bg-white rounded-lg feature-tabbar mx-auto">
+            <h2 className="pt-3 fs-4 fw-bold">Features</h2>
+            <div className="row p-3 justify-content-evenly">
+              <div className="col-6 col-lg-3">
+                <FeatureTab
+                  index={0}
+                  curr={props.currPage}
+                  title={"Personalization Quizes"}
+                  icon={faEdit}
+                  onClick={() => handleOnClick(0)}
+                />
+              </div>
+              <div className="col-6 col-lg-3">
+                <FeatureTab
+                  index={1}
+                  curr={props.currPage}
+                  title={"Video Learning Pathway"}
+                  icon={faChalkboardTeacher}
+                  onClick={() => handleOnClick(1)}
+                />
+              </div>
+              <div className="col-6 col-lg-3">
+                <FeatureTab
+                  index={2}
+                  curr={props.currPage}
+                  title={"AI Counselor"}
+                  icon={faComments}
+                  onClick={() => handleOnClick(2)}
+                />
+              </div>
+              <div className="col-6 col-lg-3">
+                <FeatureTab
+                  index={3}
+                  curr={props.currPage}
+                  title={"College Search Tool"}
+                  icon={faSearch}
+                  onClick={() => handleOnClick(3)}
+                />
+              </div>
             </div>
           </div>
         </div>
+        <Slider className="pb-0" {...settings} ref={sliderRef}>
+          <FeatureCard
+            title={"PERSONALIZATION QUIZZES"}
+            description={
+              "Discover schools that match what’s important to you – location, majors, campus life, cost."
+            }
+            image={QuestionsIMG}
+          />
+          <FeatureCard
+            title={"VIDEO LEARNING PATHWAYS"}
+            description={
+              "Every single student is unique in their interests and goals. Cledge looks to provide tailored learning experiences for every student that addresses these interests and goals."
+            }
+            image={VideoIMG}
+          />
+          <FeatureCard
+            title={"AI COUNSELOR"}
+            description={
+              "An AI assistant will answer questions and provide personalized guidance based on historical data."
+            }
+            image={ChatbotIMG}
+          />
+          <FeatureCard
+            title={"COLLEGE SEARCH TOOL"}
+            description={
+              "Discover schools that match what’s important to you – location, majors, campus life, cost."
+            }
+            image={SearchIMG}
+          />
+        </Slider>
       </div>
-      <Slider className="pb-0" {...settings} ref={sliderRef}>
-        <FeatureCard
-          title={"PERSONALIZATION QUIZZES"}
-          description={
-            "Discover schools that match what’s important to you – location, majors, campus life, cost."
-          }
-          image={QuestionsIMG}
-        />
-        <FeatureCard
-          title={"VIDEO LEARNING PATHWAYS"}
-          description={
-            "Every single student is unique in their interests and goals. Cledge looks to provide tailored learning experiences for every student that addresses these interests and goals."
-          }
-          image={VideoIMG}
-        />
-        <FeatureCard
-          title={"AI COUNSELOR"}
-          description={
-            "An AI assistant will answer questions and provide personalized guidance based on historical data."
-          }
-          image={ChatbotIMG}
-        />
-        <FeatureCard
-          title={"COLLEGE SEARCH TOOL"}
-          description={
-            "Discover schools that match what’s important to you – location, majors, campus life, cost."
-          }
-          image={SearchIMG}
-        />
-      </Slider>
-    </div>
-  );
-});
+    );
+  }
+);
 
 interface FeatureTabProps {
   icon: any;

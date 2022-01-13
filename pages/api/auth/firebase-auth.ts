@@ -9,6 +9,7 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 const firebaseCreds = {
@@ -70,6 +71,9 @@ class AuthFunctions {
   //       Alert(err);
   //     });
   // }
+  static async resetPassword(email: string) {
+    await sendPasswordResetEmail(firebaseAuth, email);
+  }
   static async signOut() {
     await firebaseAuth.signOut().catch((err) => {
       console.error(err);

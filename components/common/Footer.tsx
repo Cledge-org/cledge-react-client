@@ -55,7 +55,7 @@ export default function Footer({
             <li className="mt-2">
               <a
                 onClick={() => {
-                  onFeatureClick("Personalized Quizzes");
+                  onFeatureClick(0);
                 }}
                 className="cl-white"
               >
@@ -65,7 +65,7 @@ export default function Footer({
             <li className="mt-2">
               <a
                 onClick={() => {
-                  onFeatureClick("Video Learning Pathway");
+                  onFeatureClick(1);
                 }}
                 className="cl-white"
               >
@@ -75,7 +75,7 @@ export default function Footer({
             <li className="mt-2">
               <a
                 onClick={() => {
-                  onFeatureClick("College Search");
+                  onFeatureClick(3);
                 }}
                 className="cl-white"
               >
@@ -85,7 +85,7 @@ export default function Footer({
             <li className="mt-2">
               <a
                 onClick={() => {
-                  onFeatureClick("AI Counselor");
+                  onFeatureClick(2);
                 }}
                 className="cl-white"
               >

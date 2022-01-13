@@ -40,10 +40,7 @@ export default function QuestionSummarySubpage({
     return null;
   }
   return (
-    <div
-      className="container-fluid h-100 d-flex flex-column"
-      // style={{ overflowY: "auto" }}
-    >
+    <div className="container-fluid h-100 d-flex flex-column pb-4">
       <QuestionSubPageHeader
         subText={
           <ul className="p-0 ps-3">
