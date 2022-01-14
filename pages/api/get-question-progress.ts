@@ -4,7 +4,7 @@ import { getAccountInfo } from "./get-account";
 import { getQuestionResponses } from "./get-question-responses";
 import assert from "assert";
 import { getQuestionListWithDatabase } from "./get-question-list";
-import { MONGO_CONNECTION_STRING } from "../../secrets";
+import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -38,6 +38,7 @@ export async function getQuestionProgress(
             questionsDb
           );
         res({
+          userTags: userInfo.tags,
           userProgress: { responses: userResponses },
           questionData: [gradeQuestionList],
         });
