@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import QuestionSubPageHeader from "./question_subpage_header";
-import QuestionSummaryCard from "./question_summary_card";
+import QuestionSummaryCard from "./question-summary-card";
 interface TextInputQuestionProps {
   question: Question;
   userAnswer: string;

@@ -1,7 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
-import { MONGO_CONNECTION_STRING } from "../../secrets";
+import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -11,9 +11,16 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
-  const { userToken, articleId, article } = req.body;
+  const { userToken, articleId, article } = JSON.parse(req.body);
   return article
-    ? resolve.status(200).send(await putResourceArticle(articleId, article))
+    ? resolve
+        .status(200)
+        .send(
+          await putResourceArticle(
+            articleId ? new ObjectId(articleId) : undefined,
+            article
+          )
+        )
     : resolve.status(400).send("No article provided");
 };
 

@@ -1,7 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
-import { MONGO_CONNECTION_STRING } from "../../secrets";
+import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -11,11 +11,16 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
-  const { userToken, contentId, content } = req.body;
+  const { userToken, contentId, content } = JSON.parse(req.body);
   return content
     ? resolve
         .status(200)
-        .send(await putPathwayModulePersonalizedContent(contentId, content))
+        .send(
+          await putPathwayModulePersonalizedContent(
+            contentId ? new ObjectId(contentId) : undefined,
+            content
+          )
+        )
     : resolve.status(400).send("No pathway module data provided");
 };
 
@@ -25,7 +30,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putPathwayModulePersonalizedContent = async (
   contentId: ObjectId | undefined,
   content: PersonalizedContent
-): Promise<void> => {
+): Promise<string> => {
   if (content._id) {
     // Document should not have _id field when sent to database
     delete content._id;
@@ -37,17 +42,18 @@ export const putPathwayModulePersonalizedContent = async (
         assert.equal(connection_err, null);
         try {
           if (!contentId) {
-            await client
+            let insertedDoc = await client
               .db("pathways")
-              .collection("modules")
+              .collection("personalized-content")
               .insertOne(content);
+            res(insertedDoc.insertedId.toString());
           } else {
             await client
               .db("pathways")
-              .collection("modules")
+              .collection("personalized-content")
               .updateOne({ _id: contentId }, { $set: content });
+            res(contentId.toString());
           }
-          res();
         } catch (e) {
           err(e);
         }

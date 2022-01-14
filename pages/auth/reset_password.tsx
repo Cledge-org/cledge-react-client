@@ -1,6 +1,11 @@
 // my accounts page
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { ORIGIN_URL } from "../../config";
 export default function resetpassword() {
+  const [email, setEmail] = useState("");
+  const router = useRouter();
   return (
     <div className="container-fluid">
       <div className="col w-md-25 d-md-flex mx-auto mt-5 flex-column justify-content-center align-items-center w-25">
@@ -14,16 +19,27 @@ export default function resetpassword() {
             Email address
           </label>
           <input
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
             type="email"
             className="px-3 form-control"
             id="email"
             placeholder="Enter email"
           />
         </div>
-
         <div className="row d-flex flex-row mt-4 justify-content-center align-items-center">
           <div className="col px-0">
             <button
+              onClick={() => {
+                fetch(`${ORIGIN_URL}/api/reset-password`, {
+                  method: "POST",
+                  body: JSON.stringify({ email }),
+                }).then((res) => {
+                  console.log(res.status);
+                  router.back();
+                });
+              }}
               type="button"
               className="btn btn-primary rounded- cl-btn-blue"
             >

@@ -1,7 +1,7 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
-import { MONGO_CONNECTION_STRING } from "../../secrets";
+import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -10,11 +10,10 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  // TODO: authentication, grab user id from token validation (probably)
-  const { userToken, listName } = req.body;
-  return listName
-    ? resolve.status(200).send(await getQuestionList(listName))
-    : resolve.status(400).send("listName required");
+  const { listName } = JSON.parse(req.body);
+  return !listName
+    ? resolve.status(400).send("No list name provided")
+    : resolve.status(200).send(await getQuestionList(listName));
 };
 
 // Gets a question list with its chunks populated
@@ -89,6 +88,10 @@ const getQuestionChunk = (
       const chunk: QuestionChunk_Db = (await questionsDb
         .collection("question-chunks")
         .findOne({ name: chunkName })) as QuestionChunk_Db;
+      if (chunk === null) {
+        res({ _id: null, name: "NULL CHUNK", questions: [] });
+        return;
+      }
       // Chunk questions are currently just question ids, we need to fetch from database
       const chunkQuestions: Question[] = (await Promise.all(
         chunk.questions.map((questionId) =>

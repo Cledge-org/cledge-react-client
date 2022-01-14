@@ -1,18 +1,26 @@
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GetServerSidePropsContext, NextPage } from "next";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Modal from "react-modal";
 import TextInputQuestion from "../components/question_components/textinput_question";
 import { NextApplicationPage } from "./_app";
 import { getAccountInfo } from "./api/get-account";
+import { useSession } from "next-auth/react";
+import AuthFunctions from "./api/auth/firebase-auth";
+import { ORIGIN_URL } from "../config";
 
 // account page
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    let accountInfo: AccountInfo = await getAccountInfo("testUser");
-    accountInfo.birthday = accountInfo.birthday.toDateString(); //THIS WORKS -- IT'S A TEMPORARY SOLUTION
+    let accountInfo: AccountInfo = await (
+      await fetch(`${ORIGIN_URL}/api/get-account`, {
+        method: "POST",
+        body: JSON.stringify({ userId: AuthFunctions.userId }),
+      })
+    ).json();
+    // accountInfo.birthday = accountInfo.birthday.toDateString(); //THIS WORKS -- IT'S A TEMPORARY SOLUTION
     return { props: { accountInfo } };
   } catch (err) {
     console.log(err);
@@ -25,6 +33,42 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
   accountInfo,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [currUserData, setCurrUserData]: [
+    AccountInfo,
+    Dispatch<SetStateAction<AccountInfo>>
+  ] = useState(accountInfo);
+  const [currQuestion, setCurrQuestion] = useState({
+    userAnswer: "",
+    _id: null,
+    question: "",
+    type: "",
+    helpVid: "",
+    helpText: "",
+    data: [],
+    isConcatenable: false,
+  });
+  const [iteratedFirst, setIteratedFirst] = useState(false);
+  const updateUserData = async () => {
+    await fetch(`${ORIGIN_URL}/api/update-user`, {
+      method: "POST",
+      body: JSON.stringify({
+        userId: (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()).uid,
+        userInfo: { ...currUserData, _id: undefined },
+      }),
+    }).then(async (res) => {
+      console.log(res.status);
+    });
+  };
+  useEffect(() => {
+    if (!iteratedFirst) {
+      setIteratedFirst(true);
+    } else {
+      setModalOpen(true);
+    }
+  }, [currQuestion]);
+  useEffect(() => {
+    console.log(currUserData);
+  }, [currUserData]);
   return (
     <div className="container-fluid h-100 center-child">
       <div style={{ width: "40%" }}>
@@ -61,9 +105,13 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
           </div>
           <InfoSection
             name="NAME"
-            value={accountInfo.name}
+            value={currUserData.name}
             onEdit={() => {
-              setModalOpen(true);
+              setCurrQuestion({
+                ...currQuestion,
+                userAnswer: currUserData.name,
+                question: "NAME",
+              });
             }}
           />
           {/* <InfoSection
@@ -75,26 +123,28 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
           /> */}
           <InfoSection
             name="ADDRESS"
-            value={accountInfo.address}
+            value={currUserData.address}
             onEdit={() => {
-              setModalOpen(true);
+              setCurrQuestion({
+                ...currQuestion,
+                userAnswer: currUserData.address,
+                question: "ADDRESS",
+              });
             }}
           />
-          <InfoSection
-            name="PASSWORD"
-            value="******"
-            onEdit={() => {
-              setModalOpen(true);
-            }}
-          />
+          <InfoSection name="PASSWORD" value="******" onEdit={() => {}} />
         </div>
         <div className="myaccount-blob">
           <span className="title">Contact Info</span>
           <InfoSection
             name="Email"
-            value={accountInfo.email}
+            value={currUserData.email}
             onEdit={() => {
-              setModalOpen(true);
+              setCurrQuestion({
+                ...currQuestion,
+                userAnswer: currUserData.email,
+                question: "Email",
+              });
             }}
           />
         </div>
@@ -102,14 +152,19 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
           <span className="title">Academic Info</span>
           <InfoSection
             name="Grade"
-            value={accountInfo.grade}
+            value={currUserData.grade}
             onEdit={() => {
-              setModalOpen(true);
+              setCurrQuestion({
+                ...currQuestion,
+                userAnswer: currUserData.grade.toString(),
+                question: "Grade",
+              });
             }}
           />
         </div>
       </div>
       <Modal
+        ariaHideApp={false}
         style={{
           content: {
             top: "30%",
@@ -126,10 +181,29 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
         isOpen={modalOpen}
       >
         <TextInputQuestion
-          question={undefined}
-          userAnswer={""}
-          onChange={() => {}}
+          question={currQuestion}
+          userAnswer={currQuestion.userAnswer}
+          onChange={(value) => {
+            let newUserData = currUserData;
+            newUserData[currQuestion.question.toLowerCase()] =
+              currQuestion.question.toLowerCase() === "grade"
+                ? parseInt(value)
+                : value;
+            setCurrUserData({ ...newUserData });
+          }}
         />
+        <div className="w-100 center-child">
+          <button
+            className="general-submit-btn mt-2"
+            onClick={() => {
+              updateUserData().catch((err) => {
+                console.error(err);
+              });
+            }}
+          >
+            SUBMIT
+          </button>
+        </div>
       </Modal>
     </div>
   );

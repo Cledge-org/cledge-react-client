@@ -1,7 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
-import { MONGO_CONNECTION_STRING } from "../../secrets";
+import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -11,12 +11,14 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
-  const { userToken, userId, contentProgress } = req.body;
+  const { userToken, userId, contentProgress } = JSON.parse(req.body);
   return contentProgress
     ? resolve
         .status(200)
         .send(await putPathwayProgress(userId, contentProgress))
-    : resolve.status(400).send("No pathway content progress provided");
+    : resolve
+        .status(400)
+        .send("No pathway content progress or userId provided");
 };
 
 // Sets pathway content progress for a user by their firebase ID (string). Batch
@@ -27,7 +29,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putPathwayProgress = async (
   userId: string,
   contentProgress: Record<string, ContentProgress[]> // Map between module ID and a list of ContentProgress for that module
-): Promise<string> => {
+): Promise<boolean> => {
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
@@ -42,7 +44,7 @@ export const putPathwayProgress = async (
               { $set: contentProgress },
               { upsert: true }
             );
-          res(updateResult.upsertedId.toString());
+          res(updateResult.acknowledged);
         } catch (e) {
           err(e);
         }

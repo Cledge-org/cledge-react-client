@@ -1,7 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
-import { MONGO_CONNECTION_STRING } from "../../secrets";
+import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -11,11 +11,16 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
-  const { userToken, pathwayModuleId, pathwayModule } = req.body;
+  const { userToken, pathwayModuleId, pathwayModule } = JSON.parse(req.body);
   return pathwayModule
     ? resolve
         .status(200)
-        .send(await putPathwayModule(pathwayModuleId, pathwayModule))
+        .send(
+          await putPathwayModule(
+            pathwayModuleId ? new ObjectId(pathwayModuleId) : undefined,
+            pathwayModule
+          )
+        )
     : resolve.status(400).send("No pathway module data provided");
 };
 
@@ -24,7 +29,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putPathwayModule = async (
   pathwayModuleId: ObjectId | undefined,
   pathwayModule: PathwayModule_Db
-): Promise<void> => {
+): Promise<{ moduleId: string }> => {
   if (pathwayModule._id) {
     // Document should not have _id field when sent to database
     delete pathwayModule._id;
@@ -36,17 +41,22 @@ export const putPathwayModule = async (
         assert.equal(connection_err, null);
         try {
           if (!pathwayModuleId) {
-            await client
+            let insertedDoc = await client
               .db("pathways")
               .collection("modules")
               .insertOne(pathwayModule);
+            res({
+              moduleId: insertedDoc.insertedId.toString(),
+            });
           } else {
             await client
               .db("pathways")
               .collection("modules")
               .updateOne({ _id: pathwayModuleId }, { $set: pathwayModule });
+            res({
+              moduleId: pathwayModuleId.toString(),
+            });
           }
-          res();
         } catch (e) {
           err(e);
         }

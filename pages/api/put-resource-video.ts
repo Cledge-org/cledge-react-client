@@ -1,7 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
-import { MONGO_CONNECTION_STRING } from "../../secrets";
+import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -11,9 +11,17 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
-  const { userToken, videoId, video } = req.body;
+  const { userToken, videoId, video } = JSON.parse(req.body);
+  console.error(video);
   return video
-    ? resolve.status(200).send(await putResourceVideo(videoId, video))
+    ? resolve
+        .status(200)
+        .send(
+          await putResourceVideo(
+            videoId ? new ObjectId(videoId) : undefined,
+            video
+          )
+        )
     : resolve.status(400).send("No video provided");
 };
 

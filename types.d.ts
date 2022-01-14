@@ -43,6 +43,7 @@ interface UserResponse {
   response: any;
 }
 interface ProgressInfo {
+  userTags: string[];
   userProgress: UserProgress;
   questionData: QuestionList[];
 }
@@ -96,6 +97,7 @@ interface PathwayProgress {
   moduleProgress: ModuleProgress[];
 }
 interface ModuleProgress {
+  moduleId: string;
   finished: boolean;
   title: string;
   contentProgress: ContentProgress[]; // Map between content ID and whether that content is finished
@@ -103,7 +105,7 @@ interface ModuleProgress {
 interface ContentProgress {
   finished: boolean;
   title: string;
-  videoTime?: string;
+  videoTime: number;
 }
 interface Pathway {
   _id: ObjectId;

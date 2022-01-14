@@ -5,14 +5,16 @@ interface MCQQuestionProps {
   question: Question;
   userAnswer: string;
   onChange: Function;
+  tags: string[];
 }
 
 export default function MCQQuestion({
   question,
   userAnswer,
   onChange,
+  tags,
 }: MCQQuestionProps) {
-  const [selected, setSelected] = useState(userAnswer);
+  const [selected, setSelected] = useState(userAnswer?.slice());
   return (
     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
       <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
@@ -23,11 +25,14 @@ export default function MCQQuestion({
           return (
             <button
               onClick={() => {
-                setSelected(tag);
-                onChange(tag);
+                let oldTag = question.data.find(
+                  ({ op }) => userAnswer === op
+                )?.tag;
+                setSelected(op);
+                onChange(op, [tag], oldTag ? [oldTag] : []);
               }}
               className={
-                selected === tag ? "mcq-answer-btn-selected" : "mcq-answer-btn"
+                selected === op ? "mcq-answer-btn-selected" : "mcq-answer-btn"
               }
             >
               {op}
@@ -35,7 +40,6 @@ export default function MCQQuestion({
           );
         })}
       </div>
-      {/* <button className="general-submit-btn">SUBMIT</button> */}
     </div>
   );
 }

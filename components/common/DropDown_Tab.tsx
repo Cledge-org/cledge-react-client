@@ -1,3 +1,4 @@
+import { faCheckCircle } from "@fortawesome/free-regular-svg-icons";
 import {
   faChevronDown,
   faFileAlt,
@@ -15,6 +16,8 @@ export default function DropDownTab({
   isExtracurricular,
   isPathway,
   currSelectedPath,
+  isFinishedModule,
+  isFinishedContent,
 }: {
   chunkList: Array<any>;
   title: string;
@@ -23,9 +26,12 @@ export default function DropDownTab({
   onClick: Function;
   isExtracurricular?: boolean;
   isPathway?: boolean;
+  isFinishedContent?: boolean[];
+  isFinishedModule?: boolean;
   currSelectedPath?: string;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  console.log(percentComplete);
   return (
     <div className="progress-dropdown-container">
       <button
@@ -36,6 +42,7 @@ export default function DropDownTab({
           }
           setIsExpanded(!isExpanded);
         }}
+        style={isFinishedModule ? { borderBottomColor: "#2651ed" } : {}}
       >
         <div className="text">
           {title}
@@ -61,28 +68,55 @@ export default function DropDownTab({
             : "progress-dropdown-menu-closed"
         }
       >
-        {chunkList.map((chunkTitle: string) => (
+        {chunkList.map((chunkTitle, index) => (
           <button
             onClick={() => {
-              if (isExtracurricular || isPathway) {
-                onClick(chunkTitle);
-                return;
-              }
-              onClick();
+              // if (isExtracurricular || isPathway) {
+              //   onClick(chunkTitle);
+              //   return;
+              // }
+              onClick(isPathway ? chunkTitle.title : chunkTitle);
             }}
             className={
-              currSelectedPath === title + chunkTitle
+              currSelectedPath ===
+              title + (isPathway ? chunkTitle.title : chunkTitle)
                 ? "progress-dropdown-menu-btn-selected"
                 : "progress-dropdown-menu-btn"
             }
           >
             <div
               className="center-child icon"
-              style={{ width: "36px", height: "36px" }}
+              style={{ width: `36px`, height: `36px` }}
             >
-              <FontAwesomeIcon icon={isPathway ? faVideo : faFileAlt} />
+              <FontAwesomeIcon
+                className={`${
+                  isPathway
+                    ? isFinishedModule || isFinishedContent[index]
+                      ? "cl-blue"
+                      : ""
+                    : ""
+                }`}
+                style={
+                  isPathway
+                    ? isFinishedModule || isFinishedContent[index]
+                      ? { fontSize: "1.3em" }
+                      : {}
+                    : {}
+                }
+                icon={
+                  isPathway
+                    ? isFinishedModule || isFinishedContent[index]
+                      ? faCheckCircle
+                      : chunkTitle.type.toLowerCase() === "article"
+                      ? faFileAlt
+                      : faVideo
+                    : faFileAlt
+                }
+              />
             </div>
-            <div className="text">{chunkTitle}</div>
+            <div className="text">
+              {isPathway ? chunkTitle.title : chunkTitle}
+            </div>
           </button>
         ))}
       </div>

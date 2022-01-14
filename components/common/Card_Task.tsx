@@ -37,20 +37,17 @@ export default function CardTask({
 
     return (
       <div className="d-flex flex-row align-items-center">
-        <div className="col-1">
-          <FontAwesomeIcon
-            icon={checkIcon}
-            style={{ height: "2.5em", margin: "5%" }}
-            className={boxColor}
-          />
-        </div>
+        <FontAwesomeIcon
+          style={{ fontSize: "1.75em" }}
+          icon={checkIcon}
+          className={boxColor}
+        />
         <div className="col-11 ps-3 cl-mid-gray" style={{ fontSize: "1.4em" }}>
           {subtask}
         </div>
       </div>
     );
   });
-  console.log(correctUrl);
   return (
     <Link href={url} as={correctUrl}>
       <span className="col-lg-4 col-md-6 col-xs-12">
@@ -59,7 +56,11 @@ export default function CardTask({
           textGradient={textGradient}
           classNames="col-12 p-3 px-4"
           title={title}
-          child={<div className="d-flex flex-column h-100">{subtasksList}</div>}
+          child={
+            <div className="d-flex flex-column h-100 justify-content-start">
+              {subtasksList}
+            </div>
+          }
         />
       </span>
     </Link>

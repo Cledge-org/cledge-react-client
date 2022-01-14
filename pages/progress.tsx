@@ -19,10 +19,37 @@ import { getQuestionProgress } from "./api/get-question-progress";
 import { NextApplicationPage } from "./_app";
 import DropDownTab from "../components/common/DropDown_Tab";
 import CardTask from "../components/common/Card_Task";
+import AuthFunctions from "./api/auth/firebase-auth";
+import { ORIGIN_URL } from "../config";
+import { useSession } from "next-auth/react";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    return { props: { progressInfo: await getQuestionProgress("testUser") } };
+    const user = await (
+      await fetch(`${ORIGIN_URL}/api/get-account`, {
+        method: "POST",
+        body: JSON.stringify({ userId: AuthFunctions.userId }),
+      })
+    ).json();
+    const userProgress = await fetch(
+      `${ORIGIN_URL}/api/get-question-progress`,
+      {
+        method: "POST",
+        body: JSON.stringify({ userId: AuthFunctions.userId }),
+      }
+    );
+    let userProgressJSON = await userProgress.json();
+    console.error(userProgressJSON);
+    console.error(userProgress.status);
+    return {
+      props: {
+        progressInfo: {
+          userTags: user.tags,
+          userProgress: userProgressJSON.userProgress,
+          questionData: userProgressJSON.questionData,
+        },
+      },
+    };
   } catch (err) {
     console.log(err);
     ctx.res.end();
@@ -32,24 +59,44 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
   progressInfo,
 }) => {
-  const [currPage, setCurrPage] = useState("all");
+  const session = useSession();
+  const [currPage, setCurrPage] = useState({ page: "all", chunk: "" });
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
   const [percentageData, setPercentageData] = useState({
     allLists: 0,
     lists: [],
   });
-
-  useEffect(() => {
+  const [currUserTags, setCurrUserTags] = useState(progressInfo.userTags);
+  const onPercentageUpdate = () => {
     setPercentageData({
       allLists: calculateTotalPercent(progressInfo.questionData),
       lists: progressInfo.questionData.map(({ chunks }) => {
         return calculatePercentComplete(chunks);
       }),
     });
+  };
+  const resetResponses = async () => {
+    fetch(`${ORIGIN_URL}/api/put-question-responses`, {
+      method: "POST",
+      body: JSON.stringify({
+        responses: [],
+        userId: (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()).uid,
+      }),
+    });
+  };
+  useEffect(() => {
+    console.log(session.data.user);
+    //resetResponses();
+    onPercentageUpdate();
+    console.log(percentageData.lists);
   }, []);
-
   const isNotEmpty = (element: any) => {
-    return element !== null && element !== "" && element !== [];
+    return (
+      element !== undefined &&
+      element !== null &&
+      element !== "" &&
+      element !== []
+    );
   };
   const calculatePercentComplete = (chunks: QuestionChunk[]): number => {
     let total: number = 0;
@@ -72,7 +119,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
         }
       });
     });
-    return Math.round((finished / total) * 100);
+    return Math.round(total === 0 ? 0 : (finished / total) * 100);
   };
   const calculateTotalPercent = (lists: QuestionList[]) => {
     let finished = 0;
@@ -82,16 +129,14 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
     });
     return Math.round((finished / total) * 100);
   };
+  console.log(percentageData.lists);
   return (
-    <div
-      className="container-fluid d-flex flex-row px-0"
-      style={{ height: "94vh" }}
-    >
+    <div className="container-fluid d-flex flex-row px-0">
       <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
         <DropDownTab
           isAll
           chunkList={[]}
-          onClick={() => setCurrPage("all")}
+          onClick={() => setCurrPage({ page: "all", chunk: "" })}
           title="All Sections"
           percentComplete={undefined}
         />
@@ -100,16 +145,26 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
             <DropDownTab
               isExtracurricular={list.name === "Extracurriculars"}
               chunkList={list.chunks.map((chunk) => chunk.name)}
-              onClick={(chunk) => setCurrPage(chunk ?? list.name)}
+              onClick={(chunk) =>
+                setCurrPage({ page: list.name, chunk: chunk })
+              }
               title={list.name}
-              percentComplete={percentageData[index]}
+              percentComplete={percentageData.lists[index]}
             />
           );
         })}
       </div>
-      <div className="d-flex" style={{ flex: 3 }}>
-        {currPage === "all" ? (
-          <div className="container-fluid h-100">
+      <div
+        className="d-flex"
+        style={{
+          flex: 3,
+        }}
+      >
+        {currPage.page === "all" ? (
+          <div
+            className="container-fluid d-flex flex-column"
+            style={{ flex: 1 }}
+          >
             <QuestionSubPageHeader
               title="Profile Completion"
               percentage={percentageData.allLists}
@@ -127,7 +182,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                 title={"Finished"}
               />
             </ul>
-            <div className="tab-content">
+            <div className="tab-content h-100">
               <div
                 className={`resources-tab-pane flex-row justify-content-start align-items-center
                   ${
@@ -140,14 +195,27 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
               >
                 {progressInfo.questionData
                   .filter(({ chunks }, index) => {
-                    return percentageData[index] < 100;
+                    return percentageData.lists[index] < 100;
                   })
-                  .map(({ name }) => (
+                  .map(({ name, chunks }, index) => (
                     <CardCheckIn
-                      snippet={"OH CRAP"}
+                      snippet={
+                        <ul className="p-0 ps-3">
+                          {chunks.map(({ name }) => (
+                            <li>{name}</li>
+                          ))}
+                        </ul>
+                      }
                       title={name}
+                      onCardClick={() => {
+                        setCurrPage({ page: name, chunk: chunks[0].name });
+                      }}
                       textGradient={"light"}
-                      percentComplete={0}
+                      percentComplete={
+                        percentageData.lists.filter((value) => value < 100)[
+                          index
+                        ]
+                      }
                       isFinished={false}
                     />
                   ))}
@@ -164,15 +232,24 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
               >
                 {progressInfo.questionData
                   .filter(({ chunks }, index) => {
-                    return percentageData[index] < 100;
+                    return percentageData.lists[index] === 100;
                   })
-                  .map(({ name }) => (
+                  .map(({ name, chunks }) => (
                     <CardCheckIn
-                      snippet={"OH CRAP"}
+                      snippet={
+                        <ul className="p-0 ps-3">
+                          {chunks.map(({ name }) => (
+                            <li>{name}</li>
+                          ))}
+                        </ul>
+                      }
                       title={name}
+                      onCardClick={() => {
+                        setCurrPage({ page: name, chunk: chunks[0].name });
+                      }}
                       textGradient={"light"}
-                      percentComplete={0}
-                      isFinished={false}
+                      percentComplete={100}
+                      isFinished={true}
                     />
                   ))}
               </div>
@@ -181,11 +258,17 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
         ) : (
           progressInfo.questionData
             .map((list) => {
-              if (list.name !== "Extracurriculars") {
+              if (list.name !== "Extracurricular") {
                 return (
                   <QuestionSummaryPage
-                    isShowing={currPage === list.name}
+                    userTags={currUserTags}
+                    viaChunk={currPage.chunk}
+                    isShowing={currPage.page === list.name}
                     listTitle={list.name}
+                    onPercentageUpdate={(newTags) => {
+                      onPercentageUpdate();
+                      setCurrUserTags(newTags);
+                    }}
                     chunks={list.chunks}
                     userAnswers={progressInfo.userProgress}
                     percentComplete={calculatePercentComplete(list.chunks)}
@@ -194,25 +277,22 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
               }
             })
             .concat(
-              progressInfo.questionData
-                .find(({ name }) => name === "Extracurriculars")
-                .chunks.map((chunk) => {
-                  return (
-                    <QuestionECSubpage
-                      userECResponses={
-                        progressInfo.userProgress.responses.find(
-                          ({ questionId }) => questionId === chunk.name
-                        ) !== undefined
-                          ? progressInfo.userProgress.responses.find(
-                              ({ questionId }) => questionId === chunk.name
-                            ).response
-                          : []
-                      }
-                      chunk={chunk}
-                      isShowing={currPage === chunk.name}
-                    />
-                  );
-                })
+              progressInfo.questionData.find(
+                ({ name }) => name === "Extracurricular"
+              )
+                ? progressInfo.questionData
+                    .find(({ name }) => name === "Extracurricular")
+                    .chunks.map((chunk) => {
+                      return (
+                        <QuestionECSubpage
+                          key={chunk.name}
+                          userResponses={progressInfo.userProgress.responses}
+                          chunk={chunk}
+                          isShowing={currPage.chunk === chunk.name}
+                        />
+                      );
+                    })
+                : []
             )
         )}
       </div>

@@ -1,7 +1,7 @@
 import { InsertOneResult, MongoClient, ObjectId, UpdateResult } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
-import { MONGO_CONNECTION_STRING } from "../../secrets";
+import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -11,9 +11,16 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
-  const { userToken, pathwayId, pathway } = req.body;
+  const { userToken, pathwayId, pathway } = JSON.parse(req.body);
   return pathway
-    ? resolve.status(200).send(await putCourse(pathwayId, pathway))
+    ? resolve
+        .status(200)
+        .send(
+          await putCourse(
+            pathwayId ? new ObjectId(pathwayId) : undefined,
+            pathway
+          )
+        )
     : resolve.status(400).send("No pathway data provided");
 };
 

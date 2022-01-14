@@ -14,22 +14,31 @@ import ECCalendarDropDown from "./ec_calendar_dropdown";
 import ECDropDown from "./ec_dropdown_question";
 
 interface ECCalendarDropDownProps {
-  defaultStart?: Date;
-  defaultEnd?: Date;
+  defaultStart: Date;
+  defaultEnd: Date;
+  defaultProgress: string;
+  onChange?: Function;
 }
-const defaultProps: ECCalendarDropDownProps = {};
 
 export default function ECTimeFrame({
   defaultEnd,
   defaultStart,
+  defaultProgress,
+  onChange,
 }: ECCalendarDropDownProps) {
-  const [progress, setProgress] = useState("none");
+  const [interval, setInterval] = useState({
+    progress: defaultProgress ? defaultProgress : "none",
+    start: defaultStart,
+    finished: defaultEnd,
+  });
   useEffect(() => {
     typeof document !== undefined
       ? require("bootstrap/dist/js/bootstrap")
       : null;
   }, []);
-
+  useEffect(() => {
+    onChange(interval);
+  }, [interval]);
   return (
     <div className="w-100 d-flex flex-column justify-content-evenly pt-5">
       <div className="fw-bold cl-dark-text pb-3" style={{ fontSize: "1.4em" }}>
@@ -38,10 +47,12 @@ export default function ECTimeFrame({
       <div className="d-flex w-100 flex-row justify-content-between align-items-center pb-3">
         <button
           onClick={() => {
-            setProgress("finished");
+            setInterval({ ...interval, progress: "finished" });
           }}
           className={
-            progress === "finished" ? "cl-btn-gray-selected" : "cl-btn-gray"
+            interval.progress === "finished"
+              ? "cl-btn-gray-selected"
+              : "cl-btn-gray"
           }
           style={{ width: "47%", fontSize: "1.1em" }}
         >
@@ -49,10 +60,12 @@ export default function ECTimeFrame({
         </button>
         <button
           onClick={() => {
-            setProgress("ongoing");
+            setInterval({ ...interval, progress: "ongoing" });
           }}
           className={
-            progress === "ongoing" ? "cl-btn-gray-selected" : "cl-btn-gray"
+            interval.progress === "ongoing"
+              ? "cl-btn-gray-selected"
+              : "cl-btn-gray"
           }
           style={{ width: "47%", fontSize: "1.1em" }}
         >
@@ -62,14 +75,26 @@ export default function ECTimeFrame({
       <div className="cl-mid-gray pb-2" style={{ fontSize: "0.9em" }}>
         Start:
       </div>
-      <ECCalendarDropDown />
-      {progress === "finished" ? <div className="py-3" /> : null}
-      {progress === "finished" ? (
+      <ECCalendarDropDown
+        initialDate={interval.start}
+        onChange={(newStartDate) => {
+          setInterval({ ...interval, start: newStartDate });
+        }}
+      />
+      {interval.progress === "finished" ? <div className="py-3" /> : null}
+      {interval.progress === "finished" ? (
         <div className="cl-mid-gray pb-2" style={{ fontSize: "0.9em" }}>
           Finish:
         </div>
       ) : null}
-      {progress === "finished" ? <ECCalendarDropDown /> : null}
+      {interval.progress === "finished" ? (
+        <ECCalendarDropDown
+          initialDate={interval.finished}
+          onChange={(newEndDate) => {
+            setInterval({ ...interval, finished: newEndDate });
+          }}
+        />
+      ) : null}
     </div>
   );
 }

@@ -10,28 +10,59 @@ import ECQuestionSummaryCard from "../components/question_components/ec_question
 import { Button, ProgressBar } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
-import ECEditor from "../components/question_components/EC_editor";
+import ECEditor from "../components/question_components/ec-editor";
 import { NextApplicationPage } from "./_app";
 import { GetServerSidePropsContext } from "next";
-import YesNoQuestion from "../components/question_components/yes-no-question";
 import TextInputQuestion from "../components/question_components/textinput_question";
 import { useRouter } from "next/router";
-import { getQuestionList } from "./api/get-question-list";
+import { ORIGIN_URL } from "../config";
+import AuthFunctions from "./api/auth/firebase-auth";
+import { useSession } from "next-auth/react";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    let questionnaireChunks = (
-      await getQuestionList(ctx.query.questionnaire as string)
-    ).chunks;
-    let questionnaireData = questionnaireChunks[0].questions;
-    for (let i = 1; i < questionnaireChunks.length; i++) {
+    let firstQuestionnaire = ctx.query.questionnaire.indexOf(",");
+    let userResponses = await (
+      await fetch(`${ORIGIN_URL}/api/get-question-responses`, {
+        method: "POST",
+        body: JSON.stringify({
+          //THIS WORKS
+          userId: AuthFunctions.userId,
+        }),
+      })
+    ).json();
+    let questionnaire = await (
+      await fetch(`${ORIGIN_URL}/api/get-question-list`, {
+        method: "POST",
+        body: JSON.stringify({
+          //THIS WORKS
+          listName: ctx.query.questionnaire.substring(
+            0,
+            firstQuestionnaire === -1
+              ? ctx.query.questionnaire.length
+              : firstQuestionnaire
+          ) as string,
+        }),
+      })
+    ).json();
+    const user = await (
+      await fetch(`${ORIGIN_URL}/api/get-account`, {
+        method: "POST",
+        body: JSON.stringify({ userId: AuthFunctions.userId }),
+      })
+    ).json();
+    //console.error(questionnaireChunks);
+    let questionnaireData = questionnaire.chunks[0].questions;
+    for (let i = 1; i < questionnaire.chunks.length; i++) {
       questionnaireData = questionnaireData.concat(
-        questionnaireChunks[i].questions
+        questionnaire.chunks[i].questions
       );
     }
     return {
       props: {
         questionnaireData,
+        userResponses,
+        userTags: user.tags,
       },
     };
   } catch (err) {
@@ -41,22 +72,25 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 };
 
-const Questionnaire: NextApplicationPage<{ questionnaireData: Question[] }> = ({
-  questionnaireData,
-}) => {
+const Questionnaire: NextApplicationPage<{
+  questionnaireData: Question[];
+  userResponses: UserResponse[];
+  userTags: string[];
+}> = ({ questionnaireData, userResponses, userTags }) => {
   const [isShowingContinue, setIsShowingContinue] = useState(true);
   const [isShowingStart, setIsShowingStart] = useState(false);
   const [progress, changeProgress] = useState(0);
   const [page, changePage] = useState(0);
+  const [newTags, setNewTags] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
+  const [newUserResponses, setNewUserResponses] = useState(userResponses);
   const hiddenFileInput = React.useRef(null);
 
   const transcriptUpload = () => {
     hiddenFileInput.current.click();
   };
-
+  const session = useSession();
   const router = useRouter();
 
   const goBack = (e) => {
@@ -71,41 +105,101 @@ const Questionnaire: NextApplicationPage<{ questionnaireData: Question[] }> = ({
     if (page < questionnaireData.length - 1) changePage(page + 1);
   };
 
-  const submitForm = (e: { preventDefault: () => void }) => {
+  const submitForm = async (e: { preventDefault: () => void }) => {
     //REMOVE CHECK IN FROM LIST AND UPLOAD DATA
+    let checkInList = [];
+    let queriedList = router.query.questionnaire.slice();
+    //THESE WORK
+    while (queriedList.indexOf(",") !== -1) {
+      checkInList.push(queriedList.substring(0, queriedList.indexOf(",")));
+      queriedList = queriedList.substring(queriedList.indexOf(",") + 1);
+    }
+    checkInList.push(queriedList);
+    checkInList.splice(0, 1);
+    let uid = (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()).uid;
+    userTags.length === 0
+      ? (userTags = newTags)
+      : (userTags = userTags.concat(newTags));
+    await Promise.all([
+      fetch(`${ORIGIN_URL}/api/update-user`, {
+        method: "POST",
+        body: JSON.stringify({
+          userId: uid,
+          userInfo: { checkIns: checkInList },
+        }),
+      }),
+      fetch(`${ORIGIN_URL}/api/put-question-responses`, {
+        method: "POST",
+        body: JSON.stringify({
+          responses: newUserResponses,
+          userId: uid,
+        }),
+      }),
+      fetch(`${ORIGIN_URL}/api/update-user`, {
+        method: "POST",
+        body: JSON.stringify({
+          userInfo: { tags: userTags },
+          userId: uid,
+        }),
+      }),
+    ]).then((values) => {
+      values.forEach((value) => {
+        console.log(value.status);
+      });
+    });
     router.push({ pathname: "/dashboard" });
   };
-
+  const filterDuplicates = (toFilter: any[]) => {
+    return toFilter.filter((element, index, self) => {
+      let indexOfDuplicate = self.findIndex((value) => value === element);
+      return indexOfDuplicate === -1 || index === indexOfDuplicate;
+    });
+  };
   const questionnairePages = questionnaireData.map((question) => {
+    const updateFunc = (value, newQTags, oldTags) => {
+      newUserResponses.find(
+        (questionResponse) => questionResponse.questionId === question._id
+      )
+        ? (newUserResponses[
+            newUserResponses.findIndex(
+              (questionResponse) => questionResponse.questionId === question._id
+            )
+          ]["response"] = value)
+        : newUserResponses.push({
+            questionId: question._id,
+            response: value,
+          });
+      setNewTags(filterDuplicates(newTags.concat(newQTags)));
+    };
     if (question.type === "TextInput") {
       return (
         <TextInputQuestion
+          key={question._id}
           question={question}
           userAnswer={""}
-          onChange={() => {}}
+          onChange={updateFunc}
         />
       );
     }
     if (question.type === "MCQ") {
       return (
-        <MCQQuestion question={question} userAnswer={""} onChange={() => {}} />
+        <MCQQuestion
+          question={question}
+          key={question._id}
+          userAnswer={""}
+          onChange={updateFunc}
+          tags={userTags}
+        />
       );
     }
     if (question.type === "CheckBox") {
       return (
         <CheckBoxQuestion
+          key={question._id}
           question={question}
           userAnswers={[]}
-          onChange={() => {}}
-        />
-      );
-    }
-    if (question.type === "YesNo") {
-      return (
-        <YesNoQuestion
-          question={question}
-          userAnswer={undefined}
-          onChange={() => {}}
+          onChange={updateFunc}
+          tags={userTags}
         />
       );
     }

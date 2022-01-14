@@ -2,7 +2,7 @@ import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 import { getQuestionListWithDocumentAndDatabase } from "./get-question-list";
-import { MONGO_CONNECTION_STRING } from "../../secrets";
+import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -26,6 +26,14 @@ export async function getAllQuestionLists(): Promise<QuestionList[]> {
           .collection("question-lists")
           .find()
           .toArray()) as QuestionList_Db[];
+        let indexOfUnclean = allQuestionLists.findIndex(
+          ({ chunks }) => !chunks
+        );
+        while (indexOfUnclean !== -1) {
+          allQuestionLists.splice(indexOfUnclean, 1);
+          indexOfUnclean = allQuestionLists.findIndex(({ chunks }) => !chunks);
+        }
+        console.error(allQuestionLists);
         res(
           (await Promise.all(
             allQuestionLists.map((list) =>

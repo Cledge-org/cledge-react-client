@@ -1,7 +1,7 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
-import { MONGO_CONNECTION_STRING } from "../../secrets";
+import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -10,11 +10,10 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  // TODO: authentication, grab user id from token validation (probably)
-  const { userToken, userId, pathwayId } = req.body;
-  return userId && pathwayId
-    ? resolve.status(200).send(await getPathwayProgress(userId, pathwayId))
-    : resolve.status(400).send("Both user and pathway IDs required");
+  const { userId, pathwayId } = JSON.parse(req.body);
+  return !userId || !pathwayId
+    ? resolve.status(400).send("No userId or courseId provided")
+    : resolve.status(200).send(await getPathwayProgress(pathwayId, userId));
 };
 
 // Gets gets progress info for a specific learning pathway given pathway
@@ -28,7 +27,7 @@ export async function getPathwayProgress(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const courseDb = client.db("pathways");
+        const pathwaysDb = client.db("pathways");
         const usersDb = client.db("users");
 
         const [pathway, userInfo, progressByModule]: [
@@ -36,13 +35,13 @@ export async function getPathwayProgress(
           AccountInfo,
           Record<string, ContentProgress[]>
         ] = await Promise.all([
-          courseDb
+          pathwaysDb
             .collection("pathways")
-            .findOne({ _id: pathwayId }) as Promise<Pathway_Db>,
+            .findOne({ _id: new ObjectId(pathwayId) }) as Promise<Pathway_Db>,
           usersDb
             .collection("users")
             .findOne({ firebaseId: userId }) as Promise<AccountInfo>,
-          courseDb
+          pathwaysDb
             .collection("progress-by-user")
             .findOne({ firebaseId: userId }) as Promise<
             Record<string, ContentProgress[]>
@@ -52,7 +51,7 @@ export async function getPathwayProgress(
           (await getSpecificPathwayProgress(
             userInfo.tags,
             pathway,
-            courseDb,
+            pathwaysDb,
             progressByModule
           )) as PathwayProgress
         );
@@ -66,20 +65,23 @@ export async function getPathwayProgress(
 export async function getSpecificPathwayProgress(
   userTags: string[],
   pathway: Pathway_Db,
-  courseDb: Db,
+  pathwaysDb: Db,
   progressByModule: Record<string, ContentProgress[]>
 ): Promise<PathwayProgress> {
   return new Promise(async (res, err) => {
-    const moduleProgress = await Promise.all(
+    let moduleProgress = await Promise.all(
       pathway.modules.map((moduleId) =>
         getSpecificModuleProgress(
           userTags,
           progressByModule,
           moduleId,
-          courseDb
+          pathwaysDb
         )
       )
     );
+    moduleProgress = moduleProgress.filter(({ title }) => {
+      return title !== "NULL MODULE";
+    });
     res({
       finished: moduleProgress.reduce(
         (prev: boolean, cur: ModuleProgress) => prev && cur.finished,
@@ -96,7 +98,7 @@ async function getSpecificModuleProgress(
   userTags: string[],
   progressByModule: Record<string, ContentProgress[]>,
   moduleId: ObjectId,
-  courseDb: Db
+  pathwaysDb: Db
 ): Promise<ModuleProgress> {
   return new Promise(async (res, err) => {
     try {
@@ -104,38 +106,66 @@ async function getSpecificModuleProgress(
         PathwayModule_Db,
         PersonalizedContent[]
       ] = await Promise.all([
-        courseDb.collection("modules").findOne({
-          _id: moduleId,
+        pathwaysDb.collection("modules").findOne({
+          _id: new ObjectId(moduleId),
         }) as Promise<PathwayModule_Db>,
-        courseDb
+        pathwaysDb
           .collection("personalized-content")
           .find({ tags: { $in: userTags }, moduleId })
           .toArray() as Promise<PersonalizedContent[]>,
       ]);
-      const moduleProgress: ContentProgress[] = progressByModule[module.title];
-      const titles: Set<string> = new Set();
-      moduleProgress.forEach((progress) => {
-        titles.add(progress.title);
-      });
-      // Iterate through preset and presonalized contents and find contents not in progress, add them as unfinished
-      module.presetContent.forEach((content) => {
-        if (!titles.has(content.title)) {
-          moduleProgress.push({ title: content.title, finished: false });
+      if (module) {
+        let moduleContentProgress: ContentProgress[] =
+          progressByModule[module._id];
+        if (!moduleContentProgress) {
+          moduleContentProgress = [];
         }
-      });
-      modulePersonalizedContent.forEach((content) => {
-        if (!titles.has(content.title)) {
-          moduleProgress.push({ title: content.title, finished: false });
+        const titles: Set<string> = new Set();
+        moduleContentProgress.forEach((progress) => {
+          titles.add(progress.title);
+        });
+        // Iterate through preset and presonalized contents and find contents not in progress, add them as unfinished
+        if (module.presetContent) {
+          module.presetContent.forEach((content, index) => {
+            if (!titles.has(content.title)) {
+              moduleContentProgress.push({
+                contentId: index,
+                title: content.title,
+                finished: false,
+                videoTime: 0,
+              });
+            }
+          });
         }
-      });
-      res({
-        finished: moduleProgress.reduce(
-          (prev, cur) => prev && cur.finished,
-          true
-        ),
-        contentProgress: moduleProgress,
-        title: module.title,
-      });
+        if (modulePersonalizedContent) {
+          modulePersonalizedContent.forEach((content) => {
+            if (!titles.has(content.title)) {
+              moduleContentProgress.push({
+                contentId: content._id,
+                title: content.title,
+                finished: false,
+                videoTime: 0,
+              });
+            }
+          });
+        }
+        res({
+          moduleId: moduleId.toString(),
+          finished: moduleContentProgress.reduce(
+            (prev, cur) => prev && cur.finished,
+            true
+          ),
+          contentProgress: moduleContentProgress,
+          title: module.title,
+        });
+      } else {
+        res({
+          moduleId: moduleId.toString(),
+          finished: false,
+          contentProgress: [],
+          title: "NULL MODULE",
+        });
+      }
     } catch (e) {
       err(e);
     }
