@@ -2,6 +2,7 @@ import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 import { MONGO_CONNECTION_STRING } from "../../config";
+import AuthFunctions from "./auth/firebase-auth";
 
 export const config = {
   api: {
@@ -13,7 +14,7 @@ export const config = {
 // object
 // TODO: validate AccountInfo object (userInfo) is valid
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId, userInfo } = JSON.parse(req.body);
+  const { userInfo, userId } = JSON.parse(req.body);
   console.error(userInfo);
   if (!userId || !userInfo) {
     resolve

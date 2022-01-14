@@ -2,6 +2,8 @@ import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 import { MONGO_CONNECTION_STRING } from "../../config";
+import AuthFunctions from "./auth/firebase-auth";
+import { getSession } from "next-auth/react";
 
 export const config = {
   api: {
@@ -11,8 +13,7 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
-  const { userToken, userId } = JSON.parse(req.body);
-  console.error(userId);
+  const { userId } = JSON.parse(req.body);
   return userId
     ? resolve.status(200).send(await getAccountInfo(userId))
     : resolve.status(400).send("No user id provided");

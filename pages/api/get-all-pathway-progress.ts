@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 import { getSpecificPathwayProgress } from "./get-pathway-progress";
 import { MONGO_CONNECTION_STRING } from "../../config";
+import AuthFunctions from "./auth/firebase-auth";
 
 export const config = {
   api: {

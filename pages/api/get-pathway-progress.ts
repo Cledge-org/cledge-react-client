@@ -2,6 +2,7 @@ import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 import { MONGO_CONNECTION_STRING } from "../../config";
+import AuthFunctions from "./auth/firebase-auth";
 
 export const config = {
   api: {
@@ -10,10 +11,10 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId, pathwayId } = JSON.parse(req.body);
+  const { pathwayId, userId } = JSON.parse(req.body);
   return !userId || !pathwayId
     ? resolve.status(400).send("No userId or courseId provided")
-    : resolve.status(200).send(await getPathwayProgress(pathwayId, userId));
+    : resolve.status(200).send(await getPathwayProgress(userId, pathwayId));
 };
 
 // Gets gets progress info for a specific learning pathway given pathway
@@ -129,7 +130,6 @@ async function getSpecificModuleProgress(
           module.presetContent.forEach((content, index) => {
             if (!titles.has(content.title)) {
               moduleContentProgress.push({
-                contentId: index,
                 title: content.title,
                 finished: false,
                 videoTime: 0,
@@ -141,7 +141,6 @@ async function getSpecificModuleProgress(
           modulePersonalizedContent.forEach((content) => {
             if (!titles.has(content.title)) {
               moduleContentProgress.push({
-                contentId: content._id,
                 title: content.title,
                 finished: false,
                 videoTime: 0,

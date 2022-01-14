@@ -7,6 +7,7 @@ import CheckBoxQuestion from "./checkbox_question";
 import TextInputQuestion from "./textinput_question";
 import { ORIGIN_URL } from "../../config";
 import AuthFunctions from "../../pages/api/auth/firebase-auth";
+import { useSession } from "next-auth/react";
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface QuestionSummaryCardProps {
@@ -53,6 +54,7 @@ export default function QuestionSummaryCard({
       )
     )
   );
+  const session = useSession();
   const filterDuplicates = (toFilter: any[]) => {
     return toFilter.filter((element, index, self) => {
       let indexOfDuplicate = self.findIndex((value) => value === element);
@@ -175,9 +177,6 @@ export default function QuestionSummaryCard({
               } else {
                 newUserResponses.push(userAnswer);
               }
-              let uid = (
-                await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()
-              ).uid;
               userTags.filter((value) => !oldTags.includes(value));
               userTags.length === 0
                 ? (userTags = newTags)
@@ -190,7 +189,7 @@ export default function QuestionSummaryCard({
                     method: "POST",
                     body: JSON.stringify({
                       responses: newUserResponses,
-                      userId: uid,
+                      userId: session.data.user.uid,
                     }),
                   }),
                 ].concat(
@@ -200,7 +199,7 @@ export default function QuestionSummaryCard({
                           method: "POST",
                           body: JSON.stringify({
                             userInfo: { tags: userTags },
-                            userId: uid,
+                            userId: session.data.user.uid,
                           }),
                         }),
                       ]

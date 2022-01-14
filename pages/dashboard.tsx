@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import Card from "../components/common/Card";
 import CardVideo from "../components/common/Card_Video";
 import CardText from "../components/common/Card_Text";
@@ -24,33 +24,16 @@ import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  console.error(AuthFunctions.userId);
-  const user = await (
-    await fetch(`${ORIGIN_URL}/api/get-account`, {
-      method: "POST",
-      body: JSON.stringify({ userId: AuthFunctions.userId }),
-    })
-  ).json();
-  const userProgress = await (
-    await fetch(`${ORIGIN_URL}/api/get-all-pathway-progress`, {
-      method: "POST",
-      body: JSON.stringify({ userId: AuthFunctions.userId }),
-    })
-  ).json();
-  const allPathways = await (
-    await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
-  ).json();
-  console.error(userProgress);
   try {
+    const session = await getSession(ctx);
     return {
       props: {
-        allPathways,
-        dashboardInfo: {
-          userTags: user.tags,
-          userProgress,
-          userName: user.name,
-          checkIns: user.checkIns,
-        },
+        ...(await (
+          await fetch(`${ORIGIN_URL}/api/get-dashboard`, {
+            method: "POST",
+            body: JSON.stringify({ userId: session.user.uid }),
+          })
+        ).json()),
       },
     };
   } catch (err) {
@@ -71,7 +54,7 @@ const Dashboard: NextApplicationPage<{
   const [isInUserView, setIsInUserView] = useState(false);
   const getCurrentTasks = () => {
     let noProgress = [];
-    allPathways.forEach((pathway) => {
+    allPathways?.forEach((pathway) => {
       if (
         !dashboardInfo.userProgress.find(({ pathwayId }) => {
           return pathwayId === pathway._id;
@@ -138,15 +121,6 @@ const Dashboard: NextApplicationPage<{
         );
       });
   };
-  const resetProgress = async () => {
-    fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
-      method: "POST",
-      body: JSON.stringify({
-        userId: (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()).uid,
-        contentProgress: {},
-      }),
-    });
-  };
   useEffect(() => {
     //resetProgress();
   }, []);
@@ -157,7 +131,7 @@ const Dashboard: NextApplicationPage<{
       query: { questionnaire: dashboardInfo.checkIns },
     });
   }
-  if (session.data.user.email === "test31@gmail.com" && !isInUserView) {
+  if (session.data?.user?.email === "test31@gmail.com" && !isInUserView) {
     return (
       <div className="container-fluid p-5 align-items-center d-flex flex-column">
         <button
@@ -205,7 +179,7 @@ const Dashboard: NextApplicationPage<{
   console.log(finishedTasks);
   return (
     <div className="container-fluid p-5">
-      {session.data.user.email === "test31@gmail.com" ? (
+      {session.data?.user?.email === "test31@gmail.com" ? (
         <button
           onClick={() => {
             setIsInUserView(false);

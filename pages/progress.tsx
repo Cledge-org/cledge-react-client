@@ -21,22 +21,20 @@ import DropDownTab from "../components/common/DropDown_Tab";
 import CardTask from "../components/common/Card_Task";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { ORIGIN_URL } from "../config";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
+    const session = await getSession(ctx);
     const user = await (
       await fetch(`${ORIGIN_URL}/api/get-account`, {
         method: "POST",
-        body: JSON.stringify({ userId: AuthFunctions.userId }),
+        body: JSON.stringify({ userId: session.user.uid }),
       })
     ).json();
     const userProgress = await fetch(
       `${ORIGIN_URL}/api/get-question-progress`,
-      {
-        method: "POST",
-        body: JSON.stringify({ userId: AuthFunctions.userId }),
-      }
+      { method: "POST", body: JSON.stringify({ userId: session.user.uid }) }
     );
     let userProgressJSON = await userProgress.json();
     console.error(userProgressJSON);
@@ -75,17 +73,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
       }),
     });
   };
-  const resetResponses = async () => {
-    fetch(`${ORIGIN_URL}/api/put-question-responses`, {
-      method: "POST",
-      body: JSON.stringify({
-        responses: [],
-        userId: (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()).uid,
-      }),
-    });
-  };
   useEffect(() => {
-    console.log(session.data.user);
     //resetResponses();
     onPercentageUpdate();
     console.log(percentageData.lists);
@@ -131,7 +119,10 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
   };
   console.log(percentageData.lists);
   return (
-    <div className="container-fluid d-flex flex-row px-0">
+    <div
+      className="container-fluid d-flex flex-row px-0"
+      style={{ minHeight: "100vh" }}
+    >
       <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
         <DropDownTab
           isAll

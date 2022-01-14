@@ -3,14 +3,22 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AuthFunctions from "./firebase-auth";
 import { FirebaseAdapter } from "@next-auth/firebase-adapter";
+import { ORIGIN_URL } from "../../../config";
 
 export default NextAuth({
-  debug: true,
   pages: {
     signIn: "/auth/login",
     signUp: "/auth/signup",
     signOut: "/auth/signout",
   },
+  session: {
+    strategy: "jwt",
+  },
+  jwt: {
+    secret: "3tPVVnhAzQIyBnrgzL/+fRMmJLz8WzzbbLK8QljweTA",
+    maxAge: 60 * 60 * 24 * 30,
+  },
+  secret: process.env.NEXT_AUTH_SECRET,
   providers: [
     CredentialsProvider({
       async authorize(credentials, req) {
@@ -59,17 +67,22 @@ export default NextAuth({
   ],
   callbacks: {
     redirect({ url, baseUrl }) {
-      return baseUrl;
+      return ORIGIN_URL + "/dashboard";
+    },
+    jwt: async ({ token, user }) => {
+      if (user) {
+        console.error(user.uid);
+        token.uid = user.uid;
+      }
+      return Promise.resolve(token);
     },
     session: async ({ session, token, user }) => {
       // Send properties to the client, like an access_token from a provider.
       // console.debug(user);
-      // session.user = user;
-      if (AuthFunctions.userId) {
-        session.accessToken = token.accessToken;
-        return Promise.resolve(session);
-      }
-      return null;
+      // session.user = user
+      session.user.uid = token.uid;
+      session.accessToken = token.accessToken;
+      return Promise.resolve(session);
     },
   },
 });

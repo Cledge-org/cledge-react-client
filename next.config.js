@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
-require('dotenv').config()
+require("dotenv").config();
 
 module.exports = {
   reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   env: {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     AZURE_CLIENT_ID: process.env.AZURE_CLIENT_ID,
@@ -11,6 +14,6 @@ module.exports = {
     AZURE_TENANT_GUID: process.env.AZURE_TENANT_GUID,
     USER_FLOW_AUTH: process.env.USER_FLOW_AUTH,
     GOOGLE_ID: process.env.GOOGLE_ID,
-    GOOGLE_SECRET: process.env.GOOGLE_SECRET
-  }
-}
+    GOOGLE_SECRET: process.env.GOOGLE_SECRET,
+  },
+};

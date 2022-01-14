@@ -12,6 +12,7 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
+
 const firebaseCreds = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -20,12 +21,7 @@ const firebaseCreds = {
 const firebaseApp = initializeApp(firebaseCreds);
 const firebaseAuth = getAuth(firebaseApp);
 const provider = new GoogleAuthProvider();
-onAuthStateChanged(firebaseAuth, (user) => {
-  console.log(user?.uid);
-  AuthFunctions.userId = user?.uid;
-});
 class AuthFunctions {
-  static userId = firebaseAuth.currentUser?.uid;
   static async signInEmail(email: string, password: string) {
     try {
       let user = await setPersistence(
@@ -34,21 +30,16 @@ class AuthFunctions {
       ).then(() => {
         return signInWithEmailAndPassword(firebaseAuth, email, password);
       });
-      this.userId = user.user.uid;
+      console.error(user.user.uid);
       return user.user;
     } catch (err) {
       console.error(err);
     }
   }
-  static async createUser(
-    email: string,
-    password: string,
-    initUserObj: AccountInfo
-  ) {
+  static async createUser(email: string, password: string, initUserObj) {
     await createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((res) => {
         const user = res.user;
-        this.userId = user.uid;
         fetch("/api/create-user", {
           method: "POST",
           body: JSON.stringify({

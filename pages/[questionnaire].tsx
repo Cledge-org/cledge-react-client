@@ -17,18 +17,16 @@ import TextInputQuestion from "../components/question_components/textinput_quest
 import { useRouter } from "next/router";
 import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     let firstQuestionnaire = ctx.query.questionnaire.indexOf(",");
+    const session = await getSession(ctx);
     let userResponses = await (
       await fetch(`${ORIGIN_URL}/api/get-question-responses`, {
         method: "POST",
-        body: JSON.stringify({
-          //THIS WORKS
-          userId: AuthFunctions.userId,
-        }),
+        body: JSON.stringify({ userId: session.user.uid }),
       })
     ).json();
     let questionnaire = await (
@@ -36,7 +34,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         method: "POST",
         body: JSON.stringify({
           //THIS WORKS
-          listName: ctx.query.questionnaire.substring(
+          listName: new String(ctx.query.questionnaire).substring(
             0,
             firstQuestionnaire === -1
               ? ctx.query.questionnaire.length
@@ -48,7 +46,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const user = await (
       await fetch(`${ORIGIN_URL}/api/get-account`, {
         method: "POST",
-        body: JSON.stringify({ userId: AuthFunctions.userId }),
+        body: JSON.stringify({ userId: session.user.uid }),
       })
     ).json();
     //console.error(questionnaireChunks);
@@ -108,7 +106,7 @@ const Questionnaire: NextApplicationPage<{
   const submitForm = async (e: { preventDefault: () => void }) => {
     //REMOVE CHECK IN FROM LIST AND UPLOAD DATA
     let checkInList = [];
-    let queriedList = router.query.questionnaire.slice();
+    let queriedList = new String(router.query.questionnaire.slice());
     //THESE WORK
     while (queriedList.indexOf(",") !== -1) {
       checkInList.push(queriedList.substring(0, queriedList.indexOf(",")));
@@ -116,7 +114,6 @@ const Questionnaire: NextApplicationPage<{
     }
     checkInList.push(queriedList);
     checkInList.splice(0, 1);
-    let uid = (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()).uid;
     userTags.length === 0
       ? (userTags = newTags)
       : (userTags = userTags.concat(newTags));
@@ -124,22 +121,21 @@ const Questionnaire: NextApplicationPage<{
       fetch(`${ORIGIN_URL}/api/update-user`, {
         method: "POST",
         body: JSON.stringify({
-          userId: uid,
-          userInfo: { checkIns: checkInList },
+          userInfo: { checkIns: checkInList, userId: session.data.user.uid },
         }),
       }),
       fetch(`${ORIGIN_URL}/api/put-question-responses`, {
         method: "POST",
         body: JSON.stringify({
           responses: newUserResponses,
-          userId: uid,
+          userId: session.data.user.uid,
         }),
       }),
       fetch(`${ORIGIN_URL}/api/update-user`, {
         method: "POST",
         body: JSON.stringify({
           userInfo: { tags: userTags },
-          userId: uid,
+          userId: session.data.user.uid,
         }),
       }),
     ]).then((values) => {

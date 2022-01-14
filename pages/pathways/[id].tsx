@@ -8,46 +8,42 @@ import { useRouter } from "next/router";
 import { getAccountInfo } from "../api/get-account";
 import AuthFunctions from "../api/auth/firebase-auth";
 import { ORIGIN_URL } from "../../config";
+import { getSession, useSession } from "next-auth/react";
 
 //profile progress/ question summary page
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const userProgress = await (
-    await fetch(`${ORIGIN_URL}/api/get-all-pathway-progress`, {
-      method: "POST",
-      body: JSON.stringify({ userId: AuthFunctions.userId }),
-    })
-  ).json();
-  let fetchedData = await fetch(`${ORIGIN_URL}/api/get-pathway`, {
-    method: "POST",
-    body: JSON.stringify({
-      userId: AuthFunctions.userId,
-      pathwayId: ctx.query.id as string,
-    }),
-  });
-  console.error(fetchedData.status);
   try {
+    const session = await getSession(ctx);
     return {
       props: {
-        pathwayInfo: await fetchedData.json(),
-        pathwayProgress: userProgress,
-        uid: AuthFunctions.userId,
+        ...(await (
+          await fetch(`${ORIGIN_URL}/api/get-pathway-and-progress`, {
+            method: "POST",
+            body: JSON.stringify({
+              userId: session.user.uid,
+              pathwayId: ctx.query.id as string,
+            }),
+          })
+        ).json()),
       },
     };
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     ctx.res.end();
     return { props: {} as never };
   }
 };
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
-  pathwayProgress: PathwayProgress[];
-  uid: string;
-}> = ({ pathwayInfo, pathwayProgress, uid }) => {
+  pathwaysProgress: PathwayProgress[];
+}> = ({ pathwayInfo, pathwaysProgress }) => {
   const [currPage, setCurrPage] = useState(null);
   const [currSelected, setCurrSelected] = useState("");
-  const [allPathwayProgress, setAllPathwayProgress] = useState(pathwayProgress);
+  const [allPathwayProgress, setAllPathwayProgress] =
+    useState(pathwaysProgress);
+  //console.warn(pathwayInfo);
+  //console.warn(allPathwayProgress);
   const checkForDiscrepancies = (pathwayProgress: PathwayProgress) => {
     if (pathwayProgress.title !== pathwayInfo.title) {
       pathwayProgress.title = pathwayInfo.title;
@@ -232,8 +228,8 @@ const Pathways: NextApplicationPage<{
           return moduleProgress.moduleId === moduleId;
         }
       );
-      console.log(moduleTitle);
-      console.log(indexOfModule);
+      //console.log(moduleTitle);
+      //console.log(indexOfModule);
       if (indexOfModule === -1) {
         let newPathwayProgress = allPathwayProgress.slice();
         addNewModuleProgress(
@@ -297,8 +293,8 @@ const Pathways: NextApplicationPage<{
             return moduleProgress.moduleId === moduleId;
           }
         );
-        console.log(moduleTitle);
-        console.log(indexOfModule);
+        //console.log(moduleTitle);
+        //console.log(indexOfModule);
         if (indexOfModule === -1) {
           let newPathwayProgress = allPathwayProgress.slice();
           addNewModuleProgress(
@@ -371,9 +367,9 @@ const Pathways: NextApplicationPage<{
       pathwayInfo.modules[0].presetContent,
       pathwayInfo.modules[0].personalizedContent
     )[0];
-    console.log(
-      currContent.url.substring(currContent.url.lastIndexOf("v=") + 2)
-    );
+    //console.log(
+    //   currContent.url.substring(currContent.url.lastIndexOf("v=") + 2)
+    // );
     if (currContent.type.toLowerCase() === "article") {
       setArticleToFinished(
         currContent,
@@ -434,8 +430,8 @@ const Pathways: NextApplicationPage<{
                   {currContent.title}
                 </span>
               </div>
-              <div className="ms-5 mt-3">
-                <div className="ms-4">{currContent.content}</div>
+              <div className="mt-3 ms-5 w-100">
+                <div className="ms-5 text-start">{currContent.content}</div>
               </div>
             </div>
           </>
@@ -453,6 +449,7 @@ const Pathways: NextApplicationPage<{
     allContent.sort((a, b) => a.priority - b.priority);
     return allContent;
   };
+  const session = useSession();
   useEffect(() => {
     let contentProgress: Record<string, ContentProgress[]> = {};
     let pathwayProgress = allPathwayProgress.find(
@@ -465,16 +462,16 @@ const Pathways: NextApplicationPage<{
         });
         contentProgress[actualModule._id] = moduleProgress.contentProgress;
       });
-      console.log(contentProgress);
+      //console.log(contentProgress);
       window.onbeforeunload = (e) => {
         fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
           method: "POST",
           body: JSON.stringify({
-            userId: uid,
             contentProgress,
+            userId: session.data.user.uid,
           }),
         }).then((res) => {
-          console.log(res.status);
+          //console.log(res.status);
         });
       };
     }
@@ -507,11 +504,11 @@ const Pathways: NextApplicationPage<{
           fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
             method: "POST",
             body: JSON.stringify({
-              userId: uid,
               contentProgress,
+              userId: session.data.user.uid,
             }),
           }).then((res) => {
-            console.log(res.status);
+            //console.log(res.status);
           });
         }
         return allPathwayProgress;
@@ -532,9 +529,8 @@ const Pathways: NextApplicationPage<{
             ) => {
               let currModuleProgress = allPathwayProgress
                 .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
-                ?.moduleProgress?.find(
-                  ({ moduleId }) => moduleId === pathwayInfo.modules[0]._id
-                );
+                ?.moduleProgress?.find(({ moduleId }) => moduleId === _id);
+              //console.warn(currModuleProgress);
               if (!currModuleProgress) {
                 currModuleProgress = {
                   contentProgress: [],
@@ -634,8 +630,8 @@ const Pathways: NextApplicationPage<{
                                   {currContent.title}
                                 </span>
                               </div>
-                              <div className="ms-5 mt-3">
-                                <div className="ms-4">
+                              <div className="ms-5 mt-3 w-100">
+                                <div className="ms-5 text-start">
                                   {currContent.content}
                                 </div>
                               </div>

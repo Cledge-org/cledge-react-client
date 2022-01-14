@@ -29,7 +29,10 @@ const settings = {
 };
 
 export default React.forwardRef(
-  (props: { currPage: number; setCurrPage: Function }, ref) => {
+  (
+    props: { currPage: number; setCurrPage: Function },
+    ref: React.LegacyRef<HTMLDivElement>
+  ) => {
     const sliderRef = useRef<Slider>();
     const handleOnClick = (index) => {
       sliderRef.current.slickGoTo(index);

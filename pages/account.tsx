@@ -6,7 +6,7 @@ import Modal from "react-modal";
 import TextInputQuestion from "../components/question_components/textinput_question";
 import { NextApplicationPage } from "./_app";
 import { getAccountInfo } from "./api/get-account";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { ORIGIN_URL } from "../config";
 
@@ -14,10 +14,11 @@ import { ORIGIN_URL } from "../config";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
+    const session = await getSession(ctx);
     let accountInfo: AccountInfo = await (
       await fetch(`${ORIGIN_URL}/api/get-account`, {
         method: "POST",
-        body: JSON.stringify({ userId: AuthFunctions.userId }),
+        body: JSON.stringify({ userId: session.user.uid }),
       })
     ).json();
     // accountInfo.birthday = accountInfo.birthday.toDateString(); //THIS WORKS -- IT'S A TEMPORARY SOLUTION
@@ -48,12 +49,13 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
     isConcatenable: false,
   });
   const [iteratedFirst, setIteratedFirst] = useState(false);
+  const session = useSession();
   const updateUserData = async () => {
     await fetch(`${ORIGIN_URL}/api/update-user`, {
       method: "POST",
       body: JSON.stringify({
-        userId: (await (await fetch(`${ORIGIN_URL}/api/get-uid`)).json()).uid,
         userInfo: { ...currUserData, _id: undefined },
+        userId: session.data.user.uid,
       }),
     }).then(async (res) => {
       console.log(res.status);
