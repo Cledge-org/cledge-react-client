@@ -10,7 +10,7 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve.status(200).send(getAllPathways());
+  return resolve.status(200).send(await getAllPathways());
 };
 
 // Admin API. Gets all pathways and their modules, with all their preset and
@@ -44,9 +44,10 @@ export async function getSpecificPathway(
   courseDb: Db
 ): Promise<Pathway> {
   return new Promise(async (res, err) => {
-    const modules = await Promise.all(
+    let modules = await Promise.all(
       pathway.modules.map((moduleId) => getSpecificModule(moduleId, courseDb))
     );
+    modules = modules.filter((x) => x !== null); // Remove all modules that weren't found
     res({
       title: pathway.title,
       _id: pathway._id,
@@ -60,7 +61,7 @@ export async function getSpecificPathway(
 async function getSpecificModule(
   moduleId: string,
   courseDb: Db
-): Promise<PathwayModule> {
+): Promise<PathwayModule | null> {
   return new Promise(async (res, err) => {
     try {
       const [module, modulePersonalizedContent]: [
@@ -75,13 +76,17 @@ async function getSpecificModule(
           .find({ moduleId })
           .toArray() as Promise<PersonalizedContent[]>,
       ]);
-      res({
-        _id: module._id,
-        title: module.title,
-        presetContent: module.presetContent,
-        personalizedContent: modulePersonalizedContent,
-        tags: module.tags,
-      });
+      if (!module) {
+        res(null);
+      } else {
+        res({
+          _id: module._id,
+          title: module.title,
+          presetContent: module.presetContent,
+          personalizedContent: modulePersonalizedContent,
+          tags: module.tags,
+        });
+      }
     } catch (e) {
       err(e);
     }

@@ -39,11 +39,12 @@ export async function getPathway(
               firebaseId: userId,
             }) as Promise<AccountInfo>,
           ]);
-        const modules: PathwayModule[] = await Promise.all(
+        let modules: PathwayModule[] = await Promise.all(
           pathway.modules.map((moduleId) =>
             getModule(moduleId, coursesDb, accountInfo.tags)
           )
         );
+        modules = modules.filter((x) => x !== null);
         res({
           tags: pathway.tags,
           title: pathway.title,
@@ -59,25 +60,32 @@ const getModule = (
   moduleId: string,
   coursesDb: Db,
   userTags: string[]
-): Promise<PathwayModule> => {
+): Promise<PathwayModule | null> => {
   return new Promise(async (res, err) => {
     try {
-      // Get module with preset content
-      const module: PathwayModule_Db = (await coursesDb
-        .collection("modules")
-        .findOne({ _id: new ObjectId(moduleId) })) as PathwayModule_Db;
-      // Populate this module's personalized content based on user's tags
-      const personalizedContent = (await coursesDb
-        .collection("personalized-content")
-        .find({ tags: { $in: userTags }, moduleId })
-        .toArray()) as PersonalizedContent[];
-      res({
-        _id: module._id,
-        title: module.title,
-        presetContent: module.presetContent,
-        tags: module.tags,
-        personalizedContent,
-      });
+      const [module, personalizedContent]: [
+        PathwayModule_Db,
+        PersonalizedContent[]
+      ] = await Promise.all([
+        coursesDb.collection("modules").findOne({
+          _id: new ObjectId(moduleId),
+        }) as Promise<PathwayModule_Db>,
+        coursesDb
+          .collection("personalized-content")
+          .find({ tags: { $in: userTags }, moduleId })
+          .toArray() as Promise<PersonalizedContent[]>,
+      ]);
+      if (!module) {
+        res(null);
+      } else {
+        res({
+          _id: module._id,
+          title: module.title,
+          presetContent: module.presetContent,
+          tags: module.tags,
+          personalizedContent,
+        });
+      }
     } catch (e) {
       err(e);
     }
