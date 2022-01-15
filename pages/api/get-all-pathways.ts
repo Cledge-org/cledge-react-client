@@ -21,15 +21,15 @@ export async function getAllPathways(): Promise<Pathway[]> {
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const courseDb = client.db("pathways");
-        const pathways: Pathway_Db[] = (await courseDb
+        const pathwaysDb = client.db("pathways");
+        const pathways: Pathway_Db[] = (await pathwaysDb
           .collection("pathways")
           .find()
           .toArray()) as Pathway_Db[];
         res(
           (await Promise.all(
             pathways.map((pathway: Pathway_Db) =>
-              getSpecificPathway(pathway, courseDb)
+              getSpecificPathway(pathway, pathwaysDb)
             )
           )) as Pathway[]
         );
@@ -41,11 +41,11 @@ export async function getAllPathways(): Promise<Pathway[]> {
 // Takes a pathway document and its database and populates its modules
 export async function getSpecificPathway(
   pathway: Pathway_Db,
-  courseDb: Db
+  pathwaysDb: Db
 ): Promise<Pathway> {
   return new Promise(async (res, err) => {
     let modules = await Promise.all(
-      pathway.modules.map((moduleId) => getSpecificModule(moduleId, courseDb))
+      pathway.modules.map((moduleId) => getSpecificModule(moduleId, pathwaysDb))
     );
     modules = modules.filter((x) => x !== null); // Remove all modules that weren't found
     res({
@@ -60,7 +60,7 @@ export async function getSpecificPathway(
 // Gets specific module given its id and database
 async function getSpecificModule(
   moduleId: ObjectId,
-  courseDb: Db
+  pathwaysDb: Db
 ): Promise<PathwayModule | null> {
   return new Promise(async (res, err) => {
     try {
@@ -68,10 +68,10 @@ async function getSpecificModule(
         PathwayModule_Db,
         PersonalizedContent[]
       ] = await Promise.all([
-        courseDb.collection("modules").findOne({
+        pathwaysDb.collection("modules").findOne({
           _id: moduleId,
         }) as Promise<PathwayModule_Db>,
-        courseDb
+        pathwaysDb
           .collection("personalized-content")
           .find({ moduleId })
           .toArray() as Promise<PersonalizedContent[]>,

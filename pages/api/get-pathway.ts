@@ -11,7 +11,7 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
-  const { userToken, userId, pathwayId } = req.body;
+  const { userToken, userId, pathwayId } = JSON.parse(req.body);
   return userId && pathwayId
     ? resolve.status(200).send(await getPathway(userId, pathwayId))
     : resolve.status(400).send("Both user and pathway IDs required");
@@ -27,13 +27,13 @@ export async function getPathway(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const coursesDb = client.db("courses");
+        const pathwaysDb = client.db("pathways");
         const usersDb = client.db("users");
 
         const [pathway, accountInfo]: [Pathway_Db, AccountInfo] =
           await Promise.all([
-            coursesDb
-              .collection("courses")
+            pathwaysDb
+              .collection("pathways")
               .findOne({ _id: pathwayId }) as Promise<Pathway_Db>,
             usersDb.collection("users").findOne({
               firebaseId: userId,
@@ -41,7 +41,7 @@ export async function getPathway(
           ]);
         let modules: PathwayModule[] = await Promise.all(
           pathway.modules.map((moduleId) =>
-            getModule(moduleId, coursesDb, accountInfo.tags)
+            getModule(moduleId, pathwaysDb, accountInfo.tags)
           )
         );
         modules = modules.filter((x) => x !== null);
@@ -56,9 +56,9 @@ export async function getPathway(
   });
 }
 
-const getModule = (
-  moduleId: ObjectId,
-  coursesDb: Db,
+export const getModule = (
+  moduleId: string,
+  pathwaysDb: Db,
   userTags: string[]
 ): Promise<PathwayModule | null> => {
   return new Promise(async (res, err) => {
@@ -67,10 +67,10 @@ const getModule = (
         PathwayModule_Db,
         PersonalizedContent[]
       ] = await Promise.all([
-        coursesDb.collection("modules").findOne({
-          _id: moduleId,
+        pathwaysDb.collection("modules").findOne({
+          _id: new ObjectId(moduleId),
         }) as Promise<PathwayModule_Db>,
-        coursesDb
+        pathwaysDb
           .collection("personalized-content")
           .find({ tags: { $in: userTags }, moduleId })
           .toArray() as Promise<PersonalizedContent[]>,

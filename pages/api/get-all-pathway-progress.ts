@@ -47,8 +47,6 @@ export async function getAllPathwayProgress(
             Record<string, ContentProgress[]>
           >,
         ]);
-        console.error("PROGRESS BY MODULE: ");
-        console.error(progressByModule);
         if (!progressByModule) {
           res([]);
           return;

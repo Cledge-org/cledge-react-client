@@ -6,6 +6,7 @@ import assert from "assert";
 import { getQuestionListWithDatabase } from "./get-question-list";
 import { MONGO_CONNECTION_STRING } from "../../config";
 import AuthFunctions from "./auth/firebase-auth";
+import { getAllQuestionLists } from "./get-all-questions";
 
 export const config = {
   api: {
@@ -24,27 +25,20 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export async function getQuestionProgress(
   userId: string
 ): Promise<ProgressInfo> {
-  const [userResponses, userInfo] = await Promise.all([
+  const [userResponses, userInfo, questionData] = await Promise.all([
     getQuestionResponses(userId),
     getAccountInfo(userId),
+    getAllQuestionLists(),
   ]);
-
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const questionsDb = client.db("questions");
-        // TODO: Fetch other lists for user
-        const gradeQuestionList: QuestionList =
-          await getQuestionListWithDatabase(
-            `${userInfo.grade}th Grade`,
-            questionsDb
-          );
         res({
           userTags: userInfo.tags,
           userProgress: { responses: userResponses },
-          questionData: [gradeQuestionList],
+          questionData,
         });
       }
     );

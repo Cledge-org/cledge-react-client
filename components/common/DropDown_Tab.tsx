@@ -31,7 +31,6 @@ export default function DropDownTab({
   currSelectedPath?: string;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  console.log(percentComplete);
   return (
     <div className="progress-dropdown-container">
       <button

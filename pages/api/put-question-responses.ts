@@ -13,7 +13,6 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userToken, responses, userId } = JSON.parse(req.body);
-  console.error(responses);
   return userId && responses
     ? resolve.status(200).send(await putQuestionResponses(userId, responses))
     : resolve.status(400).send("No user id or responses provided");

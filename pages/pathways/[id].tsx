@@ -386,7 +386,9 @@ const Pathways: NextApplicationPage<{
               <YoutubeEmbed
                 isPathway
                 key={`youtube-container-${currContent.url.substring(
-                  currContent.url.lastIndexOf("v=") + 2
+                  currContent.url.indexOf("v=") !== -1
+                    ? currContent.url.indexOf("v=") + 2
+                    : currContent.url.lastIndexOf("/") + 1
                 )}`}
                 isVideoFinished={
                   currModuleProgress.contentProgress.find(
@@ -417,7 +419,9 @@ const Pathways: NextApplicationPage<{
                   )
                 }
                 videoId={currContent.url.substring(
-                  currContent.url.lastIndexOf("v=") + 2
+                  currContent.url.indexOf("v=") !== -1
+                    ? currContent.url.indexOf("v=") + 2
+                    : currContent.url.lastIndexOf("/") + 1
                 )}
               />
             </div>
@@ -576,7 +580,9 @@ const Pathways: NextApplicationPage<{
                               <YoutubeEmbed
                                 isPathway
                                 key={`youtube-container-${currContent.url.substring(
-                                  currContent.url.lastIndexOf("v=") + 2
+                                  currContent.url.indexOf("v=") !== -1
+                                    ? currContent.url.indexOf("v=") + 2
+                                    : currContent.url.lastIndexOf("/") + 1
                                 )}`}
                                 isVideoFinished={
                                   currModuleProgress.contentProgress.find(
@@ -617,7 +623,9 @@ const Pathways: NextApplicationPage<{
                                   )
                                 }
                                 videoId={currContent.url.substring(
-                                  currContent.url.lastIndexOf("v=") + 2
+                                  currContent.url.indexOf("v=") !== -1
+                                    ? currContent.url.indexOf("v=") + 2
+                                    : currContent.url.lastIndexOf("/") + 1
                                 )}
                               />
                             </div>

@@ -31,7 +31,6 @@ export const getQuestionResponses = async (
           .db("users")
           .collection("question-responses")
           .findOne({ firebaseId: userId }, (document_err, user_responses) => {
-            console.error(user_responses);
             document_err
               ? err(document_err)
               : res(user_responses === null ? [] : user_responses.responses);

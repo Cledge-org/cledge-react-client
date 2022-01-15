@@ -21,7 +21,11 @@ export default function CardVideo({
       title={title}
       child={
         <YoutubeEmbed
-          videoId={videoUrl.substring(videoUrl.indexOf("v=") + 2)}
+          videoId={videoUrl.substring(
+            videoUrl.indexOf("v=") !== -1
+              ? videoUrl.indexOf("v=") + 2
+              : videoUrl.lastIndexOf("/") + 1
+          )}
         />
       }
       url={videoUrl}

@@ -15,7 +15,6 @@ export const config = {
 // TODO: validate AccountInfo object (userInfo) is valid
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { userInfo, userId } = JSON.parse(req.body);
-  console.error(userInfo);
   if (!userId || !userInfo) {
     resolve
       .status(400)

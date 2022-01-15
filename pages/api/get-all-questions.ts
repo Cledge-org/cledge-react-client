@@ -33,7 +33,6 @@ export async function getAllQuestionLists(): Promise<QuestionList[]> {
           allQuestionLists.splice(indexOfUnclean, 1);
           indexOfUnclean = allQuestionLists.findIndex(({ chunks }) => !chunks);
         }
-        console.error(allQuestionLists);
         res(
           (await Promise.all(
             allQuestionLists.map((list) =>

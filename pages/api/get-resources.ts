@@ -24,12 +24,10 @@ export const getResourcesInfo = async (): Promise<ResourcesInfo> => {
           .collection("videos")
           .find()
           .toArray()) as CardVideo[];
-
         const articles: CardArticle[] = (await resource_db
           .collection("articles")
           .find()
           .toArray()) as CardArticle[];
-
         const resources: CardResource[] = (await resource_db
           .collection("resources")
           .find()
