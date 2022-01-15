@@ -12,12 +12,15 @@ import QuestionECSubpage from "./questionPages/question_ec_subpage";
 import Progress from "./progress";
 import { useSession } from "next-auth/react";
 import Signup from "./auth/signup";
+import LoadingScreen from "../components/common/loading";
+import { Router } from "next/router";
+import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
   if (status === "authenticated") {
     window.location.href = "/dashboard";
-    return null;
+    return <LoadingScreen />;
   }
   return <Welcome></Welcome>;
 };

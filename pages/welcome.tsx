@@ -4,7 +4,7 @@ import YoutubeEmbed from "../components/common/YoutubeEmbed";
 import MsftSVG from "../public/images/landing_msft.svg";
 import OpenAISVG from "../public/images/landing_openai.svg";
 import FeatureCarousel from "../components/common/FeatureCarousel";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import WaitlistForm from "../components/common/WaitlistForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,6 +12,8 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { isMobile } from "react-device-detect";
+import { Router } from "next/router";
+import LoadingScreen from "../components/common/loading";
 
 //landing page
 export default function Welcome(props) {

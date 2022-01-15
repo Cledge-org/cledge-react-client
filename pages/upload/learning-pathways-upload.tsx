@@ -7,6 +7,7 @@ import ECDropDown from "../../components/question_components/ec_dropdown_questio
 import UploadPage from "../../components/common/upload-page";
 import { ORIGIN_URL } from "../../config";
 import router from "next/router";
+import { getSession } from "next-auth/react";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {

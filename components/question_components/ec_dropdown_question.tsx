@@ -52,7 +52,9 @@ export default function ECDropDown({
 }: ECDropDownProps) {
   const [chosen, setChosen] = useState(
     //WORKS!!!
-    isConcatenable ? defaultValue.map((element) => " " + element) : ""
+    isConcatenable && defaultValue instanceof Array
+      ? defaultValue.map((element) => " " + element)
+      : ""
   );
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);

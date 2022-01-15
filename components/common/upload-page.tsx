@@ -18,7 +18,7 @@ const UploadPage = ({
 }) => {
   const router = useRouter();
   const session = useSession();
-  if (session.data.user.email === "test31@gmail.com") {
+  if (session.data?.user?.email === "test31@gmail.com") {
     return (
       <div className="container-fluid p-5 d-flex flex-column align-items-center justify-content-center">
         <div className="d-flex flex-column align-items-center w-50">

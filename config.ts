@@ -3,4 +3,5 @@ export const MONGO_CONNECTION_STRING =
 export const ORIGIN_URL =
   process.env.NODE_ENV !== "production"
     ? "http://localhost:3000"
-    : "https://cledge.org";
+    : "https://cledge-first-test.vercel.app";
+console.log(ORIGIN_URL);

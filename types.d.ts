@@ -1,3 +1,7 @@
+interface Window {
+  YT: any;
+  onYouTubeIframeAPIReady: any;
+}
 //Account Page Types -->
 interface AccountInfo extends WithId<Document> {
   _id?: ObjectId;

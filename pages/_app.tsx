@@ -14,7 +14,9 @@ import { store } from "../utils/store";
 import { Provider } from "react-redux";
 import ProtectedComponent from "../components/common/ProtectedComponent";
 import AuthFunctions from "./api/auth/firebase-auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Router, useRouter } from "next/router";
+import LoadingScreen from "../components/common/loading";
 
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
   requireAuth?: boolean;
@@ -27,6 +29,32 @@ function MyApp({
   Component: NextApplicationPage;
   pageProps: any;
 }) {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  useEffect(() => {
+    const endLoading = () => {
+      setLoading(false);
+    };
+    const endLoadingShowNewHeader = () => {
+      setLoading(false);
+    };
+    const startLoading = () => {
+      if (router.pathname === "/" || router.pathname === "") {
+        setLoading(true);
+      }
+    };
+    Router.events.on("routeChangeStart", startLoading);
+    Router.events.on("routeChangeError", endLoading);
+    Router.events.on("routeChangeComplete", endLoadingShowNewHeader);
+    return () => {
+      Router.events.off("routeChangeComplete", endLoadingShowNewHeader);
+      Router.events.off("routeChangeStart", startLoading);
+      Router.events.off("routeChangeError", endLoading);
+    };
+  }, [router]);
+  if (loading) {
+    return <LoadingScreen />;
+  }
   return (
     <AuthProvider session={pageProps.session}>
       <Provider store={store}>
