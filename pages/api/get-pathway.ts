@@ -57,7 +57,7 @@ export async function getPathway(
 }
 
 const getModule = (
-  moduleId: string,
+  moduleId: ObjectId,
   coursesDb: Db,
   userTags: string[]
 ): Promise<PathwayModule | null> => {
@@ -68,7 +68,7 @@ const getModule = (
         PersonalizedContent[]
       ] = await Promise.all([
         coursesDb.collection("modules").findOne({
-          _id: new ObjectId(moduleId),
+          _id: moduleId,
         }) as Promise<PathwayModule_Db>,
         coursesDb
           .collection("personalized-content")

@@ -59,7 +59,7 @@ export async function getSpecificPathway(
 
 // Gets specific module given its id and database
 async function getSpecificModule(
-  moduleId: string,
+  moduleId: ObjectId,
   courseDb: Db
 ): Promise<PathwayModule | null> {
   return new Promise(async (res, err) => {
@@ -69,7 +69,7 @@ async function getSpecificModule(
         PersonalizedContent[]
       ] = await Promise.all([
         courseDb.collection("modules").findOne({
-          _id: new ObjectId(moduleId),
+          _id: moduleId,
         }) as Promise<PathwayModule_Db>,
         courseDb
           .collection("personalized-content")

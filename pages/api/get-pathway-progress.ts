@@ -129,7 +129,6 @@ async function getSpecificModuleProgress(
           module.presetContent.forEach((content, index) => {
             if (!titles.has(content.title)) {
               moduleContentProgress.push({
-                contentId: index,
                 title: content.title,
                 finished: false,
                 videoTime: 0,
@@ -141,7 +140,6 @@ async function getSpecificModuleProgress(
           modulePersonalizedContent.forEach((content) => {
             if (!titles.has(content.title)) {
               moduleContentProgress.push({
-                contentId: content._id,
                 title: content.title,
                 finished: false,
                 videoTime: 0,
