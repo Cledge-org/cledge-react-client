@@ -27,17 +27,14 @@ import { getAllPathwaysAccountAndProgress } from "./api/get-dashboard";
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = await getSession(ctx);
-    const reqData = await getAllPathwaysAccountAndProgress(session.user.uid);
-    console.error(reqData);
     return {
       props: {
-        // ...(await (
-        //   await fetch(`${ORIGIN_URL}/api/get-dashboard`, {
-        //     method: "POST",
-        //     body: JSON.stringify({ userId: session.user.uid }),
-        //   })
-        // ).json()),
-        ...reqData,
+        ...(await (
+          await fetch(`${ORIGIN_URL}/api/get-dashboard`, {
+            method: "POST",
+            body: JSON.stringify({ userId: session.user.uid }),
+          })
+        ).json()),
       },
     };
   } catch (err) {

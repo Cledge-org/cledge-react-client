@@ -49,8 +49,8 @@ export async function getSpecificPathway(
     );
     modules = modules.filter((x) => x !== null); // Remove all modules that weren't found
     res({
-      title: pathway.title ? pathway.title : "UNDEFINED",
-      _id: pathway._id.toString(),
+      title: pathway.title,
+      _id: pathway._id,
       modules,
       tags: pathway.tags,
     });
@@ -80,13 +80,11 @@ async function getSpecificModule(
         res(null);
       } else {
         res({
-          _id: module._id.toString(),
-          title: module.title ? module.title : "UNDEFINED",
-          presetContent: module.presetContent ? module.presetContent : [],
-          personalizedContent: modulePersonalizedContent
-            ? modulePersonalizedContent
-            : [],
-          tags: module.tags ? module.tags : [],
+          _id: module._id,
+          title: module.title,
+          presetContent: module.presetContent,
+          personalizedContent: modulePersonalizedContent,
+          tags: module.tags,
         });
       }
     } catch (e) {
