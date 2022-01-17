@@ -13,7 +13,6 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
     source: "",
     description: "",
   });
-
   return (
     <UploadPage
       onUpload={() => {

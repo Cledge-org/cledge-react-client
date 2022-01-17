@@ -9,7 +9,7 @@ import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { ORIGIN_URL } from "../../config";
 import { useRouter } from "next/router";
 
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+export const getStaticProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
@@ -20,7 +20,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     };
   } catch (err) {
     console.log(err);
-    ctx.res.end();
+    // ctx.res.end();
     return { props: {} as never };
   }
 };

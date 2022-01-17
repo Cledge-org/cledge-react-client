@@ -26,25 +26,15 @@ import { getSession, useSession } from "next-auth/react";
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = await getSession(ctx);
-    const user = await (
-      await fetch(`${ORIGIN_URL}/api/get-account`, {
-        method: "POST",
-        body: JSON.stringify({ userId: session.user.uid }),
-      })
-    ).json();
     const userProgress = await fetch(
       `${ORIGIN_URL}/api/get-question-progress`,
       { method: "POST", body: JSON.stringify({ userId: session.user.uid }) }
     );
     let userProgressJSON = await userProgress.json();
-    console.error(userProgressJSON);
-    console.error(userProgress.status);
     return {
       props: {
         progressInfo: {
-          userTags: user.tags,
-          userProgress: userProgressJSON.userProgress,
-          questionData: userProgressJSON.questionData,
+          ...userProgressJSON,
         },
       },
     };
