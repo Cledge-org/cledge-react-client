@@ -89,8 +89,8 @@ export async function getSpecificPathwayProgress(
         true
       ),
       moduleProgress,
-      title: pathway.title,
-      pathwayId: pathway._id,
+      title: pathway.title ? pathway.title : "UNDEFINED",
+      pathwayId: pathway._id.toString(),
     });
   });
 }
@@ -155,7 +155,7 @@ async function getSpecificModuleProgress(
             true
           ),
           contentProgress: moduleContentProgress,
-          title: module.title,
+          title: module.title ? module.title : "UNDEFINED",
         });
       } else {
         res({

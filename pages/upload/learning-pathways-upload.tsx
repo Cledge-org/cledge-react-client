@@ -9,7 +9,7 @@ import { ORIGIN_URL } from "../../config";
 import router from "next/router";
 import { getSession } from "next-auth/react";
 
-export const getStaticProps = async (ctx: GetServerSidePropsContext) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
@@ -20,7 +20,7 @@ export const getStaticProps = async (ctx: GetServerSidePropsContext) => {
     };
   } catch (err) {
     console.log(err);
-    // ctx.res.end();
+    ctx.res.end();
     return { props: {} as never };
   }
 };

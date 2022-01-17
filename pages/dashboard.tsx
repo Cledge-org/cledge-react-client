@@ -22,18 +22,22 @@ import { getPathwayProgress } from "./api/get-pathway-progress";
 import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
 import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
+import { getAllPathwaysAccountAndProgress } from "./api/get-dashboard";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = await getSession(ctx);
+    const reqData = await getAllPathwaysAccountAndProgress(session.user.uid);
+    console.error(reqData);
     return {
       props: {
-        ...(await (
-          await fetch(`${ORIGIN_URL}/api/get-dashboard`, {
-            method: "POST",
-            body: JSON.stringify({ userId: session.user.uid }),
-          })
-        ).json()),
+        // ...(await (
+        //   await fetch(`${ORIGIN_URL}/api/get-dashboard`, {
+        //     method: "POST",
+        //     body: JSON.stringify({ userId: session.user.uid }),
+        //   })
+        // ).json()),
+        ...reqData,
       },
     };
   } catch (err) {
@@ -48,6 +52,7 @@ const Dashboard: NextApplicationPage<{
   dashboardInfo: Dashboard;
   allPathways: Pathway[];
 }> = ({ dashboardInfo, allPathways }) => {
+  console.error(allPathways);
   const router = useRouter();
   const session = useSession();
   const [currTab, setCurrTab] = useState("current tasks");
