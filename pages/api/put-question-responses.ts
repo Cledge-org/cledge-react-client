@@ -1,6 +1,8 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
+import { MONGO_CONNECTION_STRING } from "../../config";
+import AuthFunctions from "./auth/firebase-auth";
 
 export const config = {
   api: {
@@ -10,13 +12,13 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
-  const { userToken, userId, responses } = req.body;
-  return userId
+  const { userToken, responses, userId } = JSON.parse(req.body);
+  return userId && responses
     ? resolve.status(200).send(await putQuestionResponses(userId, responses))
-    : resolve.status(400).send("No user id provided");
+    : resolve.status(400).send("No user id or responses provided");
 };
 
-// Creates or updates a user's question responses
+// Creates or updates a user's question responses by their firebase Id (string)
 export const putQuestionResponses = async (
   userId: string,
   responses: UserResponse[]
@@ -31,7 +33,7 @@ export const putQuestionResponses = async (
             .db("users")
             .collection("question-responses")
             .updateOne(
-              { _id: userId },
+              { firebaseId: userId },
               { $set: { responses } },
               { upsert: true }
             );

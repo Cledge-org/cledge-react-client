@@ -133,8 +133,8 @@ a {
 
 .cl-btn-blue {
   @extend .cl-btn;
-  background-color: $cl-blue;
-  color: white;
+  background-color: $cl-blue !important;
+  color: white !important;
   border: 1px solid $cl-blue;
 }
 
@@ -150,7 +150,6 @@ input[type="number"] {
     box-shadow: none;
   }
 }
-
 h1 {
   font-family: "Montserrat", sans-serif;
 }
@@ -173,9 +172,6 @@ a {
   &:hover {
     background-color: $cl-light-blue;
   }
-}
-.w-60 {
-  max-width: 60%;
 }
 
 .footer {
@@ -220,6 +216,17 @@ $spacers: (
   z-index: 1000;
 }
 
+.questionnaire-container {
+  height: 80%;
+}
+
+.questionnaire-question {
+  transform: scale(0.8, 0.8);
+  -ms-transform: scale(0.8, 0.8); /* IE 9 */
+  -webkit-transform: scale(0.8, 0.8); /* Safari and Chrome */
+  -o-transform: scale(0.8, 0.8); /* Opera */
+  -moz-transform: scale(0.8, 0.8); /* Firefox */
+}
 //NAV STYLES -->
 .nav-regular {
   @extend .shadow-sm;

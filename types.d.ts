@@ -1,21 +1,20 @@
+interface Window {
+  YT: any;
+  onYouTubeIframeAPIReady: any;
+}
 //Account Page Types -->
-interface AccountInfo {
+interface AccountInfo extends WithId<Document> {
+  _id?: ObjectId;
+  firebaseId: string;
   name: string;
   address: string;
   grade: number;
   birthday: Date;
   email: string;
   tags: string[];
+  checkIns: string[];
 }
-interface AccountInfo_Db {
-  _id: ObjectId;
-  name: string;
-  address: string;
-  grade: number;
-  birthday: Date;
-  email: string;
-  tags: string[];
-}
+
 //Resource Page Types -->
 interface ResourcesInfo {
   videoList: CardVideo[];
@@ -23,18 +22,22 @@ interface ResourcesInfo {
   resources: CardResource[];
 }
 interface CardVideo {
+  _id?: ObjectId;
   source: string;
   title: string;
 }
 interface CardArticle {
+  _id?: ObjectId;
   description: string;
   source: string;
   title: string;
 }
 interface CardResource {
+  _id?: ObjectId;
   source: string;
   title: string;
 }
+
 //Progress Page Types -->
 interface UserProgress {
   responses: UserResponse[];
@@ -44,19 +47,32 @@ interface UserResponse {
   response: any;
 }
 interface ProgressInfo {
+  userTags: string[];
   userProgress: UserProgress;
   questionData: QuestionList[];
 }
-interface QuestionList {
+interface QuestionList extends WithId<Document> {
+  _id: ObjectId;
   name: string;
   chunks: QuestionChunk[];
 }
-interface QuestionChunk {
+interface QuestionList_Db extends WithId<Document> {
+  _id: ObjectId;
+  name: string;
+  chunks: ObjectId[]; // Document IDs of chunks
+}
+interface QuestionChunk extends WithId<Document> {
+  _id: ObjectId;
   name: string;
   questions: Question[];
 }
-interface Question {
-  id: string;
+interface QuestionChunk_Db extends WithId<Document> {
+  _id: ObjectId;
+  name: string;
+  questions: ObjectId[]; // Document IDs of question data
+}
+interface Question extends WithId<Document> {
+  _id?: ObjectId;
   question: string;
   type: string;
   helpVid?: string;
@@ -64,11 +80,13 @@ interface Question {
   data?: any[];
   isConcatenable?: boolean;
 }
+
 //Learning Pathways Types -->
 interface Dashboard {
   userName: string;
   userTags: string[];
   userProgress: PathwayProgress[];
+  checkIns: string[];
 }
 interface UserPathway {
   pathway: Course;
@@ -77,44 +95,45 @@ interface UserPathway {
 }
 
 interface PathwayProgress {
+  pathwayId: string; // ID of the pathway this progress belongs to, NOT database ID of the progress itself
   finished: boolean;
   title: string;
-  id: string;
   moduleProgress: ModuleProgress[];
 }
 interface ModuleProgress {
+  moduleId: string;
   finished: boolean;
   title: string;
-  contentProgress: Record<string, boolean>; // Map between content ID and whether that content is finished
+  contentProgress: ContentProgress[]; // Map between content ID and whether that content is finished
 }
-
 interface ContentProgress {
   finished: boolean;
   title: string;
-  videoTime?: string;
+  videoTime: number;
 }
 interface Pathway {
+  _id: ObjectId;
   title: string;
-  id: string;
   modules: PathwayModule[];
   tags: string[];
 }
+interface Pathway_Db extends WithId<Document> {
+  _id: ObjectId;
+  tags: string[];
+  modules: ObjectId[]; // Module document IDs
+  title: string;
+}
 interface PathwayModule {
+  _id: ObjectId;
   title: string;
   presetContent: PresetContent[];
   personalizedContent: PersonalizedContent[];
   tags: string[];
 }
-interface Pathway_Db {
-  id: string;
-  tags: string[];
-  modules: string[]; // Module document IDs
+interface PathwayModule_Db extends WithId<Document> {
+  _id: ObjectId;
   title: string;
-}
-interface PathwayModule_Db {
-  title: string;
-  presetContent: string[]; // Preset content document IDs
-  personalizedContent: string[];
+  presetContent: PresetContent[];
   tags: string[];
 }
 interface PresetContent {
@@ -124,14 +143,13 @@ interface PresetContent {
   url: string;
   content?: string;
 }
-interface PersonalizedContent {
+interface PersonalizedContent extends WithId<Document> {
+  _id: ObjectId;
+  moduleId: ObjectId;
   priority: number;
-  tagConfigs: string[][];
   tags: string[];
   title: string;
   type: string;
   url: string;
   content?: string;
-  tags: string[];
-  tagConfigs: string[][];
 }

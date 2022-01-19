@@ -6,21 +6,29 @@ import Iframe from "react-iframe";
 import YoutubeEmbed from "./YoutubeEmbed";
 
 interface CardVideoProps extends CardProps {
-  videoId: string;
+  videoUrl: string;
 }
 
 export default function CardVideo({
   title,
   textGradient,
-  videoId,
+  videoUrl,
 }: CardVideoProps) {
   useEffect(() => {}, []);
   return (
     <Card
       textGradient={textGradient}
       title={title}
-      child={<YoutubeEmbed videoId={videoId} />}
-      url={"https://www.youtube.com/watch?v=" + videoId}
+      child={
+        <YoutubeEmbed
+          videoId={videoUrl.substring(
+            videoUrl.indexOf("v=") !== -1
+              ? videoUrl.indexOf("v=") + 2
+              : videoUrl.lastIndexOf("/") + 1
+          )}
+        />
+      }
+      url={videoUrl}
     />
   );
 }

@@ -1,6 +1,9 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
+import { MONGO_CONNECTION_STRING } from "../../config";
+import AuthFunctions from "./auth/firebase-auth";
+import { getSession } from "next-auth/react";
 
 export const config = {
   api: {
@@ -10,33 +13,25 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
-  const { userToken, userId } = req.body;
+  const { userId } = JSON.parse(req.body);
   return userId
     ? resolve.status(200).send(await getAccountInfo(userId))
     : resolve.status(400).send("No user id provided");
 };
 
+// Get account info by a user's account info by their firebaseId
 export const getAccountInfo = async (userId: string): Promise<AccountInfo> => {
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        client
-          .db("users")
-          .collection("users")
-          .findOne({ _id: userId }, (document_err, user_info) => {
-            document_err
-              ? err(document_err)
-              : res({
-                  name: user_info.name,
-                  address: user_info.address,
-                  grade: user_info.grade,
-                  birthday: user_info.birthday,
-                  email: user_info.email,
-                  tags: user_info.tags,
-                });
-          });
+        res(
+          (await client
+            .db("users")
+            .collection("users")
+            .findOne({ firebaseId: userId })) as AccountInfo
+        );
       }
     );
   });

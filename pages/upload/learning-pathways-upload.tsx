@@ -2,15 +2,21 @@ import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GetServerSidePropsContext } from "next";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { getLearningPathways } from "../api/get-learning-pathways";
 import { NextApplicationPage } from "../_app";
 import ECDropDown from "../../components/question_components/ec_dropdown_question";
 import UploadPage from "../../components/common/upload-page";
+import { ORIGIN_URL } from "../../config";
+import router from "next/router";
+import { getSession } from "next-auth/react";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
-      props: { allCourses: await getLearningPathways() },
+      props: {
+        allPathways: await (
+          await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
+        ).json(),
+      },
     };
   } catch (err) {
     console.log(err);
@@ -20,20 +26,22 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 // logged in landing page
 const LearningPathwaysUploadPage: NextApplicationPage<{
-  allCourses: Course[];
-}> = ({ allCourses }) => {
-  console.log(allCourses);
-  const courseTitles = allCourses
+  allPathways: Pathway[];
+}> = ({ allPathways }) => {
+  console.log(allPathways);
+  const courseTitles = allPathways
     .map(({ title }) => title)
     .concat("NEW COURSE");
-  const [currCourseData, setCurrCourseData]: [
-    currCourseData: Course,
-    setCurrCourseData: Dispatch<SetStateAction<Course>>
+  const [currCourseIndex, setCurrCourseIndex] = useState(allPathways.length);
+  const [currPathwayData, setCurrPathwayData]: [
+    currPathwayData: Pathway,
+    setCurrPathwayData: Dispatch<SetStateAction<Pathway>>
   ] = useState({
-    id: "",
+    _id: null,
     title: "",
     modules: [
       {
+        _id: null,
         title: "",
         presetContent: [
           {
@@ -46,7 +54,8 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
         ],
         personalizedContent: [
           {
-            tagConfigs: [["", ""]],
+            moduleId: null,
+            _id: null,
             priority: -1,
             content: "",
             tags: ["", ""],
@@ -61,10 +70,123 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
     tags: ["", ""],
   });
   useEffect(() => {
-    console.log(allCourses);
+    console.log(allPathways);
   }, []);
   return (
-    <UploadPage>
+    <UploadPage
+      onUpload={() => {
+        let sendPathwayData = currPathwayData;
+        sendPathwayData.tags = sendPathwayData.tags.filter((tag) => {
+          return tag !== "";
+        });
+        sendPathwayData.modules.forEach((module, index) => {
+          sendPathwayData.modules[index].tags = module.tags.filter((tag) => {
+            return tag !== "";
+          });
+          module.personalizedContent.forEach(({ tags }, contentIndex) => {
+            sendPathwayData.modules[index].personalizedContent[
+              contentIndex
+            ].tags = tags.filter((tag) => {
+              return tag !== "";
+            });
+          });
+        });
+        Promise.all([
+          ...sendPathwayData.modules.map((module, index) =>
+            fetch("/api/put-pathway-module", {
+              method: "POST",
+              body: JSON.stringify({
+                pathwayModuleId: module._id === null ? undefined : module._id,
+                pathwayModule: {
+                  title: module.title,
+                  presetContent: module.presetContent,
+                  tags: module.tags,
+                },
+              }),
+            })
+          ),
+        ])
+          .then(async (resArr) => {
+            let jsonArr = await Promise.all(
+              resArr.map(async (res) => await res.json())
+            );
+            let personalizedContentUpload: PersonalizedContent[] =
+              sendPathwayData.modules[0].personalizedContent.map(
+                (personalizedContent, index) => {
+                  return {
+                    ...personalizedContent,
+                    moduleId:
+                      personalizedContent.moduleId === null
+                        ? jsonArr[0].moduleId
+                        : personalizedContent.moduleId,
+                  };
+                }
+              );
+            for (let i = 1; i < sendPathwayData.modules.length; i++) {
+              personalizedContentUpload = personalizedContentUpload.concat(
+                sendPathwayData.modules[i].personalizedContent.map(
+                  (personalizedContent, index) => {
+                    return {
+                      ...personalizedContent,
+                      moduleId:
+                        personalizedContent.moduleId === null
+                          ? jsonArr[i].moduleId
+                          : personalizedContent.moduleId,
+                    };
+                  }
+                )
+              );
+            }
+            Promise.all([
+              fetch("/api/put-pathway", {
+                method: "POST",
+                body: JSON.stringify({
+                  pathwayId:
+                    sendPathwayData._id === null
+                      ? undefined
+                      : sendPathwayData._id,
+                  pathway: {
+                    tags: sendPathwayData.tags,
+                    modules: jsonArr.map(({ moduleId }) => moduleId),
+                    title: sendPathwayData.title,
+                  },
+                }),
+              }),
+              ...personalizedContentUpload.map(
+                async (personalizedContent) =>
+                  await fetch("/api/put-pathway-module-personalized-content", {
+                    method: "POST",
+                    body: JSON.stringify({
+                      contentId:
+                        personalizedContent._id === null
+                          ? undefined
+                          : personalizedContent._id,
+                      content: { ...personalizedContent, _id: undefined },
+                    }),
+                  })
+              ),
+            ])
+              .then((values) => {
+                let unsuccessful = false;
+                values.forEach((value, index) => {
+                  console.log(index + " " + value.status);
+                  if (value.status !== 200) {
+                    unsuccessful = true;
+                    alert(
+                      "Upload Unsuccessful! (should probably talk to Yousef or Bryan)"
+                    );
+                  }
+                });
+                if (!unsuccessful) {
+                  alert("Upload Successful!");
+                }
+                router.push({ pathname: "/dashboard" });
+              })
+              .catch((err) => console.error(err));
+          })
+          .catch((err) => console.error(err));
+      }}
+    >
       <div className="mt-4 d-flex flex-column w-100">
         <div className="form-group">
           <label
@@ -72,17 +194,18 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             className="text-muted"
             htmlFor="course-title"
           >
-            CURRENT COURSE:
+            CURRENT PATHWAY:
           </label>
           <ECDropDown
             isForWaitlist
             onChange={(value) => {
               if (value === "NEW COURSE") {
-                setCurrCourseData({
-                  id: "",
+                setCurrPathwayData({
+                  _id: null,
                   title: "",
                   modules: [
                     {
+                      _id: null,
                       title: "",
                       presetContent: [
                         {
@@ -94,8 +217,10 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                         },
                       ],
                       personalizedContent: [
+                        //WORKS DO NOT FIX
                         {
-                          tagConfigs: [["", ""]],
+                          moduleId: null,
+                          _id: null,
                           priority: -1,
                           content: "",
                           tags: ["", ""],
@@ -109,9 +234,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                   ],
                   tags: ["", ""],
                 });
+                setCurrCourseIndex(allPathways.length + 1);
                 return;
               }
-              setCurrCourseData(allCourses[courseTitles.indexOf(value)]);
+              let courseIndex = courseTitles.indexOf(value);
+              setCurrCourseIndex(courseIndex);
+              setCurrPathwayData(allPathways[courseIndex]);
             }}
             defaultValue={"NEW COURSE"}
             valuesList={courseTitles}
@@ -124,13 +252,13 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             className="text-muted"
             htmlFor="course-title"
           >
-            Course Title:
+            Pathway Title:
           </label>
           <input
-            value={currCourseData.title}
+            value={currPathwayData.title}
             onChange={(e) =>
-              setCurrCourseData({
-                ...currCourseData,
+              setCurrPathwayData({
+                ...currPathwayData,
                 title: e.target.value,
               })
             }
@@ -149,14 +277,14 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             Tags:
           </label>
           <div className="d-flex flex-row w-100 flex-wrap">
-            {currCourseData.tags.map((tag, index) => (
+            {currPathwayData.tags.map((tag, index) => (
               <input
                 value={tag}
                 onChange={(e) => {
-                  let course = currCourseData;
+                  let course = currPathwayData;
                   course.tags[index] = e.target.value;
-                  setCurrCourseData({
-                    ...currCourseData,
+                  setCurrPathwayData({
+                    ...currPathwayData,
                     tags: course.tags,
                   });
                 }}
@@ -171,10 +299,10 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               style={{ width: "24px", height: "24px" }}
               className="align-self-center align-items-center justify-content-center"
               onClick={() => {
-                let courseTags = currCourseData.tags;
+                let courseTags = currPathwayData.tags;
                 courseTags.push("");
-                setCurrCourseData({
-                  ...currCourseData,
+                setCurrPathwayData({
+                  ...currPathwayData,
                   tags: courseTags,
                 });
               }}
@@ -192,7 +320,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             Modules:
           </label>
           <div className="ms-4">
-            {currCourseData.modules.map((module, index) => {
+            {currPathwayData.modules.map((module, index) => {
               return (
                 <>
                   <button
@@ -203,10 +331,10 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                       color: "red",
                     }}
                     onClick={() => {
-                      let course = currCourseData;
+                      let course = currPathwayData;
                       course.modules.splice(index, 1);
-                      setCurrCourseData({
-                        ...currCourseData,
+                      setCurrPathwayData({
+                        ...currPathwayData,
                         modules: course.modules,
                       });
                     }}
@@ -224,10 +352,10 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                     <input
                       value={module.title}
                       onChange={(e) => {
-                        let course = currCourseData;
+                        let course = currPathwayData;
                         course.modules[index].title = e.target.value;
-                        setCurrCourseData({
-                          ...currCourseData,
+                        setCurrPathwayData({
+                          ...currPathwayData,
                           modules: course.modules,
                         });
                       }}
@@ -246,16 +374,16 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                       Module Tags:
                     </label>
                     <div className="d-flex flex-row w-100 flex-wrap">
-                      {currCourseData.modules[index].tags.map(
+                      {currPathwayData.modules[index].tags.map(
                         (tag, tagIndex) => (
                           <input
                             value={tag}
                             onChange={(e) => {
-                              let course = currCourseData;
+                              let course = currPathwayData;
                               course.modules[index].tags[tagIndex] =
                                 e.target.value;
-                              setCurrCourseData({
-                                ...currCourseData,
+                              setCurrPathwayData({
+                                ...currPathwayData,
                                 modules: course.modules,
                               });
                             }}
@@ -271,10 +399,10 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                         style={{ width: "24px", height: "24px" }}
                         className="align-self-center align-items-center justify-content-center"
                         onClick={() => {
-                          let course = currCourseData;
+                          let course = currPathwayData;
                           course.modules[index].tags.push("");
-                          setCurrCourseData({
-                            ...currCourseData,
+                          setCurrPathwayData({
+                            ...currPathwayData,
                             modules: course.modules,
                           });
                         }}
@@ -302,13 +430,13 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                               color: "red",
                             }}
                             onClick={() => {
-                              let course = currCourseData;
+                              let course = currPathwayData;
                               course.modules[index].presetContent.splice(
                                 contentIndex,
                                 1
                               );
-                              setCurrCourseData({
-                                ...currCourseData,
+                              setCurrPathwayData({
+                                ...currPathwayData,
                                 modules: course.modules,
                               });
                             }}
@@ -329,12 +457,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                               <input
                                 value={preset.title}
                                 onChange={(e) => {
-                                  let course = currCourseData;
+                                  let course = currPathwayData;
                                   course.modules[index].presetContent[
                                     contentIndex
                                   ].title = e.target.value;
-                                  setCurrCourseData({
-                                    ...currCourseData,
+                                  setCurrPathwayData({
+                                    ...currPathwayData,
                                     modules: course.modules,
                                   });
                                 }}
@@ -359,12 +487,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                               <input
                                 value={preset.priority}
                                 onChange={(e) => {
-                                  let course = currCourseData;
+                                  let course = currPathwayData;
                                   course.modules[index].presetContent[
                                     contentIndex
                                   ].priority = parseInt(e.target.value);
-                                  setCurrCourseData({
-                                    ...currCourseData,
+                                  setCurrPathwayData({
+                                    ...currPathwayData,
                                     modules: course.modules,
                                   });
                                 }}
@@ -386,12 +514,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                             <ECDropDown
                               isForWaitlist
                               onChange={(value) => {
-                                let course = currCourseData;
+                                let course = currPathwayData;
                                 course.modules[index].presetContent[
                                   contentIndex
                                 ].type = value;
-                                setCurrCourseData({
-                                  ...currCourseData,
+                                setCurrPathwayData({
+                                  ...currPathwayData,
                                   modules: course.modules,
                                 });
                               }}
@@ -412,12 +540,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                               <input
                                 value={preset.url}
                                 onChange={(e) => {
-                                  let course = currCourseData;
+                                  let course = currPathwayData;
                                   course.modules[index].presetContent[
                                     contentIndex
                                   ].url = e.target.value;
-                                  setCurrCourseData({
-                                    ...currCourseData,
+                                  setCurrPathwayData({
+                                    ...currPathwayData,
                                     modules: course.modules,
                                   });
                                 }}
@@ -440,12 +568,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                               <input
                                 value={preset.content}
                                 onChange={(e) => {
-                                  let course = currCourseData;
+                                  let course = currPathwayData;
                                   course.modules[index].presetContent[
                                     contentIndex
                                   ].content = e.target.value;
-                                  setCurrCourseData({
-                                    ...currCourseData,
+                                  setCurrPathwayData({
+                                    ...currPathwayData,
                                     modules: course.modules,
                                   });
                                 }}
@@ -463,7 +591,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                     })}
                     <button
                       onClick={() => {
-                        let course = currCourseData;
+                        let course = currPathwayData;
                         course.modules[index].presetContent.push({
                           priority: -1,
                           title: "",
@@ -471,8 +599,8 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                           url: "",
                           content: "",
                         });
-                        setCurrCourseData({
-                          ...currCourseData,
+                        setCurrPathwayData({
+                          ...currPathwayData,
                           modules: course.modules,
                         });
                       }}
@@ -500,12 +628,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 color: "red",
                               }}
                               onClick={() => {
-                                let course = currCourseData;
+                                let course = currPathwayData;
                                 course.modules[
                                   index
                                 ].personalizedContent.splice(contentIndex, 1);
-                                setCurrCourseData({
-                                  ...currCourseData,
+                                setCurrPathwayData({
+                                  ...currPathwayData,
                                   modules: course.modules,
                                 });
                               }}
@@ -526,12 +654,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 <input
                                   value={personalized.title}
                                   onChange={(e) => {
-                                    let course = currCourseData;
+                                    let course = currPathwayData;
                                     course.modules[index].personalizedContent[
                                       contentIndex
                                     ].title = e.target.value;
-                                    setCurrCourseData({
-                                      ...currCourseData,
+                                    setCurrPathwayData({
+                                      ...currPathwayData,
                                       modules: course.modules,
                                     });
                                   }}
@@ -556,12 +684,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 <input
                                   value={personalized.priority}
                                   onChange={(e) => {
-                                    let course = currCourseData;
+                                    let course = currPathwayData;
                                     course.modules[index].personalizedContent[
                                       contentIndex
                                     ].priority = parseInt(e.target.value);
-                                    setCurrCourseData({
-                                      ...currCourseData,
+                                    setCurrPathwayData({
+                                      ...currPathwayData,
                                       modules: course.modules,
                                     });
                                   }}
@@ -583,12 +711,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                               <ECDropDown
                                 isForWaitlist
                                 onChange={(value) => {
-                                  let course = currCourseData;
+                                  let course = currPathwayData;
                                   course.modules[index].personalizedContent[
                                     contentIndex
                                   ].type = value;
-                                  setCurrCourseData({
-                                    ...currCourseData,
+                                  setCurrPathwayData({
+                                    ...currPathwayData,
                                     modules: course.modules,
                                   });
                                 }}
@@ -609,12 +737,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 <input
                                   value={personalized.url}
                                   onChange={(e) => {
-                                    let course = currCourseData;
+                                    let course = currPathwayData;
                                     course.modules[index].personalizedContent[
                                       contentIndex
                                     ].url = e.target.value;
-                                    setCurrCourseData({
-                                      ...currCourseData,
+                                    setCurrPathwayData({
+                                      ...currPathwayData,
                                       modules: course.modules,
                                     });
                                   }}
@@ -639,12 +767,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 <input
                                   value={personalized.content}
                                   onChange={(e) => {
-                                    let course = currCourseData;
+                                    let course = currPathwayData;
                                     course.modules[index].personalizedContent[
                                       contentIndex
                                     ].content = e.target.value;
-                                    setCurrCourseData({
-                                      ...currCourseData,
+                                    setCurrPathwayData({
+                                      ...currPathwayData,
                                       modules: course.modules,
                                     });
                                   }}
@@ -667,21 +795,21 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                   Content Tags:
                                 </label>
                                 <div className="d-flex flex-row w-100 flex-wrap">
-                                  {currCourseData.modules[
+                                  {currPathwayData.modules[
                                     index
                                   ].personalizedContent[contentIndex].tags.map(
                                     (tag, tagIndex) => (
                                       <input
                                         value={tag}
                                         onChange={(e) => {
-                                          let course = currCourseData;
+                                          let course = currPathwayData;
                                           course.modules[
                                             index
                                           ].personalizedContent[
                                             contentIndex
                                           ].tags[tagIndex] = e.target.value;
-                                          setCurrCourseData({
-                                            ...currCourseData,
+                                          setCurrPathwayData({
+                                            ...currPathwayData,
                                             modules: course.modules,
                                           });
                                         }}
@@ -702,12 +830,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                     }}
                                     className="align-self-center align-items-center justify-content-center"
                                     onClick={() => {
-                                      let course = currCourseData;
+                                      let course = currPathwayData;
                                       course.modules[index].personalizedContent[
                                         contentIndex
                                       ].tags.push("");
-                                      setCurrCourseData({
-                                        ...currCourseData,
+                                      setCurrPathwayData({
+                                        ...currPathwayData,
                                         modules: course.modules,
                                       });
                                     }}
@@ -723,18 +851,19 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                     )}
                     <button
                       onClick={() => {
-                        let course = currCourseData;
+                        let course = currPathwayData;
                         course.modules[index].personalizedContent.push({
+                          moduleId: null,
+                          _id: null,
                           priority: -1,
                           title: "",
                           type: "",
                           url: "",
                           content: "",
                           tags: [""],
-                          tagConfigs: [[]],
                         });
-                        setCurrCourseData({
-                          ...currCourseData,
+                        setCurrPathwayData({
+                          ...currPathwayData,
                           modules: course.modules,
                         });
                       }}
@@ -742,46 +871,48 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                       Add Another Personalized Content
                     </button>
                   </div>
-                  <button
-                    onClick={() => {
-                      let course = currCourseData;
-                      course.modules.push({
-                        title: "",
-                        presetContent: [
-                          {
-                            priority: -1,
-                            title: "",
-                            type: "",
-                            url: "",
-                            content: "",
-                          },
-                        ],
-                        personalizedContent: [
-                          {
-                            priority: -1,
-                            title: "",
-                            type: "",
-                            url: "",
-                            content: "",
-                            tags: [""],
-                            tagConfigs: [[]],
-                          },
-                        ],
-                        tags: ["", ""],
-                      });
-                      setCurrCourseData({
-                        ...currCourseData,
-                        modules: course.modules,
-                      });
-                    }}
-                  >
-                    Add Another Module
-                  </button>
                 </>
               );
             })}
           </div>
         </div>
+        <button
+          onClick={() => {
+            let course = currPathwayData;
+            course.modules.push({
+              title: "",
+              _id: null,
+              presetContent: [
+                {
+                  priority: -1,
+                  title: "",
+                  type: "",
+                  url: "",
+                  content: "",
+                },
+              ],
+              personalizedContent: [
+                {
+                  moduleId: null,
+                  _id: null,
+                  priority: -1,
+                  title: "",
+                  type: "",
+                  url: "",
+                  content: "",
+                  tags: [""],
+                },
+              ],
+              tags: ["", ""],
+            });
+            setCurrPathwayData({
+              ...currPathwayData,
+              modules: course.modules,
+            });
+          }}
+        >
+          Add Another Module
+        </button>
       </div>
     </UploadPage>
   );

@@ -4,7 +4,7 @@ import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 interface QuestionSubPageHeaderProps {
   title: string;
   percentage: number;
-  subText?: string;
+  subText?: string | JSX.Element;
   isExtracurricular?: boolean;
   onAddNew?: Function;
 }

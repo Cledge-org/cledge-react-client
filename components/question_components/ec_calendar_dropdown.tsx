@@ -12,8 +12,10 @@ import Dropdown from "react-dropdown";
 import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
 import ECDropDown from "./ec_dropdown_question";
 
-interface ECCalendarDropDownProps {}
-const defaultProps: ECCalendarDropDownProps = {};
+interface ECCalendarDropDownProps {
+  onChange: Function;
+  initialDate: Date;
+}
 function useOutsideAlerter(ref, handleClickOutside) {
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -22,8 +24,11 @@ function useOutsideAlerter(ref, handleClickOutside) {
     };
   }, [ref]);
 }
-export default function ECCalendarDropDown() {
-  const [chosen, setChosen] = useState(new Date());
+export default function ECCalendarDropDown({
+  onChange,
+  initialDate,
+}: ECCalendarDropDownProps) {
+  const [chosen, setChosen] = useState(initialDate ? initialDate : new Date());
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
   const months = [
@@ -55,6 +60,7 @@ export default function ECCalendarDropDown() {
   });
   const changeChosen = (value: Date) => {
     setChosen(value);
+    onChange(value);
   };
   const buildDays = () => {
     let daysRows = [];
@@ -155,4 +161,3 @@ export default function ECCalendarDropDown() {
     </div>
   );
 }
-ECCalendarDropDown.defaultProps = defaultProps;

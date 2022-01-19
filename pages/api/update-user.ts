@@ -1,6 +1,8 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
+import { MONGO_CONNECTION_STRING } from "../../config";
+import AuthFunctions from "./auth/firebase-auth";
 
 export const config = {
   api: {
@@ -8,20 +10,18 @@ export const config = {
   },
 };
 
+// Sets a user in the database given their user ID to the given AccountInfo
+// object
+// TODO: validate AccountInfo object (userInfo) is valid
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { id, name, address, grade, birthday, email, tags } = req.body;
-  if (!id) {
-    resolve.status(400).send("User ID required (id)");
+  const { userInfo, userId } = JSON.parse(req.body);
+  if (!userId || !userInfo) {
+    resolve
+      .status(400)
+      .send("User ID required (userId) and User Info (userInfo)");
   } else {
     try {
-      await updateUser(id, {
-        name,
-        address,
-        grade,
-        birthday,
-        email,
-        tags,
-      });
+      await updateUser(userId, userInfo);
       resolve.status(200).send("Success");
     } catch (e) {
       resolve.status(500).send(e);
@@ -32,7 +32,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // Updates user of id with provided AccountInfo. If a field is not provided, it
 // will not be updated, so its old value will remain.
 export const updateUser = async (
-  id: string,
+  firebaseId: string,
   user: AccountInfo
 ): Promise<void> => {
   return new Promise((res, err) => {
@@ -49,7 +49,7 @@ export const updateUser = async (
           await client
             .db("users")
             .collection("users")
-            .updateOne({ _id: id }, { $set: user });
+            .updateOne({ firebaseId }, { $set: user });
           res();
         } catch (e) {
           err(e);

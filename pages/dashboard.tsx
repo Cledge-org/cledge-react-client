@@ -3,9 +3,10 @@ import React, {
   ReactElement,
   ReactNodeArray,
   ReactPortal,
+  useEffect,
   useState,
 } from "react";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import Card from "../components/common/Card";
 import CardVideo from "../components/common/Card_Video";
 import CardText from "../components/common/Card_Text";
@@ -13,13 +14,29 @@ import CardTask from "../components/common/Card_Task";
 import TabButton from "../components/common/TabButton";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "./_app";
-import { getDashboardInfo } from "./api/get-dashboard";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
+import { redirect } from "next/dist/server/api-utils";
+import getAccountInfo from "./api/get-account";
+import { getPathwayProgress } from "./api/get-pathway-progress";
+import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
+import { ORIGIN_URL } from "../config";
+import AuthFunctions from "./api/auth/firebase-auth";
+import { getAllPathwaysAccountAndProgress } from "./api/get-dashboard";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    return { props: { pathwaysInfo: await getDashboardInfo("testUser") } };
+    const session = await getSession(ctx);
+    return {
+      props: {
+        ...(await (
+          await fetch(`${ORIGIN_URL}/api/get-dashboard`, {
+            method: "POST",
+            body: JSON.stringify({ userId: session.user.uid }),
+          })
+        ).json()),
+      },
+    };
   } catch (err) {
     console.log(err);
     ctx.res.end();
@@ -28,21 +45,44 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 
 // logged in landing page
-const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
-  pathwaysInfo,
-}) => {
+const Dashboard: NextApplicationPage<{
+  dashboardInfo: Dashboard;
+  allPathways: Pathway[];
+}> = ({ dashboardInfo, allPathways }) => {
+  console.error(allPathways);
   const router = useRouter();
   const session = useSession();
   const [currTab, setCurrTab] = useState("current tasks");
+  const [isInUserView, setIsInUserView] = useState(false);
   const getCurrentTasks = () => {
-    // if(pathwaysInfo.userProgress === undefined){
-    //   return
-    // }
-    return pathwaysInfo.userProgress
+    let noProgress = [];
+    allPathways?.forEach((pathway) => {
+      if (
+        !dashboardInfo.userProgress.find(({ pathwayId }) => {
+          return pathwayId === pathway._id;
+        })
+      ) {
+        let subtasks = {};
+        pathway.modules.forEach(({ title }) => {
+          subtasks[title] = false;
+        });
+        noProgress.push(
+          <CardTask
+            url={"/pathways/[id]"}
+            correctUrl={`/pathways/${pathway._id}`}
+            textGradient="light"
+            title={pathway.title}
+            subtasks={subtasks}
+          />
+        );
+      }
+    });
+    return dashboardInfo.userProgress
       .filter(({ finished }) => {
+        console.log(finished);
         return !finished;
       })
-      .map(({ moduleProgress, title, id }) => {
+      .map(({ moduleProgress, title, pathwayId }) => {
         let subtasks = {};
         moduleProgress.forEach(({ title }) => {
           let moduleTitle = title;
@@ -53,20 +93,21 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
         return (
           <CardTask
             url={"/pathways/[id]"}
-            correctUrl={`/pathways/${id}`}
+            correctUrl={`/pathways/${pathwayId}`}
             textGradient="light"
             title={title}
             subtasks={subtasks}
           />
         );
-      });
+      })
+      .concat(noProgress);
   };
   const getFinishedTasks = () => {
-    return pathwaysInfo.userProgress
+    return dashboardInfo.userProgress
       .filter(({ finished }) => {
         return finished;
       })
-      .map(({ moduleProgress, title, id }) => {
+      .map(({ moduleProgress, title, pathwayId }) => {
         let subtasks = {};
         moduleProgress.forEach(({ title }) => {
           subtasks[title] = true;
@@ -74,7 +115,7 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
         return (
           <CardTask
             url={"/pathways/[id]"}
-            correctUrl={`/pathways/${id}`}
+            correctUrl={`/pathways/${pathwayId}`}
             textGradient="light"
             title={title}
             subtasks={subtasks}
@@ -82,46 +123,77 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
         );
       });
   };
-  if (session.data.user.email === "") {
-    //"yousefgomaa@hotmail.com") {
+  useEffect(() => {
+    //resetProgress();
+  }, []);
+  //UNCOMMENT THIS ONCE TESTING IS FINISHED
+  if (dashboardInfo.checkIns.length > 0) {
+    router.push({
+      pathname: "/[questionnaire]",
+      query: { questionnaire: dashboardInfo.checkIns },
+    });
+  }
+  if (session.data?.user?.email === "test31@gmail.com" && !isInUserView) {
     return (
-      <div className="container-fluid p-5 d-flex flex-row justify-content-between">
+      <div className="container-fluid p-5 align-items-center d-flex flex-column">
         <button
           onClick={() => {
-            router.push({
-              pathname: "/upload/learning-pathways-upload",
-            });
+            setIsInUserView(true);
           }}
         >
-          Learning Pathways
+          Switch to User View
         </button>
-        <button
-          onClick={() => {
-            router.push({
-              pathname: "/upload/resources-upload",
-            });
-          }}
-        >
-          Resources
-        </button>
-        <button
-          onClick={() => {
-            router.push({
-              pathname: "/upload/question-upload",
-            });
-          }}
-        >
-          User Progress Questions
-        </button>
+        <div className="container-fluid p-5 d-flex flex-row justify-content-between">
+          <button
+            onClick={() => {
+              router.push({
+                pathname: "/upload/learning-pathways-upload",
+              });
+            }}
+          >
+            Learning Pathways
+          </button>
+          <button
+            onClick={() => {
+              router.push({
+                pathname: "/upload/resources-upload",
+              });
+            }}
+          >
+            Resources
+          </button>
+          <button
+            onClick={() => {
+              router.push({
+                pathname: "/upload/question-upload",
+              });
+            }}
+          >
+            User Progress Questions
+          </button>
+        </div>
       </div>
     );
   }
+  let currentTasks = getCurrentTasks();
+  let finishedTasks = getFinishedTasks();
+  console.log(currentTasks);
+  console.log(finishedTasks);
   return (
     <div className="container-fluid p-5">
+      {session.data?.user?.email === "test31@gmail.com" ? (
+        <button
+          onClick={() => {
+            setIsInUserView(false);
+          }}
+        >
+          Switch to Admin View
+        </button>
+      ) : null}
       <div className="row">
         <h1 className="pt-2 red-purple-text-gradient fw-bold">
           <strong>
-            Welcome back, {pathwaysInfo.userName}
+            Welcome back, {dashboardInfo.userName}
             <br />
             This is your home page.
             <br />
@@ -149,10 +221,32 @@ const Dashboard: NextApplicationPage<{ pathwaysInfo: Dashboard }> = ({
       </div>
       <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
         {currTab === "current tasks" ? (
-          <div className="row w-100">{getCurrentTasks()}</div>
+          <div className="row w-100">
+            {currentTasks.length > 0 ? (
+              currentTasks
+            ) : (
+              <div
+                className="container-fluid center-child"
+                style={{ height: "40vh" }}
+              >
+                You have no current tasks.
+              </div>
+            )}
+          </div>
         ) : null}
         {currTab === "finished tasks" ? (
-          <div className="row w-100">{getFinishedTasks()}</div>
+          <div className="row w-100">
+            {finishedTasks.length > 0 ? (
+              finishedTasks
+            ) : (
+              <div
+                className="container-fluid center-child"
+                style={{ height: "40vh" }}
+              >
+                Any finished tasks will appear here.
+              </div>
+            )}
+          </div>
         ) : null}
       </div>
     </div>

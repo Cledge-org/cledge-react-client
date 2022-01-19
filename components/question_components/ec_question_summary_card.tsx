@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import MCQQuestion from "./mcq_question";
 import CheckBoxQuestion from "./checkbox_question";
 import TextInputQuestion from "./textinput_question";
+Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface ECQuestionSummaryCardProps {
   response: UserResponse[];
@@ -21,14 +22,12 @@ export default function ECQuestionSummaryCard({
   const titleQuestion = response.find(
     ({ questionId }) =>
       questionId ===
-      chunkQuestions.find(({ question }) => question === "Title").id
+      chunkQuestions.find(({ question }) => question === "Title")?._id
   );
   return (
     <div className="w-100 d-flex flex-column justify-content-evenly qsummary-card-container mt-3">
       <div className="d-flex justify-content-between align-items-center px-4 pt-3 question-text">
-        {titleQuestion !== undefined
-          ? titleQuestion.response
-          : "No Title Given"}
+        {titleQuestion ? titleQuestion.response : "No Title Given"}
         <button onClick={() => onClick()} className="icon-btn center-child">
           <div
             onClick={() => {
@@ -41,15 +40,22 @@ export default function ECQuestionSummaryCard({
         </button>
       </div>
       <div className="w-100 d-flex align-items-center justify-content-center ecsummary-info-container">
-        {chunkQuestions.map(({ question, type, id }) =>
+        {chunkQuestions.map(({ question, type, _id }) =>
           question !== "Title" ? (
             <div className="ecsummary-info-section">
               <div className="name">{question.toLocaleUpperCase()}</div>
               <div className="value">
-                {response.find(({ questionId }) => id === questionId) !==
+                {response.find(({ questionId }) => _id === questionId) !==
                 undefined
-                  ? response.find(({ questionId }) => id === questionId)
-                      .response
+                  ? response.find(({ questionId }) => _id === questionId)
+                      .response instanceof Array
+                    ? response
+                        .find(({ questionId }) => _id === questionId)
+                        .response.reduce((prev, curr) => {
+                          return prev === "" ? curr : prev + ", " + curr;
+                        }, "")
+                    : response.find(({ questionId }) => _id === questionId)
+                        .response
                   : "Not Answered"}
               </div>
             </div>

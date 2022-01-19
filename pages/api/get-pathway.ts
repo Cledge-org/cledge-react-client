@@ -1,6 +1,7 @@
-import { Db, MongoClient } from "mongodb";
+import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
+import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -9,66 +10,82 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve
-    .status(200)
-    .send(getPathway("TEST_USER_ID", "TEST_COURSE_ID"));
+  // TODO: authentication, grab user id from token validation (probably)
+  const { userToken, userId, pathwayId } = JSON.parse(req.body);
+  return userId && pathwayId
+    ? resolve.status(200).send(await getPathway(userId, pathwayId))
+    : resolve.status(400).send("Both user and pathway IDs required");
 };
 
-// Gets all the pathway modules and content for a pathway ID and specific user
+// Gets all the pathway modules and content for a pathway ID and specific user (firebaseId)
 export async function getPathway(
   userId: string,
-  courseId: string
+  pathwayId: ObjectId
 ): Promise<Pathway> {
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
-        const coursesDb = client.db("courses");
+        const pathwaysDb = client.db("pathways");
         const usersDb = client.db("users");
 
         const [pathway, accountInfo]: [Pathway_Db, AccountInfo] =
           await Promise.all([
-            coursesDb
-              .collection("courses")
-              .findOne({ _id: courseId }) as Promise<Pathway_Db>,
-            usersDb
-              .collection("users")
-              .findOne({ _id: userId }) as Promise<AccountInfo>,
+            pathwaysDb
+              .collection("pathways")
+              .findOne({ _id: pathwayId }) as Promise<Pathway_Db>,
+            usersDb.collection("users").findOne({
+              firebaseId: userId,
+            }) as Promise<AccountInfo>,
           ]);
-        const modules: PathwayModule[] = await Promise.all(
+        let modules: PathwayModule[] = await Promise.all(
           pathway.modules.map((moduleId) =>
-            getModule(moduleId, coursesDb, accountInfo.tags)
+            getModule(moduleId, pathwaysDb, accountInfo.tags)
           )
         );
-        res({ tags: pathway.tags, title: pathway.title, id: pathway.id, modules });
+        modules = modules.filter((x) => x !== null);
+        res({
+          tags: pathway.tags,
+          title: pathway.title,
+          _id: pathway._id,
+          modules,
+        });
       }
     );
   });
 }
 
-const getModule = (
+export const getModule = (
   moduleId: string,
-  coursesDb: Db,
+  pathwaysDb: Db,
   userTags: string[]
-): Promise<PathwayModule> => {
+): Promise<PathwayModule | null> => {
   return new Promise(async (res, err) => {
     try {
-      // Get module with preset content
-      const module: PathwayModule_Db = (await coursesDb
-        .collection("modules")
-        .findOne({ _id: moduleId })) as PathwayModule_Db;
-      // Populate this module's personalized content based on user's tags
-      const personalizedContent = (await coursesDb
-        .collection("personalized-content")
-        .find({ tags: { $in: userTags }, moduleId })
-        .toArray()) as PersonalizedContent[];
-      res({
-        title: module.title,
-        presetContent: module.presetContent,
-        tags: module.tags,
-        personalizedContent,
-      });
+      const [module, personalizedContent]: [
+        PathwayModule_Db,
+        PersonalizedContent[]
+      ] = await Promise.all([
+        pathwaysDb.collection("modules").findOne({
+          _id: new ObjectId(moduleId),
+        }) as Promise<PathwayModule_Db>,
+        pathwaysDb
+          .collection("personalized-content")
+          .find({ tags: { $in: userTags }, moduleId })
+          .toArray() as Promise<PersonalizedContent[]>,
+      ]);
+      if (!module) {
+        res(null);
+      } else {
+        res({
+          _id: module._id,
+          title: module.title,
+          presetContent: module.presetContent,
+          tags: module.tags,
+          personalizedContent,
+        });
+      }
     } catch (e) {
       err(e);
     }

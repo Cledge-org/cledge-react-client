@@ -1,30 +1,44 @@
 import React, { useEffect, useState } from "react";
 import QuestionSubPageHeader from "./question_subpage_header";
-import QuestionSummaryCard from "./question_summary_card";
 import CheckBox from "../common/CheckBox";
 
 interface CheckBoxQuestionProps {
   question: Question;
   userAnswers: string[];
+  onChange: Function;
+  tags: string[];
 }
 
 export default function CheckBoxQuestion({
   question,
   userAnswers,
+  onChange,
+  tags,
 }: CheckBoxQuestionProps) {
-  const [selected, setSelected] = useState([0]);
+  const [selected, setSelected] = useState(
+    userAnswers !== null ? userAnswers.slice() : []
+  );
   useEffect(() => {
     console.log(selected);
   }, [selected]);
-  const changeSelected = (value: number) => {
-    setSelected((selectedCopy): number[] => {
-      if (selectedCopy.includes(value)) {
-        selectedCopy.splice(selectedCopy.indexOf(value), 1);
-      } else {
-        selectedCopy.push(value);
-      }
-      return selectedCopy;
+  let changeSelected = (value: string) => {
+    let selectedCopy = selected.slice();
+    if (selectedCopy.includes(value)) {
+      selectedCopy.splice(selectedCopy.indexOf(value), 1);
+    } else {
+      selectedCopy.push(value);
+    }
+    let oldTags = userAnswers?.map((checkedOp, index) => {
+      return question.data.find(({ tag, op }) => op === checkedOp)?.tag;
     });
+    setSelected(selectedCopy);
+    onChange(
+      selectedCopy,
+      selectedCopy.map((checkedOp, index) => {
+        return question.data.find(({ tag, op }) => op === checkedOp)?.tag;
+      }),
+      oldTags
+    );
   };
   return (
     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
@@ -36,23 +50,28 @@ export default function CheckBoxQuestion({
           return (
             <button
               key={op}
-              onClick={() => {}}
+              onClick={() => {
+                console.log(tag);
+                changeSelected(op);
+              }}
               className={
-                userAnswers.includes(tag)
+                selected.includes(op)
                   ? "checkbox-mcq-variant-selected"
                   : "checkbox-mcq-variant"
               }
             >
               {op}
               <CheckBox
-                selected={userAnswers.includes(tag)}
-                setSelected={changeSelected.bind(this)}
+                selected={selected.includes(op)}
+                setSelected={() => {
+                  changeSelected(op);
+                }}
               />
             </button>
           );
         })}
       </div>
-      <button className="general-submit-btn">SUBMIT</button>
+      {/* <button className="general-submit-btn">SUBMIT</button> */}
     </div>
   );
 }

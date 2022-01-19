@@ -1,4 +1,4 @@
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -85,6 +85,11 @@ export default function Header({ key }: { key: string }) {
         >
           {status === "authenticated" ? (
             <div className="navbar-nav">
+              <Link href="/dashboard">
+                <a className="nav-link" style={{ fontWeight: 600 }}>
+                  <span className={`${colors}`}>My Learning</span>
+                </a>
+              </Link>
               <Link href="/resources">
                 <a className="nav-link" style={{ fontWeight: 600 }}>
                   <span className={`${colors}`}>Resources</span>

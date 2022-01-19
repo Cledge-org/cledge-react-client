@@ -7,10 +7,17 @@ import { NextApplicationPage } from "./_app";
 import CardImage from "../components/common/Card_Image";
 import { GetServerSidePropsContext } from "next";
 import { getResourcesInfo } from "./api/get-resources";
+import { ORIGIN_URL } from "../config";
 
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+export const getStaticProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    return { props: { resourcesInfo: await getResourcesInfo() } };
+    return {
+      props: {
+        resourcesInfo: await (
+          await fetch(`${ORIGIN_URL}/api/get-resources`)
+        ).json(),
+      },
+    };
   } catch (err) {
     console.log(err);
     ctx.res.end();
@@ -77,7 +84,7 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
               <CardVideo
                 title={element.title}
                 textGradient={"light"}
-                videoId={element.source}
+                videoUrl={element.source}
               />
             ))}
           </div>

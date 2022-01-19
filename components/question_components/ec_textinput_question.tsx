@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import QuestionSubPageHeader from "./question_subpage_header";
-import QuestionSummaryCard from "./question_summary_card";
 
 interface ECTextInputQuestionProps {
   questionTitle: string;
   userResponse: string;
+  placeholder: string;
+  onChange: Function;
 }
 
 export default function ECTextInputQuestion({
   questionTitle,
   userResponse,
+  placeholder,
+  onChange,
 }: ECTextInputQuestionProps) {
   return (
     <div className="w-100 d-flex flex-column justify-content-evenly pt-5">
@@ -20,7 +23,10 @@ export default function ECTextInputQuestion({
         defaultValue={userResponse}
         type="text"
         className="form-control ec-text-input"
-        placeholder="Your response..."
+        placeholder={placeholder}
+        onChange={() => {
+          onChange();
+        }}
       />
     </div>
   );
