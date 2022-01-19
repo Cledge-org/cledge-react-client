@@ -5,6 +5,8 @@ import { getProviders, signIn } from "next-auth/react";
 import type { Provider } from "next-auth/providers";
 import GoogleProvider from "next-auth/providers/google";
 import AuthFunctions from "../api/auth/firebase-auth";
+import { useForm } from "react-hook-form";
+
 
 export default function signup() {
   var [formData, setFormData] = useState({
@@ -14,6 +16,9 @@ export default function signup() {
     password1: "",
     password2: "",
   });
+
+  const { register, formState: {errors} } = useForm();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     await AuthFunctions.createUser(formData.email, formData.password1, {
@@ -50,6 +55,14 @@ export default function signup() {
               className="px-3 form-control"
               id="firstName"
               placeholder="First Name"
+              {...register("email", {
+                required: "Enter your e-mail",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z0-9.-]$/i,
+                  message: "Enter a valid e-mail address",
+                },          
+              
+              })}
             />
           </div>
           <div className="form-group mt-3 split-input">
