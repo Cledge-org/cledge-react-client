@@ -14,4 +14,5 @@ export const actions = {
   ADD_RESOURCE: "addResource",
   ADD_PATHWAY: "addPathway",
   UPDATE_PATHWAY: "updatePathway",
+  SET_INITIAL_STATE: "setInitialState",
 };

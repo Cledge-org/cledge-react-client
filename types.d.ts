@@ -82,12 +82,6 @@ interface Question extends WithId<Document> {
 }
 
 //Learning Pathways Types -->
-interface Dashboard {
-  userName: string;
-  userTags: string[];
-  userProgress: PathwayProgress[];
-  checkIns: string[];
-}
 interface UserPathway {
   pathway: Course;
   userTags: string[];

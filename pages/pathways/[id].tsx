@@ -9,6 +9,7 @@ import { getAccountInfo } from "../api/get-account";
 import AuthFunctions from "../api/auth/firebase-auth";
 import { ORIGIN_URL } from "../../config";
 import { getSession, useSession } from "next-auth/react";
+import { connect } from "react-redux";
 
 //profile progress/ question summary page
 
@@ -18,7 +19,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return {
       props: {
         ...(await (
-          await fetch(`${ORIGIN_URL}/api/get-pathway-and-progress`, {
+          await fetch(`${ORIGIN_URL}/api/get-pathway`, {
             method: "POST",
             body: JSON.stringify({
               userId: session.user.uid,
@@ -669,4 +670,6 @@ const Pathways: NextApplicationPage<{
 };
 
 Pathways.requireAuth = true;
-export default Pathways;
+export default connect((state) => ({
+  pathwaysProgress: state.pathwaysProgress,
+}))(Pathways);

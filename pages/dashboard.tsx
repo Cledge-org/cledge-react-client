@@ -23,18 +23,15 @@ import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
 import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { getAllPathwaysAccountAndProgress } from "./api/get-dashboard";
+import { connect } from "react-redux";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    const session = await getSession(ctx);
     return {
       props: {
-        ...(await (
-          await fetch(`${ORIGIN_URL}/api/get-dashboard`, {
-            method: "POST",
-            body: JSON.stringify({ userId: session.user.uid }),
-          })
-        ).json()),
+        allPathways: await (
+          await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
+        ).json(),
       },
     };
   } catch (err) {
@@ -46,19 +43,21 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 // logged in landing page
 const Dashboard: NextApplicationPage<{
-  dashboardInfo: Dashboard;
   allPathways: Pathway[];
-}> = ({ dashboardInfo, allPathways }) => {
+  accountInfo: AccountInfo;
+  pathwaysProgress: PathwayProgress[];
+}> = ({ allPathways, accountInfo, pathwaysProgress }) => {
   console.error(allPathways);
   const router = useRouter();
   const session = useSession();
   const [currTab, setCurrTab] = useState("current tasks");
   const [isInUserView, setIsInUserView] = useState(false);
+  console.log(accountInfo);
   const getCurrentTasks = () => {
     let noProgress = [];
     allPathways?.forEach((pathway) => {
       if (
-        !dashboardInfo.userProgress.find(({ pathwayId }) => {
+        !pathwaysProgress.find(({ pathwayId }) => {
           return pathwayId === pathway._id;
         })
       ) {
@@ -77,7 +76,7 @@ const Dashboard: NextApplicationPage<{
         );
       }
     });
-    return dashboardInfo.userProgress
+    return pathwaysProgress
       .filter(({ finished }) => {
         console.log(finished);
         return !finished;
@@ -103,7 +102,7 @@ const Dashboard: NextApplicationPage<{
       .concat(noProgress);
   };
   const getFinishedTasks = () => {
-    return dashboardInfo.userProgress
+    return pathwaysProgress
       .filter(({ finished }) => {
         return finished;
       })
@@ -127,10 +126,10 @@ const Dashboard: NextApplicationPage<{
     //resetProgress();
   }, []);
   //UNCOMMENT THIS ONCE TESTING IS FINISHED
-  if (dashboardInfo.checkIns.length > 0) {
+  if (accountInfo.checkIns.length > 0) {
     router.push({
       pathname: "/[questionnaire]",
-      query: { questionnaire: dashboardInfo.checkIns },
+      query: { questionnaire: accountInfo.checkIns },
     });
   }
   if (session.data?.user?.email === "test31@gmail.com" && !isInUserView) {
@@ -193,7 +192,7 @@ const Dashboard: NextApplicationPage<{
       <div className="row">
         <h1 className="pt-2 red-purple-text-gradient fw-bold">
           <strong>
-            Welcome back, {dashboardInfo.userName}
+            Welcome back, {accountInfo.name}
             <br />
             This is your home page.
             <br />
@@ -253,4 +252,7 @@ const Dashboard: NextApplicationPage<{
   );
 };
 Dashboard.requireAuth = true;
-export default Dashboard;
+export default connect((state) => ({
+  accountInfo: state.accountInfo,
+  pathwaysProgress: state.pathwaysProgress,
+}))(Dashboard);

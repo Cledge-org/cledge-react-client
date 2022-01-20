@@ -9,26 +9,9 @@ import { getAccountInfo } from "./api/get-account";
 import { getSession, useSession } from "next-auth/react";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { ORIGIN_URL } from "../config";
+import { connect } from "react-redux";
 
 // account page
-
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  try {
-    const session = await getSession(ctx);
-    let accountInfo: AccountInfo = await (
-      await fetch(`${ORIGIN_URL}/api/get-account`, {
-        method: "POST",
-        body: JSON.stringify({ userId: session.user.uid }),
-      })
-    ).json();
-    // accountInfo.birthday = accountInfo.birthday.toDateString(); //THIS WORKS -- IT'S A TEMPORARY SOLUTION
-    return { props: { accountInfo } };
-  } catch (err) {
-    console.log(err);
-    ctx.res.end();
-    return { props: {} as never };
-  }
-};
 
 const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
   accountInfo,
@@ -229,4 +212,6 @@ function InfoSection({ name, value, onEdit }: InfoSectionProps) {
   );
 }
 AccountPage.requireAuth = true;
-export default AccountPage;
+export default connect((state) => ({ accountInfo: state.accountInfo }))(
+  AccountPage
+);

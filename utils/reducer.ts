@@ -5,6 +5,14 @@ export const reducer: Reducer<any, any> = (
   state: any | undefined,
   action: Action<any> | undefined
 ) => {
+  console.log(action);
+  if (action.type === actions.SET_INITIAL_STATE) {
+    return {
+      pathwaysProgress: action.pathwaysProgress,
+      questionResponses: action.questionResponses,
+      accountInfo: action.accountInfo,
+    };
+  }
   if (action.type === actions.NEW_QUESTION_RESPONSE) {
   }
   if (action.type === actions.UDPATE_QUESTION_RESPONSE) {

@@ -24,20 +24,14 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // Gets all user responses to relevant questions by a user's firebaseId
 export async function getQuestionProgress(
   userId: string
-): Promise<ProgressInfo> {
-  const [userResponses, userInfo, questionData] = await Promise.all([
-    getQuestionResponses(userId),
-    getAccountInfo(userId),
-    getAllQuestionLists(),
-  ]);
+): Promise<{ questionData: QuestionList[] }> {
+  const questionData = await getAllQuestionLists();
   return new Promise((res, err) => {
     MongoClient.connect(
       MONGO_CONNECTION_STRING,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         res({
-          userTags: userInfo.tags,
-          userProgress: { responses: userResponses },
           questionData,
         });
       }

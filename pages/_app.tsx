@@ -5,9 +5,13 @@ import "../styles/main_pages.scss";
 import "../styles/components.scss";
 import "../styles/question_components.scss";
 import "../styles/testing.css";
-import { SessionProvider as AuthProvider } from "next-auth/react";
+import {
+  getSession,
+  SessionProvider as AuthProvider,
+  useSession,
+} from "next-auth/react";
 import type { AppProps } from "next/app";
-import { NextPage } from "next";
+import { GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
 import Layout from "../components/common/Layout";
 import { store } from "../utils/store";
@@ -17,11 +21,12 @@ import AuthFunctions from "./api/auth/firebase-auth";
 import { useEffect, useState } from "react";
 import { Router, useRouter } from "next/router";
 import LoadingScreen from "../components/common/loading";
+import { ORIGIN_URL } from "../config";
+import { initialStateAction } from "../utils/actionFunctions";
 
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
   requireAuth?: boolean;
 };
-
 function MyApp({
   Component,
   pageProps,
@@ -29,8 +34,44 @@ function MyApp({
   Component: NextApplicationPage;
   pageProps: any;
 }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const asyncUseEffect = async () => {
+    setLoading(true);
+    const session = await getSession();
+    const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
+      await Promise.all([
+        fetch(`${ORIGIN_URL}/api/get-account`, {
+          method: "POST",
+          body: JSON.stringify({ userId: session.user.uid }),
+        }),
+        fetch(`${ORIGIN_URL}/api/get-all-pathway-progress`, {
+          method: "POST",
+          body: JSON.stringify({ userId: session.user.uid }),
+        }),
+        fetch(`${ORIGIN_URL}/api/get-question-responses`, {
+          method: "POST",
+          body: JSON.stringify({ userId: session.user.uid }),
+        }),
+      ]);
+    const [accountInfoJSON, pathwaysProgressJSON, questionResponsesJSON] =
+      await Promise.all([
+        accountInfoRes.json(),
+        pathwaysProgressRes.json(),
+        questionResponsesRes.json(),
+      ]);
+    store.dispatch(
+      initialStateAction({
+        accountInfo: accountInfoJSON,
+        pathwaysProgress: pathwaysProgressJSON,
+        questionResponses: questionResponsesJSON,
+      })
+    );
+    setLoading(false);
+  };
+  useEffect(() => {
+    asyncUseEffect();
+  }, []);
   useEffect(() => {
     const endLoading = () => {
       setLoading(false);
