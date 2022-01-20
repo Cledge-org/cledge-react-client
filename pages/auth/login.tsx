@@ -112,8 +112,6 @@ export default function login() {
                   password: formData.password,
                   email: formData.email,
                   callbackUrl: `${window.location.origin}/dashboard`,
-                }).then((res) => {
-                  console.log(res);
                 });
               }}
             >

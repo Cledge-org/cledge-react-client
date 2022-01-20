@@ -18,10 +18,9 @@ import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
-  const router = useRouter();
+  console.log(session);
   if (status === "authenticated") {
-    console.log(session.user);
-    router.push({ pathname: "/dashboard" });
+    window.location.href = "/dashboard";
     return <LoadingScreen />;
   }
   return <Welcome></Welcome>;
