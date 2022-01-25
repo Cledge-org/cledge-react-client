@@ -1,7 +1,6 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
-import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -24,7 +23,7 @@ export async function getPathway(
 ): Promise<Pathway> {
   return new Promise((res, err) => {
     MongoClient.connect(
-      MONGO_CONNECTION_STRING,
+      process.env.MONGO_URL,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         const pathwaysDb = client.db("pathways");

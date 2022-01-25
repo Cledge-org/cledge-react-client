@@ -4,7 +4,6 @@ import { getAccountInfo } from "./get-account";
 import { getQuestionResponses } from "./get-question-responses";
 import assert from "assert";
 import { getQuestionListWithDatabase } from "./get-question-list";
-import { MONGO_CONNECTION_STRING } from "../../config";
 import AuthFunctions from "./auth/firebase-auth";
 import { getAllQuestionLists } from "./get-all-questions";
 
@@ -32,7 +31,7 @@ export async function getQuestionProgress(
   ]);
   return new Promise((res, err) => {
     MongoClient.connect(
-      MONGO_CONNECTION_STRING,
+      process.env.MONGO_URL,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         res({

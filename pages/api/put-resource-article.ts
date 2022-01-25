@@ -1,7 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
-import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -36,7 +35,7 @@ export const putResourceArticle = async (
   }
   return new Promise((res, err) => {
     MongoClient.connect(
-      MONGO_CONNECTION_STRING,
+      process.env.MONGO_URL,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         try {
