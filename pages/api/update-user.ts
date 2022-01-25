@@ -1,8 +1,6 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
-import { MONGO_CONNECTION_STRING } from "../../config";
-import AuthFunctions from "./auth/firebase-auth";
 
 export const config = {
   api: {
@@ -37,7 +35,7 @@ export const updateUser = async (
 ): Promise<void> => {
   return new Promise((res, err) => {
     MongoClient.connect(
-      MONGO_CONNECTION_STRING,
+      process.env.MONGO_URL,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         try {

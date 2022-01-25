@@ -1,9 +1,6 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
-import { MONGO_CONNECTION_STRING } from "../../config";
-import AuthFunctions from "./auth/firebase-auth";
-import { getSession } from "next-auth/react";
 
 export const config = {
   api: {
@@ -23,7 +20,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const getAccountInfo = async (userId: string): Promise<AccountInfo> => {
   return new Promise((res, err) => {
     MongoClient.connect(
-      MONGO_CONNECTION_STRING,
+      process.env.MONGO_URL,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         res(

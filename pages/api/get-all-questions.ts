@@ -2,7 +2,6 @@ import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 import { getQuestionListWithDocumentAndDatabase } from "./get-question-list";
-import { MONGO_CONNECTION_STRING } from "../../config";
 
 export const config = {
   api: {
@@ -18,7 +17,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export async function getAllQuestionLists(): Promise<QuestionList[]> {
   return new Promise((res, err) => {
     MongoClient.connect(
-      MONGO_CONNECTION_STRING,
+      process.env.MONGO_URL,
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         const questionsDb = client.db("questions");
