@@ -123,8 +123,19 @@ const Dashboard: NextApplicationPage<{
         );
       });
   };
+  // const asyncUseEffect = async () => {
+  //   console.time("DASHBOARD");
+  //   let json = await (
+  //     await fetch(`${ORIGIN_URL}/api/get-dashboard`, {
+  //       method: "POST",
+  //       body: JSON.stringify({ userId: session.data.user.uid }),
+  //     })
+  //   ).json();
+  //   console.timeEnd("DASHBOARD");
+  // };
   useEffect(() => {
     //resetProgress();
+    // asyncUseEffect();
   }, []);
   //UNCOMMENT THIS ONCE TESTING IS FINISHED
   if (dashboardInfo.checkIns.length > 0) {

@@ -1,0 +1,45 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- azure_setup
+
+pool:
+ vmImage: ubuntu-latest
+
+steps:
+- task: NodeTool@0
+ inputs:
+   versionSpec: '14.x'
+ displayName: 'Install Node.js'
+
+- script: |
+   npm install
+   npm run build
+ displayName: 'npm install and build'
+ # NOTE: These environment variables are only required if using the contentful powered sample project
+ # insert your own credentials here
+env:
+  NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY: 'AIzaSyDIWezBqFoahyxyMGCAg8VPujjUf1FVZbU'
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: 'cledge-dev.firebaseapp.com'
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID: 'cledge-dev'
+  GOOGLE_ID: '257598879810-1q27ivpgp1d1p82g9c5ccqa0shauqr6e.apps.googleusercontent.com'
+  GOOGLE_SECRET: 'n7-66jM0sSDMPKOPqy18OnDa'
+  NEXT_AUTH_SECRET: 'YajOadU+8LfvgzUW0fiv4JKIwPeFiroCP2FKi/fwbHc'
+  MONGO_URL: 'mongodb://cledge-db:Tc7PYDfYtB1jBrPfBDPYSNLhlovMKU6AatyKbWPAE75IFy1tLEsczdULMYfaoiFu5bH9qbna704PQCdHBKT8YQ==@cledge-db.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@cledge-db@'
+
+- task: ArchiveFiles@2
+ inputs:
+   rootFolderOrFile: '.'
+   includeRootFolder: false
+   archiveType: 'zip'
+   archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+   replaceExistingArchive: true
+
+- task: PublishBuildArtifacts@1
+ inputs:
+   PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+   ArtifactName: 'drop'
+   publishLocation: 'Container'
