@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 import { AppProps } from "next/dist/shared/lib/router/router";
-import QuestionSummaryPage from "./questionPages/question_summary_subpage";
+import QuestionSummaryPage from "../components/questionPages/question_summary_subpage";
 import {
   buildStyles,
   CircularProgressbar,
@@ -13,7 +13,7 @@ import TabButton from "../components/common/TabButton";
 import CardText from "../components/common/Card_Text";
 import CardCheckIn from "../components/common/Card_CheckIn";
 import QuestionSubPageHeader from "../components/question_components/question_subpage_header";
-import QuestionECSubpage from "./questionPages/question_ec_subpage";
+import QuestionECSubpage from "../components/questionPages/question_ec_subpage";
 import { GetServerSidePropsContext } from "next";
 import { getQuestionProgress } from "./api/get-question-progress";
 import { NextApplicationPage } from "./_app";

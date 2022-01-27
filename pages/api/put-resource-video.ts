@@ -11,7 +11,7 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userToken, videoId, video } = JSON.parse(req.body);
-  console.error(video);
+  console.error("AYO" + video);
   return video
     ? resolve
         .status(200)

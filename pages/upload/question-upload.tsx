@@ -119,7 +119,7 @@ const QuestionUploadPage: NextApplicationPage<{
               return;
             }
           } catch (err) {
-            console.error(err);
+            console.error("AYO" + err);
           }
         }
         fetch("/api/put-question-list", {
@@ -147,7 +147,7 @@ const QuestionUploadPage: NextApplicationPage<{
               router.push({ pathname: "/dashboard" });
             }
           })
-          .catch((err) => console.error(err));
+          .catch((err) => console.error("AYO" + err));
       }}
     >
       <div className="mt-4 d-flex flex-column w-100">

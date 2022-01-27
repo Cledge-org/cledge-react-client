@@ -24,32 +24,12 @@ import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { getAllPathwaysAccountAndProgress } from "./api/get-dashboard";
 
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  try {
-    const session = await getSession(ctx);
-    return {
-      props: {
-        ...(await (
-          await fetch(`${ORIGIN_URL}/api/get-dashboard`, {
-            method: "POST",
-            body: JSON.stringify({ userId: session.user.uid }),
-          })
-        ).json()),
-      },
-    };
-  } catch (err) {
-    console.log(err);
-    ctx.res.end();
-    return { props: {} as never };
-  }
-};
-
 // logged in landing page
 const Dashboard: NextApplicationPage<{
   dashboardInfo: Dashboard;
   allPathways: Pathway[];
 }> = ({ dashboardInfo, allPathways }) => {
-  console.error(allPathways);
+  console.error("AYO" + allPathways);
   const router = useRouter();
   const session = useSession();
   const [currTab, setCurrTab] = useState("current tasks");
@@ -263,5 +243,26 @@ const Dashboard: NextApplicationPage<{
     </div>
   );
 };
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  try {
+    const session = await getSession(ctx);
+    return {
+      props: {
+        ...(await (
+          await fetch(`${ORIGIN_URL}/api/get-dashboard`, {
+            method: "POST",
+            body: JSON.stringify({ userId: session.user.uid }),
+          })
+        ).json()),
+      },
+    };
+  } catch (err) {
+    console.log(err);
+    ctx.res.end();
+    return { props: {} as never };
+  }
+};
+
 Dashboard.requireAuth = true;
 export default Dashboard;

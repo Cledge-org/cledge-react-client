@@ -5,7 +5,6 @@ import ECDropDown from "../components/question_components/ec_dropdown_question";
 import MCQQuestion from "../components/question_components/mcq_question";
 import Slider from "../components/question_components/slider";
 import CheckBoxQuestion from "../components/question_components/checkbox_question";
-import QuestionECSubpage from "./questionPages/question_ec_subpage";
 import ECQuestionSummaryCard from "../components/question_components/ec_question_summary_card";
 import { Button, ProgressBar } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

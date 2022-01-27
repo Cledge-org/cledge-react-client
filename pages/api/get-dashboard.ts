@@ -24,7 +24,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export async function getAllPathwaysAccountAndProgress(
   userId: string
 ): Promise<{ dashboardInfo: Dashboard; allPathways: Pathway[] }> {
-  console.error(userId);
+  console.error("AYO" + userId);
   return new Promise((res, err) => {
     MongoClient.connect(
       process.env.MONGO_URL,
@@ -49,6 +49,7 @@ export async function getAllPathwaysAccountAndProgress(
             Record<string, ContentProgress[]>
           >,
         ]);
+        console.error("AYO" + pathways);
         res({
           allPathways: (await Promise.all(
             pathways.map((pathway: Pathway_Db) =>
