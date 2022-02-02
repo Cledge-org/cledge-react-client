@@ -1,21 +1,20 @@
-// my accounts page
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getProviders, signIn } from "next-auth/react";
 import type { Provider } from "next-auth/providers";
 import GoogleProvider from "next-auth/providers/google";
 import AuthFunctions from "../api/auth/firebase-auth";
+import { useRouter } from "next/router";
 
 export default function login() {
   var [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // signIn({email:formData.email, password: formData.password})
-  };
-
+  const router = useRouter();
+  const [errorMessages, setErrorMessages] = useState(
+    router.query.error ? ["Incorrect email or password"] : []
+  );
   return (
     <div className="container">
       <div
@@ -23,6 +22,11 @@ export default function login() {
         style={{ height: "80vh" }}
       >
         <div className="fs-1 fw-bold cl-dark-text">Sign in</div>
+        <div className="cl-red d-flex flex-column">
+          {errorMessages.map((message) => {
+            return <div>{message}</div>;
+          })}
+        </div>
         <div className="form-group mt-3 w-100">
           <label
             style={{ fontSize: "0.9em" }}
@@ -42,7 +46,6 @@ export default function login() {
             placeholder="Enter email"
           />
         </div>
-
         <div className="form-group mt-3 w-100">
           <label
             style={{ fontSize: "0.9em" }}
@@ -91,6 +94,20 @@ export default function login() {
               type="button"
               className="btn btn-primary cl-btn-blue"
               onClick={() => {
+                const emailStr = "Email must be formatted correctly";
+                if (
+                  !formData.email.includes("@") ||
+                  !formData.email.includes(".")
+                ) {
+                  if (!errorMessages.includes(emailStr)) {
+                    errorMessages.push(emailStr);
+                    setErrorMessages([...errorMessages]);
+                  }
+                  return;
+                } else if (errorMessages.includes(emailStr)) {
+                  errorMessages.splice(errorMessages.indexOf(emailStr), 1);
+                  setErrorMessages([...errorMessages]);
+                }
                 signIn("credentials", {
                   password: formData.password,
                   email: formData.email,

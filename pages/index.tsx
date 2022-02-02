@@ -13,11 +13,12 @@ import Progress from "./progress";
 import { useSession } from "next-auth/react";
 import Signup from "./auth/signup";
 import LoadingScreen from "../components/common/loading";
-import { Router } from "next/router";
+import { Router, useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
+  console.log(session);
   if (status === "authenticated") {
     window.location.href = "/dashboard";
     return <LoadingScreen />;

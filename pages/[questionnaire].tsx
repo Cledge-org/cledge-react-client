@@ -121,20 +121,14 @@ const Questionnaire: NextApplicationPage<{
       fetch(`${ORIGIN_URL}/api/update-user`, {
         method: "POST",
         body: JSON.stringify({
-          userInfo: { checkIns: checkInList, userId: session.data.user.uid },
+          userInfo: { checkIns: checkInList, tags: userTags },
+          userId: session.data.user.uid,
         }),
       }),
       fetch(`${ORIGIN_URL}/api/put-question-responses`, {
         method: "POST",
         body: JSON.stringify({
           responses: newUserResponses,
-          userId: session.data.user.uid,
-        }),
-      }),
-      fetch(`${ORIGIN_URL}/api/update-user`, {
-        method: "POST",
-        body: JSON.stringify({
-          userInfo: { tags: userTags },
           userId: session.data.user.uid,
         }),
       }),

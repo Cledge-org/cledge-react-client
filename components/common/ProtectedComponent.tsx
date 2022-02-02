@@ -8,22 +8,20 @@ export default function ProtectedComponent({
 }: {
   children: JSX.Element;
 }) {
-  const { status } = useSession();
+  const session = useSession();
   const router = useRouter();
   useEffect(() => {
-    if (status === "unauthenticated") {
+    console.log(session.data);
+    if (session.status === "unauthenticated") {
       console.log("not authenticated. redirecting");
       router.push("/auth/login");
     }
-  }, [status, router]);
-
-  if (status === "loading") {
+  }, [session, router]);
+  if (session.status === "loading") {
     return <LoadingScreen />;
   }
-
-  if (status === "authenticated") {
+  if (session.status === "authenticated") {
     return <>{children}</>;
   }
-
   return null;
 }
