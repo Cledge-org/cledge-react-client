@@ -6,3 +6,8 @@ export const initialStateAction = (initialState) => {
     ...initialState,
   };
 };
+export const clearState = () => {
+  return {
+    type: actions.CLEAR_STATE,
+  };
+};

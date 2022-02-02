@@ -34,44 +34,8 @@ function MyApp({
   Component: NextApplicationPage;
   pageProps: any;
 }) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const asyncUseEffect = async () => {
-    setLoading(true);
-    const session = await getSession();
-    const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
-      await Promise.all([
-        fetch(`${ORIGIN_URL}/api/get-account`, {
-          method: "POST",
-          body: JSON.stringify({ userId: session.user.uid }),
-        }),
-        fetch(`${ORIGIN_URL}/api/get-all-pathway-progress`, {
-          method: "POST",
-          body: JSON.stringify({ userId: session.user.uid }),
-        }),
-        fetch(`${ORIGIN_URL}/api/get-question-responses`, {
-          method: "POST",
-          body: JSON.stringify({ userId: session.user.uid }),
-        }),
-      ]);
-    const [accountInfoJSON, pathwaysProgressJSON, questionResponsesJSON] =
-      await Promise.all([
-        accountInfoRes.json(),
-        pathwaysProgressRes.json(),
-        questionResponsesRes.json(),
-      ]);
-    store.dispatch(
-      initialStateAction({
-        accountInfo: accountInfoJSON,
-        pathwaysProgress: pathwaysProgressJSON,
-        questionResponses: questionResponsesJSON,
-      })
-    );
-    setLoading(false);
-  };
-  useEffect(() => {
-    asyncUseEffect();
-  }, []);
   useEffect(() => {
     const endLoading = () => {
       setLoading(false);

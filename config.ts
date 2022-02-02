@@ -1,7 +1,7 @@
 export const ORIGIN_URL =
   process.env.NODE_ENV !== "production"
     ? "http://localhost:3000"
-    : "https://cledge-first-test.vercel.app";
+    : "https://cledge-testing.azurewebsites.net";
 export const actions = {
   NEW_QUESTION_RESPONSE: "newQuestionResponse",
   UDPATE_QUESTION_RESPONSE: "updateQuestionResponse",
@@ -13,4 +13,5 @@ export const actions = {
   ADD_PATHWAY: "addPathway",
   UPDATE_PATHWAY: "updatePathway",
   SET_INITIAL_STATE: "setInitialState",
+  CLEAR_STATE: "clearState",
 };
