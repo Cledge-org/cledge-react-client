@@ -12,6 +12,8 @@ declare module "redux" {
     questionResponses: UserResponse[];
     pathwaysProgress: PathwayProgress[];
     accountInfo: AccountInfo;
+    userTags: string[];
+    checkIns: string[];
     type: string;
   }
 }

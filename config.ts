@@ -14,4 +14,6 @@ export const actions = {
   UPDATE_PATHWAY: "updatePathway",
   SET_INITIAL_STATE: "setInitialState",
   CLEAR_STATE: "clearState",
+  UPDATE_TAGS: "updateTags",
+  UPDATE_TAGS_AND_CHECKINS: "updateTagsAndCheckIns",
 };

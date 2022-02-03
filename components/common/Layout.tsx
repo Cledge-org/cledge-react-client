@@ -15,7 +15,7 @@ export default function Layout({ children }) {
   const [header, setHeader] = useState(<Header key="initial" />);
   const asyncUseEffect = async () => {
     setLoading(true);
-    if (session.data?.user?.uid && store.getState()) {
+    if (session.data?.user?.uid && !store.getState()) {
       const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
         await Promise.all([
           fetch(`${ORIGIN_URL}/api/get-account`, {

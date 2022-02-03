@@ -10,6 +10,8 @@ import { getSession, useSession } from "next-auth/react";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { ORIGIN_URL } from "../config";
 import { connect } from "react-redux";
+import { store } from "../utils/store";
+import { updateAccountAction } from "../utils/actionFunctions";
 
 // account page
 
@@ -40,7 +42,8 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
         userInfo: { ...currUserData, _id: undefined },
         userId: session.data.user.uid,
       }),
-    }).then(async (res) => {
+    }).then((res) => {
+      store.dispatch(updateAccountAction({ ...currUserData, _id: undefined }));
       console.log(res.status);
     });
   };

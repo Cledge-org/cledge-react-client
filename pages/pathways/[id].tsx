@@ -10,6 +10,8 @@ import AuthFunctions from "../api/auth/firebase-auth";
 import { ORIGIN_URL } from "../../config";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
+import { store } from "../../utils/store";
+import { updatePathwayProgressAction } from "../../utils/actionFunctions";
 
 //profile progress/ question summary page
 
@@ -476,6 +478,7 @@ const Pathways: NextApplicationPage<{
             userId: session.data.user.uid,
           }),
         }).then((res) => {
+          store.dispatch(updatePathwayProgressAction(pathwayProgress));
           //console.log(res.status);
         });
       };
@@ -513,6 +516,7 @@ const Pathways: NextApplicationPage<{
               userId: session.data.user.uid,
             }),
           }).then((res) => {
+            store.dispatch(updatePathwayProgressAction(pathwayProgress));
             //console.log(res.status);
           });
         }
