@@ -48,7 +48,6 @@ export async function getPathway(
           )
         );
         modules = modules.filter((x) => x !== null);
-        console.error(modules);
         res({
           tags: pathway.tags,
           title: pathway.title,
