@@ -42,12 +42,12 @@ export const putResourceResource = async (
           if (!resourceId) {
             await client
               .db("resources")
-              .collection("videos")
+              .collection("resources")
               .insertOne(resource);
           } else {
             await client
               .db("resources")
-              .collection("videos")
+              .collection("resources")
               .updateOne({ _id: resourceId }, { $set: resource });
           }
           res();

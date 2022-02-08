@@ -17,17 +17,17 @@ import { useRouter } from "next/router";
 import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { getSession, useSession } from "next-auth/react";
+import { connect } from "react-redux";
+import { store } from "../utils/store";
+import {
+  updateQuestionResponsesAction,
+  updateTagsAndCheckInsAction,
+} from "../utils/actionFunctions";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     let firstQuestionnaire = ctx.query.questionnaire.indexOf(",");
     const session = await getSession(ctx);
-    let userResponses = await (
-      await fetch(`${ORIGIN_URL}/api/get-question-responses`, {
-        method: "POST",
-        body: JSON.stringify({ userId: session.user.uid }),
-      })
-    ).json();
     let questionnaire = await (
       await fetch(`${ORIGIN_URL}/api/get-question-list`, {
         method: "POST",
@@ -42,12 +42,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         }),
       })
     ).json();
-    const user = await (
-      await fetch(`${ORIGIN_URL}/api/get-account`, {
-        method: "POST",
-        body: JSON.stringify({ userId: session.user.uid }),
-      })
-    ).json();
     //console.error(questionnaireChunks);
     let questionnaireData = questionnaire.chunks[0].questions;
     for (let i = 1; i < questionnaire.chunks.length; i++) {
@@ -58,8 +52,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return {
       props: {
         questionnaireData,
-        userResponses,
-        userTags: user.tags,
       },
     };
   } catch (err) {
@@ -132,6 +124,8 @@ const Questionnaire: NextApplicationPage<{
         }),
       }),
     ]).then((values) => {
+      store.dispatch(updateTagsAndCheckInsAction(userTags, checkInList));
+      store.dispatch(updateQuestionResponsesAction(newUserResponses));
       values.forEach((value) => {
         console.log(value.status);
       });
@@ -313,4 +307,7 @@ const Questionnaire: NextApplicationPage<{
   );
 };
 Questionnaire.requireAuth = true;
-export default Questionnaire;
+export default connect((state) => ({
+  userTags: state.accountInfo.tags,
+  userResponses: state.questionResponses,
+}))(Questionnaire);
