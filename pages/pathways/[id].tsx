@@ -21,7 +21,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     console.error(ctx.query.id)
     return {
       props: {
-        ...(await (
+        pathwayInfo: (await (
           await fetch(`${ORIGIN_URL}/api/get-pathway`, {
             method: "POST",
             body: JSON.stringify({

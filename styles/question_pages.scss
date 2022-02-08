@@ -105,6 +105,8 @@
   animation-duration: 600ms;
 }
 .progress-dropdown-menu-btn {
+  @extend .pt-2;
+  @extend .pb-2;
   width: 100%;
   outline: none;
   border: none;
@@ -114,6 +116,8 @@
   background-color: $cl-light-gray;
   .text {
     @extend .ps-4;
+    text-align: left;
+    line-height: normal;
   }
   .icon {
     color: $cl-mid-gray;
