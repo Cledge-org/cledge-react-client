@@ -44,7 +44,12 @@ export async function getSpecificPathway(
 ): Promise<Pathway> {
   return new Promise(async (res, err) => {
     let modules = await Promise.all(
-      pathway.modules.map((moduleId) => getSpecificModule(moduleId, pathwaysDb))
+      pathway.modules.map((moduleId) =>
+        getSpecificModule(
+          moduleId instanceof ObjectId ? moduleId : new ObjectId(moduleId),
+          pathwaysDb
+        )
+      )
     );
     modules = modules.filter((x) => x !== null); // Remove all modules that weren't found
     res({
@@ -63,6 +68,7 @@ async function getSpecificModule(
 ): Promise<PathwayModule | null> {
   return new Promise(async (res, err) => {
     try {
+      console.error(moduleId);
       const [module, modulePersonalizedContent]: [
         PathwayModule_Db,
         PersonalizedContent[]

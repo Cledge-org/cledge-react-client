@@ -523,6 +523,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                   modules: course.modules,
                                 });
                               }}
+                              defaultValue={preset.type}
                               placeholder="Pick Content Type"
                               valuesList={["Video", "Article"]}
                             />
@@ -720,6 +721,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                     modules: course.modules,
                                   });
                                 }}
+                                defaultValue={personalized.type}
                                 placeholder="Pick Personalized Content Type"
                                 valuesList={["Video", "Article"]}
                               />

@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     ? resolve
         .status(200)
         .send(
-          await putCourse(
+          await putPathway(
             pathwayId ? new ObjectId(pathwayId) : undefined,
             pathway
           )
@@ -25,7 +25,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
 // Admin API. Creates or updates a pathway - if no ID provided, will create
 // pathway, otherwise will attempt to update given ID
-export const putCourse = async (
+export const putPathway = async (
   pathwayId: ObjectId | undefined,
   pathway: Pathway_Db
 ): Promise<void> => {
