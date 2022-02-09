@@ -22,7 +22,6 @@ import { getPathwayProgress } from "./api/get-pathway-progress";
 import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
 import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
-import { getAllPathwaysAccountAndProgress } from "./api/get-dashboard";
 import { connect } from "react-redux";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
