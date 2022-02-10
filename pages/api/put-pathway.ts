@@ -13,13 +13,13 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { userToken, pathwayId, pathway } = JSON.parse(req.body);
   return pathway
     ? resolve
-        .status(200)
-        .send(
-          await putCourse(
-            pathwayId ? new ObjectId(pathwayId) : undefined,
-            pathway
-          )
+      .status(200)
+      .send(
+        await putCourse(
+          pathwayId,
+          pathway
         )
+      )
     : resolve.status(400).send("No pathway data provided");
 };
 

@@ -96,7 +96,7 @@ const getQuestionChunk = (
         chunk.questions.map((questionId) =>
           questionsDb
             .collection("question-data")
-            .findOne({ _id: new ObjectId(questionId) })
+            .findOne({ _id: questionId })
         )
       )) as Question[];
       res({ _id: chunk._id, name: chunk.name, questions: chunkQuestions });
