@@ -185,7 +185,7 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
             className="general-submit-btn mt-2"
             onClick={() => {
               updateUserData().catch((err) => {
-                console.error("AYO" + err);
+                console.error(err);
               });
             }}
           >

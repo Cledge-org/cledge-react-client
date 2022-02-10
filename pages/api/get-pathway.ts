@@ -30,18 +30,15 @@ export async function getPathway(
         assert.equal(connection_err, null);
         const pathwaysDb = client.db("pathways");
         const usersDb = client.db("users");
-        const [pathway, accountInfo]: [
-          Pathway_Db,
-          AccountInfo
-        ] = await Promise.all([
-          pathwaysDb
-            .collection("pathways")
-            .findOne({ _id: pathwayId }) as Promise<Pathway_Db>,
-          usersDb.collection("users").findOne({
-            firebaseId: userId,
-          }) as Promise<AccountInfo>,
-        ]);
-        console.error(pathway);
+        const [pathway, accountInfo]: [Pathway_Db, AccountInfo] =
+          await Promise.all([
+            pathwaysDb
+              .collection("pathways")
+              .findOne({ _id: pathwayId }) as Promise<Pathway_Db>,
+            usersDb.collection("users").findOne({
+              firebaseId: userId,
+            }) as Promise<AccountInfo>,
+          ]);
         let modules: PathwayModule[] = await Promise.all(
           pathway.modules.map((moduleId) =>
             getModule(moduleId, pathwaysDb, accountInfo.tags)

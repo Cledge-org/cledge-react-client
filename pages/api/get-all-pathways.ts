@@ -68,7 +68,6 @@ async function getSpecificModule(
 ): Promise<PathwayModule | null> {
   return new Promise(async (res, err) => {
     try {
-      console.error(moduleId);
       const [module, modulePersonalizedContent]: [
         PathwayModule_Db,
         PersonalizedContent[]

@@ -31,10 +31,9 @@ class AuthFunctions {
       ).then(() => {
         return signInWithEmailAndPassword(firebaseAuth, email, password);
       });
-      console.error("AYO" + user.user.uid);
       return user.user;
     } catch (err) {
-      console.error("AYO" + err);
+      console.error(err);
     }
   }
   static async createUser(email: string, password: string, initUserObj) {
@@ -53,7 +52,7 @@ class AuthFunctions {
         });
       })
       .catch((err) => {
-        console.error("AYO" + err);
+        console.error(err);
       });
   }
   // static async signInGoogle() {
@@ -68,7 +67,7 @@ class AuthFunctions {
   }
   static async signOut() {
     await firebaseAuth.signOut().catch((err) => {
-      console.error("AYO" + err);
+      console.error(err);
     });
   }
 }
