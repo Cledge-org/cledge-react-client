@@ -14,13 +14,13 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   console.error(video);
   return video
     ? resolve
-        .status(200)
-        .send(
-          await putResourceVideo(
-            videoId ? new ObjectId(videoId) : undefined,
-            video
-          )
+      .status(200)
+      .send(
+        await putResourceVideo(
+          videoId,
+          video
         )
+      )
     : resolve.status(400).send("No video provided");
 };
 
@@ -42,12 +42,12 @@ export const putResourceVideo = async (
         try {
           if (!videoId && video) {
             await client.db("resources").collection("videos").insertOne(video);
-          } else if(videoId && !video) {
+          } else if (videoId && !video) {
             await client
               .db("resources")
               .collection("videos")
               .deleteOne({ _id: videoId });
-          } else if(videoId && video) {
+          } else if (videoId && video) {
             await client
               .db("resources")
               .collection("videos")

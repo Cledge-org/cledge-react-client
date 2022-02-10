@@ -13,13 +13,13 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { userToken, resourceId, resource } = JSON.parse(req.body);
   return resource
     ? resolve
-        .status(200)
-        .send(
-          await putResourceResource(
-            resourceId ? new ObjectId(resourceId) : undefined,
-            resource
-          )
+      .status(200)
+      .send(
+        await putResourceResource(
+          resourceId,
+          resource
         )
+      )
     : resolve.status(400).send("No video provided");
 };
 

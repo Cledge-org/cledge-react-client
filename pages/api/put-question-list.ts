@@ -13,13 +13,13 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { userToken, questionListId, questionList } = JSON.parse(req.body);
   return questionList
     ? resolve
-        .status(200)
-        .send(
-          await putQuestionList(
-            questionListId ? new ObjectId(questionListId) : undefined,
-            questionList
-          )
+      .status(200)
+      .send(
+        await putQuestionList(
+          questionListId,
+          questionList
         )
+      )
     : resolve.status(400).send("No question chunk data provided");
 };
 

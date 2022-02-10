@@ -13,13 +13,13 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { userToken, articleId, article } = JSON.parse(req.body);
   return article
     ? resolve
-        .status(200)
-        .send(
-          await putResourceArticle(
-            articleId ? new ObjectId(articleId) : undefined,
-            article
-          )
+      .status(200)
+      .send(
+        await putResourceArticle(
+          articleId,
+          article
         )
+      )
     : resolve.status(400).send("No article provided");
 };
 

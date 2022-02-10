@@ -13,13 +13,13 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { userToken, contentId, content } = JSON.parse(req.body);
   return content
     ? resolve
-        .status(200)
-        .send(
-          await putPathwayModulePersonalizedContent(
-            contentId ? new ObjectId(contentId) : undefined,
-            content
-          )
+      .status(200)
+      .send(
+        await putPathwayModulePersonalizedContent(
+          contentId,
+          content
         )
+      )
     : resolve.status(400).send("No pathway module data provided");
 };
 
