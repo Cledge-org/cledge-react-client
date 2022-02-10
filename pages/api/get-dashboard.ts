@@ -28,7 +28,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 //   return new Promise((res, err) => {
 //     MongoClient.connect(
 //       process.env.MONGO_URL,
-//       async (connection_err, client) => {npm
+//       async (connection_err, client) => {
 //         assert.equal(connection_err, null);
 //         const pathwaysDb = client.db("pathways");
 //         const usersDb = client.db("users");
