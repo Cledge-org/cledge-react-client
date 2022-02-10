@@ -64,12 +64,12 @@ test("should add questions and get those added questions exactly", (done) => {
     const questionListDb: QuestionList_Db[] = [testQuestionListDb1];
     const gradeQuestionChunks: QuestionChunk[] = [testQuestionChunk1];
     const questionChunkDb: QuestionChunk_Db[] = [testQuestionChunkDb1];
-    
+
     await Promise.all([
-      ...questionListDb.map((question_list) => putQuestionList(undefined, question_list)),
-      ...questionChunkDb.map((question_chunk) => putQuestionChunk(undefined, question_chunk)),
+      ...questionListDb.map((questionList) => putQuestionList(undefined, questionList)),
+      ...questionChunkDb.map((questionChunk) => putQuestionChunk(undefined, questionChunk)),
       ...question.map((questions) => putQuestion(undefined, questions)),
-      ...userResponse.map((response) => putQuestionResponses("Test Question Response", [response])),
+      ...userResponse.map((responses) => putQuestionResponses("Test User Id", [responses])),
     ]);
 
     // Test get functionality - should be identical to what we put
