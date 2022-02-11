@@ -1,7 +1,4 @@
-export const ORIGIN_URL =
-  process.env.NODE_ENV !== "production"
-    ? "http://localhost:3000"
-    : "https://cledge-testing.azurewebsites.net";
+export const ORIGIN_URL = "https://cledge-testing.azurewebsites.net";
 export const actions = {
   NEW_QUESTION_RESPONSE: "newQuestionResponse",
   UDPATE_QUESTION_RESPONSE: "updateQuestionResponse",
