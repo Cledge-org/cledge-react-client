@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
 import { getSpecificPathwayProgress } from "./get-pathway-progress";
@@ -49,18 +49,23 @@ export async function getAllPathwayProgress(
           res([]);
           return;
         }
-        res(
-          (await Promise.all(
-            pathways.map((pathway: Pathway_Db) =>
-              getSpecificPathwayProgress(
-                userInfo.tags,
-                pathway,
-                pathwaysDb,
-                progressByModule
+
+        try {
+          res(
+            (await Promise.all(
+              pathways.map((pathway: Pathway_Db) =>
+                getSpecificPathwayProgress(
+                  userInfo.tags,
+                  pathway,
+                  pathwaysDb,
+                  progressByModule
+                )
               )
-            )
-          )) as PathwayProgress[]
-        );
+            )) as PathwayProgress[]
+          );
+        } catch (e) {
+          err(e);
+        }
       }
     );
   });

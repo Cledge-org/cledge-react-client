@@ -44,8 +44,8 @@ export async function getPathwayProgress(
           pathwaysDb
             .collection("progress-by-user")
             .findOne({ firebaseId: userId }) as Promise<
-              Record<string, ContentProgress[]>
-            >,
+            Record<string, ContentProgress[]>
+          >,
         ]);
         res(
           (await getSpecificPathwayProgress(
@@ -69,28 +69,32 @@ export async function getSpecificPathwayProgress(
   progressByModule: Record<string, ContentProgress[]>
 ): Promise<PathwayProgress> {
   return new Promise(async (res, err) => {
-    let moduleProgress = await Promise.all(
-      pathway.modules.map((moduleId) =>
-        getSpecificModuleProgress(
-          userTags,
-          progressByModule,
-          moduleId,
-          pathwaysDb
+    try {
+      let moduleProgress = await Promise.all(
+        pathway.modules.map((moduleId) =>
+          getSpecificModuleProgress(
+            userTags,
+            progressByModule,
+            moduleId,
+            pathwaysDb
+          )
         )
-      )
-    );
-    moduleProgress = moduleProgress.filter(({ title }) => {
-      return title !== "NULL MODULE";
-    });
-    res({
-      finished: moduleProgress.reduce(
-        (prev: boolean, cur: ModuleProgress) => prev && cur.finished,
-        true
-      ),
-      moduleProgress,
-      title: pathway.title,
-      pathwayId: pathway._id,
-    });
+      );
+      moduleProgress = moduleProgress.filter(({ title }) => {
+        return title !== "NULL MODULE";
+      });
+      res({
+        finished: moduleProgress.reduce(
+          (prev: boolean, cur: ModuleProgress) => prev && cur.finished,
+          true
+        ),
+        moduleProgress,
+        title: pathway.title,
+        pathwayId: pathway._id,
+      });
+    } catch (e) {
+      err(e);
+    }
   });
 }
 
