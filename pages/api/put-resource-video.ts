@@ -13,13 +13,13 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { userToken, videoId, video } = JSON.parse(req.body);
   return video
     ? resolve
-        .status(200)
-        .send(
-          await putResourceVideo(
-            videoId ? new ObjectId(videoId) : undefined,
-            video
-          )
+      .status(200)
+      .send(
+        await putResourceVideo(
+          videoId,
+          video
         )
+      )
     : resolve.status(400).send("No video provided");
 };
 
@@ -27,7 +27,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // create video, otherwise will attempt to update given ID
 export const putResourceVideo = async (
   videoId: ObjectId | undefined,
-  video: CardVideo
+  video: CardVideo | undefined
 ): Promise<void> => {
   return new Promise((res, err) => {
     if (video._id) {
@@ -39,9 +39,14 @@ export const putResourceVideo = async (
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         try {
-          if (!videoId) {
+          if (!videoId && video) {
             await client.db("resources").collection("videos").insertOne(video);
-          } else {
+          } else if (videoId && !video) {
+            await client
+              .db("resources")
+              .collection("videos")
+              .deleteOne({ _id: videoId });
+          } else if (videoId && video) {
             await client
               .db("resources")
               .collection("videos")

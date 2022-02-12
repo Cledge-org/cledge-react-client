@@ -13,13 +13,13 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { userToken, questionId, question } = JSON.parse(req.body);
   return question
     ? resolve
-        .status(200)
-        .send(
-          await putQuestion(
-            questionId ? new ObjectId(questionId) : undefined,
-            question
-          )
+      .status(200)
+      .send(
+        await putQuestion(
+          questionId,
+          question
         )
+      )
     : resolve.status(400).send("No question data provided");
 };
 

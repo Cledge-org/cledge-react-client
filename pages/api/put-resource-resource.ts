@@ -13,13 +13,13 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { userToken, resourceId, resource } = JSON.parse(req.body);
   return resource
     ? resolve
-        .status(200)
-        .send(
-          await putResourceResource(
-            resourceId ? new ObjectId(resourceId) : undefined,
-            resource
-          )
+      .status(200)
+      .send(
+        await putResourceResource(
+          resourceId,
+          resource
         )
+      )
     : resolve.status(400).send("No video provided");
 };
 
@@ -27,7 +27,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // resource, otherwise will attempt to update given ID
 export const putResourceResource = async (
   resourceId: ObjectId | undefined,
-  resource: CardResource
+  resource: CardResource | undefined
 ): Promise<void> => {
   if (resource._id) {
     // Document should not have _id field when sent to database
@@ -39,12 +39,17 @@ export const putResourceResource = async (
       async (connection_err, client) => {
         assert.equal(connection_err, null);
         try {
-          if (!resourceId) {
+          if (!resourceId && resource) {
             await client
               .db("resources")
               .collection("resources")
               .insertOne(resource);
-          } else {
+          } else if (resourceId && !resource) {
+            await client
+              .db("resources")
+              .collection("resources")
+              .deleteOne({ _id: resourceId });
+          } else if (resourceId && resource) {
             await client
               .db("resources")
               .collection("resources")

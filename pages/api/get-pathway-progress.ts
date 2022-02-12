@@ -37,7 +37,7 @@ export async function getPathwayProgress(
         ] = await Promise.all([
           pathwaysDb
             .collection("pathways")
-            .findOne({ _id: new ObjectId(pathwayId) }) as Promise<Pathway_Db>,
+            .findOne({ _id: pathwayId }) as Promise<Pathway_Db>,
           usersDb
             .collection("users")
             .findOne({ firebaseId: userId }) as Promise<AccountInfo>,
@@ -69,28 +69,32 @@ export async function getSpecificPathwayProgress(
   progressByModule: Record<string, ContentProgress[]>
 ): Promise<PathwayProgress> {
   return new Promise(async (res, err) => {
-    let moduleProgress = await Promise.all(
-      pathway.modules.map((moduleId) =>
-        getSpecificModuleProgress(
-          userTags,
-          progressByModule,
-          moduleId,
-          pathwaysDb
+    try {
+      let moduleProgress = await Promise.all(
+        pathway.modules.map((moduleId) =>
+          getSpecificModuleProgress(
+            userTags,
+            progressByModule,
+            moduleId,
+            pathwaysDb
+          )
         )
-      )
-    );
-    moduleProgress = moduleProgress.filter(({ title }) => {
-      return title !== "NULL MODULE";
-    });
-    res({
-      finished: moduleProgress.reduce(
-        (prev: boolean, cur: ModuleProgress) => prev && cur.finished,
-        true
-      ),
-      moduleProgress,
-      title: pathway.title,
-      pathwayId: pathway._id,
-    });
+      );
+      moduleProgress = moduleProgress.filter(({ title }) => {
+        return title !== "NULL MODULE";
+      });
+      res({
+        finished: moduleProgress.reduce(
+          (prev: boolean, cur: ModuleProgress) => prev && cur.finished,
+          true
+        ),
+        moduleProgress,
+        title: pathway.title,
+        pathwayId: pathway._id,
+      });
+    } catch (e) {
+      err(e);
+    }
   });
 }
 
@@ -107,7 +111,7 @@ async function getSpecificModuleProgress(
         PersonalizedContent[]
       ] = await Promise.all([
         pathwaysDb.collection("modules").findOne({
-          _id: new ObjectId(moduleId),
+          _id: moduleId,
         }) as Promise<PathwayModule_Db>,
         pathwaysDb
           .collection("personalized-content")
