@@ -11,16 +11,17 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
   const { userToken, pathwayModuleId, pathwayModule } = JSON.parse(req.body);
-  return pathwayModule
-    ? resolve
-      .status(200)
-      .send(
-        await putPathwayModule(
-          pathwayModuleId,
-          pathwayModule
-        )
-      )
-    : resolve.status(400).send("No pathway module data provided");
+
+  if (pathwayModule) {
+    try {
+      const result = await putPathwayModule(pathwayModuleId, pathwayModule);
+      resolve.status(200).send(result);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No pathway module data provided");
+  }
 };
 
 // Admin API. Creates or updates a pathway - if no ID provided, will create

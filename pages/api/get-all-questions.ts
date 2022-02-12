@@ -10,7 +10,12 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve.status(200).send(await getAllQuestionLists());
+  try {
+    const allQuestionLists = await getAllQuestionLists();
+    resolve.status(200).send(allQuestionLists);
+  } catch (e) {
+    resolve.status(500).send(e);
+  }
 };
 
 // Admin API. Gets all question lists with chunks and data populated

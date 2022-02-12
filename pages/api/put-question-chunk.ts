@@ -11,16 +11,17 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userToken, questionChunkId, questionChunk } = JSON.parse(req.body);
-  return questionChunk
-    ? resolve
-      .status(200)
-      .send(
-        await putQuestionChunk(
-          questionChunkId,
-          questionChunk
-        )
-      )
-    : resolve.status(400).send("No question chunk data provided");
+
+  if (questionChunk) {
+    try {
+      const result = await putQuestionChunk(questionChunkId, questionChunk);
+      resolve.status(200).send(result);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No question chunk data provided");
+  }
 };
 
 // Admin API. Creates or updates a question chunk - if no ID provided, will

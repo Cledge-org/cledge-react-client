@@ -11,16 +11,16 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userToken, videoId, video } = JSON.parse(req.body);
-  return video
-    ? resolve
-      .status(200)
-      .send(
-        await putResourceVideo(
-          videoId,
-          video
-        )
-      )
-    : resolve.status(400).send("No video provided");
+  if (video) {
+    try {
+      const result = await putResourceVideo(videoId, video);
+      resolve.status(200).send(result);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No video provided");
+  }
 };
 
 // Admin API. Creates or updates a resource video - if no ID provided, will

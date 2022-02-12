@@ -11,11 +11,15 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userToken, userId, pathwayId } = JSON.parse(req.body);
-  return userId && pathwayId
-    ? resolve
-        .status(200)
-        .send(await getPathway(userId, new ObjectId(pathwayId)))
-    : resolve.status(400).send("Both user and pathway IDs required");
+
+  if (userId && pathwayId) {
+    try {
+      const pathway = await getPathway(userId, new ObjectId(pathwayId));
+      resolve.status(200).send(pathway);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  }
 };
 
 // Gets all the pathway modules and content for a pathway ID and specific user (firebaseId)
@@ -47,7 +51,7 @@ export async function getPathway(
         modules = modules.filter((x) => x !== null);
         res({
           tags: pathway.tags,
-          title: pathway.title,
+          name: pathway.name,
           _id: pathway._id,
           modules,
         });
@@ -80,7 +84,7 @@ export const getModule = (
       } else {
         res({
           _id: module._id,
-          title: module.title,
+          name: module.name,
           presetContent: module.presetContent,
           tags: module.tags,
           personalizedContent,

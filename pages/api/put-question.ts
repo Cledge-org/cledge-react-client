@@ -11,16 +11,17 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userToken, questionId, question } = JSON.parse(req.body);
-  return question
-    ? resolve
-      .status(200)
-      .send(
-        await putQuestion(
-          questionId,
-          question
-        )
-      )
-    : resolve.status(400).send("No question data provided");
+
+  if (question) {
+    try {
+      const result = await putQuestion(questionId, question);
+      resolve.status(200).send(result);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No question data provided");
+  }
 };
 
 // Admin API. Creates or updates a question - if no ID provided, will create

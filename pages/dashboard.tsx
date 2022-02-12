@@ -61,15 +61,15 @@ const Dashboard: NextApplicationPage<{
         })
       ) {
         let subtasks = {};
-        pathway.modules.forEach(({ title }) => {
-          subtasks[title] = false;
+        pathway.modules.forEach(({ name }) => {
+          subtasks[name] = false;
         });
         noProgress.push(
           <CardTask
             url={"/pathways/[id]"}
             correctUrl={`/pathways/${pathway._id}`}
             textGradient="light"
-            title={pathway.title}
+            title={pathway.name}
             subtasks={subtasks}
           />
         );
@@ -80,12 +80,12 @@ const Dashboard: NextApplicationPage<{
         console.log(finished);
         return !finished;
       })
-      .map(({ moduleProgress, title, pathwayId }) => {
+      .map(({ moduleProgress, name, pathwayId }) => {
         let subtasks = {};
-        moduleProgress.forEach(({ title }) => {
-          let moduleTitle = title;
-          subtasks[title] = moduleProgress.find(
-            ({ title }) => title === moduleTitle
+        moduleProgress.forEach(({ name }) => {
+          let moduleTitle = name;
+          subtasks[name] = moduleProgress.find(
+            ({ name }) => name === moduleTitle
           ).finished;
         });
         return (
@@ -93,7 +93,7 @@ const Dashboard: NextApplicationPage<{
             url={"/pathways/[id]"}
             correctUrl={`/pathways/${pathwayId}`}
             textGradient="light"
-            title={title}
+            title={name}
             subtasks={subtasks}
           />
         );
@@ -105,17 +105,17 @@ const Dashboard: NextApplicationPage<{
       .filter(({ finished }) => {
         return finished;
       })
-      .map(({ moduleProgress, title, pathwayId }) => {
+      .map(({ moduleProgress, name, pathwayId }) => {
         let subtasks = {};
-        moduleProgress.forEach(({ title }) => {
-          subtasks[title] = true;
+        moduleProgress.forEach(({ name }) => {
+          subtasks[name] = true;
         });
         return (
           <CardTask
             url={"/pathways/[id]"}
             correctUrl={`/pathways/${pathwayId}`}
             textGradient="light"
-            title={title}
+            title={name}
             subtasks={subtasks}
           />
         );

@@ -9,7 +9,12 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve.status(200).send(await getResourcesInfo());
+  try {
+    const resources = await getResourcesInfo();
+    resolve.status(200).send(resources);
+  } catch (e) {
+    resolve.status(500).send(e);
+  }
 };
 
 export const getResourcesInfo = async (): Promise<ResourcesInfo> => {

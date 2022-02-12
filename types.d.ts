@@ -24,18 +24,18 @@ interface ResourcesInfo {
 interface CardVideo {
   _id?: ObjectId;
   source: string;
-  title: string;
+  name: string;
 }
 interface CardArticle {
   _id?: ObjectId;
   description: string;
   source: string;
-  title: string;
+  name: string;
 }
 interface CardResource {
   _id?: ObjectId;
   source: string;
-  title: string;
+  name: string;
 }
 
 //Progress Page Types -->
@@ -91,23 +91,23 @@ interface UserPathway {
 interface PathwayProgress {
   pathwayId: string; // ID of the pathway this progress belongs to, NOT database ID of the progress itself
   finished: boolean;
-  title: string;
+  name: string;
   moduleProgress: ModuleProgress[];
 }
 interface ModuleProgress {
   moduleId: string;
   finished: boolean;
-  title: string;
+  name: string;
   contentProgress: ContentProgress[]; // Map between content ID and whether that content is finished
 }
 interface ContentProgress {
   finished: boolean;
-  title: string;
+  name: string;
   videoTime: number;
 }
 interface Pathway {
   _id: ObjectId;
-  title: string;
+  name: string;
   modules: PathwayModule[];
   tags: string[];
 }
@@ -115,24 +115,24 @@ interface Pathway_Db extends WithId<Document> {
   _id: ObjectId;
   tags: string[];
   modules: ObjectId[]; // Module document IDs
-  title: string;
+  name: string;
 }
 interface PathwayModule {
   _id: ObjectId;
-  title: string;
+  name: string;
   presetContent: PresetContent[];
   personalizedContent: PersonalizedContent[];
   tags: string[];
 }
 interface PathwayModule_Db extends WithId<Document> {
   _id: ObjectId;
-  title: string;
+  name: string;
   presetContent: PresetContent[];
   tags: string[];
 }
 interface PresetContent {
   priority: number;
-  title: string;
+  name: string;
   type: string;
   url: string;
   content?: string;
@@ -142,7 +142,7 @@ interface PersonalizedContent extends WithId<Document> {
   moduleId: ObjectId;
   priority: number;
   tags: string[];
-  title: string;
+  name: string;
   type: string;
   url: string;
   content?: string;

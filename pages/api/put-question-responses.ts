@@ -12,9 +12,17 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userToken, responses, userId } = JSON.parse(req.body);
-  return userId && responses
-    ? resolve.status(200).send(await putQuestionResponses(userId, responses))
-    : resolve.status(400).send("No user id or responses provided");
+
+  if (userId && responses) {
+    try {
+      const result = await putQuestionResponses(userId, responses);
+      resolve.status(200).send(result);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No user id or responses provided");
+  }
 };
 
 // Creates or updates a user's question responses by their firebase Id (string)

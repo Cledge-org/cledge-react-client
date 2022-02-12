@@ -6,17 +6,17 @@ import { putResourceVideo } from "../pages/api/put-resource-video";
 const testArticle1: CardArticle = {
   description: "Test Description",
   source: "Test Source",
-  title: "Test Title",
+  name: "Test Title",
 };
 
 const testVideo1: CardVideo = {
   source: "Test Source",
-  title: "Test Title",
+  name: "Test Title",
 };
 
 const testResource1: CardResource = {
   source: "Test Source",
-  title: "Test Title",
+  name: "Test Title",
 };
 
 test("should add resources and get those added resources exactly", (done) => {

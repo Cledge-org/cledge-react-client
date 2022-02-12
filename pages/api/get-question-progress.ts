@@ -15,9 +15,17 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { userId } = JSON.parse(req.body);
-  return !userId
-    ? resolve.status(400).send("No user Id given")
-    : resolve.status(200).send(await getQuestionProgress(userId));
+  
+  if (userId) {
+    try {
+      const questionProgress = await getQuestionProgress(userId);
+      resolve.status(200).send(questionProgress);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No user Id provided");
+  }
 };
 
 // Gets all user responses to relevant questions by a user's firebaseId

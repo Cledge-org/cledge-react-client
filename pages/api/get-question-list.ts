@@ -10,9 +10,17 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { listName } = JSON.parse(req.body);
-  return !listName
-    ? resolve.status(400).send("No list name provided")
-    : resolve.status(200).send(await getQuestionList(listName));
+
+  if (listName) {
+    try {
+      const list = await getQuestionList(listName);
+      resolve.status(200).send(list);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No list name provided");
+  }
 };
 
 // Gets a question list with its chunks populated
@@ -94,9 +102,7 @@ const getQuestionChunk = (
       // Chunk questions are currently just question ids, we need to fetch from database
       const chunkQuestions: Question[] = (await Promise.all(
         chunk.questions.map((questionId) =>
-          questionsDb
-            .collection("question-data")
-            .findOne({ _id: questionId })
+          questionsDb.collection("question-data").findOne({ _id: questionId })
         )
       )) as Question[];
       res({ _id: chunk._id, name: chunk.name, questions: chunkQuestions });
