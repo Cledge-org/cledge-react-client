@@ -67,7 +67,7 @@ export async function getPathwayAndProgress(
         res({
           pathwayInfo: {
             tags: requestedPathway.tags,
-            title: requestedPathway.title,
+            name: requestedPathway.name,
             _id: requestedPathway._id,
             modules,
           },

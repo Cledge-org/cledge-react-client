@@ -46,7 +46,7 @@ export async function getPathway(
         modules = modules.filter((x) => x !== null);
         res({
           tags: pathway.tags,
-          title: pathway.title,
+          name: pathway.name,
           _id: pathway._id,
           modules,
         });
@@ -79,7 +79,7 @@ export const getModule = (
       } else {
         res({
           _id: module._id,
-          title: module.title,
+          name: module.name,
           presetContent: module.presetContent,
           tags: module.tags,
           personalizedContent,

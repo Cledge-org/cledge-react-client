@@ -80,8 +80,8 @@ export async function getSpecificPathwayProgress(
           )
         )
       );
-      moduleProgress = moduleProgress.filter(({ title }) => {
-        return title !== "NULL MODULE";
+      moduleProgress = moduleProgress.filter(({ name }) => {
+        return name !== "NULL MODULE";
       });
       res({
         finished: moduleProgress.reduce(
@@ -89,7 +89,7 @@ export async function getSpecificPathwayProgress(
           true
         ),
         moduleProgress,
-        title: pathway.title,
+        name: pathway.name,
         pathwayId: pathway._id,
       });
     } catch (e) {
@@ -126,14 +126,14 @@ async function getSpecificModuleProgress(
         }
         const titles: Set<string> = new Set();
         moduleContentProgress.forEach((progress) => {
-          titles.add(progress.title);
+          titles.add(progress.name);
         });
         // Iterate through preset and presonalized contents and find contents not in progress, add them as unfinished
         if (module.presetContent) {
           module.presetContent.forEach((content, index) => {
-            if (!titles.has(content.title)) {
+            if (!titles.has(content.name)) {
               moduleContentProgress.push({
-                title: content.title,
+                name: content.name,
                 finished: false,
                 videoTime: 0,
               });
@@ -142,9 +142,9 @@ async function getSpecificModuleProgress(
         }
         if (modulePersonalizedContent) {
           modulePersonalizedContent.forEach((content) => {
-            if (!titles.has(content.title)) {
+            if (!titles.has(content.name)) {
               moduleContentProgress.push({
-                title: content.title,
+                name: content.name,
                 finished: false,
                 videoTime: 0,
               });
@@ -158,14 +158,14 @@ async function getSpecificModuleProgress(
             true
           ),
           contentProgress: moduleContentProgress,
-          title: module.title,
+          name: module.name,
         });
       } else {
         res({
           moduleId: moduleId.toString(),
           finished: false,
           contentProgress: [],
-          title: "NULL MODULE",
+          name: "NULL MODULE",
         });
       }
     } catch (e) {

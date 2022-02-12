@@ -48,7 +48,7 @@ export async function getSpecificPathway(
     );
     modules = modules.filter((x) => x !== null); // Remove all modules that weren't found
     res({
-      title: pathway.title,
+      name: pathway.name,
       _id: pathway._id,
       modules,
       tags: pathway.tags,
@@ -80,7 +80,7 @@ async function getSpecificModule(
       } else {
         res({
           _id: module._id,
-          title: module.title,
+          name: module.name,
           presetContent: module.presetContent,
           personalizedContent: modulePersonalizedContent,
           tags: module.tags,
