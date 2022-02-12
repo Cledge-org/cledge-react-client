@@ -11,16 +11,20 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
   const { userToken, contentId, content } = JSON.parse(req.body);
-  return content
-    ? resolve
-      .status(200)
-      .send(
-        await putPathwayModulePersonalizedContent(
-          contentId,
-          content
-        )
-      )
-    : resolve.status(400).send("No pathway module data provided");
+
+  if (content) {
+    try {
+      const result = await putPathwayModulePersonalizedContent(
+        contentId,
+        content
+      );
+      resolve.status(200).send(result);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No pathway module data provided");
+  }
 };
 
 // Admin API. Creates or updates personalized content for a pathway module. If a

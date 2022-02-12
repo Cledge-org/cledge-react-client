@@ -11,16 +11,17 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userToken, articleId, article } = JSON.parse(req.body);
-  return article
-    ? resolve
-      .status(200)
-      .send(
-        await putResourceArticle(
-          articleId,
-          article
-        )
-      )
-    : resolve.status(400).send("No article provided");
+
+  if (article) {
+    try {
+      const result = await putResourceArticle(articleId, article);
+      resolve.status(200).send(result);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No article provided");
+  }
 };
 
 // Admin API. Creates or updates a resource article - if no ID provided, will

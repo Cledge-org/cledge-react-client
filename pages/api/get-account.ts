@@ -11,9 +11,17 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userId } = JSON.parse(req.body);
-  return userId
-    ? resolve.status(200).send(await getAccountInfo(userId))
-    : resolve.status(400).send("No user id provided");
+
+  if (userId) {
+    try {
+      const accountInfo = await getAccountInfo(userId);
+      resolve.status(200).send(accountInfo);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No user id provided");
+  }
 };
 
 // Get account info by a user's account info by their firebaseId

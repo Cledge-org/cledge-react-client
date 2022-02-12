@@ -11,9 +11,17 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { pathwayId, userId } = JSON.parse(req.body);
-  return !userId || !pathwayId
-    ? resolve.status(400).send("No userId or courseId provided")
-    : resolve.status(200).send(await getPathwayProgress(userId, pathwayId));
+  
+  if (userId && pathwayId) {
+    try {
+      const pathwayProgress = await getPathwayProgress(userId, pathwayId);
+      resolve.status(200).send(pathwayProgress);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No userId or courseId provided");
+  }
 };
 
 // Gets gets progress info for a specific learning pathway given pathway
