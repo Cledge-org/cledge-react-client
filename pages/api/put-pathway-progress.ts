@@ -12,13 +12,17 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
   const { contentProgress, userId } = JSON.parse(req.body);
-  return contentProgress
-    ? resolve
-        .status(200)
-        .send(await putPathwayProgress(userId, contentProgress))
-    : resolve
-        .status(400)
-        .send("No pathway content progress or userId provided");
+
+  if (contentProgress) {
+    try {
+      const result = await putPathwayProgress(userId, contentProgress);
+      resolve.status(200).send(result);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No pathway content progress or userId provided");
+  }
 };
 
 // Sets pathway content progress for a user by their firebase ID (string). Batch

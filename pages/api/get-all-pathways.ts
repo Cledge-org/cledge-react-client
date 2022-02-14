@@ -9,7 +9,12 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  return resolve.status(200).send(await getAllPathways());
+  try {
+    const allPathways = await getAllPathways();
+    resolve.status(200).send(allPathways);
+  } catch (e) {
+    resolve.status(500).send(e);
+  }
 };
 
 // Admin API. Gets all pathways and their modules, with all their preset and
@@ -48,7 +53,7 @@ export async function getSpecificPathway(
     );
     modules = modules.filter((x) => x !== null); // Remove all modules that weren't found
     res({
-      title: pathway.title,
+      name: pathway.name,
       _id: pathway._id,
       modules,
       tags: pathway.tags,
@@ -80,7 +85,7 @@ async function getSpecificModule(
       } else {
         res({
           _id: module._id,
-          title: module.title,
+          name: module.name,
           presetContent: module.presetContent,
           personalizedContent: modulePersonalizedContent,
           tags: module.tags,

@@ -17,12 +17,20 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { pathwayId, userId } = JSON.parse(req.body);
-  return userId && pathwayId
-    ? resolve.status(200).send({
+
+  if (userId && pathwayId) {
+    try {
+      const result = {
         ...(await getPathwayAndProgress(userId, pathwayId)),
         uid: userId,
-      })
-    : resolve.status(400).send("No user id provided");
+      };
+      resolve.status(200).send(result);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No user id provided");
+  }
 };
 export async function getPathwayAndProgress(
   userId: string,
@@ -67,7 +75,7 @@ export async function getPathwayAndProgress(
         res({
           pathwayInfo: {
             tags: requestedPathway.tags,
-            title: requestedPathway.title,
+            name: requestedPathway.name,
             _id: requestedPathway._id,
             modules,
           },

@@ -11,9 +11,17 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { pathwayId, userId } = JSON.parse(req.body);
-  return !userId || !pathwayId
-    ? resolve.status(400).send("No userId or courseId provided")
-    : resolve.status(200).send(await getPathwayProgress(userId, pathwayId));
+  
+  if (userId && pathwayId) {
+    try {
+      const pathwayProgress = await getPathwayProgress(userId, pathwayId);
+      resolve.status(200).send(pathwayProgress);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No userId or courseId provided");
+  }
 };
 
 // Gets gets progress info for a specific learning pathway given pathway
@@ -44,8 +52,8 @@ export async function getPathwayProgress(
           pathwaysDb
             .collection("progress-by-user")
             .findOne({ firebaseId: userId }) as Promise<
-              Record<string, ContentProgress[]>
-            >,
+            Record<string, ContentProgress[]>
+          >,
         ]);
         res(
           (await getSpecificPathwayProgress(
@@ -69,28 +77,32 @@ export async function getSpecificPathwayProgress(
   progressByModule: Record<string, ContentProgress[]>
 ): Promise<PathwayProgress> {
   return new Promise(async (res, err) => {
-    let moduleProgress = await Promise.all(
-      pathway.modules.map((moduleId) =>
-        getSpecificModuleProgress(
-          userTags,
-          progressByModule,
-          moduleId,
-          pathwaysDb
+    try {
+      let moduleProgress = await Promise.all(
+        pathway.modules.map((moduleId) =>
+          getSpecificModuleProgress(
+            userTags,
+            progressByModule,
+            moduleId,
+            pathwaysDb
+          )
         )
-      )
-    );
-    moduleProgress = moduleProgress.filter(({ title }) => {
-      return title !== "NULL MODULE";
-    });
-    res({
-      finished: moduleProgress.reduce(
-        (prev: boolean, cur: ModuleProgress) => prev && cur.finished,
-        true
-      ),
-      moduleProgress,
-      title: pathway.title,
-      pathwayId: pathway._id,
-    });
+      );
+      moduleProgress = moduleProgress.filter(({ name }) => {
+        return name !== "NULL MODULE";
+      });
+      res({
+        finished: moduleProgress.reduce(
+          (prev: boolean, cur: ModuleProgress) => prev && cur.finished,
+          true
+        ),
+        moduleProgress,
+        name: pathway.name,
+        pathwayId: pathway._id,
+      });
+    } catch (e) {
+      err(e);
+    }
   });
 }
 
@@ -122,14 +134,14 @@ async function getSpecificModuleProgress(
         }
         const titles: Set<string> = new Set();
         moduleContentProgress.forEach((progress) => {
-          titles.add(progress.title);
+          titles.add(progress.name);
         });
         // Iterate through preset and presonalized contents and find contents not in progress, add them as unfinished
         if (module.presetContent) {
           module.presetContent.forEach((content, index) => {
-            if (!titles.has(content.title)) {
+            if (!titles.has(content.name)) {
               moduleContentProgress.push({
-                title: content.title,
+                name: content.name,
                 finished: false,
                 videoTime: 0,
               });
@@ -138,9 +150,9 @@ async function getSpecificModuleProgress(
         }
         if (modulePersonalizedContent) {
           modulePersonalizedContent.forEach((content) => {
-            if (!titles.has(content.title)) {
+            if (!titles.has(content.name)) {
               moduleContentProgress.push({
-                title: content.title,
+                name: content.name,
                 finished: false,
                 videoTime: 0,
               });
@@ -154,14 +166,14 @@ async function getSpecificModuleProgress(
             true
           ),
           contentProgress: moduleContentProgress,
-          title: module.title,
+          name: module.name,
         });
       } else {
         res({
           moduleId: moduleId.toString(),
           finished: false,
           contentProgress: [],
-          title: "NULL MODULE",
+          name: "NULL MODULE",
         });
       }
     } catch (e) {
