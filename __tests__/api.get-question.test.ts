@@ -45,13 +45,13 @@ const testProgressInfo: ProgressInfo = {
 const testQuestionListDb1: QuestionList_Db = {
   _id: "Test Id",
   name: "Test Name",
-  chunks:[new ObjectId()],
+  chunks:[ObjectId],
 };
 
 const testQuestionChunkDb1: QuestionChunk_Db = {
   _id: new ObjectId(),
   name: "Test Name",
-  questions:[new ObjectId()],
+  questions:[ObjectId],
 };
 
 
@@ -65,10 +65,23 @@ test("should add questions and get those added questions exactly", (done) => {
     const gradeQuestionChunks: QuestionChunk[] = [testQuestionChunk1];
     const questionChunkDb: QuestionChunk_Db[] = [testQuestionChunkDb1];
 
+    // await Promise.all([
+    //   ...questionListDb.map((questionList) => putQuestionList(undefined, questionList)),
+    //   ...questionChunkDb.map((questionChunk) => putQuestionChunk(undefined, questionChunk)),
+    //   ...question.map((questions) => putQuestion(undefined, questions)),
+    //   ...userResponse.map((responses) => putQuestionResponses("Test User Id", [responses])),
+    // ]);
+
     await Promise.all([
       ...questionListDb.map((questionList) => putQuestionList(undefined, questionList)),
+    ]);
+    await Promise.all([
       ...questionChunkDb.map((questionChunk) => putQuestionChunk(undefined, questionChunk)),
+    ]);
+    await Promise.all([
       ...question.map((questions) => putQuestion(undefined, questions)),
+    ]);
+    await Promise.all([
       ...userResponse.map((responses) => putQuestionResponses("Test User Id", [responses])),
     ]);
 
