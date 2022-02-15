@@ -59,7 +59,7 @@ interface QuestionList extends WithId<Document> {
 interface QuestionList_Db extends WithId<Document> {
   _id: ObjectId;
   name: string;
-  chunks: ObjectId[]; // Document IDs of chunks
+  chunks: string[]; // Document IDs of chunks
 }
 interface QuestionChunk extends WithId<Document> {
   _id: ObjectId;
