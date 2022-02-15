@@ -26,10 +26,8 @@ import { connect } from "react-redux";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    const session = await getSession(ctx);
     const questionResponses = await fetch(
-      `${ORIGIN_URL}/api/get-question-progress`,
-      { method: "POST", body: JSON.stringify({ userId: session.user.uid }) }
+      `${ORIGIN_URL}/api/get-question-progress`
     );
     let userProgressJSON = await questionResponses.json();
     return {

@@ -1,71 +1,66 @@
 import React, { useState } from "react";
-import QuestionSubPageHeader from "../components/question_components/question_subpage_header";
-import ECTextInputQuestion from "../components/question_components/ec_textinput_question";
-import ECDropDown from "../components/question_components/ec_dropdown_question";
-import MCQQuestion from "../components/question_components/mcq_question";
-import Slider from "../components/question_components/slider";
-import CheckBoxQuestion from "../components/question_components/checkbox_question";
-import ECQuestionSummaryCard from "../components/question_components/ec_question_summary_card";
+import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
+import ECTextInputQuestion from "../../components/question_components/ec_textinput_question";
+import ECDropDown from "../../components/question_components/ec_dropdown_question";
+import MCQQuestion from "../../components/question_components/mcq_question";
+import Slider from "../../components/question_components/slider";
+import CheckBoxQuestion from "../../components/question_components/checkbox_question";
+import ECQuestionSummaryCard from "../../components/question_components/ec_question_summary_card";
 import { Button, ProgressBar } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
-import ECEditor from "../components/question_components/ec-editor";
-import { NextApplicationPage } from "./_app";
+import ECEditor from "../../components/question_components/ec-editor";
+import { NextApplicationPage } from "../_app";
 import { GetServerSidePropsContext } from "next";
-import TextInputQuestion from "../components/question_components/textinput_question";
+import TextInputQuestion from "../../components/question_components/textinput_question";
 import { useRouter } from "next/router";
-import { ORIGIN_URL } from "../config";
-import AuthFunctions from "./api/auth/firebase-auth";
-import { getSession, useSession } from "next-auth/react";
+import { ORIGIN_URL } from "../../config";
+import AuthFunctions from "../api/auth/firebase-auth";
+import { useSession } from "next-auth/react";
 import { connect } from "react-redux";
-import { store } from "../utils/store";
+import { store } from "../../utils/store";
 import {
   updateQuestionResponsesAction,
   updateTagsAndCheckInsAction,
-} from "../utils/actionFunctions";
+} from "../../utils/actionFunctions";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    let firstQuestionnaire = ctx.query.questionnaire.indexOf(",");
-    const session = await getSession(ctx);
-    let questionnaire = await (
+    let firstCheckIn = ctx.query.checkIn.indexOf(",");
+    let checkIn = await (
       await fetch(`${ORIGIN_URL}/api/get-question-list`, {
         method: "POST",
         body: JSON.stringify({
           //THIS WORKS
-          listName: new String(ctx.query.questionnaire).substring(
+          listName: new String(ctx.query.checkIn).substring(
             0,
-            firstQuestionnaire === -1
-              ? ctx.query.questionnaire.length
-              : firstQuestionnaire
+            firstCheckIn === -1 ? ctx.query.checkIn.length : firstCheckIn
           ) as string,
         }),
       })
     ).json();
-    //console.error(questionnaireChunks);
-    let questionnaireData = questionnaire.chunks[0].questions;
-    for (let i = 1; i < questionnaire.chunks.length; i++) {
-      questionnaireData = questionnaireData.concat(
-        questionnaire.chunks[i].questions
-      );
+    //console.error(checkInChunks);
+    let checkInData = checkIn.chunks[0].questions;
+    for (let i = 1; i < checkIn.chunks.length; i++) {
+      checkInData = checkInData.concat(checkIn.chunks[i].questions);
     }
     return {
       props: {
-        questionnaireData,
+        checkInData: [],
       },
     };
   } catch (err) {
-    console.log(err);
+    console.error(err);
     ctx.res.end();
     return { props: {} as never };
   }
 };
 
-const Questionnaire: NextApplicationPage<{
-  questionnaireData: Question[];
+const CheckIn: NextApplicationPage<{
+  checkInData: Question[];
   userResponses: UserResponse[];
   userTags: string[];
-}> = ({ questionnaireData, userResponses, userTags }) => {
+}> = ({ checkInData, userResponses, userTags }) => {
   const [isShowingContinue, setIsShowingContinue] = useState(true);
   const [isShowingStart, setIsShowingStart] = useState(false);
   const [progress, changeProgress] = useState(0);
@@ -84,20 +79,20 @@ const Questionnaire: NextApplicationPage<{
 
   const goBack = (e) => {
     e.preventDefault();
-    changeProgress(progress - 100 / (questionnaireData.length - 1));
+    changeProgress(progress - 100 / (checkInData.length - 1));
     if (page > 0) changePage(page - 1);
   };
 
   const goForward = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    changeProgress(progress + 100 / (questionnaireData.length - 1));
-    if (page < questionnaireData.length - 1) changePage(page + 1);
+    changeProgress(progress + 100 / (checkInData.length - 1));
+    if (page < checkInData.length - 1) changePage(page + 1);
   };
 
   const submitForm = async (e: { preventDefault: () => void }) => {
     //REMOVE CHECK IN FROM LIST AND UPLOAD DATA
     let checkInList = [];
-    let queriedList = new String(router.query.questionnaire.slice());
+    let queriedList = new String(router.query.checkIn.slice());
     //THESE WORK
     while (queriedList.indexOf(",") !== -1) {
       checkInList.push(queriedList.substring(0, queriedList.indexOf(",")));
@@ -138,7 +133,7 @@ const Questionnaire: NextApplicationPage<{
       return indexOfDuplicate === -1 || index === indexOfDuplicate;
     });
   };
-  const questionnairePages = questionnaireData.map((question) => {
+  const checkInPages = checkInData.map((question) => {
     const updateFunc = (value, newQTags, oldTags) => {
       newUserResponses.find(
         (questionResponse) => questionResponse.questionId === question._id
@@ -232,7 +227,7 @@ const Questionnaire: NextApplicationPage<{
             style={{ fontSize: "1em", width: "40%" }}
           >
             <span className="fw-bold mb-3" style={{ fontSize: "2.4em" }}>
-              Start the questionnaire
+              Start the checkIn
             </span>
             Help us help you better! <br />
             Tell us about yourself and we'll show you content and suggestions
@@ -240,7 +235,7 @@ const Questionnaire: NextApplicationPage<{
             <br />
             <br />
             Be sure to answer carefully and accurately. You can always access
-            this questionnaire again through the home page to make changes.
+            this checkIn again through the home page to make changes.
             <button
               className="btn cl-btn-blue mt-3"
               style={{ fontSize: "1.1em", width: "30%" }}
@@ -260,9 +255,9 @@ const Questionnaire: NextApplicationPage<{
     );
   }
   return (
-    <div className="questionnaire-container container-fluid d-flex flex-column overflow-auto">
-      <div className="row col-md-5 d-md-flex mx-auto mt-5 pt-5 flex-column justify-content-center text-center questionnaire-question">
-        {questionnairePages[page]}
+    <div className="checkIn-container container-fluid d-flex flex-column overflow-auto">
+      <div className="row col-md-5 d-md-flex mx-auto mt-5 pt-5 flex-column justify-content-center text-center checkIn-question">
+        {checkInPages[page]}
       </div>
       <div
         className="auth-bottom-nav align-self-center"
@@ -277,7 +272,7 @@ const Questionnaire: NextApplicationPage<{
         </div>
 
         <div className="px-0">
-          {page < questionnairePages.length - 1 && (
+          {page < checkInPages.length - 1 && (
             <button
               type="button"
               className="btn cl-btn-blue"
@@ -286,7 +281,7 @@ const Questionnaire: NextApplicationPage<{
               Next
             </button>
           )}
-          {page === questionnairePages.length - 1 && (
+          {page === checkInPages.length - 1 && (
             <button
               type="button"
               className="btn cl-btn-blue"
@@ -306,8 +301,8 @@ const Questionnaire: NextApplicationPage<{
     </div>
   );
 };
-Questionnaire.requireAuth = true;
+CheckIn.requireAuth = true;
 export default connect((state) => ({
   userTags: state.accountInfo.tags,
   userResponses: state.questionResponses,
-}))(Questionnaire);
+}))(CheckIn);

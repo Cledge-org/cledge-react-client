@@ -14,24 +14,18 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId } = JSON.parse(req.body);
-  
-  if (userId) {
-    try {
-      const questionProgress = await getQuestionProgress(userId);
-      resolve.status(200).send(questionProgress);
-    } catch (e) {
-      resolve.status(500).send(e);
-    }
-  } else {
-    resolve.status(400).send("No user Id provided");
+  try {
+    const questionProgress = await getQuestionProgress();
+    resolve.status(200).send(questionProgress);
+  } catch (e) {
+    resolve.status(500).send(e);
   }
 };
 
 // Gets all user responses to relevant questions by a user's firebaseId
-export async function getQuestionProgress(
-  userId: string
-): Promise<{ questionData: QuestionList[] }> {
+export async function getQuestionProgress(): Promise<{
+  questionData: QuestionList[];
+}> {
   const questionData = await getAllQuestionLists();
   return new Promise((res, err) => {
     MongoClient.connect(
