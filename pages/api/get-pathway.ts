@@ -14,7 +14,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
   if (userId && pathwayId) {
     try {
-      const pathway = await getPathway(userId, pathwayId);
+      const pathway = await getPathway(userId, new ObjectId(pathwayId));
       resolve.status(200).send(pathway);
     } catch (e) {
       resolve.status(500).send(e);
@@ -34,7 +34,6 @@ export async function getPathway(
         assert.equal(connection_err, null);
         const pathwaysDb = client.db("pathways");
         const usersDb = client.db("users");
-
         const [pathway, accountInfo]: [Pathway_Db, AccountInfo] =
           await Promise.all([
             pathwaysDb
