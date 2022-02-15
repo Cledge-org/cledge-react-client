@@ -42,6 +42,7 @@ export const putQuestionResponses = async (
           { upsert: true }
         );
       res();
+      client.close();
     } catch (e) {
       err(e);
     }

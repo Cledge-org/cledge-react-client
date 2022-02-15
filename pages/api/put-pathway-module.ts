@@ -53,6 +53,7 @@ export const putPathwayModule = (
         res({
           moduleId: pathwayModuleId.toString(),
         });
+        client.close();
       }
     } catch (e) {
       err(e);

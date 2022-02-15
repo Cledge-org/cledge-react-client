@@ -46,6 +46,7 @@ export const putCourse = async (
           .updateOne({ _id: pathwayId }, { $set: pathway });
       }
       res();
+      client.close();
     } catch (e) {
       err(e);
     }

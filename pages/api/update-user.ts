@@ -46,6 +46,7 @@ export const updateUser = async (
         .collection("users")
         .updateOne({ firebaseId }, { $set: user });
       res();
+      client.close();
     } catch (e) {
       err(e);
     }

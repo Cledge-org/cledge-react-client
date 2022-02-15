@@ -49,6 +49,7 @@ export const putQuestionList = (
           .updateOne({ _id: questionListId }, { $set: questionList });
       }
       res();
+      client.close();
     } catch (e) {
       err(e);
     }

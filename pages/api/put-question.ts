@@ -53,6 +53,7 @@ export const putQuestion = async (
         res({
           questionId: questionId.toString(),
         });
+        client.close();
       }
     } catch (e) {
       console.log("ERROR: " + e);

@@ -54,6 +54,7 @@ export const putPathwayModulePersonalizedContent = (
             .collection("personalized-content")
             .updateOne({ _id: contentId }, { $set: content });
           res(contentId.toString());
+          client.close();
         }
       } catch (e) {
         err(e);

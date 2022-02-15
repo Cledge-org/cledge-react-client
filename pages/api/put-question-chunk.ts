@@ -53,6 +53,7 @@ export const putQuestionChunk = async (
         res({
           chunkId: questionChunkId.toString(),
         });
+        client.close();
       }
     } catch (e) {
       err(e);

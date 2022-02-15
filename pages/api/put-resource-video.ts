@@ -50,6 +50,7 @@ export const putResourceVideo = async (
           .updateOne({ _id: videoId }, { $set: video });
       }
       res();
+      client.close();
     } catch (e) {
       err(e);
     }

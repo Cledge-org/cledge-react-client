@@ -54,6 +54,7 @@ export const putResourceResource = async (
           .updateOne({ _id: resourceId }, { $set: resource });
       }
       res();
+      client.close();
     } catch (e) {
       err(e);
     }

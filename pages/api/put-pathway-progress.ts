@@ -46,6 +46,7 @@ export const putPathwayProgress = async (
           { upsert: true }
         );
       res(updateResult.acknowledged);
+      client.close();
     } catch (e) {
       err(e);
     }
