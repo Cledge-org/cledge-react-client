@@ -39,6 +39,11 @@ interface CardResource {
 }
 
 //Progress Page Types -->
+interface UserProgress_Db extends WithId<Document> {
+  _id: ObjectId;
+  firebaseId: string;
+  responses: UserResponse[];
+}
 interface UserProgress {
   responses: UserResponse[];
 }

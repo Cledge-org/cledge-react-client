@@ -1,6 +1,5 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import assert from "assert";
 import AuthFunctions from "./auth/firebase-auth";
 
 export const config = {
@@ -11,7 +10,7 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { pathwayId, userId } = JSON.parse(req.body);
-  
+
   if (userId && pathwayId) {
     try {
       const pathwayProgress = await getPathwayProgress(userId, pathwayId);
@@ -26,45 +25,44 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
 // Gets gets progress info for a specific learning pathway given pathway
 // document id and a user id
-export async function getPathwayProgress(
+export function getPathwayProgress(
   userId: string,
   pathwayId: ObjectId
 ): Promise<PathwayProgress> {
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        const pathwaysDb = client.db("pathways");
-        const usersDb = client.db("users");
-
-        const [pathway, userInfo, progressByModule]: [
-          Pathway_Db,
-          AccountInfo,
+  return new Promise(async (res, err) => {
+    try {
+      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const pathwaysDb = client.db("pathways");
+      const usersDb = client.db("users");
+      const [pathway, userInfo, progressByModule]: [
+        Pathway_Db,
+        AccountInfo,
+        Record<string, ContentProgress[]>
+      ] = await Promise.all([
+        pathwaysDb
+          .collection("pathways")
+          .findOne({ _id: pathwayId }) as Promise<Pathway_Db>,
+        usersDb
+          .collection("users")
+          .findOne({ firebaseId: userId }) as Promise<AccountInfo>,
+        pathwaysDb
+          .collection("progress-by-user")
+          .findOne({ firebaseId: userId }) as Promise<
           Record<string, ContentProgress[]>
-        ] = await Promise.all([
-          pathwaysDb
-            .collection("pathways")
-            .findOne({ _id: pathwayId }) as Promise<Pathway_Db>,
-          usersDb
-            .collection("users")
-            .findOne({ firebaseId: userId }) as Promise<AccountInfo>,
-          pathwaysDb
-            .collection("progress-by-user")
-            .findOne({ firebaseId: userId }) as Promise<
-            Record<string, ContentProgress[]>
-          >,
-        ]);
-        res(
-          (await getSpecificPathwayProgress(
-            userInfo.tags,
-            pathway,
-            pathwaysDb,
-            progressByModule
-          )) as PathwayProgress
-        );
-      }
-    );
+        >,
+      ]);
+      res(
+        (await getSpecificPathwayProgress(
+          userInfo.tags,
+          pathway,
+          pathwaysDb,
+          progressByModule
+        )) as PathwayProgress
+      );
+      client.close();
+    } catch (e) {
+      err(e);
+    }
   });
 }
 

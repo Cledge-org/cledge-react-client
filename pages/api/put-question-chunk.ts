@@ -34,33 +34,28 @@ export const putQuestionChunk = async (
     // Document should not have _id field when sent to database
     delete questionChunk._id;
   }
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        try {
-          if (!questionChunkId) {
-            let insertedDoc = await client
-              .db("questions")
-              .collection("question-chunks")
-              .insertOne(questionChunk);
-            res({
-              chunkId: insertedDoc.insertedId.toString(),
-            });
-          } else {
-            await client
-              .db("questions")
-              .collection("question-chunks")
-              .updateOne({ _id: questionChunkId }, { $set: questionChunk });
-            res({
-              chunkId: questionChunkId.toString(),
-            });
-          }
-        } catch (e) {
-          err(e);
-        }
+  return new Promise(async (res, err) => {
+    try {
+      const client = await MongoClient.connect(process.env.MONGO_URL);
+      if (!questionChunkId) {
+        let insertedDoc = await client
+          .db("questions")
+          .collection("question-chunks")
+          .insertOne(questionChunk);
+        res({
+          chunkId: insertedDoc.insertedId.toString(),
+        });
+      } else {
+        await client
+          .db("questions")
+          .collection("question-chunks")
+          .updateOne({ _id: questionChunkId }, { $set: questionChunk });
+        res({
+          chunkId: questionChunkId.toString(),
+        });
       }
-    );
+    } catch (e) {
+      err(e);
+    }
   });
 };

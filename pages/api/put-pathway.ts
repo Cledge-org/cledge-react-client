@@ -34,28 +34,20 @@ export const putCourse = async (
     // Document should not have _id field when sent to database
     delete pathway._id;
   }
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        try {
-          if (!pathwayId) {
-            await client
-              .db("pathways")
-              .collection("pathways")
-              .insertOne(pathway);
-          } else {
-            await client
-              .db("pathways")
-              .collection("pathways")
-              .updateOne({ _id: pathwayId }, { $set: pathway });
-          }
-          res();
-        } catch (e) {
-          err(e);
-        }
+  return new Promise(async (res, err) => {
+    try {
+      const client = await MongoClient.connect(process.env.MONGO_URL);
+      if (!pathwayId) {
+        await client.db("pathways").collection("pathways").insertOne(pathway);
+      } else {
+        await client
+          .db("pathways")
+          .collection("pathways")
+          .updateOne({ _id: pathwayId }, { $set: pathway });
       }
-    );
+      res();
+    } catch (e) {
+      err(e);
+    }
   });
 };

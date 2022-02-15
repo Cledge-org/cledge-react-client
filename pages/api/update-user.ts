@@ -33,26 +33,21 @@ export const updateUser = async (
   firebaseId: string,
   user: AccountInfo
 ): Promise<void> => {
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        try {
-          // Remove undefined and null fields in user as to not delete them
-          for (const propName in user) {
-            if (user[propName] === null || user[propName] === undefined)
-              delete user[propName];
-          }
-          await client
-            .db("users")
-            .collection("users")
-            .updateOne({ firebaseId }, { $set: user });
-          res();
-        } catch (e) {
-          err(e);
-        }
+  return new Promise(async (res, err) => {
+    const client = await MongoClient.connect(process.env.MONGO_URL);
+    try {
+      // Remove undefined and null fields in user as to not delete them
+      for (const propName in user) {
+        if (user[propName] === null || user[propName] === undefined)
+          delete user[propName];
       }
-    );
+      await client
+        .db("users")
+        .collection("users")
+        .updateOne({ firebaseId }, { $set: user });
+      res();
+    } catch (e) {
+      err(e);
+    }
   });
 };

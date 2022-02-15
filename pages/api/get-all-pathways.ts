@@ -1,6 +1,5 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import assert from "assert";
 
 export const config = {
   api: {
@@ -19,50 +18,56 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
 // Admin API. Gets all pathways and their modules, with all their preset and
 // personalized contents
-export async function getAllPathways(): Promise<Pathway[]> {
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        const pathwaysDb = client.db("pathways");
-        const pathways: Pathway_Db[] = (await pathwaysDb
-          .collection("pathways")
-          .find()
-          .toArray()) as Pathway_Db[];
-        res(
-          (await Promise.all(
-            pathways.map((pathway: Pathway_Db) =>
-              getSpecificPathway(pathway, pathwaysDb)
-            )
-          )) as Pathway[]
-        );
-      }
-    );
+export function getAllPathways(): Promise<Pathway[]> {
+  return new Promise(async (res, err) => {
+    try {
+      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const pathwaysDb = client.db("pathways");
+      const pathways: Pathway_Db[] = (await pathwaysDb
+        .collection("pathways")
+        .find()
+        .toArray()) as Pathway_Db[];
+      res(
+        (await Promise.all(
+          pathways.map((pathway: Pathway_Db) =>
+            getSpecificPathway(pathway, pathwaysDb)
+          )
+        )) as Pathway[]
+      );
+      client.close();
+    } catch (e) {
+      err(e);
+    }
   });
 }
 
 // Takes a pathway document and its database and populates its modules
-export async function getSpecificPathway(
+export function getSpecificPathway(
   pathway: Pathway_Db,
   pathwaysDb: Db
 ): Promise<Pathway> {
   return new Promise(async (res, err) => {
-    let modules = await Promise.all(
-      pathway.modules.map((moduleId) => getSpecificModule(moduleId, pathwaysDb))
-    );
-    modules = modules.filter((x) => x !== null); // Remove all modules that weren't found
-    res({
-      name: pathway.name,
-      _id: pathway._id,
-      modules,
-      tags: pathway.tags,
-    });
+    try {
+      let modules = await Promise.all(
+        pathway.modules.map((moduleId) =>
+          getSpecificModule(moduleId, pathwaysDb)
+        )
+      );
+      modules = modules.filter((x) => x !== null); // Remove all modules that weren't found
+      res({
+        name: pathway.name,
+        _id: pathway._id,
+        modules,
+        tags: pathway.tags,
+      });
+    } catch (e) {
+      err(e);
+    }
   });
 }
 
 // Gets specific module given its id and database
-async function getSpecificModule(
+function getSpecificModule(
   moduleId: ObjectId,
   pathwaysDb: Db
 ): Promise<PathwayModule | null> {

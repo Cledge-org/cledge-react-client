@@ -1,4 +1,3 @@
-import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import AuthFunctions from "./auth/firebase-auth";
 
