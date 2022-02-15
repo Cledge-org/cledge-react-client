@@ -4,6 +4,8 @@ import QuestionSubPageHeader from "../../components/question_components/question
 import ECEditor from "../../components/question_components/ec-editor";
 import { ORIGIN_URL } from "../../config";
 import { useSession } from "next-auth/react";
+import { store } from "../../utils/store";
+import { updateQuestionResponsesAction } from "../../utils/actionFunctions";
 interface QuestionECSubpageProps {
   userResponses: UserResponse[];
   isShowing: boolean;
@@ -75,6 +77,7 @@ export default function QuestionECSubpage({
             userId: session.data.user.uid,
           }),
         });
+        store.dispatch(updateQuestionResponsesAction(userResponses));
         setIsAdding(false);
         setIsEditing(false);
       }}

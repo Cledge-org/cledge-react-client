@@ -9,7 +9,7 @@ import { GetServerSidePropsContext } from "next";
 import { getResourcesInfo } from "./api/get-resources";
 import { ORIGIN_URL } from "../config";
 
-export const getStaticProps = async (ctx: GetServerSidePropsContext) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {

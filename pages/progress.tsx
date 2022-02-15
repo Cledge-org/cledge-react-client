@@ -22,20 +22,19 @@ import CardTask from "../components/common/Card_Task";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { ORIGIN_URL } from "../config";
 import { getSession, useSession } from "next-auth/react";
+import { connect } from "react-redux";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = await getSession(ctx);
-    const userProgress = await fetch(
+    const questionResponses = await fetch(
       `${ORIGIN_URL}/api/get-question-progress`,
       { method: "POST", body: JSON.stringify({ userId: session.user.uid }) }
     );
-    let userProgressJSON = await userProgress.json();
+    let userProgressJSON = await questionResponses.json();
     return {
       props: {
-        progressInfo: {
-          ...userProgressJSON,
-        },
+        ...userProgressJSON,
       },
     };
   } catch (err) {
@@ -44,9 +43,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return { props: {} as never };
   }
 };
-const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
-  progressInfo,
-}) => {
+const Progress: NextApplicationPage<{
+  questionData: QuestionList[];
+  userTags: string[];
+  questionResponses: UserResponse[];
+}> = ({ questionData, userTags, questionResponses }) => {
   const session = useSession();
   const [currPage, setCurrPage] = useState({ page: "all", chunk: "" });
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
@@ -54,11 +55,11 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
     allLists: 0,
     lists: [],
   });
-  const [currUserTags, setCurrUserTags] = useState(progressInfo.userTags);
+  const [currUserTags, setCurrUserTags] = useState(userTags);
   const onPercentageUpdate = () => {
     setPercentageData({
-      allLists: calculateTotalPercent(progressInfo.questionData),
-      lists: progressInfo.questionData.map(({ chunks }) => {
+      allLists: calculateTotalPercent(questionData),
+      lists: questionData.map(({ chunks }) => {
         return calculatePercentComplete(chunks);
       }),
     });
@@ -82,15 +83,13 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
     chunks.map((chunk) => {
       total += chunk.questions.length;
       chunk.questions.forEach((question) => {
-        let userQuestionIds: string[] = progressInfo.userProgress.responses.map(
+        let userQuestionIds: string[] = questionResponses.map(
           ({ questionId }) => questionId
         );
         if (
           userQuestionIds.includes(question._id) &&
           isNotEmpty(
-            progressInfo.userProgress.responses[
-              userQuestionIds.indexOf(question._id)
-            ].response
+            questionResponses[userQuestionIds.indexOf(question._id)].response
           )
         ) {
           finished++;
@@ -121,7 +120,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
           title="All Sections"
           percentComplete={undefined}
         />
-        {progressInfo.questionData.map((list, index) => {
+        {questionData.map((list, index) => {
           return (
             <DropDownTab
               isExtracurricular={list.name === "Extracurriculars"}
@@ -174,7 +173,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                 `}
                 id="upcoming"
               >
-                {progressInfo.questionData
+                {questionData
                   .filter(({ chunks }, index) => {
                     return percentageData.lists[index] < 100;
                   })
@@ -211,7 +210,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                 `}
                 id="finished"
               >
-                {progressInfo.questionData
+                {questionData
                   .filter(({ chunks }, index) => {
                     return percentageData.lists[index] === 100;
                   })
@@ -237,7 +236,7 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
             </div>
           </div>
         ) : (
-          progressInfo.questionData
+          questionData
             .map((list) => {
               if (list.name !== "Extracurricular") {
                 return (
@@ -251,23 +250,21 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
                       setCurrUserTags(newTags);
                     }}
                     chunks={list.chunks}
-                    userAnswers={progressInfo.userProgress}
+                    userAnswers={{ responses: questionResponses }}
                     percentComplete={calculatePercentComplete(list.chunks)}
                   />
                 );
               }
             })
             .concat(
-              progressInfo.questionData.find(
-                ({ name }) => name === "Extracurricular"
-              )
-                ? progressInfo.questionData
+              questionData.find(({ name }) => name === "Extracurricular")
+                ? questionData
                     .find(({ name }) => name === "Extracurricular")
                     .chunks.map((chunk) => {
                       return (
                         <QuestionECSubpage
                           key={chunk.name}
-                          userResponses={progressInfo.userProgress.responses}
+                          userResponses={questionResponses}
                           chunk={chunk}
                           isShowing={currPage.chunk === chunk.name}
                         />
@@ -282,4 +279,9 @@ const Progress: NextApplicationPage<{ progressInfo: ProgressInfo }> = ({
 };
 
 Progress.requireAuth = true;
-export default Progress;
+export default connect((state) => {
+  return {
+    userTags: state.accountInfo.tags,
+    questionResponses: state.questionResponses,
+  };
+})(Progress);
