@@ -18,10 +18,10 @@ import { updatePathwayProgressAction } from "../../utils/actionFunctions";
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = await getSession(ctx);
-    console.error(ctx.query.id)
+    console.error(ctx.query.id);
     return {
       props: {
-        pathwayInfo: (await (
+        pathwayInfo: await (
           await fetch(`${ORIGIN_URL}/api/get-pathway`, {
             method: "POST",
             body: JSON.stringify({
@@ -29,7 +29,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
               pathwayId: ctx.query.id as string,
             }),
           })
-        ).json()),
+        ).json(),
       },
     };
   } catch (err) {
@@ -559,21 +559,19 @@ const Pathways: NextApplicationPage<{
                   chunkList={getSortedContent(
                     presetContent,
                     personalizedContent
-                  ).map(({ title, type }) => {
-                    return { title, type };
+                  ).map(({ name, type }) => {
+                    return { name, type };
                   })}
                   onClick={(contentTitle) => {
                     let currContent = presetContent.find(
                       ({ name }) => name === contentTitle
                     );
-                    let currContentIndex = currContent
-                      ? presetContent.indexOf(currContent)
-                      : null;
                     if (currContent === undefined) {
                       currContent = personalizedContent.find(
                         ({ name }) => name === contentTitle
                       );
                     }
+                    console.log(pathwaysProgress);
                     if (currContent.type.toLowerCase() === "article") {
                       setArticleToFinished(currContent, name, _id);
                     }

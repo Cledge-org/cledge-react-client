@@ -74,11 +74,11 @@ export default function DropDownTab({
               //   onClick(chunkTitle);
               //   return;
               // }
-              onClick(isPathway ? chunkTitle.title : chunkTitle);
+              onClick(isPathway ? chunkTitle.name : chunkTitle);
             }}
             className={
               currSelectedPath ===
-              title + (isPathway ? chunkTitle.title : chunkTitle)
+              title + (isPathway ? chunkTitle.name : chunkTitle)
                 ? "progress-dropdown-menu-btn-selected"
                 : "progress-dropdown-menu-btn"
             }
@@ -114,7 +114,7 @@ export default function DropDownTab({
               />
             </div>
             <div className="text">
-              {isPathway ? chunkTitle.title : chunkTitle}
+              {isPathway ? chunkTitle.name : chunkTitle}
             </div>
           </button>
         ))}

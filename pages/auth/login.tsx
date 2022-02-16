@@ -26,7 +26,7 @@ export default function login() {
   }
   return (
     <div className="container">
-      <div
+      <form
         className="col col-md-5 d-flex mx-auto flex-column justify-content-center align-items-center"
         style={{ height: "80vh" }}
       >
@@ -99,10 +99,12 @@ export default function login() {
           </div>
 
           <div className="px-0">
-            <button
-              type="button"
+            <input
+              type="submit"
+              value={"Log In"}
               className="btn btn-primary cl-btn-blue"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 const emailStr = "Email must be formatted correctly";
                 if (
                   !formData.email.includes("@") ||
@@ -123,12 +125,10 @@ export default function login() {
                   callbackUrl: `${window.location.origin}/dashboard`,
                 });
               }}
-            >
-              Log in
-            </button>
+            />
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
