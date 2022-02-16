@@ -25,7 +25,8 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 // Admin API. Creates or updates a resource - if no ID provided, will create
-// resource, otherwise will attempt to update given ID
+// resource, otherwise will attempt to update given ID. If no resource provided,
+// will attempt to delete.
 export const putResourceResource = async (
   resourceId: ObjectId | undefined,
   resource: CardResource | undefined

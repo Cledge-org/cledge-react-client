@@ -25,10 +25,11 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 // Admin API. Creates or updates a question chunk - if no ID provided, will
-// create question chunk, otherwise will attempt to update given ID
+// create question chunk, otherwise will attempt to update given ID. If no
+// question chunk is provided, will attempt to delete
 export const putQuestionChunk = async (
   questionChunkId: ObjectId | undefined,
-  questionChunk: QuestionChunk_Db
+  questionChunk: QuestionChunk_Db | undefined
 ): Promise<{ chunkId: string }> => {
   if (questionChunk._id) {
     // Document should not have _id field when sent to database
@@ -37,7 +38,7 @@ export const putQuestionChunk = async (
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
-      if (!questionChunkId) {
+      if (!questionChunkId && questionChunk) {
         let insertedDoc = await client
           .db("questions")
           .collection("question-chunks")
@@ -45,7 +46,12 @@ export const putQuestionChunk = async (
         res({
           chunkId: insertedDoc.insertedId.toString(),
         });
-      } else {
+      } else if (questionChunkId && !questionChunk) {
+        await client
+          .db("questions")
+          .collection("question-chunks")
+          .deleteOne({ _id: questionChunkId });
+      } else if (questionChunkId && questionChunk) {
         await client
           .db("questions")
           .collection("question-chunks")
@@ -53,8 +59,8 @@ export const putQuestionChunk = async (
         res({
           chunkId: questionChunkId.toString(),
         });
-        client.close();
       }
+      client.close();
     } catch (e) {
       err(e);
     }

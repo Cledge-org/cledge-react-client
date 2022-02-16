@@ -25,10 +25,11 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 // Admin API. Creates or updates a question - if no ID provided, will create
-// question, otherwise will attempt to update given ID
+// question, otherwise will attempt to update given ID. If no question provided,
+// will attempt to delete
 export const putQuestion = async (
   questionId: ObjectId | undefined,
-  question: Question
+  question: Question | undefined
 ): Promise<{ questionId: string }> => {
   if (question._id) {
     // Document should not have _id field when sent to database
@@ -37,7 +38,7 @@ export const putQuestion = async (
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
-      if (!questionId) {
+      if (!questionId && question) {
         let insertedDoc = await client
           .db("questions")
           .collection("question-data")
@@ -45,7 +46,15 @@ export const putQuestion = async (
         res({
           questionId: insertedDoc.insertedId.toString(),
         });
-      } else {
+      } else if (questionId && !question) {
+        await client
+          .db("questions")
+          .collection("question-data")
+          .deleteOne({ _id: questionId });
+        res({
+          questionId: questionId.toString(),
+        });
+      } else if(questionId && question) {
         await client
           .db("questions")
           .collection("question-data")
@@ -53,8 +62,8 @@ export const putQuestion = async (
         res({
           questionId: questionId.toString(),
         });
-        client.close();
       }
+      client.close();
     } catch (e) {
       console.log("ERROR: " + e);
       err(e);

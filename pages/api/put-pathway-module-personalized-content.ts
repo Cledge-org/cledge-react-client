@@ -32,7 +32,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // no ID is provided, the content will be uploaded as a new document.
 export const putPathwayModulePersonalizedContent = (
   contentId: ObjectId | undefined,
-  content: PersonalizedContent
+  content: PersonalizedContent | undefined
 ): Promise<string> => {
   if (content._id) {
     // Document should not have _id field when sent to database
@@ -42,20 +42,26 @@ export const putPathwayModulePersonalizedContent = (
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
       try {
-        if (!contentId) {
+        if (!contentId && content) {
           let insertedDoc = await client
             .db("pathways")
             .collection("personalized-content")
             .insertOne(content);
           res(insertedDoc.insertedId.toString());
-        } else {
+        } else if (contentId && !content) {
+          await client
+            .db("pathways")
+            .collection("personalized-content")
+            .deleteOne({ _id: contentId });
+          res(contentId.toString());
+        } else if (contentId && content) {
           await client
             .db("pathways")
             .collection("personalized-content")
             .updateOne({ _id: contentId }, { $set: content });
           res(contentId.toString());
-          client.close();
         }
+        client.close();
       } catch (e) {
         err(e);
       }

@@ -25,10 +25,11 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 // Admin API. Creates or updates a question list - if no ID provided, will
-// create question list, otherwise will attempt to update given ID
+// create question list, otherwise will attempt to update given ID. If no
+// question list provided, will attempt to delete
 export const putQuestionList = (
   questionListId: ObjectId | undefined,
-  questionList: QuestionList_Db
+  questionList: QuestionList_Db | undefined
 ): Promise<void> => {
   if (questionList._id) {
     // Document should not have _id field when sent to database
@@ -37,12 +38,17 @@ export const putQuestionList = (
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
-      if (!questionListId) {
+      if (!questionListId && questionList) {
         await client
           .db("questions")
           .collection("question-lists")
           .insertOne(questionList);
-      } else {
+      } else if (questionListId && !questionList) {
+        await client
+          .db("questions")
+          .collection("question-lists")
+          .deleteOne({ _id: questionListId });
+      } else if (questionListId && questionList) {
         await client
           .db("questions")
           .collection("question-lists")

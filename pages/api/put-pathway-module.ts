@@ -25,10 +25,11 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 // Admin API. Creates or updates a pathway - if no ID provided, will create
-// pathway, otherwise will attempt to update given ID
+// pathway module, otherwise will attempt to update given ID. If no pathway
+// module provided, will attempt to delete
 export const putPathwayModule = (
   pathwayModuleId: ObjectId | undefined,
-  pathwayModule: PathwayModule_Db
+  pathwayModule: PathwayModule_Db | undefined
 ): Promise<{ moduleId: string }> => {
   if (pathwayModule._id) {
     // Document should not have _id field when sent to database
@@ -37,7 +38,7 @@ export const putPathwayModule = (
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
-      if (!pathwayModuleId) {
+      if (!pathwayModuleId && pathwayModule) {
         let insertedDoc = await client
           .db("pathways")
           .collection("modules")
@@ -45,7 +46,12 @@ export const putPathwayModule = (
         res({
           moduleId: insertedDoc.insertedId.toString(),
         });
-      } else {
+      } else if (pathwayModuleId && !pathwayModule) {
+        await client
+          .db("pathways")
+          .collection("modules")
+          .deleteOne({ _id: pathwayModuleId });
+      } else if (pathwayModuleId && pathwayModule) {
         await client
           .db("pathways")
           .collection("modules")
@@ -53,8 +59,8 @@ export const putPathwayModule = (
         res({
           moduleId: pathwayModuleId.toString(),
         });
-        client.close();
       }
+      client.close();
     } catch (e) {
       err(e);
     }

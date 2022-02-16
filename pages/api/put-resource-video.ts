@@ -24,7 +24,8 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 // Admin API. Creates or updates a resource video - if no ID provided, will
-// create video, otherwise will attempt to update given ID
+// create video, otherwise will attempt to update given ID. If no video
+// provided, will attempt to delete.
 export const putResourceVideo = async (
   videoId: ObjectId | undefined,
   video: CardVideo | undefined

@@ -28,7 +28,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     resolve.status(400).send("No user id provided");
   }
 };
-export async function getPathwayAndProgress(
+export function getPathwayAndProgress(
   userId: string,
   pathwayId: string
 ): Promise<{
