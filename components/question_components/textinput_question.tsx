@@ -1,16 +1,21 @@
 import React, { useState } from "react";
 import QuestionSubPageHeader from "./question_subpage_header";
 import QuestionSummaryCard from "./question-summary-card";
+import { ORIGIN_URL } from "../../config";
+import { useSession } from "next-auth/react";
 interface TextInputQuestionProps {
   question: Question;
   userAnswer: string;
   onChange: Function;
+  isGrade?: boolean;
 }
 export default function TextInputQuestion({
   question,
   userAnswer,
+  isGrade,
   onChange,
 }: TextInputQuestionProps) {
+  const session = useSession();
   const [currValue, setCurrValue] = useState(userAnswer);
   return (
     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
@@ -21,7 +26,16 @@ export default function TextInputQuestion({
         <input
           defaultValue={currValue}
           type="text"
-          onChange={(e) => {
+          onChange={async (e) => {
+            if (isGrade) {
+              await fetch(`${ORIGIN_URL}/api/update-user`, {
+                method: "POST",
+                body: JSON.stringify({
+                  userInfo: { grade: e.target.value },
+                  userId: session.data.user.uid,
+                }),
+              });
+            }
             setCurrValue(e.target.value);
             onChange(e.target.value);
           }}

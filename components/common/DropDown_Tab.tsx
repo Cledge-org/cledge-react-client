@@ -41,7 +41,7 @@ export default function DropDownTab({
           }
           setIsExpanded(!isExpanded);
         }}
-        style={isFinishedModule ? { borderBottomColor: "#2651ed" } : {}}
+        style={isFinishedModule ? { borderTopColor: "#2651ed" } : {}}
       >
         <div className="text">
           {title}
