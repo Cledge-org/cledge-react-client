@@ -289,6 +289,20 @@ const QuestionUploadPage: NextApplicationPage<{
                     placeholder="Enter Question"
                   />
                 </div>
+                {currQuestion._id ? (
+                  <div className="form-group mb-2">
+                    <label style={{ fontSize: "0.9em" }} className="text-muted">
+                      Question ID:
+                    </label>
+                    <input
+                      disabled
+                      value={currQuestion._id}
+                      type="text"
+                      className="px-3 form-control"
+                      placeholder="No ID"
+                    />
+                  </div>
+                ) : null}
                 <div className="form-group mb-2">
                   <label style={{ fontSize: "0.9em" }} className="text-muted">
                     Question Type:
