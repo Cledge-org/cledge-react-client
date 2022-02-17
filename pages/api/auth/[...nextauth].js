@@ -71,7 +71,7 @@ export default NextAuth({
     },
     jwt: async ({ token, user }) => {
       if (user) {
-        console.error(user.uid);
+        console.error("AYO" + user.uid);
         token.uid = user.uid;
       }
       return Promise.resolve(token);

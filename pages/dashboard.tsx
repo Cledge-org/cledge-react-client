@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Card from "../components/common/Card";
 import CardVideo from "../components/common/Card_Video";
 import CardText from "../components/common/Card_Text";
@@ -22,7 +22,6 @@ import { getPathwayProgress } from "./api/get-pathway-progress";
 import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
 import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
-import { getAllPathwaysAccountAndProgress } from "./api/get-dashboard";
 import { connect } from "react-redux";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -53,6 +52,7 @@ const Dashboard: NextApplicationPage<{
   const [currTab, setCurrTab] = useState("current tasks");
   const [isInUserView, setIsInUserView] = useState(false);
   console.log(accountInfo);
+  console.log(pathwaysProgress);
   const getCurrentTasks = () => {
     let noProgress = [];
     allPathways?.forEach((pathway) => {
@@ -82,6 +82,7 @@ const Dashboard: NextApplicationPage<{
         return !finished;
       })
       .map(({ moduleProgress, name, pathwayId }) => {
+        let realPathway = allPathways.find(({ _id }) => _id === pathwayId);
         let subtasks = {};
         moduleProgress.forEach(({ name }) => {
           let moduleTitle = name;
@@ -89,6 +90,12 @@ const Dashboard: NextApplicationPage<{
             ({ name }) => name === moduleTitle
           ).finished;
         });
+        realPathway.modules.forEach(({ name }) => {
+          if (subtasks[name] === undefined) {
+            subtasks[name] = false;
+          }
+        });
+        console.log(subtasks);
         return (
           <CardTask
             url={"/pathways/[id]"}
@@ -139,8 +146,8 @@ const Dashboard: NextApplicationPage<{
   //UNCOMMENT THIS ONCE TESTING IS FINISHED
   if (accountInfo.checkIns.length > 0) {
     router.push({
-      pathname: "/[questionnaire]",
-      query: { questionnaire: accountInfo.checkIns },
+      pathname: "/check-ins/[checkIn]",
+      query: { checkIn: accountInfo.checkIns },
     });
   }
   if (session.data?.user?.email === "test31@gmail.com" && !isInUserView) {
@@ -262,6 +269,7 @@ const Dashboard: NextApplicationPage<{
     </div>
   );
 };
+
 Dashboard.requireAuth = true;
 export default connect((state) => ({
   accountInfo: state.accountInfo,

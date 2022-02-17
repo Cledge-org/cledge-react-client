@@ -19,7 +19,6 @@ const firebaseCreds = {
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
 };
 
-
 const firebaseApp = initializeApp(firebaseCreds);
 const firebaseAuth = getAuth(firebaseApp);
 const provider = new GoogleAuthProvider();
@@ -32,7 +31,6 @@ class AuthFunctions {
       ).then(() => {
         return signInWithEmailAndPassword(firebaseAuth, email, password);
       });
-      console.error(user.user.uid);
       return user.user;
     } catch (err) {
       console.error(err);

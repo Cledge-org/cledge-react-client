@@ -119,7 +119,7 @@ const QuestionUploadPage: NextApplicationPage<{
               return;
             }
           } catch (err) {
-            console.error(err);
+            console.error("AYO" + err);
           }
         }
         fetch("/api/put-question-list", {
@@ -147,7 +147,7 @@ const QuestionUploadPage: NextApplicationPage<{
               router.push({ pathname: "/dashboard" });
             }
           })
-          .catch((err) => console.error(err));
+          .catch((err) => console.error("AYO" + err));
       }}
     >
       <div className="mt-4 d-flex flex-column w-100">
@@ -289,6 +289,20 @@ const QuestionUploadPage: NextApplicationPage<{
                     placeholder="Enter Question"
                   />
                 </div>
+                {currQuestion._id ? (
+                  <div className="form-group mb-2">
+                    <label style={{ fontSize: "0.9em" }} className="text-muted">
+                      Question ID:
+                    </label>
+                    <input
+                      disabled
+                      value={currQuestion._id}
+                      type="text"
+                      className="px-3 form-control"
+                      placeholder="No ID"
+                    />
+                  </div>
+                ) : null}
                 <div className="form-group mb-2">
                   <label style={{ fontSize: "0.9em" }} className="text-muted">
                     Question Type:

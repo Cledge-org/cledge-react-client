@@ -74,7 +74,7 @@ export default function Layout({ children }) {
   }, []);
   return (
     <div>
-      {router.pathname === "/[questionnaire]" ? null : header}
+      {router.pathname === "/check-ins/[checkIn]" ? null : header}
       {loading ? <LoadingScreen /> : <main>{children}</main>}
     </div>
   );

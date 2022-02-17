@@ -12,37 +12,24 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId } = JSON.parse(req.body);
-
-  if (userId) {
-    try {
-      const questionProgress = await getQuestionProgress(userId);
-      resolve.status(200).send(questionProgress);
-    } catch (e) {
-      resolve.status(500).send(e);
-    }
-  } else {
-    resolve.status(400).send("No user Id provided");
+  try {
+    const questionProgress = await getQuestionProgress();
+    resolve.status(200).send(questionProgress);
+  } catch (e) {
+    resolve.status(500).send(e);
   }
 };
 
 // Gets all user responses to relevant questions by a user's firebaseId
 export function getQuestionProgress(
-  userId: string,
   overrideClient?: MongoClient
-): Promise<ProgressInfo> {
+): Promise<{ questionData: QuestionList[] }> {
   return new Promise(async (res, err) => {
     try {
       const client =
         overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
-      const [userResponses, userInfo, questionData] = await Promise.all([
-        getQuestionResponses(userId, client),
-        getAccountInfo(userId, client),
-        getAllQuestionLists(client),
-      ]);
+      const questionData = await getAllQuestionLists(client);
       res({
-        userTags: userInfo.tags,
-        userProgress: { responses: userResponses },
         questionData,
       });
       if (!overrideClient) {

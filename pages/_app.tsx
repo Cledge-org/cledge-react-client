@@ -5,11 +5,7 @@ import "../styles/main_pages.scss";
 import "../styles/components.scss";
 import "../styles/question_components.scss";
 import "../styles/testing.css";
-import {
-  getSession,
-  SessionProvider as AuthProvider,
-  useSession,
-} from "next-auth/react";
+import { SessionProvider as AuthProvider, useSession } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";

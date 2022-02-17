@@ -50,7 +50,10 @@ export function getSpecificPathway(
     try {
       let modules = await Promise.all(
         pathway.modules.map((moduleId) =>
-          getSpecificModule(moduleId, pathwaysDb)
+          getSpecificModule(
+            moduleId instanceof ObjectId ? moduleId : new ObjectId(moduleId),
+            pathwaysDb
+          )
         )
       );
       modules = modules.filter((x) => x !== null); // Remove all modules that weren't found
@@ -72,6 +75,7 @@ function getSpecificModule(
   pathwaysDb: Db
 ): Promise<PathwayModule | null> {
   return new Promise(async (res, err) => {
+    console.error(moduleId);
     try {
       const [module, modulePersonalizedContent]: [
         PathwayModule_Db,
@@ -85,6 +89,7 @@ function getSpecificModule(
           .find({ moduleId })
           .toArray() as Promise<PersonalizedContent[]>,
       ]);
+      // console.error(module);
       if (!module) {
         res(null);
       } else {

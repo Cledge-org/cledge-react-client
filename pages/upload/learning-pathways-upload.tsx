@@ -182,9 +182,9 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 }
                 router.push({ pathname: "/dashboard" });
               })
-              .catch((err) => console.error(err));
+              .catch((err) => console.error("AYO" + err));
           })
-          .catch((err) => console.error(err));
+          .catch((err) => console.error("AYO" + err));
       }}
     >
       <div className="mt-4 d-flex flex-column w-100">
@@ -523,6 +523,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                   modules: course.modules,
                                 });
                               }}
+                              defaultValue={preset.type}
                               placeholder="Pick Content Type"
                               valuesList={["Video", "Article"]}
                             />
@@ -720,6 +721,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                     modules: course.modules,
                                   });
                                 }}
+                                defaultValue={personalized.type}
                                 placeholder="Pick Personalized Content Type"
                                 valuesList={["Video", "Article"]}
                               />

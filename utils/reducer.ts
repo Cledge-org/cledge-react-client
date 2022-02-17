@@ -60,6 +60,5 @@ export const reducer: Reducer<any, any> = (
   }
   if (action.type === actions.ADD_RESOURCE) {
   }
-  console.error(action.type);
   return state;
 };

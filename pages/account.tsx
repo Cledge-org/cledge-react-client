@@ -6,7 +6,7 @@ import Modal from "react-modal";
 import TextInputQuestion from "../components/question_components/textinput_question";
 import { NextApplicationPage } from "./_app";
 import { getAccountInfo } from "./api/get-account";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { ORIGIN_URL } from "../config";
 import { connect } from "react-redux";
