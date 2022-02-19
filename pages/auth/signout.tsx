@@ -1,5 +1,8 @@
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import { ORIGIN_URL } from "../../config";
+import { clearState } from "../../utils/actionFunctions";
+import { store } from "../../utils/store";
 
 // my accounts page
 export default function SignOut() {
@@ -15,7 +18,11 @@ export default function SignOut() {
         </div>
         <button
           className="cl-btn-blue btn btn-primary w-50"
-          onClick={(e) => signOut().then(() => router.push({ pathname: "" }))}
+          onClick={(e) =>
+            signOut({ callbackUrl: `${ORIGIN_URL}` }).then(() => {
+              store.dispatch(clearState());
+            })
+          }
         >
           Confirm
         </button>

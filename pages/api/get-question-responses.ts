@@ -1,6 +1,5 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import assert from "assert";
 import AuthFunctions from "./auth/firebase-auth";
 
 export const config = {
@@ -12,7 +11,7 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userId } = JSON.parse(req.body);
-  
+
   if (userId) {
     try {
       const questionResponses = await getQuestionResponses(userId);
@@ -26,23 +25,24 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 // Gets a user's question responses by a user's firebaseId
-export const getQuestionResponses = async (
-  userId: string
+export const getQuestionResponses = (
+  userId: string,
+  overrideClient?: MongoClient
 ): Promise<UserResponse[]> => {
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        client
-          .db("users")
-          .collection("question-responses")
-          .findOne({ firebaseId: userId }, (document_err, user_responses) => {
-            document_err
-              ? err(document_err)
-              : res(user_responses === null ? [] : user_responses.responses);
-          });
+  return new Promise(async (res, err) => {
+    try {
+      const client =
+        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
+      const user_responses = (await client
+        .db("users")
+        .collection("question-responses")
+        .findOne({ firebaseId: userId })) as UserProgress_Db;
+      res(user_responses.responses);
+      if (!overrideClient) {
+        client.close();
       }
-    );
+    } catch (e) {
+      err(e);
+    }
   });
 };

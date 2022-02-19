@@ -25,7 +25,8 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 // Admin API. Creates or updates a resource - if no ID provided, will create
-// resource, otherwise will attempt to update given ID
+// resource, otherwise will attempt to update given ID. If no resource provided,
+// will attempt to delete.
 export const putResourceResource = async (
   resourceId: ObjectId | undefined,
   resource: CardResource | undefined
@@ -34,33 +35,29 @@ export const putResourceResource = async (
     // Document should not have _id field when sent to database
     delete resource._id;
   }
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        try {
-          if (!resourceId && resource) {
-            await client
-              .db("resources")
-              .collection("resources")
-              .insertOne(resource);
-          } else if (resourceId && !resource) {
-            await client
-              .db("resources")
-              .collection("resources")
-              .deleteOne({ _id: resourceId });
-          } else if (resourceId && resource) {
-            await client
-              .db("resources")
-              .collection("resources")
-              .updateOne({ _id: resourceId }, { $set: resource });
-          }
-          res();
-        } catch (e) {
-          err(e);
-        }
+  return new Promise(async (res, err) => {
+    try {
+      const client = await MongoClient.connect(process.env.MONGO_URL);
+      if (!resourceId && resource) {
+        await client
+          .db("resources")
+          .collection("resources")
+          .insertOne(resource);
+      } else if (resourceId && !resource) {
+        await client
+          .db("resources")
+          .collection("resources")
+          .deleteOne({ _id: resourceId });
+      } else if (resourceId && resource) {
+        await client
+          .db("resources")
+          .collection("resources")
+          .updateOne({ _id: resourceId }, { $set: resource });
       }
-    );
+      res();
+      client.close();
+    } catch (e) {
+      err(e);
+    }
   });
 };

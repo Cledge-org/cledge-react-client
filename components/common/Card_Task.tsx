@@ -31,8 +31,8 @@ export default function CardTask({
     if (subtasks[subtask]) checkIcon = faCheckSquare;
     else checkIcon = faSquare;
 
-    if (index % 3 === 0) boxColor = "cl-blue";
-    else if (index % 3 === 1) boxColor = "cl-yellow";
+    if (subtasks[subtask]) boxColor = "cl-blue";
+    // else if (index % 3 === 1) boxColor = "cl-yellow";
     else boxColor = "cl-red";
 
     return (

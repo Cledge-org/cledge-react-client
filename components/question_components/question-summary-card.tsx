@@ -8,6 +8,11 @@ import TextInputQuestion from "./textinput_question";
 import { ORIGIN_URL } from "../../config";
 import AuthFunctions from "../../pages/api/auth/firebase-auth";
 import { useSession } from "next-auth/react";
+import { store } from "../../utils/store";
+import {
+  updateQuestionResponsesAction,
+  updateTagsAction,
+} from "../../utils/actionFunctions";
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface QuestionSummaryCardProps {
@@ -209,6 +214,8 @@ export default function QuestionSummaryCard({
                 reses.forEach((res) => {
                   console.log(res.status);
                 });
+                store.dispatch(updateTagsAction(userTags));
+                store.dispatch(updateQuestionResponsesAction(newUserResponses));
                 onUpdate(userTags);
                 setOriginalAnswer(userAnswer);
                 setDisplayingQuestion(false);

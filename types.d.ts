@@ -39,6 +39,11 @@ interface CardResource {
 }
 
 //Progress Page Types -->
+interface UserProgress_Db extends WithId<Document> {
+  _id?: ObjectId;
+  firebaseId: string;
+  responses: UserResponse[];
+}
 interface UserProgress {
   responses: UserResponse[];
 }
@@ -52,22 +57,22 @@ interface ProgressInfo {
   questionData: QuestionList[];
 }
 interface QuestionList extends WithId<Document> {
-  _id: ObjectId;
+  _id?: ObjectId;
   name: string;
   chunks: QuestionChunk[];
 }
 interface QuestionList_Db extends WithId<Document> {
-  _id: ObjectId;
+  _id?: ObjectId;
   name: string;
-  chunks: ObjectId[]; // Document IDs of chunks
+  chunks: string[]; // Document IDs of chunks
 }
 interface QuestionChunk extends WithId<Document> {
-  _id: ObjectId;
+  _id?: ObjectId;
   name: string;
   questions: Question[];
 }
 interface QuestionChunk_Db extends WithId<Document> {
-  _id: ObjectId;
+  _id?: ObjectId;
   name: string;
   questions: ObjectId[]; // Document IDs of question data
 }
@@ -93,7 +98,6 @@ interface UserPathway {
   userTags: string[];
   userCourseProgress: PathwayProgress;
 }
-
 interface PathwayProgress {
   pathwayId: string; // ID of the pathway this progress belongs to, NOT database ID of the progress itself
   finished: boolean;
@@ -112,26 +116,26 @@ interface ContentProgress {
   videoTime: number;
 }
 interface Pathway {
-  _id: ObjectId;
+  _id?: ObjectId;
   name: string;
   modules: PathwayModule[];
   tags: string[];
 }
 interface Pathway_Db extends WithId<Document> {
-  _id: ObjectId;
+  _id?: ObjectId;
   tags: string[];
   modules: ObjectId[]; // Module document IDs
   name: string;
 }
 interface PathwayModule {
-  _id: ObjectId;
+  _id?: ObjectId;
   name: string;
   presetContent: PresetContent[];
   personalizedContent: PersonalizedContent[];
   tags: string[];
 }
 interface PathwayModule_Db extends WithId<Document> {
-  _id: ObjectId;
+  _id?: ObjectId;
   name: string;
   presetContent: PresetContent[];
   tags: string[];
@@ -144,7 +148,7 @@ interface PresetContent {
   content?: string;
 }
 interface PersonalizedContent extends WithId<Document> {
-  _id: ObjectId;
+  _id?: ObjectId;
   moduleId: ObjectId;
   priority: number;
   tags: string[];

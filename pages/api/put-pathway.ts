@@ -14,7 +14,10 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
   if (pathway) {
     try {
-      const result = await putCourse(pathwayId, pathway);
+      const result = await putPathway(
+        pathwayId ? new ObjectId(pathwayId) : undefined,
+        pathway
+      );
       resolve.status(200).send(result);
     } catch (e) {
       resolve.status(500).send(e);
@@ -26,36 +29,34 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
 // Admin API. Creates or updates a pathway - if no ID provided, will create
 // pathway, otherwise will attempt to update given ID
-export const putCourse = async (
+export const putPathway = async (
   pathwayId: ObjectId | undefined,
-  pathway: Pathway_Db
+  pathway: Pathway_Db | undefined
 ): Promise<void> => {
   if (pathway._id) {
     // Document should not have _id field when sent to database
     delete pathway._id;
   }
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        try {
-          if (!pathwayId) {
-            await client
-              .db("pathways")
-              .collection("pathways")
-              .insertOne(pathway);
-          } else {
-            await client
-              .db("pathways")
-              .collection("pathways")
-              .updateOne({ _id: pathwayId }, { $set: pathway });
-          }
-          res();
-        } catch (e) {
-          err(e);
-        }
+  return new Promise(async (res, err) => {
+    try {
+      const client = await MongoClient.connect(process.env.MONGO_URL);
+      if (!pathwayId && pathway) {
+        await client.db("pathways").collection("pathways").insertOne(pathway);
+      } else if (pathwayId && !pathway) {
+        await client
+          .db("pathways")
+          .collection("pathways")
+          .deleteOne({ _id: pathwayId });
+      } else if (pathwayId && pathway) {
+        await client
+          .db("pathways")
+          .collection("pathways")
+          .updateOne({ _id: pathwayId }, { $set: pathway });
       }
-    );
+      res();
+      client.close();
+    } catch (e) {
+      err(e);
+    }
   });
 };

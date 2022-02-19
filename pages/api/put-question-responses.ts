@@ -30,25 +30,21 @@ export const putQuestionResponses = async (
   userId: string,
   responses: UserResponse[]
 ): Promise<void> => {
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        try {
-          await client
-            .db("users")
-            .collection("question-responses")
-            .updateOne(
-              { firebaseId: userId },
-              { $set: { responses } },
-              { upsert: true }
-            );
-          res();
-        } catch (e) {
-          err(e);
-        }
-      }
-    );
+  return new Promise(async (res, err) => {
+    try {
+      const client = await MongoClient.connect(process.env.MONGO_URL);
+      await client
+        .db("users")
+        .collection("question-responses")
+        .updateOne(
+          { firebaseId: userId },
+          { $set: { responses } },
+          { upsert: true }
+        );
+      res();
+      client.close();
+    } catch (e) {
+      err(e);
+    }
   });
 };

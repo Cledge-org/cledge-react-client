@@ -25,7 +25,8 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 // Admin API. Creates or updates a resource article - if no ID provided, will
-// create article, otherwise will attempt to update given ID
+// create article, otherwise will attempt to update given ID. If no article
+// provided, will attempt to delete
 export const putResourceArticle = async (
   articleId: ObjectId | undefined,
   article: CardArticle | undefined
@@ -34,33 +35,26 @@ export const putResourceArticle = async (
     // Document should not have _id field when sent to database
     delete article._id;
   }
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        try {
-          if (!articleId && article) {
-            await client
-              .db("resources")
-              .collection("articles")
-              .insertOne(article);
-          } else if (articleId && !article) {
-            await client
-              .db("resources")
-              .collection("articles")
-              .deleteOne({ _id: articleId });
-          } else if (articleId && article) {
-            await client
-              .db("resources")
-              .collection("articles")
-              .updateOne({ _id: articleId }, { $set: article });
-          }
-          res();
-        } catch (e) {
-          err(e);
-        }
+  return new Promise(async (res, err) => {
+    const client = await MongoClient.connect(process.env.MONGO_URL);
+    try {
+      if (!articleId && article) {
+        await client.db("resources").collection("articles").insertOne(article);
+      } else if (articleId && !article) {
+        await client
+          .db("resources")
+          .collection("articles")
+          .deleteOne({ _id: articleId });
+      } else if (articleId && article) {
+        await client
+          .db("resources")
+          .collection("articles")
+          .updateOne({ _id: articleId }, { $set: article });
       }
-    );
+      res();
+      client.close();
+    } catch (e) {
+      err(e);
+    }
   });
 };

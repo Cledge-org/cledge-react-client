@@ -24,39 +24,36 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 // Admin API. Creates or updates a resource video - if no ID provided, will
-// create video, otherwise will attempt to update given ID
+// create video, otherwise will attempt to update given ID. If no video
+// provided, will attempt to delete.
 export const putResourceVideo = async (
   videoId: ObjectId | undefined,
   video: CardVideo | undefined
 ): Promise<void> => {
-  return new Promise((res, err) => {
+  return new Promise(async (res, err) => {
     if (video._id) {
       // Document should not have _id field when sent to database
       delete video._id;
     }
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        try {
-          if (!videoId && video) {
-            await client.db("resources").collection("videos").insertOne(video);
-          } else if (videoId && !video) {
-            await client
-              .db("resources")
-              .collection("videos")
-              .deleteOne({ _id: videoId });
-          } else if (videoId && video) {
-            await client
-              .db("resources")
-              .collection("videos")
-              .updateOne({ _id: videoId }, { $set: video });
-          }
-          res();
-        } catch (e) {
-          err(e);
-        }
+    try {
+      const client = await MongoClient.connect(process.env.MONGO_URL);
+      if (!videoId && video) {
+        await client.db("resources").collection("videos").insertOne(video);
+      } else if (videoId && !video) {
+        await client
+          .db("resources")
+          .collection("videos")
+          .deleteOne({ _id: videoId });
+      } else if (videoId && video) {
+        await client
+          .db("resources")
+          .collection("videos")
+          .updateOne({ _id: videoId }, { $set: video });
       }
-    );
+      res();
+      client.close();
+    } catch (e) {
+      err(e);
+    }
   });
 };
