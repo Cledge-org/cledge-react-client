@@ -8,6 +8,7 @@ import { putPathwayModule } from "../pages/api/put-pathway-module";
 import { putPathwayProgress } from "../pages/api/put-pathway-progress";
 import { putPathway } from "../pages/api/put-pathway";
 import { ObjectId } from "mongodb";
+import { createUser } from "../pages/api/create-user";
 
 const testPersonalizedContent: PersonalizedContent = {
   _id: new ObjectId(),
@@ -88,7 +89,21 @@ const testDashboard: Dashboard = {
   checkIns: ["Test CheckIn 1", "Test CheckIn 2", "Test CheckIn 3"],
 };
 
+const testUserFirebaseId = "Test User Id";
 
+beforeAll(() => {
+  // TODO: add personalized content with tags of those of the test user
+  createUser({
+    firebaseId: testUserFirebaseId,
+    name: "Test User",
+    address: "Test address",
+    grade: 11,
+    birthday: new Date(),
+    email: "Test email",
+    tags: [],
+    checkIns: [],
+  });
+});
 
 test("should add questions and get those added questions exactly", (done) => {
   const callback = async () => {
@@ -108,7 +123,7 @@ test("should add questions and get those added questions exactly", (done) => {
       ...pathwayDb.map((questionList) => putPathway(undefined, questionList)),
     ]);
     await Promise.all([
-      ...pathwayProgress.map((pathway_progress) => putPathwayProgress("Test User Id", {"Test Module Id": contentProgress})),
+      ...pathwayProgress.map((pathway_progress) => putPathwayProgress(testUserFirebaseId, {"Test Module Id": contentProgress})),
     ]);
     await Promise.all([
       ...pathwayModuleDb.map((pathway_module) => putPathwayModule(undefined, pathway_module)),
@@ -119,10 +134,10 @@ test("should add questions and get those added questions exactly", (done) => {
 
     // Test get functionality - should be identical to what we put
     const fetchedAllPathway = await getAllPathways();
-    const fetchedAllPathwayProgress = await getAllPathwayProgress("Test User Id");
-    const fetchedPathway = await getPathway("Test User Id", new ObjectId());
-    const fetchedPathwayProgress = await getPathwayProgress("Test User Id", new ObjectId());
-    const fetchedPathwayAndProgress = await getPathwayAndProgress("Test User Id", "Test Pathway Id");
+    const fetchedAllPathwayProgress = await getAllPathwayProgress(testUserFirebaseId);
+    const fetchedPathway = await getPathway(testUserFirebaseId, new ObjectId());
+    const fetchedPathwayProgress = await getPathwayProgress(testUserFirebaseId, new ObjectId());
+    const fetchedPathwayAndProgress = await getPathwayAndProgress(testUserFirebaseId, "Test Pathway Id");
 
     expect(fetchedAllPathway.length).toBe(pathwayDb.length);
     expect(fetchedAllPathwayProgress.length).toBe(userPathway.length);
