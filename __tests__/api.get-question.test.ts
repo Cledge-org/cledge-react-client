@@ -23,7 +23,7 @@ const testQuestion: Question = {
 };
 
 const testQuestionChunk1: QuestionChunk = {
-  _id: "Test Id",
+  _id: new ObjectId(),
   name: "Test Name",
   questions: [testQuestion],
 };
@@ -43,15 +43,15 @@ const testProgressInfo: ProgressInfo = {
 };
 
 const testQuestionListDb1: QuestionList_Db = {
-  _id: "Test Id",
+  _id: new ObjectId(),
   name: "Test Name",
-  chunks:[ObjectId],
+  chunks:["Test Id 1", "Test Id 2"],
 };
 
 const testQuestionChunkDb1: QuestionChunk_Db = {
   _id: new ObjectId(),
   name: "Test Name",
-  questions:[ObjectId],
+  questions:[testQuestion],
 };
 
 
@@ -65,30 +65,17 @@ test("should add questions and get those added questions exactly", (done) => {
     const gradeQuestionChunks: QuestionChunk[] = [testQuestionChunk1];
     const questionChunkDb: QuestionChunk_Db[] = [testQuestionChunkDb1];
 
-    // await Promise.all([
-    //   ...questionListDb.map((questionList) => putQuestionList(undefined, questionList)),
-    //   ...questionChunkDb.map((questionChunk) => putQuestionChunk(undefined, questionChunk)),
-    //   ...question.map((questions) => putQuestion(undefined, questions)),
-    //   ...userResponse.map((responses) => putQuestionResponses("Test User Id", [responses])),
-    // ]);
-
     await Promise.all([
       ...questionListDb.map((questionList) => putQuestionList(undefined, questionList)),
-    ]);
-    await Promise.all([
       ...questionChunkDb.map((questionChunk) => putQuestionChunk(undefined, questionChunk)),
-    ]);
-    await Promise.all([
       ...question.map((questions) => putQuestion(undefined, questions)),
-    ]);
-    await Promise.all([
       ...userResponse.map((responses) => putQuestionResponses("Test User Id", [responses])),
     ]);
 
     // Test get functionality - should be identical to what we put
     const fetchedAllQuestionsLists = await getAllQuestionLists();
     const fetchedQuestionList = await getQuestionList("Test Question List");
-    const fetchedQuestionsProgress = await getQuestionProgress("Test Question Progress");
+    const fetchedQuestionsProgress = await getQuestionProgress();
     const fetchedQuestionResponse = await getQuestionResponses("Test Question Response");
 
     expect(fetchedAllQuestionsLists.length).toBe(questionListDb.length);

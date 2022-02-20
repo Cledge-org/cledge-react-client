@@ -6,82 +6,81 @@ import { getPathway } from "../pages/api/get-pathway";
 import { putPathwayModulePersonalizedContent } from "../pages/api/put-pathway-module-personalized-content";
 import { putPathwayModule } from "../pages/api/put-pathway-module";
 import { putPathwayProgress } from "../pages/api/put-pathway-progress";
-import { putCourse } from "../pages/api/put-pathway";
+import { putPathway } from "../pages/api/put-pathway";
 import { ObjectId } from "mongodb";
 
-
 const testPersonalizedContent: PersonalizedContent = {
-    _id: new ObjectId(),
-    moduleId: new ObjectId(),
-    priority: 1,
-    tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
-    title: "Test Title",
-    type: "Test type",
-    url: "Test Url",
+  _id: new ObjectId(),
+  moduleId: new ObjectId(),
+  priority: 1,
+  tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
+  name: "Test Name",
+  type: "Test type",
+  url: "Test Url",
 };
 
 const testPresetContent: PresetContent = {
-    priority: 1,
-    title: "Test Title",
-    type: "Test type",
-    url: "Test Url",
+  priority: 1,
+  name: "Test Name",
+  type: "Test type",
+  url: "Test Url",
 };
 
 const testPathwayModule_Db: PathwayModule_Db = {
-    _id: new ObjectId(),
-    title: "Test Title",
-    presetContent: [testPresetContent],
-    tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
+  _id: new ObjectId(),
+  name: "Test Name",
+  presetContent: [testPresetContent],
+  tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
 };
 
 const testPathwayModule: PathwayModule = {
-    _id: new ObjectId(),
-    title: "Test Title",
-    presetContent: [testPresetContent],
-    personalizedContent: [testPersonalizedContent],
-    tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
+  _id: new ObjectId(),
+  name: "Test Name",
+  presetContent: [testPresetContent],
+  personalizedContent: [testPersonalizedContent],
+  tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
 };
 
 const testPathway_Db: Pathway_Db = {
-    _id: new ObjectId(),
-    tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
-    modules: [new ObjectId()],
-    title: "Test Title",
+  _id: new ObjectId(),
+  tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
+  modules: [new ObjectId()],
+  name: "Test Name",
 };
 
-  
 const testContentProgress: ContentProgress = {
-    finished: true,
-    title: "Test Title",
-    videoTime: 1,
+  finished: true,
+  name: "Test Name",
+  videoTime: 1,
 };
 
 const testModuleProgress: ModuleProgress = {
-    moduleId: "Test Module Id",
-    finished: true,
-    title: "Test Title",
-    contentProgress: [testContentProgress],
+  moduleId: "Test Module Id",
+  finished: true,
+  name: "Test Name",
+  contentProgress: [testContentProgress],
 };
 
 const testPathway: Pathway = {
-    _id: new ObjectId(),
-    title: "Test Title",
-    modules: [testPathwayModule],
-    tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
+  _id: new ObjectId(),
+  name: "Test Name",
+  modules: [testPathwayModule],
+  tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
 };
   
 const testPathwayProgress: PathwayProgress = {
-    pathwayId: "Test Pathway Id",
-    finished: true,
-    title: "Test Title",
-    moduleProgress: [testModuleProgress], 
+  pathwayId: "Test Pathway Id",
+  finished: true,
+  name: "Test Name",
+  moduleProgress: [testModuleProgress], 
 };
 
 const testUserPathway: UserPathway = {
-    pathway: "Test Course 1", // need to update
-    userTags: ["Test User Tag 1", "Test User Tag 2", "Test User Tag 3"],
-    userCourseProgress: testPathwayProgress,
-}
+  pathway: "Test Course 1", // need to update
+  userTags: ["Test User Tag 1", "Test User Tag 2", "Test User Tag 3"],
+  userCourseProgress: testPathwayProgress,
+};
+
 const testDashboard: Dashboard = {
   userName: "Test UserName",
   userTags: ["Test User Tag 1", "Test User Tag 2", "Test User Tag 3"],
@@ -106,9 +105,15 @@ test("should add questions and get those added questions exactly", (done) => {
     const moduleProgress: ModuleProgress[] = [testModuleProgress];
 
     await Promise.all([
-      ...pathwayDb.map((questionList) => putCourse(undefined, questionList)),
+      ...pathwayDb.map((questionList) => putPathway(undefined, questionList)),
+    ]);
+    await Promise.all([
       ...pathwayProgress.map((pathway_progress) => putPathwayProgress("Test User Id", {"Test Module Id": contentProgress})),
+    ]);
+    await Promise.all([
       ...pathwayModuleDb.map((pathway_module) => putPathwayModule(undefined, pathway_module)),
+    ]);
+    await Promise.all([
       ...personalizedContent.map((responses) => putPathwayModulePersonalizedContent(undefined, testPersonalizedContent)),
     ]);
 
