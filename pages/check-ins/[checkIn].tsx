@@ -39,14 +39,14 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         }),
       })
     ).json();
-    //console.error(checkInChunks);
+    console.error(checkIn);
     let checkInData = checkIn.chunks[0].questions;
     for (let i = 1; i < checkIn.chunks.length; i++) {
       checkInData = checkInData.concat(checkIn.chunks[i].questions);
     }
     return {
       props: {
-        checkInData: [],
+        checkInData,
       },
     };
   } catch (err) {
@@ -70,7 +70,7 @@ const CheckIn: NextApplicationPage<{
   const [isEditing, setIsEditing] = useState(false);
   const [newUserResponses, setNewUserResponses] = useState(userResponses);
   const hiddenFileInput = React.useRef(null);
-
+  console.log(checkInData);
   const transcriptUpload = () => {
     hiddenFileInput.current.click();
   };
@@ -149,6 +149,7 @@ const CheckIn: NextApplicationPage<{
           });
       setNewTags(filterDuplicates(newTags.concat(newQTags)));
     };
+    console.log(question);
     if (question.type === "TextInput") {
       return (
         <TextInputQuestion
@@ -248,7 +249,7 @@ const CheckIn: NextApplicationPage<{
           </div>
           <img
             style={{ width: "60%" }}
-            src="images/questionLandingGraphic.png"
+            src="../images/questionLandingGraphic.png"
           />
         </div>
       </div>
