@@ -23,6 +23,9 @@ import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
 import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { getAllPathwaysAccountAndProgress } from "./api/get-dashboard";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -43,6 +46,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return { props: {} as never };
   }
 };
+
 
 // logged in landing page
 const Dashboard: NextApplicationPage<{
@@ -191,8 +195,8 @@ const Dashboard: NextApplicationPage<{
   console.log(currentTasks);
   console.log(finishedTasks);
   return (
-    <div className="container-fluid p-5">
-      {session.data?.user?.email === "test31@gmail.com" ? (
+    <div>
+      {/* {session.data?.user?.email === "test31@gmail.com" ? (
         <button
           onClick={() => {
             setIsInUserView(false);
@@ -200,16 +204,44 @@ const Dashboard: NextApplicationPage<{
         >
           Switch to Admin View
         </button>
-      ) : null}
-      <div className="row">
-        <h1 className="pt-2 red-purple-text-gradient fw-bold">
-          <strong>
-            Welcome back, {dashboardInfo.userName}
-            <br />
-            This is your home page.
-            <br />
+      ) : null} */}
+      
+
+      <div className="w-full md:w-auto" style={{backgroundColor: "lightgray"}}>
+      <div className="w-full md:w-auto" style={{backgroundColor: "#F2F2F7", display: 'flex'}}>
+      <div>
+        <h1 className = "mt-30 ml-30" >
+          <strong style={{color: "#2651ED", fontSize: 28, paddingLeft: 200}}>
+            Personalized 12th grade videos for {dashboardInfo.userName}      
           </strong>
         </h1>
+        <h2>
+          <strong className = "mt-30 ml-30" style={{paddingLeft: 200}}>
+          Need more personalized videos?
+        </strong>
+        </h2>
+        <h3 className = "mt-30 ml-30" style={{paddingLeft: 200}}>
+        The learning modules are tailored to you based on your current checkin 
+        <br></br>
+        progress. 
+        Complete the checkin questions to receive more personalized content!
+        </h3>
+      </div>
+      <div>
+       </div>
+       <div>
+         <button style={{backgroundColor: "#2651ED", color: "white"}}>Update Checkin Questions</button>
+       </div>
+      </div>
+      <div>
+      <Tabs TabIndicatorProps={{style: {backgroundColor: "white"}}}>
+        <Tab label='All Modules'/>
+        <Tab label='In Progress'/>
+        <Tab label='Finished'/>
+      </Tabs>
+
+
+      </div>
       </div>
       <br />
       <br />

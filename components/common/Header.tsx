@@ -57,7 +57,7 @@ export default function Header({ key }: { key: string }) {
           ? "sticky-top nav-regular shadow-none"
           : "sticky-top nav-regular"
       }`}
-      style={{ zIndex: 2000 }}
+      style={{ zIndex: 2000, textAlign: "center"}}
     >
       <div className="container-fluid">
         <Link href="/">
@@ -84,9 +84,9 @@ export default function Header({ key }: { key: string }) {
           id="navbarNavAltMarkup"
         >
           {status === "authenticated" ? (
-            <div className="navbar-nav">
+            <div className="navbar-nav" style={{marginRight: 250}}>
               <Link href="/dashboard">
-                <a className="nav-link" style={{ fontWeight: 600 }}>
+                <a className="nav-link" style={{ fontWeight: 600}}>
                   <span className={`${colors}`}>My Learning</span>
                 </a>
               </Link>
@@ -97,17 +97,17 @@ export default function Header({ key }: { key: string }) {
               </Link>
               <Link href="/progress">
                 <a className="nav-link" style={{ fontWeight: 600 }}>
-                  <span className={`${colors}`}>Progress</span>
+                  <span className={`${colors}`}>College Finding</span>
                 </a>
               </Link>
               <Link href="/account">
                 <a className="nav-link" style={{ fontWeight: 600 }}>
-                  <span className={`${colors}`}>My Account</span>
+                  <span className={`${colors}`}>Application Checkin</span>
                 </a>
               </Link>
               <Link href="/api/auth/signout">
                 <a className="nav-link" style={{ fontWeight: 600 }} href="">
-                  <span className={`${colors}`}>Log Out</span>
+                  <span className={`${colors}`}>Smart Counselor</span>
                 </a>
               </Link>
             </div>
