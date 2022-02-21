@@ -75,7 +75,6 @@ function getSpecificModule(
   pathwaysDb: Db
 ): Promise<PathwayModule | null> {
   return new Promise(async (res, err) => {
-    console.error(moduleId);
     try {
       const [module, modulePersonalizedContent]: [
         PathwayModule_Db,
@@ -89,7 +88,6 @@ function getSpecificModule(
           .find({ moduleId })
           .toArray() as Promise<PersonalizedContent[]>,
       ]);
-      // console.error(module);
       if (!module) {
         res(null);
       } else {

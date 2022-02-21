@@ -16,37 +16,49 @@ const testPersonalizedContent: PersonalizedContent = {
   priority: 1,
   tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
   name: "Test Name",
-  type: "Test type",
+  type: "Test Type",
   url: "Test Url",
 };
 
 const testPresetContent: PresetContent = {
   priority: 1,
   name: "Test Name",
-  type: "Test type",
+  type: "Test Type",
   url: "Test Url",
+};
+
+const testPathwayModuleName = "Test Pathway Module Name";
+const testPathwayModuleTag = "Test Pathway Module Tag"
+const testPathwayModule: PathwayModule = {
+  _id: new ObjectId(),
+  name: testPathwayModuleName,
+  presetContent: [testPresetContent],
+  personalizedContent: [testPersonalizedContent],
+  tags: [testPathwayModuleTag],
 };
 
 const testPathwayModule_Db: PathwayModule_Db = {
   _id: new ObjectId(),
-  name: "Test Name",
+  name: testPathwayModuleName,
   presetContent: [testPresetContent],
-  tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
+  tags: [testPathwayModuleTag],
 };
 
-const testPathwayModule: PathwayModule = {
+const pathway1ObjectId = new ObjectId();
+const testPathwayName = "Test Pathway Name";
+const testPathwayTag = "Test Pathway Tag"
+const testPathway: Pathway = {
   _id: new ObjectId(),
-  name: "Test Name",
-  presetContent: [testPresetContent],
-  personalizedContent: [testPersonalizedContent],
-  tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
+  name: testPathwayName,
+  modules: [testPathwayModule],
+  tags: [testPathwayTag],
 };
-
+  
 const testPathway_Db: Pathway_Db = {
   _id: new ObjectId(),
-  tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
-  modules: [new ObjectId()],
-  name: "Test Name",
+  tags: [testPathwayTag],
+  modules: [pathway1ObjectId],
+  name: testPathwayName,
 };
 
 const testContentProgress: ContentProgress = {
@@ -62,13 +74,7 @@ const testModuleProgress: ModuleProgress = {
   contentProgress: [testContentProgress],
 };
 
-const testPathway: Pathway = {
-  _id: new ObjectId(),
-  name: "Test Name",
-  modules: [testPathwayModule],
-  tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
-};
-  
+
 const testPathwayProgress: PathwayProgress = {
   pathwayId: "Test Pathway Id",
   finished: true,
@@ -105,7 +111,7 @@ beforeAll(() => {
   });
 });
 
-test("should add questions and get those added questions exactly", (done) => {
+test("should add pathway and get those added pathways exactly", (done) => {
   const callback = async () => {
     // Test put functionality
     const pathway: Pathway[] = [testPathway];
@@ -120,7 +126,7 @@ test("should add questions and get those added questions exactly", (done) => {
     const moduleProgress: ModuleProgress[] = [testModuleProgress];
 
     await Promise.all([
-      ...pathwayDb.map((questionList) => putPathway(undefined, questionList)),
+      ...pathwayDb.map((pathway_put) => putPathway(pathway1ObjectId, pathway_put)),
     ]);
     await Promise.all([
       ...pathwayProgress.map((pathway_progress) => putPathwayProgress(testUserFirebaseId, {"Test Module Id": contentProgress})),
@@ -133,11 +139,19 @@ test("should add questions and get those added questions exactly", (done) => {
     ]);
 
     // Test get functionality - should be identical to what we put
-    const fetchedAllPathway = await getAllPathways();
-    const fetchedAllPathwayProgress = await getAllPathwayProgress(testUserFirebaseId);
-    const fetchedPathway = await getPathway(testUserFirebaseId, new ObjectId());
-    const fetchedPathwayProgress = await getPathwayProgress(testUserFirebaseId, new ObjectId());
-    const fetchedPathwayAndProgress = await getPathwayAndProgress(testUserFirebaseId, "Test Pathway Id");
+    const [
+      fetchedAllPathway, 
+      fetchedAllPathwayProgress,
+      fetchedPathway,
+      fetchedPathwayProgress,
+      fetchedPathwayAndProgress,
+    ] = await Promise.all([
+      getAllPathways(),
+      getAllPathwayProgress(testUserFirebaseId),
+      getPathway(testUserFirebaseId, pathway1ObjectId),
+      getPathwayProgress(testUserFirebaseId, new ObjectId()),
+      getPathwayAndProgress(testUserFirebaseId, "Test Pathway Id"),
+    ]);
 
     expect(fetchedAllPathway.length).toBe(pathwayDb.length);
     expect(fetchedAllPathwayProgress.length).toBe(userPathway.length);

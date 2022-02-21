@@ -58,7 +58,7 @@ export const putQuestion = async (
         await client
           .db("questions")
           .collection("question-data")
-          .updateOne({ _id: questionId }, { $set: question });
+          .updateOne({ _id: questionId }, { $set: question }, {upsert: true});
         res({
           questionId: questionId.toString(),
         });

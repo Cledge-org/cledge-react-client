@@ -22,17 +22,18 @@ const testQuestion: Question = {
   type: "Test Type",
 };
 
+const testQuestionChunkName = "Test Chunk 1";
 const testQuestionChunk1: QuestionChunk = {
   _id: new ObjectId(),
-  name: "Test Chunk 1",
+  name: testQuestionChunkName,
   questions: [testQuestion],
 };
 
 const testQuestionChunks = [testQuestionChunk1];
-
+const testQuestionListName = "Test Question List Name";
 const testQuestionList1: QuestionList = {
   _id: new ObjectId(),
-  name: "Test Name",
+  name: testQuestionListName,
   chunks: testQuestionChunks,
 };
 
@@ -42,16 +43,17 @@ const testProgressInfo: ProgressInfo = {
   questionData: [testQuestionList1],
 };
 
+const question1ObjectId = new ObjectId();
 const testQuestionListDb1: QuestionList_Db = {
   _id: new ObjectId(),
-  name: "Test Question List",
-  chunks: ["Test Chunk 1"],
+  name: testQuestionListName,
+  chunks: [testQuestionChunkName],
 };
 
 const testQuestionChunkDb1: QuestionChunk_Db = {
   _id: new ObjectId(),
-  name: "Test Name",
-  questions: [testQuestion],
+  name: testQuestionChunkName,
+  questions: [question1ObjectId],
 };
 
 test("should add questions and get those added questions exactly", (done) => {
@@ -75,7 +77,7 @@ test("should add questions and get those added questions exactly", (done) => {
       ),
     ]);
     await Promise.all([
-      ...question.map((questions) => putQuestion(undefined, questions)),
+      ...question.map((questions) => putQuestion(question1ObjectId, questions)),
     ]);
     await Promise.all([
       ...userResponse.map((responses) =>
@@ -91,7 +93,7 @@ test("should add questions and get those added questions exactly", (done) => {
       fetchedQuestionResponse,
     ] = await Promise.all([
       getAllQuestionLists(),
-      getQuestionList("Test Question List"),
+      getQuestionList(testQuestionListName),
       getQuestionProgress(),
       getQuestionResponses("Test User Id"),
     ]);
