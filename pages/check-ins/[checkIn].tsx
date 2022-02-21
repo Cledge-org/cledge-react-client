@@ -136,45 +136,46 @@ const CheckIn: NextApplicationPage<{
   const checkInPages = checkInData.map((question) => {
     const updateFunc = (value, newQTags, oldTags) => {
       newUserResponses.find(
-        (questionResponse) => questionResponse.questionId === question._id
+        (questionResponse) => questionResponse.questionId === question?._id
       )
         ? (newUserResponses[
             newUserResponses.findIndex(
-              (questionResponse) => questionResponse.questionId === question._id
+              (questionResponse) =>
+                questionResponse.questionId === question?._id
             )
           ]["response"] = value)
         : newUserResponses.push({
-            questionId: question._id,
+            questionId: question?._id,
             response: value,
           });
       setNewTags(filterDuplicates(newTags.concat(newQTags)));
     };
     console.log(question);
-    if (question.type === "TextInput") {
+    if (question?.type === "TextInput") {
       return (
         <TextInputQuestion
-          key={question._id}
+          key={question?._id}
           question={question}
           userAnswer={""}
           onChange={updateFunc}
         />
       );
     }
-    if (question.type === "MCQ") {
+    if (question?.type === "MCQ") {
       return (
         <MCQQuestion
           question={question}
-          key={question._id}
+          key={question?._id}
           userAnswer={""}
           onChange={updateFunc}
           tags={userTags}
         />
       );
     }
-    if (question.type === "CheckBox") {
+    if (question?.type === "CheckBox") {
       return (
         <CheckBoxQuestion
-          key={question._id}
+          key={question?._id}
           question={question}
           userAnswers={[]}
           onChange={updateFunc}
@@ -185,7 +186,7 @@ const CheckIn: NextApplicationPage<{
     return (
       <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
         <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-          {question.question}
+          {question?.question}
         </span>
         <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
           <div className="w-75">
