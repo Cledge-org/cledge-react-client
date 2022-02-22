@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import AuthFunctions from "./auth/firebase-auth";
 import { getSpecificPathwayProgress } from "./get-pathway-progress";
@@ -28,9 +28,11 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     resolve.status(400).send("No user id provided");
   }
 };
+
+// Gets both the pathway for a user and a user's progress in it
 export function getPathwayAndProgress(
   userId: string,
-  pathwayId: string
+  pathwayId: ObjectId
 ): Promise<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
@@ -58,7 +60,7 @@ export function getPathwayAndProgress(
         >,
       ]);
       const requestedPathway = pathways.find(
-        ({ _id }) => _id.toString() === pathwayId
+        ({ _id }) => _id.toString() === pathwayId.toString()
       );
       let modules: PathwayModule[] = await Promise.all(
         requestedPathway.modules.map((moduleId) =>
