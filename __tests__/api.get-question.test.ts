@@ -50,8 +50,6 @@ const testQuestionChunkDb1: QuestionChunk_Db = {
   questions: [question1ObjectId],
 };
 
-
-
 const testProgressInfo: ProgressInfo = {
   userTags: ["Test User Tag 1", "Test User Tag 2", "Test User Tag 3"],
   userProgress: testUserProgress,

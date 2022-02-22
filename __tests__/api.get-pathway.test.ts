@@ -28,37 +28,39 @@ const testPresetContent: PresetContent = {
 };
 
 const testPathwayModuleName = "Test Pathway Module Name";
-const testPathwayModuleTag = "Test Pathway Module Tag"
+const testPathwayModuleTag = ["Test Pathway Module Tag"];
 const testPathwayModule: PathwayModule = {
   _id: new ObjectId(),
   name: testPathwayModuleName,
   presetContent: [testPresetContent],
   personalizedContent: [testPersonalizedContent],
-  tags: [testPathwayModuleTag],
+  tags: testPathwayModuleTag,
 };
 
+const pathway1ObjectId = new ObjectId();
 const testPathwayModule_Db: PathwayModule_Db = {
   _id: new ObjectId(),
   name: testPathwayModuleName,
   presetContent: [testPresetContent],
-  tags: [testPathwayModuleTag],
+  tags: testPathwayModuleTag,
 };
 
 const testPathwayName = "Test Pathway Name";
-const testPathwayTag = "Test Pathway Tag"
+const testPathwayTag = ["Test Pathway Tag"];
+const testPathwayModules = [testPathwayModule];
 const testPathway: Pathway = {
   _id: new ObjectId(),
   name: testPathwayName,
-  modules:  [testPathwayModule],
-  tags: [testPathwayTag],
+  modules: testPathwayModules,
+  tags: testPathwayTag,
 };
-  
-const pathway1ObjectId = new ObjectId();
+
+const pathwayModule1ObjectId = new ObjectId();
 const testPathway_Db: Pathway_Db = {
   _id: new ObjectId(),
-  tags: [testPathwayTag],
-  modules: [pathway1ObjectId],
   name: testPathwayName,
+  tags: testPathwayTag,
+  modules: [pathwayModule1ObjectId],
 };
 
 const testContentProgress: ContentProgress = {
@@ -135,11 +137,11 @@ test("should add pathway and get those added pathways exactly", (done) => {
     ]);
     await Promise.all([
       ...pathwayModuleDb.map((pathway_module) => 
-      putPathwayModule(undefined, pathway_module)),
+      putPathwayModule(pathwayModule1ObjectId, pathway_module)),
     ]);
     await Promise.all([
       ...personalizedContent.map((responses) => 
-      putPathwayModulePersonalizedContent(undefined, testPersonalizedContent)),
+      putPathwayModulePersonalizedContent(undefined, responses)),
     ]);
 
     // Test get functionality - should be identical to what we put
