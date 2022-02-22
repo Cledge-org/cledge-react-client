@@ -44,16 +44,16 @@ const testPathwayModule_Db: PathwayModule_Db = {
   tags: [testPathwayModuleTag],
 };
 
-const pathway1ObjectId = new ObjectId();
 const testPathwayName = "Test Pathway Name";
 const testPathwayTag = "Test Pathway Tag"
 const testPathway: Pathway = {
   _id: new ObjectId(),
   name: testPathwayName,
-  modules: [testPathwayModule],
+  modules:  [testPathwayModule],
   tags: [testPathwayTag],
 };
   
+const pathway1ObjectId = new ObjectId();
 const testPathway_Db: Pathway_Db = {
   _id: new ObjectId(),
   tags: [testPathwayTag],
@@ -126,16 +126,20 @@ test("should add pathway and get those added pathways exactly", (done) => {
     const moduleProgress: ModuleProgress[] = [testModuleProgress];
 
     await Promise.all([
-      ...pathwayDb.map((pathway_put) => putPathway(pathway1ObjectId, pathway_put)),
+      ...pathwayDb.map((pathway_put) => 
+      putPathway(pathway1ObjectId, pathway_put)),
     ]);
     await Promise.all([
-      ...pathwayProgress.map((pathway_progress) => putPathwayProgress(testUserFirebaseId, {"Test Module Id": contentProgress})),
+      ...pathwayProgress.map((pathway_progress) => 
+      putPathwayProgress(testUserFirebaseId, {"Test Module Id": contentProgress})),
     ]);
     await Promise.all([
-      ...pathwayModuleDb.map((pathway_module) => putPathwayModule(undefined, pathway_module)),
+      ...pathwayModuleDb.map((pathway_module) => 
+      putPathwayModule(undefined, pathway_module)),
     ]);
     await Promise.all([
-      ...personalizedContent.map((responses) => putPathwayModulePersonalizedContent(undefined, testPersonalizedContent)),
+      ...personalizedContent.map((responses) => 
+      putPathwayModulePersonalizedContent(undefined, testPersonalizedContent)),
     ]);
 
     // Test get functionality - should be identical to what we put
@@ -148,7 +152,7 @@ test("should add pathway and get those added pathways exactly", (done) => {
     ] = await Promise.all([
       getAllPathways(),
       getAllPathwayProgress(testUserFirebaseId),
-      getPathway(testUserFirebaseId, pathway1ObjectId),
+      getPathway(testUserFirebaseId, new ObjectId()),
       getPathwayProgress(testUserFirebaseId, new ObjectId()),
       getPathwayAndProgress(testUserFirebaseId, "Test Pathway Id"),
     ]);

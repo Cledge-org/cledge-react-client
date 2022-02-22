@@ -37,12 +37,6 @@ const testQuestionList1: QuestionList = {
   chunks: testQuestionChunks,
 };
 
-const testProgressInfo: ProgressInfo = {
-  userTags: ["Test User Tag 1", "Test User Tag 2", "Test User Tag 3"],
-  userProgress: testUserProgress,
-  questionData: [testQuestionList1],
-};
-
 const question1ObjectId = new ObjectId();
 const testQuestionListDb1: QuestionList_Db = {
   _id: new ObjectId(),
@@ -54,6 +48,14 @@ const testQuestionChunkDb1: QuestionChunk_Db = {
   _id: new ObjectId(),
   name: testQuestionChunkName,
   questions: [question1ObjectId],
+};
+
+
+
+const testProgressInfo: ProgressInfo = {
+  userTags: ["Test User Tag 1", "Test User Tag 2", "Test User Tag 3"],
+  userProgress: testUserProgress,
+  questionData: [testQuestionList1],
 };
 
 test("should add questions and get those added questions exactly", (done) => {
