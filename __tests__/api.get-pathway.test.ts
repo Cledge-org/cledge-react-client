@@ -152,7 +152,7 @@ test("should add pathway and get those added pathways exactly", (done) => {
     ] = await Promise.all([
       getAllPathways(),
       getAllPathwayProgress(testUserFirebaseId),
-      getPathway(testUserFirebaseId, new ObjectId()),
+      getPathway(testUserFirebaseId, pathway1ObjectId),
       getPathwayProgress(testUserFirebaseId, new ObjectId()),
       getPathwayAndProgress(testUserFirebaseId, "Test Pathway Id"),
     ]);
