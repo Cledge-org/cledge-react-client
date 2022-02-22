@@ -20,6 +20,7 @@ import { useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { store } from "../../utils/store";
 import {
+  updateAccountAction,
   updateQuestionResponsesAction,
   updateTagsAndCheckInsAction,
 } from "../../utils/actionFunctions";
@@ -60,7 +61,8 @@ const CheckIn: NextApplicationPage<{
   checkInData: Question[];
   userResponses: UserResponse[];
   userTags: string[];
-}> = ({ checkInData, userResponses, userTags }) => {
+  grade: number;
+}> = ({ checkInData, userResponses, userTags, grade }) => {
   const [isShowingContinue, setIsShowingContinue] = useState(true);
   const [isShowingStart, setIsShowingStart] = useState(false);
   const [progress, changeProgress] = useState(0);
@@ -103,11 +105,24 @@ const CheckIn: NextApplicationPage<{
     userTags.length === 0
       ? (userTags = newTags)
       : (userTags = userTags.concat(newTags));
+    let newGrade = newUserResponses.find(
+      ({ questionId }) => questionId === "61de0b617c405886579656ec"
+    )?.response;
     await Promise.all([
       fetch(`${ORIGIN_URL}/api/update-user`, {
         method: "POST",
         body: JSON.stringify({
-          userInfo: { checkIns: checkInList, tags: userTags },
+          userInfo: {
+            checkIns: checkInList,
+            tags: userTags,
+            grade: newGrade
+              ? parseInt(
+                  newGrade.includes("9")
+                    ? "9"
+                    : newGrade.substring(0, newGrade.indexOf("t"))
+                )
+              : grade,
+          },
           userId: session.data.user.uid,
         }),
       }),
@@ -119,6 +134,19 @@ const CheckIn: NextApplicationPage<{
         }),
       }),
     ]).then((values) => {
+      store.dispatch(
+        updateAccountAction({
+          ...store.getState().accountInfo,
+          grade: newGrade
+            ? parseInt(
+                newGrade.includes("9")
+                  ? "9"
+                  : newGrade.substring(0, newGrade.indexOf("t"))
+              )
+            : grade,
+          _id: undefined,
+        })
+      );
       store.dispatch(updateTagsAndCheckInsAction(userTags, checkInList));
       store.dispatch(updateQuestionResponsesAction(newUserResponses));
       values.forEach((value) => {
@@ -306,5 +334,6 @@ const CheckIn: NextApplicationPage<{
 CheckIn.requireAuth = true;
 export default connect((state) => ({
   userTags: state.accountInfo.tags,
+  grade: state.accountInfo.grade,
   userResponses: state.questionResponses,
 }))(CheckIn);
