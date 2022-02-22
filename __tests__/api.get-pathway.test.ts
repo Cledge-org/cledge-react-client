@@ -10,11 +10,12 @@ import { putPathway } from "../pages/api/put-pathway";
 import { ObjectId } from "mongodb";
 import { createUser } from "../pages/api/create-user";
 
+const testPersonalizedContentTag = ["Test Tag 1", "Test Tag 2", "Test Tag 3"];
 const testPersonalizedContent: PersonalizedContent = {
   _id: new ObjectId(),
   moduleId: new ObjectId(),
   priority: 1,
-  tags: ["Test Tag 1", "Test Tag 2", "Test Tag 3"],
+  tags: testPersonalizedContentTag,
   name: "Test Name",
   type: "Test Type",
   url: "Test Url",
@@ -84,17 +85,19 @@ const testPathwayProgress: PathwayProgress = {
   moduleProgress: [testModuleProgress], 
 };
 
+const testUserPathwayTag = ["Test User Tag 1", "Test User Tag 2", "Test User Tag 3"];
 const testUserPathway: UserPathway = {
   pathway: "Test Course 1", // need to update
-  userTags: ["Test User Tag 1", "Test User Tag 2", "Test User Tag 3"],
+  userTags: testUserPathwayTag,
   userCourseProgress: testPathwayProgress,
 };
 
+const testUserCheckIns = ["Test CheckIn 1", "Test CheckIn 2", "Test CheckIn 3"];
 const testDashboard: Dashboard = {
   userName: "Test UserName",
-  userTags: ["Test User Tag 1", "Test User Tag 2", "Test User Tag 3"],
+  userTags: testUserPathwayTag,
   userProgress: [testPathwayProgress],
-  checkIns: ["Test CheckIn 1", "Test CheckIn 2", "Test CheckIn 3"],
+  checkIns: testUserCheckIns,
 };
 
 const testUserFirebaseId = "Test User Id";
@@ -108,8 +111,8 @@ beforeAll(() => {
     grade: 11,
     birthday: new Date(),
     email: "Test email",
-    tags: ["Test User Tag 1", "Test User Tag 2", "Test User Tag 3"],
-    checkIns: ["Test CheckIn 1", "Test CheckIn 2", "Test CheckIn 3"],
+    tags: testPersonalizedContentTag,
+    checkIns: [],
   });
 });
 
