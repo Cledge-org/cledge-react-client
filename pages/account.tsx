@@ -11,13 +11,17 @@ import AuthFunctions from "./api/auth/firebase-auth";
 import { ORIGIN_URL } from "../config";
 import { connect } from "react-redux";
 import { store } from "../utils/store";
-import { updateAccountAction } from "../utils/actionFunctions";
+import {
+  updateAccountAction,
+  updateQuestionResponsesAction,
+} from "../utils/actionFunctions";
 
 // account page
 
-const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
-  accountInfo,
-}) => {
+const AccountPage: NextApplicationPage<{
+  accountInfo: AccountInfo;
+  questionResponses: UserResponse[];
+}> = ({ accountInfo, questionResponses }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [currUserData, setCurrUserData]: [
     AccountInfo,
@@ -36,15 +40,32 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
   const [iteratedFirst, setIteratedFirst] = useState(false);
   const session = useSession();
   const updateUserData = async () => {
-    await fetch(`${ORIGIN_URL}/api/update-user`, {
-      method: "POST",
-      body: JSON.stringify({
-        userInfo: { ...currUserData, _id: undefined },
-        userId: session.data.user.uid,
+    await Promise.all([
+      fetch(`${ORIGIN_URL}/api/update-user`, {
+        method: "POST",
+        body: JSON.stringify({
+          userInfo: { ...currUserData, _id: undefined },
+          userId: session.data.user.uid,
+        }),
       }),
-    }).then((res) => {
-      store.dispatch(updateAccountAction({ ...currUserData, _id: undefined }));
-      console.log(res.status);
+      fetch(`${ORIGIN_URL}/api/put-question-responses`, {
+        method: "POST",
+        body: JSON.stringify({
+          responses: questionResponses,
+          userId: session.data.user.uid,
+        }),
+      }),
+    ]).then((reses) => {
+      reses.forEach((res, index) => {
+        if (index === 0) {
+          store.dispatch(
+            updateAccountAction({ ...currUserData, _id: undefined })
+          );
+        } else {
+          store.dispatch(updateQuestionResponsesAction(questionResponses));
+        }
+        console.log(res.status);
+      });
     });
   };
   useEffect(() => {
@@ -178,15 +199,33 @@ const AccountPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({
                 ? parseInt(value)
                 : value;
             setCurrUserData({ ...newUserData });
+            if (currQuestion.question.toLowerCase() === "grade") {
+              let indexOfResponse = questionResponses.findIndex(
+                ({ questionId }) => questionId === "61de0b617c405886579656ec"
+              );
+              let newUserResponses = questionResponses;
+              if (indexOfResponse === -1) {
+                newUserResponses.push({
+                  questionId: "61de0b617c405886579656ec",
+                  response: value,
+                });
+              } else {
+                newUserResponses[indexOfResponse].response = value;
+              }
+            }
           }}
         />
         <div className="w-100 center-child">
           <button
             className="general-submit-btn mt-2"
             onClick={() => {
-              updateUserData().catch((err) => {
-                console.error(err);
-              });
+              updateUserData()
+                .then(() => {
+                  setModalOpen(false);
+                })
+                .catch((err) => {
+                  console.error(err);
+                });
             }}
           >
             SUBMIT
@@ -215,6 +254,7 @@ function InfoSection({ name, value, onEdit }: InfoSectionProps) {
   );
 }
 AccountPage.requireAuth = true;
-export default connect((state) => ({ accountInfo: state.accountInfo }))(
-  AccountPage
-);
+export default connect((state) => ({
+  accountInfo: state.accountInfo,
+  questionResponses: state.questionResponses,
+}))(AccountPage);

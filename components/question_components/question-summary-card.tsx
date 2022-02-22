@@ -10,6 +10,7 @@ import AuthFunctions from "../../pages/api/auth/firebase-auth";
 import { useSession } from "next-auth/react";
 import { store } from "../../utils/store";
 import {
+  updateAccountAction,
   updateQuestionResponsesAction,
   updateTagsAction,
 } from "../../utils/actionFunctions";
@@ -188,6 +189,39 @@ export default function QuestionSummaryCard({
                 : (userTags = userTags.concat(newTags));
               setNewTags([]);
               setOldTags([]);
+              if (question._id === "61de0b617c405886579656ec") {
+                fetch(`${ORIGIN_URL}/api/update-user`, {
+                  method: "POST",
+                  body: JSON.stringify({
+                    userInfo: {
+                      grade: parseInt(
+                        userAnswer.response.includes("9")
+                          ? "9"
+                          : userAnswer.response.substring(
+                              0,
+                              userAnswer.response.indexOf("t")
+                            )
+                      ),
+                    },
+                    userId: session.data.user.uid,
+                  }),
+                }).then(() => {
+                  store.dispatch(
+                    updateAccountAction({
+                      ...store.getState().accountInfo,
+                      grade: parseInt(
+                        userAnswer.response.includes("9")
+                          ? "9"
+                          : userAnswer.response.substring(
+                              0,
+                              userAnswer.response.indexOf("t")
+                            )
+                      ),
+                      _id: undefined,
+                    })
+                  );
+                });
+              }
               Promise.all(
                 [
                   fetch(`${ORIGIN_URL}/api/put-question-responses`, {
