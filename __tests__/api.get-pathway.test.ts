@@ -108,8 +108,8 @@ beforeAll(() => {
     grade: 11,
     birthday: new Date(),
     email: "Test email",
-    tags: [],
-    checkIns: [],
+    tags: ["Test User Tag 1", "Test User Tag 2", "Test User Tag 3"],
+    checkIns: ["Test CheckIn 1", "Test CheckIn 2", "Test CheckIn 3"],
   });
 });
 
@@ -155,8 +155,8 @@ test("should add pathway and get those added pathways exactly", (done) => {
       getAllPathways(),
       getAllPathwayProgress(testUserFirebaseId),
       getPathway(testUserFirebaseId, pathway1ObjectId),
-      getPathwayProgress(testUserFirebaseId, new ObjectId()),
-      getPathwayAndProgress(testUserFirebaseId, "Test Pathway Id"),
+      getPathwayProgress(testUserFirebaseId, pathway1ObjectId),
+      getPathwayAndProgress(testUserFirebaseId, pathway1ObjectId),
     ]);
 
     expect(fetchedAllPathway.length).toBe(pathwayDb.length);
