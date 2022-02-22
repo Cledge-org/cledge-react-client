@@ -37,7 +37,11 @@ export const getQuestionResponses = (
         .db("users")
         .collection("question-responses")
         .findOne({ firebaseId: userId })) as UserProgress_Db;
-      res(user_responses.responses);
+      if (!user_responses) {
+        res([]);
+      } else {
+        res(user_responses.responses);
+      }
       if (!overrideClient) {
         client.close();
       }

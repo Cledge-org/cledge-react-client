@@ -20,6 +20,7 @@ import { useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { store } from "../../utils/store";
 import {
+  updateAccountAction,
   updateQuestionResponsesAction,
   updateTagsAndCheckInsAction,
 } from "../../utils/actionFunctions";
@@ -39,14 +40,14 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         }),
       })
     ).json();
-    //console.error(checkInChunks);
+    console.error(checkIn);
     let checkInData = checkIn.chunks[0].questions;
     for (let i = 1; i < checkIn.chunks.length; i++) {
       checkInData = checkInData.concat(checkIn.chunks[i].questions);
     }
     return {
       props: {
-        checkInData: [],
+        checkInData,
       },
     };
   } catch (err) {
@@ -60,7 +61,8 @@ const CheckIn: NextApplicationPage<{
   checkInData: Question[];
   userResponses: UserResponse[];
   userTags: string[];
-}> = ({ checkInData, userResponses, userTags }) => {
+  grade: number;
+}> = ({ checkInData, userResponses, userTags, grade }) => {
   const [isShowingContinue, setIsShowingContinue] = useState(true);
   const [isShowingStart, setIsShowingStart] = useState(false);
   const [progress, changeProgress] = useState(0);
@@ -70,7 +72,7 @@ const CheckIn: NextApplicationPage<{
   const [isEditing, setIsEditing] = useState(false);
   const [newUserResponses, setNewUserResponses] = useState(userResponses);
   const hiddenFileInput = React.useRef(null);
-
+  console.log(checkInData);
   const transcriptUpload = () => {
     hiddenFileInput.current.click();
   };
@@ -103,11 +105,24 @@ const CheckIn: NextApplicationPage<{
     userTags.length === 0
       ? (userTags = newTags)
       : (userTags = userTags.concat(newTags));
+    let newGrade = newUserResponses.find(
+      ({ questionId }) => questionId === "61de0b617c405886579656ec"
+    )?.response;
     await Promise.all([
       fetch(`${ORIGIN_URL}/api/update-user`, {
         method: "POST",
         body: JSON.stringify({
-          userInfo: { checkIns: checkInList, tags: userTags },
+          userInfo: {
+            checkIns: checkInList,
+            tags: userTags,
+            grade: newGrade
+              ? parseInt(
+                  newGrade.includes("9")
+                    ? "9"
+                    : newGrade.substring(0, newGrade.indexOf("t"))
+                )
+              : grade,
+          },
           userId: session.data.user.uid,
         }),
       }),
@@ -119,6 +134,19 @@ const CheckIn: NextApplicationPage<{
         }),
       }),
     ]).then((values) => {
+      store.dispatch(
+        updateAccountAction({
+          ...store.getState().accountInfo,
+          grade: newGrade
+            ? parseInt(
+                newGrade.includes("9")
+                  ? "9"
+                  : newGrade.substring(0, newGrade.indexOf("t"))
+              )
+            : grade,
+          _id: undefined,
+        })
+      );
       store.dispatch(updateTagsAndCheckInsAction(userTags, checkInList));
       store.dispatch(updateQuestionResponsesAction(newUserResponses));
       values.forEach((value) => {
@@ -136,44 +164,46 @@ const CheckIn: NextApplicationPage<{
   const checkInPages = checkInData.map((question) => {
     const updateFunc = (value, newQTags, oldTags) => {
       newUserResponses.find(
-        (questionResponse) => questionResponse.questionId === question._id
+        (questionResponse) => questionResponse.questionId === question?._id
       )
         ? (newUserResponses[
             newUserResponses.findIndex(
-              (questionResponse) => questionResponse.questionId === question._id
+              (questionResponse) =>
+                questionResponse.questionId === question?._id
             )
           ]["response"] = value)
         : newUserResponses.push({
-            questionId: question._id,
+            questionId: question?._id,
             response: value,
           });
       setNewTags(filterDuplicates(newTags.concat(newQTags)));
     };
-    if (question.type === "TextInput") {
+    console.log(question);
+    if (question?.type === "TextInput") {
       return (
         <TextInputQuestion
-          key={question._id}
+          key={question?._id}
           question={question}
           userAnswer={""}
           onChange={updateFunc}
         />
       );
     }
-    if (question.type === "MCQ") {
+    if (question?.type === "MCQ") {
       return (
         <MCQQuestion
           question={question}
-          key={question._id}
+          key={question?._id}
           userAnswer={""}
           onChange={updateFunc}
           tags={userTags}
         />
       );
     }
-    if (question.type === "CheckBox") {
+    if (question?.type === "CheckBox") {
       return (
         <CheckBoxQuestion
-          key={question._id}
+          key={question?._id}
           question={question}
           userAnswers={[]}
           onChange={updateFunc}
@@ -184,7 +214,7 @@ const CheckIn: NextApplicationPage<{
     return (
       <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
         <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-          {question.question}
+          {question?.question}
         </span>
         <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
           <div className="w-75">
@@ -248,7 +278,7 @@ const CheckIn: NextApplicationPage<{
           </div>
           <img
             style={{ width: "60%" }}
-            src="images/questionLandingGraphic.png"
+            src="../images/questionLandingGraphic.png"
           />
         </div>
       </div>
@@ -304,5 +334,6 @@ const CheckIn: NextApplicationPage<{
 CheckIn.requireAuth = true;
 export default connect((state) => ({
   userTags: state.accountInfo.tags,
+  grade: state.accountInfo.grade,
   userResponses: state.questionResponses,
 }))(CheckIn);
