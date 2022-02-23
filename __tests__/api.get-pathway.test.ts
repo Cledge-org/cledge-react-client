@@ -1,6 +1,5 @@
 import { getAllPathwayProgress } from "../pages/api/get-all-pathway-progress";
 import { getAllPathways } from "../pages/api/get-all-pathways";
-import { getPathwayAndProgress } from "../pages/api/get-pathway-and-progress";
 import { getPathwayProgress } from "../pages/api/get-pathway-progress";
 import { getPathway } from "../pages/api/get-pathway";
 import { putPathwayModulePersonalizedContent } from "../pages/api/put-pathway-module-personalized-content";
@@ -152,20 +151,17 @@ test("should add pathway and get those added pathways exactly", (done) => {
       fetchedAllPathwayProgress,
       fetchedPathway,
       fetchedPathwayProgress,
-      fetchedPathwayAndProgress,
     ] = await Promise.all([
       getAllPathways(),
       getAllPathwayProgress(testUserFirebaseId),
       getPathway(testUserFirebaseId, pathway1ObjectId),
       getPathwayProgress(testUserFirebaseId, pathway1ObjectId),
-      getPathwayAndProgress(testUserFirebaseId, pathway1ObjectId),
     ]);
 
     expect(fetchedAllPathway.length).toBe(pathwayDb.length);
     expect(fetchedAllPathwayProgress.length).toBe(userPathway.length);
     expect(fetchedPathway.modules.length).toBe(pathwayModuleDb.length);
     expect(fetchedPathwayProgress.moduleProgress.length).toBe(contentProgress.length);
-    expect(fetchedPathwayAndProgress.pathwaysProgress.length).toBe(dashboard.length);
    
     for (let i = 0; i < fetchedAllPathway.length; i++) {
       expect(fetchedAllPathway[i]).toMatchObject(pathway[i]);
@@ -178,9 +174,6 @@ test("should add pathway and get those added pathways exactly", (done) => {
     }
     for (let i = 0; i < fetchedPathwayProgress.moduleProgress.length; i++) {
       expect(fetchedPathwayProgress.moduleProgress[i]).toMatchObject(moduleProgress[i]);
-    }
-    for (let i = 0; i < fetchedPathwayAndProgress.pathwaysProgress.length; i++) {
-        expect(fetchedPathwayAndProgress.pathwaysProgress[i]).toMatchObject(pathwayProgress[i]);
     }
     done();
   };
