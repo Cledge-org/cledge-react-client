@@ -99,13 +99,13 @@ interface UserPathway {
   userCourseProgress: PathwayProgress;
 }
 interface PathwayProgress {
-  pathwayId: string; // ID of the pathway this progress belongs to, NOT database ID of the progress itself
+  pathwayId: ObjectId; // ID of the pathway this progress belongs to, NOT database ID of the progress itself
   finished: boolean;
   name: string;
   moduleProgress: ModuleProgress[];
 }
 interface ModuleProgress {
-  moduleId: string;
+  moduleId: ObjectId;
   finished: boolean;
   name: string;
   contentProgress: ContentProgress[]; // Map between content ID and whether that content is finished

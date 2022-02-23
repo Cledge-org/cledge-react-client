@@ -1,6 +1,5 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import assert from "assert";
 import AuthFunctions from "./auth/firebase-auth";
 
 export const config = {

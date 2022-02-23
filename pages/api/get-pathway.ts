@@ -13,7 +13,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
   if (userId && pathwayId) {
     try {
-      const pathway = await getPathway(userId, new ObjectId(pathwayId));
+      const pathway = await getPathway(userId, pathwayId);
       resolve.status(200).send(pathway);
     } catch (e) {
       resolve.status(500).send(e);
