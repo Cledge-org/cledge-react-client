@@ -10,11 +10,12 @@ import { putPathway } from "../pages/api/put-pathway";
 import { ObjectId } from "mongodb";
 import { createUser } from "../pages/api/create-user";
 
+const pathwayModule1ObjectId = new ObjectId();
 const testPersonalizedContentTag = ["Test Tag 1", "Test Tag 2", "Test Tag 3"];
 const testPersonalizedContent: PersonalizedContent = {
   _id: new ObjectId(),
-  moduleId: new ObjectId(),
-  priority: 1,
+  moduleId: pathwayModule1ObjectId,
+  priority: 0,
   tags: testPersonalizedContentTag,
   name: "Test Name",
   type: "Test Type",
@@ -22,13 +23,13 @@ const testPersonalizedContent: PersonalizedContent = {
 };
 
 const testPresetContent: PresetContent = {
-  priority: 1,
+  priority: 0,
   name: "Test Name",
   type: "Test Type",
   url: "Test Url",
 };
 
-const testPathwayModuleName = "Test Pathway Module Name";
+const testPathwayModuleName = "Test Name";
 const testPathwayModuleTag = ["Test Pathway Module Tag"];
 const testPathwayModule: PathwayModule = {
   _id: new ObjectId(),
@@ -46,7 +47,7 @@ const testPathwayModule_Db: PathwayModule_Db = {
   tags: testPathwayModuleTag,
 };
 
-const testPathwayName = "Test Pathway Name";
+const testPathwayName = "Test Name";
 const testPathwayTag = ["Test Pathway Tag"];
 const testPathwayModules = [testPathwayModule];
 const testPathway: Pathway = {
@@ -56,7 +57,6 @@ const testPathway: Pathway = {
   tags: testPathwayTag,
 };
 
-const pathwayModule1ObjectId = new ObjectId();
 const testPathway_Db: Pathway_Db = {
   _id: new ObjectId(),
   name: testPathwayName,
@@ -65,22 +65,21 @@ const testPathway_Db: Pathway_Db = {
 };
 
 const testContentProgress: ContentProgress = {
-  finished: true,
+  finished: false,
   name: "Test Name",
-  videoTime: 1,
+  videoTime: 0,
 };
 
 const testModuleProgress: ModuleProgress = {
   moduleId: "Test Module Id",
-  finished: true,
+  finished: false,
   name: "Test Name",
   contentProgress: [testContentProgress],
 };
 
-
 const testPathwayProgress: PathwayProgress = {
   pathwayId: "Test Pathway Id",
-  finished: true,
+  finished: false,
   name: "Test Name",
   moduleProgress: [testModuleProgress], 
 };
@@ -112,7 +111,7 @@ beforeAll(() => {
     birthday: new Date(),
     email: "Test email",
     tags: testPersonalizedContentTag,
-    checkIns: [],
+    checkIns: testUserCheckIns,
   });
 });
 
@@ -165,7 +164,7 @@ test("should add pathway and get those added pathways exactly", (done) => {
     expect(fetchedAllPathway.length).toBe(pathwayDb.length);
     expect(fetchedAllPathwayProgress.length).toBe(userPathway.length);
     expect(fetchedPathway.modules.length).toBe(pathwayModuleDb.length);
-    expect(fetchedPathwayProgress.moduleProgress.length).toBe(moduleProgress.length);
+    expect(fetchedPathwayProgress.moduleProgress.length).toBe(contentProgress.length);
     expect(fetchedPathwayAndProgress.pathwaysProgress.length).toBe(dashboard.length);
    
     for (let i = 0; i < fetchedAllPathway.length; i++) {
