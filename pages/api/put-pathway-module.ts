@@ -1,6 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import assert from "assert";
 
 export const config = {
   api: {
@@ -30,7 +29,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putPathwayModule = (
   pathwayModuleId: ObjectId | undefined,
   pathwayModule: PathwayModule_Db | undefined
-): Promise<{ moduleId: string }> => {
+): Promise<ObjectId> => {
   if (pathwayModule._id) {
     // Document should not have _id field when sent to database
     delete pathwayModule._id;
@@ -43,9 +42,7 @@ export const putPathwayModule = (
           .db("pathways")
           .collection("modules")
           .insertOne(pathwayModule);
-        res({
-          moduleId: insertedDoc.insertedId.toString(),
-        });
+        res(insertedDoc.insertedId);
       } else if (pathwayModuleId && !pathwayModule) {
         await client
           .db("pathways")
@@ -56,9 +53,7 @@ export const putPathwayModule = (
           .db("pathways")
           .collection("modules")
           .updateOne({ _id: pathwayModuleId }, { $set: pathwayModule });
-        res({
-          moduleId: pathwayModuleId.toString(),
-        });
+        res(pathwayModuleId);
       }
       client.close();
     } catch (e) {

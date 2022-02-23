@@ -1,6 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import assert from "assert";
 
 export const config = {
   api: {

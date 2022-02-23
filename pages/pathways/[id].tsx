@@ -12,6 +12,7 @@ import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { store } from "../../utils/store";
 import { updatePathwayProgressAction } from "../../utils/actionFunctions";
+import { ObjectId } from "mongodb";
 
 //profile progress/ question summary page
 
@@ -26,7 +27,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
             method: "POST",
             body: JSON.stringify({
               userId: session.user.uid,
-              pathwayId: ctx.query.id as string,
+              pathwayId: new ObjectId(ctx.query.id as string),
             }),
           })
         ).json(),

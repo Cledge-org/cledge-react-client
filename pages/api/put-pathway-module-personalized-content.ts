@@ -1,6 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import assert from "assert";
 
 export const config = {
   api: {
@@ -33,7 +32,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putPathwayModulePersonalizedContent = (
   contentId: ObjectId | undefined,
   content: PersonalizedContent | undefined
-): Promise<string> => {
+): Promise<ObjectId> => {
   if (content._id) {
     // Document should not have _id field when sent to database
     delete content._id;
@@ -47,19 +46,19 @@ export const putPathwayModulePersonalizedContent = (
             .db("pathways")
             .collection("personalized-content")
             .insertOne(content);
-          res(insertedDoc.insertedId.toString());
+          res(insertedDoc.insertedId);
         } else if (contentId && !content) {
           await client
             .db("pathways")
             .collection("personalized-content")
             .deleteOne({ _id: contentId });
-          res(contentId.toString());
+          res(contentId);
         } else if (contentId && content) {
           await client
             .db("pathways")
             .collection("personalized-content")
             .updateOne({ _id: contentId }, { $set: content });
-          res(contentId.toString());
+          res(contentId);
         }
         client.close();
       } catch (e) {
