@@ -9,7 +9,7 @@ import { GetServerSidePropsContext } from "next";
 import { getResourcesInfo } from "./api/get-resources";
 import { ORIGIN_URL } from "../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faFilter, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -43,10 +43,10 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
   const [currTab, setCurrTab] = useState("all");
   return (
     <div className="d-flex flex-column vh-100">
-      <div className="row">
+      <div className="d-flex flex-row justify-content-center">
         {resourceTypes.map((type) => {
           return (
-            <TabButton
+            <ResourcesTabButton
               onClick={() => {
                 setCurrTab(type.toLowerCase());
               }}
@@ -55,15 +55,39 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
             />
           );
         })}
-        <button>Filter</button>
+        <button className="cl-btn-clear d-flex flex-row align-items-center justify-content-evenly">
+          <div className="pe-2">
+            <FontAwesomeIcon icon={faFilter} />
+          </div>
+          Filter
+        </button>
       </div>
       {currTab === "all" ? (
-        <div>
-          <div>
-            <FontAwesomeIcon icon={faSearch} />
+        <>
+          <div className="d-flex flex-row justify-content-center">
+            <div className="d-flex flex-row justify-content-evenly align-items-center search-container">
+              <div className="p-1 cl-mid-gray">
+                <FontAwesomeIcon icon={faSearch} />
+              </div>
+              <input
+                className="py-1 search-input"
+                type="text"
+                placeholder="What would you like to know?"
+              />
+            </div>
           </div>
-          <input />
-        </div>
+          <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
+            <div className="row jusify-content-evenly">
+              {resourcesInfo.resources.map((element) => (
+                <CardImage
+                  snippet=""
+                  title={element.name}
+                  textGradient={"light"}
+                />
+              ))}
+            </div>
+          </div>
+        </>
       ) : null}
       <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
         {currTab === "resources" ? (
@@ -103,4 +127,42 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
     </div>
   );
 };
+interface ResourcesTabButtonProps {
+  onClick: Function;
+  title: String;
+  currTab: String;
+}
+function ResourcesTabButton({
+  onClick,
+  title,
+  currTab,
+}: ResourcesTabButtonProps) {
+  const cledgeBlue = "#2651ed";
+  const midGray = "#656565";
+  const lowerCaseName = title.toLowerCase();
+  return (
+    <li
+      className="resources-tab-nav-btn"
+      id={lowerCaseName + "-tab"}
+      onClick={() => {
+        onClick(lowerCaseName);
+      }}
+      style={
+        currTab === lowerCaseName
+          ? {
+              backgroundColor: "rgba(0, 0, 0, 0.1)",
+            }
+          : {}
+      }
+    >
+      <div
+        style={{
+          width: "fit-content",
+        }}
+      >
+        {title}
+      </div>
+    </li>
+  );
+}
 export default Resources;

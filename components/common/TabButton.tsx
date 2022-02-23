@@ -11,7 +11,7 @@ export default function TabButton({ onClick, title, currTab }: TabButtonProps) {
   const lowerCaseName = title.toLowerCase();
   return (
     <li
-      className="resources-tab-nav-btn col-3 col-lg-2"
+      className="general-tab-nav-btn col-3 col-lg-2"
       id={lowerCaseName + "-tab"}
       onClick={() => {
         onClick(lowerCaseName);
