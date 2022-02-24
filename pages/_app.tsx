@@ -5,9 +5,9 @@ import "../styles/main_pages.scss";
 import "../styles/components.scss";
 import "../styles/question_components.scss";
 import "../styles/testing.css";
-import { SessionProvider as AuthProvider } from "next-auth/react";
+import { SessionProvider as AuthProvider, useSession } from "next-auth/react";
 import type { AppProps } from "next/app";
-import { NextPage } from "next";
+import { GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
 import Layout from "../components/common/Layout";
 import { store } from "../utils/store";
@@ -17,11 +17,12 @@ import AuthFunctions from "./api/auth/firebase-auth";
 import { useEffect, useState } from "react";
 import { Router, useRouter } from "next/router";
 import LoadingScreen from "../components/common/loading";
+import { ORIGIN_URL } from "../config";
+import { initialStateAction } from "../utils/actionFunctions";
 
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
   requireAuth?: boolean;
 };
-
 function MyApp({
   Component,
   pageProps,

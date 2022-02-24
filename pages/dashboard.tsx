@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Card from "../components/common/Card";
 import CardVideo from "../components/common/Card_Video";
 import CardText from "../components/common/Card_Text";
@@ -22,22 +22,17 @@ import { getPathwayProgress } from "./api/get-pathway-progress";
 import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
 import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
-import { getAllPathwaysAccountAndProgress } from "./api/get-dashboard";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-
+import { connect } from "react-redux";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    const session = await getSession(ctx);
     return {
       props: {
-        ...(await (
-          await fetch(`${ORIGIN_URL}/api/get-dashboard`, {
-            method: "POST",
-            body: JSON.stringify({ userId: session.user.uid }),
-          })
-        ).json()),
+        allPathways: await (
+          await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
+        ).json(),
       },
     };
   } catch (err) {
@@ -47,82 +42,124 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 };
 
-
 // logged in landing page
 const Dashboard: NextApplicationPage<{
-  dashboardInfo: Dashboard;
   allPathways: Pathway[];
-}> = ({ dashboardInfo, allPathways }) => {
+  accountInfo: AccountInfo;
+  pathwaysProgress: PathwayProgress[];
+}> = ({ allPathways, accountInfo, pathwaysProgress }) => {
   console.error(allPathways);
   const router = useRouter();
   const session = useSession();
   const [currTab, setCurrTab] = useState("current tasks");
   const [isInUserView, setIsInUserView] = useState(false);
+  console.log(accountInfo);
+  console.log(pathwaysProgress);
+  const parseId = (objectId) => {
+    const objectIdStr = objectId.toString();
+    if (!objectIdStr.includes('"')) {
+      return objectIdStr;
+    }
+    return objectIdStr.substring(
+      objectIdStr.indexOf('"') + 1,
+      objectIdStr.length - 2
+    );
+  };
   const getCurrentTasks = () => {
     let noProgress = [];
     allPathways?.forEach((pathway) => {
       if (
-        !dashboardInfo.userProgress.find(({ pathwayId }) => {
-          return pathwayId === pathway._id;
+        !pathwaysProgress.find(({ pathwayId }) => {
+          return pathwayId === parseId(pathway._id);
         })
       ) {
         let subtasks = {};
-        pathway.modules.forEach(({ title }) => {
-          subtasks[title] = false;
+        pathway.modules.forEach(({ name }) => {
+          subtasks[name] = false;
         });
+        const firstUrl = pathway?.modules[0]?.presetContent[0]?.url;
+        const videoId = firstUrl?.substring(
+          firstUrl?.indexOf("v=") !== -1
+            ? firstUrl?.indexOf("v=") + 2
+            : firstUrl?.lastIndexOf("/") + 1
+        );
         noProgress.push(
           <CardTask
             url={"/pathways/[id]"}
             correctUrl={`/pathways/${pathway._id}`}
-            textGradient="light"
-            title={pathway.title}
+            title={pathway.name}
             subtasks={subtasks}
+            videoId={videoId}
           />
         );
       }
     });
-    return dashboardInfo.userProgress
+    return pathwaysProgress
       .filter(({ finished }) => {
         console.log(finished);
         return !finished;
       })
-      .map(({ moduleProgress, title, pathwayId }) => {
+      .map(({ moduleProgress, name, pathwayId }) => {
+        let realPathway = allPathways.find(
+          ({ _id }) => parseId(_id) === pathwayId
+        );
         let subtasks = {};
-        moduleProgress.forEach(({ title }) => {
-          let moduleTitle = title;
-          subtasks[title] = moduleProgress.find(
-            ({ title }) => title === moduleTitle
+        moduleProgress.forEach(({ name }) => {
+          let moduleTitle = name;
+          subtasks[name] = moduleProgress.find(
+            ({ name }) => name === moduleTitle
           ).finished;
         });
+        realPathway.modules.forEach(({ name }) => {
+          if (subtasks[name] === undefined) {
+            subtasks[name] = false;
+          }
+        });
+        const firstUrl = realPathway?.modules[0]?.presetContent[0]?.url;
+        const videoId = firstUrl?.substring(
+          firstUrl?.indexOf("v=") !== -1
+            ? firstUrl?.indexOf("v=") + 2
+            : firstUrl?.lastIndexOf("/") + 1
+        );
+        console.log(subtasks);
         return (
           <CardTask
             url={"/pathways/[id]"}
             correctUrl={`/pathways/${pathwayId}`}
-            textGradient="light"
-            title={title}
+            title={name}
             subtasks={subtasks}
+            videoId={videoId}
           />
         );
       })
       .concat(noProgress);
   };
   const getFinishedTasks = () => {
-    return dashboardInfo.userProgress
+    return pathwaysProgress
       .filter(({ finished }) => {
         return finished;
       })
-      .map(({ moduleProgress, title, pathwayId }) => {
+      .map(({ moduleProgress, name, pathwayId }) => {
+        let realPathway = allPathways.find(
+          ({ _id }) => parseId(_id) === pathwayId
+        );
         let subtasks = {};
-        moduleProgress.forEach(({ title }) => {
-          subtasks[title] = true;
+        moduleProgress.forEach(({ name }) => {
+          subtasks[name] = true;
         });
+        const firstUrl = realPathway?.modules[0]?.presetContent[0]?.url;
+        const videoId = firstUrl?.substring(
+          firstUrl.indexOf("v=") !== -1
+            ? firstUrl?.indexOf("v=") + 2
+            : firstUrl?.lastIndexOf("/") + 1
+        );
         return (
           <CardTask
             url={"/pathways/[id]"}
             correctUrl={`/pathways/${pathwayId}`}
-            textGradient="light"
-            title={title}
+            title={name}
             subtasks={subtasks}
+            videoId={videoId}
           />
         );
       });
@@ -142,10 +179,10 @@ const Dashboard: NextApplicationPage<{
     // asyncUseEffect();
   }, []);
   //UNCOMMENT THIS ONCE TESTING IS FINISHED
-  if (dashboardInfo.checkIns.length > 0) {
+  if (accountInfo.checkIns.length > 0) {
     router.push({
-      pathname: "/[questionnaire]",
-      query: { questionnaire: dashboardInfo.checkIns },
+      pathname: "/check-ins/[checkIn]",
+      query: { checkIn: accountInfo.checkIns },
     });
   }
   if (session.data?.user?.email === "test31@gmail.com" && !isInUserView) {
@@ -205,43 +242,50 @@ const Dashboard: NextApplicationPage<{
           Switch to Admin View
         </button>
       ) : null} */}
-      
 
-      <div className="w-full md:w-auto" style={{backgroundColor: "lightgray"}}>
-      <div className="w-full md:w-auto" style={{backgroundColor: "#F2F2F7", display: 'flex'}}>
-      <div>
-        <h1 className = "mt-30 ml-30" >
-          <strong style={{color: "#2651ED", fontSize: 28, paddingLeft: 200}}>
-            Personalized 12th grade videos for {dashboardInfo.userName}      
-          </strong>
-        </h1>
-        <h2>
-          <strong className = "mt-30 ml-30" style={{paddingLeft: 200}}>
-          Need more personalized videos?
-        </strong>
-        </h2>
-        <h3 className = "mt-30 ml-30" style={{paddingLeft: 200}}>
-        The learning modules are tailored to you based on your current checkin 
-        <br></br>
-        progress. 
-        Complete the checkin questions to receive more personalized content!
-        </h3>
-      </div>
-      <div>
-       </div>
-       <div>
-         <button style={{backgroundColor: "#2651ED", color: "white"}}>Update Checkin Questions</button>
-       </div>
-      </div>
-      <div>
-      <Tabs TabIndicatorProps={{style: {backgroundColor: "white"}}}>
-        <Tab label='All Modules'/>
-        <Tab label='In Progress'/>
-        <Tab label='Finished'/>
-      </Tabs>
-
-
-      </div>
+      <div
+        className="w-full md:w-auto"
+        style={{ backgroundColor: "lightgray" }}
+      >
+        <div
+          className="w-full md:w-auto"
+          style={{ backgroundColor: "#F2F2F7", display: "flex" }}
+        >
+          <div>
+            <h1 className="mt-30 ml-30">
+              <strong
+                style={{ color: "#2651ED", fontSize: 28, paddingLeft: 200 }}
+              >
+                Personalized 12th grade videos for {accountInfo.name}
+              </strong>
+            </h1>
+            <h2>
+              <strong className="mt-30 ml-30" style={{ paddingLeft: 200 }}>
+                Need more personalized videos?
+              </strong>
+            </h2>
+            <h3 className="mt-30 ml-30" style={{ paddingLeft: 200 }}>
+              The learning modules are tailored to you based on your current
+              checkin
+              <br></br>
+              progress. Complete the checkin questions to receive more
+              personalized content!
+            </h3>
+          </div>
+          <div></div>
+          <div>
+            <button style={{ backgroundColor: "#2651ED", color: "white" }}>
+              Update Checkin Questions
+            </button>
+          </div>
+        </div>
+        <div>
+          <Tabs TabIndicatorProps={{ style: { backgroundColor: "white" } }}>
+            <Tab label="All Modules" />
+            <Tab label="In Progress" />
+            <Tab label="Finished" />
+          </Tabs>
+        </div>
       </div>
       <br />
       <br />
@@ -295,5 +339,9 @@ const Dashboard: NextApplicationPage<{
     </div>
   );
 };
+
 Dashboard.requireAuth = true;
-export default Dashboard;
+export default connect((state) => ({
+  accountInfo: state.accountInfo,
+  pathwaysProgress: state.pathwaysProgress,
+}))(Dashboard);

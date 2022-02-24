@@ -1,6 +1,5 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import assert from "assert";
 import AuthFunctions from "./auth/firebase-auth";
 
 export const config = {
@@ -12,13 +11,17 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
   const { contentProgress, userId } = JSON.parse(req.body);
-  return contentProgress
-    ? resolve
-        .status(200)
-        .send(await putPathwayProgress(userId, contentProgress))
-    : resolve
-        .status(400)
-        .send("No pathway content progress or userId provided");
+
+  if (contentProgress) {
+    try {
+      const result = await putPathwayProgress(userId, contentProgress);
+      resolve.status(200).send(result);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No pathway content progress or userId provided");
+  }
 };
 
 // Sets pathway content progress for a user by their firebase ID (string). Batch
@@ -30,25 +33,21 @@ export const putPathwayProgress = async (
   userId: string,
   contentProgress: Record<string, ContentProgress[]> // Map between module ID and a list of ContentProgress for that module
 ): Promise<boolean> => {
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        try {
-          let updateResult = await client
-            .db("pathways")
-            .collection("progress-by-user")
-            .updateOne(
-              { firebaseId: userId },
-              { $set: contentProgress },
-              { upsert: true }
-            );
-          res(updateResult.acknowledged);
-        } catch (e) {
-          err(e);
-        }
-      }
-    );
+  return new Promise(async (res, err) => {
+    try {
+      const client = await MongoClient.connect(process.env.MONGO_URL);
+      let updateResult = await client
+        .db("pathways")
+        .collection("progress-by-user")
+        .updateOne(
+          { firebaseId: userId },
+          { $set: contentProgress },
+          { upsert: true }
+        );
+      res(updateResult.acknowledged);
+      client.close();
+    } catch (e) {
+      err(e);
+    }
   });
 };

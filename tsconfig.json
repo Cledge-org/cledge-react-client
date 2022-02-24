@@ -19,6 +19,7 @@
     "next-env.d.ts",
     "types.d.ts",
     "auth.d.ts",
+    "redux.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "pages/api/auth/[...nextauth].js"

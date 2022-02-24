@@ -1,0 +1,11 @@
+{
+  "appService.zipIgnorePattern": ["node_modules{,/**}", ".vscode{,/**}"],
+  "appService.defaultWebAppToDeploy": "/subscriptions/1738c318-5a12-48d8-b7f0-1b38fc1121f9/resourceGroups/cledge-dev/providers/Microsoft.Web/sites/cledge-dev",
+  "appService.deploySubpath": ".",
+  "azureFunctions.deploySubpath": ".",
+  "azureFunctions.postDeployTask": "npm install (functions)",
+  "azureFunctions.projectLanguage": "JavaScript",
+  "azureFunctions.projectRuntime": "~4",
+  "debug.internalConsoleOptions": "neverOpen",
+  "azureFunctions.preDeployTask": "npm prune (functions)"
+}

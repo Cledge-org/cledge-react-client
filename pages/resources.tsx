@@ -9,7 +9,7 @@ import { GetServerSidePropsContext } from "next";
 import { getResourcesInfo } from "./api/get-resources";
 import { ORIGIN_URL } from "../config";
 
-export const getStaticProps = async (ctx: GetServerSidePropsContext) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
@@ -61,7 +61,7 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
             {resourcesInfo.resources.map((element) => (
               <CardImage
                 snippet=""
-                title={element.title}
+                title={element.name}
                 textGradient={"light"}
               />
             ))}
@@ -72,7 +72,7 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
             {resourcesInfo.articles.map((element) => (
               <CardText
                 snippet=""
-                title={element.title}
+                title={element.name}
                 textGradient={"light"}
               />
             ))}
@@ -82,7 +82,7 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
           <div className="row">
             {resourcesInfo.videoList.map((element) => (
               <CardVideo
-                title={element.title}
+                title={element.name}
                 textGradient={"light"}
                 videoUrl={element.source}
               />

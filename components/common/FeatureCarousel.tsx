@@ -138,13 +138,13 @@ const FeatureTab = ({ icon, title, onClick, curr, index }: FeatureTabProps) => {
   const borderColor = curr == index ? "#2651ed" : "#f2f2f7";
   return (
     <div
-      className="feature-tab d-flex flex-column justify-content-between"
+      className="feature-tab d-flex flex-column justify-content-between align-items-center"
       onClick={(e) => onClick()}
       style={{ borderColor: borderColor }}
     >
       <FontAwesomeIcon
         icon={icon}
-        style={{ height: "2.4em" }}
+        style={{ height: "2.4em", width: "2.4em" }}
         className="cl-blue"
       />
       <p

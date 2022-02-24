@@ -30,7 +30,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
 }> = ({ allPathways }) => {
   console.log(allPathways);
   const courseTitles = allPathways
-    .map(({ title }) => title)
+    .map(({ name }) => name)
     .concat("NEW COURSE");
   const [currCourseIndex, setCurrCourseIndex] = useState(allPathways.length);
   const [currPathwayData, setCurrPathwayData]: [
@@ -38,15 +38,15 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
     setCurrPathwayData: Dispatch<SetStateAction<Pathway>>
   ] = useState({
     _id: null,
-    title: "",
+    name: "",
     modules: [
       {
         _id: null,
-        title: "",
+        name: "",
         presetContent: [
           {
             priority: -1,
-            title: "",
+            name: "",
             type: "",
             url: "",
             content: "",
@@ -59,7 +59,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             priority: -1,
             content: "",
             tags: ["", ""],
-            title: "",
+            name: "",
             type: "",
             url: "",
           },
@@ -98,7 +98,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               body: JSON.stringify({
                 pathwayModuleId: module._id === null ? undefined : module._id,
                 pathwayModule: {
-                  title: module.title,
+                  name: module.name,
                   presetContent: module.presetContent,
                   tags: module.tags,
                 },
@@ -148,7 +148,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                   pathway: {
                     tags: sendPathwayData.tags,
                     modules: jsonArr.map(({ moduleId }) => moduleId),
-                    title: sendPathwayData.title,
+                    name: sendPathwayData.name,
                   },
                 }),
               }),
@@ -182,9 +182,9 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 }
                 router.push({ pathname: "/dashboard" });
               })
-              .catch((err) => console.error(err));
+              .catch((err) => console.error("AYO" + err));
           })
-          .catch((err) => console.error(err));
+          .catch((err) => console.error("AYO" + err));
       }}
     >
       <div className="mt-4 d-flex flex-column w-100">
@@ -192,7 +192,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           <label
             style={{ fontSize: "1.2em" }}
             className="text-muted"
-            htmlFor="course-title"
+            htmlFor="course-name"
           >
             CURRENT PATHWAY:
           </label>
@@ -202,15 +202,15 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               if (value === "NEW COURSE") {
                 setCurrPathwayData({
                   _id: null,
-                  title: "",
+                  name: "",
                   modules: [
                     {
                       _id: null,
-                      title: "",
+                      name: "",
                       presetContent: [
                         {
                           priority: -1,
-                          title: "",
+                          name: "",
                           type: "",
                           url: "",
                           content: "",
@@ -224,7 +224,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                           priority: -1,
                           content: "",
                           tags: ["", ""],
-                          title: "",
+                          name: "",
                           type: "",
                           url: "",
                         },
@@ -250,22 +250,22 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           <label
             style={{ fontSize: "0.9em" }}
             className="text-muted"
-            htmlFor="course-title"
+            htmlFor="course-name"
           >
-            Pathway Title:
+            Pathway name:
           </label>
           <input
-            value={currPathwayData.title}
+            value={currPathwayData.name}
             onChange={(e) =>
               setCurrPathwayData({
                 ...currPathwayData,
-                title: e.target.value,
+                name: e.target.value,
               })
             }
             type="text"
             className="px-3 form-control"
-            id="course-title"
-            placeholder="Enter course title"
+            id="course-name"
+            placeholder="Enter course name"
           />
         </div>
         <div className="form-group">
@@ -345,15 +345,15 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                     <label
                       style={{ fontSize: "0.9em" }}
                       className="text-muted"
-                      htmlFor={`module-title-${index}`}
+                      htmlFor={`module-name-${index}`}
                     >
-                      Module Title:
+                      Module name:
                     </label>
                     <input
-                      value={module.title}
+                      value={module.name}
                       onChange={(e) => {
                         let course = currPathwayData;
-                        course.modules[index].title = e.target.value;
+                        course.modules[index].name = e.target.value;
                         setCurrPathwayData({
                           ...currPathwayData,
                           modules: course.modules,
@@ -361,8 +361,8 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                       }}
                       type="text"
                       className="px-3 form-control"
-                      id={`module-title-${index}`}
-                      placeholder="Enter module title"
+                      id={`module-name-${index}`}
+                      placeholder="Enter module name"
                     />
                   </div>
                   <div className="form-group">
@@ -448,19 +448,19 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                               <label
                                 style={{ fontSize: "0.9em" }}
                                 className="text-muted"
-                                htmlFor={`preset-title-${
-                                  module.title + contentIndex
+                                htmlFor={`preset-name-${
+                                  module.name + contentIndex
                                 }`}
                               >
-                                Preset Title:
+                                Preset name:
                               </label>
                               <input
-                                value={preset.title}
+                                value={preset.name}
                                 onChange={(e) => {
                                   let course = currPathwayData;
                                   course.modules[index].presetContent[
                                     contentIndex
-                                  ].title = e.target.value;
+                                  ].name = e.target.value;
                                   setCurrPathwayData({
                                     ...currPathwayData,
                                     modules: course.modules,
@@ -468,10 +468,10 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 }}
                                 type="text"
                                 className="px-3 form-control"
-                                id={`preset-title-${
-                                  module.title + contentIndex
+                                id={`preset-name-${
+                                  module.name + contentIndex
                                 }`}
-                                placeholder="Enter preset title"
+                                placeholder="Enter preset name"
                               />
                             </div>
                             <div className="form-group">
@@ -479,7 +479,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 style={{ fontSize: "0.9em" }}
                                 className="text-muted"
                                 htmlFor={`preset-priority-${
-                                  module.title + contentIndex
+                                  module.name + contentIndex
                                 }`}
                               >
                                 Priority:
@@ -499,7 +499,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 type="number"
                                 className="px-3 form-control"
                                 id={`preset-priority-${
-                                  module.title + contentIndex
+                                  module.name + contentIndex
                                 }`}
                                 placeholder="Enter priority"
                               />
@@ -523,6 +523,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                   modules: course.modules,
                                 });
                               }}
+                              defaultValue={preset.type}
                               placeholder="Pick Content Type"
                               valuesList={["Video", "Article"]}
                             />
@@ -532,7 +533,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 style={{ fontSize: "0.9em" }}
                                 className="text-muted"
                                 htmlFor={`preset-url-${
-                                  module.title + contentIndex
+                                  module.name + contentIndex
                                 }`}
                               >
                                 URL:
@@ -551,7 +552,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 }}
                                 type="text"
                                 className="px-3 form-control"
-                                id={`preset-url-${module.title + contentIndex}`}
+                                id={`preset-url-${module.name + contentIndex}`}
                                 placeholder="Enter url"
                               />
                             </div>
@@ -560,7 +561,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 style={{ fontSize: "0.9em" }}
                                 className="text-muted"
                                 htmlFor={`preset-content-${
-                                  module.title + contentIndex
+                                  module.name + contentIndex
                                 }`}
                               >
                                 Content:
@@ -580,7 +581,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 type="text"
                                 className="px-3 form-control"
                                 id={`preset-content-${
-                                  module.title + contentIndex
+                                  module.name + contentIndex
                                 }`}
                                 placeholder="Enter content"
                               />
@@ -594,7 +595,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                         let course = currPathwayData;
                         course.modules[index].presetContent.push({
                           priority: -1,
-                          title: "",
+                          name: "",
                           type: "",
                           url: "",
                           content: "",
@@ -645,19 +646,19 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 <label
                                   style={{ fontSize: "0.9em" }}
                                   className="text-muted"
-                                  htmlFor={`personalized-title-${
-                                    module.title + contentIndex
+                                  htmlFor={`personalized-name-${
+                                    module.name + contentIndex
                                   }`}
                                 >
-                                  Personalized Title:
+                                  Personalized name:
                                 </label>
                                 <input
-                                  value={personalized.title}
+                                  value={personalized.name}
                                   onChange={(e) => {
                                     let course = currPathwayData;
                                     course.modules[index].personalizedContent[
                                       contentIndex
-                                    ].title = e.target.value;
+                                    ].name = e.target.value;
                                     setCurrPathwayData({
                                       ...currPathwayData,
                                       modules: course.modules,
@@ -665,10 +666,10 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                   }}
                                   type="text"
                                   className="px-3 form-control"
-                                  id={`personalized-title-${
-                                    module.title + contentIndex
+                                  id={`personalized-name-${
+                                    module.name + contentIndex
                                   }`}
-                                  placeholder="Enter personalized title"
+                                  placeholder="Enter personalized name"
                                 />
                               </div>
                               <div className="form-group">
@@ -676,7 +677,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                   style={{ fontSize: "0.9em" }}
                                   className="text-muted"
                                   htmlFor={`personalized-priority-${
-                                    module.title + contentIndex
+                                    module.name + contentIndex
                                   }`}
                                 >
                                   Priority:
@@ -696,7 +697,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                   type="number"
                                   className="px-3 form-control"
                                   id={`personalized-priority-${
-                                    module.title + contentIndex
+                                    module.name + contentIndex
                                   }`}
                                   placeholder="Enter priority"
                                 />
@@ -720,6 +721,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                     modules: course.modules,
                                   });
                                 }}
+                                defaultValue={personalized.type}
                                 placeholder="Pick Personalized Content Type"
                                 valuesList={["Video", "Article"]}
                               />
@@ -729,7 +731,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                   style={{ fontSize: "0.9em" }}
                                   className="text-muted"
                                   htmlFor={`personalized-url-${
-                                    module.title + contentIndex
+                                    module.name + contentIndex
                                   }`}
                                 >
                                   URL:
@@ -749,7 +751,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                   type="text"
                                   className="px-3 form-control"
                                   id={`personalized-url-${
-                                    module.title + contentIndex
+                                    module.name + contentIndex
                                   }`}
                                   placeholder="Enter url"
                                 />
@@ -759,7 +761,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                   style={{ fontSize: "0.9em" }}
                                   className="text-muted"
                                   htmlFor={`personalized-content-${
-                                    module.title + contentIndex
+                                    module.name + contentIndex
                                   }`}
                                 >
                                   Content:
@@ -779,7 +781,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                   type="text"
                                   className="px-3 form-control"
                                   id={`personalized-content-${
-                                    module.title + contentIndex
+                                    module.name + contentIndex
                                   }`}
                                   placeholder="Enter content"
                                 />
@@ -789,7 +791,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                   style={{ fontSize: "0.9em" }}
                                   className="text-muted"
                                   htmlFor={`personalized-content-tags-${
-                                    module.title + contentIndex
+                                    module.name + contentIndex
                                   }`}
                                 >
                                   Content Tags:
@@ -817,7 +819,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                         className="px-3 form-control me-2 mt-2"
                                         style={{ width: "10vw" }}
                                         id={`personalized-content-tags-${
-                                          module.title + contentIndex
+                                          module.name + contentIndex
                                         }`}
                                         placeholder="Enter content tag"
                                       />
@@ -856,7 +858,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                           moduleId: null,
                           _id: null,
                           priority: -1,
-                          title: "",
+                          name: "",
                           type: "",
                           url: "",
                           content: "",
@@ -880,12 +882,12 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           onClick={() => {
             let course = currPathwayData;
             course.modules.push({
-              title: "",
+              name: "",
               _id: null,
               presetContent: [
                 {
                   priority: -1,
-                  title: "",
+                  name: "",
                   type: "",
                   url: "",
                   content: "",
@@ -896,7 +898,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                   moduleId: null,
                   _id: null,
                   priority: -1,
-                  title: "",
+                  name: "",
                   type: "",
                   url: "",
                   content: "",

@@ -1,6 +1,5 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import assert from "assert";
 
 export const config = {
   api: {
@@ -47,18 +46,14 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
 // Creates a new user with specified account info
 export const createUser = async (user: AccountInfo): Promise<void> => {
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        try {
-          await client.db("users").collection("users").insertOne(user);
-          res();
-        } catch (e) {
-          err(e);
-        }
-      }
-    );
+  return new Promise(async (res, err) => {
+    try {
+      const client = await MongoClient.connect(process.env.MONGO_URL);
+      await client.db("users").collection("users").insertOne(user);
+      res();
+      client.close();
+    } catch (e) {
+      err(e);
+    }
   });
 };

@@ -1,6 +1,5 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import assert from "assert";
 
 export const config = {
   api: {
@@ -10,32 +9,29 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { listName } = JSON.parse(req.body);
-  return !listName
-    ? resolve.status(400).send("No list name provided")
-    : resolve.status(200).send(await getQuestionList(listName));
+
+  if (listName) {
+    try {
+      const list = await getQuestionList(listName);
+      resolve.status(200).send(list);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No list name provided");
+  }
 };
 
 // Gets a question list with its chunks populated
-export async function getQuestionList(listName: string): Promise<QuestionList> {
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        const questionsDb = client.db("questions");
-        res(await getQuestionListWithDatabase(listName, questionsDb));
-      }
-    );
-  });
-}
-
-// Gets and populates list given its name and database
-export const getQuestionListWithDatabase = (
+export const getQuestionList = (
   listName: string,
-  questionsDb: Db
+  overrideClient?: MongoClient
 ): Promise<QuestionList> => {
   return new Promise(async (res, err) => {
     try {
+      const client =
+        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
+      const questionsDb = client.db("questions");
       const gradeQuestionList: QuestionList_Db = (await questionsDb
         .collection("question-lists")
         .findOne({ name: listName })) as QuestionList_Db;
@@ -51,19 +47,25 @@ export const getQuestionListWithDatabase = (
         name: gradeQuestionList.name,
         chunks: gradeQuestionChunks,
       });
+      if (!overrideClient) {
+        client.close();
+      }
     } catch (e) {
       err(e);
     }
   });
 };
 
-// Gets and populates list given its database document and database
-export const getQuestionListWithDocumentAndDatabase = (
+// Gets and populates list given its database document
+export const getQuestionListByDocument = (
   list: QuestionList_Db,
-  questionsDb: Db
+  overrideClient?: MongoClient
 ): Promise<QuestionList> => {
   return new Promise(async (res, err) => {
     try {
+      const client =
+        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
+      const questionsDb = client.db("questions");
       const gradeQuestionChunks: QuestionChunk[] = (await Promise.all(
         list.chunks.map((chunkName: any) =>
           getQuestionChunk(chunkName, questionsDb)
@@ -71,6 +73,9 @@ export const getQuestionListWithDocumentAndDatabase = (
       )) as QuestionChunk[];
       // Populate question list chunks
       res({ _id: list._id, name: list.name, chunks: gradeQuestionChunks });
+      if (!overrideClient) {
+        client.close();
+      }
     } catch (e) {
       err(e);
     }
@@ -96,7 +101,12 @@ const getQuestionChunk = (
         chunk.questions.map((questionId) =>
           questionsDb
             .collection("question-data")
-            .findOne({ _id: new ObjectId(questionId) })
+            .findOne({
+              _id:
+                questionId instanceof ObjectId
+                  ? questionId
+                  : new ObjectId(questionId),
+            })
         )
       )) as Question[];
       res({ _id: chunk._id, name: chunk.name, questions: chunkQuestions });

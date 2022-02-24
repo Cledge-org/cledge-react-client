@@ -1,6 +1,5 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import assert from "assert";
 import AuthFunctions from "./auth/firebase-auth";
 
 export const config = {
@@ -11,52 +10,64 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { pathwayId, userId } = JSON.parse(req.body);
-  return !userId || !pathwayId
-    ? resolve.status(400).send("No userId or courseId provided")
-    : resolve.status(200).send(await getPathwayProgress(userId, pathwayId));
+
+  if (userId && pathwayId) {
+    try {
+      const pathwayProgress = await getPathwayProgress(userId, pathwayId);
+      resolve.status(200).send(pathwayProgress);
+    } catch (e) {
+      resolve.status(500).send(e);
+    }
+  } else {
+    resolve.status(400).send("No userId or courseId provided");
+  }
 };
 
 // Gets gets progress info for a specific learning pathway given pathway
 // document id and a user id
-export async function getPathwayProgress(
+export function getPathwayProgress(
   userId: string,
   pathwayId: ObjectId
 ): Promise<PathwayProgress> {
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        const pathwaysDb = client.db("pathways");
-        const usersDb = client.db("users");
-
-        const [pathway, userInfo, progressByModule]: [
-          Pathway_Db,
-          AccountInfo,
+  return new Promise(async (res, err) => {
+    try {
+      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const pathwaysDb = client.db("pathways");
+      const usersDb = client.db("users");
+      const [pathway, userInfo, progressByModule]: [
+        Pathway_Db,
+        AccountInfo,
+        Record<string, ContentProgress[]>
+      ] = await Promise.all([
+        pathwaysDb
+          .collection("pathways")
+          .findOne({
+            _id:
+              pathwayId instanceof ObjectId
+                ? pathwayId
+                : new ObjectId(pathwayId),
+          }) as Promise<Pathway_Db>,
+        usersDb
+          .collection("users")
+          .findOne({ firebaseId: userId }) as Promise<AccountInfo>,
+        pathwaysDb
+          .collection("progress-by-user")
+          .findOne({ firebaseId: userId }) as Promise<
           Record<string, ContentProgress[]>
-        ] = await Promise.all([
-          pathwaysDb
-            .collection("pathways")
-            .findOne({ _id: new ObjectId(pathwayId) }) as Promise<Pathway_Db>,
-          usersDb
-            .collection("users")
-            .findOne({ firebaseId: userId }) as Promise<AccountInfo>,
-          pathwaysDb
-            .collection("progress-by-user")
-            .findOne({ firebaseId: userId }) as Promise<
-            Record<string, ContentProgress[]>
-          >,
-        ]);
-        res(
-          (await getSpecificPathwayProgress(
-            userInfo.tags,
-            pathway,
-            pathwaysDb,
-            progressByModule
-          )) as PathwayProgress
-        );
-      }
-    );
+        >,
+      ]);
+      res(
+        (await getSpecificPathwayProgress(
+          userInfo.tags,
+          pathway,
+          pathwaysDb,
+          progressByModule
+        )) as PathwayProgress
+      );
+      client.close();
+    } catch (e) {
+      err(e);
+    }
   });
 }
 
@@ -69,28 +80,32 @@ export async function getSpecificPathwayProgress(
   progressByModule: Record<string, ContentProgress[]>
 ): Promise<PathwayProgress> {
   return new Promise(async (res, err) => {
-    let moduleProgress = await Promise.all(
-      pathway.modules.map((moduleId) =>
-        getSpecificModuleProgress(
-          userTags,
-          progressByModule,
-          moduleId,
-          pathwaysDb
+    try {
+      let moduleProgress = await Promise.all(
+        pathway.modules.map((moduleId) =>
+          getSpecificModuleProgress(
+            userTags,
+            progressByModule,
+            moduleId,
+            pathwaysDb
+          )
         )
-      )
-    );
-    moduleProgress = moduleProgress.filter(({ title }) => {
-      return title !== "NULL MODULE";
-    });
-    res({
-      finished: moduleProgress.reduce(
-        (prev: boolean, cur: ModuleProgress) => prev && cur.finished,
-        true
-      ),
-      moduleProgress,
-      title: pathway.title,
-      pathwayId: pathway._id,
-    });
+      );
+      moduleProgress = moduleProgress.filter(({ name }) => {
+        return name !== "NULL MODULE";
+      });
+      res({
+        finished: moduleProgress.reduce(
+          (prev: boolean, cur: ModuleProgress) => prev && cur.finished,
+          true
+        ),
+        moduleProgress,
+        name: pathway.name,
+        pathwayId: pathway._id,
+      });
+    } catch (e) {
+      err(e);
+    }
   });
 }
 
@@ -107,7 +122,7 @@ async function getSpecificModuleProgress(
         PersonalizedContent[]
       ] = await Promise.all([
         pathwaysDb.collection("modules").findOne({
-          _id: new ObjectId(moduleId),
+          _id: moduleId instanceof ObjectId ? moduleId : new ObjectId(moduleId),
         }) as Promise<PathwayModule_Db>,
         pathwaysDb
           .collection("personalized-content")
@@ -122,14 +137,14 @@ async function getSpecificModuleProgress(
         }
         const titles: Set<string> = new Set();
         moduleContentProgress.forEach((progress) => {
-          titles.add(progress.title);
+          titles.add(progress.name);
         });
         // Iterate through preset and presonalized contents and find contents not in progress, add them as unfinished
         if (module.presetContent) {
           module.presetContent.forEach((content, index) => {
-            if (!titles.has(content.title)) {
+            if (!titles.has(content.name)) {
               moduleContentProgress.push({
-                title: content.title,
+                name: content.name,
                 finished: false,
                 videoTime: 0,
               });
@@ -138,9 +153,9 @@ async function getSpecificModuleProgress(
         }
         if (modulePersonalizedContent) {
           modulePersonalizedContent.forEach((content) => {
-            if (!titles.has(content.title)) {
+            if (!titles.has(content.name)) {
               moduleContentProgress.push({
-                title: content.title,
+                name: content.name,
                 finished: false,
                 videoTime: 0,
               });
@@ -148,20 +163,20 @@ async function getSpecificModuleProgress(
           });
         }
         res({
-          moduleId: moduleId.toString(),
+          moduleId,
           finished: moduleContentProgress.reduce(
             (prev, cur) => prev && cur.finished,
             true
           ),
           contentProgress: moduleContentProgress,
-          title: module.title,
+          name: module.name,
         });
       } else {
         res({
-          moduleId: moduleId.toString(),
+          moduleId,
           finished: false,
           contentProgress: [],
-          title: "NULL MODULE",
+          name: "NULL MODULE",
         });
       }
     } catch (e) {

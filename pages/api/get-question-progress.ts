@@ -2,8 +2,6 @@ import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getAccountInfo } from "./get-account";
 import { getQuestionResponses } from "./get-question-responses";
-import assert from "assert";
-import { getQuestionListWithDatabase } from "./get-question-list";
 import AuthFunctions from "./auth/firebase-auth";
 import { getAllQuestionLists } from "./get-all-questions";
 
@@ -14,32 +12,31 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId } = JSON.parse(req.body);
-  return !userId
-    ? resolve.status(400).send("No user Id given")
-    : resolve.status(200).send(await getQuestionProgress(userId));
+  try {
+    const questionProgress = await getQuestionProgress();
+    resolve.status(200).send(questionProgress);
+  } catch (e) {
+    resolve.status(500).send(e);
+  }
 };
 
 // Gets all user responses to relevant questions by a user's firebaseId
-export async function getQuestionProgress(
-  userId: string
-): Promise<ProgressInfo> {
-  const [userResponses, userInfo, questionData] = await Promise.all([
-    getQuestionResponses(userId),
-    getAccountInfo(userId),
-    getAllQuestionLists(),
-  ]);
-  return new Promise((res, err) => {
-    MongoClient.connect(
-      process.env.MONGO_URL,
-      async (connection_err, client) => {
-        assert.equal(connection_err, null);
-        res({
-          userTags: userInfo.tags,
-          userProgress: { responses: userResponses },
-          questionData,
-        });
+export function getQuestionProgress(
+  overrideClient?: MongoClient
+): Promise<{ questionData: QuestionList[] }> {
+  return new Promise(async (res, err) => {
+    try {
+      const client =
+        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
+      const questionData = await getAllQuestionLists(client);
+      res({
+        questionData,
+      });
+      if (!overrideClient) {
+        client.close();
       }
-    );
+    } catch (e) {
+      err(e);
+    }
   });
 }
