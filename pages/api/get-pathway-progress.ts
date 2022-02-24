@@ -41,7 +41,12 @@ export function getPathwayProgress(
       ] = await Promise.all([
         pathwaysDb
           .collection("pathways")
-          .findOne({ _id: pathwayId }) as Promise<Pathway_Db>,
+          .findOne({
+            _id:
+              pathwayId instanceof ObjectId
+                ? pathwayId
+                : new ObjectId(pathwayId),
+          }) as Promise<Pathway_Db>,
         usersDb
           .collection("users")
           .findOne({ firebaseId: userId }) as Promise<AccountInfo>,
@@ -117,7 +122,7 @@ async function getSpecificModuleProgress(
         PersonalizedContent[]
       ] = await Promise.all([
         pathwaysDb.collection("modules").findOne({
-          _id: moduleId,
+          _id: moduleId instanceof ObjectId ? moduleId : new ObjectId(moduleId),
         }) as Promise<PathwayModule_Db>,
         pathwaysDb
           .collection("personalized-content")
