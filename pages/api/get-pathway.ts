@@ -33,9 +33,12 @@ export function getPathway(
       const usersDb = client.db("users");
       const [pathway, accountInfo]: [Pathway_Db, AccountInfo] =
         await Promise.all([
-          pathwaysDb
-            .collection("pathways")
-            .findOne({ _id: pathwayId }) as Promise<Pathway_Db>,
+          pathwaysDb.collection("pathways").findOne({
+            _id:
+              pathwayId instanceof ObjectId
+                ? pathwayId
+                : new ObjectId(pathwayId),
+          }) as Promise<Pathway_Db>,
           usersDb.collection("users").findOne({
             firebaseId: userId,
           }) as Promise<AccountInfo>,
@@ -71,7 +74,7 @@ export const getModule = (
         PersonalizedContent[]
       ] = await Promise.all([
         pathwaysDb.collection("modules").findOne({
-          _id: moduleId,
+          _id: moduleId instanceof ObjectId ? moduleId : new ObjectId(moduleId),
         }) as Promise<PathwayModule_Db>,
         pathwaysDb
           .collection("personalized-content")
