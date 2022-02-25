@@ -137,7 +137,7 @@ test("should add pathway and get those added pathways exactly", (done) => {
     ]);
     await Promise.all([
       ...pathwayProgress.map((pathway_progress) => 
-      putPathwayProgress(testUserFirebaseId, {"Test Module Id": contentProgress})),
+      putPathwayProgress(testUserFirebaseId, {pathwayModule1ObjectId, contentProgress})),
     ]);
     await Promise.all([
       ...pathwayModuleDb.map((pathway_module) => 
