@@ -65,15 +65,15 @@ const testPathway_Db: Pathway_Db = {
 
 const testContentProgress: ContentProgress = {
   finished: false,
-  name: "Test Name",
+  name: testPathwayName,
   videoTime: 0,
 };
 
 const testContentProgresses = [testContentProgress];
 const testModuleProgress: ModuleProgress = {
-  moduleId: pathwayModule1ObjectId,
+  moduleId: new ObjectId(),
   finished: false,
-  name: "Test Name",
+  name: testPathwayModuleName,
   contentProgress: testContentProgresses,
 };
 
@@ -81,13 +81,9 @@ const testModuleProgresses = [testModuleProgress];
 const testPathwayProgress: PathwayProgress = {
   pathwayId: pathway1ObjectId,
   finished: false,
-  name: "Test Name",
+  name: testPathwayName,
   moduleProgress: testModuleProgresses, 
 };
-
-console.log("Check contents of testPathwayProgress");
-console.log(testPathwayProgress);
-
 
 const testUserPathwayTag = ["Test User Tag 1", "Test User Tag 2", "Test User Tag 3"];
 const testUserPathway: UserPathway = {
@@ -166,16 +162,7 @@ test("should add pathway and get those added pathways exactly", (done) => {
 
     expect(fetchedAllPathway.length).toBe(pathwayDb.length);
     expect(fetchedAllPathwayProgress.length).toBe(testDashboard.userProgress.length);
-    expect(fetchedPathway.tags.length).toBe(testPathway_Db.tags.length);
-
-    console.log("Length of fetchedPathwayProgress.moduleProgress");
-    console.log(fetchedPathwayProgress.moduleProgress.length);
-    console.log("Length of testModuleProgresses.length");
-    console.log(testModuleProgresses.length);
-    
-    console.log("Check contents of fetchedPathwayProgress");
-    console.log(fetchedPathwayProgress);
-   
+    expect(fetchedPathway.modules.length).toBe(testPathway_Db.modules.length);  
     expect(fetchedPathwayProgress.moduleProgress.length).toBe(testModuleProgresses.length);
    
     for (let i = 0; i < fetchedAllPathway.length; i++) {
@@ -185,7 +172,7 @@ test("should add pathway and get those added pathways exactly", (done) => {
       expect(fetchedAllPathwayProgress[i]).toMatchObject(pathwayProgress[i]);
     }
     for (let i = 0; i < fetchedPathway.tags.length; i++) {
-      expect(fetchedPathway.tags[i]).toMatchObject(testPathwayTag[i]);
+      expect(fetchedPathway.modules[i]).toMatchObject(pathwayModule[i]);
     }
     for (let i = 0; i < fetchedPathwayProgress.moduleProgress.length; i++) {
       expect(fetchedPathwayProgress.moduleProgress[i]).toMatchObject(testModuleProgress[i]);
