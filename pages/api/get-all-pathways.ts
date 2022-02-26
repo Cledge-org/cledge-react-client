@@ -81,7 +81,7 @@ function getSpecificModule(
         PersonalizedContent[]
       ] = await Promise.all([
         pathwaysDb.collection("modules").findOne({
-          _id: moduleId,
+          _id: moduleId instanceof ObjectId ? moduleId : new ObjectId(moduleId),
         }) as Promise<PathwayModule_Db>,
         pathwaysDb
           .collection("personalized-content")
