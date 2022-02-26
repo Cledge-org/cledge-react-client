@@ -175,7 +175,7 @@ test("should add pathway and get those added pathways exactly", (done) => {
       expect(fetchedPathway.modules[i]).toMatchObject(pathwayModule[i]);
     }
     for (let i = 0; i < fetchedPathwayProgress.moduleProgress.length; i++) {
-      expect(fetchedPathwayProgress.moduleProgress[i]).toMatchObject(testModuleProgress[i]);
+      expect(fetchedPathwayProgress.moduleProgress[i]).toMatchObject(testModuleProgresses[i]);
     }
     done();
   };
