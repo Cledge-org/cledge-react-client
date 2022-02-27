@@ -112,7 +112,7 @@ export async function getSpecificPathwayProgress(
 async function getSpecificModuleProgress(
   userTags: string[],
   progressByModule: Record<string, ContentProgress[]>,
-  moduleId: ObjectId,
+  moduleId:ObjectId,
   pathwaysDb: Db
 ): Promise<ModuleProgress> {
   return new Promise(async (res, err) => {
