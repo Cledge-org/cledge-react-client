@@ -25,17 +25,20 @@ interface CardVideo {
   _id?: ObjectId;
   source: string;
   name: string;
+  category: string;
 }
 interface CardArticle {
   _id?: ObjectId;
   description: string;
   source: string;
   name: string;
+  category: string;
 }
 interface CardResource {
   _id?: ObjectId;
   source: string;
   name: string;
+  category: string;
 }
 
 //Progress Page Types -->
