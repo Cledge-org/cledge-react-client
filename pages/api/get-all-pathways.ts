@@ -88,7 +88,6 @@ function getSpecificModule(
           .find({ moduleId })
           .toArray() as Promise<PersonalizedContent[]>,
       ]);
-      // console.error(module);
       if (!module) {
         res(null);
       } else {
