@@ -54,9 +54,9 @@
   border: 2px solid rgba($color: #000000, $alpha: 0.1);
   border-radius: 10px;
   min-width: fit-content;
-  width: max-content;
+  width: 25vw;
   .search-input {
-    width: 16vw;
+    width: 18vw;
     @extend .py-1;
     &:active,
     &:focus {
@@ -64,7 +64,7 @@
       border: none;
       outline: none;
     }
-    font-size: 1em;
+    font-size: 1.1em;
     border: none;
   }
 }

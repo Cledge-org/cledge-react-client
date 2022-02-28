@@ -40,7 +40,62 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
     "Grades",
     "Scholarship",
   ];
+  const [searchTxt, setSearchTxt] = useState("");
   const [currTab, setCurrTab] = useState("all");
+  const compare = (searchText: string, itemName: string) => {
+    if (searchText.length < 2 || itemName.length < 2) {
+      if (itemName.includes(searchText)) {
+        return 1;
+      }
+      return 0;
+    }
+    let searchTextEveryTwo = new Map();
+    for (let i = 0; i < searchText.length - 1; i++) {
+      let everyTwo = searchText.substr(i, 2);
+      let count = searchTextEveryTwo.has(everyTwo)
+        ? searchTextEveryTwo.get(everyTwo) + 1
+        : 1;
+      searchTextEveryTwo.set(everyTwo, count);
+    }
+    let matches = 0;
+    for (let i = 0; i < itemName.length - 1; i++) {
+      let everyTwo = itemName.substr(i, 2);
+      let count = searchTextEveryTwo.has(everyTwo)
+        ? searchTextEveryTwo.get(everyTwo)
+        : 0;
+      if (count > 0) {
+        searchTextEveryTwo.set(everyTwo, count - 1);
+        matches += 2;
+      }
+    }
+    return matches / (searchText.length + itemName.length - 2);
+  };
+  const filter = (txt: string, originalArray, comparisonArray) => {
+    let allItems = [];
+    let data = comparisonArray;
+    let comparisonValArr = [];
+    var index = 0;
+    for (var i = 0; i < data.length; i++) {
+      let comparisonVal = compare(
+        txt.toLowerCase(),
+        data[i].name.toLowerCase() +
+          (data[i].description ? data[i].description.toLowerCase() : "")
+      );
+      if (comparisonVal > 0.1) {
+        comparisonValArr.push(comparisonVal);
+        allItems[index] = originalArray[i];
+        index++;
+      }
+    }
+    return allItems;
+  };
+  const searchAlg = (txt, originalArray, comparisonArray) => {
+    if (txt.trim() === "") {
+      return originalArray;
+    }
+    let filteredItems = filter(txt.trim(), originalArray, comparisonArray);
+    return filteredItems;
+  };
   return (
     <div className="d-flex flex-column vh-100">
       <div className="d-flex flex-row justify-content-center">
@@ -55,74 +110,87 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
             />
           );
         })}
-        <button className="cl-btn-clear d-flex flex-row align-items-center justify-content-evenly">
-          <div className="pe-2">
+        {/* <button className="cl-btn-clear d-flex flex-row align-items-center justify-content-evenly">
+          <div className="pe-2" style={{ width: "24px" }}>
             <FontAwesomeIcon icon={faFilter} />
           </div>
           Filter
-        </button>
+        </button> */}
       </div>
-      {currTab === "all" ? (
-        <>
-          <div className="d-flex flex-row justify-content-center">
-            <div className="d-flex flex-row justify-content-evenly align-items-center search-container">
-              <div className="p-1 cl-mid-gray">
-                <FontAwesomeIcon icon={faSearch} />
-              </div>
-              <input
-                className="py-1 search-input"
-                type="text"
-                placeholder="What would you like to know?"
-              />
-            </div>
+      <div className="d-flex flex-row justify-content-center">
+        <div className="d-flex flex-row justify-content-start align-items-center search-container">
+          <div className="p-1 cl-mid-gray" style={{ width: "30px" }}>
+            <FontAwesomeIcon icon={faSearch} />
           </div>
-          <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
-            <div className="row jusify-content-evenly">
-              {resourcesInfo.resources.map((element) => (
-                <CardImage
-                  snippet=""
-                  title={element.name}
-                  textGradient={"light"}
-                />
-              ))}
-            </div>
-          </div>
-        </>
-      ) : null}
+          <input
+            onChange={(e) => {
+              setSearchTxt(e.target.value);
+            }}
+            className="py-1 search-input"
+            type="text"
+            placeholder="What would you like to know?"
+          />
+        </div>
+      </div>
       <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
-        {currTab === "resources" ? (
-          <div className="row jusify-content-evenly">
-            {resourcesInfo.resources.map((element) => (
-              <CardImage
-                snippet=""
-                title={element.name}
-                textGradient={"light"}
-              />
-            ))}
-          </div>
-        ) : null}
-        {currTab === "articles" ? (
-          <div className="row">
-            {resourcesInfo.articles.map((element) => (
-              <CardText
-                snippet=""
-                title={element.name}
-                textGradient={"light"}
-              />
-            ))}
-          </div>
-        ) : null}
-        {currTab === "videos" ? (
-          <div className="row">
-            {resourcesInfo.videoList.map((element) => (
-              <CardVideo
-                title={element.name}
-                textGradient={"light"}
-                videoUrl={element.source}
-              />
-            ))}
-          </div>
-        ) : null}
+        {resourceTypes.map((type) => {
+          let currType = type.toLowerCase();
+          const filteredResources = resourcesInfo.resources.filter(
+            ({ category }) =>
+              currType === "all"
+                ? true
+                : category
+                ? currType === category
+                : true
+          );
+          const filteredArticles = resourcesInfo.articles.filter(
+            ({ category }) =>
+              currType === "all"
+                ? true
+                : category
+                ? currType === category
+                : true
+          );
+          const filteredVideos = resourcesInfo.videoList.filter(
+            ({ category }) =>
+              currType === "all"
+                ? true
+                : category
+                ? currType === category
+                : true
+          );
+          return currTab === currType ? (
+            <div className="row jusify-content-evenly">
+              {searchAlg(searchTxt, filteredResources, filteredResources).map(
+                (element) => (
+                  <CardImage
+                    snippet=""
+                    title={element.name}
+                    textGradient={"light"}
+                  />
+                )
+              )}
+              {searchAlg(searchTxt, filteredArticles, filteredArticles).map(
+                (element) => (
+                  <CardText
+                    snippet={element.description}
+                    title={element.name}
+                    textGradient={"light"}
+                  />
+                )
+              )}
+              {searchAlg(searchTxt, filteredVideos, filteredVideos).map(
+                (element) => (
+                  <CardVideo
+                    title={element.name}
+                    textGradient={"light"}
+                    videoUrl={element.source}
+                  />
+                )
+              )}
+            </div>
+          ) : null;
+        })}
       </div>
     </div>
   );
