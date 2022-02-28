@@ -25,6 +25,7 @@ import AuthFunctions from "./api/auth/firebase-auth";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { connect } from "react-redux";
+import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -53,6 +54,7 @@ const Dashboard: NextApplicationPage<{
   const session = useSession();
   const [currTab, setCurrTab] = useState("current tasks");
   const [isInUserView, setIsInUserView] = useState(false);
+  const [percentage, setPercentage] = useState(0);
   console.log(accountInfo);
   console.log(pathwaysProgress);
   const parseId = (objectId) => {
@@ -65,8 +67,29 @@ const Dashboard: NextApplicationPage<{
       objectIdStr.length - 2
     );
   };
+  useEffect(() => {
+    let totalPathways = 0;
+    let finishedPathways = 0;
+    allPathways?.forEach((pathway) => {
+      if (
+        !pathwaysProgress.find(({ pathwayId }) => {
+          return pathwayId === parseId(pathway._id);
+        })
+      ) {
+        totalPathways++;
+      }
+    });
+    pathwaysProgress.forEach(({ finished }) => {
+      if (finished) {
+        finishedPathways++;
+      }
+      totalPathways++;
+    });
+    setPercentage(Math.round((finishedPathways / totalPathways) * 100));
+  }, []);
   const getCurrentTasks = () => {
     let noProgress = [];
+
     allPathways?.forEach((pathway) => {
       if (
         !pathwaysProgress.find(({ pathwayId }) => {
@@ -74,9 +97,20 @@ const Dashboard: NextApplicationPage<{
         })
       ) {
         let subtasks = {};
-        pathway.modules.forEach(({ name }) => {
-          subtasks[name] = false;
-        });
+        pathway.modules.forEach(
+          ({ name, presetContent, personalizedContent }) => {
+            subtasks[name] = { finished: false, contentProgress: [] };
+            subtasks[name].contentProgress = presetContent
+              .map(() => {
+                return false;
+              })
+              .concat(
+                personalizedContent.map(() => {
+                  return false;
+                })
+              );
+          }
+        );
         const firstUrl = pathway?.modules[0]?.presetContent[0]?.url;
         const videoId = firstUrl?.substring(
           firstUrl?.indexOf("v=") !== -1
@@ -104,17 +138,33 @@ const Dashboard: NextApplicationPage<{
           ({ _id }) => parseId(_id) === pathwayId
         );
         let subtasks = {};
-        moduleProgress.forEach(({ name }) => {
+        moduleProgress.forEach(({ name, contentProgress }) => {
           let moduleTitle = name;
-          subtasks[name] = moduleProgress.find(
-            ({ name }) => name === moduleTitle
-          ).finished;
+          subtasks[name] = {
+            finished: moduleProgress.find(({ name }) => name === moduleTitle)
+              .finished,
+            contentProgress: [],
+          };
+          subtasks[name].contentProgress = contentProgress.map(
+            ({ finished }) => finished
+          );
         });
-        realPathway.modules.forEach(({ name }) => {
-          if (subtasks[name] === undefined) {
-            subtasks[name] = false;
+        realPathway.modules.forEach(
+          ({ name, presetContent, personalizedContent }) => {
+            if (subtasks[name] === undefined) {
+              subtasks[name] = { finished: false, contentProgress: [] };
+              subtasks[name].contentProgress = presetContent
+                .map(() => {
+                  return false;
+                })
+                .concat(
+                  personalizedContent.map(() => {
+                    return false;
+                  })
+                );
+            }
           }
-        });
+        );
         const firstUrl = realPathway?.modules[0]?.presetContent[0]?.url;
         const videoId = firstUrl?.substring(
           firstUrl?.indexOf("v=") !== -1
@@ -144,8 +194,11 @@ const Dashboard: NextApplicationPage<{
           ({ _id }) => parseId(_id) === pathwayId
         );
         let subtasks = {};
-        moduleProgress.forEach(({ name }) => {
-          subtasks[name] = true;
+        moduleProgress.forEach(({ name, contentProgress }) => {
+          subtasks[name] = { finished: true, contentProgress: [] };
+          subtasks[name].contentProgress = contentProgress.map(
+            ({ finished }) => finished
+          );
         });
         const firstUrl = realPathway?.modules[0]?.presetContent[0]?.url;
         const videoId = firstUrl?.substring(
@@ -272,24 +325,40 @@ const Dashboard: NextApplicationPage<{
               personalized content!
             </h3>
           </div>
-          <div></div>
-          <div>
-            <button style={{ backgroundColor: "#2651ED", color: "white" }}>
+          <div className="d-flex flex-row" style={{ height: "10vh" }}>
+            <div style={{ width: "10vh" }}>
+              <CircularProgressbarWithChildren
+                strokeWidth={10}
+                children={
+                  <div
+                    style={{ fontWeight: "bold", fontSize: "1.3em" }}
+                  >{`${percentage}%`}</div>
+                }
+                className="center-child"
+                styles={{
+                  text: {
+                    fontWeight: "bold",
+                  },
+                  trail: {
+                    stroke: "#d6d6d6",
+                  },
+                  path: {
+                    transition: "stroke-dashoffset 0.5s ease 0s",
+                    stroke: "#2651ed",
+                  },
+                }}
+                value={percentage}
+              />
+            </div>
+            <button style={{ height: "6vh" }} className="cl-btn-blue">
               Update Checkin Questions
             </button>
           </div>
         </div>
-        <div>
-          <Tabs TabIndicatorProps={{ style: { backgroundColor: "white" } }}>
-            <Tab label="All Modules" />
-            <Tab label="In Progress" />
-            <Tab label="Finished" />
-          </Tabs>
-        </div>
       </div>
       <br />
       <br />
-      <div className="d-flex flex-row w-100">
+      <div className="d-flex flex-row w-100 px-5 mx-5 mb-3">
         <TabButton
           onClick={() => {
             setCurrTab("current tasks");
@@ -306,7 +375,7 @@ const Dashboard: NextApplicationPage<{
           currTab={currTab}
         />
       </div>
-      <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
+      <div className="container-fluid align-self-center mx-0 px-5 mx-5 col justify-content-evenly">
         {currTab === "current tasks" ? (
           <div className="row w-100">
             {currentTasks.length > 0 ? (
