@@ -11,6 +11,7 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
   const [resourceData, setResourceData] = useState({
     title: "",
     source: "",
+    category: "",
     description: "",
   });
   return (
@@ -27,6 +28,25 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
         });
       }}
     >
+      <ECDropDown
+        isForWaitlist
+        onChange={(value) => {
+          setResourceData({
+            ...resourceData,
+            title: value.toLowerCase(),
+          });
+        }}
+        defaultValue={resourceType}
+        valuesList={[
+          "Extracurricular",
+          "Essay",
+          "Application",
+          "Standardized Tests",
+          "Academics",
+          "Grades",
+          "Scholarship",
+        ]}
+      />
       <ECDropDown
         isForWaitlist
         onChange={(value) => {
