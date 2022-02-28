@@ -99,6 +99,21 @@ a {
     border-color: rgba($color: $cl-light-gray, $alpha: 0.9);
   }
 }
+.cl-btn-clear {
+  @extend .cl-btn;
+  transition: 200ms;
+  color: $cl-dark-text;
+  background-color: $cl-white;
+  border: 1px solid $cl-dark-blue;
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+    color: $cl-white;
+    background-color: rgba($color: $cl-dark-blue, $alpha: 0.9);
+    border-color: rgba($color: $cl-white, $alpha: 0.9);
+  }
+}
+
 .cl-btn-gray-selected {
   @extend .cl-btn-gray;
   background-color: $cl-orange;
