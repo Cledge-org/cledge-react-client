@@ -51,7 +51,11 @@
     "redux": "^4.1.2",
     "sass": "^1.41.0",
     "slick-carousel": "^1.8.1",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "antd": "^4.10.3",
+    "axios": "^0.21.1",
+    "styled-components": "^5.2.1",
+    "react-awesome-reveal": "^3.7.1"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^2.2.0",
