@@ -70,7 +70,11 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
     }
     return matches / (searchText.length + itemName.length - 2);
   };
-  const filter = (txt: string, originalArray, comparisonArray) => {
+  const filter = (
+    txt: string,
+    originalArray: CardResource[] | CardArticle[] | CardVideo[],
+    comparisonArray: CardResource[] | CardArticle[] | CardVideo[]
+  ) => {
     let allItems = [];
     let data = comparisonArray;
     let comparisonValArr = [];
@@ -81,7 +85,7 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
         data[i].name.toLowerCase() +
           (data[i].description ? data[i].description.toLowerCase() : "")
       );
-      if (comparisonVal > 0.1) {
+      if (comparisonVal > 0.05) {
         comparisonValArr.push(comparisonVal);
         allItems[index] = originalArray[i];
         index++;
@@ -89,7 +93,11 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
     }
     return allItems;
   };
-  const searchAlg = (txt, originalArray, comparisonArray) => {
+  const searchAlg = (
+    txt: string,
+    originalArray: CardResource[] | CardArticle[] | CardVideo[],
+    comparisonArray: CardResource[] | CardArticle[] | CardVideo[]
+  ) => {
     if (txt.trim() === "") {
       return originalArray;
     }
@@ -159,35 +167,45 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
                 ? currType === category
                 : true
           );
+          const searchedResources = searchAlg(
+            searchTxt,
+            filteredResources,
+            filteredResources
+          ).map((element) => (
+            <CardImage snippet="" title={element.name} textGradient={"light"} />
+          ));
+          const searchedArticles = searchAlg(
+            searchTxt,
+            filteredArticles,
+            filteredArticles
+          ).map((element) => (
+            <CardText
+              snippet={element.description}
+              title={element.name}
+              textGradient={"light"}
+            />
+          ));
+          const searchedVideos = searchAlg(
+            searchTxt,
+            filteredVideos,
+            filteredVideos
+          ).map((element) => (
+            <CardVideo
+              title={element.name}
+              textGradient={"light"}
+              videoUrl={element.source}
+            />
+          ));
           return currTab === currType ? (
             <div className="row jusify-content-evenly">
-              {searchAlg(searchTxt, filteredResources, filteredResources).map(
-                (element) => (
-                  <CardImage
-                    snippet=""
-                    title={element.name}
-                    textGradient={"light"}
-                  />
-                )
-              )}
-              {searchAlg(searchTxt, filteredArticles, filteredArticles).map(
-                (element) => (
-                  <CardText
-                    snippet={element.description}
-                    title={element.name}
-                    textGradient={"light"}
-                  />
-                )
-              )}
-              {searchAlg(searchTxt, filteredVideos, filteredVideos).map(
-                (element) => (
-                  <CardVideo
-                    title={element.name}
-                    textGradient={"light"}
-                    videoUrl={element.source}
-                  />
-                )
-              )}
+              {searchedArticles.length === 0 &&
+              searchedResources.length === 0 &&
+              searchedVideos.length === 0
+                ? "No resources match your search"
+                : null}
+              {searchedResources}
+              {searchedArticles}
+              {searchedVideos}
             </div>
           ) : null;
         })}
