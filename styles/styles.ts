@@ -21,7 +21,9 @@ export const Styles = createGlobalStyle`
         font-family: 'Motiva Sans Light', sans-serif;
     }
 
-
+    h1 {
+        color: red;
+    }
     body {
         margin:0;
         padding:0;

@@ -12,6 +12,7 @@ import Signup from "./auth/signup";
 import LoadingScreen from "../components/common/loading";
 import { Router, useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { Styles } from "../styles/styles";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
@@ -20,7 +21,10 @@ const Home: NextPage = () => {
     window.location.href = "/dashboard";
     return <LoadingScreen />;
   }
-  return <Welcome></Welcome>;
+  return (<>
+    <Styles />
+    <Welcome></Welcome>
+  </>);
 };
 
 export default Home;
