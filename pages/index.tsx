@@ -23,6 +23,7 @@ const Home: NextPage = () => {
   }
   return (<>
     <Styles />
+    <></>
     <Welcome></Welcome>
   </>);
 };

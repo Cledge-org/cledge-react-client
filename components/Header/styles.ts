@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { MenuOutlined } from "@ant-design/icons";
 
 export const HeaderSection = styled("header")`
