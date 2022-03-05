@@ -5,8 +5,10 @@ import AboutContent from "../content/AboutContent.json";
 import MissionContent from "../content/MissionContent.json";
 import ProductContent from "../content/ProductContent.json";
 import ContactContent from "../content/ContactContent.json";
+import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import styled from "styled-components";
+import Footer from "../components/common/Footer";
 
 const Contact = dynamic(() => import("../components/ContactForm"));
 const MiddleBlock = dynamic(() => import("../components/MiddleBlock"));
@@ -21,6 +23,9 @@ const Intro = styled("div")`
 `;
 
 const Home = () => {
+  const slideShowRef = useRef(null);
+  const [currFeature, setCurrFeature] = useState(0);
+
   return (
     <>
       <Container>
@@ -31,7 +36,7 @@ const Home = () => {
             title={IntroContent.title}
             content={IntroContent.text}
             button={IntroContent.button}
-            icon="developer.svg"
+            icon="landing_video.svg"
             id="intro"
           />
         </Intro>
@@ -44,22 +49,21 @@ const Home = () => {
           type="left"
           title={AboutContent.title}
           content={AboutContent.text}
-          section={AboutContent.section}
-          icon="graphs.svg"
+          icon="landing_1.svg"
           id="about"
         />
         <ContentBlock
           type="right"
           title={MissionContent.title}
           content={MissionContent.text}
-          icon="product-launch.svg"
+          icon="landing_2.svg"
           id="mission"
         />
         <ContentBlock
           type="left"
           title={ProductContent.title}
           content={ProductContent.text}
-          icon="waving.svg"
+          icon="landing_3.svg"
           id="product"
         />
         <Contact
@@ -68,6 +72,16 @@ const Home = () => {
           id="contact"
         />
       </Container>
+      <Footer
+        onFeatureClick={(featureIndex) => {
+          setCurrFeature(featureIndex);
+          console.log(slideShowRef.current.offsetTop);
+          document.body.scrollTo({
+            top: slideShowRef.current.offsetTop,
+            behavior: "smooth",
+          });
+        }}
+      />
     </>
   );
 };

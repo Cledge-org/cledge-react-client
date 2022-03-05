@@ -2,28 +2,6 @@ import { createGlobalStyle } from "styled-components";
 
 export const Styles = createGlobalStyle`
 
-    @font-face {
-        font-family: "Motiva Sans Light";
-        src: url("/fonts/Motiva-Sans-Light.ttf") format("truetype");
-        font-style: normal;
-    }
-
-    @font-face {
-        font-family: "Motiva Sans Bold";
-        src: url("/fonts/Motiva-Sans-Bold.ttf") format("truetype");
-        font-style: normal;
-    }
-
-
-    body,
-    html,
-    a {
-        font-family: 'Motiva Sans Light', sans-serif;
-    }
-
-    h1 {
-        color: red;
-    }
     body {
         margin:0;
         padding:0;
@@ -59,9 +37,8 @@ export const Styles = createGlobalStyle`
     h4,
     h5,
     h6 {
-        font-family: 'Motiva Sans Bold', serif;
-        color: #18216d;
-        font-size: 56px;
+        color: #1A2169;
+        font-size: 36px;
         line-height: 1.18;
 
         @media only screen and (max-width: 890px) {
@@ -74,8 +51,8 @@ export const Styles = createGlobalStyle`
     }
 
     p {
-        color: #18216d;
-        font-size: 21px;        
+        color: #1A2169;
+        font-size: 18px;        
         line-height: 1.41;
     }
 
