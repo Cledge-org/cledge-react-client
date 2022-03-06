@@ -2,17 +2,17 @@ import styled from "styled-components";
 import { SvgIcon } from "../../../common/SvgIcon";
 
 export const VideoWrapper = styled("div")`
-  max-width: 540px;
+  max-width: 800px;
   margin-left: auto;
   margin-right: 0;
 `;
 
 export const IconWrapper = styled.div`
   position: relative;
-  right: -60px;
+  right: -90px;
 
   @media only screen and (max-width: 1024px) {
-    right: -30px;
+    right: -60px;
   }
 
   @media only screen and (max-width: 768px) {

@@ -11,10 +11,10 @@ export const LeftContentSection = styled("section")`
 
 export const IconWrapper = styled.div`
   position: relative;
-  left: -60px;
+  left: -90px;
 
   @media only screen and (max-width: 1024px) {
-    left: -30px;
+    left: -60px;
   }
 
   @media only screen and (max-width: 768px) {
@@ -29,7 +29,7 @@ export const Content = styled("p")`
 export const ContentWrapper = styled("div")`
   position: relative;
   max-width: 540px;
-  
+
   @media only screen and (max-width: 575px) {
     padding-top: 4rem;
   }

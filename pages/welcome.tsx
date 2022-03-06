@@ -19,20 +19,29 @@ const ContentBlock = dynamic(() => import("../components/ContentBlock"));
 
 const Intro = styled("div")`
   background: center / cover url("images/landing_bg.svg") no-repeat;
-  width: calc(100% + 120px);
-  padding: 0 60px;
+  width: calc(100% + 180px);
+  padding: 0 90px;
   position: relative;
-  left: -60px;
+  left: -90px;
   height: 100vh;
   display: flex;
   align-items: center;
 
   @media only screen and (max-width: 1024px) {
-    left: -30px;
+    left: -60px;
   }
 
   @media only screen and (max-width: 768px) {
     left: -18px;
+  }
+
+  h6, p {
+    color: white;
+  }
+
+  h6 {
+    font-weight: 800;
+    font-size: 48px;
   }
 `;
 
