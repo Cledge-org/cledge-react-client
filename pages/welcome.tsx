@@ -5,6 +5,7 @@ import AboutContent from "../content/AboutContent.json";
 import MissionContent from "../content/MissionContent.json";
 import ProductContent from "../content/ProductContent.json";
 import ContactContent from "../content/ContactContent.json";
+import PartnerContent from "../content/PartnerContent.json";
 import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import styled from "styled-components";
@@ -17,9 +18,22 @@ const ScrollToTop = dynamic(() => import("../common/ScrollToTop"));
 const ContentBlock = dynamic(() => import("../components/ContentBlock"));
 
 const Intro = styled("div")`
-  background: center / cover url("../public/images/landing_bg.svg") no-repeat;
+  background: center / cover url("images/landing_bg.svg") no-repeat;
+  width: calc(100% + 120px);
+  padding: 0 60px;
+  position: relative;
+  left: -60px;
   height: 100vh;
-  width: 100%;
+  display: flex;
+  align-items: center;
+
+  @media only screen and (max-width: 1024px) {
+    left: -30px;
+  }
+
+  @media only screen and (max-width: 768px) {
+    left: -18px;
+  }
 `;
 
 const Home = () => {
@@ -41,9 +55,9 @@ const Home = () => {
           />
         </Intro>
         <MiddleBlock
+          id="goal"
           title={MiddleBlockContent.title}
           content={MiddleBlockContent.text}
-          button={MiddleBlockContent.button}
         />
         <ContentBlock
           type="left"
@@ -65,6 +79,11 @@ const Home = () => {
           content={ProductContent.text}
           icon="landing_3.svg"
           id="product"
+        />
+        <MiddleBlock
+          id="partner"
+          title={PartnerContent.title}
+          content={PartnerContent.text}
         />
         <Contact
           title={ContactContent.title}

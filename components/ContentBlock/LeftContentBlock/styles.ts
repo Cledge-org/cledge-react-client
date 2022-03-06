@@ -9,6 +9,19 @@ export const LeftContentSection = styled("section")`
   }
 `;
 
+export const IconWrapper = styled.div`
+  position: relative;
+  left: -60px;
+
+  @media only screen and (max-width: 1024px) {
+    left: -30px;
+  }
+
+  @media only screen and (max-width: 768px) {
+    left: -18px
+  }
+`;
+
 export const Content = styled("p")`
   margin: 1.5rem 0 2rem 0;
 `;
@@ -16,7 +29,7 @@ export const Content = styled("p")`
 export const ContentWrapper = styled("div")`
   position: relative;
   max-width: 540px;
-
+  
   @media only screen and (max-width: 575px) {
     padding-top: 4rem;
   }

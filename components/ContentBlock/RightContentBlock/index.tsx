@@ -4,10 +4,12 @@ import { Button } from "../../../common/Button";
 import { ContentBlockProps } from "../types";
 import { Fade } from "react-awesome-reveal";
 import {
+  VideoWrapper,
   RightBlockContainer,
   Content,
   ContentWrapper,
   ButtonWrapper,
+  IconWrapper
 } from "./styles";
 
 const RightBlock = ({
@@ -39,8 +41,7 @@ const RightBlock = ({
                         key={id}
                         color={item.color}
                         fixedWidth={true}
-                        onClick={() => scrollTo("about")}
-                      >
+                        onClick={() => scrollTo("about")}>
                         {item.title}
                       </Button>
                     );
@@ -49,7 +50,15 @@ const RightBlock = ({
             </ContentWrapper>
           </Col>
           <Col lg={11} md={11} sm={12} xs={24}>
-            <SvgIcon src={icon} width="100%" height="100%" />
+            {id === "intro" ? (
+              <VideoWrapper>
+                  <SvgIcon src={icon} width="100%" height="100%" />            
+              </VideoWrapper>
+            ) : (
+              <IconWrapper>
+              <SvgIcon src={icon} width="100%" height="100%" />
+              </IconWrapper>
+            )}
           </Col>
         </Row>
       </Fade>

@@ -1,8 +1,29 @@
 import styled from "styled-components";
+import { SvgIcon } from "../../../common/SvgIcon";
+
+export const VideoWrapper = styled("div")`
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: 0;
+`;
+
+export const IconWrapper = styled.div`
+  position: relative;
+  right: -60px;
+
+  @media only screen and (max-width: 1024px) {
+    right: -30px;
+  }
+
+  @media only screen and (max-width: 768px) {
+    right: -18px;
+  }
+`;
 
 export const RightBlockContainer = styled("section")`
   position: relative;
   padding: 10rem 0 8rem;
+  width: 100%;
 
   @media only screen and (max-width: 1024px) {
     padding: 8rem 0 6rem;
