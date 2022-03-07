@@ -57,13 +57,27 @@ export default function CardTask({
       setHeight(innerRef.current.clientHeight);
     }
   }, [innerRef]);
+  useEffect(() => {
+    if (isHovering && innerRef?.current) {
+      //!THIS WORKS
+      const top = innerRef.current.getBoundingClientRect().top;
+      if (top + innerRef.current.clientHeight > window.innerHeight) {
+        setTimeout(() => {
+          document.body.scroll({
+            behavior: "smooth",
+            top: document.body.clientHeight,
+          });
+        }, 200);
+      }
+    }
+  }, [isHovering]);
   return (
     <Link href={url} as={correctUrl}>
       <span
-        style={innerRef?.current && isHovering ? { height: height } : {}}
+        style={innerRef?.current && isHovering ? { height: height + "px" } : {}}
         className="d-flex flex-column align-items-center col-lg-3 col-3 col-md-3 col-xs-8 position-relative"
       >
-        <span
+        <div
           ref={innerRef}
           onMouseOver={() => {
             setIsHovering(true);
@@ -115,9 +129,12 @@ export default function CardTask({
             </div>
             {isHovering ? (
               <div>
-                {Object.keys(subtasks).map((subtask) => {
+                {Object.keys(subtasks).map((subtask, index) => {
                   return (
-                    <div className="d-flex flex-row align-items-center py-2 cl-dark-text">
+                    <div
+                      id={title + "-" + subtask + "-" + index}
+                      className="d-flex flex-row align-items-center py-2 cl-dark-text"
+                    >
                       {subtask}
                       <div
                         className="cl-mid-gray ms-2"
@@ -137,7 +154,7 @@ export default function CardTask({
               </div>
             ) : null}
           </div>
-        </span>
+        </div>
       </span>
     </Link>
   );
