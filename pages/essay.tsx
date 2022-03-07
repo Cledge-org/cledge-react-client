@@ -15,7 +15,8 @@ import { updatePathwayProgressAction } from "../utils/actionFunctions";
 import { ObjectId } from "mongodb";
 
 //profile progress/ question summary page
-
+// I need to make the types that we store more general so that we don't have to convert all our pathways every time we
+// change how we want to store the data? Or well, we can also adjust the way we deal with the data in the future.
 // I have a few questions Why does the present content have a priority but the modules do not?
 const pageContent = {
   "tags": [
@@ -29,40 +30,42 @@ const pageContent = {
           "name": "Beginning with writing a college essay",
           "presetContent": [
               {
-                  
-                  "name": "Writing a personal statement",
-                  "type": "Video",
-                  "url": "https://www.youtube.com/watch?v=uk7pLY4jbDU",
-                  "content": "This is where I will describe the questions that I want to ask the user! I will associate them with a specific question id, and allow for future reference without the context of the video? is that really a good idea? Maybe they can reference eachother, or perhaps just live in the same pace. Yeah that makes more sense. It seems I can change the presentation of the content by changing the type. I think I want to have multiple different items to display on one page, so I'll modify the format to be more modular with question types and arrays of items to display. Do I need an id for these? or some type of ordering? most likely yes."
+                "contents": [
+                  { 
+                    "name": "Writing a personal statement",
+                    "type": "Video",
+                    "url": "https://www.youtube.com/watch?v=uk7pLY4jbDU",
+                    "content": "This is where I will describe the questions that I want to ask the user! I will associate them with a specific question id, and allow for future reference without the context of the video? is that really a good idea? Maybe they can reference eachother, or perhaps just live in the same pace. Yeah that makes more sense. It seems I can change the presentation of the content by changing the type. I think I want to have multiple different items to display on one page, so I'll modify the format to be more modular with question types and arrays of items to display. Do I need an id for these? or some type of ordering? most likely yes."
+                  }
+                ],
               },
-              // {
-              //     [
-              //       {
-                      
-              //         "name": "Paths after college",
-              //         "type": "Video",
-              //         "url": "https://www.youtube.com/watch?v=lAtFF47Ce4k",
-              //         "content": "Put in the first sentence to your personal statement."
-              //       },
-              //       {
-                      //     "name": "questiongs",
-                      //     "type": "Questions",
-                      //     "questions": [
-
-                      //         {
-                      //             "question": "What is your current GPA?",
-                      //             "answer": "",
-                      //             "type": "text"
-                      //         },  
-                      //         {
-                      //             "question": "What is your current GPA?",
-                      //             "answer": "",
-                      //             "type": "text"
-                      //         },
-                      //     ]
-              //       }
-              //   ]
-              // }
+              {
+                "contents": [
+                  {
+                    
+                    "name": "Paths after college",
+                    "type": "Video",
+                    "url": "https://www.youtube.com/watch?v=lAtFF47Ce4k",
+                    "content": "Put in the first sentence to your personal statement."
+                  },
+                  {
+                    "name": "general questions",
+                    "type": "Questions",
+                    "questions": [
+                        {
+                            "question": "What is your current GPA?",
+                            "answer": "",
+                            "type": "text"
+                        },  
+                        {
+                            "question": "What is your name?",
+                            "answer": "",
+                            "type": "text"
+                        }
+                    ]
+                  }
+                ]
+              }
           ],
           "tags": [
               "overview",
