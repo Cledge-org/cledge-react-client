@@ -21,11 +21,8 @@ const Home: NextPage = () => {
     window.location.href = "/dashboard";
     return <LoadingScreen />;
   }
-  return (<>
-    <Styles />
-    <></>
-    <Welcome></Welcome>
-  </>);
+  return (
+    <Welcome></Welcome>);
 };
 
 export default Home;

@@ -28,20 +28,57 @@ const Intro = styled("div")`
   align-items: center;
 
   @media only screen and (max-width: 1024px) {
+    width: calc(100% + 120px);
     left: -60px;
+    padding: 0 60px;
   }
+
+  @media only screen and (max-width: 768px) {
+    width: calc(100% + 36px);
+    left: -18px;
+    padding: 0 18px;
+  }
+
+  #intro h6,
+  #intro p {
+    color: white;
+  }
+
+  #intro h6 {
+    font-weight: 800;
+    font-size: 48px;
+  }
+`;
+
+const Metric = styled.div`
+  position: relative;
+  flex-wrap: wrap;
+  padding: 30px;
+  justify-content: space-evenly;
+  width: 100vw;
+  left: -60px;
 
   @media only screen and (max-width: 768px) {
     left: -18px;
   }
 
-  h6, p {
+  & > div {
+    width: 33.3%;
+    flex: 1 0 auto;
+    padding: 20px;
+
+    @media only screen and (max-width: 767px) {
+      width: 100%;
+    }
+  }
+
+  div h2,
+  div p {
     color: white;
   }
 
-  h6 {
-    font-weight: 800;
-    font-size: 48px;
+  p {
+    font-size: 14px;
   }
 `;
 
@@ -68,6 +105,25 @@ const Home = () => {
           title={MiddleBlockContent.title}
           content={MiddleBlockContent.text}
         />
+        <Metric id="metric" className="d-flex bg-dark-blue">
+          <div>
+            <h2 className="title ">100+ metrics</h2>
+            <p>used to give you personalized feedback</p>
+          </div>
+          <div>
+            <h2 className="title">50+ hours of content</h2>
+            <p>
+              at your disposal to help you navigate all all parts of the
+              application and preparation process
+            </p>
+          </div>
+          <div>
+            <h2 className="title">90% of users</h2>
+            <p>
+              increased confidence in college related decisions using Cledge
+            </p>
+          </div>
+        </Metric>
         <ContentBlock
           type="left"
           title={AboutContent.title}
