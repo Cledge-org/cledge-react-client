@@ -45,8 +45,9 @@ const Pathways: NextApplicationPage<{
 }> = ({ pathwayInfo, pathwaysProgress }) => {
   const [currPage, setCurrPage] = useState(null);
   const [currSelected, setCurrSelected] = useState("");
-  const [allPathwayProgress, setAllPathwayProgress] =
-    useState(pathwaysProgress);
+  const [allPathwayProgress, setAllPathwayProgress] = useState(
+    pathwaysProgress.slice()
+  );
   //console.warn(pathwayInfo);
   //console.warn(allPathwayProgress);
   const checkForDiscrepancies = (pathwayProgress: PathwayProgress) => {
@@ -480,7 +481,13 @@ const Pathways: NextApplicationPage<{
             userId: session.data.user.uid,
           }),
         }).then((res) => {
-          store.dispatch(updatePathwayProgressAction(pathwayProgress));
+          let newProgress = allPathwayProgress.slice();
+          newProgress[
+            newProgress.findIndex(
+              ({ pathwayId }) => pathwayId === pathwayProgress.pathwayId
+            )
+          ] = pathwayProgress;
+          store.dispatch(updatePathwayProgressAction(newProgress));
           //console.log(res.status);
         });
       };
@@ -518,7 +525,13 @@ const Pathways: NextApplicationPage<{
               userId: session.data.user.uid,
             }),
           }).then((res) => {
-            store.dispatch(updatePathwayProgressAction(pathwayProgress));
+            let newProgress = allPathwayProgress.slice();
+            newProgress[
+              newProgress.findIndex(
+                ({ pathwayId }) => pathwayId === pathwayProgress.pathwayId
+              )
+            ] = pathwayProgress;
+            store.dispatch(updatePathwayProgressAction(newProgress));
             //console.log(res.status);
           });
         }
@@ -675,5 +688,5 @@ const Pathways: NextApplicationPage<{
 
 Pathways.requireAuth = true;
 export default connect((state) => ({
-  pathwaysProgress: state.pathwaysProgress,
+  pathwaysProgress: state.pathwaysProgress.slice(),
 }))(Pathways);
