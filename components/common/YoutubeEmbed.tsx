@@ -71,7 +71,7 @@ export default function YoutubeEmbed({
   }, []);
 
   return (
-    <div className={`center-child m-0 p-0 ${isPathway ? "h-100" : "h-auto"}`}>
+    <div className={`center-child m-0 p-0 h-100`}>
       <div
         id={videoId}
         style={{
@@ -79,7 +79,7 @@ export default function YoutubeEmbed({
           minWidth: "300px",
           minHeight: "200px",
           width: "100%",
-          height: isPathway ? "100%" : "50%",
+          height: "100%"
         }}
       />
     </div>

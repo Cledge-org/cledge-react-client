@@ -52,15 +52,23 @@ const Intro = styled("div")`
 `;
 
 const Metric = styled.div`
+  margin-top: 100px;
   position: relative;
   flex-wrap: wrap;
   padding: 30px;
   justify-content: space-evenly;
   width: 100vw;
-  left: -60px;
+  left: -90px;
+  padding: 30px 90px;
+
+  @media only screen and (max-width: 1024px) {
+    left: -60px;
+    padding: 30px 60px;
+  }
 
   @media only screen and (max-width: 768px) {
     left: -18px;
+    padding: 30px 18px;
   }
 
   & > div {

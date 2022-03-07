@@ -2,9 +2,17 @@ import styled from "styled-components";
 import { SvgIcon } from "../../../common/SvgIcon";
 
 export const VideoWrapper = styled("div")`
-  max-width: 800px;
+
+  max-width: 600px;
   margin-left: auto;
-  margin-right: 0;
+  margin-right: auto;
+  aspect-ratio: 16 / 9;
+  flex: 1;
+  
+
+  & > * {
+    height: 100%;
+  }
 `;
 
 export const IconWrapper = styled.div`
