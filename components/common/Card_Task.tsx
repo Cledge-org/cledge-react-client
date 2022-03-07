@@ -71,20 +71,26 @@ export default function CardTask({
           onMouseOut={() => {
             setIsHovering(false);
           }}
+          style={{ width: "100%" }}
           className={`d-flex flex-column align-items-center px-2 hover-pointer card-task-container`}
         >
-          <div>
+          <div className="w-100">
             <div
               className="position-relative"
-              style={{ maxHeight: "25vh", aspectRatio: "16/9" }}
+              style={{ maxHeight: "25vh", aspectRatio: "16/9", width: "100%" }}
             >
-              <img
-                src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
+              {videoId?.length === 11 ? (
+                <img
+                  src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+                />
+              ) : (
+                <div
+                  style={{ backgroundColor: "lightgray" }}
+                  className="center-child h-100"
+                >
+                  Thumbnail couldn't load :|
+                </div>
+              )}
               <div
                 style={{
                   position: "absolute",

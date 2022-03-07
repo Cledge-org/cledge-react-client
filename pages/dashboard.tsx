@@ -22,8 +22,6 @@ import { getPathwayProgress } from "./api/get-pathway-progress";
 import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
 import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 import { connect } from "react-redux";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 
@@ -52,7 +50,7 @@ const Dashboard: NextApplicationPage<{
   console.error(allPathways);
   const router = useRouter();
   const session = useSession();
-  const [currTab, setCurrTab] = useState("current tasks");
+  const [currTab, setCurrTab] = useState("all modules");
   const [isInUserView, setIsInUserView] = useState(false);
   const [percentage, setPercentage] = useState(0);
   console.log(accountInfo);
@@ -301,23 +299,21 @@ const Dashboard: NextApplicationPage<{
         style={{ backgroundColor: "lightgray" }}
       >
         <div
-          className="w-full md:w-auto"
-          style={{ backgroundColor: "#F2F2F7", display: "flex" }}
+          className="w-full md:w-auto py-5 d-flex flex-row justify-content-around"
+          style={{ backgroundColor: "#F2F2F7" }}
         >
           <div>
-            <h1 className="mt-30 ml-30">
-              <strong
-                style={{ color: "#2651ED", fontSize: 28, paddingLeft: 200 }}
-              >
+            <h1>
+              <strong style={{ color: "#2651ED", fontSize: 28 }}>
                 Personalized 12th grade videos for {accountInfo.name}
               </strong>
             </h1>
             <h2>
-              <strong className="mt-30 ml-30" style={{ paddingLeft: 200 }}>
+              <strong className="" style={{}}>
                 Need more personalized videos?
               </strong>
             </h2>
-            <h3 className="mt-30 ml-30" style={{ paddingLeft: 200 }}>
+            <h3 className="" style={{}}>
               The learning modules are tailored to you based on your current
               checkin
               <br></br>
@@ -325,13 +321,16 @@ const Dashboard: NextApplicationPage<{
               personalized content!
             </h3>
           </div>
-          <div className="d-flex flex-row" style={{ height: "10vh" }}>
-            <div style={{ width: "10vh" }}>
+          <div
+            className="d-flex flex-row align-items-center justify-content-between align-self-end"
+            style={{ height: "10vh", width: "20vw" }}
+          >
+            <div style={{ width: "4vw" }}>
               <CircularProgressbarWithChildren
                 strokeWidth={10}
                 children={
                   <div
-                    style={{ fontWeight: "bold", fontSize: "1.3em" }}
+                    style={{ fontWeight: "bold", fontSize: "1.1em" }}
                   >{`${percentage}%`}</div>
                 }
                 className="center-child"
@@ -358,16 +357,23 @@ const Dashboard: NextApplicationPage<{
       </div>
       <br />
       <br />
-      <div className="d-flex flex-row w-100 px-5 mx-5 mb-3">
-        <TabButton
+      <div className="d-flex flex-row w-100 px-5 ms-5 mb-3">
+        <div className="ms-2" />
+        <DashboardTabButton
+          onClick={() => {
+            setCurrTab("all modules");
+          }}
+          title="All Modules"
+          currTab={currTab}
+        />
+        <DashboardTabButton
           onClick={() => {
             setCurrTab("current tasks");
           }}
           title="Current Tasks"
           currTab={currTab}
         />
-        <div className="px-2" />
-        <TabButton
+        <DashboardTabButton
           onClick={() => {
             setCurrTab("finished tasks");
           }}
@@ -375,10 +381,10 @@ const Dashboard: NextApplicationPage<{
           currTab={currTab}
         />
       </div>
-      <div className="container-fluid align-self-center mx-0 px-5 mx-5 col justify-content-evenly">
-        {currTab === "current tasks" ? (
-          <div className="row w-100">
-            {currentTasks.length > 0 ? (
+      <div className="container-fluid align-self-center mx-0 px-5 pb-5 mx-5 justify-content-evenly">
+        <div className="row w-100">
+          {currTab === "current tasks" || currTab === "all modules" ? (
+            currentTasks.length > 0 ? (
               currentTasks
             ) : (
               <div
@@ -387,12 +393,10 @@ const Dashboard: NextApplicationPage<{
               >
                 You have no current tasks.
               </div>
-            )}
-          </div>
-        ) : null}
-        {currTab === "finished tasks" ? (
-          <div className="row w-100">
-            {finishedTasks.length > 0 ? (
+            )
+          ) : null}
+          {currTab === "finished tasks" || currTab === "all modules" ? (
+            finishedTasks.length > 0 ? (
               finishedTasks
             ) : (
               <div
@@ -401,14 +405,54 @@ const Dashboard: NextApplicationPage<{
               >
                 Any finished tasks will appear here.
               </div>
-            )}
-          </div>
-        ) : null}
+            )
+          ) : null}
+        </div>
       </div>
     </div>
   );
 };
-
+interface DashboardTabButtonProps {
+  onClick: Function;
+  title: String;
+  currTab: String;
+}
+function DashboardTabButton({
+  onClick,
+  title,
+  currTab,
+}: DashboardTabButtonProps) {
+  const cledgeBlue = "#2651ed";
+  const midGray = "#656565";
+  const lowerCaseName = title.toLowerCase();
+  return (
+    <li
+      className="general-tab-nav-btn col-3 col-lg-2 flex-column"
+      id={lowerCaseName + "-tab"}
+      style={{ border: "none" }}
+      onClick={() => {
+        onClick(lowerCaseName);
+      }}
+    >
+      <div
+        style={{
+          width: "fit-content",
+          color: currTab === lowerCaseName ? cledgeBlue : midGray,
+          fontWeight: currTab === lowerCaseName ? 700 : 500,
+        }}
+      >
+        {title}
+      </div>
+      <div
+        style={{
+          height: "3px",
+          width: "100%",
+          backgroundColor: currTab === lowerCaseName ? cledgeBlue : midGray,
+        }}
+      />
+    </li>
+  );
+}
 Dashboard.requireAuth = true;
 export default connect((state) => ({
   accountInfo: state.accountInfo,
