@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Router, useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-export default function Header({ key }: { key: string }) {
+export default function Header({ key_prop }: { key_prop: string }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   console.log();
@@ -134,7 +134,7 @@ export default function Header({ key }: { key: string }) {
     //   </div>
     // </nav>
     <nav
-      key={key}
+      key={key_prop}
       className={`w-100 navbar cl-blue navbar-expand-md px-3 ${navclass} ${
         scrollState !== "scrolling" && router.pathname === "/"
           ? "position-absolute top-0 start-0 nav-transparent"

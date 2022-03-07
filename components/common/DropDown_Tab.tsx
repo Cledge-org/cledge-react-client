@@ -82,6 +82,7 @@ export default function DropDownTab({
                 ? "progress-dropdown-menu-btn-selected"
                 : "progress-dropdown-menu-btn"
             }
+            key={index.toString()}
           >
             <div
               className="center-child icon"
