@@ -35,7 +35,6 @@ export const Styles = createGlobalStyle`
     h2,
     h3,
     h4,
-    h5,
     h6 {
         color: #1A2169;
         font-size: 36px;

@@ -50,7 +50,7 @@ export default function Footer({
         </div>
 
         <div className="col-12 col-md-3 mx-auto mt-5 mt-md-0">
-          <h6 className="title mb-4">FEATURES</h6>
+          <h5 className="title mb-4">FEATURES</h5>
           <ul className="list-unstyled">
             <li className="mt-2">
               <a
@@ -95,7 +95,7 @@ export default function Footer({
           </ul>
         </div>
         <div className="col-12 col-md-3  mt-5 mt-md-0">
-          <h6 className="title mb-4">MORE</h6>
+          <h5 className="title mb-4">MORE</h5>
           <a href="mailto:ayan@cledge.org" className="cl-white">
             Get in Touch
           </a>
