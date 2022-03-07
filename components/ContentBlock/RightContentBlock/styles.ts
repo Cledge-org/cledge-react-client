@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { SvgIcon } from "../../../common/SvgIcon";
 
 export const VideoWrapper = styled("div")`
 

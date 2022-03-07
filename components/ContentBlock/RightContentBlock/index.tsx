@@ -1,6 +1,6 @@
 import { Row, Col } from "antd";
-import { SvgIcon } from "../../../common/SvgIcon";
-import { Button } from "../../../common/Button";
+import { SvgIcon } from "../../common/SvgIcon";
+import { Button } from "../../common/Button";
 import { ContentBlockProps } from "../types";
 import { Fade } from "react-awesome-reveal";
 import {

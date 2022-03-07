@@ -1,5 +1,5 @@
 import { Row, Col } from "antd";
-import { SvgIcon } from "../../../common/SvgIcon";
+import { SvgIcon } from "../../common/SvgIcon";
 import { ContentBlockProps } from "../types";
 import { Fade } from "react-awesome-reveal";
 import {

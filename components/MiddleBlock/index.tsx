@@ -1,6 +1,6 @@
 import { Row, Col } from "antd";
 import { Slide } from "react-awesome-reveal";
-import { Button } from "../../common/Button";
+import { Button } from "../common/Button";
 import {
   MiddleBlockSection,
   Content,

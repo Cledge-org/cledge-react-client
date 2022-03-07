@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Row, Col, Drawer } from "antd";
-import Container from "../../common/Container";
-import { SvgIcon } from "../../common/SvgIcon";
-import { Button } from "../../common/Button";
+import Container from "../common/Container";
+import { SvgIcon } from "../common/SvgIcon";
+import { Button } from "../common/Button";
 import {
   HeaderSection,
   LogoContainer,

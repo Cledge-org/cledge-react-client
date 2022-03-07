@@ -14,8 +14,7 @@ import Footer from "../components/common/Footer";
 
 const Contact = dynamic(() => import("../components/ContactForm"));
 const MiddleBlock = dynamic(() => import("../components/MiddleBlock"));
-const Container = dynamic(() => import("../common/Container"));
-const ScrollToTop = dynamic(() => import("../common/ScrollToTop"));
+const Container = dynamic(() => import("../components/common/Container"));
 const ContentBlock = dynamic(() => import("../components/ContentBlock"));
 
 const Intro = styled("div")`
@@ -98,7 +97,6 @@ const Home = () => {
   return (
     <>
       <Container>
-        <ScrollToTop />
         <Intro>
           <ContentBlock
             type="right"

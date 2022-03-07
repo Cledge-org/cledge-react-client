@@ -12,7 +12,6 @@ import Signup from "./auth/signup";
 import LoadingScreen from "../components/common/loading";
 import { Router, useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Styles } from "../styles/styles";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
