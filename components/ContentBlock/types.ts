@@ -1,5 +1,5 @@
 export interface ContentBlockProps {
-  icon: string;
+  icon?: string;
   title: string;
   content: string;
   section?: any;
@@ -7,4 +7,5 @@ export interface ContentBlockProps {
   t?: any;
   id: string;
   type?: string;
+  video?: JSX.Element;
 }

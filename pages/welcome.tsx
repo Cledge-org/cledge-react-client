@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import IntroContent from "../content/IntroContent.json";
 import MiddleBlockContent from "../content/MiddleBlockContent.json";
+import YoutubeEmbed from "../components/common/YoutubeEmbed";
 import AboutContent from "../content/AboutContent.json";
 import MissionContent from "../content/MissionContent.json";
 import ProductContent from "../content/ProductContent.json";
@@ -96,7 +97,7 @@ const Home = () => {
             title={IntroContent.title}
             content={IntroContent.text}
             button={IntroContent.button}
-            icon="landing_video.svg"
+            video={<YoutubeEmbed videoId="Bly0QbY3fV4" />}
             id="intro"
           />
         </Intro>
