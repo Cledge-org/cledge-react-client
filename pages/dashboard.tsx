@@ -302,18 +302,18 @@ const Dashboard: NextApplicationPage<{
           className="w-full md:w-auto py-5 d-flex flex-row justify-content-around"
           style={{ backgroundColor: "#F2F2F7" }}
         >
-          <div>
+          <div className="px-5">
             <h1>
-              <strong style={{ color: "#2651ED", fontSize: 28 }}>
+              <strong style={{ color: "#2651ED", fontSize: "1em" }}>
                 Personalized 12th grade videos for {accountInfo.name}
               </strong>
             </h1>
             <h2>
-              <strong className="" style={{}}>
+              <strong className="" style={{ fontSize: "1.3em" }}>
                 Need more personalized videos?
               </strong>
             </h2>
-            <h3 className="" style={{}}>
+            <h3 className="" style={{ fontSize: "1.6em" }}>
               The learning modules are tailored to you based on your current
               checkin
               <br></br>
@@ -382,7 +382,7 @@ const Dashboard: NextApplicationPage<{
         />
       </div>
       <div className="container-fluid align-self-center mx-0 px-5 pb-5 mx-5 justify-content-evenly">
-        <div className="row w-100">
+        <div className="row w-100 flex-wrap">
           {currTab === "current tasks" || currTab === "all modules" ? (
             currentTasks.length > 0 ? (
               currentTasks

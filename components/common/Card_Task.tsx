@@ -31,7 +31,7 @@ export default function CardTask({
   useEffect(() => {}, []);
   console.log(subtasks);
   let [height, setHeight] = useState(0);
-  const innerRef = useRef();
+  const innerRef: React.MutableRefObject<HTMLDivElement> = useRef();
   const [isHovering, setIsHovering] = useState(false);
   var subtasksRatio = () => {
     let finished = 0;
@@ -58,18 +58,7 @@ export default function CardTask({
     }
   }, [innerRef]);
   useEffect(() => {
-    if (isHovering && innerRef?.current) {
-      //!THIS WORKS
-      const top = innerRef.current.getBoundingClientRect().top;
-      if (top + innerRef.current.clientHeight > window.innerHeight) {
-        setTimeout(() => {
-          document.body.scroll({
-            behavior: "smooth",
-            top: document.body.clientHeight,
-          });
-        }, 200);
-      }
-    }
+    console.log(isHovering);
   }, [isHovering]);
   return (
     <Link href={url} as={correctUrl}>
@@ -78,29 +67,49 @@ export default function CardTask({
         className="d-flex flex-column align-items-center col-lg-3 col-3 col-md-3 col-xs-8 position-relative"
       >
         <div
+          key={title + videoId}
           ref={innerRef}
           onMouseOver={() => {
-            setIsHovering(true);
+            if (!isHovering) {
+              console.log("MOUSE OVER");
+              setIsHovering((prevIsHovering) => {
+                return prevIsHovering ? false : true;
+              });
+            }
+            //TODO: Fix scrolling bug
+            // if (innerRef?.current) {
+            //   const bottom = innerRef.current.getBoundingClientRect().bottom;
+            //   if (bottom > window.innerHeight) {
+            //     console.log(bottom - window.innerHeight);
+            //     // setTimeout(() => {
+            //     document.body.scroll({
+            //       behavior: "smooth",
+            //       top: bottom - window.innerHeight,
+            //     });
+            //     // }, 200);
+            //   }
+            // }
           }}
           onMouseOut={() => {
+            console.log("MOUSE OUT");
             setIsHovering(false);
           }}
-          style={{ width: "100%" }}
-          className={`d-flex flex-column align-items-center px-2 hover-pointer card-task-container`}
+          className={`d-flex flex-column align-items-center px-2 hover-pointer w-100 card-task-container`}
         >
           <div className="w-100">
             <div
               className="position-relative"
-              style={{ maxHeight: "25vh", aspectRatio: "16/9", width: "100%" }}
+              style={{ aspectRatio: "16/9", width: "100%" }}
             >
               {videoId?.length === 11 ? (
                 <img
                   src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+                  style={{ width: "100%" }}
                 />
               ) : (
                 <div
                   style={{ backgroundColor: "lightgray" }}
-                  className="center-child h-100"
+                  className="center-child h-100 w-100"
                 >
                   Thumbnail couldn't load :|
                 </div>
