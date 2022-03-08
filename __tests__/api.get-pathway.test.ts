@@ -27,18 +27,18 @@ const testPresetContent: PresetContent = {
   type: "Test Type",
   url: "Test Url",
 };
-
+const pathway1ObjectId = new ObjectId();
 const testPathwayModuleName = "Test Name";
 const testPathwayModuleTag = ["Test Pathway Module Tag"];
 const testPathwayModule: PathwayModule = {
-  _id: new ObjectId(),
+  _id: pathwayModule1ObjectId,
   name: testPathwayModuleName,
   presetContent: [testPresetContent],
   personalizedContent: [testPersonalizedContent],
   tags: testPathwayModuleTag,
 };
 
-const pathway1ObjectId = new ObjectId();
+
 const testPathwayModule_Db: PathwayModule_Db = {
   _id: new ObjectId(),
   name: testPathwayModuleName,
@@ -50,7 +50,7 @@ const testPathwayName = "Test Name";
 const testPathwayTag = ["Test Pathway Tag"];
 const testPathwayModules = [testPathwayModule];
 const testPathway: Pathway = {
-  _id: new ObjectId(),
+  _id: pathway1ObjectId,
   name: testPathwayName,
   modules: testPathwayModules,
   tags: testPathwayTag,

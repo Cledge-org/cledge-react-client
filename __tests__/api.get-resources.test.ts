@@ -36,15 +36,31 @@ test("should add resources and get those added resources exactly", (done) => {
     expect(fetchedResources.articles.length).toBe(articles.length);
     expect(fetchedResources.videoList.length).toBe(videos.length);
     expect(fetchedResources.resources.length).toBe(resources.length);
+
+    let articleId = [ ];
+    let videoId = [ ];
+    let resourceId = [ ];
+
     for (let i = 0; i < fetchedResources.articles.length; i++) {
       expect(fetchedResources.articles[i]).toMatchObject(articles[i]);
+      articleId.push(fetchedResources.articles[i]._id);
     }
     for (let i = 0; i < fetchedResources.videoList.length; i++) {
       expect(fetchedResources.videoList[i]).toMatchObject(videos[i]);
+      videoId.push(fetchedResources.videoList[i]._id);
+
     }
     for (let i = 0; i < fetchedResources.resources.length; i++) {
       expect(fetchedResources.resources[i]).toMatchObject(resources[i]);
+      resourceId.push(fetchedResources.resources[i]._id);
     }
+
+    for (let i = 0; i < articleId.length; i++)
+      await putResourceArticle(articleId[i], undefined);
+    for (let i = 0; i < videoId.length; i++)
+      await putResourceArticle(videoId[i], undefined);
+    for (let i = 0; i < resourceId.length; i++)
+      await putResourceArticle(resourceId[i], undefined);
     done();
   };
   callback();

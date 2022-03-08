@@ -30,7 +30,7 @@ export const putResourceArticle = async (
   articleId: ObjectId | undefined,
   article: CardArticle | undefined
 ): Promise<void> => {
-  if (article._id) {
+  if (article != undefined && article._id) {
     // Document should not have _id field when sent to database
     delete article._id;
   }
@@ -48,7 +48,7 @@ export const putResourceArticle = async (
         await client
           .db("resources")
           .collection("articles")
-          .updateOne({ _id: articleId }, { $set: article });
+          .updateOne({ _id: articleId }, { $set: article }, {upsert: true});
       }
       res();
       client.close();

@@ -1,3 +1,4 @@
+import { TextareaAutosize } from "@mui/material";
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -30,7 +31,7 @@ export const putResourceVideo = async (
   video: CardVideo | undefined
 ): Promise<void> => {
   return new Promise(async (res, err) => {
-    if (video._id) {
+    if (video != undefined && video._id) {
       // Document should not have _id field when sent to database
       delete video._id;
     }
@@ -47,7 +48,7 @@ export const putResourceVideo = async (
         await client
           .db("resources")
           .collection("videos")
-          .updateOne({ _id: videoId }, { $set: video });
+          .updateOne({ _id: videoId }, { $set: video }, {upsert: true});
       }
       res();
       client.close();
