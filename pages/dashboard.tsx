@@ -23,6 +23,7 @@ import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
 import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { connect } from "react-redux";
+import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -49,29 +50,78 @@ const Dashboard: NextApplicationPage<{
   console.error(allPathways);
   const router = useRouter();
   const session = useSession();
-  const [currTab, setCurrTab] = useState("current tasks");
+  const [currTab, setCurrTab] = useState("all modules");
   const [isInUserView, setIsInUserView] = useState(false);
+  const [percentage, setPercentage] = useState(0);
   console.log(accountInfo);
   console.log(pathwaysProgress);
-  const getCurrentTasks = () => {
-    let noProgress = [];
+  const parseId = (objectId) => {
+    const objectIdStr = objectId.toString();
+    if (!objectIdStr.includes('"')) {
+      return objectIdStr;
+    }
+    return objectIdStr.substring(
+      objectIdStr.indexOf('"') + 1,
+      objectIdStr.length - 2
+    );
+  };
+  useEffect(() => {
+    let totalPathways = 0;
+    let finishedPathways = 0;
     allPathways?.forEach((pathway) => {
       if (
         !pathwaysProgress.find(({ pathwayId }) => {
-          return pathwayId === pathway._id;
+          return pathwayId === parseId(pathway._id);
+        })
+      ) {
+        totalPathways++;
+      }
+    });
+    pathwaysProgress.forEach(({ finished }) => {
+      if (finished) {
+        finishedPathways++;
+      }
+      totalPathways++;
+    });
+    setPercentage(Math.round((finishedPathways / totalPathways) * 100));
+  }, []);
+  const getCurrentTasks = () => {
+    let noProgress = [];
+
+    allPathways?.forEach((pathway) => {
+      if (
+        !pathwaysProgress.find(({ pathwayId }) => {
+          return pathwayId === parseId(pathway._id);
         })
       ) {
         let subtasks = {};
-        pathway.modules.forEach(({ name }) => {
-          subtasks[name] = false;
-        });
+        pathway.modules.forEach(
+          ({ name, presetContent, personalizedContent }) => {
+            subtasks[name] = { finished: false, contentProgress: [] };
+            subtasks[name].contentProgress = presetContent
+              .map(() => {
+                return false;
+              })
+              .concat(
+                personalizedContent.map(() => {
+                  return false;
+                })
+              );
+          }
+        );
+        const firstUrl = pathway?.modules[0]?.presetContent[0]?.url;
+        const videoId = firstUrl?.substring(
+          firstUrl?.indexOf("v=") !== -1
+            ? firstUrl?.indexOf("v=") + 2
+            : firstUrl?.lastIndexOf("/") + 1
+        );
         noProgress.push(
           <CardTask
             url={"/pathways/[id]"}
             correctUrl={`/pathways/${pathway._id}`}
-            textGradient="light"
             title={pathway.name}
             subtasks={subtasks}
+            videoId={videoId}
           />
         );
       }
@@ -82,27 +132,51 @@ const Dashboard: NextApplicationPage<{
         return !finished;
       })
       .map(({ moduleProgress, name, pathwayId }) => {
-        let realPathway = allPathways.find(({ _id }) => _id === pathwayId);
+        let realPathway = allPathways.find(
+          ({ _id }) => parseId(_id) === pathwayId
+        );
         let subtasks = {};
-        moduleProgress.forEach(({ name }) => {
+        moduleProgress.forEach(({ name, contentProgress }) => {
           let moduleTitle = name;
-          subtasks[name] = moduleProgress.find(
-            ({ name }) => name === moduleTitle
-          ).finished;
+          subtasks[name] = {
+            finished: moduleProgress.find(({ name }) => name === moduleTitle)
+              .finished,
+            contentProgress: [],
+          };
+          subtasks[name].contentProgress = contentProgress.map(
+            ({ finished }) => finished
+          );
         });
-        realPathway.modules.forEach(({ name }) => {
-          if (subtasks[name] === undefined) {
-            subtasks[name] = false;
+        realPathway.modules.forEach(
+          ({ name, presetContent, personalizedContent }) => {
+            if (subtasks[name] === undefined) {
+              subtasks[name] = { finished: false, contentProgress: [] };
+              subtasks[name].contentProgress = presetContent
+                .map(() => {
+                  return false;
+                })
+                .concat(
+                  personalizedContent.map(() => {
+                    return false;
+                  })
+                );
+            }
           }
-        });
+        );
+        const firstUrl = realPathway?.modules[0]?.presetContent[0]?.url;
+        const videoId = firstUrl?.substring(
+          firstUrl?.indexOf("v=") !== -1
+            ? firstUrl?.indexOf("v=") + 2
+            : firstUrl?.lastIndexOf("/") + 1
+        );
         console.log(subtasks);
         return (
           <CardTask
             url={"/pathways/[id]"}
             correctUrl={`/pathways/${pathwayId}`}
-            textGradient="light"
             title={name}
             subtasks={subtasks}
+            videoId={videoId}
           />
         );
       })
@@ -114,17 +188,29 @@ const Dashboard: NextApplicationPage<{
         return finished;
       })
       .map(({ moduleProgress, name, pathwayId }) => {
+        let realPathway = allPathways.find(
+          ({ _id }) => parseId(_id) === pathwayId
+        );
         let subtasks = {};
-        moduleProgress.forEach(({ name }) => {
-          subtasks[name] = true;
+        moduleProgress.forEach(({ name, contentProgress }) => {
+          subtasks[name] = { finished: true, contentProgress: [] };
+          subtasks[name].contentProgress = contentProgress.map(
+            ({ finished }) => finished
+          );
         });
+        const firstUrl = realPathway?.modules[0]?.presetContent[0]?.url;
+        const videoId = firstUrl?.substring(
+          firstUrl.indexOf("v=") !== -1
+            ? firstUrl?.indexOf("v=") + 2
+            : firstUrl?.lastIndexOf("/") + 1
+        );
         return (
           <CardTask
             url={"/pathways/[id]"}
             correctUrl={`/pathways/${pathwayId}`}
-            textGradient="light"
             title={name}
             subtasks={subtasks}
+            videoId={videoId}
           />
         );
       });
@@ -197,8 +283,8 @@ const Dashboard: NextApplicationPage<{
   console.log(currentTasks);
   console.log(finishedTasks);
   return (
-    <div className="container-fluid p-5">
-      {session.data?.user?.email === "test31@gmail.com" ? (
+    <div>
+      {/* {session.data?.user?.email === "test31@gmail.com" ? (
         <button
           onClick={() => {
             setIsInUserView(false);
@@ -206,29 +292,88 @@ const Dashboard: NextApplicationPage<{
         >
           Switch to Admin View
         </button>
-      ) : null}
-      <div className="row">
-        <h1 className="pt-2 red-purple-text-gradient fw-bold">
-          <strong>
-            Welcome back, {accountInfo.name}
-            <br />
-            This is your home page.
-            <br />
-          </strong>
-        </h1>
+      ) : null} */}
+
+      <div
+        className="w-full md:w-auto"
+        style={{ backgroundColor: "lightgray" }}
+      >
+        <div
+          className="w-full md:w-auto py-5 d-flex flex-row justify-content-around"
+          style={{ backgroundColor: "#F2F2F7" }}
+        >
+          <div>
+            <h1>
+              <strong style={{ color: "#2651ED", fontSize: 28 }}>
+                Personalized 12th grade videos for {accountInfo.name}
+              </strong>
+            </h1>
+            <h2>
+              <strong className="" style={{}}>
+                Need more personalized videos?
+              </strong>
+            </h2>
+            <h3 className="" style={{}}>
+              The learning modules are tailored to you based on your current
+              checkin
+              <br></br>
+              progress. Complete the checkin questions to receive more
+              personalized content!
+            </h3>
+          </div>
+          <div
+            className="d-flex flex-row align-items-center justify-content-between align-self-end"
+            style={{ height: "10vh", width: "20vw" }}
+          >
+            <div style={{ width: "4vw" }}>
+              <CircularProgressbarWithChildren
+                strokeWidth={10}
+                children={
+                  <div
+                    style={{ fontWeight: "bold", fontSize: "1.1em" }}
+                  >{`${percentage}%`}</div>
+                }
+                className="center-child"
+                styles={{
+                  text: {
+                    fontWeight: "bold",
+                  },
+                  trail: {
+                    stroke: "#d6d6d6",
+                  },
+                  path: {
+                    transition: "stroke-dashoffset 0.5s ease 0s",
+                    stroke: "#2651ed",
+                  },
+                }}
+                value={percentage}
+              />
+            </div>
+            <button style={{ height: "6vh" }} className="cl-btn-blue">
+              Update Checkin Questions
+            </button>
+          </div>
+        </div>
       </div>
       <br />
       <br />
-      <div className="d-flex flex-row w-100">
-        <TabButton
+      <div className="d-flex flex-row w-100 px-5 ms-5 mb-3">
+        <div className="ms-2" />
+        <DashboardTabButton
+          onClick={() => {
+            setCurrTab("all modules");
+          }}
+          title="All Modules"
+          currTab={currTab}
+        />
+        <DashboardTabButton
           onClick={() => {
             setCurrTab("current tasks");
           }}
           title="Current Tasks"
           currTab={currTab}
         />
-        <div className="px-2" />
-        <TabButton
+        <DashboardTabButton
           onClick={() => {
             setCurrTab("finished tasks");
           }}
@@ -236,10 +381,10 @@ const Dashboard: NextApplicationPage<{
           currTab={currTab}
         />
       </div>
-      <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
-        {currTab === "current tasks" ? (
-          <div className="row w-100">
-            {currentTasks.length > 0 ? (
+      <div className="container-fluid align-self-center mx-0 px-5 pb-5 mx-5 justify-content-evenly">
+        <div className="row w-100">
+          {currTab === "current tasks" || currTab === "all modules" ? (
+            currentTasks.length > 0 ? (
               currentTasks
             ) : (
               <div
@@ -248,12 +393,10 @@ const Dashboard: NextApplicationPage<{
               >
                 You have no current tasks.
               </div>
-            )}
-          </div>
-        ) : null}
-        {currTab === "finished tasks" ? (
-          <div className="row w-100">
-            {finishedTasks.length > 0 ? (
+            )
+          ) : null}
+          {currTab === "finished tasks" || currTab === "all modules" ? (
+            finishedTasks.length > 0 ? (
               finishedTasks
             ) : (
               <div
@@ -262,14 +405,54 @@ const Dashboard: NextApplicationPage<{
               >
                 Any finished tasks will appear here.
               </div>
-            )}
-          </div>
-        ) : null}
+            )
+          ) : null}
+        </div>
       </div>
     </div>
   );
 };
-
+interface DashboardTabButtonProps {
+  onClick: Function;
+  title: String;
+  currTab: String;
+}
+function DashboardTabButton({
+  onClick,
+  title,
+  currTab,
+}: DashboardTabButtonProps) {
+  const cledgeBlue = "#2651ed";
+  const midGray = "#656565";
+  const lowerCaseName = title.toLowerCase();
+  return (
+    <li
+      className="general-tab-nav-btn col-3 col-lg-2 flex-column"
+      id={lowerCaseName + "-tab"}
+      style={{ border: "none" }}
+      onClick={() => {
+        onClick(lowerCaseName);
+      }}
+    >
+      <div
+        style={{
+          width: "fit-content",
+          color: currTab === lowerCaseName ? cledgeBlue : midGray,
+          fontWeight: currTab === lowerCaseName ? 700 : 500,
+        }}
+      >
+        {title}
+      </div>
+      <div
+        style={{
+          height: "3px",
+          width: "100%",
+          backgroundColor: currTab === lowerCaseName ? cledgeBlue : midGray,
+        }}
+      />
+    </li>
+  );
+}
 Dashboard.requireAuth = true;
 export default connect((state) => ({
   accountInfo: state.accountInfo,

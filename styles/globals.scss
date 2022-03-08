@@ -51,6 +51,9 @@ a {
 .bg-cl-blue {
   background-color: $cl-blue;
 }
+.bg-cl-white {
+  background-color: $cl-white;
+}
 .cl-white {
   color: $cl-white;
 }
@@ -78,7 +81,9 @@ a {
 .cl-red {
   color: $cl-red;
 }
-
+.hover-pointer:hover {
+  cursor: pointer;
+}
 .center-child {
   display: flex;
   align-items: center;

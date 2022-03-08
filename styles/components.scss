@@ -28,7 +28,17 @@
     cursor: pointer;
   }
 }
-
+.card-task-container {
+  transition: all 200ms ease-in-out, padding-bottom 0ms, padding-top 0ms;
+}
+.card-task-container:hover {
+  @extend .shadow;
+  @extend .bg-cl-white;
+  @extend .py-2;
+  transition: all 200ms ease-in-out;
+  position: absolute;
+  z-index: 1000;
+}
 .article-btn {
   outline: none;
   color: $cl-blue;
