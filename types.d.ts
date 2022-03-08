@@ -26,6 +26,7 @@ interface CardVideo {
   source: string;
   name: string;
   category: string;
+  description?: string;
 }
 interface CardArticle {
   _id?: ObjectId;
@@ -39,6 +40,7 @@ interface CardResource {
   source: string;
   name: string;
   category: string;
+  description?: string;
 }
 
 //Progress Page Types -->

@@ -1,36 +1,141 @@
 import React, { useEffect, useState } from "react";
-import YoutubeEmbed from "../../components/common/YoutubeEmbed";
-import DropDownTab from "../../components/common/DropDown_Tab";
+import YoutubeEmbed from "../components/common/YoutubeEmbed";
+import DropDownTab from "../components/common/DropDown_Tab";
 import { GetServerSidePropsContext } from "next";
-import { getPathway } from "../api/get-pathway";
-import { NextApplicationPage } from "../_app";
+import { getPathway } from "./api/get-pathway";
+import { NextApplicationPage } from "./_app";
 import { useRouter } from "next/router";
-import { getAccountInfo } from "../api/get-account";
-import AuthFunctions from "../api/auth/firebase-auth";
-import { ORIGIN_URL } from "../../config";
+import { getAccountInfo } from "./api/get-account";
+import AuthFunctions from "./api/auth/firebase-auth";
+import { ORIGIN_URL } from "../config";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
-import { store } from "../../utils/store";
-import { updatePathwayProgressAction } from "../../utils/actionFunctions";
+import { store } from "../utils/store";
+import { updatePathwayProgressAction } from "../utils/actionFunctions";
 import { ObjectId } from "mongodb";
 
 //profile progress/ question summary page
 
+// I have a few questions Why does the present content have a priority but the modules do not?
+const pageContent = {
+  "tags": [
+      "quick-start"
+  ],
+  "name": "The “Quick Start” College Pathway",
+  "_id": "61de02937c405886579656e7",
+  "modules": [
+      {
+          "_id": "61de02937c405886579656e6",
+          "name": "Beginning with writing a college essay",
+          "presetContent": [
+              {
+                  
+                  "name": "Writing a personal statement",
+                  "type": "Video",
+                  "url": "https://www.youtube.com/watch?v=uk7pLY4jbDU",
+                  "content": "This is where I will describe the questions that I want to ask the user! I will associate them with a specific question id, and allow for future reference without the context of the video? is that really a good idea? Maybe they can reference eachother, or perhaps just live in the same pace. Yeah that makes more sense. It seems I can change the presentation of the content by changing the type. I think I want to have multiple different items to display on one page, so I'll modify the format to be more modular with question types and arrays of items to display. Do I need an id for these? or some type of ordering? most likely yes."
+              },
+              // {
+              //     [
+              //       {
+                      
+              //         "name": "Paths after college",
+              //         "type": "Video",
+              //         "url": "https://www.youtube.com/watch?v=lAtFF47Ce4k",
+              //         "content": "Put in the first sentence to your personal statement."
+              //       },
+              //       {
+                      //     "name": "questiongs",
+                      //     "type": "Questions",
+                      //     "questions": [
+
+                      //         {
+                      //             "question": "What is your current GPA?",
+                      //             "answer": "",
+                      //             "type": "text"
+                      //         },  
+                      //         {
+                      //             "question": "What is your current GPA?",
+                      //             "answer": "",
+                      //             "type": "text"
+                      //         },
+                      //     ]
+              //       }
+              //   ]
+              // }
+          ],
+          "tags": [
+              "overview",
+              "college-admissions"
+          ],
+          "personalizedContent": []
+      },
+      {
+          "_id": "61de02937c405886579656e5",
+          "name": "6 parts of the college application",
+          "presetContent": [
+              {
+                  "name": "Introduction",
+                  "type": "Video",
+                  "url": "https://www.youtube.com/watch?v=R0c8WnxLsH0",
+                  "content": "There is no secret that gets you into college. However, there are some factors that admissions officers focus on."
+              }
+          ],
+          "tags": [
+              "parts of college app"
+          ],
+          "personalizedContent": []
+      }
+  ]
+}
+
+const pathwaysProgress = [
+ 
+  {
+      "finished": false,
+      "moduleProgress": [
+          {
+              "moduleId": "61de02937c405886579656e6",
+              "finished": false,
+              "contentProgress": [
+                  {
+                      "name": "What is the goal?",
+                      "finished": false,
+                      "videoTime": 488
+                  },
+                  {
+                      "name": "Paths after college",
+                      "finished": false,
+                      "videoTime": 0
+                  }
+              ],
+              "name": "Beginning with writing a college essay"
+          },
+          {
+              "moduleId": "61de02937c405886579656e5",
+              "finished": false,
+              "contentProgress": [
+                  {
+                      "name": "Introduction",
+                      "finished": true,
+                      "videoTime": 231
+                  }
+              ],
+              "name": "6 parts of the college application"
+          }
+      ],
+      "name": "The “Quick Start” College Pathway",
+      "pathwayId": "61de02937c405886579656e7"
+  }
+]
+
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    const session = await getSession(ctx);
+    // const session = await getSession(ctx);
     console.error(ctx.query.id);
     return {
       props: {
-        pathwayInfo: await (
-          await fetch(`${ORIGIN_URL}/api/get-pathway`, {
-            method: "POST",
-            body: JSON.stringify({
-              userId: session.user.uid,
-              pathwayId: new ObjectId(ctx.query.id as string),
-            }),
-          })
-        ).json(),
+        pathwayInfo: pageContent,
       },
     };
   } catch (err) {
@@ -39,15 +144,19 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return { props: {} as never };
   }
 };
-const Pathways: NextApplicationPage<{
+
+// PathwayModules
+const Essay: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
 }> = ({ pathwayInfo, pathwaysProgress }) => {
+  useEffect(() => {
+    console.log("Hello marker\n", pathwaysProgress);
+  }, [])
   const [currPage, setCurrPage] = useState(null);
   const [currSelected, setCurrSelected] = useState("");
-  const [allPathwayProgress, setAllPathwayProgress] = useState(
-    pathwaysProgress.slice()
-  );
+  const [allPathwayProgress, setAllPathwayProgress] =
+    useState(pathwaysProgress);
   //console.warn(pathwayInfo);
   //console.warn(allPathwayProgress);
   const checkForDiscrepancies = (pathwayProgress: PathwayProgress) => {
@@ -452,11 +561,11 @@ const Pathways: NextApplicationPage<{
     );
   }, []);
   const getSortedContent = (presetContent, personalizedContent) => {
-    let allContent = presetContent.concat(personalizedContent);
-    if (presetContent.length === 0) {
-      allContent = personalizedContent;
+    let allContent = presetContent.concat(personalizedContent); 
+    if (presetContent.length === 0) { 
+      allContent = personalizedContent; 
     }
-    allContent.sort((a, b) => a.priority - b.priority);
+    // allContent.sort((a, b) =>  a.priority - b.priority); //  
     return allContent;
   };
   const session = useSession();
@@ -472,25 +581,19 @@ const Pathways: NextApplicationPage<{
         });
         contentProgress[actualModule._id] = moduleProgress.contentProgress;
       });
-      //console.log(contentProgress);
-      window.onbeforeunload = (e) => {
-        fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
-          method: "POST",
-          body: JSON.stringify({
-            contentProgress,
-            userId: session.data.user.uid,
-          }),
-        }).then((res) => {
-          let newProgress = allPathwayProgress.slice();
-          newProgress[
-            newProgress.findIndex(
-              ({ pathwayId }) => pathwayId === pathwayProgress.pathwayId
-            )
-          ] = pathwayProgress;
-          store.dispatch(updatePathwayProgressAction(newProgress));
-          //console.log(res.status);
-        });
-      };
+      // console.log(contentProgress);
+      // window.onbeforeunload = (e) => {
+      //   fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
+      //     method: "POST",
+      //     body: JSON.stringify({
+      //       contentProgress,
+      //       userId: session.data.user.uid,
+      //     }),
+      //   }).then((res) => {
+      //     store.dispatch(updatePathwayProgressAction(pathwayProgress));
+      //     //console.log(res.status);
+      //   });
+      // };
     }
   }, [allPathwayProgress]);
   useEffect(() => {
@@ -518,22 +621,16 @@ const Pathways: NextApplicationPage<{
             });
             contentProgress[actualModule._id] = moduleProgress.contentProgress;
           });
-          fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
-            method: "POST",
-            body: JSON.stringify({
-              contentProgress,
-              userId: session.data.user.uid,
-            }),
-          }).then((res) => {
-            let newProgress = allPathwayProgress.slice();
-            newProgress[
-              newProgress.findIndex(
-                ({ pathwayId }) => pathwayId === pathwayProgress.pathwayId
-              )
-            ] = pathwayProgress;
-            store.dispatch(updatePathwayProgressAction(newProgress));
-            //console.log(res.status);
-          });
+          // fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
+          //   method: "POST",
+          //   body: JSON.stringify({
+          //     contentProgress,
+          //     userId: session.data.user.uid,
+          //   }),
+          // }).then((res) => {
+          //   store.dispatch(updatePathwayProgressAction(pathwayProgress));
+          //   //console.log(res.status);
+          // });
         }
         return allPathwayProgress;
       });
@@ -585,7 +682,7 @@ const Pathways: NextApplicationPage<{
                         ({ name }) => name === contentTitle
                       );
                     }
-                    console.log(pathwaysProgress);
+                    // console.log(pathwaysProgress);
                     if (currContent.type.toLowerCase() === "article") {
                       setArticleToFinished(currContent, name, _id);
                     }
@@ -675,6 +772,8 @@ const Pathways: NextApplicationPage<{
                   title={name}
                   isPathway
                   percentComplete={undefined}
+                  key={_id.toString()}
+                  // key={_id}
                 />
               );
             }
@@ -686,7 +785,8 @@ const Pathways: NextApplicationPage<{
   );
 };
 
-Pathways.requireAuth = true;
+Essay.requireAuth = true;
 export default connect((state) => ({
-  pathwaysProgress: state.pathwaysProgress.slice(),
-}))(Pathways);
+  // pathwaysProgress: state.pathwaysProgress,
+  pathwaysProgress: pathwaysProgress,
+}))(Essay);

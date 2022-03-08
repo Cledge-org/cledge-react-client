@@ -112,7 +112,7 @@
   border: none;
   display: flex;
   align-items: center;
-  height: 5vh;
+  height: fit-content;
   background-color: $cl-light-gray;
   .text {
     @extend .ps-4;

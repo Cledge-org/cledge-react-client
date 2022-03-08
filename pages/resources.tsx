@@ -70,7 +70,11 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
     }
     return matches / (searchText.length + itemName.length - 2);
   };
-  const filter = (txt: string, originalArray, comparisonArray) => {
+  const filter = (
+    txt: string,
+    originalArray: CardResource[] | CardArticle[] | CardVideo[],
+    comparisonArray: CardResource[] | CardArticle[] | CardVideo[]
+  ) => {
     let allItems = [];
     let data = comparisonArray;
     let comparisonValArr = [];
@@ -79,17 +83,21 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
       let comparisonVal = compare(
         txt.toLowerCase(),
         data[i].name.toLowerCase() +
-          (data[i].description ? data[i].description.toLowerCase() : "")
+          (data[i].description ? " " + data[i].description.toLowerCase() : "")
       );
-      if (comparisonVal > 0.1) {
+      if (comparisonVal > 0) {
         comparisonValArr.push(comparisonVal);
-        allItems[index] = originalArray[i];
+        allItems[index] = { ...originalArray[i], coefficient: comparisonVal };
         index++;
       }
     }
-    return allItems;
+    return allItems.sort((a, b) => b.coefficient - a.coefficient);
   };
-  const searchAlg = (txt, originalArray, comparisonArray) => {
+  const searchAlg = (
+    txt: string,
+    originalArray: CardResource[] | CardArticle[] | CardVideo[],
+    comparisonArray: CardResource[] | CardArticle[] | CardVideo[]
+  ) => {
     if (txt.trim() === "") {
       return originalArray;
     }
@@ -135,59 +143,68 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
       <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
         {resourceTypes.map((type) => {
           let currType = type.toLowerCase();
-          const filteredResources = resourcesInfo.resources.filter(
-            ({ category }) =>
+          const filteredResources = resourcesInfo.resources
+            .filter(({ category }) =>
               currType === "all"
                 ? true
                 : category
                 ? currType === category
                 : true
-          );
-          const filteredArticles = resourcesInfo.articles.filter(
-            ({ category }) =>
-              currType === "all"
-                ? true
-                : category
-                ? currType === category
-                : true
-          );
-          const filteredVideos = resourcesInfo.videoList.filter(
-            ({ category }) =>
-              currType === "all"
-                ? true
-                : category
-                ? currType === category
-                : true
+            )
+            .map((resource) => ({ ...resource, type: "resource" }))
+            .concat(
+              resourcesInfo.articles
+                .filter(({ category }) =>
+                  currType === "all"
+                    ? true
+                    : category
+                    ? currType === category
+                    : true
+                )
+                .map((article) => ({ ...article, type: "article" }))
+            )
+            .concat(
+              resourcesInfo.videoList
+                .filter(({ category }) =>
+                  currType === "all"
+                    ? true
+                    : category
+                    ? currType === category
+                    : true
+                )
+                .map((video) => ({ ...video, type: "video" }))
+            );
+          const searchedResources = searchAlg(
+            searchTxt,
+            filteredResources,
+            filteredResources
+          ).map((element) =>
+            element.type === "resource" ? (
+              <CardImage
+                snippet=""
+                title={element.name}
+                textGradient={"light"}
+              />
+            ) : element.type === "video" ? (
+              <CardVideo
+                title={element.name}
+                textGradient={"light"}
+                videoUrl={element.source}
+              />
+            ) : (
+              <CardText
+                snippet={element.description}
+                title={element.name}
+                textGradient={"light"}
+              />
+            )
           );
           return currTab === currType ? (
             <div className="row jusify-content-evenly">
-              {searchAlg(searchTxt, filteredResources, filteredResources).map(
-                (element) => (
-                  <CardImage
-                    snippet=""
-                    title={element.name}
-                    textGradient={"light"}
-                  />
-                )
-              )}
-              {searchAlg(searchTxt, filteredArticles, filteredArticles).map(
-                (element) => (
-                  <CardText
-                    snippet={element.description}
-                    title={element.name}
-                    textGradient={"light"}
-                  />
-                )
-              )}
-              {searchAlg(searchTxt, filteredVideos, filteredVideos).map(
-                (element) => (
-                  <CardVideo
-                    title={element.name}
-                    textGradient={"light"}
-                    videoUrl={element.source}
-                  />
-                )
-              )}
+              {searchedResources.length === 0
+                ? "No resources match your search"
+                : null}
+              {searchedResources}
             </div>
           ) : null;
         })}
