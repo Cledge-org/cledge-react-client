@@ -17,27 +17,28 @@ const MiddleBlock = dynamic(() => import("../components/MiddleBlock"));
 const Container = dynamic(() => import("../components/common/Container"));
 const ContentBlock = dynamic(() => import("../components/ContentBlock"));
 
-const Intro = styled("div")`
-  background: center / cover url("images/landing_bg.svg") no-repeat;
-  width: calc(100% + 180px);
-  padding: 0 90px;
+const FullWidthContainer = styled("div")`
   position: relative;
+  width: 100vw;
   left: -90px;
-  height: 100vh;
-  display: flex;
-  align-items: center;
+  padding: 0px 90px;
 
   @media only screen and (max-width: 1024px) {
-    width: calc(100% + 120px);
     left: -60px;
-    padding: 0 60px;
+    padding: 0px 60px;
   }
 
   @media only screen and (max-width: 768px) {
-    width: calc(100% + 36px);
     left: -18px;
-    padding: 0 18px;
+    padding: 0px 18px;
   }
+`;
+
+const Intro = styled(FullWidthContainer)`
+  background: center / cover url("images/landing_bg.svg") no-repeat;
+  height: 100vh;
+  display: flex;
+  align-items: center;
 
   #intro h6,
   #intro p {
@@ -50,23 +51,18 @@ const Intro = styled("div")`
   }
 `;
 
-const Metric = styled.div`
+const Metric = styled(FullWidthContainer)`
   margin-top: 100px;
-  position: relative;
+  display: flex;
   flex-wrap: wrap;
-  padding: 30px;
   justify-content: space-evenly;
-  width: 100vw;
-  left: -90px;
   padding: 30px 90px;
 
   @media only screen and (max-width: 1024px) {
-    left: -60px;
     padding: 30px 60px;
   }
 
   @media only screen and (max-width: 768px) {
-    left: -18px;
     padding: 30px 18px;
   }
 
@@ -88,6 +84,10 @@ const Metric = styled.div`
   p {
     font-size: 14px;
   }
+`;
+
+const Partner = styled(FullWidthContainer)`
+  background: #F9FAFF;
 `;
 
 const Home = () => {
@@ -152,11 +152,13 @@ const Home = () => {
           icon="landing_3.svg"
           id="product"
         />
-        <MiddleBlock
-          id="partner"
-          title={PartnerContent.title}
-          content={PartnerContent.text}
-        />
+        <Partner>
+          <MiddleBlock
+            id="partner"
+            title={PartnerContent.title}
+            content={PartnerContent.text}
+          />
+        </Partner>
         <Contact
           title={ContactContent.title}
           content={ContactContent.text}

@@ -24,7 +24,7 @@ const MiddleBlock = ({ title, content, button, id }: MiddleBlockProps) => {
     });
   };
   return (
-    <MiddleBlockSection>
+    <MiddleBlockSection id={id}>
       <Slide direction="up">
         <Row justify="center" align="middle">
           <ContentWrapper>

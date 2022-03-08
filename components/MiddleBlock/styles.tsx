@@ -22,7 +22,7 @@ export const Card = styled.div`
 
 export const MiddleBlockSection = styled("section")`
   position: relative;
-  padding: 7.5rem 0 3rem;
+  padding: 7.5rem 0;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -30,21 +30,21 @@ export const MiddleBlockSection = styled("section")`
   flex-direction: column;
 
   @media screen and (max-width: 1024px) {
-    padding: 5.5rem 0 3rem;
+    padding: 5.5rem 0;
   }
 
   & > div {
     width: 100%;
   }
 
-  #icon * {
-    display: inline-block;
-    width: 50%;
-    margin-right: 30px;
+  #icon {
+    margin-top: 30px;
   }
 
-  #icon :last-child {
-    width: 30%;
+  #icon * {
+    display: inline-block;
+    height: 90px;
+    margin-right: 30px;
   }
 `;
 

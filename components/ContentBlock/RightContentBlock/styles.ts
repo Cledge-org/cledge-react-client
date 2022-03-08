@@ -4,7 +4,6 @@ export const VideoWrapper = styled("div")`
 
   max-width: 600px;
   margin-left: auto;
-  margin-right: auto;
   aspect-ratio: 16 / 9;
   flex: 1;
   
