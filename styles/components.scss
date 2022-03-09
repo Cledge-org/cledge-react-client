@@ -39,6 +39,17 @@
   position: absolute;
   z-index: 1000;
 }
+@media screen and (max-width: 1200px) {
+  .card-task-container {
+    width: 200px;
+  }
+}
+@media screen and (max-width: 800px) {
+  .card-task-container {
+    width: 120px;
+  }
+}
+
 .article-btn {
   outline: none;
   color: $cl-blue;
