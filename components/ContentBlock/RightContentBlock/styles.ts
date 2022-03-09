@@ -7,7 +7,6 @@ export const VideoWrapper = styled("div")`
   aspect-ratio: 16 / 9;
   flex: 1;
   
-
   & > * {
     height: 100%;
   }
@@ -28,15 +27,15 @@ export const IconWrapper = styled.div`
 
 export const RightBlockContainer = styled("section")`
   position: relative;
-  padding: 10rem 0 8rem;
+  padding: 7rem 0 0 0;
   width: 100%;
 
   @media only screen and (max-width: 1024px) {
-    padding: 8rem 0 6rem;
+    padding: 7rem 0 0 0 ;
   }
 
   @media only screen and (max-width: 768px) {
-    padding: 4rem 0 3rem;
+    padding: 4rem 0 0 0;
   }
 `;
 
@@ -49,7 +48,7 @@ export const ContentWrapper = styled("div")`
   max-width: 540px;
 
   @media only screen and (max-width: 575px) {
-    padding-bottom: 4rem;
+    padding-bottom: ${(props) => (props.id ==="mission" ? "0" : "4rem")};
   }
 `;
 

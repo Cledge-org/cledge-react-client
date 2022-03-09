@@ -43,7 +43,7 @@ export const MiddleBlockSection = styled("section")`
 
   #icon * {
     display: inline-block;
-    height: 90px;
+    height: 60px;
     margin-right: 30px;
   }
 `;

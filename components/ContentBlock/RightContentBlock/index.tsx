@@ -31,9 +31,9 @@ const RightBlock = ({
       <Fade direction="right">
         <Row justify="space-between" align="middle" id={id}>
           <Col lg={11} md={11} sm={11} xs={24}>
-            <ContentWrapper>
+            <ContentWrapper id={id}>
               <h6>{title}</h6>
-              <Content>{content}</Content>
+              <Content >{content}</Content>
               <ButtonWrapper>
                 {typeof button === "object" &&
                   button.map((item: any, id: number) => {

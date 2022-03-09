@@ -88,6 +88,7 @@ const Metric = styled(FullWidthContainer)`
 
 const Partner = styled(FullWidthContainer)`
   background: #F9FAFF;
+  margin-top: 4rem;
 `;
 
 const Home = () => {
