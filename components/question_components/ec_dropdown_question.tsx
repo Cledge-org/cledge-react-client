@@ -19,6 +19,7 @@ interface ECDropDownProps {
   isForWaitlist?: boolean;
   onChange: Function;
   key: String;
+  isForDashboard?: boolean;
 }
 const defaultProps: ECDropDownProps = {
   isConcatenable: false,
@@ -48,6 +49,7 @@ export default function ECDropDown({
   key,
   isForWaitlist,
   questionTitle,
+  isForDashboard,
   onChange,
 }: ECDropDownProps) {
   const [chosen, setChosen] = useState(
@@ -104,6 +106,7 @@ export default function ECDropDown({
           ? "w-100 d-flex flex-column justify-content-evenly pt-5"
           : "w-100 d-flex flex-column justify-content-evenly"
       }
+      style={isForDashboard ? { flex: "0.2" } : {}}
     >
       {!forCalendar && !isForWaitlist ? (
         <div
@@ -115,7 +118,20 @@ export default function ECDropDown({
       ) : null}
       <div ref={wrapperRef} className="dropdown-container">
         <button
-          className={`ec-dropdown-btn ${isForWaitlist ? "bg-white" : ""}`}
+          className={`ec-dropdown-btn ${isForWaitlist ? "bg-white" : ""} ${
+            isForDashboard ? "py-1" : ""
+          }`}
+          style={
+            isForDashboard
+              ? {
+                  border: "none",
+                  borderRadius: 0,
+                  borderBottom: "2px solid #656565",
+                  backgroundColor: "transparent",
+                  color: "#070452",
+                }
+              : {}
+          }
           onClick={() => setIsOpen(!isOpen)}
         >
           {!forCalendar &&

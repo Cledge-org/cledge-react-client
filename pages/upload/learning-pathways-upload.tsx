@@ -29,9 +29,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
   allPathways: Pathway[];
 }> = ({ allPathways }) => {
   console.log(allPathways);
-  const courseTitles = allPathways
-    .map(({ name }) => name)
-    .concat("NEW COURSE");
+  const courseTitles = allPathways.map(({ name }) => name).concat("NEW COURSE");
   const [currCourseIndex, setCurrCourseIndex] = useState(allPathways.length);
   const [currPathwayData, setCurrPathwayData]: [
     currPathwayData: Pathway,
@@ -39,6 +37,8 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
   ] = useState({
     _id: null,
     name: "",
+    part: "",
+    order: -1,
     modules: [
       {
         _id: null,
@@ -203,6 +203,8 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 setCurrPathwayData({
                   _id: null,
                   name: "",
+                  part: "",
+                  order: -1,
                   modules: [
                     {
                       _id: null,
@@ -263,6 +265,50 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               })
             }
             type="text"
+            className="px-3 form-control"
+            id="course-name"
+            placeholder="Enter course name"
+          />
+        </div>
+        <div className="form-group">
+          <label
+            style={{ fontSize: "0.9em" }}
+            className="text-muted"
+            htmlFor="course-name"
+          >
+            Part (Example: "1. Starting Pathways"):
+          </label>
+          <input
+            value={currPathwayData.name}
+            onChange={(e) =>
+              setCurrPathwayData({
+                ...currPathwayData,
+                part: e.target.value,
+              })
+            }
+            type="text"
+            className="px-3 form-control"
+            id="course-name"
+            placeholder="Enter course name"
+          />
+        </div>
+        <div className="form-group">
+          <label
+            style={{ fontSize: "0.9em" }}
+            className="text-muted"
+            htmlFor="course-name"
+          >
+            Order:
+          </label>
+          <input
+            value={currPathwayData.name}
+            onChange={(e) =>
+              setCurrPathwayData({
+                ...currPathwayData,
+                order: e.target.value,
+              })
+            }
+            type="number"
             className="px-3 form-control"
             id="course-name"
             placeholder="Enter course name"
@@ -468,9 +514,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 }}
                                 type="text"
                                 className="px-3 form-control"
-                                id={`preset-name-${
-                                  module.name + contentIndex
-                                }`}
+                                id={`preset-name-${module.name + contentIndex}`}
                                 placeholder="Enter preset name"
                               />
                             </div>

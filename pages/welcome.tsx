@@ -8,7 +8,6 @@ import ProductContent from "../content/ProductContent.json";
 import ContactContent from "../content/ContactContent.json";
 import PartnerContent from "../content/PartnerContent.json";
 import { useEffect, useRef, useState } from "react";
-import Header from "../components/Header";
 import styled from "styled-components";
 import Footer from "../components/common/Footer";
 
@@ -87,7 +86,7 @@ const Metric = styled(FullWidthContainer)`
 `;
 
 const Partner = styled(FullWidthContainer)`
-  background: #F9FAFF;
+  background: #f9faff;
   margin-top: 4rem;
 `;
 

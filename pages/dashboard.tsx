@@ -24,6 +24,9 @@ import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { connect } from "react-redux";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
+import ECDropDown from "../components/question_components/ec_dropdown_question";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -183,7 +186,7 @@ const Dashboard: NextApplicationPage<{
       .concat(noProgress);
   };
   const getFinishedTasks = () => {
-    return pathwaysProgress
+    let pathwaysList = pathwaysProgress
       .filter(({ finished }) => {
         return finished;
       })
@@ -204,16 +207,9 @@ const Dashboard: NextApplicationPage<{
             ? firstUrl?.indexOf("v=") + 2
             : firstUrl?.lastIndexOf("/") + 1
         );
-        return (
-          <CardTask
-            url={"/pathways/[id]"}
-            correctUrl={`/pathways/${pathwayId}`}
-            title={name}
-            subtasks={subtasks}
-            videoId={videoId}
-          />
-        );
+        return { name, pathwayId, subtasks, videoId };
       });
+    return <PartDropDown pathwayList={pathwaysList} title="1. Test" />;
   };
   // const asyncUseEffect = async () => {
   //   console.time("DASHBOARD");
@@ -283,7 +279,7 @@ const Dashboard: NextApplicationPage<{
   console.log(currentTasks);
   console.log(finishedTasks);
   return (
-    <div>
+    <div className="vh-100">
       {/* {session.data?.user?.email === "test31@gmail.com" ? (
         <button
           onClick={() => {
@@ -380,6 +376,14 @@ const Dashboard: NextApplicationPage<{
           title="Finished Tasks"
           currTab={currTab}
         />
+        <div style={{ borderBottom: "2px solid #656565" }} />
+        <ECDropDown
+          isForDashboard
+          isForWaitlist
+          onChange={(value) => {}}
+          defaultValue={"11th Grade"}
+          valuesList={["11th Grade", "12th Grade"]}
+        />
       </div>
       <div className="container-fluid align-self-center mx-0 px-5 pb-5 mx-5 justify-content-evenly">
         <div className="row w-100 flex-wrap">
@@ -395,18 +399,18 @@ const Dashboard: NextApplicationPage<{
               </div>
             )
           ) : null}
-          {currTab === "finished tasks" || currTab === "all modules" ? (
-            finishedTasks.length > 0 ? (
+          {currTab === "finished tasks" || currTab === "all modules"
+            ? // finishedTasks.length > 0 ? (
               finishedTasks
-            ) : (
-              <div
-                className="container-fluid center-child"
-                style={{ height: "40vh" }}
-              >
-                Any finished tasks will appear here.
-              </div>
-            )
-          ) : null}
+            : // ) : (
+              //   <div
+              //     className="container-fluid center-child"
+              //     style={{ height: "40vh" }}
+              //   >
+              //     Any finished tasks will appear here.
+              //   </div>
+              // )
+              null}
         </div>
       </div>
     </div>
@@ -451,6 +455,85 @@ function DashboardTabButton({
         }}
       />
     </li>
+  );
+}
+
+function PartDropDown({
+  pathwayList,
+  title,
+}: {
+  pathwayList: Array<any>;
+  title: string;
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  return (
+    <div className="progress-dropdown-container w-100 d-flex flex-row align-items-stretch">
+      <div className="align-items-center">
+        <div
+          style={{
+            marginTop: "2em",
+            width: "2em",
+            height: "2em",
+            border: "1px solid transparent",
+            borderRadius: "1em",
+            overflow: "hidden",
+          }}
+        >
+          <div style={{ height: "50%", backgroundColor: "#2651ed" }} />
+          <div style={{ height: "50%", backgroundColor: "#f2f2f7" }} />
+        </div>
+        <div
+          style={{
+            height: "90%",
+            width: "2px",
+            marginRight: "calc(1em - 2px)",
+            borderLeft: "2px dashed #656565",
+            backgroundColor: "transparent",
+          }}
+        />
+      </div>
+      <div className="d-flex flex-column">
+        <button
+          className="progress-dropdown-btn justify-content-start"
+          style={{ backgroundColor: "transparent", borderTop: "none" }}
+          onClick={() => {
+            setIsExpanded(!isExpanded);
+          }}
+        >
+          <div className="text ms-3 cl-dark-text" style={{ fontSize: "1.3em" }}>
+            {title}
+          </div>
+          <div
+            className={`${
+              isExpanded ? "center-child icon-open" : "center-child icon-close"
+            } ms-3`}
+            style={{ width: "12px", height: "12px" }}
+          >
+            <FontAwesomeIcon icon={faChevronDown} />
+          </div>
+        </button>
+        <div
+          className={`flex-1 ${
+            isExpanded
+              ? "progress-dropdown-menu-expanded"
+              : "progress-dropdown-menu-closed"
+          } flex-row flex-wrap`}
+          style={{
+            backgroundColor: "transparent",
+          }}
+        >
+          {pathwayList.map(({ name, pathwayId, subtasks, videoId }, index) => (
+            <CardTask
+              url={"/pathways/[id]"}
+              correctUrl={`/pathways/${pathwayId}`}
+              title={name}
+              subtasks={subtasks}
+              videoId={videoId}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 Dashboard.requireAuth = true;

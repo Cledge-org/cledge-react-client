@@ -1,3 +1,5 @@
+import { number } from "yup";
+
 interface Window {
   YT: any;
   onYouTubeIframeAPIReady: any;
@@ -124,6 +126,8 @@ interface Pathway {
   _id?: ObjectId;
   name: string;
   modules: PathwayModule[];
+  part: string;
+  order: number;
   tags: string[];
 }
 interface Pathway_Db extends WithId<Document> {
