@@ -132,6 +132,8 @@ interface Pathway_Db extends WithId<Document> {
   _id?: ObjectId;
   tags: string[];
   modules: ObjectId[]; // Module document IDs
+  part: string;
+  order: number;
   name: string;
 }
 interface PathwayModule {

@@ -53,6 +53,8 @@ export function getPathway(
         tags: pathway.tags,
         name: pathway.name,
         _id: pathway._id,
+        order: pathway.order,
+        part: pathway.part,
         modules,
       });
       client.close();

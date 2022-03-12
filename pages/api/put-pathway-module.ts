@@ -29,11 +29,15 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putPathwayModule = (
   pathwayModuleId: ObjectId | undefined,
   pathwayModule: PathwayModule_Db | undefined
-): Promise<ObjectId> => {
+): Promise<{ moduleId: ObjectId }> => {
   if (pathwayModule._id) {
     // Document should not have _id field when sent to database
     delete pathwayModule._id;
   }
+  if (!(pathwayModuleId instanceof ObjectId)) {
+    pathwayModuleId = new ObjectId(pathwayModuleId);
+  }
+  console.error(pathwayModuleId);
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
@@ -42,7 +46,7 @@ export const putPathwayModule = (
           .db("pathways")
           .collection("modules")
           .insertOne(pathwayModule);
-        res(insertedDoc.insertedId);
+        res({ moduleId: insertedDoc.insertedId });
       } else if (pathwayModuleId && !pathwayModule) {
         await client
           .db("pathways")
@@ -57,7 +61,8 @@ export const putPathwayModule = (
             { $set: pathwayModule },
             { upsert: true }
           );
-        res(pathwayModuleId);
+        console.error(pathwayModuleId);
+        res({ moduleId: pathwayModuleId });
       }
       client.close();
     } catch (e) {

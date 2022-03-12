@@ -16,6 +16,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         allPathways: await (
           await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
         ).json(),
+        allModules: await (
+          await fetch(`${ORIGIN_URL}/api/get-all-modules`)
+        ).json(),
       },
     };
   } catch (err) {
@@ -27,8 +30,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 // logged in landing page
 const LearningPathwaysUploadPage: NextApplicationPage<{
   allPathways: Pathway[];
-}> = ({ allPathways }) => {
-  console.log(allPathways);
+  allModules: PathwayModule[];
+}> = ({ allPathways, allModules }) => {
+  console.log(allModules);
   const courseTitles = allPathways.map(({ name }) => name).concat("NEW COURSE");
   const [currCourseIndex, setCurrCourseIndex] = useState(allPathways.length);
   const [currPathwayData, setCurrPathwayData]: [
@@ -110,34 +114,20 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             let jsonArr = await Promise.all(
               resArr.map(async (res) => await res.json())
             );
-            let personalizedContentUpload: PersonalizedContent[] =
-              sendPathwayData.modules[0].personalizedContent.map(
-                (personalizedContent, index) => {
-                  return {
-                    ...personalizedContent,
-                    moduleId:
-                      personalizedContent.moduleId === null
-                        ? jsonArr[0].moduleId
-                        : personalizedContent.moduleId,
-                  };
-                }
-              );
-            for (let i = 1; i < sendPathwayData.modules.length; i++) {
+            console.log(jsonArr);
+            let personalizedContentUpload: PersonalizedContent[] = [];
+            for (let i = 0; i < sendPathwayData.modules.length; i++) {
               personalizedContentUpload = personalizedContentUpload.concat(
                 sendPathwayData.modules[i].personalizedContent.map(
                   (personalizedContent, index) => {
                     return {
                       ...personalizedContent,
-                      moduleId:
-                        personalizedContent.moduleId === null
-                          ? jsonArr[i].moduleId
-                          : personalizedContent.moduleId,
+                      moduleId: jsonArr[i].moduleId,
                     };
                   }
                 )
               );
             }
-            console.log();
             Promise.all([
               fetch("/api/put-pathway", {
                 method: "POST",
@@ -277,7 +267,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           <label
             style={{ fontSize: "0.9em" }}
             className="text-muted"
-            htmlFor="course-name"
+            htmlFor="course-part"
           >
             Part (Example: "1. Starting Pathways"):
           </label>
@@ -291,7 +281,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             }
             type="text"
             className="px-3 form-control"
-            id="course-name"
+            id="course-part"
             placeholder="Enter part"
           />
         </div>
@@ -299,7 +289,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           <label
             style={{ fontSize: "0.9em" }}
             className="text-muted"
-            htmlFor="course-name"
+            htmlFor="course-order"
           >
             Order: (Lower number means it's at the beginning or higher priority)
           </label>
@@ -314,7 +304,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             }}
             type="number"
             className="px-3 form-control"
-            id="course-name"
+            id="course-order"
             placeholder="Enter order"
           />
         </div>

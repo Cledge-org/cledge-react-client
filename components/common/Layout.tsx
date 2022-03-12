@@ -37,6 +37,7 @@ export default function Layout({ children }) {
           pathwaysProgressRes.json(),
           questionResponsesRes.json(),
         ]);
+      console.log(pathwaysProgressJSON);
       store.dispatch(
         initialStateAction({
           accountInfo: accountInfoJSON,

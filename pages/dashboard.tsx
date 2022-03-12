@@ -27,6 +27,7 @@ import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import ECDropDown from "../components/question_components/ec_dropdown_question";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { boolean } from "yup";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -244,11 +245,31 @@ const Dashboard: NextApplicationPage<{
       );
       i = -1;
     }
+    partsList.sort((a, b) => {
+      return (
+        parseInt(b[0].part.substring(0, b[0].part.indexOf("."))) -
+        parseInt(a[0].part.substring(0, a[0].part.indexOf(".")))
+      );
+    });
     let partsComponents = [];
     partsList.forEach((part) => {
       part.sort((a, b) => b.order - a.order);
+      let finished = 0;
+      let total = 0;
+      part.forEach(({ subtasks }) => {
+        Object.keys(subtasks).forEach((subtask, index) => {
+          if (subtasks[subtask].finished) {
+            finished++;
+          }
+        });
+        total += Object.keys(subtasks).length;
+      });
       partsComponents.push(
-        <PartDropDown pathwayList={part} title={part[0].part} />
+        <PartDropDown
+          progressRatio={finished / total}
+          pathwayList={part}
+          title={part[0].part}
+        />
       );
     });
     return partsComponents;
@@ -535,9 +556,11 @@ function DashboardTabButton({
 function PartDropDown({
   pathwayList,
   title,
+  progressRatio,
 }: {
   pathwayList: Array<any>;
   title: string;
+  progressRatio: number;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [initialized, setInitialized] = useState(false);
@@ -557,8 +580,18 @@ function PartDropDown({
             overflow: "hidden",
           }}
         >
-          <div style={{ height: "50%", backgroundColor: "#2651ed" }} />
-          <div style={{ height: "50%", backgroundColor: "#f2f2f7" }} />
+          <div
+            style={{
+              height: `${progressRatio * 100}%`,
+              backgroundColor: "#2651ed",
+            }}
+          />
+          <div
+            style={{
+              height: `${(1 - progressRatio) * 100}%`,
+              backgroundColor: "#f2f2f7",
+            }}
+          />
         </div>
         <div
           style={{
@@ -576,8 +609,8 @@ function PartDropDown({
           className="progress-dropdown-btn justify-content-between dashboard-dropdown-hover mb-2 ms-2"
           style={{
             width: "10vw",
-            maxWidth: "25%",
-            minWidth: "10%",
+            maxWidth: "30%",
+            minWidth: "15%",
           }}
           onClick={() => {
             setIsExpanded(!isExpanded);
@@ -596,7 +629,7 @@ function PartDropDown({
           </div>
         </button>
         <div
-          className={`flex-1 ${
+          className={`${
             // initialized
             //   ? "progress-dropdown-menu-closed-no-animation"
             isExpanded
@@ -605,6 +638,8 @@ function PartDropDown({
           } flex-row flex-wrap`}
           style={{
             backgroundColor: "transparent",
+            flex: 1,
+            width: "90vw",
           }}
         >
           {pathwayList.map(({ name, pathwayId, subtasks, videoId }, index) => (

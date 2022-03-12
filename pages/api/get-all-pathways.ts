@@ -49,17 +49,23 @@ export function getSpecificPathway(
   return new Promise(async (res, err) => {
     try {
       let modules = await Promise.all(
-        pathway.modules.map((moduleId) =>
-          getSpecificModule(
+        pathway.modules.map((moduleId) => {
+          if (pathway.name === "New Test for Faster Loading") {
+            console.error("HMM");
+            console.error(moduleId);
+          }
+          return getSpecificModule(
             moduleId instanceof ObjectId ? moduleId : new ObjectId(moduleId),
             pathwaysDb
-          )
-        )
+          );
+        })
       );
       modules = modules.filter((x) => x !== null); // Remove all modules that weren't found
       res({
         name: pathway.name,
         _id: pathway._id,
+        order: pathway.order,
+        part: pathway.part,
         modules,
         tags: pathway.tags,
       });
@@ -85,7 +91,7 @@ function getSpecificModule(
         }) as Promise<PathwayModule_Db>,
         pathwaysDb
           .collection("personalized-content")
-          .find({ moduleId })
+          .find({ moduleId: moduleId })
           .toArray() as Promise<PersonalizedContent[]>,
       ]);
       if (!module) {
