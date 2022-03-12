@@ -40,6 +40,13 @@ const testQuestionChunk1: QuestionChunk = {
   questions: [testQuestion],
 };
 
+const testQuestionChunkName2 = "Test Chunk 2";
+const testQuestionChunk2: QuestionChunk = {
+  _id: new ObjectId(),
+  name: testQuestionChunkName2,
+  questions: [testQuestion2],
+};
+
 const testQuestionChunks = [testQuestionChunk1];
 const testQuestionListName = "Test Question List Name";
 const testQuestionList1: QuestionList = {
@@ -48,6 +55,13 @@ const testQuestionList1: QuestionList = {
   chunks: testQuestionChunks,
 };
 
+const testQuestionChunks2 = [testQuestionChunk2];
+const testQuestionListName2 = "Test Question List Name 2";
+const testQuestionList2: QuestionList = {
+  _id: new ObjectId(),
+  name: testQuestionListName2,
+  chunks: testQuestionChunks2,
+};
 
 const question1ObjectId = new ObjectId();
 const testQuestionListDb1: QuestionList_Db = {
@@ -58,8 +72,8 @@ const testQuestionListDb1: QuestionList_Db = {
 
 const testQuestionListDb2: QuestionList_Db = {
     _id: new ObjectId(),
-    name: testQuestionListName,
-    chunks: [testQuestionChunkName],
+    name: testQuestionListName2,
+    chunks: [testQuestionChunkName2],
 };
 
 const testQuestionChunkDb1: QuestionChunk_Db = {
@@ -70,7 +84,7 @@ const testQuestionChunkDb1: QuestionChunk_Db = {
 
 const testQuestionChunkDb2: QuestionChunk_Db = {
     _id: new ObjectId(),
-    name: testQuestionChunkName,
+    name: testQuestionChunkName2,
     questions: [question1ObjectId],
   };
 
@@ -134,7 +148,6 @@ test ("update question", async () => {
     ]);
 
     updateQuestion._id = newObjectId;
-    // need to update appropriately - no need to check?
     updateUserResponse.questionId = questionId;
     updateQuestionListDb._id = newObjectId;
     updateQuestionChunkDb._id = newObjectId;
@@ -149,7 +162,7 @@ test ("update question", async () => {
 
     for (let i = 0; i < actualProgressData.length; i++) {
       if (actualProgressData[i]._id.equals(newObjectId)) {
-        expect(actualProgressData[i]).toMatchObject(testQuestionList1)
+        expect(actualProgressData[i]).toMatchObject(testQuestionList2)
         progressCount++;
       }
     }
