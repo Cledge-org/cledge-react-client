@@ -38,16 +38,16 @@ export const putResourceArticle = async (
     const client = await MongoClient.connect(process.env.MONGO_URL);
     try {
       if (!articleId && article) {
-        await client.db("resources").collection("articles").insertOne(article);
+        await client.db("resources").collection("all_resources").insertOne(article);
       } else if (articleId && !article) {
         await client
           .db("resources")
-          .collection("articles")
+          .collection("all_resources")
           .deleteOne({ _id: articleId });
       } else if (articleId && article) {
         await client
           .db("resources")
-          .collection("articles")
+          .collection("all_resources")
           .updateOne({ _id: articleId }, { $set: article });
       }
       res();

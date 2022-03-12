@@ -37,16 +37,16 @@ export const putResourceVideo = async (
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
       if (!videoId && video) {
-        await client.db("resources").collection("videos").insertOne(video);
+        await client.db("resources").collection("all_resources").insertOne(video);
       } else if (videoId && !video) {
         await client
           .db("resources")
-          .collection("videos")
+          .collection("all_resources")
           .deleteOne({ _id: videoId });
       } else if (videoId && video) {
         await client
           .db("resources")
-          .collection("videos")
+          .collection("all_resources")
           .updateOne({ _id: videoId }, { $set: video });
       }
       res();

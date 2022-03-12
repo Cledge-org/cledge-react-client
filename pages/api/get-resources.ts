@@ -22,13 +22,13 @@ export const getResourcesInfo = (): Promise<ResourcesInfo> => {
       const client = await MongoClient.connect(process.env.MONGO_URL);
       const resource_db = client.db("resources");
       const [videoList, articles, resources] = await Promise.all([
-        resource_db.collection("videos").find().toArray() as Promise<
+        resource_db.collection("all_resources").find({"tag": "video"}).toArray() as Promise<
           CardVideo[]
         >,
-        resource_db.collection("articles").find().toArray() as Promise<
+        resource_db.collection("all_resources").find({"tag": "article"}).toArray() as Promise<
           CardArticle[]
         >,
-        resource_db.collection("resources").find().toArray() as Promise<
+        resource_db.collection("all_resources").find({"tag": "resource"}).toArray() as Promise<
           CardResource[]
         >,
       ]);
