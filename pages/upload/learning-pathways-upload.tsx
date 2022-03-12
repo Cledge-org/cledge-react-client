@@ -16,9 +16,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         allPathways: await (
           await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
         ).json(),
-        allModules: await (
-          await fetch(`${ORIGIN_URL}/api/get-all-modules`)
-        ).json(),
+        // allModules: await (
+        //   await fetch(`${ORIGIN_URL}/api/get-all-modules`)
+        // ).json(),
       },
     };
   } catch (err) {
