@@ -90,7 +90,6 @@ const Dashboard: NextApplicationPage<{
   }, []);
   const getCurrentTasks = () => {
     let noProgress = [];
-
     allPathways?.forEach((pathway) => {
       if (
         !pathwaysProgress.find(({ pathwayId }) => {
@@ -118,15 +117,14 @@ const Dashboard: NextApplicationPage<{
             ? firstUrl?.indexOf("v=") + 2
             : firstUrl?.lastIndexOf("/") + 1
         );
-        noProgress.push(
-          <CardTask
-            url={"/pathways/[id]"}
-            correctUrl={`/pathways/${pathway._id}`}
-            title={pathway.name}
-            subtasks={subtasks}
-            videoId={videoId}
-          />
-        );
+        noProgress.push({
+          name: pathway.name,
+          pathwayId: pathway._id,
+          subtasks,
+          videoId,
+          part: pathway.part,
+          order: pathway.order,
+        });
       }
     });
     return pathwaysProgress
@@ -173,15 +171,14 @@ const Dashboard: NextApplicationPage<{
             : firstUrl?.lastIndexOf("/") + 1
         );
         console.log(subtasks);
-        return (
-          <CardTask
-            url={"/pathways/[id]"}
-            correctUrl={`/pathways/${pathwayId}`}
-            title={name}
-            subtasks={subtasks}
-            videoId={videoId}
-          />
-        );
+        return {
+          name,
+          pathwayId,
+          subtasks,
+          videoId,
+          part: realPathway.part,
+          order: realPathway.order,
+        };
       })
       .concat(noProgress);
   };
@@ -207,9 +204,54 @@ const Dashboard: NextApplicationPage<{
             ? firstUrl?.indexOf("v=") + 2
             : firstUrl?.lastIndexOf("/") + 1
         );
-        return { name, pathwayId, subtasks, videoId };
+        return {
+          name,
+          pathwayId,
+          subtasks,
+          videoId,
+          part: realPathway.part,
+          order: realPathway.order,
+        };
       });
-    return <PartDropDown pathwayList={pathwaysList} title="1. Test" />;
+    return pathwaysList;
+  };
+  const sortIntoParts = (pathwaysList) => {
+    console.log(pathwaysList);
+    let partsList = [];
+    pathwaysList.sort((a, b) => {
+      if (!a.part) {
+        a.part = "0. No Part";
+        a.order = 0;
+      }
+      if (!b.part) {
+        b.part = "0. No Part";
+        b.order = 0;
+      }
+      return (
+        parseInt(b.part.substring(0, b.part.indexOf("."))) -
+        parseInt(a.part.substring(0, a.part.indexOf(".")))
+      );
+    });
+    let copyOfPathways = pathwaysList.slice();
+    for (let i = 0; i < copyOfPathways.length; i++) {
+      let pathway = copyOfPathways[i];
+      let filteredPathways = copyOfPathways.filter(
+        (element) => element.part === pathway.part
+      );
+      partsList.push(filteredPathways);
+      copyOfPathways = copyOfPathways.filter(
+        (element) => element.part !== pathway.part
+      );
+      i = -1;
+    }
+    let partsComponents = [];
+    partsList.forEach((part) => {
+      part.sort((a, b) => b.order - a.order);
+      partsComponents.push(
+        <PartDropDown pathwayList={part} title={part[0].part} />
+      );
+    });
+    return partsComponents;
   };
   // const asyncUseEffect = async () => {
   //   console.time("DASHBOARD");
@@ -276,8 +318,14 @@ const Dashboard: NextApplicationPage<{
   }
   let currentTasks = getCurrentTasks();
   let finishedTasks = getFinishedTasks();
-  console.log(currentTasks);
-  console.log(finishedTasks);
+  let sortedParts = [];
+  if (currTab === "current tasks") {
+    sortedParts = sortIntoParts(currentTasks);
+  } else if (currTab === "finished tasks") {
+    sortedParts = sortIntoParts(finishedTasks);
+  } else {
+    sortedParts = sortIntoParts(currentTasks.concat(finishedTasks));
+  }
   return (
     <div className="vh-100">
       {/* {session.data?.user?.email === "test31@gmail.com" ? (
@@ -299,6 +347,13 @@ const Dashboard: NextApplicationPage<{
           style={{ backgroundColor: "#F2F2F7" }}
         >
           <div className="px-5">
+            <button
+              onClick={() => {
+                setIsInUserView(false);
+              }}
+            >
+              Switch to Admin View
+            </button>
             <h1>
               <strong style={{ color: "#2651ED", fontSize: "1em" }}>
                 Personalized 12th grade videos for {accountInfo.name}
@@ -376,7 +431,13 @@ const Dashboard: NextApplicationPage<{
           title="Finished Tasks"
           currTab={currTab}
         />
-        <div style={{ borderBottom: "2px solid #656565" }} />
+        <div
+          className="bottom-border-pathway-filter"
+          style={{
+            borderBottom: "3px solid #656565",
+            flex: "1",
+          }}
+        />
         <ECDropDown
           isForDashboard
           isForWaitlist
@@ -384,12 +445,13 @@ const Dashboard: NextApplicationPage<{
           defaultValue={"11th Grade"}
           valuesList={["11th Grade", "12th Grade"]}
         />
+        <div className="me-4" />
       </div>
       <div className="container-fluid align-self-center mx-0 px-5 pb-5 mx-5 justify-content-evenly">
         <div className="row w-100 flex-wrap">
-          {currTab === "current tasks" || currTab === "all modules" ? (
-            currentTasks.length > 0 ? (
-              currentTasks
+          {currTab === "current tasks" ? (
+            sortedParts.length > 0 ? (
+              sortedParts
             ) : (
               <div
                 className="container-fluid center-child"
@@ -399,18 +461,30 @@ const Dashboard: NextApplicationPage<{
               </div>
             )
           ) : null}
-          {currTab === "finished tasks" || currTab === "all modules"
-            ? // finishedTasks.length > 0 ? (
-              finishedTasks
-            : // ) : (
-              //   <div
-              //     className="container-fluid center-child"
-              //     style={{ height: "40vh" }}
-              //   >
-              //     Any finished tasks will appear here.
-              //   </div>
-              // )
-              null}
+          {currTab === "finished tasks" ? (
+            finishedTasks.length > 0 ? (
+              sortedParts
+            ) : (
+              <div
+                className="container-fluid center-child"
+                style={{ height: "40vh" }}
+              >
+                Any finished tasks will appear here.
+              </div>
+            )
+          ) : null}
+          {currTab === "all modules" ? (
+            sortedParts.length > 0 ? (
+              sortedParts
+            ) : (
+              <div
+                className="container-fluid center-child"
+                style={{ height: "40vh" }}
+              >
+                Any modules will appear here.
+              </div>
+            )
+          ) : null}
         </div>
       </div>
     </div>
@@ -466,6 +540,10 @@ function PartDropDown({
   title: string;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [initialized, setInitialized] = useState(false);
+  useEffect(() => {
+    setInitialized(true);
+  }, []);
   return (
     <div className="progress-dropdown-container w-100 d-flex flex-row align-items-stretch">
       <div className="align-items-center">
@@ -486,7 +564,8 @@ function PartDropDown({
           style={{
             height: "90%",
             width: "2px",
-            marginRight: "calc(1em - 2px)",
+            marginTop: "5px",
+            marginLeft: "calc(1em - 1px)",
             borderLeft: "2px dashed #656565",
             backgroundColor: "transparent",
           }}
@@ -494,8 +573,12 @@ function PartDropDown({
       </div>
       <div className="d-flex flex-column">
         <button
-          className="progress-dropdown-btn justify-content-start"
-          style={{ backgroundColor: "transparent", borderTop: "none" }}
+          className="progress-dropdown-btn justify-content-between dashboard-dropdown-hover mb-2 ms-2"
+          style={{
+            width: "10vw",
+            maxWidth: "25%",
+            minWidth: "10%",
+          }}
           onClick={() => {
             setIsExpanded(!isExpanded);
           }}
@@ -506,7 +589,7 @@ function PartDropDown({
           <div
             className={`${
               isExpanded ? "center-child icon-open" : "center-child icon-close"
-            } ms-3`}
+            } ms-3 me-2`}
             style={{ width: "12px", height: "12px" }}
           >
             <FontAwesomeIcon icon={faChevronDown} />
@@ -514,6 +597,8 @@ function PartDropDown({
         </button>
         <div
           className={`flex-1 ${
+            // initialized
+            //   ? "progress-dropdown-menu-closed-no-animation"
             isExpanded
               ? "progress-dropdown-menu-expanded"
               : "progress-dropdown-menu-closed"

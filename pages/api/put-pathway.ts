@@ -50,7 +50,7 @@ export const putPathway = async (
         await client
           .db("pathways")
           .collection("pathways")
-          .updateOne({ _id: pathwayId }, { $set: pathway }, {upsert: true});
+          .updateOne({ _id: pathwayId }, { $set: pathway }, { upsert: true });
       }
       res();
       client.close();

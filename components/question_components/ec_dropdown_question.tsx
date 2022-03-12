@@ -119,14 +119,15 @@ export default function ECDropDown({
       <div ref={wrapperRef} className="dropdown-container">
         <button
           className={`ec-dropdown-btn ${isForWaitlist ? "bg-white" : ""} ${
-            isForDashboard ? "py-1" : ""
+            isForDashboard ? "py-0 bottom-border-pathway-filter" : ""
           }`}
           style={
             isForDashboard
               ? {
                   border: "none",
                   borderRadius: 0,
-                  borderBottom: "2px solid #656565",
+                  height: "87%",
+                  borderBottom: "3px solid #656565",
                   backgroundColor: "transparent",
                   color: "#070452",
                 }

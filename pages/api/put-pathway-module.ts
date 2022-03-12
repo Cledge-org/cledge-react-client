@@ -52,7 +52,11 @@ export const putPathwayModule = (
         await client
           .db("pathways")
           .collection("modules")
-          .updateOne({ _id: pathwayModuleId }, { $set: pathwayModule }, {upsert: true});
+          .updateOne(
+            { _id: pathwayModuleId },
+            { $set: pathwayModule },
+            { upsert: true }
+          );
         res(pathwayModuleId);
       }
       client.close();

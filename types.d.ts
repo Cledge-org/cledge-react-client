@@ -1,5 +1,3 @@
-import { number } from "yup";
-
 interface Window {
   YT: any;
   onYouTubeIframeAPIReady: any;

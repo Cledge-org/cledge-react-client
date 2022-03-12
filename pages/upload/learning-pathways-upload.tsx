@@ -137,6 +137,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 )
               );
             }
+            console.log();
             Promise.all([
               fetch("/api/put-pathway", {
                 method: "POST",
@@ -149,6 +150,8 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                     tags: sendPathwayData.tags,
                     modules: jsonArr.map(({ moduleId }) => moduleId),
                     name: sendPathwayData.name,
+                    order: sendPathwayData.order,
+                    part: sendPathwayData.part,
                   },
                 }),
               }),
@@ -184,7 +187,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               })
               .catch((err) => console.error("AYO" + err));
           })
-          .catch((err) => console.error("AYO" + err));
+          .catch((err) => console.error("AYO2" + err));
       }}
     >
       <div className="mt-4 d-flex flex-column w-100">
@@ -279,7 +282,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             Part (Example: "1. Starting Pathways"):
           </label>
           <input
-            value={currPathwayData.name}
+            value={currPathwayData.part}
             onChange={(e) =>
               setCurrPathwayData({
                 ...currPathwayData,
@@ -289,7 +292,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             type="text"
             className="px-3 form-control"
             id="course-name"
-            placeholder="Enter course name"
+            placeholder="Enter part"
           />
         </div>
         <div className="form-group">
@@ -298,20 +301,21 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             className="text-muted"
             htmlFor="course-name"
           >
-            Order:
+            Order: (Lower number means it's at the beginning or higher priority)
           </label>
           <input
-            value={currPathwayData.name}
-            onChange={(e) =>
+            value={currPathwayData.order}
+            onChange={(e) => {
+              console.log(parseInt(e.target.value));
               setCurrPathwayData({
                 ...currPathwayData,
-                order: e.target.value,
-              })
-            }
+                order: parseInt(e.target.value),
+              });
+            }}
             type="number"
             className="px-3 form-control"
             id="course-name"
-            placeholder="Enter course name"
+            placeholder="Enter order"
           />
         </div>
         <div className="form-group">
