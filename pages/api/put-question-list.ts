@@ -51,7 +51,7 @@ export const putQuestionList = (
         await client
           .db("questions")
           .collection("question-lists")
-          .updateOne({ _id: questionListId }, { $set: questionList });
+          .updateOne({ _id: questionListId }, { $set: questionList }, {upsert:true});
       }
       res();
       client.close();
