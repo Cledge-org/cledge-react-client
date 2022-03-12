@@ -247,8 +247,8 @@ const Dashboard: NextApplicationPage<{
     }
     partsList.sort((a, b) => {
       return (
-        parseInt(b[0].part.substring(0, b[0].part.indexOf("."))) -
-        parseInt(a[0].part.substring(0, a[0].part.indexOf(".")))
+        parseInt(a[0].part.substring(0, a[0].part.indexOf("."))) -
+        parseInt(b[0].part.substring(0, b[0].part.indexOf(".")))
       );
     });
     let partsComponents = [];
