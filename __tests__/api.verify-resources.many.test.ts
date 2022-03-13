@@ -63,6 +63,7 @@ test ("verify resources", async () => {
     expect(fetchedResources.resources[i]).toMatchObject(resources[0]);
   }
 
+  // put functionality to delete
   for (let i = 0; i < manySize; i++) {
     await putResourceArticle(articleId[i], undefined);
     await putResourceVideo(videoId[i], undefined);
