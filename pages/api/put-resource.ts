@@ -14,10 +14,10 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     const { userToken, resourceId, resource } = req.body;
 
     // use this line only if resourceId is not an ObjectId type;
-    // change line 21 resourceId into resourceIdStr
+    // change line 20 resourceId into resourceObjId
     const resourceObjId = new BSON.ObjectId(resourceId);
     try {
-        const result = await putResource(resourceObjId, resource);
+        const result = await putResource(resourceId, resource);
         resolve.status(200).send(result);
     } catch (e) {
         resolve.status(500).send(e);
