@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { getResourcesInfo } from "../pages/api/get-resources";
-import { putResourceArticle} from "../pages/api/put-resource-article";
+import { putResourceArticle } from "../pages/api/put-resource-article";
 import { putResourceResource } from "../pages/api/put-resource-resource";
 import { putResourceVideo } from "../pages/api/put-resource-video";
 
@@ -26,24 +26,25 @@ const testResource1: CardResource = {
 
 const newObjectId = new ObjectId();
 
-test ("verify resources", async () => {
-  const articles: CardArticle[] = [testArticle1];
-  const videos: CardVideo[] = [testVideo1];
-  const resources: CardResource[] = [testResource1];
-  let expectedArticle = testArticle1;
-  let expectedVideo = testVideo1;
-  let expectedResource = testResource1;
+test("verify resources", (done) => {
+  const callback = async () => {
+    const articles: CardArticle[] = [testArticle1];
+    const videos: CardVideo[] = [testVideo1];
+    const resources: CardResource[] = [testResource1];
+    let expectedArticle = testArticle1;
+    let expectedVideo = testVideo1;
+    let expectedResource = testResource1;
 
-  await Promise.all([
-    ...articles.map((article) => putResourceArticle(newObjectId, article)),
-    ...videos.map((video) => putResourceVideo(newObjectId, video)),
-    ...resources.map((resource) => putResourceResource(newObjectId, resource)),
-  ]);
-  
+    await Promise.all([
+      ...articles.map((article) => putResourceArticle(newObjectId, article)),
+      ...videos.map((video) => putResourceVideo(newObjectId, video)),
+      ...resources.map((resource) => putResourceResource(newObjectId, resource)),
+    ]);
+
     expectedArticle._id = newObjectId;
     expectedVideo._id = newObjectId;
     expectedResource._id = newObjectId;
-    
+
     let actualResource = await getResourcesInfo();
     let actualArticles = actualResource.articles;
     let actualVideos = actualResource.videoList;
@@ -82,6 +83,10 @@ test ("verify resources", async () => {
     await putResourceArticle(newObjectId, undefined);
     await putResourceVideo(newObjectId, undefined);
     await putResourceResource(newObjectId, undefined);
+    done();
+  };
+  callback();
 });
+
 
 

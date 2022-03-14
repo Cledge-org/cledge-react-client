@@ -46,7 +46,7 @@ export const putResourceResource = async (
         await client
           .db("resources")
           .collection("resources")
-          .deleteOne({ _id: resourceId });
+          .deleteOne({_id: resourceId });
       } else if (resourceId && resource) {
         await client
           .db("resources")

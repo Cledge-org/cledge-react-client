@@ -43,7 +43,7 @@ export const putResourceArticle = async (
         await client
           .db("resources")
           .collection("articles")
-          .deleteOne({ _id: articleId });
+          .deleteOne({_id: articleId });
       } else if (articleId && article) {
         await client
           .db("resources")

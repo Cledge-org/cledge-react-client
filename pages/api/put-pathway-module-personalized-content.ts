@@ -57,7 +57,7 @@ export const putPathwayModulePersonalizedContent = (
           await client
             .db("pathways")
             .collection("personalized-content")
-            .updateOne({ _id: contentId }, { $set: content });
+            .updateOne({ _id: contentId }, { $set: content }, {upsert: true});
           res(contentId);
         }
         client.close();
