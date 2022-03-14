@@ -9,7 +9,8 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
-  const { userToken, articleId, article } = JSON.parse(req.body);
+  const { userToken, articleId, article } = req.body;
+  console.log(111);
 
   if (article) {
     try {
@@ -34,10 +35,12 @@ export const putResourceArticle = async (
     // Document should not have _id field when sent to database
     delete article._id;
   }
+  console.log(222);
   return new Promise(async (res, err) => {
     const client = await MongoClient.connect(process.env.MONGO_URL);
     try {
       if (!articleId && article) {
+        article.tag = "article";
         await client.db("resources").collection("all_resources").insertOne(article);
       } else if (articleId && !article) {
         await client

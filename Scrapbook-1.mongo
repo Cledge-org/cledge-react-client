@@ -1,0 +1,10 @@
+db.all_resources.remove({"name": "wow"})
+
+db.all_resources.find()
+
+db.all_resources.updateOne({_id: ObjectId("622edc84e96d2d6b31e2d8da")}, {$set: {
+        "source": "112"
+    }
+})
+
+db.all_resources.find({"name": "Merge Test"})
