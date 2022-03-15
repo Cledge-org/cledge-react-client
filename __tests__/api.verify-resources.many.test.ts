@@ -29,10 +29,26 @@ const testResource1: CardResource = {
 
 
 test("verify resources", async () => {
+    // checks if there is anything in the database at the beginning of test
+    const fetchedResourceCheck = await getResourcesInfo();
+    expect(fetchedResourceCheck.articles.length).toBe(0);
+    expect(fetchedResourceCheck.videoList.length).toBe(0);
+    expect(fetchedResourceCheck.resources.length).toBe(0);
+
     let articles = [testArticle1];
     let videos = [testVideo1];
     let resources = [testResource1];
     let manySize = 100;
+    let articleId = [];
+    let videoId = [];
+    let resourceId = [];
+    
+    for (let i = 0; i < manySize; i++) {
+      await putResourceArticle(articleId.pop(), undefined);
+      await putResourceVideo(videoId.pop(), undefined);
+      await putResourceResource(resourceId.pop(), undefined);
+    }
+
     for (let i = 0; i < manySize; i++) {
       await Promise.all([
         ...articles.map((article) => putResourceArticle(undefined, article)),
@@ -42,9 +58,7 @@ test("verify resources", async () => {
     }
 
     const fetchedResources = await getResourcesInfo();
-    let articleId = [];
-    let videoId = [];
-    let resourceId = [];
+    
 
     expect(fetchedResources.articles.length).toBe(manySize);
     expect(fetchedResources.videoList.length).toBe(manySize);

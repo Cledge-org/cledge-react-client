@@ -49,6 +49,12 @@ const newObjectId = new ObjectId();
 
 test("update resources", (done) => {
     const callback = async () => {
+       // checks if there is anything in the database at the beginning of test
+        const fetchedResourceCheck = await getResourcesInfo();
+        expect(fetchedResourceCheck.articles.length).toBe(0);
+        expect(fetchedResourceCheck.videoList.length).toBe(0);
+        expect(fetchedResourceCheck.resources.length).toBe(0);
+
         const articles: CardArticle[] = [testArticle1];
         const videos: CardVideo[] = [testVideo1];
         const resources: CardResource[] = [testResource1];

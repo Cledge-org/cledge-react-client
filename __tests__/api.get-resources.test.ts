@@ -21,6 +21,15 @@ const testResource1: CardResource = {
 
 test("should add resources and get those added resources exactly", (done) => {
   const callback = async () => {
+    // checks if there is anything in the database at the beginning of test
+    const fetchedResourceCheck = await getResourcesInfo();
+    expect(fetchedResourceCheck.articles.length).toBe(0);
+    expect(fetchedResourceCheck.videoList.length).toBe(0);
+    expect(fetchedResourceCheck.resources.length).toBe(0);
+
+    let articleId = [];
+    let videoId = [];
+    let resourceId = [];
     // Test put functionality
     const articles: CardArticle[] = [testArticle1];
     const videos: CardVideo[] = [testVideo1];
@@ -37,9 +46,6 @@ test("should add resources and get those added resources exactly", (done) => {
     expect(fetchedResources.videoList.length).toBe(videos.length);
     expect(fetchedResources.resources.length).toBe(resources.length);
 
-    let articleId = [];
-    let videoId = [];
-    let resourceId = [];
 
     for (let i = 0; i < fetchedResources.articles.length; i++) {
       expect(fetchedResources.articles[i]).toMatchObject(articles[i]);
@@ -55,6 +61,7 @@ test("should add resources and get those added resources exactly", (done) => {
       resourceId.push(fetchedResources.resources[i]._id);
     }
 
+    // deletes element in the database
     for (let i = 0; i < articleId.length; i++)
       await putResourceArticle(articleId[i], undefined);
     for (let i = 0; i < videoId.length; i++)
