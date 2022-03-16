@@ -8,10 +8,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 
 
-function navbar() {
+function Navbar() {
   return (
-    <div>navbar</div>
+    <div>Navbar</div>
   )
 }
 
-export default navbar
+export default Navbar
