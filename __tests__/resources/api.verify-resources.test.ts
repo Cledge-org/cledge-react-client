@@ -1,8 +1,11 @@
 import { ObjectId } from "mongodb";
-import { getResourcesInfo } from "../pages/api/get-resources";
-import { putResourceArticle } from "../pages/api/put-resource-article";
-import { putResourceResource } from "../pages/api/put-resource-resource";
-import { putResourceVideo } from "../pages/api/put-resource-video";
+import { getResourcesInfo } from "../../pages/api/get-resources";
+import { putResourceArticle } from "../../pages/api/put-resource-article";
+import { putResourceResource } from "../../pages/api/put-resource-resource";
+import { putResourceVideo } from "../../pages/api/put-resource-video";
+
+
+jest.setTimeout(10000);
 
 const titleArticle = "Test Article";
 const titleVideo = "Test Video";
@@ -24,12 +27,14 @@ const testResource1: CardResource = {
   name: titleResource,
 };
 
-const newObjectId = new ObjectId();
 
 test("verify resources", (done) => {
   const callback = async () => {
+    let newObjectId = new ObjectId();
+    console.log("Verify starting...");
     // checks if there is anything in the database at the beginning of test
     const fetchedResourceCheck = await getResourcesInfo();
+    console.log(fetchedResourceCheck);
     expect(fetchedResourceCheck.articles.length).toBe(0);
     expect(fetchedResourceCheck.videoList.length).toBe(0);
     expect(fetchedResourceCheck.resources.length).toBe(0);
@@ -59,11 +64,16 @@ test("verify resources", (done) => {
     let videoCount = 0;
     let resourceCount = 0;
 
+    let articleId = [];
+    let videoId = [];
+    let resourceId = [];
+
     for (let i = 0; i < actualArticles.length; i++) {
       if (actualArticles[i]._id.equals(newObjectId)) {
         expect(actualArticles[i]).toEqual(expectedArticle);
         articleCount++;
       }
+      articleId.push(actualArticles[i]._id);
     }
 
     for (let i = 0; i < actualVideos.length; i++) {
@@ -71,6 +81,7 @@ test("verify resources", (done) => {
         expect(actualVideos[i]).toEqual(expectedVideo);
         videoCount++;
       }
+      videoId.push(actualVideos[i]._id);
     }
 
     for (let i = 0; i < actualResources.length; i++) {
@@ -78,6 +89,7 @@ test("verify resources", (done) => {
         expect(actualResources[i]).toEqual(expectedResource);
         resourceCount++;
       }
+      resourceId.push(actualResources[i]._id);
     }
 
     const expectedCount = 1;
@@ -86,9 +98,21 @@ test("verify resources", (done) => {
     expect(videoCount).toEqual(expectedCount);
     expect(resourceCount).toEqual(expectedCount);
 
-    await putResourceArticle(newObjectId, undefined);
-    await putResourceVideo(newObjectId, undefined);
-    await putResourceResource(newObjectId, undefined);
+
+    console.log("Verify deleting...");
+    for (let i = 0; i < articleId.length; i++)
+      await putResourceArticle(articleId[i], undefined);
+    for (let i = 0; i < videoId.length; i++)
+      await putResourceVideo(videoId[i], undefined);
+    for (let i = 0; i < resourceId.length; i++)
+      await putResourceResource(resourceId[i], undefined);
+
+
+    const fetchedResourcesCheck = await getResourcesInfo();
+    console.log(fetchedResourcesCheck);
+    expect(fetchedResourcesCheck.articles.length).toBe(0);
+    expect(fetchedResourcesCheck.videoList.length).toBe(0);
+    expect(fetchedResourcesCheck.resources.length).toBe(0);
     done();
   };
   callback();

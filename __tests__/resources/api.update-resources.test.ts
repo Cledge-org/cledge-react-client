@@ -1,9 +1,12 @@
 import { ObjectId } from "mongodb";
 import { isAssetError } from "next/dist/client/route-loader";
-import { getResourcesInfo } from "../pages/api/get-resources";
-import { putResourceArticle } from "../pages/api/put-resource-article";
-import { putResourceResource } from "../pages/api/put-resource-resource";
-import { putResourceVideo } from "../pages/api/put-resource-video";
+import { getResourcesInfo } from "../../pages/api/get-resources";
+import { putResourceArticle } from "../../pages/api/put-resource-article";
+import { putResourceResource } from "../../pages/api/put-resource-resource";
+import { putResourceVideo } from "../../pages/api/put-resource-video";
+
+
+jest.setTimeout(10000);
 
 const titleArticle = "Test Article";
 const titleVideo = "Test Video";
@@ -45,12 +48,15 @@ const testResource2: CardResource = {
     name: titleResource2,
 };
 
-const newObjectId = new ObjectId();
 
 test("update resources", (done) => {
     const callback = async () => {
-       // checks if there is anything in the database at the beginning of test
+        // checks if there is anything in the database at the beginning of test("
+        console.log("update start...");
+        let newObjectId = new ObjectId();
+
         const fetchedResourceCheck = await getResourcesInfo();
+        console.log(fetchedResourceCheck);
         expect(fetchedResourceCheck.articles.length).toBe(0);
         expect(fetchedResourceCheck.videoList.length).toBe(0);
         expect(fetchedResourceCheck.resources.length).toBe(0);
@@ -88,6 +94,10 @@ test("update resources", (done) => {
         let actualVideos = actualResource.videoList;
         let actualResources = actualResource.resources;
 
+        let articleId = [];
+        let videoId = [];
+        let resourceId = [];
+
         let articleCount = 0;
         let videoCount = 0;
         let resourceCount = 0;
@@ -97,6 +107,7 @@ test("update resources", (done) => {
                 expect(actualArticles[i]).toEqual(updateArticle);
                 articleCount++;
             }
+            articleId.push(actualArticles[i]._id);
         }
 
         for (let i = 0; i < actualVideos.length; i++) {
@@ -104,6 +115,7 @@ test("update resources", (done) => {
                 expect(actualVideos[i]).toEqual(updateVideo);
                 videoCount++;
             }
+            videoId.push(actualVideos[i]._id);
         }
 
         for (let i = 0; i < actualResources.length; i++) {
@@ -111,6 +123,7 @@ test("update resources", (done) => {
                 expect(actualResources[i]).toEqual(updateResource);
                 resourceCount++;
             }
+            resourceId.push(actualResources[i]._id);
         }
 
         const expectedCount = 1;
@@ -119,9 +132,20 @@ test("update resources", (done) => {
         expect(videoCount).toEqual(expectedCount);
         expect(resourceCount).toEqual(expectedCount);
 
-        await putResourceArticle(newObjectId, undefined);
-        await putResourceVideo(newObjectId, undefined);
-        await putResourceResource(newObjectId, undefined);
+        console.log("Update deleting");
+        for (let i = 0; i < articleId.length; i++)
+            await putResourceArticle(articleId[i], undefined);
+        for (let i = 0; i < videoId.length; i++)
+            await putResourceVideo(videoId[i], undefined);
+        for (let i = 0; i < resourceId.length; i++)
+            await putResourceResource(resourceId[i], undefined);
+
+
+        const fetchedResourceChecks = await getResourcesInfo();
+        console.log(fetchedResourceChecks);
+        expect(fetchedResourceChecks.articles.length).toBe(0);
+        expect(fetchedResourceChecks.videoList.length).toBe(0);
+        expect(fetchedResourceChecks.resources.length).toBe(0);
         done();
     };
     callback();

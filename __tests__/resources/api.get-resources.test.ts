@@ -1,7 +1,10 @@
-import { getResourcesInfo } from "../pages/api/get-resources";
-import { putResourceArticle } from "../pages/api/put-resource-article";
-import { putResourceResource } from "../pages/api/put-resource-resource";
-import { putResourceVideo } from "../pages/api/put-resource-video";
+import { getResourcesInfo } from "../../pages/api/get-resources";
+import { putResourceArticle } from "../../pages/api/put-resource-article";
+import { putResourceResource } from "../../pages/api/put-resource-resource";
+import { putResourceVideo } from "../../pages/api/put-resource-video";
+
+
+jest.setTimeout(10000);
 
 const testArticle1: CardArticle = {
   description: "Test Description",
@@ -22,7 +25,9 @@ const testResource1: CardResource = {
 test("should add resources and get those added resources exactly", (done) => {
   const callback = async () => {
     // checks if there is anything in the database at the beginning of test
+    console.log("Get started...");
     const fetchedResourceCheck = await getResourcesInfo();
+    console.log(fetchedResourceCheck);
     expect(fetchedResourceCheck.articles.length).toBe(0);
     expect(fetchedResourceCheck.videoList.length).toBe(0);
     expect(fetchedResourceCheck.resources.length).toBe(0);
@@ -61,6 +66,7 @@ test("should add resources and get those added resources exactly", (done) => {
       resourceId.push(fetchedResources.resources[i]._id);
     }
 
+    console.log("Get deleting....");
     // deletes element in the database
     for (let i = 0; i < articleId.length; i++)
       await putResourceArticle(articleId[i], undefined);
@@ -69,6 +75,12 @@ test("should add resources and get those added resources exactly", (done) => {
     for (let i = 0; i < resourceId.length; i++)
       await putResourceResource(resourceId[i], undefined);
 
+
+    const fetchedResourcesCheck = await getResourcesInfo();
+    console.log(fetchedResourcesCheck);
+    expect(fetchedResourcesCheck.articles.length).toBe(0);
+    expect(fetchedResourcesCheck.videoList.length).toBe(0);
+    expect(fetchedResourcesCheck.resources.length).toBe(0);
     done();
   };
   callback();

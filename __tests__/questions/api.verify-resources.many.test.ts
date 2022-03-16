@@ -1,8 +1,9 @@
 import { ObjectId } from "mongodb";
-import { getResourcesInfo } from "../pages/api/get-resources";
-import { putResourceArticle } from "../pages/api/put-resource-article";
-import { putResourceResource } from "../pages/api/put-resource-resource";
-import { putResourceVideo } from "../pages/api/put-resource-video";
+import {putResourceVideo} from "../../pages/api/put-resource-video";
+import { getResourcesInfo } from "../../pages/api/get-resources";
+import { putResourceArticle } from "../../pages/api/put-resource-article";
+import { putResourceResource } from "../../pages/api/put-resource-resource";
+
 
 jest.setTimeout(1000000);
 
@@ -28,10 +29,11 @@ const testResource1: CardResource = {
 };
 
 
-test("verify resources", async () => {
+test("verify resources",  (done) => {
+  const callback = async () => {
     // checks if there is anything in the database at the beginning of test
     const fetchedResourceCheck = await getResourcesInfo();
-    expect(fetchedResourceCheck.articles.length).toBe(0);
+    // expect(fetchedResourceCheck.articles.length).toBe(0);
     expect(fetchedResourceCheck.videoList.length).toBe(0);
     expect(fetchedResourceCheck.resources.length).toBe(0);
 
@@ -44,12 +46,6 @@ test("verify resources", async () => {
     let resourceId = [];
     
     for (let i = 0; i < manySize; i++) {
-      await putResourceArticle(articleId.pop(), undefined);
-      await putResourceVideo(videoId.pop(), undefined);
-      await putResourceResource(resourceId.pop(), undefined);
-    }
-
-    for (let i = 0; i < manySize; i++) {
       await Promise.all([
         ...articles.map((article) => putResourceArticle(undefined, article)),
         ...videos.map((video) => putResourceVideo(undefined, video)),
@@ -58,8 +54,6 @@ test("verify resources", async () => {
     }
 
     const fetchedResources = await getResourcesInfo();
-    
-
     expect(fetchedResources.articles.length).toBe(manySize);
     expect(fetchedResources.videoList.length).toBe(manySize);
     expect(fetchedResources.resources.length).toBe(manySize);
@@ -83,6 +77,14 @@ test("verify resources", async () => {
       await putResourceVideo(videoId.pop(), undefined);
       await putResourceResource(resourceId.pop(), undefined);
     }
+
+    const fetchedResourceChecks = await getResourcesInfo();
+    expect(fetchedResourceChecks.articles.length).toBe(0);
+    expect(fetchedResourceChecks.videoList.length).toBe(0);
+    expect(fetchedResourceChecks.resources.length).toBe(0);
+    done();
+  };
+  callback();
 });
 
 
