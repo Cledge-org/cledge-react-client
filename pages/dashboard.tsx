@@ -24,6 +24,10 @@ import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { connect } from "react-redux";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
+import ECDropDown from "../components/question_components/ec_dropdown_question";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { boolean } from "yup";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -87,7 +91,6 @@ const Dashboard: NextApplicationPage<{
   }, []);
   const getCurrentTasks = () => {
     let noProgress = [];
-
     allPathways?.forEach((pathway) => {
       if (
         !pathwaysProgress.find(({ pathwayId }) => {
@@ -115,15 +118,14 @@ const Dashboard: NextApplicationPage<{
             ? firstUrl?.indexOf("v=") + 2
             : firstUrl?.lastIndexOf("/") + 1
         );
-        noProgress.push(
-          <CardTask
-            url={"/pathways/[id]"}
-            correctUrl={`/pathways/${pathway._id}`}
-            title={pathway.name}
-            subtasks={subtasks}
-            videoId={videoId}
-          />
-        );
+        noProgress.push({
+          name: pathway.name,
+          pathwayId: pathway._id,
+          subtasks,
+          videoId,
+          part: pathway.part,
+          order: pathway.order,
+        });
       }
     });
     return pathwaysProgress
@@ -170,20 +172,19 @@ const Dashboard: NextApplicationPage<{
             : firstUrl?.lastIndexOf("/") + 1
         );
         console.log(subtasks);
-        return (
-          <CardTask
-            url={"/pathways/[id]"}
-            correctUrl={`/pathways/${pathwayId}`}
-            title={name}
-            subtasks={subtasks}
-            videoId={videoId}
-          />
-        );
+        return {
+          name,
+          pathwayId,
+          subtasks,
+          videoId,
+          part: realPathway.part,
+          order: realPathway.order,
+        };
       })
       .concat(noProgress);
   };
   const getFinishedTasks = () => {
-    return pathwaysProgress
+    let pathwaysList = pathwaysProgress
       .filter(({ finished }) => {
         return finished;
       })
@@ -204,16 +205,74 @@ const Dashboard: NextApplicationPage<{
             ? firstUrl?.indexOf("v=") + 2
             : firstUrl?.lastIndexOf("/") + 1
         );
-        return (
-          <CardTask
-            url={"/pathways/[id]"}
-            correctUrl={`/pathways/${pathwayId}`}
-            title={name}
-            subtasks={subtasks}
-            videoId={videoId}
-          />
-        );
+        return {
+          name,
+          pathwayId,
+          subtasks,
+          videoId,
+          part: realPathway.part,
+          order: realPathway.order,
+        };
       });
+    return pathwaysList;
+  };
+  const sortIntoParts = (pathwaysList) => {
+    console.log(pathwaysList);
+    let partsList = [];
+    pathwaysList.sort((a, b) => {
+      if (!a.part) {
+        a.part = "0. No Part";
+        a.order = 0;
+      }
+      if (!b.part) {
+        b.part = "0. No Part";
+        b.order = 0;
+      }
+      return (
+        parseInt(b.part.substring(0, b.part.indexOf("."))) -
+        parseInt(a.part.substring(0, a.part.indexOf(".")))
+      );
+    });
+    let copyOfPathways = pathwaysList.slice();
+    for (let i = 0; i < copyOfPathways.length; i++) {
+      let pathway = copyOfPathways[i];
+      let filteredPathways = copyOfPathways.filter(
+        (element) => element.part === pathway.part
+      );
+      partsList.push(filteredPathways);
+      copyOfPathways = copyOfPathways.filter(
+        (element) => element.part !== pathway.part
+      );
+      i = -1;
+    }
+    partsList.sort((a, b) => {
+      return (
+        parseInt(a[0].part.substring(0, a[0].part.indexOf("."))) -
+        parseInt(b[0].part.substring(0, b[0].part.indexOf(".")))
+      );
+    });
+    let partsComponents = [];
+    partsList.forEach((part) => {
+      part.sort((a, b) => b.order - a.order);
+      let finished = 0;
+      let total = 0;
+      part.forEach(({ subtasks }) => {
+        Object.keys(subtasks).forEach((subtask, index) => {
+          if (subtasks[subtask].finished) {
+            finished++;
+          }
+        });
+        total += Object.keys(subtasks).length;
+      });
+      partsComponents.push(
+        <PartDropDown
+          progressRatio={finished / total}
+          pathwayList={part}
+          title={part[0].part}
+        />
+      );
+    });
+    return partsComponents;
   };
   // const asyncUseEffect = async () => {
   //   console.time("DASHBOARD");
@@ -280,10 +339,16 @@ const Dashboard: NextApplicationPage<{
   }
   let currentTasks = getCurrentTasks();
   let finishedTasks = getFinishedTasks();
-  console.log(currentTasks);
-  console.log(finishedTasks);
+  let sortedParts = [];
+  if (currTab === "current tasks") {
+    sortedParts = sortIntoParts(currentTasks);
+  } else if (currTab === "finished tasks") {
+    sortedParts = sortIntoParts(finishedTasks);
+  } else {
+    sortedParts = sortIntoParts(currentTasks.concat(finishedTasks));
+  }
   return (
-    <div>
+    <div className="vh-100">
       {/* {session.data?.user?.email === "test31@gmail.com" ? (
         <button
           onClick={() => {
@@ -302,18 +367,25 @@ const Dashboard: NextApplicationPage<{
           className="w-full md:w-auto py-5 d-flex flex-row justify-content-around"
           style={{ backgroundColor: "#F2F2F7" }}
         >
-          <div>
+          <div className="px-5">
+            <button
+              onClick={() => {
+                setIsInUserView(false);
+              }}
+            >
+              Switch to Admin View
+            </button>
             <h1>
-              <strong style={{ color: "#2651ED", fontSize: 28 }}>
+              <strong style={{ color: "#2651ED", fontSize: "1em" }}>
                 Personalized 12th grade videos for {accountInfo.name}
               </strong>
             </h1>
             <h2>
-              <strong className="" style={{}}>
+              <strong className="" style={{ fontSize: "1.3em" }}>
                 Need more personalized videos?
               </strong>
             </h2>
-            <h3 className="" style={{}}>
+            <h3 className="" style={{ fontSize: "1.6em" }}>
               The learning modules are tailored to you based on your current
               checkin
               <br></br>
@@ -380,12 +452,27 @@ const Dashboard: NextApplicationPage<{
           title="Finished Tasks"
           currTab={currTab}
         />
+        <div
+          className="bottom-border-pathway-filter"
+          style={{
+            borderBottom: "3px solid #656565",
+            flex: "1",
+          }}
+        />
+        <ECDropDown
+          isForDashboard
+          isForWaitlist
+          onChange={(value) => {}}
+          defaultValue={"11th Grade"}
+          valuesList={["11th Grade", "12th Grade"]}
+        />
+        <div className="me-4" />
       </div>
       <div className="container-fluid align-self-center mx-0 px-5 pb-5 mx-5 justify-content-evenly">
-        <div className="row w-100">
-          {currTab === "current tasks" || currTab === "all modules" ? (
-            currentTasks.length > 0 ? (
-              currentTasks
+        <div className="row w-100 flex-wrap">
+          {currTab === "current tasks" ? (
+            sortedParts.length > 0 ? (
+              sortedParts
             ) : (
               <div
                 className="container-fluid center-child"
@@ -395,15 +482,27 @@ const Dashboard: NextApplicationPage<{
               </div>
             )
           ) : null}
-          {currTab === "finished tasks" || currTab === "all modules" ? (
+          {currTab === "finished tasks" ? (
             finishedTasks.length > 0 ? (
-              finishedTasks
+              sortedParts
             ) : (
               <div
                 className="container-fluid center-child"
                 style={{ height: "40vh" }}
               >
                 Any finished tasks will appear here.
+              </div>
+            )
+          ) : null}
+          {currTab === "all modules" ? (
+            sortedParts.length > 0 ? (
+              sortedParts
+            ) : (
+              <div
+                className="container-fluid center-child"
+                style={{ height: "40vh" }}
+              >
+                Any modules will appear here.
               </div>
             )
           ) : null}
@@ -451,6 +550,110 @@ function DashboardTabButton({
         }}
       />
     </li>
+  );
+}
+
+function PartDropDown({
+  pathwayList,
+  title,
+  progressRatio,
+}: {
+  pathwayList: Array<any>;
+  title: string;
+  progressRatio: number;
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [initialized, setInitialized] = useState(false);
+  useEffect(() => {
+    setInitialized(true);
+  }, []);
+  return (
+    <div className="progress-dropdown-container w-100 d-flex flex-row align-items-stretch">
+      <div className="align-items-center">
+        <div
+          style={{
+            marginTop: "2em",
+            width: "2em",
+            height: "2em",
+            border: "1px solid transparent",
+            borderRadius: "1em",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              height: `${progressRatio * 100}%`,
+              backgroundColor: "#2651ed",
+            }}
+          />
+          <div
+            style={{
+              height: `${(1 - progressRatio) * 100}%`,
+              backgroundColor: "#f2f2f7",
+            }}
+          />
+        </div>
+        <div
+          style={{
+            height: "90%",
+            width: "2px",
+            marginTop: "5px",
+            marginLeft: "calc(1em - 1px)",
+            borderLeft: "2px dashed #656565",
+            backgroundColor: "transparent",
+          }}
+        />
+      </div>
+      <div className="d-flex flex-column">
+        <button
+          className="progress-dropdown-btn justify-content-between dashboard-dropdown-hover mb-2 ms-2"
+          style={{
+            width: "10vw",
+            maxWidth: "30%",
+            minWidth: "15%",
+          }}
+          onClick={() => {
+            setIsExpanded(!isExpanded);
+          }}
+        >
+          <div className="text ms-3 cl-dark-text" style={{ fontSize: "1.3em" }}>
+            {title}
+          </div>
+          <div
+            className={`${
+              isExpanded ? "center-child icon-open" : "center-child icon-close"
+            } ms-3 me-2`}
+            style={{ width: "12px", height: "12px" }}
+          >
+            <FontAwesomeIcon icon={faChevronDown} />
+          </div>
+        </button>
+        <div
+          className={`${
+            // initialized
+            //   ? "progress-dropdown-menu-closed-no-animation"
+            isExpanded
+              ? "progress-dropdown-menu-expanded"
+              : "progress-dropdown-menu-closed"
+          } flex-row flex-wrap`}
+          style={{
+            backgroundColor: "transparent",
+            flex: 1,
+            width: "90vw",
+          }}
+        >
+          {pathwayList.map(({ name, pathwayId, subtasks, videoId }, index) => (
+            <CardTask
+              url={"/pathways/[id]"}
+              correctUrl={`/pathways/${pathwayId}`}
+              title={name}
+              subtasks={subtasks}
+              videoId={videoId}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 Dashboard.requireAuth = true;

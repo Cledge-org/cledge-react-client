@@ -70,6 +70,18 @@
     box-shadow: none;
   }
 }
+.dashboard-dropdown-hover {
+  @extend .px-1;
+  @extend .py-2;
+  @extend .mt-3;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  transition: 200ms;
+  background-color: transparent;
+}
+.dashboard-dropdown-hover:hover {
+  background-color: $cl-light-gray;
+}
 .progress-dropdown-menu-closed {
   background-color: $cl-light-gray;
   display: flex;
@@ -79,28 +91,37 @@
   animation-name: close;
   animation-duration: 600ms;
 }
-
+.progress-dropdown-menu-closed-no-animation {
+  background-color: $cl-light-gray;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 0;
+}
 @keyframes close {
   0% {
     max-height: 30vh;
+    overflow: visible;
   }
   100% {
     max-height: 0;
+    overflow: hidden;
   }
 }
 @keyframes expand {
   0% {
     max-height: 0;
+    overflow: hidden;
   }
   100% {
     max-height: 50vh;
+    overflow: visible;
   }
 }
 .progress-dropdown-menu-expanded {
   background-color: $cl-light-gray;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   animation-name: expand;
   animation-duration: 600ms;
 }

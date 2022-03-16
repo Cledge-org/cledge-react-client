@@ -171,6 +171,12 @@
     border-bottom: none;
   }
 }
+@media screen and (max-width: 800px) {
+  .myaccount-blob {
+    width: 65vw;
+  }
+}
+
 //SIGN UP AND LOGIN PAGE STYLES -->
 .auth-bottom-nav {
   @extend .mt-3;
@@ -193,4 +199,7 @@
   @extend .pb-2;
   width: 90%;
   border-bottom: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.7);
+}
+.bottom-border-pathway-filter {
+  margin-bottom: calc($spacer * 0.5 - 1px);
 }

@@ -36,6 +36,9 @@ export const putPathway = async (
     // Document should not have _id field when sent to database
     delete pathway._id;
   }
+  pathway.modules = pathway.modules.map((module) => {
+    return module instanceof ObjectId ? module : new ObjectId(module);
+  });
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
@@ -50,7 +53,7 @@ export const putPathway = async (
         await client
           .db("pathways")
           .collection("pathways")
-          .updateOne({ _id: pathwayId }, { $set: pathway }, {upsert: true});
+          .updateOne({ _id: pathwayId }, { $set: pathway }, { upsert: true });
       }
       res();
       client.close();

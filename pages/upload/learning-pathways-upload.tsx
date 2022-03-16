@@ -16,6 +16,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         allPathways: await (
           await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
         ).json(),
+        // allModules: await (
+        //   await fetch(`${ORIGIN_URL}/api/get-all-modules`)
+        // ).json(),
       },
     };
   } catch (err) {
@@ -27,11 +30,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 // logged in landing page
 const LearningPathwaysUploadPage: NextApplicationPage<{
   allPathways: Pathway[];
-}> = ({ allPathways }) => {
-  console.log(allPathways);
-  const courseTitles = allPathways
-    .map(({ name }) => name)
-    .concat("NEW COURSE");
+  allModules: PathwayModule[];
+}> = ({ allPathways, allModules }) => {
+  console.log(allModules);
+  const courseTitles = allPathways.map(({ name }) => name).concat("NEW COURSE");
   const [currCourseIndex, setCurrCourseIndex] = useState(allPathways.length);
   const [currPathwayData, setCurrPathwayData]: [
     currPathwayData: Pathway,
@@ -39,6 +41,8 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
   ] = useState({
     _id: null,
     name: "",
+    part: "",
+    order: -1,
     modules: [
       {
         _id: null,
@@ -110,28 +114,15 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             let jsonArr = await Promise.all(
               resArr.map(async (res) => await res.json())
             );
-            let personalizedContentUpload: PersonalizedContent[] =
-              sendPathwayData.modules[0].personalizedContent.map(
-                (personalizedContent, index) => {
-                  return {
-                    ...personalizedContent,
-                    moduleId:
-                      personalizedContent.moduleId === null
-                        ? jsonArr[0].moduleId
-                        : personalizedContent.moduleId,
-                  };
-                }
-              );
-            for (let i = 1; i < sendPathwayData.modules.length; i++) {
+            console.log(jsonArr);
+            let personalizedContentUpload: PersonalizedContent[] = [];
+            for (let i = 0; i < sendPathwayData.modules.length; i++) {
               personalizedContentUpload = personalizedContentUpload.concat(
                 sendPathwayData.modules[i].personalizedContent.map(
                   (personalizedContent, index) => {
                     return {
                       ...personalizedContent,
-                      moduleId:
-                        personalizedContent.moduleId === null
-                          ? jsonArr[i].moduleId
-                          : personalizedContent.moduleId,
+                      moduleId: jsonArr[i].moduleId,
                     };
                   }
                 )
@@ -149,6 +140,8 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                     tags: sendPathwayData.tags,
                     modules: jsonArr.map(({ moduleId }) => moduleId),
                     name: sendPathwayData.name,
+                    order: sendPathwayData.order,
+                    part: sendPathwayData.part,
                   },
                 }),
               }),
@@ -184,7 +177,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               })
               .catch((err) => console.error("AYO" + err));
           })
-          .catch((err) => console.error("AYO" + err));
+          .catch((err) => console.error("AYO2" + err));
       }}
     >
       <div className="mt-4 d-flex flex-column w-100">
@@ -203,6 +196,8 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 setCurrPathwayData({
                   _id: null,
                   name: "",
+                  part: "",
+                  order: -1,
                   modules: [
                     {
                       _id: null,
@@ -266,6 +261,51 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             className="px-3 form-control"
             id="course-name"
             placeholder="Enter course name"
+          />
+        </div>
+        <div className="form-group">
+          <label
+            style={{ fontSize: "0.9em" }}
+            className="text-muted"
+            htmlFor="course-part"
+          >
+            Part (Example: "1. Starting Pathways"):
+          </label>
+          <input
+            value={currPathwayData.part}
+            onChange={(e) =>
+              setCurrPathwayData({
+                ...currPathwayData,
+                part: e.target.value,
+              })
+            }
+            type="text"
+            className="px-3 form-control"
+            id="course-part"
+            placeholder="Enter part"
+          />
+        </div>
+        <div className="form-group">
+          <label
+            style={{ fontSize: "0.9em" }}
+            className="text-muted"
+            htmlFor="course-order"
+          >
+            Order: (Lower number means it's at the beginning or higher priority)
+          </label>
+          <input
+            value={currPathwayData.order}
+            onChange={(e) => {
+              console.log(parseInt(e.target.value));
+              setCurrPathwayData({
+                ...currPathwayData,
+                order: parseInt(e.target.value),
+              });
+            }}
+            type="number"
+            className="px-3 form-control"
+            id="course-order"
+            placeholder="Enter order"
           />
         </div>
         <div className="form-group">
@@ -468,9 +508,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                                 }}
                                 type="text"
                                 className="px-3 form-control"
-                                id={`preset-name-${
-                                  module.name + contentIndex
-                                }`}
+                                id={`preset-name-${module.name + contentIndex}`}
                                 placeholder="Enter preset name"
                               />
                             </div>
