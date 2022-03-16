@@ -9,7 +9,7 @@ import {
   Content,
   ContentWrapper,
   ButtonWrapper,
-  IconWrapper
+  IconWrapper,
 } from "./styles";
 
 const RightBlock = ({
@@ -33,7 +33,7 @@ const RightBlock = ({
           <Col lg={11} md={11} sm={11} xs={24}>
             <ContentWrapper id={id}>
               <h6>{title}</h6>
-              <Content >{content}</Content>
+              <Content>{content}</Content>
               <ButtonWrapper>
                 {typeof button === "object" &&
                   button.map((item: any, id: number) => {
@@ -42,7 +42,18 @@ const RightBlock = ({
                         key={id}
                         color={item.color}
                         fixedWidth={true}
-                        onClick={() => scrollTo("about")}>
+                        onClick={() => {
+                          if (id === 0) {
+                            window.open(
+                              "https://forms.gle/M1GxLK45Yi3Esfn5A",
+                              "_blank"
+                            );
+                          }
+                          if (id === 1) {
+                            scrollTo("about");
+                          }
+                        }}
+                      >
                         {item.title}
                       </Button>
                     );
@@ -50,16 +61,13 @@ const RightBlock = ({
               </ButtonWrapper>
             </ContentWrapper>
           </Col>
-            {id === "intro" ? (
-              <VideoWrapper
-                id="videoWrapper">
-                {video}
-              </VideoWrapper>
-            ) : (
-              <IconWrapper>
-                <SvgIcon src={icon} width="100%" height="100%" />
-              </IconWrapper>
-            )}
+          {id === "intro" ? (
+            <VideoWrapper id="videoWrapper">{video}</VideoWrapper>
+          ) : (
+            <IconWrapper>
+              <SvgIcon src={icon} width="100%" height="100%" />
+            </IconWrapper>
+          )}
         </Row>
       </Fade>
     </RightBlockContainer>
