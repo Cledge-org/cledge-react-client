@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
     // use this line only if resourceId is not an ObjectId type;
     // change line 20 resourceId into resourceObjId
-    const resourceObjId = new BSON.ObjectId(resourceId);
+    // const resourceObjId = new BSON.ObjectId(resourceId);
     try {
         const result = await putResource(resourceId, resource);
         resolve.status(200).send(result);
