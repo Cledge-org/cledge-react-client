@@ -33,7 +33,7 @@ export const putPathwayModulePersonalizedContent = (
   contentId: ObjectId | undefined,
   content: PersonalizedContent | undefined
 ): Promise<ObjectId> => {
-  if (content != undefined && content._id) {
+  if (content !== undefined && content._id) {
     // Document should not have _id field when sent to database
     delete content._id;
   }

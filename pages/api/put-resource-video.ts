@@ -31,7 +31,7 @@ export const putResourceVideo = async (
   video: CardVideo | undefined
 ): Promise<void> => {
   return new Promise(async (res, err) => {
-    if (video != undefined && video._id) {
+    if (video !== undefined && video._id) {
       // Document should not have _id field when sent to database
       delete video._id;
     }

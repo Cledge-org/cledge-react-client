@@ -32,7 +32,7 @@ export const putPathway = async (
   pathwayId: ObjectId | undefined,
   pathway: Pathway_Db | undefined
 ): Promise<void> => {
-  if (pathway != undefined && pathway._id) {
+  if (pathway !== undefined && pathway._id) {
     // Document should not have _id field when sent to database
     delete pathway._id;
   }

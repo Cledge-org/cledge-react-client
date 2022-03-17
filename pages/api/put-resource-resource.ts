@@ -30,7 +30,7 @@ export const putResourceResource = async (
   resourceId: ObjectId | undefined,
   resource: CardResource | undefined
 ): Promise<void> => {
-  if (resource != undefined && resource._id) {
+  if (resource !== undefined && resource._id) {
     // Document should not have _id field when sent to database
     delete resource._id;
   }
