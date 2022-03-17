@@ -30,7 +30,7 @@ export const putPathwayModule = (
   pathwayModuleId: ObjectId | undefined,
   pathwayModule: PathwayModule_Db | undefined
 ): Promise<ObjectId> => {
-  if (pathwayModule._id) {
+  if (pathwayModule != undefined &&pathwayModule._id) {
     // Document should not have _id field when sent to database
     delete pathwayModule._id;
   }
