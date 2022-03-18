@@ -1,9 +1,9 @@
 import { ObjectId } from "mongodb";
-import { getResourcesInfo } from "../../pages/api/get-resources";
-import { putResourceArticle } from "../../pages/api/put-resource-article";
-import { putResourceResource } from "../../pages/api/put-resource-resource";
-import { putResourceVideo } from "../../pages/api/put-resource-video";
-
+import { getResourcesInfo } from "../pages/api/get-resources";
+import { putResourceArticle } from "../pages/api/put-resource-article";
+import { putResourceResource } from "../pages/api/put-resource-resource";
+import { putResourceVideo } from "../pages/api/put-resource-video";
+import { putResource } from "../pages/api/put-resource";
 
 jest.setTimeout(10000);
 
@@ -50,9 +50,9 @@ test("verify resources", (done) => {
     let expectedResource = testResource1;
 
     await Promise.all([
-      ...articles.map((article) => putResourceArticle(newObjectId, article)),
-      ...videos.map((video) => putResourceVideo(newObjectId, video)),
-      ...resources.map((resource) => putResourceResource(newObjectId, resource)),
+      ...articles.map((article) => putResource(newObjectId, article, "article")),
+      ...videos.map((video) => putResource(newObjectId, video, "video")),
+      ...resources.map((resource) => putResource(newObjectId, resource, "video")),
     ]);
 
     expectedArticle._id = newObjectId;
@@ -103,11 +103,11 @@ test("verify resources", (done) => {
 
 
     for (let i = 0; i < articleId.length; i++)
-      await putResourceArticle(articleId[i], undefined);
+      await putResource(articleId[i], undefined, undefined);
     for (let i = 0; i < videoId.length; i++)
-      await putResourceVideo(videoId[i], undefined);
+      await putResource(videoId[i], undefined, undefined);
     for (let i = 0; i < resourceId.length; i++)
-      await putResourceResource(resourceId[i], undefined);
+      await putResource(resourceId[i], undefined, undefined);
 
 
     const fetchedResourcesCheck = await getResourcesInfo();

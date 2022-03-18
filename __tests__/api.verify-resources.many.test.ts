@@ -1,8 +1,9 @@
 import { ObjectId } from "mongodb";
-import {putResourceVideo} from "../../pages/api/put-resource-video";
-import { getResourcesInfo } from "../../pages/api/get-resources";
-import { putResourceArticle } from "../../pages/api/put-resource-article";
-import { putResourceResource } from "../../pages/api/put-resource-resource";
+import {putResourceVideo} from "../pages/api/put-resource-video";
+import { getResourcesInfo } from "../pages/api/get-resources";
+import { putResourceArticle } from "../pages/api/put-resource-article";
+import { putResourceResource } from "../pages/api/put-resource-resource";
+import { putResource } from "../pages/api/put-resource";
 
 
 const titleArticle = "Test Article";
@@ -50,9 +51,9 @@ test("verify resources",  (done) => {
     
     for (let i = 0; i < manySize; i++) {
       await Promise.all([
-        ...articles.map((article) => putResourceArticle(undefined, article)),
-        ...videos.map((video) => putResourceVideo(undefined, video)),
-        ...resources.map((resource) => putResourceResource(undefined, resource)),
+        ...articles.map((article) => putResource(undefined, article, "article")),
+        ...videos.map((video) => putResource(undefined, video, "video")),
+        ...resources.map((resource) => putResource(undefined, resource , "resource")),
       ]);
     }
 

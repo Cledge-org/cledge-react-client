@@ -1,13 +1,13 @@
-import { getAllPathwayProgress } from "../../pages/api/get-all-pathway-progress";
-import { getAllPathways } from "../../pages/api/get-all-pathways";
-import { getPathwayProgress } from "../../pages/api/get-pathway-progress";
-import { getPathway } from "../../pages/api/get-pathway";
-import { putPathwayModulePersonalizedContent } from "../../pages/api/put-pathway-module-personalized-content";
-import { putPathwayModule } from "../../pages/api/put-pathway-module";
-import { putPathwayProgress } from "../../pages/api/put-pathway-progress";
-import { putPathway } from "../../pages/api/put-pathway";
+import { getAllPathwayProgress } from "../pages/api/get-all-pathway-progress";
+import { getAllPathways } from "../pages/api/get-all-pathways";
+import { getPathwayProgress } from "../pages/api/get-pathway-progress";
+import { getPathway } from "../pages/api/get-pathway";
+import { putPathwayModulePersonalizedContent } from "../pages/api/put-pathway-module-personalized-content";
+import { putPathwayModule } from "../pages/api/put-pathway-module";
+import { putPathwayProgress } from "../pages/api/put-pathway-progress";
+import { putPathway } from "../pages/api/put-pathway";
 import { ObjectId } from "mongodb";
-import { createUser } from "../../pages/api/create-user";
+import { createUser } from "../pages/api/create-user";
 
 const pathwayModule1ObjectId = new ObjectId();
 const testPersonalizedContentTag = ["Test Tag 1", "Test Tag 2", "Test Tag 3"];

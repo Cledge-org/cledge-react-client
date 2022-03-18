@@ -1,8 +1,8 @@
-import { getResourcesInfo } from "../../pages/api/get-resources";
-import { putResourceArticle } from "../../pages/api/put-resource-article";
-import { putResourceResource } from "../../pages/api/put-resource-resource";
-import { putResourceVideo } from "../../pages/api/put-resource-video";
-import { putResource } from "../../pages/api/put-resource";
+import { getResourcesInfo } from "../pages/api/get-resources";
+import { putResourceArticle } from "../pages/api/put-resource-article";
+import { putResourceResource } from "../pages/api/put-resource-resource";
+import { putResourceVideo } from "../pages/api/put-resource-video";
+import { putResource } from "../pages/api/put-resource";
 
 
 jest.setTimeout(10000);
