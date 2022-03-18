@@ -6,7 +6,6 @@ import { putResourceResource } from "../../pages/api/put-resource-resource";
 import { putResourceVideo } from "../../pages/api/put-resource-video";
 import { putResource } from "../../pages/api/put-resource";
 
-
 jest.setTimeout(10000);
 
 const titleArticle = "Test Article";
@@ -17,50 +16,53 @@ const titleVideo2 = "Test Video 2";
 const titleResource2 = "Test Resource 2";
 
 const testArticle1: CardArticle = {
-    description: "Test Description",
     source: "Test Source",
     name: titleArticle,
-    category: "article"
+    category: "article",
+    description: "Test Description"
 };
 
 const testVideo1: CardVideo = {
     source: "Test Source",
     name: titleVideo,
-    category: "video"
+    category: "video",
+    description: "Test Description"
 };
 
 const testResource1: CardResource = {
     source: "Test Source",
     name: titleResource,
-    category: "resource"
+    category: "resource",
+    description: "Test Description"
 };
 
-
 const testArticle2: CardArticle = {
-    description: "Test Description 2",
     source: "Test Source 2",
     name: titleArticle2,
-    category: "article"
+    category: "article",
+    description: "Test Description 2"
+
 };
 
 const testVideo2: CardVideo = {
     source: "Test Source 2",
     name: titleVideo2,
-    category: "video"
+    category: "video",
+    description: "Test Description 2"
 };
 
 const testResource2: CardResource = {
     source: "Test Source 2",
     name: titleResource2,
-    category: "resource"
+    category: "resource",
+    description: "Test Description 2"
 };
 
+let newObjectId = new ObjectId();
 
 test("update resources", (done) => {
     const callback = async () => {
         // checks if there is anything in the database at the beginning of test("
-        let newObjectId = new ObjectId();
-
         const fetchedResourceCheck = await getResourcesInfo();
         expect(fetchedResourceCheck.articles.length).toBe(0);
         expect(fetchedResourceCheck.videoList.length).toBe(0);
@@ -74,9 +76,9 @@ test("update resources", (done) => {
         let updateResource = testResource2;
 
         await Promise.all([
-            ...articles.map((article) => putResource(newObjectId, article, undefined)),
-            ...videos.map((video) => putResource(newObjectId, video, undefined)),
-            ...resources.map((resource) => putResource(newObjectId, resource, undefined)),
+            ...articles.map((article) => putResource(newObjectId, article, "article")),
+            ...videos.map((video) => putResource(newObjectId, video, "video")),
+            ...resources.map((resource) => putResource(newObjectId, resource, "resource")),
         ]);
 
         const articles2: CardArticle[] = [testArticle2];
@@ -84,11 +86,10 @@ test("update resources", (done) => {
         const resources2: CardResource[] = [testResource2];
 
         await Promise.all([
-            ...articles2.map((article) => putResource(newObjectId, article, undefined)),
+            ...articles2.map((article) => putResource(newObjectId, article, "article")),
             ...videos2.map((video) => putResource(newObjectId, video, undefined)),
-            ...resources2.map((resource) =>  putResource(newObjectId, resource, undefined)),
+            ...resources2.map((resource) => putResource(newObjectId, resource, undefined)),
         ]);
-
 
         updateArticle._id = newObjectId;
         updateVideo._id = newObjectId;
@@ -106,6 +107,10 @@ test("update resources", (done) => {
         let articleCount = 0;
         let videoCount = 0;
         let resourceCount = 0;
+
+        delete updateArticle.category;
+        delete updateVideo.category;
+        delete updateResource.category;
 
         for (let i = 0; i < actualArticles.length; i++) {
             if (actualArticles[i]._id.equals(newObjectId)) {
@@ -132,7 +137,6 @@ test("update resources", (done) => {
         }
 
         const expectedCount = 1;
-
         expect(articleCount).toEqual(expectedCount);
         expect(videoCount).toEqual(expectedCount);
         expect(resourceCount).toEqual(expectedCount);

@@ -58,7 +58,8 @@ const testProgressInfo: ProgressInfo = {
 
 const newObjectId = new ObjectId();
 
-test ("verify questions", async () => {
+test ("verify questions", (done) => {
+  async function callback() {
   const question: Question[] = [testQuestion];
   const userResponse: UserResponse[] = [testUserResponse];
   const questionListDb: QuestionList_Db[] = [testQuestionListDb1];
@@ -105,6 +106,9 @@ test ("verify questions", async () => {
 
     expect(progressCount).toEqual(1);
     expect(responseCount).toEqual(1);
-});
 
+    done();
+  };
+  callback();
+});
 

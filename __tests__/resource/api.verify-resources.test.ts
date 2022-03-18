@@ -15,19 +15,21 @@ const testArticle1: CardArticle = {
   description: "Test Description",
   source: "Test Source",
   name: titleArticle,
-  category: ""
+  category: "article"
 };
 
 const testVideo1: CardVideo = {
   source: "Test Source",
   name: titleVideo,
-  category: ""
+  category: "video",
+  description: "Test Description"
 };
 
 const testResource1: CardResource = {
   source: "Test Source",
   name: titleResource,
-  category: ""
+  category: "resource",
+  description: "Test Description"
 };
 
 

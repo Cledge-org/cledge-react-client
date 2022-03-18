@@ -54,6 +54,8 @@ const testPathway: Pathway = {
   name: testPathwayName,
   modules: testPathwayModules,
   tags: testPathwayTag,
+  part: "",
+  order: 0
 };
 
 const testPathway_Db: Pathway_Db = {
@@ -61,6 +63,8 @@ const testPathway_Db: Pathway_Db = {
   name: testPathwayName,
   tags: testPathwayTag,
   modules: [pathwayModule1ObjectId],
+  part: "",
+  order: 0
 };
 
 const testContentProgress: ContentProgress = {
@@ -119,23 +123,40 @@ beforeAll(() => {
 test("should add pathway and get those added pathways exactly", (done) => {
   const callback = async () => {
     const manySizes = 10;
+    const pathway: Pathway[] = [testPathway];
+    const pathwayModule: PathwayModule[] = [testPathwayModule];
 
     for (let i = 0; i < manySizes; i++) {
       const pathwayId = new ObjectId();
       const moduleId = new ObjectId();
       const firebaseId = "Test User Id " + i;
-      
+
       // Test put functionality
-      const pathway: Pathway[] = [testPathway];
-      const pathwayProgress: PathwayProgress[] = [testPathwayProgress];
-      const pathwayModule: PathwayModule[] = [testPathwayModule];
-      const personalizedContent: PersonalizedContent[] = [testPersonalizedContent];
       const pathwayDb: Pathway_Db[] = [{
         _id: new ObjectId(),
         name: testPathwayName,
         tags: testPathwayTag,
         modules: [moduleId],
+        part: "",
+        order: 0,
       }];
+      const pathwayProgress: PathwayProgress[] = [{
+        pathwayId: pathwayId,
+        finished: false,
+        name: testPathwayName,
+        moduleProgress: testModuleProgresses,
+      }];
+      const personalizedContent: PersonalizedContent[] = [{
+        _id: new ObjectId(),
+        moduleId: moduleId,
+        priority: 0,
+        tags: testPersonalizedContentTag,
+        name: "Test Name",
+        type: "Test Type",
+        url: "Test Url",
+      }];
+
+
       const pathwayModuleDb: PathwayModule_Db[] = [testPathwayModule_Db];
       const contentProgress: ContentProgress[] = [testContentProgress];
 
@@ -169,7 +190,7 @@ test("should add pathway and get those added pathways exactly", (done) => {
 
       await Promise.all([
         ...personalizedContent.map((responses) =>
-          putPathwayModulePersonalizedContent(pathwayId, responses)),
+          putPathwayModulePersonalizedContent(undefined, responses)),
       ]);
 
       // Test get functionality - should be identical to what we put
@@ -185,20 +206,26 @@ test("should add pathway and get those added pathways exactly", (done) => {
         getPathwayProgress(firebaseId, pathwayId),
       ]);
 
-      expect(fetchedAllPathway.length).toBe(pathwayDb.length);
-      expect(fetchedAllPathwayProgress.length).toBe(testDashboard.userProgress.length);
+      expect(fetchedAllPathway.length).toBe(pathwayDb.length * (i + 1)); 
+      expect(fetchedAllPathwayProgress.length).toBe(testDashboard.userProgress.length * (i + 1));
       expect(fetchedPathway.modules.length).toBe(testPathway_Db.modules.length);
       expect(fetchedPathwayProgress.moduleProgress.length).toBe(testModuleProgresses.length);
 
       for (let i = 0; i < fetchedAllPathway.length; i++) {
         expect(fetchedAllPathway[i]).toMatchObject(pathway[0]);
       }
+
       for (let i = 0; i < fetchedAllPathwayProgress.length; i++) {
+        console.log(i);
+        console.log(fetchedAllPathwayProgress[i]);
+        console.log(pathwayProgress[0]);
         expect(fetchedAllPathwayProgress[i]).toMatchObject(pathwayProgress[0]);
       }
+
       for (let i = 0; i < fetchedPathway.tags.length; i++) {
         expect(fetchedPathway.modules[i]).toMatchObject(pathwayModule[0]);
       }
+      
       for (let i = 0; i < fetchedPathwayProgress.moduleProgress.length; i++) {
         expect(fetchedPathwayProgress.moduleProgress[i]).toMatchObject(testModuleProgresses[0]);
       }

@@ -57,6 +57,8 @@ const testPathway: Pathway = {
   name: testPathwayName,
   modules: testPathwayModules,
   tags: testPathwayTag,
+  part: "",
+  order: 0
 };
 
 const testPathway_Db: Pathway_Db = {
@@ -64,6 +66,8 @@ const testPathway_Db: Pathway_Db = {
   name: testPathwayName,
   tags: testPathwayTag,
   modules: [pathwayModule1ObjectId],
+  part: "",
+  order: 0
 };
 
 const testContentProgress: ContentProgress = {
@@ -149,6 +153,8 @@ const testPathway2: Pathway = {
   name: testPathwayName2,
   modules: testPathwayModules2,
   tags: testPathwayTag2,
+  part: "",
+  order: 0
 };
 
 const testPathway_Db2: Pathway_Db = {
@@ -156,6 +162,8 @@ const testPathway_Db2: Pathway_Db = {
   name: testPathwayName2,
   tags: testPathwayTag2,
   modules: [pathwayModule1ObjectId],
+  part: "",
+  order: 0
 };
 
 const testContentProgress2: ContentProgress = {
@@ -218,6 +226,7 @@ test("update pathway", (done) => {
     const pathwayDb: Pathway_Db[] = [testPathway_Db];
     const pathwayModuleDb: PathwayModule_Db[] = [testPathwayModule_Db];
     const contentProgress: ContentProgress[] = [testContentProgress];
+
     await Promise.all([
       ...pathwayDb.map((pathway_put) => 
       putPathway(pathway1ObjectId, pathway_put)),

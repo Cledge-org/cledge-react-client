@@ -99,7 +99,7 @@ const testProgressInfo: ProgressInfo = {
 const newObjectId = new ObjectId();
 
 test("update question", (done) => {
-    const callback = async () => {
+    async function callback() {
         // Add the elements in the database
         const question: Question[] = [testQuestion1];
         const userResponse: UserResponse[] = [testUserResponse];

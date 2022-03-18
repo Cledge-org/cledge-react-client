@@ -54,6 +54,8 @@ const testPathway: Pathway = {
   name: testPathwayName,
   modules: testPathwayModules,
   tags: testPathwayTag,
+  part: "",
+  order: 0
 };
 
 const testPathway_Db: Pathway_Db = {
@@ -61,6 +63,8 @@ const testPathway_Db: Pathway_Db = {
   name: testPathwayName,
   tags: testPathwayTag,
   modules: [pathwayModule1ObjectId],
+  part: "",
+  order: 0
 };
 
 const testContentProgress: ContentProgress = {
@@ -160,6 +164,9 @@ test("should add pathway and get those added pathways exactly", (done) => {
       getPathwayProgress(testUserFirebaseId, pathway1ObjectId),
     ]);
 
+
+    let allPathwayId = [];
+
     expect(fetchedAllPathway.length).toBe(pathwayDb.length);
     expect(fetchedAllPathwayProgress.length).toBe(testDashboard.userProgress.length);
     expect(fetchedPathway.modules.length).toBe(testPathway_Db.modules.length);  
@@ -167,7 +174,9 @@ test("should add pathway and get those added pathways exactly", (done) => {
    
     for (let i = 0; i < fetchedAllPathway.length; i++) {
       expect(fetchedAllPathway[i]).toMatchObject(pathway[i]);
+      allPathwayId.push(fetchedAllPathway[i]._id);
     }
+
     for (let i = 0; i < fetchedAllPathwayProgress.length; i++) {
       expect(fetchedAllPathwayProgress[i]).toMatchObject(pathwayProgress[i]);
     }
@@ -177,6 +186,14 @@ test("should add pathway and get those added pathways exactly", (done) => {
     for (let i = 0; i < fetchedPathwayProgress.moduleProgress.length; i++) {
       expect(fetchedPathwayProgress.moduleProgress[i]).toMatchObject(testModuleProgresses[i]);
     }
+    
+    for (let i = 0; i < allPathwayId.length; i++)
+        await putPathway(allPathwayId[i], undefined);
+
+    // Verifying pathways are empty       
+    const fetchedAllPathwayCheck =  await getAllPathways();
+    expect(fetchedAllPathwayCheck.length).toBe(0);
+
     done();
   };
   callback();

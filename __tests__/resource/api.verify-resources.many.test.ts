@@ -5,8 +5,6 @@ import { putResourceArticle } from "../../pages/api/put-resource-article";
 import { putResourceResource } from "../../pages/api/put-resource-resource";
 
 
-jest.setTimeout(1000000);
-
 const titleArticle = "Test Article";
 const titleVideo = "Test Video";
 
@@ -22,13 +20,15 @@ const testArticle1: CardArticle = {
 const testVideo1: CardVideo = {
   source: "Test Source",
   name: titleVideo,
-  category: ""
+  category: "video",
+  description: "Test Description",
 };
 
 const testResource1: CardResource = {
   source: "Test Source",
   name: titleResource,
-  category: ""
+  category: "resource",
+  description: "Test Description",
 };
 
 

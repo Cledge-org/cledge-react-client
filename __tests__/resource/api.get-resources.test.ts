@@ -17,13 +17,15 @@ const testArticle1: CardArticle = {
 const testVideo1: CardVideo = {
   source: "Test Source",
   name: "Test Title",
-  category: "video"
+  category: "video",
+  description: "Test Description",
 };
 
 const testResource1: CardResource = {
   source: "Test Source",
   name: "Test Title",
-  category: "resource"
+  category: "resource",
+  description: "Test Description",
 };
 
 test("should add resources and get those added resources exactly", (done) => {
@@ -57,15 +59,18 @@ test("should add resources and get those added resources exactly", (done) => {
     for (let i = 0; i < fetchedResources.articles.length; i++) {
       console.log(fetchedResources.articles[i]);
       console.log(articles[i]);
+      delete articles[i].category;
       expect(fetchedResources.articles[i]).toMatchObject(articles[i]);
       articleId.push(fetchedResources.articles[i]._id);
     }
     for (let i = 0; i < fetchedResources.videoList.length; i++) {
+      delete videos[i].category;
       expect(fetchedResources.videoList[i]).toMatchObject(videos[i]);
       videoId.push(fetchedResources.videoList[i]._id);
-
     }
+
     for (let i = 0; i < fetchedResources.resources.length; i++) {
+      delete resources[i].category;
       expect(fetchedResources.resources[i]).toMatchObject(resources[i]);
       resourceId.push(fetchedResources.resources[i]._id);
     }

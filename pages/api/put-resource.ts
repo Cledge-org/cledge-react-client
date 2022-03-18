@@ -35,7 +35,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // provided, will attempt to delete
 export const putResource = async (
   resourceId: ObjectId | undefined,
-  resource: CardResource | undefined,
+  resource: CardArticle | CardVideo | CardResource | undefined,
   category: String | undefined
 ): Promise<void> => {
   if (resource && resource._id) {

@@ -36,9 +36,11 @@ export const putPathway = async (
     // Document should not have _id field when sent to database
     delete pathway._id;
   }
-  pathway.modules = pathway.modules.map((module) => {
-    return module instanceof ObjectId ? module : new ObjectId(module);
-  });
+  if (pathway !== undefined) {
+    pathway.modules = pathway.modules.map((module) => {
+      return module instanceof ObjectId ? module : new ObjectId(module);
+    });
+  }
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);

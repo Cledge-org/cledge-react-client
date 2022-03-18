@@ -57,7 +57,7 @@ const testProgressInfo: ProgressInfo = {
 };
 
 test("should add questions and get those added questions exactly", (done) => {
-  const callback = async () => {
+  async function callback() {
     // Test put functionality
     const question: Question[] = [testQuestion];
     const userResponse: UserResponse[] = [testUserResponse];
