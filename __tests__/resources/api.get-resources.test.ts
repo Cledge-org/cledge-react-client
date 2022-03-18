@@ -10,24 +10,25 @@ const testArticle1: CardArticle = {
   description: "Test Description",
   source: "Test Source",
   name: "Test Title",
+  category: ""
 };
 
 const testVideo1: CardVideo = {
   source: "Test Source",
   name: "Test Title",
+  category: ""
 };
 
 const testResource1: CardResource = {
   source: "Test Source",
   name: "Test Title",
+  category: ""
 };
 
 test("should add resources and get those added resources exactly", (done) => {
   const callback = async () => {
     // checks if there is anything in the database at the beginning of test
-    console.log("Get started...");
     const fetchedResourceCheck = await getResourcesInfo();
-    console.log(fetchedResourceCheck);
     expect(fetchedResourceCheck.articles.length).toBe(0);
     expect(fetchedResourceCheck.videoList.length).toBe(0);
     expect(fetchedResourceCheck.resources.length).toBe(0);
@@ -66,7 +67,6 @@ test("should add resources and get those added resources exactly", (done) => {
       resourceId.push(fetchedResources.resources[i]._id);
     }
 
-    console.log("Get deleting....");
     // deletes element in the database
     for (let i = 0; i < articleId.length; i++)
       await putResourceArticle(articleId[i], undefined);
@@ -77,7 +77,6 @@ test("should add resources and get those added resources exactly", (done) => {
 
 
     const fetchedResourcesCheck = await getResourcesInfo();
-    console.log(fetchedResourcesCheck);
     expect(fetchedResourcesCheck.articles.length).toBe(0);
     expect(fetchedResourcesCheck.videoList.length).toBe(0);
     expect(fetchedResourcesCheck.resources.length).toBe(0);

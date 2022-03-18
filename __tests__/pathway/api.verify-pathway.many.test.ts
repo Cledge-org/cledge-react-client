@@ -121,19 +121,24 @@ test("should add pathway and get those added pathways exactly", (done) => {
     const manySizes = 10;
 
     for (let i = 0; i < manySizes; i++) {
+      const pathwayId = new ObjectId();
+      const moduleId = new ObjectId();
+      const firebaseId = "Test User Id " + i;
+      
       // Test put functionality
       const pathway: Pathway[] = [testPathway];
       const pathwayProgress: PathwayProgress[] = [testPathwayProgress];
       const pathwayModule: PathwayModule[] = [testPathwayModule];
       const personalizedContent: PersonalizedContent[] = [testPersonalizedContent];
-      const pathwayDb: Pathway_Db[] = [testPathway_Db];
+      const pathwayDb: Pathway_Db[] = [{
+        _id: new ObjectId(),
+        name: testPathwayName,
+        tags: testPathwayTag,
+        modules: [moduleId],
+      }];
       const pathwayModuleDb: PathwayModule_Db[] = [testPathwayModule_Db];
       const contentProgress: ContentProgress[] = [testContentProgress];
 
-
-      const pathwayId = new ObjectId();
-      const moduleId = new ObjectId();
-      const firebaseId = "Test User Id " + i;
 
       await createUser({
         firebaseId: firebaseId,

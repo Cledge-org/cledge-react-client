@@ -15,26 +15,27 @@ const testArticle1: CardArticle = {
   description: "Test Description",
   source: "Test Source",
   name: titleArticle,
+  category: ""
 };
 
 const testVideo1: CardVideo = {
   source: "Test Source",
   name: titleVideo,
+  category: ""
 };
 
 const testResource1: CardResource = {
   source: "Test Source",
   name: titleResource,
+  category: ""
 };
 
 
 test("verify resources", (done) => {
   const callback = async () => {
     let newObjectId = new ObjectId();
-    console.log("Verify starting...");
     // checks if there is anything in the database at the beginning of test
     const fetchedResourceCheck = await getResourcesInfo();
-    console.log(fetchedResourceCheck);
     expect(fetchedResourceCheck.articles.length).toBe(0);
     expect(fetchedResourceCheck.videoList.length).toBe(0);
     expect(fetchedResourceCheck.resources.length).toBe(0);
@@ -99,7 +100,6 @@ test("verify resources", (done) => {
     expect(resourceCount).toEqual(expectedCount);
 
 
-    console.log("Verify deleting...");
     for (let i = 0; i < articleId.length; i++)
       await putResourceArticle(articleId[i], undefined);
     for (let i = 0; i < videoId.length; i++)
@@ -109,7 +109,6 @@ test("verify resources", (done) => {
 
 
     const fetchedResourcesCheck = await getResourcesInfo();
-    console.log(fetchedResourcesCheck);
     expect(fetchedResourcesCheck.articles.length).toBe(0);
     expect(fetchedResourcesCheck.videoList.length).toBe(0);
     expect(fetchedResourcesCheck.resources.length).toBe(0);

@@ -1,11 +1,11 @@
-import { getAllQuestionLists } from "../pages/api/get-all-questions";
-import { getQuestionList } from "../pages/api/get-question-list";
-import { getQuestionProgress } from "../pages/api/get-question-progress";
-import { getQuestionResponses } from "../pages/api/get-question-responses";
-import { putQuestionChunk } from "../pages/api/put-question-chunk";
-import { putQuestionList } from "../pages/api/put-question-list";
-import { putQuestionResponses } from "../pages/api/put-question-responses";
-import { putQuestion } from "../pages/api/put-question";
+import { getAllQuestionLists } from "../../pages/api/get-all-questions";
+import { getQuestionList } from "../../pages/api/get-question-list";
+import { getQuestionProgress } from "../../pages/api/get-question-progress";
+import { getQuestionResponses } from "../../pages/api/get-question-responses";
+import { putQuestionChunk } from "../../pages/api/put-question-chunk";
+import { putQuestionList } from "../../pages/api/put-question-list";
+import { putQuestionResponses } from "../../pages/api/put-question-responses";
+import { putQuestion } from "../../pages/api/put-question";
 import { ObjectId } from "mongodb";
 
 const testUserResponse: UserResponse = {
