@@ -244,16 +244,18 @@ test("verify resources", (done) => {
     let expectedResource = testResource1;
 
     let article1Id = new ObjectId();
+    let video1Id = new ObjectId();
+    let resource1Id = new ObjectId();
 
     await Promise.all([
       ...articles.map((article) => putResource(article1Id, article, "article")),
-      ...videos.map((video) => putResource(article1Id, video, "video")),
-      ...resources.map((resource) => putResource(article1Id, resource, "resource")),
+      ...videos.map((video) => putResource(video1Id, video, "video")),
+      ...resources.map((resource) => putResource(resource1Id, resource, "resource")),
     ]);
 
     expectedArticle._id = article1Id;
-    expectedVideo._id = article1Id;
-    expectedResource._id = article1Id;
+    expectedVideo._id = video1Id;
+    expectedResource._id = resource1Id;
 
     let actualResource = await getResourcesInfo();
     let actualArticles = actualResource.articles;

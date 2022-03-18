@@ -151,14 +151,10 @@ test("should add questions and get those added questions exactly", (done) => {
       expect(fetchedAllQuestionsLists[i]).toMatchObject(questionList[i]);
     }
     for (let i = 0; i < fetchedQuestionList.chunks.length; i++) {
-      expect(fetchedQuestionList.chunks[i]).toMatchObject(
-        gradeQuestionChunks[i]
-      );
+      expect(fetchedQuestionList.chunks[i]).toMatchObject(gradeQuestionChunks[i]);
     }
     for (let i = 0; i < fetchedQuestionsProgress.questionData.length; i++) {
-      expect(fetchedQuestionsProgress.questionData[i]).toMatchObject(
-        questionList[i]
-      );
+      expect(fetchedQuestionsProgress.questionData[i]).toMatchObject(questionList[i]);
     }
     for (let i = 0; i < fetchedQuestionResponse.length; i++) {
       expect(fetchedQuestionResponse[i]).toMatchObject(userResponse[i]);
@@ -213,7 +209,6 @@ test ("verify questions", (done) => {
       }
   
       expect(actualList).toMatchObject(testQuestionList1);
-  
       expect(progressCount).toEqual(1);
       expect(responseCount).toEqual(1);
   
@@ -314,7 +309,7 @@ test("update question", (done) => {
     callback();
 });
 
-test("verify questions", (done) => {
+test("verify many questions", (done) => {
     async function callback() {
         const question: Question[] = [testQuestion1];
         const userResponse: UserResponse[] = [testUserResponse];
@@ -330,22 +325,16 @@ test("verify questions", (done) => {
             let newObjectId = new ObjectId();
             objectIds.push(newObjectId);
             await Promise.all([
-                ...questionListDb.map((questionList) =>
-                    putQuestionList(newObjectId, questionList)
-                ),
+                ...questionListDb.map((questionList) => putQuestionList(newObjectId, questionList)),
             ]);
             await Promise.all([
-                ...questionChunkDb.map((questionChunk) =>
-                    putQuestionChunk(newObjectId, questionChunk)
-                ),
+                ...questionChunkDb.map((questionChunk) => putQuestionChunk(newObjectId, questionChunk)),
             ]);
             await Promise.all([
                 ...question.map((questions) => putQuestion(question1ObjectId, questions)),
             ]);
             await Promise.all([
-                ...userResponse.map((responses) =>
-                    putQuestionResponses("Test User Id", [responses])
-                ),
+                ...userResponse.map((responses) => putQuestionResponses("Test User Id", [responses])),
             ]);
         }
 
