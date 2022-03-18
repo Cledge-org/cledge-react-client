@@ -52,7 +52,7 @@ test("verify resources", (done) => {
     await Promise.all([
       ...articles.map((article) => putResource(newObjectId, article, "article")),
       ...videos.map((video) => putResource(newObjectId, video, "video")),
-      ...resources.map((resource) => putResource(newObjectId, resource, "video")),
+      ...resources.map((resource) => putResource(newObjectId, resource, "resource")),
     ]);
 
     expectedArticle._id = newObjectId;

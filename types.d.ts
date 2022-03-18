@@ -25,7 +25,8 @@ interface CardVideo {
   _id?: ObjectId;
   source: string;
   name: string;
-  category: string;
+  tag?: string;
+  category?: string;
   description: string;
 }
 interface CardArticle {
@@ -33,13 +34,15 @@ interface CardArticle {
   description: string;
   source: string;
   name: string;
-  category: string;
+  tag?: string;
+  category?: string;
 }
 interface CardResource {
   _id?: ObjectId;
   source: string;
   name: string;
-  category: string;
+  category?: string;
+  tag?: string;
   description: string;
 }
 

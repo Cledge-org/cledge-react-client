@@ -57,8 +57,6 @@ test("should add resources and get those added resources exactly", (done) => {
 
 
     for (let i = 0; i < fetchedResources.articles.length; i++) {
-      console.log(fetchedResources.articles[i]);
-      console.log(articles[i]);
       delete articles[i].category;
       expect(fetchedResources.articles[i]).toMatchObject(articles[i]);
       articleId.push(fetchedResources.articles[i]._id);

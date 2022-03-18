@@ -75,7 +75,7 @@ const testContentProgress: ContentProgress = {
 
 const testContentProgresses = [testContentProgress];
 const testModuleProgress: ModuleProgress = {
-  moduleId: new ObjectId(),
+  moduleId: pathwayModule1ObjectId,
   finished: false,
   name: testPathwayModuleName,
   contentProgress: testContentProgresses,
