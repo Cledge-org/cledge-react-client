@@ -2,6 +2,7 @@ import { getResourcesInfo } from "../../pages/api/get-resources";
 import { putResourceArticle } from "../../pages/api/put-resource-article";
 import { putResourceResource } from "../../pages/api/put-resource-resource";
 import { putResourceVideo } from "../../pages/api/put-resource-video";
+import { putResource } from "../../pages/api/put-resource";
 
 
 jest.setTimeout(10000);
@@ -10,19 +11,19 @@ const testArticle1: CardArticle = {
   description: "Test Description",
   source: "Test Source",
   name: "Test Title",
-  category: ""
+  category: "article"
 };
 
 const testVideo1: CardVideo = {
   source: "Test Source",
   name: "Test Title",
-  category: ""
+  category: "video"
 };
 
 const testResource1: CardResource = {
   source: "Test Source",
   name: "Test Title",
-  category: ""
+  category: "resource"
 };
 
 test("should add resources and get those added resources exactly", (done) => {
@@ -41,9 +42,9 @@ test("should add resources and get those added resources exactly", (done) => {
     const videos: CardVideo[] = [testVideo1];
     const resources: CardResource[] = [testResource1];
     await Promise.all([
-      ...articles.map((article) => putResourceArticle(undefined, article)),
-      ...videos.map((video) => putResourceVideo(undefined, video)),
-      ...resources.map((resource) => putResourceResource(undefined, resource)),
+      ...articles.map((article) => putResource(undefined, article, "article")),
+      ...videos.map((video) => putResource(undefined, video, "video")),
+      ...resources.map((resource) => putResource(undefined, resource, "resource")),
     ]);
 
     // Test get functionality - should be identical to what we put
@@ -54,6 +55,8 @@ test("should add resources and get those added resources exactly", (done) => {
 
 
     for (let i = 0; i < fetchedResources.articles.length; i++) {
+      console.log(fetchedResources.articles[i]);
+      console.log(articles[i]);
       expect(fetchedResources.articles[i]).toMatchObject(articles[i]);
       articleId.push(fetchedResources.articles[i]._id);
     }
@@ -69,11 +72,11 @@ test("should add resources and get those added resources exactly", (done) => {
 
     // deletes element in the database
     for (let i = 0; i < articleId.length; i++)
-      await putResourceArticle(articleId[i], undefined);
+      await putResource(articleId[i], undefined, undefined);
     for (let i = 0; i < videoId.length; i++)
-      await putResourceVideo(videoId[i], undefined);
+      await putResource(videoId[i], undefined, undefined);
     for (let i = 0; i < resourceId.length; i++)
-      await putResourceResource(resourceId[i], undefined);
+      await putResource(resourceId[i], undefined, undefined);
 
 
     const fetchedResourcesCheck = await getResourcesInfo();

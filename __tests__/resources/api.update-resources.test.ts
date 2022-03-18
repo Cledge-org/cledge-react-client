@@ -4,6 +4,7 @@ import { getResourcesInfo } from "../../pages/api/get-resources";
 import { putResourceArticle } from "../../pages/api/put-resource-article";
 import { putResourceResource } from "../../pages/api/put-resource-resource";
 import { putResourceVideo } from "../../pages/api/put-resource-video";
+import { putResource } from "../../pages/api/put-resource";
 
 
 jest.setTimeout(10000);
@@ -19,19 +20,19 @@ const testArticle1: CardArticle = {
     description: "Test Description",
     source: "Test Source",
     name: titleArticle,
-    category: ""
+    category: "article"
 };
 
 const testVideo1: CardVideo = {
     source: "Test Source",
     name: titleVideo,
-    category: ""
+    category: "video"
 };
 
 const testResource1: CardResource = {
     source: "Test Source",
     name: titleResource,
-    category: ""
+    category: "resource"
 };
 
 
@@ -39,30 +40,28 @@ const testArticle2: CardArticle = {
     description: "Test Description 2",
     source: "Test Source 2",
     name: titleArticle2,
-    category: ""
+    category: "article"
 };
 
 const testVideo2: CardVideo = {
     source: "Test Source 2",
     name: titleVideo2,
-    category: ""
+    category: "video"
 };
 
 const testResource2: CardResource = {
     source: "Test Source 2",
     name: titleResource2,
-    category: ""
+    category: "resource"
 };
 
 
 test("update resources", (done) => {
     const callback = async () => {
         // checks if there is anything in the database at the beginning of test("
-        console.log("update start...");
         let newObjectId = new ObjectId();
 
         const fetchedResourceCheck = await getResourcesInfo();
-        console.log(fetchedResourceCheck);
         expect(fetchedResourceCheck.articles.length).toBe(0);
         expect(fetchedResourceCheck.videoList.length).toBe(0);
         expect(fetchedResourceCheck.resources.length).toBe(0);
@@ -75,9 +74,9 @@ test("update resources", (done) => {
         let updateResource = testResource2;
 
         await Promise.all([
-            ...articles.map((article) => putResourceArticle(newObjectId, article)),
-            ...videos.map((video) => putResourceVideo(newObjectId, video)),
-            ...resources.map((resource) => putResourceResource(newObjectId, resource)),
+            ...articles.map((article) => putResource(newObjectId, article, undefined)),
+            ...videos.map((video) => putResource(newObjectId, video, undefined)),
+            ...resources.map((resource) => putResource(newObjectId, resource, undefined)),
         ]);
 
         const articles2: CardArticle[] = [testArticle2];
@@ -85,9 +84,9 @@ test("update resources", (done) => {
         const resources2: CardResource[] = [testResource2];
 
         await Promise.all([
-            ...articles2.map((article) => putResourceArticle(newObjectId, article)),
-            ...videos2.map((video) => putResourceVideo(newObjectId, video)),
-            ...resources2.map((resource) => putResourceResource(newObjectId, resource)),
+            ...articles2.map((article) => putResource(newObjectId, article, undefined)),
+            ...videos2.map((video) => putResource(newObjectId, video, undefined)),
+            ...resources2.map((resource) =>  putResource(newObjectId, resource, undefined)),
         ]);
 
 
@@ -138,17 +137,15 @@ test("update resources", (done) => {
         expect(videoCount).toEqual(expectedCount);
         expect(resourceCount).toEqual(expectedCount);
 
-        console.log("Update deleting");
         for (let i = 0; i < articleId.length; i++)
-            await putResourceArticle(articleId[i], undefined);
+            await putResource(articleId[i], undefined, undefined);
         for (let i = 0; i < videoId.length; i++)
-            await putResourceVideo(videoId[i], undefined);
+            await putResource(videoId[i], undefined, undefined);
         for (let i = 0; i < resourceId.length; i++)
-            await putResourceResource(resourceId[i], undefined);
+            await putResource(resourceId[i], undefined, undefined);
 
 
         const fetchedResourceChecks = await getResourcesInfo();
-        console.log(fetchedResourceChecks);
         expect(fetchedResourceChecks.articles.length).toBe(0);
         expect(fetchedResourceChecks.videoList.length).toBe(0);
         expect(fetchedResourceChecks.resources.length).toBe(0);

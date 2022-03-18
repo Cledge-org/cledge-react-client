@@ -1,7 +1,6 @@
 import BSON from "bson";
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { CardResource } from "../../types";
 
 export const config = {
   api: {
@@ -11,20 +10,20 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     // TODO: authentication, grab user id from token validation (probably)
-    const { userToken, resourceId, resource, tag } = req.body;
+    const { userToken, resourceId, resource, category } = req.body;
 
     // use this line only if resourceId is not an ObjectId type;
-    // change line 27 resourceId into resourceObjId
+    // change line 27 resourceId into resourceObId
     // const resourceObjId = new BSON.ObjectId(resourceId);
     const types = ["video", "article", "resource"];
     if (!resourceId) {
-      if (!(tag && types.includes(tag))) {
+      if (!(category && types.includes(category))) {
         resolve.status(400).send("Invalid resource type");
         return;
       }
     }
     try {
-        const result = await putResource(resourceId, resource, tag);
+        const result = await putResource(resourceId, resource, category);
         resolve.status(200).send(result);
     } catch (e) {
         resolve.status(500).send(e);
@@ -37,7 +36,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putResource = async (
   resourceId: ObjectId | undefined,
   resource: CardResource | undefined,
-  tag: String | undefined
+  category: String | undefined
 ): Promise<void> => {
   if (resource && resource._id) {
     // Document should not have _id field when sent to database
@@ -49,7 +48,7 @@ export const putResource = async (
       name: resource.name,
       description: resource.description,
       source: resource.source,
-      tag: tag
+      category: category
     };
   }
   return new Promise(async (res, err) => {
@@ -66,7 +65,7 @@ export const putResource = async (
         await client
           .db("resources")
           .collection("all_resources")
-          .updateOne({ _id: resourceId }, { $set: resourceWithType });
+          .updateOne({ _id: resourceId }, { $set: resourceWithType }, {upsert: true});
       }
       res();
       client.close();

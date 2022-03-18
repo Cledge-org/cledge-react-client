@@ -22,24 +22,24 @@ export const getResourcesInfo = (): Promise<ResourcesInfo> => {
       const client = await MongoClient.connect(process.env.MONGO_URL);
       const resource_db = client.db("resources");
       const [videoList, articles, resources] = await Promise.all([
-        resource_db.collection("all_resources").find({"tag": "video"}).toArray() as Promise<
+        resource_db.collection("all_resources").find({"category": "video"}).toArray() as Promise<
           CardVideo[]
         >,
-        resource_db.collection("all_resources").find({"tag": "article"}).toArray() as Promise<
+        resource_db.collection("all_resources").find({"category": "article"}).toArray() as Promise<
           CardArticle[]
         >,
-        resource_db.collection("all_resources").find({"tag": "resource"}).toArray() as Promise<
+        resource_db.collection("all_resources").find({"category": "resource"}).toArray() as Promise<
           CardResource[]
         >,
       ]);
       videoList.forEach(function (currentValue) {
-        delete currentValue.tag;
+        delete currentValue.category;
       });
       articles.forEach(function (currentValue) {
-        delete currentValue.tag;
+        delete currentValue.category;
       });
       resources.forEach(function (currentValue) {
-        delete currentValue.tag;
+        delete currentValue.category;
       });
       res({ videoList, articles, resources });
       client.close();
