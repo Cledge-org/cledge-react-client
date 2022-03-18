@@ -37,6 +37,10 @@ export const putPathwayModulePersonalizedContent = (
     // Document should not have _id field when sent to database
     delete content._id;
   }
+  console.error(contentId);
+  if (!(content.moduleId instanceof ObjectId)) {
+    content.moduleId = new ObjectId(content.moduleId);
+  }
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);

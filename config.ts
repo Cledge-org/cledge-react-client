@@ -1,6 +1,7 @@
 //***IMPORTANT!***
 //CHANGE THE URL TO:
 //https://cledge-testing.azurewebsites.net
+//OR https://cledge-dev-site.azurewebsites.net
 //BEFORE BUILDING AND DEPLOYING
 export const ORIGIN_URL = "http://localhost:3000";
 process.env.NEXTAUTH_URL = ORIGIN_URL;

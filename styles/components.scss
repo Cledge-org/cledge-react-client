@@ -28,6 +28,27 @@
     cursor: pointer;
   }
 }
+.card-task-container {
+  transition: all 200ms ease-in-out, padding-bottom 0ms, padding-top 0ms;
+}
+.card-task-container:hover {
+  @extend .shadow;
+  @extend .bg-cl-white;
+  @extend .py-2;
+  transition: all 200ms ease-in-out;
+  position: absolute;
+  z-index: 1000;
+}
+@media screen and (max-width: 1200px) {
+  .card-task-container {
+    width: 200px;
+  }
+}
+@media screen and (max-width: 800px) {
+  .card-task-container {
+    width: 120px;
+  }
+}
 
 .article-btn {
   outline: none;

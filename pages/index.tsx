@@ -20,7 +20,8 @@ const Home: NextPage = () => {
     window.location.href = "/dashboard";
     return <LoadingScreen />;
   }
-  return <Welcome></Welcome>;
+  return (
+    <Welcome></Welcome>);
 };
 
 export default Home;

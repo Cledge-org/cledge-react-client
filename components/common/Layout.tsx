@@ -12,7 +12,7 @@ export default function Layout({ children }) {
   const router = useRouter();
   const session = useSession();
   const [loading, setLoading] = useState(false);
-  const [header, setHeader] = useState(<Header key="initial" />);
+  const [header, setHeader] = useState(<Header key_prop="initial" />);
   const asyncUseEffect = async () => {
     setLoading(true);
     if (session.data?.user?.uid && !store.getState()) {
@@ -37,6 +37,7 @@ export default function Layout({ children }) {
           pathwaysProgressRes.json(),
           questionResponsesRes.json(),
         ]);
+      console.log(pathwaysProgressJSON);
       store.dispatch(
         initialStateAction({
           accountInfo: accountInfoJSON,
@@ -58,7 +59,7 @@ export default function Layout({ children }) {
     const endLoadingShowNewHeader = () => {
       setLoading(false);
       numTimes++;
-      setHeader(<Header key={numTimes.toString()} />);
+      setHeader(<Header key_prop={numTimes.toString()} />);
     };
     const startLoading = () => {
       setLoading(true);

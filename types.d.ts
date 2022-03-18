@@ -25,17 +25,22 @@ interface CardVideo {
   _id?: ObjectId;
   source: string;
   name: string;
+  category: string;
+  description?: string;
 }
 interface CardArticle {
   _id?: ObjectId;
   description: string;
   source: string;
   name: string;
+  category: string;
 }
 interface CardResource {
   _id?: ObjectId;
   source: string;
   name: string;
+  category: string;
+  description?: string;
 }
 
 //Progress Page Types -->
@@ -119,12 +124,16 @@ interface Pathway {
   _id?: ObjectId;
   name: string;
   modules: PathwayModule[];
+  part: string;
+  order: number;
   tags: string[];
 }
 interface Pathway_Db extends WithId<Document> {
   _id?: ObjectId;
   tags: string[];
   modules: ObjectId[]; // Module document IDs
+  part: string;
+  order: number;
   name: string;
 }
 interface PathwayModule {
