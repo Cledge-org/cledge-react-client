@@ -38,24 +38,21 @@ export const putResource = async (
   resource: CardArticle | CardVideo | CardResource | undefined,
   tag: String | undefined
 ): Promise<void> => {
-  if (resource && resource._id) {
-    // Document should not have _id field when sent to database
-    delete resource._id;
-  }
-  let resourceWithType = {};
   if (resource) {
-    resourceWithType = {
-      name: resource.name,
-      description: resource.description,
-      source: resource.source,
-      tag: tag
-    };
+    resource.tag = tag;
+    resource.description = resource.description ? resource.description : "";
+    if (resource._id) {
+      // Document should not have _id field when sent to database
+      delete resource._id;
+    }
+
   }
+
   return new Promise(async (res, err) => {
     const client = await MongoClient.connect(process.env.MONGO_URL);
     try {
       if (!resourceId && resource) {
-        await client.db("resources").collection("all_resources").insertOne(resourceWithType);
+        await client.db("resources").collection("all_resources").insertOne(resource);
       } else if (resourceId && !resource) {
         await client
           .db("resources")
@@ -65,7 +62,7 @@ export const putResource = async (
         await client
           .db("resources")
           .collection("all_resources")
-          .updateOne({ _id: resourceId }, { $set: resourceWithType }, {upsert: true});
+          .updateOne({ _id: resourceId }, { $set: resource }, {upsert: true});
       }
       res();
       client.close();
