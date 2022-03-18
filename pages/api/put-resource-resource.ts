@@ -40,17 +40,17 @@ export const putResourceResource = async (
       if (!resourceId && resource) {
         await client
           .db("resources")
-          .collection("resources")
+          .collection("all_resources")
           .insertOne(resource);
       } else if (resourceId && !resource) {
         await client
           .db("resources")
-          .collection("resources")
-          .deleteOne({_id: resourceId });
+          .collection("all_resources")
+          .deleteOne({ _id: resourceId });
       } else if (resourceId && resource) {
         await client
           .db("resources")
-          .collection("resources")
+          .collection("all_resources")
           .updateOne({ _id: resourceId }, { $set: resource }, {upsert: true});
       }
       res();
