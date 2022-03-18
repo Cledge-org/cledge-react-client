@@ -1,7 +1,7 @@
 import BSON from "bson";
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { CardResource } from "../../types";
+import { CardResource, CardArticle, CardVideo } from "../../types";
 
 export const config = {
   api: {
@@ -36,7 +36,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // provided, will attempt to delete
 export const putResource = async (
   resourceId: ObjectId | undefined,
-  resource: CardResource | undefined,
+  resource: CardResource | CardArticle | CardVideo | undefined,
   tag: String | undefined
 ): Promise<void> => {
   if (resource && resource._id) {
