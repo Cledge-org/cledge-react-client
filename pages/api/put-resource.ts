@@ -11,13 +11,20 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     // TODO: authentication, grab user id from token validation (probably)
-    const { userToken, resourceId, resource } = req.body;
+    const { userToken, resourceId, resource, tag } = req.body;
 
     // use this line only if resourceId is not an ObjectId type;
-    // change line 20 resourceId into resourceObjId
+    // change line 27 resourceId into resourceObjId
     // const resourceObjId = new BSON.ObjectId(resourceId);
+    const types = ["video", "article", "resource"];
+    if (!resourceId) {
+      if (!(tag && types.includes(tag))) {
+        resolve.status(400).send("Invalid resource type");
+        return;
+      }
+    }
     try {
-        const result = await putResource(resourceId, resource);
+        const result = await putResource(resourceId, resource, tag);
         resolve.status(200).send(result);
     } catch (e) {
         resolve.status(500).send(e);
@@ -29,17 +36,27 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // provided, will attempt to delete
 export const putResource = async (
   resourceId: ObjectId | undefined,
-  resource: CardResource | undefined
+  resource: CardResource | undefined,
+  tag: String | undefined
 ): Promise<void> => {
   if (resource && resource._id) {
     // Document should not have _id field when sent to database
     delete resource._id;
   }
+  let resourceWithType = {};
+  if (resource) {
+    resourceWithType = {
+      name: resource.name,
+      description: resource.description,
+      source: resource.source,
+      tag: tag
+    };
+  }
   return new Promise(async (res, err) => {
     const client = await MongoClient.connect(process.env.MONGO_URL);
     try {
       if (!resourceId && resource) {
-        await client.db("resources").collection("all_resources").insertOne(resource);
+        await client.db("resources").collection("all_resources").insertOne(resourceWithType);
       } else if (resourceId && !resource) {
         await client
           .db("resources")
@@ -49,7 +66,7 @@ export const putResource = async (
         await client
           .db("resources")
           .collection("all_resources")
-          .updateOne({ _id: resourceId }, { $set: resource });
+          .updateOne({ _id: resourceId }, { $set: resourceWithType });
       }
       res();
       client.close();
