@@ -1,7 +1,6 @@
 import BSON from "bson";
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { CardResource, CardArticle, CardVideo } from "../../types";
 
 export const config = {
   api: {
@@ -14,7 +13,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     const { userToken, resourceId, resource, tag } = req.body;
 
     // use this line only if resourceId is not an ObjectId type;
-    // change line 27 resourceId into resourceObjId
+    // change line 27 resourceId into resourceObId
     // const resourceObjId = new BSON.ObjectId(resourceId);
     const types = ["video", "article", "resource"];
     if (!resourceId) {
@@ -36,7 +35,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // provided, will attempt to delete
 export const putResource = async (
   resourceId: ObjectId | undefined,
-  resource: CardResource | CardArticle | CardVideo | undefined,
+  resource: CardArticle | CardVideo | CardResource | undefined,
   tag: String | undefined
 ): Promise<void> => {
   if (resource && resource._id) {
@@ -66,7 +65,7 @@ export const putResource = async (
         await client
           .db("resources")
           .collection("all_resources")
-          .updateOne({ _id: resourceId }, { $set: resourceWithType });
+          .updateOne({ _id: resourceId }, { $set: resourceWithType }, {upsert: true});
       }
       res();
       client.close();
