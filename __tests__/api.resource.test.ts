@@ -15,46 +15,46 @@ const titleVideo2 = "Test Video 2";
 const titleResource2 = "Test Resource 2";
 
 const testArticle1: CardArticle = {
-    source: "Test Source",
-    name: titleArticle,
-    // category: "article",
-    description: "Test Description"
+  source: "Test Source",
+  name: titleArticle,
+  // category: "article",
+  description: "Test Description"
 };
 
 const testVideo1: CardVideo = {
-    source: "Test Source",
-    name: titleVideo,
-    // category: "video",
-    description: "Test Description"
+  source: "Test Source",
+  name: titleVideo,
+  // category: "video",
+  description: "Test Description"
 };
 
 const testResource1: CardResource = {
-    source: "Test Source",
-    name: titleResource,
-    // category: "resource",
-    description: "Test Description"
+  source: "Test Source",
+  name: titleResource,
+  // category: "resource",
+  description: "Test Description"
 };
 
 const testArticle2: CardArticle = {
-    source: "Test Source 2",
-    name: titleArticle2,
-    // category: "article",
-    description: "Test Description 2"
+  source: "Test Source 2",
+  name: titleArticle2,
+  // category: "article",
+  description: "Test Description 2"
 
 };
 
 const testVideo2: CardVideo = {
-    source: "Test Source 2",
-    name: titleVideo2,
-    // category: "video",
-    description: "Test Description 2"
+  source: "Test Source 2",
+  name: titleVideo2,
+  // category: "video",
+  description: "Test Description 2"
 };
 
 const testResource2: CardResource = {
-    source: "Test Source 2",
-    name: titleResource2,
-    // category: "resource",
-    description: "Test Description 2"
+  source: "Test Source 2",
+  name: titleResource2,
+  // category: "resource",
+  description: "Test Description 2"
 };
 
 let newObjectId = new ObjectId();
@@ -124,98 +124,106 @@ test("should add resources and get those added resources exactly", (done) => {
 
 test("update resources", (done) => {
   const callback = async () => {
-      // checks if there is anything in the database at the beginning of test("
-      const fetchedResourceCheck = await getResourcesInfo();
-      expect(fetchedResourceCheck.articles.length).toBe(0);
-      expect(fetchedResourceCheck.videoList.length).toBe(0);
-      expect(fetchedResourceCheck.resources.length).toBe(0);
+    // checks if there is anything in the database at the beginning of test("
+    const fetchedResourceCheck = await getResourcesInfo();
+    expect(fetchedResourceCheck.articles.length).toBe(0);
+    expect(fetchedResourceCheck.videoList.length).toBe(0);
+    expect(fetchedResourceCheck.resources.length).toBe(0);
 
-      const articles: CardArticle[] = [testArticle1];
-      const videos: CardVideo[] = [testVideo1];
-      const resources: CardResource[] = [testResource1];
-      let updateArticle = testArticle2;
-      let updateVideo = testVideo2;
-      let updateResource = testResource2;
+    const articles: CardArticle[] = [testArticle1];
+    const videos: CardVideo[] = [testVideo1];
+    const resources: CardResource[] = [testResource1];
+    let updateArticle = testArticle2;
+    let updateVideo = testVideo2;
+    let updateResource = testResource2;
 
-      await Promise.all([
-          ...articles.map((article) => putResource(newObjectId, article, "article")),
-          ...videos.map((video) => putResource(newObjectId, video, "video")),
-          ...resources.map((resource) => putResource(newObjectId, resource, "resource")),
-      ]);
+    // manually create unique objectids for each test resource
+    await Promise.all([
+      ...articles.map((article) => putResource(undefined, article, "article")),
+      ...videos.map((video) => putResource(undefined, video, "video")),
+      ...resources.map((resource) => putResource(undefined, resource, "resource")),
+    ]);
 
-      const articles2: CardArticle[] = [testArticle2];
-      const videos2: CardVideo[] = [testVideo2];
-      const resources2: CardResource[] = [testResource2];
+    // get resource after put the new one to get ids
+    const fetchedResources = await getResourcesInfo();
+    expect(fetchedResources.articles.length).toBe(articles.length);
+    expect(fetchedResources.videoList.length).toBe(videos.length);
+    expect(fetchedResources.resources.length).toBe(resources.length);
 
-      await Promise.all([
-          ...articles2.map((article) => putResource(newObjectId, article, "article")),
-          ...videos2.map((video) => putResource(newObjectId, video, "video")),
-          ...resources2.map((resource) => putResource(newObjectId, resource, "resource")),
-      ]);
 
-      updateArticle._id = newObjectId;
-      updateVideo._id = newObjectId;
-      updateResource._id = newObjectId;
+    const articles2: CardArticle[] = [testArticle2];
+    const videos2: CardVideo[] = [testVideo2];
+    const resources2: CardResource[] = [testResource2];
 
-      let actualResource = await getResourcesInfo();
-      let actualArticles = actualResource.articles;
-      let actualVideos = actualResource.videoList;
-      let actualResources = actualResource.resources;
+    await Promise.all([
+      ...articles2.map((article) => putResource(fetchedResources.articles[0]._id, article, "article")),
+      ...videos2.map((video) => putResource(fetchedResources.videoList[0]._id, video, "video")),
+      ...resources2.map((resource) => putResource(fetchedResources.resources[0]._id, resource, "resource")),
+    ]);
 
-      let articleId = [];
-      let videoId = [];
-      let resourceId = [];
+    updateArticle._id = fetchedResources.articles[0]._id;
+    updateVideo._id = fetchedResources.videoList[0]._id;
+    updateResource._id = fetchedResources.resources[0]._id;
 
-      let articleCount = 0;
-      let videoCount = 0;
-      let resourceCount = 0;
+    let actualResource = await getResourcesInfo();
+    let actualArticles = actualResource.articles;
+    let actualVideos = actualResource.videoList;
+    let actualResources = actualResource.resources;
 
-      // delete updateArticle.category;
-      // delete updateVideo.category;
-      // delete updateResource.category;
+    let articleId = [];
+    let videoId = [];
+    let resourceId = [];
 
-      for (let i = 0; i < actualArticles.length; i++) {
-          if (actualArticles[i]._id.equals(newObjectId)) {
-              expect(actualArticles[i]).toEqual(updateArticle);
-              articleCount++;
-          }
-          articleId.push(actualArticles[i]._id);
+    let articleCount = 0;
+    let videoCount = 0;
+    let resourceCount = 0;
+
+    // delete updateArticle.category;
+    // delete updateVideo.category;
+    // delete updateResource.category;
+
+    for (let i = 0; i < actualArticles.length; i++) {
+      if (actualArticles[i]._id.equals(updateArticle._id)) {
+        expect(actualArticles[i]).toEqual(updateArticle);
+        articleCount++;
       }
+      articleId.push(actualArticles[i]._id);
+    }
 
-      for (let i = 0; i < actualVideos.length; i++) {
-          if (actualVideos[i]._id.equals(newObjectId)) {
-              expect(actualVideos[i]).toEqual(updateVideo);
-              videoCount++;
-          }
-          videoId.push(actualVideos[i]._id);
+    for (let i = 0; i < actualVideos.length; i++) {
+      if (actualVideos[i]._id.equals(updateVideo._id)) {
+        expect(actualVideos[i]).toEqual(updateVideo);
+        videoCount++;
       }
+      videoId.push(actualVideos[i]._id);
+    }
 
-      for (let i = 0; i < actualResources.length; i++) {
-          if (actualResources[i]._id.equals(newObjectId)) {
-              expect(actualResources[i]).toEqual(updateResource);
-              resourceCount++;
-          }
-          resourceId.push(actualResources[i]._id);
+    for (let i = 0; i < actualResources.length; i++) {
+      if (actualResources[i]._id.equals(updateResource._id)) {
+        expect(actualResources[i]).toEqual(updateResource);
+        resourceCount++;
       }
+      resourceId.push(actualResources[i]._id);
+    }
 
-      const expectedCount = 1;
-      expect(articleCount).toEqual(expectedCount);
-      expect(videoCount).toEqual(expectedCount);
-      expect(resourceCount).toEqual(expectedCount);
+    const expectedCount = 1;
+    expect(articleCount).toEqual(expectedCount);
+    expect(videoCount).toEqual(expectedCount);
+    expect(resourceCount).toEqual(expectedCount);
 
-      for (let i = 0; i < articleId.length; i++)
-          await putResource(articleId[i], undefined, undefined);
-      for (let i = 0; i < videoId.length; i++)
-          await putResource(videoId[i], undefined, undefined);
-      for (let i = 0; i < resourceId.length; i++)
-          await putResource(resourceId[i], undefined, undefined);
+    for (let i = 0; i < articleId.length; i++)
+      await putResource(articleId[i], undefined, undefined);
+    for (let i = 0; i < videoId.length; i++)
+      await putResource(videoId[i], undefined, undefined);
+    for (let i = 0; i < resourceId.length; i++)
+      await putResource(resourceId[i], undefined, undefined);
 
 
-      const fetchedResourceChecks = await getResourcesInfo();
-      expect(fetchedResourceChecks.articles.length).toBe(0);
-      expect(fetchedResourceChecks.videoList.length).toBe(0);
-      expect(fetchedResourceChecks.resources.length).toBe(0);
-      done();
+    const fetchedResourceChecks = await getResourcesInfo();
+    expect(fetchedResourceChecks.articles.length).toBe(0);
+    expect(fetchedResourceChecks.videoList.length).toBe(0);
+    expect(fetchedResourceChecks.resources.length).toBe(0);
+    done();
   };
   callback();
 });
@@ -235,15 +243,17 @@ test("verify resources", (done) => {
     let expectedVideo = testVideo1;
     let expectedResource = testResource1;
 
+    let article1Id = new ObjectId();
+
     await Promise.all([
-      ...articles.map((article) => putResource(newObjectId, article, "article")),
-      ...videos.map((video) => putResource(newObjectId, video, "video")),
-      ...resources.map((resource) => putResource(newObjectId, resource, "resource")),
+      ...articles.map((article) => putResource(article1Id, article, "article")),
+      ...videos.map((video) => putResource(article1Id, video, "video")),
+      ...resources.map((resource) => putResource(article1Id, resource, "resource")),
     ]);
 
-    expectedArticle._id = newObjectId;
-    expectedVideo._id = newObjectId;
-    expectedResource._id = newObjectId;
+    expectedArticle._id = article1Id;
+    expectedVideo._id = article1Id;
+    expectedResource._id = article1Id;
 
     let actualResource = await getResourcesInfo();
     let actualArticles = actualResource.articles;
@@ -258,7 +268,7 @@ test("verify resources", (done) => {
     let resourceId = [];
 
     for (let i = 0; i < actualArticles.length; i++) {
-      if (actualArticles[i]._id.equals(newObjectId)) {
+      if (actualArticles[i]._id.equals(expectedArticle._id)) {
         expect(actualArticles[i]).toEqual(expectedArticle);
         articleCount++;
       }
@@ -266,7 +276,7 @@ test("verify resources", (done) => {
     }
 
     for (let i = 0; i < actualVideos.length; i++) {
-      if (actualVideos[i]._id.equals(newObjectId)) {
+      if (actualVideos[i]._id.equals(expectedVideo._id)) {
         expect(actualVideos[i]).toEqual(expectedVideo);
         videoCount++;
       }
@@ -274,7 +284,7 @@ test("verify resources", (done) => {
     }
 
     for (let i = 0; i < actualResources.length; i++) {
-      if (actualResources[i]._id.equals(newObjectId)) {
+      if (actualResources[i]._id.equals(expectedResource._id)) {
         expect(actualResources[i]).toEqual(expectedResource);
         resourceCount++;
       }
@@ -306,7 +316,7 @@ test("verify resources", (done) => {
 });
 
 
-test("verify resources",  (done) => {
+test("verify resources", (done) => {
   const callback = async () => {
     // checks if there is anything in the database at the beginning of test
     const fetchedResourceCheck = await getResourcesInfo();
@@ -321,12 +331,12 @@ test("verify resources",  (done) => {
     let articleId = [];
     let videoId = [];
     let resourceId = [];
-    
+
     for (let i = 0; i < manySize; i++) {
       await Promise.all([
         ...articles.map((article) => putResource(undefined, article, "article")),
         ...videos.map((video) => putResource(undefined, video, "video")),
-        ...resources.map((resource) => putResource(undefined, resource , "resource")),
+        ...resources.map((resource) => putResource(undefined, resource, "resource")),
       ]);
     }
 
