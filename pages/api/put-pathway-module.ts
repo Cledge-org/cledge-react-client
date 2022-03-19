@@ -30,14 +30,14 @@ export const putPathwayModule = (
   pathwayModuleId: ObjectId | undefined,
   pathwayModule: PathwayModule_Db | undefined
 ): Promise<{ moduleId: ObjectId }> => {
-  if (pathwayModule._id) {
+  if (pathwayModule !== undefined && pathwayModule._id) {
     // Document should not have _id field when sent to database
     delete pathwayModule._id;
   }
   if (!(pathwayModuleId instanceof ObjectId)) {
     pathwayModuleId = new ObjectId(pathwayModuleId);
   }
-  console.error(pathwayModuleId);
+  //console.error(pathwayModuleId);
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
@@ -61,7 +61,7 @@ export const putPathwayModule = (
             { $set: pathwayModule },
             { upsert: true }
           );
-        console.error(pathwayModuleId);
+        // console.error(pathwayModuleId);
         res({ moduleId: pathwayModuleId });
       }
       client.close();

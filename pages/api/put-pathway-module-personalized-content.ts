@@ -37,7 +37,7 @@ export const putPathwayModulePersonalizedContent = (
     // Document should not have _id field when sent to database
     delete content._id;
   }
-  console.error(contentId);
+  // console.error(contentId);
   if (!(content.moduleId instanceof ObjectId)) {
     content.moduleId = new ObjectId(content.moduleId);
   }
