@@ -34,7 +34,7 @@ export const putPathwayModule = (
     // Document should not have _id field when sent to database
     delete pathwayModule._id;
   }
-  if (!(pathwayModuleId instanceof ObjectId)) {
+  if (pathwayModuleId && !(pathwayModuleId instanceof ObjectId)) {
     pathwayModuleId = new ObjectId(pathwayModuleId);
   }
   //console.error(pathwayModuleId);
@@ -52,6 +52,7 @@ export const putPathwayModule = (
           .db("pathways")
           .collection("modules")
           .deleteOne({ _id: pathwayModuleId });
+        res({ moduleId: pathwayModuleId });
       } else if (pathwayModuleId && pathwayModule) {
         await client
           .db("pathways")
@@ -61,7 +62,6 @@ export const putPathwayModule = (
             { $set: pathwayModule },
             { upsert: true }
           );
-        // console.error(pathwayModuleId);
         res({ moduleId: pathwayModuleId });
       }
       client.close();
