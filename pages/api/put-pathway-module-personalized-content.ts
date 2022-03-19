@@ -37,8 +37,7 @@ export const putPathwayModulePersonalizedContent = (
     // Document should not have _id field when sent to database
     delete content._id;
   }
-  // console.error(contentId);
-  if (!(content.moduleId instanceof ObjectId)) {
+  if (content && !(content.moduleId instanceof ObjectId)) {
     content.moduleId = new ObjectId(content.moduleId);
   }
   return new Promise(async (res, err) => {
@@ -61,7 +60,7 @@ export const putPathwayModulePersonalizedContent = (
           await client
             .db("pathways")
             .collection("personalized-content")
-            .updateOne({ _id: contentId }, { $set: content }, {upsert: true});
+            .updateOne({ _id: contentId }, { $set: content }, { upsert: true });
           res(contentId);
         }
         client.close();
