@@ -8,6 +8,7 @@ import { putQuestionResponses } from "../pages/api/put-question-responses";
 import { putQuestion } from "../pages/api/put-question";
 import { ObjectId } from "mongodb";
 
+jest.setTimeout(1000000);
 
 const testUserResponse: UserResponse = {
     questionId: "Test Question Id",
@@ -99,125 +100,111 @@ const testProgressInfo: ProgressInfo = {
 const newObjectId = new ObjectId();
 
 test("should add questions and get those added questions exactly", (done) => {
-  async function callback() {
-    // Test put functionality
-    const question: Question[] = [testQuestion1];
-    const userResponse: UserResponse[] = [testUserResponse];
-    const questionList: QuestionList[] = [testQuestionList1];
-    const questionListDb: QuestionList_Db[] = [testQuestionListDb1];
-    const gradeQuestionChunks: QuestionChunk[] = [testQuestionChunk1];
-    const questionChunkDb: QuestionChunk_Db[] = [testQuestionChunkDb1];
-
-    await Promise.all([
-      ...questionListDb.map((questionList) =>
-        putQuestionList(undefined, questionList)
-      ),
-    ]);
-    await Promise.all([
-      ...questionChunkDb.map((questionChunk) =>
-        putQuestionChunk(undefined, questionChunk)
-      ),
-    ]);
-    await Promise.all([
-      ...question.map((questions) => putQuestion(question1ObjectId, questions)),
-    ]);
-    await Promise.all([
-      ...userResponse.map((responses) =>
-        putQuestionResponses("Test User Id", [responses])
-      ),
-    ]);
-
-    // Test get functionality - should be identical to what we put
-    const [
-      fetchedAllQuestionsLists,
-      fetchedQuestionList,
-      fetchedQuestionsProgress,
-      fetchedQuestionResponse,
-    ] = await Promise.all([
-      getAllQuestionLists(),
-      getQuestionList(testQuestionListName),
-      getQuestionProgress(),
-      getQuestionResponses("Test User Id"),
-    ]);
-
-    expect(fetchedAllQuestionsLists.length).toBe(questionListDb.length);
-    expect(fetchedQuestionList.chunks.length).toBe(testQuestionChunks.length);
-    expect(fetchedQuestionsProgress.questionData.length).toBe(
-      testProgressInfo.questionData.length
-    );
-    expect(fetchedQuestionResponse.length).toBe(userResponse.length);
-
-    for (let i = 0; i < fetchedAllQuestionsLists.length; i++) {
-      expect(fetchedAllQuestionsLists[i]).toMatchObject(questionList[i]);
-    }
-    for (let i = 0; i < fetchedQuestionList.chunks.length; i++) {
-      expect(fetchedQuestionList.chunks[i]).toMatchObject(gradeQuestionChunks[i]);
-    }
-    for (let i = 0; i < fetchedQuestionsProgress.questionData.length; i++) {
-      expect(fetchedQuestionsProgress.questionData[i]).toMatchObject(questionList[i]);
-    }
-    for (let i = 0; i < fetchedQuestionResponse.length; i++) {
-      expect(fetchedQuestionResponse[i]).toMatchObject(userResponse[i]);
-    }
-    done();
-  };
-  callback();
-});
-
-test ("verify questions", (done) => {
     async function callback() {
-    const question: Question[] = [testQuestion1];
-    const userResponse: UserResponse[] = [testUserResponse];
-    const questionListDb: QuestionList_Db[] = [testQuestionListDb1];
-    const questionChunkDb: QuestionChunk_Db[] = [testQuestionChunkDb1];
-   
-    await Promise.all([
-      ...questionListDb.map((questionList) =>
-        putQuestionList(newObjectId, questionList)
-      ),
-    ]);
-    await Promise.all([
-      ...questionChunkDb.map((questionChunk) =>
-        putQuestionChunk(newObjectId, questionChunk)
-      ),
-    ]);
-    await Promise.all([
-      ...question.map((questions) => putQuestion(question1ObjectId, questions)),
-    ]);
-    await Promise.all([
-      ...userResponse.map((responses) =>
-        putQuestionResponses("Test User Id", [responses])
-      ),
-    ]);
-  
-      let actualList = await getQuestionList(testQuestionListName);
-      let actualProgress = await getQuestionProgress();
-      let actualProgressData = actualProgress["questionData"];
-      let actualResponses = await getQuestionResponses("Test User Id");
-  
-      let progressCount = 0;
-      for (let i = 0; i < actualProgressData.length; i++) {
-        if (actualProgressData[i]._id.equals(newObjectId)) {
-            progressCount++;
+        // Test put functionality
+        const question: Question[] = [testQuestion1];
+        const userResponse: UserResponse[] = [testUserResponse];
+        const questionList: QuestionList[] = [testQuestionList1];
+        const questionListDb: QuestionList_Db[] = [testQuestionListDb1];
+        const gradeQuestionChunks: QuestionChunk[] = [testQuestionChunk1];
+        const questionChunkDb: QuestionChunk_Db[] = [testQuestionChunkDb1];
+
+        await Promise.all([
+            ...questionListDb.map((questionList) => putQuestionList(undefined, questionList)),
+        ]);
+        await Promise.all([
+            ...questionChunkDb.map((questionChunk) => putQuestionChunk(undefined, questionChunk)),
+        ]);
+        await Promise.all([
+            ...question.map((questions) => putQuestion(question1ObjectId, questions)),
+        ]);
+        await Promise.all([
+            ...userResponse.map((responses) => putQuestionResponses("Test User Id", [responses])),
+        ]);
+
+        // Test get functionality - should be identical to what we put
+        const [
+            fetchedAllQuestionsLists,
+            fetchedQuestionList,
+            fetchedQuestionsProgress,
+            fetchedQuestionResponse,
+        ] = await Promise.all([
+            getAllQuestionLists(),
+            getQuestionList(testQuestionListName),
+            getQuestionProgress(),
+            getQuestionResponses("Test User Id"),
+        ]);
+
+        expect(fetchedAllQuestionsLists.length).toBe(questionListDb.length);
+        expect(fetchedQuestionList.chunks.length).toBe(testQuestionChunks.length);
+        expect(fetchedQuestionsProgress.questionData.length).toBe(testProgressInfo.questionData.length);
+        expect(fetchedQuestionResponse.length).toBe(userResponse.length);
+
+        for (let i = 0; i < fetchedAllQuestionsLists.length; i++) {
+            expect(fetchedAllQuestionsLists[i]).toMatchObject(questionList[i]);
         }
-      }
-  
-      let responseCount = 0;
-      for (let i = 0; i< actualResponses.length; i++) {
-        if (actualResponses[i].questionId == testUserResponse.questionId)
-          responseCount++;
-      }
-  
-      expect(actualList).toMatchObject(testQuestionList1);
-      expect(progressCount).toEqual(1);
-      expect(responseCount).toEqual(1);
-  
-      done();
+        for (let i = 0; i < fetchedQuestionList.chunks.length; i++) {
+            expect(fetchedQuestionList.chunks[i]).toMatchObject(gradeQuestionChunks[i]);
+        }
+        for (let i = 0; i < fetchedQuestionsProgress.questionData.length; i++) {
+            expect(fetchedQuestionsProgress.questionData[i]).toMatchObject(questionList[i]);
+        }
+        for (let i = 0; i < fetchedQuestionResponse.length; i++) {
+            expect(fetchedQuestionResponse[i]).toMatchObject(userResponse[i]);
+        }
+
+        done();
     };
     callback();
-  });
-  
-  
+});
+
+test("verify questions", (done) => {
+    async function callback() {
+
+        const question: Question[] = [testQuestion1];
+        const userResponse: UserResponse[] = [testUserResponse];
+        const questionListDb: QuestionList_Db[] = [testQuestionListDb1];
+        const questionChunkDb: QuestionChunk_Db[] = [testQuestionChunkDb1];
+
+        await Promise.all([
+            ...questionListDb.map((questionList) => putQuestionList(newObjectId, questionList)),
+        ]);
+        await Promise.all([
+            ...questionChunkDb.map((questionChunk) => putQuestionChunk(newObjectId, questionChunk)),
+        ]);
+        await Promise.all([
+            ...question.map((questions) => putQuestion(question1ObjectId, questions)),
+        ]);
+        await Promise.all([
+            ...userResponse.map((responses) => putQuestionResponses("Test User Id", [responses])),
+        ]);
+
+        let actualList = await getQuestionList(testQuestionListName);
+        let actualProgress = await getQuestionProgress();
+        let actualProgressData = actualProgress["questionData"];
+        let actualResponses = await getQuestionResponses("Test User Id");
+
+        let progressCount = 0;
+        for (let i = 0; i < actualProgressData.length; i++) {
+            if (actualProgressData[i]._id.equals(newObjectId)) {
+                progressCount++;
+            }
+        }
+
+        let responseCount = 0;
+        for (let i = 0; i < actualResponses.length; i++) {
+            if (actualResponses[i].questionId == testUserResponse.questionId)
+                responseCount++;
+        }
+
+        expect(actualList).toMatchObject(testQuestionList1);
+        expect(progressCount).toEqual(1);
+        expect(responseCount).toEqual(1);
+
+        done();
+    };
+    callback();
+});
 
 test("update question", (done) => {
     async function callback() {
@@ -228,19 +215,16 @@ test("update question", (done) => {
         const questionChunkDb: QuestionChunk_Db[] = [testQuestionChunkDb1];
 
         await Promise.all([
-            ...questionListDb.map((questionList) =>
-                putQuestionList(newObjectId, questionList)),
+            ...questionListDb.map((questionList) => putQuestionList(newObjectId, questionList)),
         ]);
         await Promise.all([
-            ...questionChunkDb.map((questionChunk) =>
-                putQuestionChunk(newObjectId, questionChunk)),
+            ...questionChunkDb.map((questionChunk) => putQuestionChunk(newObjectId, questionChunk)),
         ]);
         await Promise.all([
             ...question.map((questions) => putQuestion(question1ObjectId, questions)),
         ]);
         await Promise.all([
-            ...userResponse.map((responses) =>
-                putQuestionResponses("Test User Id", [responses])),
+            ...userResponse.map((responses) => putQuestionResponses("Test User Id", [responses])),
         ]);
 
         // Update the elements in the database
@@ -255,20 +239,16 @@ test("update question", (done) => {
         const questionChunkDb2: QuestionChunk_Db[] = [testQuestionChunkDb2];
 
         await Promise.all([
-            ...questionListDb2.map((questionList) =>
-                putQuestionList(newObjectId, questionList)),
+            ...questionListDb2.map((questionList) => putQuestionList(newObjectId, questionList)),
         ]);
         await Promise.all([
-            ...questionChunkDb2.map((questionChunk) =>
-                putQuestionChunk(newObjectId, questionChunk)),
+            ...questionChunkDb2.map((questionChunk) => putQuestionChunk(newObjectId, questionChunk)),
         ]);
         await Promise.all([
-            ...question2.map((questions) =>
-                putQuestion(question2ObjectId, questions)),
+            ...question2.map((questions) => putQuestion(question2ObjectId, questions)),
         ]);
         await Promise.all([
-            ...userResponse2.map((responses) =>
-                putQuestionResponses("Test User Id 2", [responses])),
+            ...userResponse2.map((responses) => putQuestionResponses("Test User Id 2", [responses])),
         ]);
 
         updateQuestion._id = newObjectId;
@@ -309,8 +289,22 @@ test("update question", (done) => {
     callback();
 });
 
+
 test("verify many questions", (done) => {
     async function callback() {
+        let [fetchedAllQuestionsLists1] = await Promise.all([getAllQuestionLists()]);
+
+        let questionListIds1 = [];
+        for (let i = 0; i < fetchedAllQuestionsLists1.length; i++) {
+            questionListIds1.push(fetchedAllQuestionsLists1[i]._id);
+        }
+
+        for (let i = 0; i < questionListIds1.length; i++) {
+            await Promise.all([
+                putQuestionList(questionListIds1[i], undefined),
+            ]);
+        }
+
         const question: Question[] = [testQuestion1];
         const userResponse: UserResponse[] = [testUserResponse];
         const questionList: QuestionList[] = [testQuestionList1];
@@ -318,23 +312,33 @@ test("verify many questions", (done) => {
         const gradeQuestionChunks: QuestionChunk[] = [testQuestionChunk1];
         const questionChunkDb: QuestionChunk_Db[] = [testQuestionChunkDb1];
 
-        let manySizes = 10;
-        let objectIds = [];
+        let manySizes = 7;
+        let questionListIds = [];
+        let questionChunkIds = [];
+        let questionIds = [];
+        let userIds = [];
 
         for (let i = 0; i < manySizes; i++) {
-            let newObjectId = new ObjectId();
-            objectIds.push(newObjectId);
+            let questionListObjectId = new ObjectId();
+            questionListIds.push(questionListObjectId);
+            let questionChunkObjectId = new ObjectId();
+            questionChunkIds.push(questionChunkObjectId);
+            let questionId = new ObjectId();
+            questionIds.push(questionId);
+            let userId = "Test User Id " + i;
+            userIds.push(userId);
+
             await Promise.all([
-                ...questionListDb.map((questionList) => putQuestionList(newObjectId, questionList)),
+                ...questionListDb.map((questionList) => putQuestionList(questionListObjectId, questionList)),
             ]);
             await Promise.all([
-                ...questionChunkDb.map((questionChunk) => putQuestionChunk(newObjectId, questionChunk)),
+                ...questionChunkDb.map((questionChunk) => putQuestionChunk(questionChunkObjectId, questionChunk)),
             ]);
             await Promise.all([
-                ...question.map((questions) => putQuestion(question1ObjectId, questions)),
+                ...question.map((questions) => putQuestion(questionId, questions)),
             ]);
             await Promise.all([
-                ...userResponse.map((responses) => putQuestionResponses("Test User Id", [responses])),
+                ...userResponse.map((responses) => putQuestionResponses(userId, [responses])),
             ]);
         }
 
@@ -342,34 +346,33 @@ test("verify many questions", (done) => {
             fetchedAllQuestionsLists,
             fetchedQuestionList,
             fetchedQuestionsProgress,
-            fetchedQuestionResponse,
         ] = await Promise.all([
             getAllQuestionLists(),
             getQuestionList(testQuestionListName),
             getQuestionProgress(),
-            getQuestionResponses("Test User Id"),
         ]);
 
         expect(fetchedAllQuestionsLists.length).toBe(manySizes);
         expect(fetchedQuestionList.chunks.length).toBe(testQuestionChunks.length);
         expect(fetchedQuestionsProgress.questionData.length).toBe(manySizes);
-        expect(fetchedQuestionResponse.length).toBe(userResponse.length);
 
         for (let i = 0; i < fetchedAllQuestionsLists.length; i++) {
             expect(fetchedAllQuestionsLists[i]).toMatchObject(questionList[0]);
         }
         for (let i = 0; i < fetchedQuestionList.chunks.length; i++) {
-            expect(fetchedQuestionList.chunks[i]).toMatchObject(
-                gradeQuestionChunks[0]
-            );
+            expect(fetchedQuestionList.chunks[i]).toMatchObject(gradeQuestionChunks[0]);
         }
         for (let i = 0; i < fetchedQuestionsProgress.questionData.length; i++) {
             expect(fetchedQuestionsProgress.questionData[i]).toMatchObject(
                 questionList[0]
             );
         }
-        for (let i = 0; i < fetchedQuestionResponse.length; i++) {
-            expect(fetchedQuestionResponse[i]).toMatchObject(userResponse[0]);
+        for (let i = 0; i < userIds.length; i++) {
+            const fetchedQuestionResponse = await getQuestionResponses(userIds[i]);
+            expect(fetchedQuestionResponse.length).toBe(userResponse.length);
+            for (let i = 0; i < fetchedQuestionResponse.length; i++) {
+                expect(fetchedQuestionResponse[i]).toMatchObject(userResponse[0]);
+            }
         }
         done();
     };

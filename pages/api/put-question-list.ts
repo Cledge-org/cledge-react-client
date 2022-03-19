@@ -30,7 +30,7 @@ export const putQuestionList = (
   questionListId: ObjectId | undefined,
   questionList: QuestionList_Db | undefined
 ): Promise<void> => {
-  if (questionList._id) {
+  if (questionList !== undefined && questionList._id) {
     // Document should not have _id field when sent to database
     delete questionList._id;
   }

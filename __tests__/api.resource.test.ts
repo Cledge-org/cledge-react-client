@@ -1,7 +1,4 @@
 import { getResourcesInfo } from "../pages/api/get-resources";
-import { putResourceArticle } from "../pages/api/put-resource-article";
-import { putResourceResource } from "../pages/api/put-resource-resource";
-import { putResourceVideo } from "../pages/api/put-resource-video";
 import { putResource } from "../pages/api/put-resource";
 import { ObjectId } from "mongodb";
 
@@ -318,7 +315,7 @@ test("verify resources", (done) => {
 });
 
 
-test("verify resources", (done) => {
+test("verify many resources", (done) => {
   const callback = async () => {
     // checks if there is anything in the database at the beginning of test
     const fetchedResourceCheck = await getResourcesInfo();
