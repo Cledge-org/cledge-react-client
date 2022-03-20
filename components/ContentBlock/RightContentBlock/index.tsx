@@ -33,7 +33,7 @@ const RightBlock = ({
           <Col lg={11} md={11} sm={11} xs={24}>
             <ContentWrapper id={id}>
               <h6>{title}</h6>
-              <Content >{content}</Content>
+              <Content>{content}</Content>
               <ButtonWrapper>
                 {typeof button === "object" &&
                   button.map((item: any, id: number) => {
@@ -50,16 +50,13 @@ const RightBlock = ({
               </ButtonWrapper>
             </ContentWrapper>
           </Col>
+          <Col lg={11} md={11} sm={11} xs={24}>
             {id === "intro" ? (
-              <VideoWrapper
-                id="videoWrapper">
-                {video}
-              </VideoWrapper>
+              <VideoWrapper id="videoWrapper">{video}</VideoWrapper>
             ) : (
-              <IconWrapper>
                 <SvgIcon src={icon} width="100%" height="100%" />
-              </IconWrapper>
             )}
+          </Col>
         </Row>
       </Fade>
     </RightBlockContainer>

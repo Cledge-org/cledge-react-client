@@ -46,6 +46,7 @@ export const Content = styled("p")`
 export const ContentWrapper = styled("div")`
   position: relative;
   max-width: 540px;
+  margin: auto;
 
   @media only screen and (max-width: 575px) {
     padding-bottom: ${(props) => (props.id ==="mission" ? "0" : "4rem")};

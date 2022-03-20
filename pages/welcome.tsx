@@ -20,18 +20,7 @@ const ContentBlock = dynamic(() => import("../components/ContentBlock"));
 const FullWidthContainer = styled("div")`
   position: relative;
   width: 100vw;
-  left: -90px;
   padding: 0px 90px;
-
-  @media only screen and (max-width: 1024px) {
-    left: -60px;
-    padding: 0px 60px;
-  }
-
-  @media only screen and (max-width: 768px) {
-    left: -18px;
-    padding: 0px 18px;
-  }
 `;
 
 const Intro = styled(FullWidthContainer)`
@@ -39,6 +28,11 @@ const Intro = styled(FullWidthContainer)`
   height: 100vh;
   display: flex;
   align-items: center;
+
+  section {
+    max-width: 1500px;
+    margin: 0 auto;
+  }
 
   #intro h6,
   #intro p {
@@ -56,20 +50,11 @@ const Metric = styled(FullWidthContainer)`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  padding: 30px 90px;
-
-  @media only screen and (max-width: 1024px) {
-    padding: 30px 60px;
-  }
-
-  @media only screen and (max-width: 768px) {
-    padding: 30px 18px;
-  }
+  padding: 30px 150px;
 
   & > div {
-    width: 33.3%;
-    flex: 1 0 auto;
     padding: 20px;
+    max-width: 400px;
 
     @media only screen and (max-width: 767px) {
       width: 100%;
@@ -132,27 +117,27 @@ const Home = () => {
             </p>
           </div>
         </Metric>
-        <ContentBlock
-          type="left"
-          title={AboutContent.title}
-          content={AboutContent.text}
-          icon="landing_1.svg"
-          id="about"
-        />
-        <ContentBlock
-          type="right"
-          title={MissionContent.title}
-          content={MissionContent.text}
-          icon="landing_2.svg"
-          id="mission"
-        />
-        <ContentBlock
-          type="left"
-          title={ProductContent.title}
-          content={ProductContent.text}
-          icon="landing_3.svg"
-          id="product"
-        />
+          <ContentBlock
+            type="left"
+            title={AboutContent.title}
+            content={AboutContent.text}
+            icon="landing_1.svg"
+            id="about"
+          />
+          <ContentBlock
+            type="right"
+            title={MissionContent.title}
+            content={MissionContent.text}
+            icon="landing_2.svg"
+            id="mission"
+          />
+          <ContentBlock
+            type="left"
+            title={ProductContent.title}
+            content={ProductContent.text}
+            icon="landing_3.svg"
+            id="product"
+          />
         <Partner>
           <MiddleBlock
             id="partner"
