@@ -50,34 +50,7 @@ const Pathways: NextApplicationPage<{
   );
   //console.warn(pathwayInfo);
   //console.warn(allPathwayProgress);
-  const checkForDiscrepancies = (pathwayProgress: PathwayProgress) => {
-    if (pathwayProgress.name !== pathwayInfo.name) {
-      pathwayProgress.name = pathwayInfo.name;
-    }
-    pathwayProgress.moduleProgress.forEach((progressModule, index) => {
-      const matchingModule = pathwayInfo.modules.find(
-        ({ _id }) => progressModule.moduleId === _id
-      );
-      if (matchingModule && matchingModule.name !== progressModule.name) {
-        pathwayProgress.moduleProgress[index].name = matchingModule.name;
-      }
-      progressModule.contentProgress.forEach(
-        (progressContent, contentIndex) => {
-          let matchingContent = matchingModule.presetContent.find(
-            ({ name }) => progressContent.name === name
-          );
-          if (!matchingContent) {
-            matchingContent = matchingModule.personalizedContent.find(
-              ({ name }) => progressContent.name === name
-            );
-          }
-          if (!matchingContent) {
-            progressModule.contentProgress.splice(contentIndex, 1);
-          }
-        }
-      );
-    });
-  };
+  const checkForDiscrepancies = checkPathwayDiscrepancies(pathwayInfo);
   const checkIfModuleFinished = (
     newPathwayProgress: PathwayProgress[],
     pathwayIndex,
@@ -690,3 +663,35 @@ Pathways.requireAuth = true;
 export default connect((state) => ({
   pathwaysProgress: state.pathwaysProgress.slice(),
 }))(Pathways);
+
+function checkPathwayDiscrepancies(pathwayInfo: Pathway) {
+  return (pathwayProgress: PathwayProgress) => {
+    if (pathwayProgress.name !== pathwayInfo.name) {
+      pathwayProgress.name = pathwayInfo.name;
+    }
+    pathwayProgress.moduleProgress.forEach((progressModule, index) => {
+      const matchingModule = pathwayInfo.modules.find(
+        ({ _id }) => progressModule.moduleId === _id
+      );
+      if (matchingModule && matchingModule.name !== progressModule.name) {
+        pathwayProgress.moduleProgress[index].name = matchingModule.name;
+      }
+      progressModule.contentProgress.forEach(
+        (progressContent, contentIndex) => {
+          let matchingContent = matchingModule.presetContent.find(
+            ({ name }) => progressContent.name === name
+          );
+          if (!matchingContent) {
+            matchingContent = matchingModule.personalizedContent.find(
+              ({ name }) => progressContent.name === name
+            );
+          }
+          if (!matchingContent) {
+            progressModule.contentProgress.splice(contentIndex, 1);
+          }
+        }
+      );
+    });
+  };
+}
+
