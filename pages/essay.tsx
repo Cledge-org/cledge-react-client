@@ -15,8 +15,16 @@ import { updatePathwayProgressAction } from "../utils/actionFunctions";
 import { ObjectId } from "mongodb";
 
 //profile progress/ question summary page
-
+// I need to make the types that we store more general so that we don't have to convert all our pathways every time we
+// change how we want to store the data? Or well, we can also adjust the way we deal with the data in the future.
 // I have a few questions Why does the present content have a priority but the modules do not?
+
+// I can construct a index map from the content pages to the modules that they have. This
+// will reduce the changes that I have to make to the backend.
+
+// I need to make the below code more independent of the content and the way the content is trying to be displayed.
+// This will require declaration of types for the video and the questions, and possibly other components yet to come.
+
 const pageContent = {
   "tags": [
       "quick-start"
@@ -28,40 +36,56 @@ const pageContent = {
           "_id": "61de02937c405886579656e6",
           "name": "Beginning with writing a college essay",
           "presetContent": [
-              {
-                  
-                  "name": "Writing a personal statement",
-                  "type": "Video",
-                  "url": "https://www.youtube.com/watch?v=uk7pLY4jbDU",
-                  "content": "This is where I will describe the questions that I want to ask the user! I will associate them with a specific question id, and allow for future reference without the context of the video? is that really a good idea? Maybe they can reference eachother, or perhaps just live in the same pace. Yeah that makes more sense. It seems I can change the presentation of the content by changing the type. I think I want to have multiple different items to display on one page, so I'll modify the format to be more modular with question types and arrays of items to display. Do I need an id for these? or some type of ordering? most likely yes."
-              },
-              // {
-              //     [
-              //       {
-                      
-              //         "name": "Paths after college",
-              //         "type": "Video",
-              //         "url": "https://www.youtube.com/watch?v=lAtFF47Ce4k",
-              //         "content": "Put in the first sentence to your personal statement."
-              //       },
-              //       {
-                      //     "name": "questiongs",
-                      //     "type": "Questions",
-                      //     "questions": [
+            { 
+              "name": "Writing a personal statement",
+              "type": "Video",
+              "url": "https://www.youtube.com/watch?v=uk7pLY4jbDU",
+              "content": "This is where I will describe the questions that I want to ask the user! I will associate them with a specific question id, and allow for future reference without the context of the video? is that really a good idea? Maybe they can reference eachother, or perhaps just live in the same pace. Yeah that makes more sense. It seems I can change the presentation of the content by changing the type. I think I want to have multiple different items to display on one page, so I'll modify the format to be more modular with question types and arrays of items to display. Do I need an id for these? or some type of ordering? most likely yes."
+            },
+            {
+              "name": "Paths after college",
+              "type": "Video",
+              "url": "https://www.youtube.com/watch?v=lAtFF47Ce4k",
+              "content": "Put in the first sentence to your personal statement."
+            },
 
-                      //         {
-                      //             "question": "What is your current GPA?",
-                      //             "answer": "",
-                      //             "type": "text"
-                      //         },  
-                      //         {
-                      //             "question": "What is your current GPA?",
-                      //             "answer": "",
-                      //             "type": "text"
-                      //         },
-                      //     ]
-              //       }
-              //   ]
+              // {
+              //   "contents": [
+              //     { 
+              //       "name": "Writing a personal statement",
+              //       "type": "Video",
+              //       "url": "https://www.youtube.com/watch?v=uk7pLY4jbDU",
+              //       "content": "This is where I will describe the questions that I want to ask the user! I will associate them with a specific question id, and allow for future reference without the context of the video? is that really a good idea? Maybe they can reference eachother, or perhaps just live in the same pace. Yeah that makes more sense. It seems I can change the presentation of the content by changing the type. I think I want to have multiple different items to display on one page, so I'll modify the format to be more modular with question types and arrays of items to display. Do I need an id for these? or some type of ordering? most likely yes."
+              //     }
+              //   ],
+              // },
+              // {
+              //   "length": 
+              //   "contents": [
+              //     {
+                    
+              //       "name": "Paths after college",
+              //       "type": "Video",
+              //       "url": "https://www.youtube.com/watch?v=lAtFF47Ce4k",
+              //       "content": "Put in the first sentence to your personal statement."
+              //     },
+              //     {
+              //       "name": "general questions",
+              //       "type": "Questions",
+              //       "questions": [
+              //           {
+              //               "question": "What is your current GPA?",
+              //               "answer": "",
+              //               "type": "text"
+              //           },  
+              //           {
+              //               "question": "What is your name?",
+              //               "answer": "",
+              //               "type": "text"
+              //           }
+              //       ]
+              //     }
+                // ]
               // }
           ],
           "tags": [
@@ -150,9 +174,9 @@ const Essay: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
 }> = ({ pathwayInfo, pathwaysProgress }) => {
-  useEffect(() => {
-    console.log("Hello marker\n", pathwaysProgress);
-  }, [])
+  // useEffect(() => {
+  //   console.log("Hello marker\n", pathwaysProgress);
+  // }, [])
   const [currPage, setCurrPage] = useState(null);
   const [currSelected, setCurrSelected] = useState("");
   const [allPathwayProgress, setAllPathwayProgress] =
@@ -464,108 +488,12 @@ const Essay: NextApplicationPage<{
       }
     }
   };
-  useEffect(() => {
-    let currModuleProgress = allPathwayProgress
-      .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
-      ?.moduleProgress?.find(
-        ({ moduleId }) => moduleId === pathwayInfo.modules[0]._id
-      );
-    if (!currModuleProgress) {
-      currModuleProgress = {
-        contentProgress: [],
-        moduleId: pathwayInfo.modules[0]._id,
-        finished: false,
-        name: pathwayInfo.modules[0].name,
-      };
-    }
-    let currContent = getSortedContent(
-      pathwayInfo.modules[0].presetContent,
-      pathwayInfo.modules[0].personalizedContent
-    )[0];
-    //console.log(
-    //   currContent.url.substring(currContent.url.lastIndexOf("v=") + 2)
-    // );
-    if (currContent.type.toLowerCase() === "article") {
-      setArticleToFinished(
-        currContent,
-        pathwayInfo.modules[0].name,
-        pathwayInfo.modules[0]._id
-      );
-    }
-    setCurrSelected(pathwayInfo.modules[0].name + currContent.name);
-    setCurrPage(
-      <div className="d-flex flex-column" style={{ flex: 3 }}>
-        {currContent.type.toLowerCase() === "video" ? (
-          <>
-            <div className="w-100" style={{ height: "55%" }}>
-              <YoutubeEmbed
-                isPathway
-                key={`youtube-container-${currContent.url.substring(
-                  currContent.url.indexOf("v=") !== -1
-                    ? currContent.url.indexOf("v=") + 2
-                    : currContent.url.lastIndexOf("/") + 1
-                )}`}
-                isVideoFinished={
-                  currModuleProgress.contentProgress.find(
-                    (contentProgress, index) => {
-                      return contentProgress.name === currContent.name;
-                    }
-                  )?.finished
-                }
-                videoTime={
-                  currModuleProgress.contentProgress.find(
-                    (contentProgress, index) => {
-                      return contentProgress.name === currContent.name;
-                    }
-                  )?.videoTime
-                    ? currModuleProgress.contentProgress.find(
-                        (contentProgress, index) => {
-                          return contentProgress.name === currContent.name;
-                        }
-                      ).videoTime
-                    : 0
-                }
-                onVideoTimeUpdate={(player) =>
-                  onVideoTimeUpdate(
-                    player,
-                    currContent,
-                    pathwayInfo.modules[0].name,
-                    pathwayInfo.modules[0]._id
-                  )
-                }
-                videoId={currContent.url.substring(
-                  currContent.url.indexOf("v=") !== -1
-                    ? currContent.url.indexOf("v=") + 2
-                    : currContent.url.lastIndexOf("/") + 1
-                )}
-              />
-            </div>
-            <div className="container-fluid center-child flex-column py-5">
-              <div className="pathway-description">
-                <span
-                  className="fw-bold cl-dark-text"
-                  style={{ fontSize: "1.7em" }}
-                >
-                  {currContent.name}
-                </span>
-              </div>
-              <div className="mt-3 ms-5 w-100">
-                <div className="ms-5 text-start">{currContent.content}</div>
-              </div>
-            </div>
-          </>
-        ) : (
-          <embed src={currContent.url} className="w-100 h-100" />
-        )}
-      </div>
-    );
-  }, []);
   const getSortedContent = (presetContent, personalizedContent) => {
     let allContent = presetContent.concat(personalizedContent); 
     if (presetContent.length === 0) { 
       allContent = personalizedContent; 
     }
-    // allContent.sort((a, b) =>  a.priority - b.priority); //  
+    allContent.sort((a, b) =>  a.priority - b.priority); //  
     return allContent;
   };
   const session = useSession();
