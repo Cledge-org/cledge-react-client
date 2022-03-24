@@ -18,6 +18,8 @@ interface ECDropDownProps {
   questionTitle: string;
   isForWaitlist?: boolean;
   onChange: Function;
+  index?: number;
+  rankings?: string[];
   key: String;
   isForDashboard?: boolean;
 }
@@ -43,7 +45,9 @@ export default function ECDropDown({
   isConcatenable,
   title,
   placeholder,
+  rankings,
   forCalendar,
+  index,
   defaultValue,
   valuesList,
   key,
@@ -69,7 +73,7 @@ export default function ECDropDown({
   const changeChosen = (value: string) => {
     setChosen((prevChosen) => {
       if (!isConcatenable) {
-        onChange(value);
+        onChange(value, setChosen);
         return value;
       }
       let prevChosenArr = prevChosen instanceof Array ? prevChosen.slice() : [];
@@ -99,6 +103,11 @@ export default function ECDropDown({
       ? require("bootstrap/dist/js/bootstrap")
       : null;
   }, []);
+  useEffect(() => {
+    if (typeof chosen === "string" && rankings.indexOf(chosen) !== index) {
+      setChosen("");
+    }
+  }, [rankings]);
   return (
     <div
       className={
@@ -167,7 +176,7 @@ export default function ECDropDown({
           }
         >
           {valuesList.map((name) => (
-            <div
+            <button
               onClick={() => {
                 changeChosen(name);
               }}
@@ -183,7 +192,7 @@ export default function ECDropDown({
               }
             >
               {name}
-            </div>
+            </button>
           ))}
         </div>
       </div>

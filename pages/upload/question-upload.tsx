@@ -322,6 +322,7 @@ const QuestionUploadPage: NextApplicationPage<{
                       "CheckBox",
                       "MCQ",
                       "TextInput",
+                      "Ranking",
                       "ECTimeFrame",
                       "ECTextInput",
                       "ECDropDown",

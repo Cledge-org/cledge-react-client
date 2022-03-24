@@ -162,6 +162,7 @@
   }
 }
 .ec-dropdown-menu {
+  z-index: 1000;
   div:first-of-type {
     border: 1px solid transparent;
     border-top-left-radius: 10px;
@@ -204,6 +205,11 @@
     @extend .py-2;
     @extend .px-3;
     @extend .cl-dark-text;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
     font-size: 0.95em;
     font-weight: 500;
     transition: background-color 200ms;
