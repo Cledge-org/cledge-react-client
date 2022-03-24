@@ -166,3 +166,22 @@ interface PersonalizedContent extends WithId<Document> {
   url: string;
   content?: string;
 }
+
+// Student Metrics
+interface Activities extends WithId<Document> {
+  _id?: ObjectId;
+  activities: Activity[];
+  overallTier: number;
+  totalPoints: number;
+}
+
+interface Activity {
+  activityID: number;
+  actType: string;
+  hoursYear: number;
+  yearsSpent: number;
+  recogLevel: number;
+  description: string;
+  points: number;
+  tier: number;
+}
