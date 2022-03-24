@@ -18,6 +18,10 @@ export const ContentWrapper = styled("div")`
   max-width: 540px;
   margin: auto;
 
+  h6 {
+    font-weight: 800;
+  }
+
   @media only screen and (max-width: 575px) {
     padding-top: 4rem;
   }

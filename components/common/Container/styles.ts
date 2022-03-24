@@ -29,6 +29,7 @@ export const StyledContainer = styled("div")<any>`
     color: #1a2169;
     font-size: 36px;
     line-height: 1.18;
+    font-weight: 700;
 
     @media only screen and (max-width: 890px) {
       font-size: 32px;
