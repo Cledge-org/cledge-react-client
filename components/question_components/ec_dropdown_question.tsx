@@ -104,7 +104,11 @@ export default function ECDropDown({
       : null;
   }, []);
   useEffect(() => {
-    if (typeof chosen === "string" && rankings.indexOf(chosen) !== index) {
+    if (
+      rankings &&
+      typeof chosen === "string" &&
+      rankings.indexOf(chosen) !== index
+    ) {
       setChosen("");
     }
   }, [rankings]);

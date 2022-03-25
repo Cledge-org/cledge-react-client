@@ -6,6 +6,7 @@ import ECCalendarDropDown from "./ec_calendar_dropdown";
 import ECDropDown from "./ec_dropdown_question";
 import ECTextInputQuestion from "./ec_textinput_question";
 import ECTimeFrame from "./ec_timeframe_question";
+import CheckBoxQuestion from "./checkbox_question";
 
 interface ECEditorProps {
   title?: string;
@@ -49,10 +50,46 @@ export default function ECEditor({
           className="cl-dark-text"
           style={{ fontSize: "1.8em", fontWeight: 800 }}
         >
-          {isEditing ? "Editing Experience" : "Adding a New Experience"}
+          {isEditing ? "Editing Activity" : "Adding a New Activity"}
         </span>
-        {chunkQuestions.map(({ question, type, _id, isConcatenable, data }) => {
+        {chunkQuestions.map((questionData) => {
+          const { question, isConcatenable, data, type, _id } = questionData;
           console.log(userResponse);
+          if (type === "CheckBox") {
+            return (
+              <CheckBoxQuestion
+                tags={[]}
+                inEC
+                question={questionData}
+                userAnswers={
+                  isEditing &&
+                  userResponse &&
+                  userResponse.find(({ questionId }) => questionId === _id)
+                    ? userResponse.find(({ questionId }) => questionId === _id)
+                        .response
+                    : null
+                }
+                onChange={(value, newQTags, oldQTags) => {
+                  let totallyNewResponse = newResponse.slice();
+                  if (
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id
+                    )
+                  ) {
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id
+                    ).response = value;
+                  } else {
+                    totallyNewResponse.push({
+                      questionId: _id,
+                      response: value,
+                    });
+                  }
+                  setNewResponse(totallyNewResponse);
+                }}
+              />
+            );
+          }
           if (type === "ECDropDown") {
             return (
               <ECDropDown
