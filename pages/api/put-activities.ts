@@ -9,7 +9,6 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { activitiesId, activities } = JSON.parse(req.body);
-  console.log(activities);
   try {
     const result = await putActivities(activitiesId, activities);
     resolve.status(200).send(result);
@@ -27,36 +26,30 @@ export const putActivities = (
     activitiesId: ObjectId | undefined,
     activities: Activities | undefined
   ): Promise<void> => {
-    console.log("in function");
     if (activities !== undefined && activities._id) {
       // Document should not have _id field when sent to database
       delete activities._id;
     }
-    console.log("in promise");
     return new Promise(async (res, err) => {
       try {
         const client = await MongoClient.connect(process.env.MONGO_URL);
         if (!activitiesId && activities) {
-          console.log("in insert");
           await client
             .db("metrics")
             .collection("extracurriculars")
             .insertOne(activities);
         } 
         else if (activitiesId && !activities) {
-          console.log("in delete");
           await client
             .db("metrics")
             .collection("extracurriculars")
             .deleteOne({ _id: activitiesId });
         } else if (activitiesId && activities) {
-          console.log("in update");
           await client
             .db("metrics")
             .collection("extracurriculars")
             .updateOne({ _id: activitiesId }, { $set: activities });
         }
-        console.log("at end of function");
         res();
         client.close();
       } catch (e) {
