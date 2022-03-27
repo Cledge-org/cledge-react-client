@@ -8,7 +8,6 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  // TODO: authentication, grab user id from token validation (probably)
   const { activitiesId, activities } = JSON.parse(req.body);
   console.log(activities);
   try {
