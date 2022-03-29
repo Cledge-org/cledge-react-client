@@ -30,6 +30,10 @@ const Intro = styled(FullWidthContainer)`
   align-items: center;
   padding: 0 90px;
 
+  @media only screen and (max-width: 767px) {
+    display: block;
+  }
+
   section {
     max-width: 1500px;
     height: 100%;
@@ -44,7 +48,6 @@ const Intro = styled(FullWidthContainer)`
     font-weight: 800;
     font-size: 48px;
   }
-  
 `;
 
 const Metric = styled(FullWidthContainer)`
@@ -87,11 +90,18 @@ export const SubscribeWrapper = styled("div")`
   margin: 0 auto;
   position: absolute;
   bottom: 0;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
   width: calc(100% - 180px);
+  padding: 1.5rem;
+  margin-top: 50px;
+  border-radius: 10px 10px 0 0;
 
   @media only screen and (max-width: 767px) {
-    width: calc(100% - 36px);
+    width: 100%;
+    position: static;
   }
 
   & > * {
