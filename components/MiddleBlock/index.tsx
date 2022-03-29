@@ -27,7 +27,7 @@ const MiddleBlock = ({ title, content, button, id }: MiddleBlockProps) => {
     <MiddleBlockSection id={id}>
       <Slide direction="up">
         <Row justify="center" align="middle">
-          <ContentWrapper>
+          <ContentWrapper className="container-margin">
             <Col lg={24} md={24} sm={24} xs={24}>
               <h6>{title}</h6>
               <div>

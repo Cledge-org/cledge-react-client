@@ -27,7 +27,6 @@ export const IconWrapper = styled.div`
 
 export const RightBlockContainer = styled("section")`
   position: relative;
-  padding: 7rem 0 0 0;
   width: 100%;
 
   @media only screen and (max-width: 1024px) {

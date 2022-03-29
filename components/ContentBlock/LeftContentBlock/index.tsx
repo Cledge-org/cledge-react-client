@@ -8,8 +8,7 @@ import {
   ContentWrapper,
   ServiceWrapper,
   MinTitle,
-  MinPara,
-  IconWrapper
+  MinPara
 } from "./styles";
 
 const LeftContentBlock = ({
@@ -24,14 +23,10 @@ const LeftContentBlock = ({
       <Fade direction="left">
         <Row justify="space-between" align="middle" id={id}>
           <Col lg={11} md={11} sm={12} xs={24}>
-            <SvgIcon
-              src={icon}
-              width="100%"
-              height="100%"
-            />
+            <SvgIcon src={icon} width="100%" height="100%" />
           </Col>
           <Col lg={11} md={11} sm={11} xs={24}>
-            <ContentWrapper>
+            <ContentWrapper className="container-margin">
               <h6>{title}</h6>
               <Content>{content}</Content>
               <ServiceWrapper>

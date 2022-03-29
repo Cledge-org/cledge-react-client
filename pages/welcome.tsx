@@ -20,18 +20,19 @@ const ContentBlock = dynamic(() => import("../components/ContentBlock"));
 const FullWidthContainer = styled("div")`
   position: relative;
   width: 100vw;
-  padding: 0px 90px;
 `;
 
 const Intro = styled(FullWidthContainer)`
   background: center / cover url("images/landing_bg.svg") no-repeat;
-  height: 100vh;
+  min-height: 100vh;
+  position: relative;
   display: flex;
   align-items: center;
+  padding: 0 90px;
 
   section {
     max-width: 1500px;
-    margin: 0 auto;
+    height: 100%;
   }
 
   #intro h6,
@@ -43,6 +44,7 @@ const Intro = styled(FullWidthContainer)`
     font-weight: 800;
     font-size: 48px;
   }
+  
 `;
 
 const Metric = styled(FullWidthContainer)`
@@ -51,6 +53,10 @@ const Metric = styled(FullWidthContainer)`
   flex-wrap: wrap;
   justify-content: space-evenly;
   padding: 30px 150px;
+
+  @media only screen and (max-width: 767px) {
+    padding: 30px 18px;
+  }
 
   & > div {
     padding: 20px;
@@ -76,6 +82,23 @@ const Partner = styled(FullWidthContainer)`
   margin-top: 4rem;
 `;
 
+export const SubscribeWrapper = styled("div")`
+  background: #0b1142;
+  margin: 0 auto;
+  position: absolute;
+  bottom: 0;
+  display: block;
+  width: calc(100% - 180px);
+
+  @media only screen and (max-width: 767px) {
+    width: calc(100% - 36px);
+  }
+
+  & > * {
+    color: white !important;
+  }
+`;
+
 const Home = () => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
@@ -83,7 +106,7 @@ const Home = () => {
   return (
     <>
       <Container>
-        <Intro>
+        <Intro className="container-margin">
           <ContentBlock
             type="right"
             title={IntroContent.title}
@@ -92,6 +115,15 @@ const Home = () => {
             video={<YoutubeEmbed videoId="Bly0QbY3fV4" />}
             id="intro"
           />
+          <SubscribeWrapper>
+            <h2>
+              Join the Cledge Community & get started with our free resources
+            </h2>
+            <p>
+              Get monthly access to free live webinars & tips from college
+              advisors!
+            </p>
+          </SubscribeWrapper>
         </Intro>
         <MiddleBlock
           id="goal"
@@ -117,27 +149,27 @@ const Home = () => {
             </p>
           </div>
         </Metric>
-          <ContentBlock
-            type="left"
-            title={AboutContent.title}
-            content={AboutContent.text}
-            icon="landing_1.svg"
-            id="about"
-          />
-          <ContentBlock
-            type="right"
-            title={MissionContent.title}
-            content={MissionContent.text}
-            icon="landing_2.svg"
-            id="mission"
-          />
-          <ContentBlock
-            type="left"
-            title={ProductContent.title}
-            content={ProductContent.text}
-            icon="landing_3.svg"
-            id="product"
-          />
+        <ContentBlock
+          type="left"
+          title={AboutContent.title}
+          content={AboutContent.text}
+          icon="landing_1.svg"
+          id="about"
+        />
+        <ContentBlock
+          type="right"
+          title={MissionContent.title}
+          content={MissionContent.text}
+          icon="landing_2.svg"
+          id="mission"
+        />
+        <ContentBlock
+          type="left"
+          title={ProductContent.title}
+          content={ProductContent.text}
+          icon="landing_3.svg"
+          id="product"
+        />
         <Partner>
           <MiddleBlock
             id="partner"

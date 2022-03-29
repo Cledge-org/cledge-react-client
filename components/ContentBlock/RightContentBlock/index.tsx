@@ -9,7 +9,6 @@ import {
   Content,
   ContentWrapper,
   ButtonWrapper,
-  IconWrapper
 } from "./styles";
 
 const RightBlock = ({
@@ -31,7 +30,7 @@ const RightBlock = ({
       <Fade direction="right">
         <Row justify="space-between" align="middle" id={id}>
           <Col lg={11} md={11} sm={11} xs={24}>
-            <ContentWrapper id={id}>
+            <ContentWrapper id={id} className="container-margin">
               <h6>{title}</h6>
               <Content>{content}</Content>
               <ButtonWrapper>
@@ -54,7 +53,7 @@ const RightBlock = ({
             {id === "intro" ? (
               <VideoWrapper id="videoWrapper">{video}</VideoWrapper>
             ) : (
-                <SvgIcon src={icon} width="100%" height="100%" />
+              <SvgIcon src={icon} width="100%" height="100%" />
             )}
           </Col>
         </Row>
