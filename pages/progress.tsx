@@ -236,7 +236,7 @@ const Progress: NextApplicationPage<{
         ) : (
           questionData
             .map((list) => {
-              if (list.name !== "Extracurricular") {
+              if (list.name !== "Extracurriculars") {
                 return (
                   <QuestionSummaryPage
                     userTags={currUserTags}
@@ -255,9 +255,9 @@ const Progress: NextApplicationPage<{
               }
             })
             .concat(
-              questionData.find(({ name }) => name === "Extracurricular")
+              questionData.find(({ name }) => name === "Extracurriculars")
                 ? questionData
-                    .find(({ name }) => name === "Extracurricular")
+                    .find(({ name }) => name === "Extracurriculars")
                     .chunks.map((chunk) => {
                       return (
                         <QuestionECSubpage

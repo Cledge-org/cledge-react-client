@@ -32,7 +32,7 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
 }) => {
   const resourceTypes = [
     "All",
-    "Extracurricular",
+    "Extracurriculars",
     "Essay",
     "Application",
     "Standardized Tests",

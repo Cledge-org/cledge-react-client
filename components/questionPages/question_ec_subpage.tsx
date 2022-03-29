@@ -19,17 +19,17 @@ export default function QuestionECSubpage({
 }: QuestionECSubpageProps) {
   const chunkExists =
     userResponses?.find(({ questionId }) => {
-      return questionId === "Extracurricular";
+      return questionId === "Extracurriculars";
     }) &&
     userResponses?.find(({ questionId }) => {
-      return questionId === "Extracurricular";
+      return questionId === "Extracurriculars";
     })?.response[chunk.name];
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currECIndex, setCurrECIndex] = useState(
     chunkExists
       ? userResponses?.find(({ questionId }) => {
-          return questionId === "Extracurricular";
+          return questionId === "Extracurriculars";
         })?.response[chunk.name].length
       : 0
   );
@@ -48,11 +48,11 @@ export default function QuestionECSubpage({
       onSave={async (newAnswers) => {
         if (
           userResponses.find(({ questionId }) => {
-            return questionId === "Extracurricular";
+            return questionId === "Extracurriculars";
           }) === undefined
         ) {
           userResponses.push({
-            questionId: "Extracurricular",
+            questionId: "Extracurriculars",
             response: {
               [chunk.name]: [],
             },
@@ -60,15 +60,15 @@ export default function QuestionECSubpage({
         }
         if (
           userResponses?.find(({ questionId }) => {
-            return questionId === "Extracurricular";
+            return questionId === "Extracurriculars";
           })?.response[chunk.name] === undefined
         ) {
           userResponses.find(({ questionId }) => {
-            return questionId === "Extracurricular";
+            return questionId === "Extracurriculars";
           }).response[chunk.name] = [];
         }
         userResponses.find(({ questionId }) => {
-          return questionId === "Extracurricular";
+          return questionId === "Extracurriculars";
         }).response[chunk.name][currECIndex] = newAnswers;
         fetch(`${ORIGIN_URL}/api/put-question-responses`, {
           method: "POST",
@@ -85,10 +85,10 @@ export default function QuestionECSubpage({
       userResponse={
         chunkExists &&
         userResponses.find(({ questionId }) => {
-          return questionId === "Extracurricular";
+          return questionId === "Extracurriculars";
         }).response[chunk.name][currECIndex]
           ? userResponses.find(({ questionId }) => {
-              return questionId === "Extracurricular";
+              return questionId === "Extracurriculars";
             }).response[chunk.name][currECIndex]
           : []
       }
@@ -110,7 +110,7 @@ export default function QuestionECSubpage({
         {chunkExists
           ? userResponses
               .find(({ questionId }) => {
-                return questionId === "Extracurricular";
+                return questionId === "Extracurriculars";
               })
               .response[chunk.name].map((response, index) => {
                 return (

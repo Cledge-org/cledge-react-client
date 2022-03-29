@@ -38,7 +38,7 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
         }}
         defaultValue={resourceType}
         valuesList={[
-          "Extracurricular",
+          "Extracurriculars",
           "Essay",
           "Application",
           "Standardized Tests",
