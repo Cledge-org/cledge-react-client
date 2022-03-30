@@ -31,6 +31,7 @@ const testPresetContent: PresetContent = {
   type: "Test Type",
   url: "Test Url",
 };
+
 const testPathwayModuleName = "Test Name";
 const testPathwayModuleTag = ["Test Pathway Module Tag"];
 const testPathwayModule: PathwayModule = {
@@ -243,6 +244,68 @@ beforeEach(async () => {
   });
 });
 
+test("verifies that pathways can be deleted", (done) => {
+  const callback = async () => {
+    const personalizedContent: PersonalizedContent[] = [
+      testPersonalizedContent,
+    ];
+    const pathwayDb: Pathway_Db[] = [testPathway_Db];
+    const pathwayModuleDb: PathwayModule_Db[] = [testPathwayModule_Db];
+    const contentProgress: ContentProgress[] = [testContentProgress];
+
+    await Promise.all([
+      ...pathwayDb.map((pathway_put) =>
+        putPathway(pathway1ObjectId, pathway_put)
+      ),
+    ]);
+
+    await Promise.all([
+      ...contentProgress.map((content_progress) =>
+        putPathwayProgress(testUserFirebaseId, {
+          [pathwayModule1ObjectId.toString()]: [content_progress],
+        })
+      ),
+    ]);
+
+    await Promise.all([
+      ...pathwayModuleDb.map((pathway_module) =>
+        putPathwayModule(pathwayModule1ObjectId, pathway_module)
+      ),
+    ]);
+
+    await Promise.all([
+      ...personalizedContent.map((responses) =>
+        putPathwayModulePersonalizedContent(
+          pathwayPersonalizedContentObjectId,
+          responses
+        )
+      ),
+    ]);
+
+    let allPathwayId = [];
+    let fetchedAllPathway = await getAllPathways();
+    expect(fetchedAllPathway.length).toBe(1);
+    for (let i = 0; i < fetchedAllPathway.length; i++) {
+      allPathwayId.push(fetchedAllPathway[i]._id);
+    }
+
+    for (let i = 0; i < allPathwayId.length; i++)
+      await putPathway(allPathwayId[i], undefined);
+
+    Promise.all([
+      putPathway(pathway1ObjectId, undefined),
+      putPathwayModulePersonalizedContent(pathwayPersonalizedContentObjectId, undefined),
+      putPathwayModule(pathwayModule1ObjectId, undefined),
+    ]);
+    // Verifying pathways are empty
+    const fetchedAllPathwayCheck = await getAllPathways();
+    expect(fetchedAllPathwayCheck.length).toBe(0);
+
+    done();
+  };
+  callback();
+});
+
 test("update pathway", (done) => {
   const callback = async () => {
     const personalizedContent: PersonalizedContent[] = [
@@ -378,14 +441,6 @@ test("update pathway", (done) => {
     expect(allPathwayCount).toBe(expectCount);
     expect(allPathwayProgressCount).toBe(expectCount);
     expect(moduleProgressCount).toBe(expectCount);
-
-    for (let i = 0; i < allPathwayId.length; i++)
-      await putPathway(allPathwayId[i], undefined);
-
-    // Verifying pathways are empty
-    const fetchedAllPathwayCheck = await getAllPathways();
-    expect(fetchedAllPathwayCheck.length).toBe(0);
-
     done();
   };
   callback();
@@ -580,8 +635,6 @@ test("should add pathway and get those added pathways exactly", (done) => {
       getPathwayProgress(testUserFirebaseId, pathway1ObjectId),
     ]);
 
-    let allPathwayId = [];
-
     expect(fetchedAllPathway.length).toBe(pathwayDb.length);
     expect(fetchedAllPathwayProgress.length).toBe(
       testDashboard.userProgress.length
@@ -593,7 +646,6 @@ test("should add pathway and get those added pathways exactly", (done) => {
 
     for (let i = 0; i < fetchedAllPathway.length; i++) {
       expect(fetchedAllPathway[i]).toMatchObject(pathway[i]);
-      allPathwayId.push(fetchedAllPathway[i]._id);
     }
 
     for (let i = 0; i < fetchedAllPathwayProgress.length; i++) {
@@ -607,20 +659,6 @@ test("should add pathway and get those added pathways exactly", (done) => {
         testModuleProgresses[i]
       );
     }
-
-    for (let i = 0; i < allPathwayId.length; i++)
-      await putPathway(allPathwayId[i], undefined);
-
-    // Verifying pathways are empty
-    const fetchedAllPathwayCheck = await getAllPathways();
-    expect(fetchedAllPathwayCheck.length).toBe(0);
-
-    Promise.all([
-      putPathway(pathway1ObjectId, undefined),
-      putPathwayModulePersonalizedContent(personalizedContentId, undefined),
-      putPathwayModule(pathwayModule1ObjectId, undefined),
-    ]);
-
     done();
   };
   callback();

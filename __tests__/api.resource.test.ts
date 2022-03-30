@@ -54,9 +54,7 @@ const testResource2: CardResource = {
   description: "Test Description 2"
 };
 
-let newObjectId = new ObjectId();
-
-test("should add resources and get those added resources exactly", (done) => {
+test("should add resources and get those added resources exactly and verify if those resources are deleted", (done) => {
   const callback = async () => {
     // checks if there is anything in the database at the beginning of test
     const fetchedResourceCheck = await getResourcesInfo();
@@ -119,7 +117,7 @@ test("should add resources and get those added resources exactly", (done) => {
   callback();
 });
 
-test("update resources", (done) => {
+test("update resources and verify if the resources are deleted", (done) => {
   const callback = async () => {
     // checks if there is anything in the database at the beginning of test("
     const fetchedResourceCheck = await getResourcesInfo();
@@ -175,10 +173,6 @@ test("update resources", (done) => {
     let videoCount = 0;
     let resourceCount = 0;
 
-    // delete updateArticle.category;
-    // delete updateVideo.category;
-    // delete updateResource.category;
-
     for (let i = 0; i < actualArticles.length; i++) {
       if (actualArticles[i]._id.equals(updateArticle._id)) {
         expect(actualArticles[i]).toEqual(updateArticle);
@@ -225,7 +219,7 @@ test("update resources", (done) => {
   callback();
 });
 
-test("verify resources", (done) => {
+test("verify resources and verify if those resources are deleted", (done) => {
   const callback = async () => {
     // checks if there is anything in the database at the beginning of test
     const fetchedResourceCheck = await getResourcesInfo();
@@ -315,7 +309,7 @@ test("verify resources", (done) => {
 });
 
 
-test("verify many resources", (done) => {
+test("verify many resources and verify if those many resources are deleted", (done) => {
   const callback = async () => {
     // checks if there is anything in the database at the beginning of test
     const fetchedResourceCheck = await getResourcesInfo();
@@ -372,6 +366,3 @@ test("verify many resources", (done) => {
   };
   callback();
 });
-
-
-

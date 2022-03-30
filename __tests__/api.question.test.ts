@@ -290,7 +290,7 @@ test("update question", (done) => {
 });
 
 
-test("verify many questions", (done) => {
+test("verify that questions are deleted so database is empty", (done) => {
     async function callback() {
         let [fetchedAllQuestionsLists1] = await Promise.all([getAllQuestionLists()]);
 
@@ -304,7 +304,15 @@ test("verify many questions", (done) => {
                 putQuestionList(questionListIds1[i], undefined),
             ]);
         }
+        [fetchedAllQuestionsLists1] = await Promise.all([getAllQuestionLists()]);
+        expect(fetchedAllQuestionsLists1.length).toBe(0);
+        done();
+    };
+    callback();
+});
 
+test("verify many questions", (done) => {
+    async function callback() {
         const question: Question[] = [testQuestion1];
         const userResponse: UserResponse[] = [testUserResponse];
         const questionList: QuestionList[] = [testQuestionList1];
