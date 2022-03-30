@@ -9,12 +9,14 @@ import { updateQuestionResponsesAction } from "../../utils/actionFunctions";
 interface QuestionECSubpageProps {
   userResponses: UserResponse[];
   isShowing: boolean;
+  inMetrics?: boolean;
   chunk: QuestionChunk;
 }
 
 export default function QuestionECSubpage({
   userResponses,
   isShowing,
+  inMetrics,
   chunk,
 }: QuestionECSubpageProps) {
   const chunkExists =
@@ -95,14 +97,16 @@ export default function QuestionECSubpage({
     />
   ) : (
     <div className="container-fluid h-100 d-flex flex-column">
-      <QuestionSubPageHeader
-        isExtracurricular
-        onAddNew={() => {
-          setIsAdding(true);
-        }}
-        title={chunk.name}
-        percentage={undefined}
-      />
+      {inMetrics ? null : (
+        <QuestionSubPageHeader
+          isExtracurricular
+          onAddNew={() => {
+            setIsAdding(true);
+          }}
+          title={chunk.name}
+          percentage={undefined}
+        />
+      )}
       <div
         className="d-flex flex-column justify-content-evenly align-self-center"
         style={{ width: "91%" }}

@@ -47,8 +47,10 @@ const Metrics: NextApplicationPage<{
   questionResponses: UserResponse[];
 }> = ({ questionData, userTags, questionResponses }) => {
   const session = useSession();
-  const [currPage, setCurrPage] = useState({ page: "all", chunk: "" });
-  const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
+  const [currPage, setCurrPage] = useState({
+    page: "all",
+    tab: "extracurriculars",
+  });
   const [percentageData, setPercentageData] = useState({
     allLists: 0,
     lists: [],
@@ -105,6 +107,9 @@ const Metrics: NextApplicationPage<{
     return Math.round((finished / total) * 100);
   };
   console.log(percentageData.lists);
+  const ECResponses = questionResponses.find(({ questionId }) => {
+    return questionId === "Extracurriculars";
+  });
   return (
     <div
       className="container-fluid d-flex flex-row px-0"
@@ -114,7 +119,7 @@ const Metrics: NextApplicationPage<{
         <DropDownTab
           isAll
           chunkList={[]}
-          onClick={() => setCurrPage({ page: "all", chunk: "" })}
+          onClick={() => setCurrPage({ page: "all", tab: "extracurriculars" })}
           title="Metrics Overview"
           percentComplete={undefined}
         />
@@ -125,7 +130,7 @@ const Metrics: NextApplicationPage<{
                 isExtracurricular={list.name === "Extracurriculars"}
                 chunkList={list.chunks.map((chunk) => chunk.name)}
                 onClick={(chunk) =>
-                  setCurrPage({ page: list.name, chunk: chunk })
+                  setCurrPage({ page: list.name, tab: "data" })
                 }
                 title={list.name}
                 percentComplete={percentageData.lists[index]}
@@ -141,69 +146,161 @@ const Metrics: NextApplicationPage<{
         }}
       >
         {currPage.page === "all" ? (
-          <div>
-            <div
-              className="container-fluid d-flex flex-column"
-              style={{ flex: 1 }}
-            >
-              <QuestionSubPageHeader
-                title="Metrics Completion"
-                percentage={percentageData.allLists}
-                subText=""
+          <div
+            className="container-fluid d-flex flex-column"
+            style={{ flex: 1 }}
+          >
+            <QuestionSubPageHeader
+              title="Metrics Completion"
+              percentage={percentageData.allLists}
+              subText=""
+            />
+            <ul className="nav ms-5" role="tablist">
+              <TabButton
+                currTab={currPage.tab}
+                onClick={(tab) => {
+                  setCurrPage({ ...currPage, tab });
+                }}
+                title={"Extracurriculars"}
               />
-              <ul className="nav ms-5" role="tablist">
-                <TabButton
-                  currTab={currAllSectionTab}
-                  onClick={setCurrAllSectionTab.bind(this)}
-                  title={"Extracurriculars"}
-                />
-                <TabButton
-                  currTab={currAllSectionTab}
-                  onClick={setCurrAllSectionTab.bind(this)}
-                  title={"Academics"}
-                />
-              </ul>
-              <div className="tab-content h-100">
-                <div
-                  className={`resources-tab-pane flex-row justify-content-start align-items-center
+              <TabButton
+                currTab={currPage.tab}
+                onClick={(tab) => {
+                  setCurrPage({ ...currPage, tab });
+                }}
+                title={"Academics"}
+              />
+            </ul>
+            <div className="tab-content h-100">
+              <div
+                className={`resources-tab-pane mx-5 w-100 flex-column justify-content-start align-items-start
                   ${
-                    currAllSectionTab === "extracurriculars"
+                    currPage.tab === "extracurriculars"
                       ? " resources-active  d-flex "
                       : ""
                   }
                 `}
-                  id="extracurriculars"
-                >
-                  {}
-                </div>
-                <div
-                  className={`resources-tab-pane flex-row justify-content-start align-items-center
+                id="extracurriculars"
+              >
+                {!ECResponses
+                  ? "Looks like you have no activities"
+                  : questionData
+                      .find(({ name }) => name === "Extracurriculars")
+                      .chunks.map((chunk) => {
+                        return ECResponses.response[chunk.name].map(
+                          (response, index) => {
+                            const titleQuestion = response.find(
+                              ({ questionId }) =>
+                                questionId ===
+                                chunk.questions.find(
+                                  ({ question }) => question === "Title"
+                                )?._id
+                            );
+                            return (
+                              <ActivityDropdown
+                                title={
+                                  titleQuestion.response
+                                    ? "No title given"
+                                    : titleQuestion.response
+                                }
+                                content="Great job"
+                                tier={7}
+                              />
+                            );
+                          }
+                        );
+                      })}
+                <button className="cl-btn-blue align-self-center w-50">
+                  Update Extracurriculars
+                </button>
+              </div>
+              <div
+                className={`resources-tab-pane flex-row justify-content-start align-items-center
                   ${
-                    currAllSectionTab === "academics"
+                    currPage.tab === "academics"
                       ? " resources-active  d-flex "
                       : ""
                   }
                 `}
-                  id="academics"
-                >
-                  {}
-                </div>
+                id="academics"
+              >
+                {}
               </div>
             </div>
           </div>
-        ) : questionData.find(({ name }) => name === "Extracurriculars") ? (
-          questionData
-            .find(({ name }) => name === "Extracurriculars")
-            .chunks.map((chunk) => {
-              return (
-                <QuestionECSubpage
-                  key={chunk.name}
-                  userResponses={questionResponses}
-                  chunk={chunk}
-                  isShowing={currPage.chunk === chunk.name}
-                />
-              );
-            })
+        ) : currPage.page === "Extracurriculars" ? (
+          <div
+            className="container-fluid d-flex flex-column"
+            style={{ flex: 1 }}
+          >
+            <QuestionSubPageHeader
+              title="Extracurriculars Completion"
+              percentage={percentageData.allLists}
+              subText=""
+            />
+            <ul className="nav ms-5" role="tablist">
+              <TabButton
+                currTab={currPage.tab}
+                onClick={(tab) => {
+                  setCurrPage({ ...currPage, tab });
+                }}
+                title={"Data"}
+              />
+              <TabButton
+                currTab={currPage.tab}
+                onClick={(tab) => {
+                  setCurrPage({ ...currPage, tab });
+                }}
+                title={"Update"}
+              />
+            </ul>
+            <div className="tab-content h-100">
+              {currPage.tab === "data"
+                ? !ECResponses
+                  ? "Looks like you have no activities"
+                  : questionData
+                      .find(({ name }) => name === "Extracurriculars")
+                      .chunks.map((chunk) => {
+                        return ECResponses.response[chunk.name].map(
+                          (response, index) => {
+                            const titleQuestion = response.find(
+                              ({ questionId }) =>
+                                questionId ===
+                                chunk.questions.find(
+                                  ({ question }) => question === "Title"
+                                )?._id
+                            );
+                            return (
+                              <ActivityDropdown
+                                title={
+                                  titleQuestion.response
+                                    ? "No title given"
+                                    : titleQuestion.response
+                                }
+                                content="Great job"
+                                tier={7}
+                              />
+                            );
+                          }
+                        );
+                      })
+                : questionData.find(({ name }) => name === "Extracurriculars")
+                ? questionData
+                    .find(({ name }) => name === "Extracurriculars")
+                    .chunks.map((chunk) => {
+                      return (
+                        <QuestionECSubpage
+                          inMetrics
+                          key={chunk.name}
+                          userResponses={questionResponses}
+                          chunk={chunk}
+                          isShowing={true}
+                        />
+                      );
+                    })
+                : []}
+            </div>
+          </div>
         ) : (
           []
         )}
@@ -211,7 +308,84 @@ const Metrics: NextApplicationPage<{
     </div>
   );
 };
-
+const ActivityDropdown = ({
+  title,
+  tier,
+  content,
+}: {
+  title: string;
+  tier: number;
+  content: string;
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  return (
+    <div className="progress-dropdown-container mt-2 w-75">
+      <button
+        className="progress-dropdown-btn cl-btn-gray"
+        onClick={() => {
+          setIsExpanded(!isExpanded);
+        }}
+      >
+        <div className="text">{title}</div>
+        <div
+          className={
+            isExpanded ? "center-child icon-open" : "center-child icon-close"
+          }
+          style={{ width: "12px", height: "12px" }}
+        >
+          <FontAwesomeIcon icon={faChevronDown} />
+        </div>
+      </button>
+      <div
+        className={`progress-dropdown-menu-${
+          isExpanded ? "expanded" : "closed"
+        } ms-1 mt-2`}
+        style={{ backgroundColor: "white" }}
+      >
+        <div
+          className="d-flex flex-row align-items-center position-relative"
+          style={{ border: "1px solid black" }}
+        >
+          <div
+            className="center-child"
+            style={{ border: "1px solid black", flex: 1 }}
+          >
+            1-3
+          </div>
+          <div
+            className="center-child"
+            style={{ border: "1px solid black", flex: 1 }}
+          >
+            4-6
+          </div>
+          <div
+            className="center-child"
+            style={{ border: "1px solid black", flex: 1 }}
+          >
+            7-8
+          </div>
+          <div
+            className="center-child"
+            style={{ border: "1px solid black", flex: 1 }}
+          >
+            9-12
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              height: "130%",
+              width: "4px",
+              backgroundColor: "black",
+              bottom: "-15%",
+              left: `${(tier / 12) * 100}%`,
+            }}
+          />
+        </div>
+        <div>{content}</div>
+      </div>
+    </div>
+  );
+};
 Metrics.requireAuth = true;
 export default connect((state) => {
   return {
