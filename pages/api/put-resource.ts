@@ -9,25 +9,25 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-    // TODO: authentication, grab user id from token validation (probably)
-    const { userToken, resourceId, resource, tag } = req.body;
+  // TODO: authentication, grab user id from token validation (probably)
+  const { userToken, resourceId, resource, tag } = req.body;
 
-    // use this line only if resourceId is not an ObjectId type;
-    // change line 27 resourceId into resourceObId
-    // const resourceObjId = new BSON.ObjectId(resourceId);
-    const types = ["video", "article", "resource"];
-    if (!resourceId) {
-      if (!(tag && types.includes(tag))) {
-        resolve.status(400).send("Invalid resource type");
-        return;
-      }
+  // use this line only if resourceId is not an ObjectId type;
+  // change line 27 resourceId into resourceObId
+  // const resourceObjId = new BSON.ObjectId(resourceId);
+  const types = ["video", "article", "resource"];
+  if (!resourceId) {
+    if (!(tag && types.includes(tag))) {
+      resolve.status(400).send("Invalid resource type");
+      return;
     }
-    try {
-        const result = await putResource(resourceId, resource, tag);
-        resolve.status(200).send(result);
-    } catch (e) {
-        resolve.status(500).send(e);
-    }
+  }
+  try {
+    const result = await putResource(resourceId, resource, tag);
+    resolve.status(200).send(result);
+  } catch (e) {
+    resolve.status(500).send(e);
+  }
 };
 
 // Admin API. Creates or updates a resource article - if no ID provided, will
@@ -36,7 +36,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putResource = async (
   resourceId: ObjectId | undefined,
   resource: CardArticle | CardVideo | CardResource | undefined,
-  tag: String | undefined
+  tag: string | undefined
 ): Promise<void> => {
   if (resource) {
     resource.tag = tag;
@@ -45,14 +45,16 @@ export const putResource = async (
       // Document should not have _id field when sent to database
       delete resource._id;
     }
-
   }
 
   return new Promise(async (res, err) => {
     const client = await MongoClient.connect(process.env.MONGO_URL);
     try {
       if (!resourceId && resource) {
-        await client.db("resources").collection("all_resources").insertOne(resource);
+        await client
+          .db("resources")
+          .collection("all_resources")
+          .insertOne(resource);
       } else if (resourceId && !resource) {
         await client
           .db("resources")
@@ -62,7 +64,7 @@ export const putResource = async (
         await client
           .db("resources")
           .collection("all_resources")
-          .updateOne({ _id: resourceId }, { $set: resource }, {upsert: true});
+          .updateOne({ _id: resourceId }, { $set: resource }, { upsert: true });
       }
       res();
       client.close();
