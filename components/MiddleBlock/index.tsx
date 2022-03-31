@@ -7,6 +7,7 @@ import {
   ContentWrapper,
   Card,
   CardWrapper,
+  PartnerCard,
 } from "./styles";
 
 interface MiddleBlockProps {
@@ -30,20 +31,12 @@ const MiddleBlock = ({ title, content, button, id }: MiddleBlockProps) => {
           <ContentWrapper className="container-margin">
             <Col lg={24} md={24} sm={24} xs={24}>
               <h6>{title}</h6>
-              <div>
-                {id === "partner" && (
-                  <div id="icon">
-                    <img src="./images/landing_msft.svg" alt="Microsoft" />
-                    <img src="./images/landing_openai.svg" alt="openAI" />
-                  </div>
-                )}
-              </div>
-              <p>{content}</p>
+              {id === "partner" ? null : <p>{content}</p>}
             </Col>
           </ContentWrapper>
         </Row>
         <div>
-          {id === "goal" && (
+          {id === "goal" ? (
             <CardWrapper>
               <Card>
                 <img src="./images/school_icon/HV.png" alt="Havard"></img>
@@ -57,16 +50,75 @@ const MiddleBlock = ({ title, content, button, id }: MiddleBlockProps) => {
               <Card>
                 <img
                   src="./images/school_icon/UM.png"
-                  alt="University of Michigan"></img>
+                  alt="University of Michigan"
+                ></img>
               </Card>
               <Card>
                 <img
                   src="./images/school_icon/UW.png"
-                  alt="University of Washington"></img>
+                  alt="University of Washington"
+                ></img>
               </Card>
               <Card>
                 <img src="./images/school_icon/GT.png" alt="Georgia Tech"></img>
               </Card>
+            </CardWrapper>
+          ) : (
+            <CardWrapper>
+              <PartnerCard>
+                <strong
+                  className="cl-dark-text ms-4"
+                  style={{ fontSize: "1.8em" }}
+                >
+                  Partnered with the best technologies
+                </strong>
+                <p
+                  className="ms-4"
+                  style={{
+                    fontSize: "1.3em",
+                    fontWeight: 600,
+                    width: "85%",
+                    textAlign: "left",
+                  }}
+                >
+                  With the support of Microsoft for Startups, we are excited to
+                  empower every student with the latest technologies to drive
+                  their college counseling experience.
+                </p>
+                <img
+                  style={{ height: "20%" }}
+                  className="ms-3"
+                  src="./images/landing_msft.svg"
+                  alt="Microsoft"
+                />
+              </PartnerCard>
+              <PartnerCard>
+                <strong
+                  className="cl-dark-text ms-4"
+                  style={{ fontSize: "1.8em" }}
+                >
+                  Your data is secured
+                </strong>
+                <p
+                  className="ms-4"
+                  style={{
+                    fontSize: "1.3em",
+                    fontWeight: 600,
+                    width: "85%",
+                    textAlign: "left",
+                  }}
+                >
+                  Unlike other free platforms and services, your data is
+                  protected and never sold to colleges or other third parties.
+                  Period. We ensure your data is only used to help you.
+                </p>
+                <img
+                  style={{ height: "20%" }}
+                  className="ms-3"
+                  src="./images/azure-info-protect.png"
+                  alt="Azure Information Protection"
+                />
+              </PartnerCard>
             </CardWrapper>
           )}
         </div>

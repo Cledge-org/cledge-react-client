@@ -19,7 +19,17 @@ export const Card = styled.div`
   align-items: center;
   justify-content: center;
 `;
-
+export const PartnerCard = styled.div`
+  width: 45vw;
+  height: 40vh;
+  background: #ffffff;
+  box-shadow: 2px 8px 44px rgba(0, 11, 67, 0.06);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-evenly;
+`;
 export const MiddleBlockSection = styled("section")`
   position: relative;
   padding: 7.5rem 0;

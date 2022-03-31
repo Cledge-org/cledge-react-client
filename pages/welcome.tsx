@@ -11,6 +11,9 @@ import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import styled from "styled-components";
 import Footer from "../components/common/Footer";
+import ECDropDown from "../components/question_components/ec_dropdown_question";
+import { Button } from "../components/common/Button";
+import { Fade } from "react-awesome-reveal";
 
 const Contact = dynamic(() => import("../components/ContactForm"));
 const MiddleBlock = dynamic(() => import("../components/MiddleBlock"));
@@ -24,7 +27,7 @@ const FullWidthContainer = styled("div")`
 
 const Intro = styled(FullWidthContainer)`
   background: center / cover url("images/landing_bg.svg") no-repeat;
-  min-height: 100vh;
+  min-height: 110vh;
   position: relative;
   display: flex;
   align-items: center;
@@ -81,7 +84,7 @@ const Metric = styled(FullWidthContainer)`
 `;
 
 const Partner = styled(FullWidthContainer)`
-  background: #F9FAFF;
+  background: #f9faff;
   margin-top: 4rem;
 `;
 
@@ -89,7 +92,7 @@ export const SubscribeWrapper = styled("div")`
   background: #0b1142;
   margin: 0 auto;
   position: absolute;
-  bottom: 0;
+  bottom: 15vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -97,11 +100,60 @@ export const SubscribeWrapper = styled("div")`
   width: calc(100% - 180px);
   padding: 1.5rem;
   margin-top: 50px;
-  border-radius: 10px 10px 0 0;
+  border-radius: 10px;
 
   @media only screen and (max-width: 767px) {
     width: 100%;
     position: static;
+  }
+
+  & > * {
+    color: white !important;
+  }
+`;
+export const BlobBlock = styled("div")`
+  background: center / cover url("images/gradient-blob.svg") no-repeat;
+  min-height: 75vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 90px;
+
+  @media only screen and (max-width: 767px) {
+    display: block;
+  }
+
+  section {
+    max-width: 1500px;
+    height: 100%;
+  }
+
+  #intro h6,
+  #intro p {
+    color: white;
+  }
+
+  #intro h6 {
+    font-weight: 800;
+    font-size: 48px;
+  }
+`;
+export const MediaButton = styled("button")`
+  background: #0b1142;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  color: white;
+  width: 15vw;
+  padding: 1.5rem;
+  outline: none;
+  border-color: transparent;
+  border-radius: 5px;
+
+  @media only screen and (max-width: 767px) {
+    width: 48vw;
   }
 
   & > * {
@@ -117,23 +169,60 @@ const Home = () => {
     <>
       <Container>
         <Intro className="container-margin">
-          <ContentBlock
-            type="right"
-            title={IntroContent.title}
-            content={IntroContent.text}
-            button={IntroContent.button}
-            video={<YoutubeEmbed videoId="Bly0QbY3fV4" />}
-            id="intro"
-          />
+          <div className="w-100" style={{ marginBottom: "15vh" }}>
+            <ContentBlock
+              type="right"
+              title={IntroContent.title}
+              content={IntroContent.text}
+              button={IntroContent.button}
+              video={<YoutubeEmbed videoId="Bly0QbY3fV4" />}
+              id="intro"
+            />
+          </div>
           <SubscribeWrapper>
-            <h2>
-              Join the Cledge Community & get started with our free resources
-            </h2>
+            <h2>Get started with our free resources</h2>
             <p>
               Get monthly access to free live webinars & tips from college
               advisors!
             </p>
+            <div className="d-flex flex-row align-items-center justify-content-evenly">
+              <div>
+                <label>I am a</label>
+                <ECDropDown isForWaitlist valuesList={["Parent", "Student"]} />
+              </div>
+              <div>
+                <label>Email</label>
+                <input type="text" placeholder="Your email" />
+              </div>
+              <Button
+                key="subscribe-btn"
+                color="orange"
+                fixedWidth={true}
+                onClick={() => {}}
+              >
+                Subscribe to our monthly tips
+              </Button>
+            </div>
           </SubscribeWrapper>
+          <div
+            style={{
+              position: "absolute",
+              bottom: "5vh",
+              left: 0,
+              width: "100%",
+            }}
+            className="d-flex flex-row justify-content-center align-items-center"
+          >
+            <MediaButton>
+              <img src="images/whatsapp.svg" />
+              WhatsApp Community
+            </MediaButton>
+            <div className="mx-3" />
+            <MediaButton>
+              <img src="images/discord.svg" />
+              Discord Community
+            </MediaButton>
+          </div>
         </Intro>
         <MiddleBlock
           id="goal"
@@ -187,13 +276,51 @@ const Home = () => {
             content={PartnerContent.text}
           />
         </Partner>
+        <BlobBlock>
+          <Fade direction="right" className="center-child w-100">
+            <div
+              className="position-relative d-flex flex-row align-items-center justify-content-around"
+              style={{
+                width: "80vw",
+                height: "50vh",
+                border: "1px solid transparent",
+                borderRadius: "15px",
+                backgroundColor: "rgba(255,255,255,0.3)",
+              }}
+            >
+              <div style={{ color: "white" }}>
+                <strong style={{ fontSize: "2em" }}>
+                  Ready to take the next step towards your dreams?
+                </strong>
+                <p style={{ color: "white" }}>
+                  Join our Insider Program to get first access to the 24/7
+                  college chat service
+                </p>
+              </div>
+              <img src="images/insider-blob.svg" />
+              <div
+                className="position-absolute"
+                style={{ bottom: "-2vh", left: "5vw" }}
+              >
+                <Button
+                  key="subscribe-btn"
+                  color="orange"
+                  fixedWidth={false}
+                  onClick={() => {}}
+                >
+                  Join Insider Program for Free ➜
+                </Button>
+              </div>
+            </div>
+          </Fade>
+        </BlobBlock>
         <Contact
           title={ContactContent.title}
           content={ContactContent.text}
           id="contact"
         />
       </Container>
-      <Footer
+      {/* <Footer
         onFeatureClick={(featureIndex) => {
           setCurrFeature(featureIndex);
           console.log(slideShowRef.current.offsetTop);
@@ -202,7 +329,7 @@ const Home = () => {
             behavior: "smooth",
           });
         }}
-      />
+      /> */}
     </>
   );
 };
