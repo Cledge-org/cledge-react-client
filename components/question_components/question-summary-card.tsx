@@ -14,6 +14,7 @@ import {
   updateQuestionResponsesAction,
   updateTagsAction,
 } from "../../utils/actionFunctions";
+import RankingQuestion from "./ranking_question";
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface QuestionSummaryCardProps {
@@ -73,6 +74,18 @@ export default function QuestionSummaryCard({
         <TextInputQuestion
           question={question}
           userAnswer={userAnswer?.response}
+          onChange={(answer) => {
+            setUserAnswer({ ...userAnswer, response: answer });
+          }}
+        />
+      );
+    }
+    if (question.type === "Ranking") {
+      return (
+        <RankingQuestion
+          question={question}
+          tags={userTags}
+          userAnswers={userAnswer?.response}
           onChange={(answer) => {
             setUserAnswer({ ...userAnswer, response: answer });
           }}

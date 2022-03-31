@@ -24,6 +24,7 @@ import {
   updateQuestionResponsesAction,
   updateTagsAndCheckInsAction,
 } from "../../utils/actionFunctions";
+import RankingQuestion from "../../components/question_components/ranking_question";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -176,7 +177,9 @@ const CheckIn: NextApplicationPage<{
             questionId: question?._id,
             response: value,
           });
-      setNewTags(filterDuplicates(newTags.concat(newQTags)));
+      if (newQTags) {
+        setNewTags(filterDuplicates(newTags.concat(newQTags)));
+      }
     };
     console.log(question);
     if (question?.type === "TextInput") {
@@ -186,6 +189,17 @@ const CheckIn: NextApplicationPage<{
           question={question}
           userAnswer={""}
           onChange={updateFunc}
+        />
+      );
+    }
+    if (question?.type === "Ranking") {
+      return (
+        <RankingQuestion
+          question={question}
+          key={question?._id}
+          userAnswers={[]}
+          onChange={updateFunc}
+          tags={userTags}
         />
       );
     }

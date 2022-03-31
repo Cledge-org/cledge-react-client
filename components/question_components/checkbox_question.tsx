@@ -7,12 +7,14 @@ interface CheckBoxQuestionProps {
   userAnswers: string[];
   onChange: Function;
   tags: string[];
+  inEC?: boolean;
 }
 
 export default function CheckBoxQuestion({
   question,
   userAnswers,
   onChange,
+  inEC,
   tags,
 }: CheckBoxQuestionProps) {
   const [selected, setSelected] = useState(
@@ -41,11 +43,19 @@ export default function CheckBoxQuestion({
     );
   };
   return (
-    <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
+    <div
+      className={`h-100 d-flex flex-column ${
+        inEC ? "align-items-start w-100" : "container-fluid align-items-center"
+      } justify-content-evenly w-100 cl-dark-text fw-bold`}
+    >
       <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
         {question.question}
       </span>
-      <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
+      <div
+        className={`d-flex flex-column justify-content-evenly ${
+          inEC ? "align-items-start" : "align-items-center"
+        } h-75 w-100`}
+      >
         {question.data.map(({ op, tag }) => {
           return (
             <button
@@ -59,6 +69,7 @@ export default function CheckBoxQuestion({
                   ? "checkbox-mcq-variant-selected"
                   : "checkbox-mcq-variant"
               }
+              style={inEC ? { width: "100%" } : {}}
             >
               {op}
               <CheckBox
