@@ -157,10 +157,10 @@ test("should add questions and get those added questions exactly", (done) => {
     };
     callback();
 });
-
-test("verify questions", (done) => {
+ 
+test("verify questions given an ObjectId", (done) => {
     async function callback() {
-
+        // Test put functionality given an ObjectId
         const question: Question[] = [testQuestion1];
         const userResponse: UserResponse[] = [testUserResponse];
         const questionListDb: QuestionList_Db[] = [testQuestionListDb1];
@@ -320,7 +320,7 @@ test("verify many questions", (done) => {
         const gradeQuestionChunks: QuestionChunk[] = [testQuestionChunk1];
         const questionChunkDb: QuestionChunk_Db[] = [testQuestionChunkDb1];
 
-        let manySizes = 7;
+        let manySizes = 10;
         let questionListIds = [];
         let questionChunkIds = [];
         let questionIds = [];
@@ -367,14 +367,17 @@ test("verify many questions", (done) => {
         for (let i = 0; i < fetchedAllQuestionsLists.length; i++) {
             expect(fetchedAllQuestionsLists[i]).toMatchObject(questionList[0]);
         }
+
         for (let i = 0; i < fetchedQuestionList.chunks.length; i++) {
             expect(fetchedQuestionList.chunks[i]).toMatchObject(gradeQuestionChunks[0]);
         }
+
         for (let i = 0; i < fetchedQuestionsProgress.questionData.length; i++) {
             expect(fetchedQuestionsProgress.questionData[i]).toMatchObject(
                 questionList[0]
             );
         }
+        
         for (let i = 0; i < userIds.length; i++) {
             const fetchedQuestionResponse = await getQuestionResponses(userIds[i]);
             expect(fetchedQuestionResponse.length).toBe(userResponse.length);

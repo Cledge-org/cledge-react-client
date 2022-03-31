@@ -97,11 +97,6 @@ const testUserPathwayTag = [
   "Test User Tag 2",
   "Test User Tag 3",
 ];
-const testUserPathway: UserPathway = {
-  pathway: "Test Course 1", // need to update
-  userTags: testUserPathwayTag,
-  userCourseProgress: testPathwayProgress,
-};
 
 const testUserCheckIns = ["Test CheckIn 1", "Test CheckIn 2", "Test CheckIn 3"];
 const testDashboard: Dashboard = {
@@ -111,9 +106,7 @@ const testDashboard: Dashboard = {
   checkIns: testUserCheckIns,
 };
 
-///////////////////////////////////////////////////////////////////////////
 // UPDATE DATA
-
 const testPersonalizedContentTag2 = [
   "Test 2 Tag 1",
   "Test 2 Tag 2",
@@ -124,19 +117,19 @@ const testPersonalizedContent2: PersonalizedContent = {
   moduleId: pathwayModule1ObjectId,
   priority: 0,
   tags: testPersonalizedContentTag2,
-  name: "Test Name2",
-  type: "Test Type2",
-  url: "Test Url2",
+  name: "Test Name 2",
+  type: "Test Type 2",
+  url: "Test Url 2",
 };
 
 const testPresetContent2: PresetContent = {
   priority: 0,
-  name: "Test Name2",
-  type: "Test Type2",
-  url: "Test Url2",
+  name: "Test Name 2",
+  type: "Test Type 2",
+  url: "Test Url 2",
 };
-const testPathwayModuleName2 = "Test Name2";
-const testPathwayModuleTag2 = ["Test Pathway Module Tag2"];
+const testPathwayModuleName2 = "Test Name 2";
+const testPathwayModuleTag2 = ["Test Pathway Module Tag 2"];
 const testPathwayModule2: PathwayModule = {
   _id: pathwayModule1ObjectId,
   name: testPathwayModuleName2,
@@ -152,8 +145,8 @@ const testPathwayModule_Db2: PathwayModule_Db = {
   tags: testPathwayModuleTag2,
 };
 
-const testPathwayName2 = "Test Name2";
-const testPathwayTag2 = ["Test Pathway Tag2"];
+const testPathwayName2 = "Test Name 2";
+const testPathwayTag2 = ["Test Pathway Tag 2"];
 const testPathwayModules2 = [testPathwayModule2];
 const testPathway2: Pathway = {
   _id: pathway1ObjectId,
@@ -200,11 +193,6 @@ const testUserPathwayTag2 = [
   "Test 2 User Tag 2",
   "Test 2 User Tag 3",
 ];
-const testUserPathway2: UserPathway = {
-  pathway: "Test Course 2", // need to update
-  userTags: testUserPathwayTag2,
-  userCourseProgress: testPathwayProgress2,
-};
 
 const testUserCheckIns2 = [
   "Test 2 CheckIn 1",
@@ -212,7 +200,7 @@ const testUserCheckIns2 = [
   "Test 2 CheckIn 3",
 ];
 const testDashboard2: Dashboard = {
-  userName: "Test UserName2",
+  userName: "Test UserName 2",
   userTags: testUserPathwayTag2,
   userProgress: [testPathwayProgress2],
   checkIns: testUserCheckIns2,
@@ -253,6 +241,7 @@ test("verifies that pathways can be deleted", (done) => {
     const pathwayModuleDb: PathwayModule_Db[] = [testPathwayModule_Db];
     const contentProgress: ContentProgress[] = [testContentProgress];
 
+    // puts the pathways in the database
     await Promise.all([
       ...pathwayDb.map((pathway_put) =>
         putPathway(pathway1ObjectId, pathway_put)
@@ -297,6 +286,7 @@ test("verifies that pathways can be deleted", (done) => {
       putPathwayModulePersonalizedContent(pathwayPersonalizedContentObjectId, undefined),
       putPathwayModule(pathwayModule1ObjectId, undefined),
     ]);
+    
     // Verifying pathways are empty
     const fetchedAllPathwayCheck = await getAllPathways();
     expect(fetchedAllPathwayCheck.length).toBe(0);

@@ -14,28 +14,24 @@ const titleResource2 = "Test Resource 2";
 const testArticle1: CardArticle = {
   source: "Test Source",
   name: titleArticle,
-  // category: "article",
   description: "Test Description"
 };
 
 const testVideo1: CardVideo = {
   source: "Test Source",
   name: titleVideo,
-  // category: "video",
   description: "Test Description"
 };
 
 const testResource1: CardResource = {
   source: "Test Source",
   name: titleResource,
-  // category: "resource",
   description: "Test Description"
 };
 
 const testArticle2: CardArticle = {
   source: "Test Source 2",
   name: titleArticle2,
-  // category: "article",
   description: "Test Description 2"
 
 };
@@ -43,14 +39,12 @@ const testArticle2: CardArticle = {
 const testVideo2: CardVideo = {
   source: "Test Source 2",
   name: titleVideo2,
-  // category: "video",
   description: "Test Description 2"
 };
 
 const testResource2: CardResource = {
   source: "Test Source 2",
   name: titleResource2,
-  // category: "resource",
   description: "Test Description 2"
 };
 
@@ -69,6 +63,8 @@ test("should add resources and get those added resources exactly and verify if t
     const articles: CardArticle[] = [testArticle1];
     const videos: CardVideo[] = [testVideo1];
     const resources: CardResource[] = [testResource1];
+
+    // manually create unique objectids for each test resource
     await Promise.all([
       ...articles.map((article) => putResource(undefined, article, "article")),
       ...videos.map((video) => putResource(undefined, video, "video")),
@@ -83,18 +79,16 @@ test("should add resources and get those added resources exactly and verify if t
 
 
     for (let i = 0; i < fetchedResources.articles.length; i++) {
-      // delete articles[i].category;
       expect(fetchedResources.articles[i]).toMatchObject(articles[i]);
       articleId.push(fetchedResources.articles[i]._id);
     }
+
     for (let i = 0; i < fetchedResources.videoList.length; i++) {
-      // delete videos[i].category;
       expect(fetchedResources.videoList[i]).toMatchObject(videos[i]);
       videoId.push(fetchedResources.videoList[i]._id);
     }
 
     for (let i = 0; i < fetchedResources.resources.length; i++) {
-      // delete resources[i].category;
       expect(fetchedResources.resources[i]).toMatchObject(resources[i]);
       resourceId.push(fetchedResources.resources[i]._id);
     }
@@ -107,7 +101,7 @@ test("should add resources and get those added resources exactly and verify if t
     for (let i = 0; i < resourceId.length; i++)
       await putResource(resourceId[i], undefined, undefined);
 
-
+    // checks that database is empty
     const fetchedResourcesCheck = await getResourcesInfo();
     expect(fetchedResourcesCheck.articles.length).toBe(0);
     expect(fetchedResourcesCheck.videoList.length).toBe(0);
@@ -119,7 +113,7 @@ test("should add resources and get those added resources exactly and verify if t
 
 test("update resources and verify if the resources are deleted", (done) => {
   const callback = async () => {
-    // checks if there is anything in the database at the beginning of test("
+    // checks if there is anything in the database at the beginning of test
     const fetchedResourceCheck = await getResourcesInfo();
     expect(fetchedResourceCheck.articles.length).toBe(0);
     expect(fetchedResourceCheck.videoList.length).toBe(0);
@@ -150,6 +144,7 @@ test("update resources and verify if the resources are deleted", (done) => {
     const videos2: CardVideo[] = [testVideo2];
     const resources2: CardResource[] = [testResource2];
 
+    // updates the resources in the database
     await Promise.all([
       ...articles2.map((article) => putResource(fetchedResources.articles[0]._id, article, "article")),
       ...videos2.map((video) => putResource(fetchedResources.videoList[0]._id, video, "video")),
@@ -202,6 +197,7 @@ test("update resources and verify if the resources are deleted", (done) => {
     expect(videoCount).toEqual(expectedCount);
     expect(resourceCount).toEqual(expectedCount);
 
+    // clears the resource database
     for (let i = 0; i < articleId.length; i++)
       await putResource(articleId[i], undefined, undefined);
     for (let i = 0; i < videoId.length; i++)
@@ -209,7 +205,7 @@ test("update resources and verify if the resources are deleted", (done) => {
     for (let i = 0; i < resourceId.length; i++)
       await putResource(resourceId[i], undefined, undefined);
 
-
+    // checks that database is empty
     const fetchedResourceChecks = await getResourcesInfo();
     expect(fetchedResourceChecks.articles.length).toBe(0);
     expect(fetchedResourceChecks.videoList.length).toBe(0);
@@ -285,12 +281,11 @@ test("verify resources and verify if those resources are deleted", (done) => {
     }
 
     const expectedCount = 1;
-
     expect(articleCount).toEqual(expectedCount);
     expect(videoCount).toEqual(expectedCount);
     expect(resourceCount).toEqual(expectedCount);
 
-
+    // clears resource database
     for (let i = 0; i < articleId.length; i++)
       await putResource(articleId[i], undefined, undefined);
     for (let i = 0; i < videoId.length; i++)
@@ -298,7 +293,7 @@ test("verify resources and verify if those resources are deleted", (done) => {
     for (let i = 0; i < resourceId.length; i++)
       await putResource(resourceId[i], undefined, undefined);
 
-
+    // checks that the database is empty
     const fetchedResourcesCheck = await getResourcesInfo();
     expect(fetchedResourcesCheck.articles.length).toBe(0);
     expect(fetchedResourcesCheck.videoList.length).toBe(0);
@@ -351,13 +346,14 @@ test("verify many resources and verify if those many resources are deleted", (do
       expect(fetchedResources.resources[i]).toMatchObject(resources[0]);
     }
 
-    // put functionality to delete
+    // clears resource datbase
     for (let i = 0; i < manySize; i++) {
       await putResource(articleId.pop(), undefined, undefined);
       await putResource(videoId.pop(), undefined, undefined);
       await putResource(resourceId.pop(), undefined, undefined);
     }
 
+    // checks that database is empty
     const fetchedResourceChecks = await getResourcesInfo();
     expect(fetchedResourceChecks.articles.length).toBe(0);
     expect(fetchedResourceChecks.videoList.length).toBe(0);
