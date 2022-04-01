@@ -1,4 +1,3 @@
-import BSON from "bson";
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 

@@ -1,4 +1,3 @@
-import { TextareaAutosize } from "@mui/material";
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
