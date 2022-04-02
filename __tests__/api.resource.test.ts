@@ -278,10 +278,7 @@ test("verify many resources and verify if those many resources are deleted", (do
     expect(fetchedResourceCheck.articles.length).toBe(0);
     expect(fetchedResourceCheck.videoList.length).toBe(0);
     expect(fetchedResourceCheck.resources.length).toBe(0);
-
-    let articles = [testArticle1];
-    let videos = [testVideo1];
-    let resources = [testResource1];
+    
     let manySize = 100;
     let articleId = [];
     let videoId = [];

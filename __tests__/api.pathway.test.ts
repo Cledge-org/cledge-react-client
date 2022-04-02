@@ -231,6 +231,8 @@ beforeEach(async () => {
     await connection.deleteMany({});
   }
 
+  await client.close();
+
   // Add test user
   // TODO: add personalized content with tags of those of the test user
   createUser({

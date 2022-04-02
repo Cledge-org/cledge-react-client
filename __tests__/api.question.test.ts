@@ -97,7 +97,9 @@ beforeEach(async () => {
     for (let connection of await client.db("users").collections()) {
         await connection.deleteMany({});
     }
+    await client.close();
 });
+
 
 test("should add one question and get that one added question exactly", (done) => {
     async function callback() {
@@ -108,11 +110,12 @@ test("should add one question and get that one added question exactly", (done) =
         const questionListDb: QuestionList_Db = testQuestionListDb1;
         const gradeQuestionChunks: QuestionChunk = testQuestionChunk1;
         const questionChunkDb: QuestionChunk_Db = testQuestionChunkDb1;
+        const userId:string = "Test User Id";
 
         await putQuestionList(undefined, questionListDb);
         await putQuestionChunk(undefined, questionChunkDb);
         await putQuestion(question1ObjectId, question);
-        await putQuestionResponses("Test User Id", [userResponse]);
+        await putQuestionResponses(userId, [userResponse]);
 
         // Test get functionality - should be identical to what we put
         const [
@@ -124,7 +127,7 @@ test("should add one question and get that one added question exactly", (done) =
             getAllQuestionLists(),
             getQuestionList(testQuestionListName),
             getQuestionProgress(),
-            getQuestionResponses("Test User Id"),
+            getQuestionResponses(userId),
         ]);
 
         expect(fetchedAllQuestionsLists.length).toBe(1);
@@ -241,7 +244,6 @@ test("update question", (done) => {
     };
     callback();
 });
-
 
 test("verify many questions", (done) => {
     function createQuestion(i: string, questionId: ObjectId): {
@@ -364,7 +366,6 @@ test("verify many questions", (done) => {
         }
         done();
     };
-    callback();
+   callback();
 });
-
 
