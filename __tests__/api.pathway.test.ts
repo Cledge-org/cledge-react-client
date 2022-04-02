@@ -11,6 +11,7 @@ import { createUser } from "../pages/api/create-user";
 import { updateUser } from "../pages/api/update-user";
 
 
+const pathway1ObjectId = new ObjectId();
 const pathwayModule1ObjectId = new ObjectId();
 const pathwayPersonalizedContentObjectId = new ObjectId();
 
@@ -52,7 +53,6 @@ const testPathwayModule_Db: PathwayModule_Db = {
 const testPathwayName = "Test Name";
 const testPathwayTag = ["Test Pathway Tag"];
 const testPathwayModules = [testPathwayModule];
-const pathway1ObjectId = new ObjectId();
 const testPathway: Pathway = {
   _id: pathway1ObjectId,
   name: testPathwayName,
@@ -98,6 +98,11 @@ const testUserPathwayTag = [
   "Test User Tag 2",
   "Test User Tag 3",
 ];
+const testUserPathway: UserPathway = {
+  pathway: "Test Course 1", // need to update
+  userTags: testUserPathwayTag,
+  userCourseProgress: testPathwayProgress,
+};
 
 const testUserCheckIns = ["Test CheckIn 1", "Test CheckIn 2", "Test CheckIn 3"];
 const testDashboard: Dashboard = {
@@ -107,7 +112,9 @@ const testDashboard: Dashboard = {
   checkIns: testUserCheckIns,
 };
 
+///////////////////////////////////////////////////////////////////////////
 // UPDATE DATA
+
 const testPersonalizedContentTag2 = [
   "Test 2 Tag 1",
   "Test 2 Tag 2",
@@ -118,19 +125,19 @@ const testPersonalizedContent2: PersonalizedContent = {
   moduleId: pathwayModule1ObjectId,
   priority: 0,
   tags: testPersonalizedContentTag2,
-  name: "Test Name 2",
-  type: "Test Type 2",
-  url: "Test Url 2",
+  name: "Test Name2",
+  type: "Test Type2",
+  url: "Test Url2",
 };
 
 const testPresetContent2: PresetContent = {
   priority: 0,
-  name: "Test Name 2",
-  type: "Test Type 2",
-  url: "Test Url 2",
+  name: "Test Name2",
+  type: "Test Type2",
+  url: "Test Url2",
 };
-const testPathwayModuleName2 = "Test Name 2";
-const testPathwayModuleTag2 = ["Test Pathway Module Tag 2"];
+const testPathwayModuleName2 = "Test Name2";
+const testPathwayModuleTag2 = ["Test Pathway Module Tag2"];
 const testPathwayModule2: PathwayModule = {
   _id: pathwayModule1ObjectId,
   name: testPathwayModuleName2,
@@ -146,8 +153,8 @@ const testPathwayModule_Db2: PathwayModule_Db = {
   tags: testPathwayModuleTag2,
 };
 
-const testPathwayName2 = "Test Name 2";
-const testPathwayTag2 = ["Test Pathway Tag 2"];
+const testPathwayName2 = "Test Name2";
+const testPathwayTag2 = ["Test Pathway Tag2"];
 const testPathwayModules2 = [testPathwayModule2];
 const testPathway2: Pathway = {
   _id: pathway1ObjectId,
@@ -194,6 +201,11 @@ const testUserPathwayTag2 = [
   "Test 2 User Tag 2",
   "Test 2 User Tag 3",
 ];
+const testUserPathway2: UserPathway = {
+  pathway: "Test Course 2", // need to update
+  userTags: testUserPathwayTag2,
+  userCourseProgress: testPathwayProgress2,
+};
 
 const testUserCheckIns2 = [
   "Test 2 CheckIn 1",
@@ -201,7 +213,7 @@ const testUserCheckIns2 = [
   "Test 2 CheckIn 3",
 ];
 const testDashboard2: Dashboard = {
-  userName: "Test UserName 2",
+  userName: "Test UserName2",
   userTags: testUserPathwayTag2,
   userProgress: [testPathwayProgress2],
   checkIns: testUserCheckIns2,
@@ -244,9 +256,8 @@ test("should add one pathway and get that one added pathway exactly", (done) => 
     const pathwayModuleDb: PathwayModule_Db = testPathwayModule_Db;
     const contentProgress: ContentProgress = testContentProgress;
 
-    await putPathwayProgress(testUserFirebaseId, {[pathwayModule1ObjectId.toString()]: [contentProgress]});
+    await putPathwayProgress(testUserFirebaseId, { [pathwayModule1ObjectId.toString()]: [contentProgress] });
     await putPathway(pathway1ObjectId, pathwayDb);
-    await putPathwayProgress(testUserFirebaseId, {[pathwayModule1ObjectId.toString()]: [contentProgress]});
     await putPathwayModule(pathwayModule1ObjectId, pathwayModuleDb);
     let personalizedContentId = new ObjectId();
     await putPathwayModulePersonalizedContent(personalizedContentId, personalizedContent);
@@ -286,7 +297,7 @@ test("update pathway", (done) => {
     const contentProgress: ContentProgress = testContentProgress;
 
     await putPathway(pathway1ObjectId, pathwayDb);
-    await putPathwayProgress(testUserFirebaseId, {[pathwayModule1ObjectId.toString()]: [contentProgress]});
+    await putPathwayProgress(testUserFirebaseId, { [pathwayModule1ObjectId.toString()]: [contentProgress] });
     await putPathwayModule(pathwayModule1ObjectId, pathwayModuleDb);
     await putPathwayModulePersonalizedContent(pathwayPersonalizedContentObjectId, personalizedContent);
 
@@ -310,7 +321,7 @@ test("update pathway", (done) => {
     });
 
     await putPathway(pathway1ObjectId, pathwayDb2);
-    await putPathwayProgress(testUserFirebaseId, {[pathwayModule1ObjectId.toString()]: [contentProgress2]});
+    await putPathwayProgress(testUserFirebaseId, { [pathwayModule1ObjectId.toString()]: [contentProgress2] });
     await putPathwayModule(pathwayModule1ObjectId, pathwayModuleDb2)
     await putPathwayModulePersonalizedContent(pathwayPersonalizedContentObjectId, personalizedContent2);
 
@@ -318,7 +329,7 @@ test("update pathway", (done) => {
     let fetchedAllPathwayProgress = await getAllPathwayProgress(testUserFirebaseId);
     let fetchedPathway = await getPathway(testUserFirebaseId, pathway1ObjectId);
     let fetchedPathwayProgress = await getPathwayProgress(testUserFirebaseId, pathway1ObjectId);
-  
+
     let allPathwayId = [];
 
     expect(fetchedAllPathway.length).toBe(1);
@@ -330,11 +341,11 @@ test("update pathway", (done) => {
     expect(fetchedAllPathway[0]).toMatchObject(pathway2);
     hasPathway = true;
     allPathwayId.push(fetchedAllPathway[0]._id);
-      
+
     let hasPathwayProgress = false;
     expect(fetchedAllPathwayProgress[0]).toMatchObject(pathwayProgress2);
     hasPathwayProgress = true;
-    
+
     let hasModuleProgress = false;
     expect(fetchedPathwayProgress.moduleProgress[0]).toMatchObject(testModuleProgresses2[0]);
     hasModuleProgress = true;
@@ -347,57 +358,128 @@ test("update pathway", (done) => {
   callback();
 });
 
-test("should verify many", (done) => {
+test("verify many pathways", (done) => {
+  function createPathway(i: string, pathwayId: ObjectId, moduleId: ObjectId): {
+    pathwayDb: Pathway_Db, contentProgress: ContentProgress, pathwayModuleDb: PathwayModule_Db, personalizedContent: PersonalizedContent,
+    pathway: Pathway, pathwayProgress: PathwayProgress, pathwayModule: PathwayModule, moduleProgress: ModuleProgress
+  } {
+    const testPersonalizedContentTag = ["Test Tag 1", "Test Tag 2", "Test Tag 3"];
+    const testPersonalizedContent: PersonalizedContent = {
+      _id: new ObjectId(),
+      moduleId: moduleId,
+      priority: 0,
+      tags: testPersonalizedContentTag,
+      name: "Test Name " + i,
+      type: "Test Type " + i,
+      url: "Test Url " + i,
+    };
+
+    const testPresetContent: PresetContent = {
+      priority: 0,
+      name: "Test Name " + i,
+      type: "Test Type " + i,
+      url: "Test Url " + i,
+    };
+
+    const testPathwayModuleName = "Test Name " + i;
+    const testPathwayModuleTag = ["Test Pathway Module Tag " + i];
+    const testPathwayModule: PathwayModule = {
+      _id: moduleId,
+      name: testPathwayModuleName,
+      presetContent: [testPresetContent],
+      personalizedContent: [testPersonalizedContent],
+      tags: testPathwayModuleTag,
+    };
+
+    const testPathwayModule_Db: PathwayModule_Db = {
+      _id: new ObjectId(),
+      name: testPathwayModuleName,
+      presetContent: [testPresetContent],
+      tags: testPathwayModuleTag,
+    };
+
+    const testPathwayName = "Test Name " + i;
+    const testPathwayTag = ["Test Pathway Tag " + i];
+    const testPathwayModules = [testPathwayModule];
+    const testPathway: Pathway = {
+      _id: pathwayId,
+      name: testPathwayName,
+      modules: testPathwayModules,
+      tags: testPathwayTag,
+      part: "",
+      order: 0,
+    };
+
+    const testPathway_Db: Pathway_Db = {
+      _id: new ObjectId(),
+      name: testPathwayName,
+      tags: testPathwayTag,
+      modules: [moduleId],
+      part: "",
+      order: 0,
+    };
+
+    const testContentProgress: ContentProgress = {
+      finished: false,
+      name: testPathwayName,
+      videoTime: 0,
+    };
+
+    const testContentProgresses = [testContentProgress];
+    const testModuleProgress: ModuleProgress = {
+      moduleId: new ObjectId(),
+      finished: false,
+      name: testPathwayModuleName,
+      contentProgress: testContentProgresses,
+    };
+
+    const testModuleProgresses = [testModuleProgress];
+    const testPathwayProgress: PathwayProgress = {
+      pathwayId: pathwayId,
+      finished: false,
+      name: testPathwayName,
+      moduleProgress: testModuleProgresses,
+    };
+
+    return {
+      pathwayDb: testPathway_Db, contentProgress: testContentProgress, pathwayModuleDb: testPathwayModule_Db, personalizedContent: testPersonalizedContent,
+      pathway: testPathway, pathwayProgress: testPathwayProgress, pathwayModule: testPathwayModule, moduleProgress: testModuleProgress
+    }
+  }
+
   const callback = async () => {
     const manySizes = 10;
-    const pathway: Pathway[] = [testPathway];
-    const pathwayModule: PathwayModule[] = [testPathwayModule];
     let pathwayProgress = [];
     let pathwayIds = [];
     let moduleIds = [];
     let firebaseIds = [];
 
+    let pathways: Pathway[] = [];
+    let pathwayModule: PathwayModule[] = [];
+    let moduleProgresses: ModuleProgress[] = [];
+
     for (let j = 0; j < manySizes; j++) {
       const pathwayId = new ObjectId();
       const moduleId = new ObjectId();
       const firebaseId = "Test User Id " + j;
+      const personalizedContentObjectId = new ObjectId();
+
       pathwayIds.push(pathwayId);
       moduleIds.push(moduleId);
       firebaseIds.push(firebaseId);
 
       // Test put functionality
-      const pathwayDb: Pathway_Db[] = [
-        {
-          _id: new ObjectId(),
-          name: testPathwayName,
-          tags: testPathwayTag,
-          modules: [moduleId],
-          part: "",
-          order: 0,
-        },
-      ];
+      const pathwayResult = createPathway(j + "", pathwayId, moduleId);
+      pathways.push(pathwayResult.pathway);
+      pathwayModule.push(pathwayResult.pathwayModule);
+      const pathwayDb: Pathway_Db = pathwayResult.pathwayDb;
 
-      pathwayProgress.push({
-        pathwayId: pathwayId,
-        finished: false,
-        name: testPathwayName,
-        moduleProgress: testModuleProgresses,
-      });
+      pathwayProgress.push(pathwayResult.pathwayProgress);
+      moduleProgresses.push(pathwayResult.moduleProgress)
 
-      const personalizedContent: PersonalizedContent[] = [
-        {
-          _id: new ObjectId(),
-          moduleId: moduleId,
-          priority: 0,
-          tags: testPersonalizedContentTag,
-          name: "Test Name",
-          type: "Test Type",
-          url: "Test Url",
-        },
-      ];
-
-      const pathwayModuleDb: PathwayModule_Db[] = [testPathwayModule_Db];
-      const contentProgress: ContentProgress[] = [testContentProgress];
+      const personalizedContent: PersonalizedContent = pathwayResult.personalizedContent;
+      const pathwayModuleDb: PathwayModule_Db = pathwayResult.pathwayModuleDb;
+      const contentProgress: ContentProgress = pathwayResult.contentProgress;
 
       await createUser({
         firebaseId: firebaseId,
@@ -410,64 +492,42 @@ test("should verify many", (done) => {
         checkIns: testUserCheckIns,
       });
 
-      await Promise.all([
-        ...pathwayDb.map((pathway_put) => putPathway(pathwayId, pathway_put)),
-      ]);
-
-      await Promise.all([
-        ...contentProgress.map((content_progress) =>
-          putPathwayProgress(firebaseId, {
-            [moduleId.toString()]: [content_progress],
-          })
-        ),
-      ]);
-
-      await Promise.all([
-        ...pathwayModuleDb.map((pathway_module) =>
-          putPathwayModule(moduleId, pathway_module)
-        ),
-      ]);
-
-      await Promise.all([
-        ...personalizedContent.map((responses) =>
-          putPathwayModulePersonalizedContent(undefined, responses)
-        ),
-      ]);
+      await putPathway(pathwayId, pathwayDb);
+      await putPathwayProgress(firebaseId, { [moduleId.toString()]: [contentProgress] });
+      await putPathwayModule(moduleId, pathwayModuleDb);
+      await putPathwayModulePersonalizedContent(undefined, personalizedContent);
+     
     }
+
+    const fetchedAllPathway = await getAllPathways();
+    expect(fetchedAllPathway.length).toBe(manySizes);
+    for (let i = 0; i < fetchedAllPathway.length; i++) {
+      expect(fetchedAllPathway[i]).toMatchObject(pathways[i]);
+    }
+
 
     for (let j = 0; j < manySizes; j++) {
       // Test get functionality - should be identical to what we put
       const [
-        fetchedAllPathway,
         fetchedAllPathwayProgress,
         fetchedPathway,
         fetchedPathwayProgress,
       ] = await Promise.all([
-        getAllPathways(),
         getAllPathwayProgress(firebaseIds[j]),
         getPathway(firebaseIds[j], pathwayIds[j]),
         getPathwayProgress(firebaseIds[j], pathwayIds[j]),
       ]);
 
-      expect(fetchedAllPathway.length).toBe(manySizes);
       expect(fetchedAllPathwayProgress.length).toBe(manySizes);
       expect(fetchedPathway.modules.length).toBe(testPathway_Db.modules.length);
-      expect(fetchedPathwayProgress.moduleProgress.length).toBe(
-        testModuleProgresses.length
-      );
+      expect(fetchedPathwayProgress.moduleProgress.length).toBe(testModuleProgresses.length);
 
-      for (let i = 0; i < fetchedAllPathway.length; i++) {
-        expect(fetchedAllPathway[i]).toMatchObject(pathway[0]);
-      }
-
-      for (let i = 0; i < fetchedPathway.tags.length; i++) {
-        expect(fetchedPathway.modules[i]).toMatchObject(pathwayModule[0]);
-      }
+       for (let i = 0; i < fetchedPathway.tags.length; i++) {
+         expect(fetchedPathway.modules[i]).toMatchObject(pathwayModule[j]);
+       }
 
       for (let i = 0; i < fetchedPathwayProgress.moduleProgress.length; i++) {
-        expect(fetchedPathwayProgress.moduleProgress[i]).toMatchObject(
-          testModuleProgresses[0]
-        );
+        expect(fetchedPathwayProgress.moduleProgress[i]).toMatchObject(moduleProgresses[j]);
       }
     }
     done();
