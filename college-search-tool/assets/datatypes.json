@@ -1,5 +1,5 @@
 {
-    "UNITID": "integer",
+    "UNITID": "string",
     "INSTNM": "string",
     "CITY": "string",
     "STABBR": "string",
