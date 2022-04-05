@@ -30,11 +30,14 @@ const Intro = styled(FullWidthContainer)`
   min-height: 110vh;
   position: relative;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   padding: 0 90px;
+  padding-top: 35vh;
 
   @media only screen and (max-width: 767px) {
     display: block;
+    padding-top: 0;
   }
 
   section {
@@ -91,7 +94,6 @@ const Partner = styled(FullWidthContainer)`
 export const SubscribeWrapper = styled("div")`
   background: #0b1142;
   margin: 0 auto;
-  position: absolute;
   bottom: 15vh;
   display: flex;
   flex-direction: column;
@@ -169,7 +171,7 @@ const Home = () => {
     <>
       <Container>
         <Intro className="container-margin">
-          <div className="w-100" style={{ marginBottom: "15vh" }}>
+          <div className="w-100" style={{ marginBottom: "20vh" }}>
             <ContentBlock
               type="right"
               title={IntroContent.title}
@@ -206,10 +208,10 @@ const Home = () => {
           </SubscribeWrapper>
           <div
             style={{
-              position: "absolute",
               bottom: "5vh",
               left: 0,
               width: "100%",
+              margin: "30px 0",
             }}
             className="d-flex flex-row justify-content-center align-items-center"
           >
