@@ -210,6 +210,42 @@
   border-radius: 5px;
   color: white;
 }
+.metrics-dropdown-menu-closed {
+  background-color: $cl-light-gray;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 0;
+  animation-name: close;
+  animation-duration: 600ms;
+}
+@keyframes close {
+  0% {
+    max-height: 80vh;
+    overflow: visible;
+  }
+  100% {
+    max-height: 0;
+    overflow: hidden;
+  }
+}
+@keyframes expand {
+  0% {
+    max-height: 0;
+    overflow: hidden;
+  }
+  100% {
+    max-height: 100vh;
+    overflow: visible;
+  }
+}
+.metrics-dropdown-menu-expanded {
+  background-color: $cl-light-gray;
+  display: flex;
+  flex-direction: column;
+  animation-name: expand;
+  animation-duration: 600ms;
+}
 .metrics-dropdown-btn {
   @extend .cl-dark-text;
   @extend .px-3;

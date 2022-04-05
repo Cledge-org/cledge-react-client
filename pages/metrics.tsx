@@ -33,6 +33,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const questionResponses = await fetch(
       `${ORIGIN_URL}/api/get-question-progress`
     );
+    // const questionResponses = await fetch(
+    //   `${ORIGIN_URL}/api/get-question-progress`
+    // );
     let userProgressJSON = await questionResponses.json();
     return {
       props: {
@@ -48,8 +51,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const Metrics: NextApplicationPage<{
   questionData: QuestionList[];
   userTags: string[];
+  userActivities: any;
   questionResponses: UserResponse[];
-}> = ({ questionData, userTags, questionResponses }) => {
+}> = ({ questionData, userTags, questionResponses, userActivities }) => {
   const session = useSession();
   const [currPage, setCurrPage] = useState({
     page: "all",
@@ -208,7 +212,7 @@ const Metrics: NextApplicationPage<{
                                     : titleQuestion.response
                                 }
                                 content="Great job"
-                                tier={7}
+                                tier={1}
                               />
                             );
                           }
@@ -258,7 +262,7 @@ const Metrics: NextApplicationPage<{
                 title={"Update"}
               />
             </ul>
-            <div className="tab-content h-100">
+            <div className="tab-content h-100 mx-5">
               {currPage.tab === "data"
                 ? !ECResponses
                   ? "Looks like you have no activities"
@@ -322,6 +326,52 @@ const ActivityDropdown = ({
   content: string;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const tierIndicator = (maxTier) => (
+    <>
+      <div
+        className="bg-cl-blue"
+        style={{
+          position: "absolute",
+          height: "150%",
+          width: "4px",
+          left: `${(Math.abs(maxTier - tier - 2) / 2) * 100}%`,
+        }}
+      />
+      <div
+        className="d-flex flex-column align-items-center justify-content-end"
+        style={{
+          position: "absolute",
+          width: "100%",
+          top: "130%",
+          left: `calc(${(Math.abs(maxTier - tier - 2) / 2) * 100 - 50}% + 2px)`,
+        }}
+      >
+        <div
+          style={{
+            width: 0,
+            height: 0,
+            borderLeft: "5px solid transparent",
+            borderRight: "5px solid transparent",
+            borderBottom: "5px solid gray",
+            alignSelf: "center",
+          }}
+        ></div>
+        <div
+          className="px-2 py-2"
+          style={{
+            backgroundColor: "gray",
+            width: "100%",
+            border: "1px solid transparent",
+            borderRadius: "10px",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
+          You are at tier {tier}
+        </div>
+      </div>
+    </>
+  );
   return (
     <div className="progress-dropdown-container mt-2" style={{ width: "95%" }}>
       <button
@@ -341,9 +391,9 @@ const ActivityDropdown = ({
         </div>
       </button>
       <div
-        className={`progress-dropdown-menu-${
+        className={`metrics-dropdown-menu-${
           isExpanded ? "expanded" : "closed"
-        } mt-2 flex-row align-items-start justify-content-between`}
+        } mt-2 flex-row align-items-start justify-content-between mb-3`}
         style={{ backgroundColor: "white" }}
       >
         <div
@@ -356,70 +406,32 @@ const ActivityDropdown = ({
           }}
         >
           <div
-            className="center-child ms-2 metrics-tier-range bg-cl-purple"
+            className="position-relative center-child ms-2 metrics-tier-range bg-cl-purple"
             style={{ flex: 1 }}
           >
             1-3
+            {tier <= 3 && tier >= 1 ? tierIndicator(3) : null}
           </div>
           <div
-            className="center-child mx-2 metrics-tier-range bg-cl-gray-blue"
+            className="position-relative center-child mx-2 metrics-tier-range bg-cl-gray-blue"
             style={{ flex: 1 }}
           >
             4-6
+            {tier <= 6 && tier >= 4 ? tierIndicator(6) : null}
           </div>
           <div
-            className="center-child me-2 metrics-tier-range bg-cl-green"
+            className="position-relative center-child me-2 metrics-tier-range bg-cl-green"
             style={{ flex: 1 }}
           >
             7-9
+            {tier <= 9 && tier >= 7 ? tierIndicator(9) : null}
           </div>
           <div
-            className="center-child me-2 metrics-tier-range bg-cl-light-yellow"
+            className="position-relative center-child me-2 metrics-tier-range bg-cl-light-yellow"
             style={{ flex: 1, color: "black" }}
           >
             10-12
-          </div>
-          <div
-            className="bg-cl-blue"
-            style={{
-              position: "absolute",
-              height: "100%",
-              width: "4px",
-              left: `${(tier / 12) * 100}%`,
-            }}
-          />
-          <div
-            className="d-flex flex-column align-items-center justify-content-end"
-            style={{
-              position: "absolute",
-              width: "35%",
-              top: "110%",
-              left: `calc(${(tier / 12) * 100 - 17.5}% + 2px)`,
-            }}
-          >
-            <div
-              style={{
-                width: 0,
-                height: 0,
-                borderLeft: "5px solid transparent",
-                borderRight: "5px solid transparent",
-                borderBottom: "5px solid gray",
-                alignSelf: "center",
-              }}
-            ></div>
-            <div
-              className="px-2 py-2"
-              style={{
-                backgroundColor: "gray",
-                width: "100%",
-                border: "1px solid transparent",
-                borderRadius: "10px",
-                color: "white",
-                textAlign: "center",
-              }}
-            >
-              You are at tier {tier}
-            </div>
+            {tier <= 12 && tier >= 10 ? tierIndicator(12) : null}
           </div>
         </div>
         <div
@@ -443,7 +455,10 @@ const ActivityDropdown = ({
           >
             Next steps
           </div>
-          <button className="d-flex flex-row w-100 mb-3">
+          <button
+            className="d-flex flex-row w-100 mb-3 cl-btn-clear shadow"
+            style={{ borderColor: "lightgray", fontSize: "1.3em" }}
+          >
             <div style={{ textAlign: "left" }}>
               <strong>Set a goal</strong>
               <p>
@@ -453,9 +468,12 @@ const ActivityDropdown = ({
             </div>
             <FontAwesomeIcon icon={faArrowRight} />
           </button>
-          <button className="d-flex flex-row w-100">
+          <button
+            style={{ borderColor: "lightgray", fontSize: "1.3em" }}
+            className="d-flex flex-row w-100 cl-btn-clear shadow"
+          >
             <div style={{ textAlign: "left" }}>
-              <strong>Set a goal</strong>
+              <strong>Update profile</strong>
               <p>
                 Update your profile to help us reaccess your tier and provide
                 more personalized tips.
