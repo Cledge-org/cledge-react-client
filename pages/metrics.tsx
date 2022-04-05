@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowDown,
+  faChevronDown,
+  faArrowRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 import { AppProps } from "next/dist/shared/lib/router/router";
 import QuestionSummaryPage from "../components/questionPages/question_summary_subpage";
@@ -319,9 +323,9 @@ const ActivityDropdown = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <div className="progress-dropdown-container mt-2 w-75">
+    <div className="progress-dropdown-container mt-2" style={{ width: "95%" }}>
       <button
-        className="progress-dropdown-btn cl-btn-gray"
+        className="progress-dropdown-btn metrics-dropdown-btn"
         onClick={() => {
           setIsExpanded(!isExpanded);
         }}
@@ -339,49 +343,158 @@ const ActivityDropdown = ({
       <div
         className={`progress-dropdown-menu-${
           isExpanded ? "expanded" : "closed"
-        } ms-1 mt-2`}
+        } mt-2 flex-row align-items-start justify-content-between`}
         style={{ backgroundColor: "white" }}
       >
         <div
-          className="d-flex flex-row align-items-center position-relative"
-          style={{ border: "1px solid black" }}
+          className="d-flex flex-row align-items-center position-relative px-2 py-2"
+          style={{
+            border: "1px solid lightgray",
+            borderRadius: "10px",
+            height: "fit-content",
+            width: "49%",
+          }}
         >
           <div
-            className="center-child"
-            style={{ border: "1px solid black", flex: 1 }}
+            className="center-child ms-2 metrics-tier-range bg-cl-purple"
+            style={{ flex: 1 }}
           >
             1-3
           </div>
           <div
-            className="center-child"
-            style={{ border: "1px solid black", flex: 1 }}
+            className="center-child mx-2 metrics-tier-range bg-cl-gray-blue"
+            style={{ flex: 1 }}
           >
             4-6
           </div>
           <div
-            className="center-child"
-            style={{ border: "1px solid black", flex: 1 }}
+            className="center-child me-2 metrics-tier-range bg-cl-green"
+            style={{ flex: 1 }}
           >
-            7-8
+            7-9
           </div>
           <div
-            className="center-child"
-            style={{ border: "1px solid black", flex: 1 }}
+            className="center-child me-2 metrics-tier-range bg-cl-light-yellow"
+            style={{ flex: 1, color: "black" }}
           >
-            9-12
+            10-12
           </div>
           <div
+            className="bg-cl-blue"
             style={{
               position: "absolute",
-              height: "130%",
+              height: "100%",
               width: "4px",
-              backgroundColor: "black",
-              bottom: "-15%",
               left: `${(tier / 12) * 100}%`,
             }}
           />
+          <div
+            className="d-flex flex-column align-items-center justify-content-end"
+            style={{
+              position: "absolute",
+              width: "35%",
+              top: "110%",
+              left: `calc(${(tier / 12) * 100 - 17.5}% + 2px)`,
+            }}
+          >
+            <div
+              style={{
+                width: 0,
+                height: 0,
+                borderLeft: "5px solid transparent",
+                borderRight: "5px solid transparent",
+                borderBottom: "5px solid gray",
+                alignSelf: "center",
+              }}
+            ></div>
+            <div
+              className="px-2 py-2"
+              style={{
+                backgroundColor: "gray",
+                width: "100%",
+                border: "1px solid transparent",
+                borderRadius: "10px",
+                color: "white",
+                textAlign: "center",
+              }}
+            >
+              You are at tier {tier}
+            </div>
+          </div>
         </div>
-        <div>{content}</div>
+        <div
+          style={{ width: "49%", minHeight: "50vh" }}
+          className="d-flex flex-column align-items-start"
+        >
+          <TipsCard
+            title={
+              "You are seasoned at this activity, but you can do even better! To increase your tier, try tips below."
+            }
+            tips={["Ayo", "WAZZZup"]}
+          />
+          <div
+            className="py-2 px-2 w-100 my-3"
+            style={{
+              border: "1px solid gray",
+              backgroundColor: "gray",
+              color: "white",
+              borderRadius: "5px",
+            }}
+          >
+            Next steps
+          </div>
+          <button className="d-flex flex-row w-100 mb-3">
+            <div style={{ textAlign: "left" }}>
+              <strong>Set a goal</strong>
+              <p>
+                Update your profile to help us reaccess your tier and provide
+                more personalized tips.
+              </p>
+            </div>
+            <FontAwesomeIcon icon={faArrowRight} />
+          </button>
+          <button className="d-flex flex-row w-100">
+            <div style={{ textAlign: "left" }}>
+              <strong>Set a goal</strong>
+              <p>
+                Update your profile to help us reaccess your tier and provide
+                more personalized tips.
+              </p>
+            </div>
+            <FontAwesomeIcon icon={faArrowRight} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+const TipsCard = ({ title, tips }: { title: string; tips: string[] }) => {
+  return (
+    <div
+      className="d-flex flex-column align-items-center justify-content-between w-100 px-3 pt-3 shadow-sm"
+      style={{
+        height: "25vh",
+        border: "1px solid lightgray",
+        borderRadius: "10px",
+      }}
+    >
+      {title}
+      <div
+        className="d-flex flex-column align-items-center justify-content-evenly w-100"
+        style={{ height: "95%" }}
+      >
+        {tips.map((tip) => (
+          <div
+            className="py-2 w-100 px-2 center-child justify-content-start"
+            style={{
+              height: "5vh",
+              border: "1px solid lightgray",
+              borderRadius: "10px",
+            }}
+          >
+            {tip}
+          </div>
+        ))}
       </div>
     </div>
   );

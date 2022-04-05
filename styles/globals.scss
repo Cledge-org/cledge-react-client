@@ -29,6 +29,10 @@ $cl-orange: #f7bc76;
 $font-family-base: "Montserrat", sans-serif;
 $cl-yellow: #f7bc76;
 $cl-red: #ff6060;
+$cl-purple: #642f71;
+$cl-gray-blue: #5581a0;
+$cl-green: #58c08f;
+$cl-light-yellow: #f8e74c;
 
 a {
   color: inherit;
@@ -53,6 +57,18 @@ a {
 }
 .bg-cl-white {
   background-color: $cl-white;
+}
+.bg-cl-purple {
+  background-color: $cl-purple;
+}
+.bg-cl-gray-blue {
+  background-color: $cl-gray-blue;
+}
+.bg-cl-green {
+  background-color: $cl-green;
+}
+.bg-cl-light-yellow {
+  background-color: $cl-light-yellow;
 }
 .cl-white {
   color: $cl-white;

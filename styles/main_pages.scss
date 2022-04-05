@@ -203,3 +203,63 @@
 .bottom-border-pathway-filter {
   margin-bottom: calc($spacer * 0.5 - 1px);
 }
+//METRICS PAGE STYLES -->
+.metrics-tier-range {
+  @extend .py-2;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: white;
+}
+.metrics-dropdown-btn {
+  @extend .cl-dark-text;
+  @extend .px-3;
+  @extend .py-3;
+  .icon-close {
+    animation-name: rotateReverse;
+    animation-duration: 600ms;
+    animation-fill-mode: forwards;
+  }
+  @keyframes rotateReverse {
+    0% {
+      transform: rotate(180deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(180deg);
+    }
+  }
+  .icon-open {
+    animation-fill-mode: forwards;
+    animation-name: rotate;
+    animation-duration: 600ms;
+  }
+  border: 1px solid lightgray;
+  background-color: white;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: none;
+  &:active,
+  &:focus,
+  &:checked {
+    box-shadow: none;
+    border: 1px solid lightgray;
+    background-color: white;
+    @extend .cl-dark-text;
+  }
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+    border: 1px solid lightgray;
+    background-color: white;
+    @extend .cl-dark-text;
+  }
+}
