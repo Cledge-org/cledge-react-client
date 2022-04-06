@@ -32,17 +32,25 @@ const Intro = styled(FullWidthContainer)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 90px;
-  padding-top: 35vh;
+  padding: 0 90px 30px 90px;
 
   @media only screen and (max-width: 767px) {
     display: block;
     padding-top: 0;
   }
 
+  & > div:first-child {
+    margin-bottom: 30px;
+    @media only screen and (min-width: 767px) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+  }
+
   section {
     max-width: 1500px;
-    height: 100%;
   }
 
   #intro h6,
@@ -94,14 +102,12 @@ const Partner = styled(FullWidthContainer)`
 export const SubscribeWrapper = styled("div")`
   background: #0b1142;
   margin: 0 auto;
-  bottom: 15vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
-  width: calc(100% - 180px);
+  width: 100%;
   padding: 1.5rem;
-  margin-top: 50px;
   border-radius: 10px;
 
   @media only screen and (max-width: 767px) {
@@ -111,6 +117,26 @@ export const SubscribeWrapper = styled("div")`
 
   & > * {
     color: white !important;
+  }
+
+  & .input > div{
+    margin: 5px 10px;
+  }
+
+  label {
+    text-align: left;
+    color: grey !important;
+    width: 100%;
+  }
+
+  & button:last-child {
+    padding: 0 10px;
+    flex: 1 1 auto !important;
+    margin: 5px 10px;
+    height: 62px;
+    @media only screen and (max-width: 767px) {
+      margin: 24px 10px;
+    }
   }
 `;
 export const BlobBlock = styled("div")`
@@ -148,18 +174,23 @@ export const MediaButton = styled("button")`
   align-items: center;
   text-align: center;
   color: white;
-  width: 15vw;
+  height: 50px;
   padding: 1.5rem;
   outline: none;
   border-color: transparent;
   border-radius: 5px;
+  margin: 10px;
 
   @media only screen and (max-width: 767px) {
-    width: 48vw;
+    width: 60%;
   }
 
   & > * {
     color: white !important;
+  }
+
+  & > img {
+    margin-right: 10px;
   }
 `;
 
@@ -171,7 +202,7 @@ const Home = () => {
     <>
       <Container>
         <Intro className="container-margin">
-          <div className="w-100" style={{ marginBottom: "20vh" }}>
+          <div className="w-100">
             <ContentBlock
               type="right"
               title={IntroContent.title}
@@ -187,21 +218,24 @@ const Home = () => {
               Get monthly access to free live webinars & tips from college
               advisors!
             </p>
-            <div className="d-flex flex-row align-items-center justify-content-evenly">
-              <div>
+            <div className="input d-flex flex-row flex-wrap align-items-end justify-content-evenly">
+              <div className="flex-fill">
                 <label>I am a</label>
                 <ECDropDown isForWaitlist valuesList={["Parent", "Student"]} />
               </div>
-              <div>
+              <div className="flex-fill">
                 <label>Email</label>
-                <input type="text" placeholder="Your email" />
+                <input
+                  type="text"
+                  style={{ color: "black" }}
+                  placeholder="Your email"
+                />
               </div>
               <Button
                 key="subscribe-btn"
-                color="orange"
+                color="#F7BC76"
                 fixedWidth={true}
-                onClick={() => {}}
-              >
+                onClick={() => {}}>
                 Subscribe to our monthly tips
               </Button>
             </div>
@@ -213,13 +247,11 @@ const Home = () => {
               width: "100%",
               margin: "30px 0",
             }}
-            className="d-flex flex-row justify-content-center align-items-center"
-          >
+            className="d-flex flex-row flex-wrap justify-content-center align-items-center">
             <MediaButton>
               <img src="images/whatsapp.svg" />
               WhatsApp Community
             </MediaButton>
-            <div className="mx-3" />
             <MediaButton>
               <img src="images/discord.svg" />
               Discord Community
@@ -288,8 +320,7 @@ const Home = () => {
                 border: "1px solid transparent",
                 borderRadius: "15px",
                 backgroundColor: "rgba(255,255,255,0.3)",
-              }}
-            >
+              }}>
               <div style={{ color: "white" }}>
                 <strong style={{ fontSize: "2em" }}>
                   Ready to take the next step towards your dreams?
@@ -302,14 +333,12 @@ const Home = () => {
               <img src="images/insider-blob.svg" />
               <div
                 className="position-absolute"
-                style={{ bottom: "-2vh", left: "5vw" }}
-              >
+                style={{ bottom: "-2vh", left: "5vw" }}>
                 <Button
                   key="subscribe-btn"
                   color="orange"
                   fixedWidth={false}
-                  onClick={() => {}}
-                >
+                  onClick={() => {}}>
                   Join Insider Program for Free ➜
                 </Button>
               </div>

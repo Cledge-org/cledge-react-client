@@ -29,10 +29,6 @@ export const RightBlockContainer = styled("section")`
   position: relative;
   width: 100%;
 
-  @media only screen and (max-width: 1024px) {
-    padding: 7rem 0 0 0 ;
-  }
-
   @media only screen and (max-width: 768px) {
     padding: 4rem 0 0 0;
   }
@@ -56,6 +52,10 @@ export const ButtonWrapper = styled("div")`
   display: flex;
   justify-content: space-between;
   max-width: 100%;
+
+  & button {
+    width: 100%;
+  }
 
   @media screen and (min-width: 1024px) {
     max-width: 80%;
