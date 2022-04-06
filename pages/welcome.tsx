@@ -107,8 +107,9 @@ export const SubscribeWrapper = styled("div")`
   justify-content: center;
   text-align: center;
   width: 100%;
-  padding: 1.5rem;
+  padding: 3rem;
   border-radius: 10px;
+  max-width: 1500px;
 
   @media only screen and (max-width: 767px) {
     width: 100%;
@@ -175,15 +176,11 @@ export const MediaButton = styled("button")`
   text-align: center;
   color: white;
   height: 50px;
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
   outline: none;
   border-color: transparent;
   border-radius: 5px;
   margin: 10px;
-
-  @media only screen and (max-width: 767px) {
-    width: 60%;
-  }
 
   & > * {
     color: white !important;
@@ -192,6 +189,11 @@ export const MediaButton = styled("button")`
   & > img {
     margin-right: 10px;
   }
+
+  @media only screen and (max-width: 767px) {
+    width: 60%;
+  }
+
 `;
 
 const Home = () => {
