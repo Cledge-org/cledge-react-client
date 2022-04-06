@@ -212,7 +212,7 @@ const Metrics: NextApplicationPage<{
                                     : titleQuestion.response
                                 }
                                 content="Great job"
-                                tier={1}
+                                tier={12}
                               />
                             );
                           }
@@ -326,52 +326,115 @@ const ActivityDropdown = ({
   content: string;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const tierIndicator = (maxTier) => (
-    <>
-      <div
-        className="bg-cl-blue"
-        style={{
-          position: "absolute",
-          height: "150%",
-          width: "4px",
-          left: `${(Math.abs(maxTier - tier - 2) / 2) * 100}%`,
-        }}
-      />
-      <div
-        className="d-flex flex-column align-items-center justify-content-end"
-        style={{
-          position: "absolute",
-          width: "100%",
-          top: "130%",
-          left: `calc(${(Math.abs(maxTier - tier - 2) / 2) * 100 - 50}% + 2px)`,
-        }}
-      >
+  const tierIndicator = (minTier) => {
+    const offSet = Math.abs((tier - minTier) / 2);
+    return (
+      <>
         <div
+          className="bg-cl-dark-text"
           style={{
-            width: 0,
-            height: 0,
-            borderLeft: "5px solid transparent",
-            borderRight: "5px solid transparent",
-            borderBottom: "5px solid gray",
-            alignSelf: "center",
+            position: "absolute",
+            height: "120%",
+            width: "35%",
+            zIndex: 1,
+            left: `${offSet * 100 - offSet * 35}%`,
           }}
-        ></div>
+        />
         <div
-          className="px-2 py-2"
+          className="d-flex flex-column align-items-center justify-content-end"
           style={{
-            backgroundColor: "gray",
-            width: "100%",
-            border: "1px solid transparent",
-            borderRadius: "10px",
-            color: "white",
-            textAlign: "center",
+            position: "absolute",
+            width: "130%",
+            top: "130%",
+            left: `${
+              tier === 1
+                ? 0
+                : tier === 12
+                ? -30
+                : offSet * 100 -
+                  65 +
+                  (tier - minTier === 0
+                    ? 17.5
+                    : tier - minTier === 2
+                    ? -17.5
+                    : 0)
+            }%`,
           }}
         >
-          You are at tier {tier}
+          <div
+            style={{
+              width: 0,
+              height: 0,
+              borderLeft: "7px solid transparent",
+              borderRight: "7px solid transparent",
+              borderBottom: "7px solid #070452",
+              alignSelf: tier === 1 ? "start" : tier === 12 ? "end" : "center",
+            }}
+            className="mx-2"
+          ></div>
+          <div
+            className="px-3 py-2 bg-cl-dark-text"
+            style={{
+              width: "100%",
+              border: "1px solid transparent",
+              borderRadius: "10px",
+              color: "white",
+              textAlign: "center",
+            }}
+          >
+            You are at tier {tier}
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  };
+  const tierRangComponents = () => {
+    let tierRangComponents = [];
+    for (let i = 1; i < 5; i++) {
+      const multiplied = i * 3;
+      const tiers = [multiplied - 2, multiplied - 1, multiplied];
+      tierRangComponents.push(
+        <div
+          className="position-relative d-flex flex-row align-items-center justify-content-evenly ms-2 metrics-tier-range"
+          style={{ flex: 1, height: "100%" }}
+        >
+          {tiers.map((tier, index) => {
+            return (
+              <div
+                className={`center-child ${
+                  i % 4 === 1
+                    ? "bg-cl-purple"
+                    : i % 4 === 2
+                    ? "bg-cl-gray-blue"
+                    : i % 4 === 3
+                    ? "bg-cl-green"
+                    : "bg-cl-light-yellow"
+                } ${
+                  index === 0 ? "" : index === tiers.length - 1 ? "" : "mx-05"
+                } h-100`}
+                style={{
+                  flex: 1,
+                  zIndex: 2,
+                  borderTopLeftRadius: index === 0 ? "5px" : 0,
+                  borderBottomLeftRadius: index === 0 ? "5px" : 0,
+                  borderTopRightRadius: index === tiers.length - 1 ? "5px" : 0,
+                  borderBottomRightRadius:
+                    index === tiers.length - 1 ? "5px" : 0,
+                  color: i % 4 === 0 ? "black" : "white",
+                }}
+              >
+                {tier}
+              </div>
+            );
+          })}
+          {tier <= tiers[tiers.length - 1] && tier >= tiers[0]
+            ? tierIndicator(tiers[0])
+            : null}
+        </div>
+      );
+    }
+    return tierRangComponents;
+  };
   return (
     <div className="progress-dropdown-container mt-2" style={{ width: "95%" }}>
       <button
@@ -385,7 +448,10 @@ const ActivityDropdown = ({
           className={
             isExpanded ? "center-child icon-open" : "center-child icon-close"
           }
-          style={{ width: "12px", height: "12px" }}
+          style={{
+            width: "12px",
+            height: "12px",
+          }}
         >
           <FontAwesomeIcon icon={faChevronDown} />
         </div>
@@ -393,50 +459,27 @@ const ActivityDropdown = ({
       <div
         className={`metrics-dropdown-menu-${
           isExpanded ? "expanded" : "closed"
-        } mt-2 flex-row align-items-start justify-content-between mb-3`}
-        style={{ backgroundColor: "white" }}
+        } pt-2 px-2 flex-row align-items-start justify-content-between mb-3`}
+        style={{
+          backgroundColor: "white",
+          border: isExpanded ? "1px solid lightgray" : "none",
+          borderTop: "none",
+        }}
       >
         <div
-          className="d-flex flex-row align-items-center position-relative px-2 py-2"
+          className="d-flex flex-row align-items-center position-relative px-2 py-1"
           style={{
             border: "1px solid lightgray",
             borderRadius: "10px",
-            height: "fit-content",
+            height: "8vh",
             width: "49%",
           }}
         >
-          <div
-            className="position-relative center-child ms-2 metrics-tier-range bg-cl-purple"
-            style={{ flex: 1 }}
-          >
-            1-3
-            {tier <= 3 && tier >= 1 ? tierIndicator(3) : null}
-          </div>
-          <div
-            className="position-relative center-child mx-2 metrics-tier-range bg-cl-gray-blue"
-            style={{ flex: 1 }}
-          >
-            4-6
-            {tier <= 6 && tier >= 4 ? tierIndicator(6) : null}
-          </div>
-          <div
-            className="position-relative center-child me-2 metrics-tier-range bg-cl-green"
-            style={{ flex: 1 }}
-          >
-            7-9
-            {tier <= 9 && tier >= 7 ? tierIndicator(9) : null}
-          </div>
-          <div
-            className="position-relative center-child me-2 metrics-tier-range bg-cl-light-yellow"
-            style={{ flex: 1, color: "black" }}
-          >
-            10-12
-            {tier <= 12 && tier >= 10 ? tierIndicator(12) : null}
-          </div>
+          {tierRangComponents()}
         </div>
         <div
-          style={{ width: "49%", minHeight: "50vh" }}
-          className="d-flex flex-column align-items-start"
+          style={{ minHeight: "30vh", width: "50%" }}
+          className="d-flex flex-column align-items-center justify-content-start"
         >
           <TipsCard
             title={
@@ -444,59 +487,34 @@ const ActivityDropdown = ({
             }
             tips={["Ayo", "WAZZZup"]}
           />
-          <div
-            className="py-2 px-2 w-100 my-3"
-            style={{
-              border: "1px solid gray",
-              backgroundColor: "gray",
-              color: "white",
-              borderRadius: "5px",
-            }}
-          >
-            Next steps
-          </div>
-          <button
-            className="d-flex flex-row w-100 mb-3 cl-btn-clear shadow"
-            style={{ borderColor: "lightgray", fontSize: "1.3em" }}
-          >
-            <div style={{ textAlign: "left" }}>
-              <strong>Set a goal</strong>
-              <p>
-                Update your profile to help us reaccess your tier and provide
-                more personalized tips.
-              </p>
-            </div>
-            <FontAwesomeIcon icon={faArrowRight} />
-          </button>
-          <button
-            style={{ borderColor: "lightgray", fontSize: "1.3em" }}
-            className="d-flex flex-row w-100 cl-btn-clear shadow"
-          >
-            <div style={{ textAlign: "left" }}>
-              <strong>Update profile</strong>
-              <p>
-                Update your profile to help us reaccess your tier and provide
-                more personalized tips.
-              </p>
-            </div>
-            <FontAwesomeIcon icon={faArrowRight} />
-          </button>
         </div>
       </div>
     </div>
   );
 };
-const TipsCard = ({ title, tips }: { title: string; tips: string[] }) => {
+const TipsCard = ({
+  title,
+  tips,
+  isOverall,
+}: {
+  title: string;
+  tips: string[];
+  isOverall?: boolean;
+}) => {
   return (
     <div
-      className="d-flex flex-column align-items-center justify-content-between w-100 px-3 pt-3 shadow-sm"
+      className="position-relative d-flex overflow-hidden flex-column align-items-center justify-content-around w-100 px-3 pt-3 shadow-sm"
       style={{
         height: "25vh",
         border: "1px solid lightgray",
         borderRadius: "10px",
       }}
     >
-      {title}
+      <div>
+        <strong style={{ fontSize: "1.3em" }}>Tips</strong>
+        <br />
+        {title}
+      </div>
       <div
         className="d-flex flex-column align-items-center justify-content-evenly w-100"
         style={{ height: "95%" }}
@@ -513,6 +531,10 @@ const TipsCard = ({ title, tips }: { title: string; tips: string[] }) => {
             {tip}
           </div>
         ))}
+        <div
+          className="position-absolute top-0 w-100"
+          style={{ left: 0, backgroundColor: "lightgray", height: "1vh" }}
+        />
       </div>
     </div>
   );
