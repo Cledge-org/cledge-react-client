@@ -26,7 +26,7 @@ export const putActivities = (
     activitiesId: ObjectId | undefined,
     activities: Activities | undefined
   ): Promise<void> => {
-    if (activities !== undefined && activities._id) {
+    if (activities !== undefined && activities._id && activitiesId) {
       // Document should not have _id field when sent to database
       delete activities._id;
     }
