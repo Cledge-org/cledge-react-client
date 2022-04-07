@@ -93,11 +93,6 @@ beforeEach(async () => {
     for (let connection of await client.db("questions").collections()) {
         await connection.deleteMany({});
     }
-
-    for (let connection of await client.db("users").collections()) {
-        await connection.deleteMany({});
-    }
-    
     await client.close();
 });
 

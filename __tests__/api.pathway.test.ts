@@ -215,10 +215,6 @@ beforeEach(async () => {
   for (let connection of await client.db("pathways").collections()) {
     await connection.deleteMany({});
   }
-  for (let connection of await client.db("users").collections()) {
-    await connection.deleteMany({});
-  }
-
   await client.close();
 
   // Add test user
