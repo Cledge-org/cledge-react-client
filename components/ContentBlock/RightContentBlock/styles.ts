@@ -53,15 +53,12 @@ export const ButtonWrapper = styled("div")`
   justify-content: space-between;
   max-width: 100%;
 
-  & button {
-    width: 100%;
-  }
-
-  @media screen and (min-width: 1024px) {
-    max-width: 80%;
+  button:first-child {
+    flex: 2;
   }
 
   button:last-child {
     margin-left: 20px;
+    flex: 1;
   }
 `;

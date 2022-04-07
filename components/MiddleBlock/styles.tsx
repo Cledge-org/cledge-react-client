@@ -41,16 +41,18 @@ export const PartnerCard = styled.div`
   }
 
   & img {
-    width: 90%;
+    max-width: 90%;
     margin-top: 1rem;
+    max-height: 64px;
   }
 
   & strong {
     margin: 2rem 0;
   }
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 1000px) {
     height: 40vh;
+    min-height: 350px;
     width: 45vw;
     align-items: start;
     & p {

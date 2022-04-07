@@ -120,7 +120,7 @@ export const SubscribeWrapper = styled("div")`
     color: white !important;
   }
 
-  & .input > div{
+  & .input > div {
     margin: 5px 10px;
   }
 
@@ -142,14 +142,59 @@ export const SubscribeWrapper = styled("div")`
 `;
 export const BlobBlock = styled("div")`
   background: center / cover url("images/gradient-blob.svg") no-repeat;
-  min-height: 75vh;
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding: 0 90px;
+  .BlobContainer {
+    padding: 5rem 18px;
 
-  @media only screen and (max-width: 767px) {
-    display: block;
+    p {
+      margin-top: 1rem;
+    }
+
+    & img {
+      width: 100%;
+      margin: 3rem 0;
+    }
+  }
+
+  @media only screen and (min-width: 767px) {
+    min-height: 75vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 90px;
+
+    & > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .BlobContainer {
+      width: 80vw;
+      height: 50vh;
+      border: 1px solid transparent;
+      border-radius: 15px;
+      background-color: rgba(255,255,255,0.3);
+
+      & img {
+        width: 100%;
+      }
+
+      div:last-child {
+        position: absolute;
+      }
+    }
+  
+    & > div > div {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+  }
+
+
+  button {
+    padding: 1rem;
   }
 
   section {
@@ -193,7 +238,6 @@ export const MediaButton = styled("button")`
   @media only screen and (max-width: 767px) {
     width: 60%;
   }
-
 `;
 
 const Home = () => {
@@ -314,15 +358,7 @@ const Home = () => {
         </Partner>
         <BlobBlock>
           <Fade direction="right" className="center-child w-100">
-            <div
-              className="position-relative d-flex flex-row align-items-center justify-content-around"
-              style={{
-                width: "80vw",
-                height: "50vh",
-                border: "1px solid transparent",
-                borderRadius: "15px",
-                backgroundColor: "rgba(255,255,255,0.3)",
-              }}>
+            <div className="BlobContainer">
               <div style={{ color: "white" }}>
                 <strong style={{ fontSize: "2em" }}>
                   Ready to take the next step towards your dreams?
@@ -334,11 +370,10 @@ const Home = () => {
               </div>
               <img src="images/insider-blob.svg" />
               <div
-                className="position-absolute"
                 style={{ bottom: "-2vh", left: "5vw" }}>
                 <Button
                   key="subscribe-btn"
-                  color="orange"
+                  color="#F7BC76"
                   fixedWidth={false}
                   onClick={() => {}}>
                   Join Insider Program for Free ➜
