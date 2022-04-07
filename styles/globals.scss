@@ -29,10 +29,11 @@ $cl-orange: #f7bc76;
 $font-family-base: "Montserrat", sans-serif;
 $cl-yellow: #f7bc76;
 $cl-red: #ff6060;
-$cl-purple: #642f71;
-$cl-gray-blue: #5581a0;
-$cl-green: #58c08f;
+$cl-purple: #58508d;
+$cl-pink-purple: #bc5090;
+$cl-orange-red: #ff6361;
 $cl-light-yellow: #f8e74c;
+$cl-soft-gray: #e0dfe8;
 
 a {
   color: inherit;
@@ -42,7 +43,9 @@ a {
 * {
   box-sizing: border-box;
 }
-
+.soft-gray-border {
+  border: 1px solid $cl-soft-gray;
+}
 .bg-dark-blue {
   background-color: $cl-dark-blue;
 }
@@ -64,11 +67,11 @@ a {
 .bg-cl-purple {
   background-color: $cl-purple;
 }
-.bg-cl-gray-blue {
-  background-color: $cl-gray-blue;
+.bg-cl-pink-purple {
+  background-color: $cl-pink-purple;
 }
-.bg-cl-green {
-  background-color: $cl-green;
+.bg-cl-orange-red {
+  background-color: $cl-orange-red;
 }
 .bg-cl-light-yellow {
   background-color: $cl-light-yellow;

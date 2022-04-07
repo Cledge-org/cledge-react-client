@@ -4,6 +4,7 @@ import {
   faArrowDown,
   faChevronDown,
   faArrowRight,
+  faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 import { AppProps } from "next/dist/shared/lib/router/router";
@@ -55,10 +56,7 @@ const Metrics: NextApplicationPage<{
   questionResponses: UserResponse[];
 }> = ({ questionData, userTags, questionResponses, userActivities }) => {
   const session = useSession();
-  const [currPage, setCurrPage] = useState({
-    page: "all",
-    tab: "extracurriculars",
-  });
+  const [currPage, setCurrPage] = useState("all");
   const [percentageData, setPercentageData] = useState({
     allLists: 0,
     lists: [],
@@ -127,7 +125,7 @@ const Metrics: NextApplicationPage<{
         <DropDownTab
           isAll
           chunkList={[]}
-          onClick={() => setCurrPage({ page: "all", tab: "extracurriculars" })}
+          onClick={() => setCurrPage("all")}
           title="Metrics Overview"
           percentComplete={undefined}
         />
@@ -137,9 +135,7 @@ const Metrics: NextApplicationPage<{
               <DropDownTab
                 isExtracurricular={list.name === "Extracurriculars"}
                 chunkList={list.chunks.map((chunk) => chunk.name)}
-                onClick={(chunk) =>
-                  setCurrPage({ page: list.name, tab: "data" })
-                }
+                onClick={(chunk) => setCurrPage(list.name)}
                 title={list.name}
                 percentComplete={percentageData.lists[index]}
               />
@@ -153,160 +149,136 @@ const Metrics: NextApplicationPage<{
           flex: 3,
         }}
       >
-        {currPage.page === "all" ? (
+        {currPage === "all" ? (
           <div
             className="container-fluid d-flex flex-column"
             style={{ flex: 1 }}
           >
             <QuestionSubPageHeader
-              title="Metrics Completion"
-              percentage={percentageData.allLists}
+              title="My Application Metrics"
+              percentage={undefined}
+              isMetrics
               subText=""
             />
-            <ul className="nav ms-5" role="tablist">
-              <TabButton
-                currTab={currPage.tab}
-                onClick={(tab) => {
-                  setCurrPage({ ...currPage, tab });
-                }}
-                title={"Extracurriculars"}
-              />
-              <TabButton
-                currTab={currPage.tab}
-                onClick={(tab) => {
-                  setCurrPage({ ...currPage, tab });
-                }}
-                title={"Academics"}
-              />
-            </ul>
             <div className="tab-content h-100">
-              <div
-                className={`resources-tab-pane mx-5 w-100 flex-column justify-content-start align-items-start
-                  ${
-                    currPage.tab === "extracurriculars"
-                      ? " resources-active  d-flex "
-                      : ""
-                  }
-                `}
-                id="extracurriculars"
-              >
-                {!ECResponses
-                  ? "Looks like you have no activities"
-                  : questionData
-                      .find(({ name }) => name === "Extracurriculars")
-                      .chunks.map((chunk) => {
-                        return ECResponses.response[chunk.name].map(
-                          (response, index) => {
-                            const titleQuestion = response.find(
-                              ({ questionId }) =>
-                                questionId ===
-                                chunk.questions.find(
-                                  ({ question }) => question === "Title"
-                                )?._id
-                            );
-                            return (
-                              <ActivityDropdown
-                                title={
-                                  titleQuestion.response
-                                    ? "No title given"
-                                    : titleQuestion.response
-                                }
-                                content="Great job"
-                                tier={12}
-                              />
-                            );
-                          }
-                        );
-                      })}
-                <button className="cl-btn-blue align-self-center w-50">
-                  Update Extracurriculars
-                </button>
+              <div className="mt-2 ms-5" style={{ width: "50%" }}>
+                <div className="soft-gray-border d-flex flex-row justify-content-start py-3 px-3">
+                  <strong
+                    className="cl-dark-text"
+                    style={{ fontSize: "1.3em" }}
+                  >
+                    Extracurriculars Metrics
+                  </strong>
+                </div>
+                <div
+                  className={`soft-gray-border d-flex pt-2 px-2 flex-row align-items-start justify-content-center mb-3 w-100`}
+                  style={{
+                    backgroundColor: "white",
+                    borderTop: "none",
+                    height: "20vh",
+                  }}
+                >
+                  <TierRange tier={7} isOverall isOverview />
+                </div>
               </div>
-              <div
-                className={`resources-tab-pane flex-row justify-content-start align-items-center
-                  ${
-                    currPage.tab === "academics"
-                      ? " resources-active  d-flex "
-                      : ""
-                  }
-                `}
-                id="academics"
-              >
-                {}
+              <div className="mt-2 ms-5" style={{ width: "50%" }}>
+                <div className="soft-gray-border d-flex flex-row justify-content-start py-3 px-3">
+                  <strong
+                    className="cl-dark-text"
+                    style={{ fontSize: "1.3em" }}
+                  >
+                    Academics Metrics
+                  </strong>
+                </div>
+                <div
+                  className={`soft-gray-border d-flex pt-2 px-2 flex-row align-items-start justify-content-center mb-3 w-100`}
+                  style={{
+                    backgroundColor: "white",
+                    borderTop: "none",
+                    height: "20vh",
+                  }}
+                >
+                  <TierRange tier={7} isOverall isOverview />
+                </div>
               </div>
             </div>
           </div>
-        ) : currPage.page === "Extracurriculars" ? (
+        ) : currPage === "Extracurriculars" ? (
           <div
             className="container-fluid d-flex flex-column"
             style={{ flex: 1 }}
           >
             <QuestionSubPageHeader
               title="Extracurriculars Completion"
-              percentage={percentageData.allLists}
+              percentage={undefined}
+              isMetrics
               subText=""
             />
-            <ul className="nav ms-5" role="tablist">
-              <TabButton
-                currTab={currPage.tab}
-                onClick={(tab) => {
-                  setCurrPage({ ...currPage, tab });
-                }}
-                title={"Data"}
-              />
-              <TabButton
-                currTab={currPage.tab}
-                onClick={(tab) => {
-                  setCurrPage({ ...currPage, tab });
-                }}
-                title={"Update"}
-              />
-            </ul>
             <div className="tab-content h-100 mx-5">
-              {currPage.tab === "data"
-                ? !ECResponses
-                  ? "Looks like you have no activities"
-                  : questionData
-                      .find(({ name }) => name === "Extracurriculars")
-                      .chunks.map((chunk) => {
-                        return ECResponses.response[chunk.name].map(
-                          (response, index) => {
-                            const titleQuestion = response.find(
-                              ({ questionId }) =>
-                                questionId ===
-                                chunk.questions.find(
-                                  ({ question }) => question === "Title"
-                                )?._id
-                            );
-                            return (
-                              <ActivityDropdown
-                                title={
-                                  titleQuestion.response
-                                    ? "No title given"
-                                    : titleQuestion.response
-                                }
-                                content="Great job"
-                                tier={7}
-                              />
-                            );
-                          }
-                        );
-                      })
-                : questionData.find(({ name }) => name === "Extracurriculars")
-                ? questionData
-                    .find(({ name }) => name === "Extracurriculars")
-                    .chunks.map((chunk) => {
+              <div
+                style={{ borderBottom: "1px solid #BBBBC0" }}
+                className="pb-5"
+              >
+                <div className="d-flex flex-row align-items-center w-100 cl-dark-text mb-2">
+                  <strong style={{ fontSize: "1.6em" }}>Overall Tier</strong>
+                  <button
+                    style={{
+                      outline: "none",
+                      border: "none",
+                      backgroundColor: "transparent",
+                      fontSize: "1.8em",
+                      color: "black",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faInfoCircle} />
+                  </button>
+                </div>
+                <div className="d-flex flex-column">
+                  <TierIndicatorAndTips tier={7} isOverall />
+                </div>
+              </div>
+              <div className="d-flex flex-row align-items-center w-100 cl-dark-text mt-5 mb-2">
+                <strong style={{ fontSize: "1.6em" }}>
+                  Individual Activities
+                </strong>
+                <button
+                  style={{
+                    outline: "none",
+                    border: "none",
+                    backgroundColor: "transparent",
+                    fontSize: "1.8em",
+                    color: "black",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faInfoCircle} />
+                </button>
+              </div>
+              {questionData
+                .find(({ name }) => name === "Extracurriculars")
+                .chunks.map((chunk) => {
+                  return ECResponses.response[chunk.name].map(
+                    (response, index) => {
+                      const titleQuestion = response.find(
+                        ({ questionId }) =>
+                          questionId ===
+                          chunk.questions.find(
+                            ({ question }) => question === "Title"
+                          )?._id
+                      );
                       return (
-                        <QuestionECSubpage
-                          inMetrics
-                          key={chunk.name}
-                          userResponses={questionResponses}
-                          chunk={chunk}
-                          isShowing={true}
+                        <ActivityDropdown
+                          title={
+                            titleQuestion.response
+                              ? "No title given"
+                              : titleQuestion.response
+                          }
+                          content="Great job"
+                          tier={7}
                         />
                       );
-                    })
-                : []}
+                    }
+                  );
+                })}
             </div>
           </div>
         ) : (
@@ -326,6 +298,84 @@ const ActivityDropdown = ({
   content: string;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  return (
+    <div className="progress-dropdown-container mt-2" style={{ width: "100%" }}>
+      <button
+        className="progress-dropdown-btn metrics-dropdown-btn"
+        onClick={() => {
+          setIsExpanded(!isExpanded);
+        }}
+      >
+        <div className="text">{title}</div>
+        <div
+          className={
+            isExpanded ? "center-child icon-open" : "center-child icon-close"
+          }
+          style={{
+            width: "12px",
+            height: "12px",
+          }}
+        >
+          <FontAwesomeIcon icon={faChevronDown} />
+        </div>
+      </button>
+      <div
+        className={`metrics-dropdown-menu-${
+          isExpanded ? "expanded" : "closed"
+        } pt-2 px-2 flex-column align-items-center justify-content-start mb-3`}
+        style={{
+          backgroundColor: "white",
+          borderTop: "none",
+        }}
+      >
+        <div className="py-3 mb-5" style={{ fontSize: "1.2em" }}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Amet ut
+          porttitor vestibulum orci aliquam sapien, risus, vitae. Tincidunt non
+          quis adipiscing odio nec at eget. Sit ipsum, lobortis elit facilisi
+          porttitor aliquet sed molestie eu. Bibendum etiam id turpis fringilla
+          orci urna, iaculis.
+        </div>
+        <div className="d-flex flex-row align-items-start justify-content-between w-100">
+          <TierIndicatorAndTips tier={tier} />
+        </div>
+      </div>
+    </div>
+  );
+};
+const TierIndicatorAndTips = ({
+  isOverall,
+  tier,
+}: {
+  tier: number;
+  isOverall?: boolean;
+}) => {
+  return (
+    <>
+      <TierRange tier={tier} isOverall={isOverall} />
+      <div
+        style={{ minHeight: "30vh", width: isOverall ? "100%" : "50%" }}
+        className="d-flex flex-column align-items-center justify-content-start"
+      >
+        <TipsCard
+          isOverall={isOverall}
+          title={
+            "You are seasoned at this activity, but you can do even better! To increase your tier, try tips below."
+          }
+          tips={["Ayo", "WAZZZup"]}
+        />
+      </div>
+    </>
+  );
+};
+const TierRange = ({
+  tier,
+  isOverall,
+  isOverview,
+}: {
+  tier: number;
+  isOverall?: boolean;
+  isOverview?: boolean;
+}) => {
   const tierIndicator = (minTier) => {
     const offSet = Math.abs((tier - minTier) / 2);
     return (
@@ -334,10 +384,10 @@ const ActivityDropdown = ({
           className="bg-cl-dark-text"
           style={{
             position: "absolute",
-            height: "120%",
-            width: "35%",
+            height: "118%",
+            width: "34.8%",
             zIndex: 1,
-            left: `${offSet * 100 - offSet * 35}%`,
+            left: `${offSet * 100 - offSet * 34 - 1}%`,
           }}
         />
         <div
@@ -388,30 +438,22 @@ const ActivityDropdown = ({
       </>
     );
   };
-  const tierRangComponents = () => {
-    let tierRangComponents = [];
+  const tierRangeComponents = () => {
+    let tierRangeComponents = [];
     for (let i = 1; i < 5; i++) {
       const multiplied = i * 3;
       const tiers = [multiplied - 2, multiplied - 1, multiplied];
-      tierRangComponents.push(
+      tierRangeComponents.push(
         <div
           className="position-relative d-flex flex-row align-items-center justify-content-evenly ms-2 metrics-tier-range"
           style={{ flex: 1, height: "100%" }}
         >
-          {tiers.map((tier, index) => {
+          {tiers.map((currTier, index) => {
             return (
               <div
-                className={`center-child ${
-                  i % 4 === 1
-                    ? "bg-cl-purple"
-                    : i % 4 === 2
-                    ? "bg-cl-gray-blue"
-                    : i % 4 === 3
-                    ? "bg-cl-green"
-                    : "bg-cl-light-yellow"
-                } ${
+                className={`h-100 overflow-hidden center-child ${
                   index === 0 ? "" : index === tiers.length - 1 ? "" : "mx-05"
-                } h-100`}
+                }`}
                 style={{
                   flex: 1,
                   zIndex: 2,
@@ -423,7 +465,23 @@ const ActivityDropdown = ({
                   color: i % 4 === 0 ? "black" : "white",
                 }}
               >
-                {tier}
+                <div
+                  className={`center-child ${
+                    i % 4 === 1
+                      ? "bg-cl-purple"
+                      : i % 4 === 2
+                      ? "bg-cl-pink-purple"
+                      : i % 4 === 3
+                      ? "bg-cl-orange-red"
+                      : "bg-cl-light-yellow"
+                  } h-100`}
+                  style={{
+                    width: currTier === tier && isOverview ? "50%" : "100%",
+                    height: currTier === tier && isOverview ? "50%" : "100%",
+                  }}
+                >
+                  <strong style={{ fontSize: "1.2em" }}>{currTier}</strong>
+                </div>
               </div>
             );
           })}
@@ -433,62 +491,20 @@ const ActivityDropdown = ({
         </div>
       );
     }
-    return tierRangComponents;
+    return tierRangeComponents;
   };
   return (
-    <div className="progress-dropdown-container mt-2" style={{ width: "95%" }}>
-      <button
-        className="progress-dropdown-btn metrics-dropdown-btn"
-        onClick={() => {
-          setIsExpanded(!isExpanded);
-        }}
-      >
-        <div className="text">{title}</div>
-        <div
-          className={
-            isExpanded ? "center-child icon-open" : "center-child icon-close"
-          }
-          style={{
-            width: "12px",
-            height: "12px",
-          }}
-        >
-          <FontAwesomeIcon icon={faChevronDown} />
-        </div>
-      </button>
-      <div
-        className={`metrics-dropdown-menu-${
-          isExpanded ? "expanded" : "closed"
-        } pt-2 px-2 flex-row align-items-start justify-content-between mb-3`}
-        style={{
-          backgroundColor: "white",
-          border: isExpanded ? "1px solid lightgray" : "none",
-          borderTop: "none",
-        }}
-      >
-        <div
-          className="d-flex flex-row align-items-center position-relative px-2 py-1"
-          style={{
-            border: "1px solid lightgray",
-            borderRadius: "10px",
-            height: "8vh",
-            width: "49%",
-          }}
-        >
-          {tierRangComponents()}
-        </div>
-        <div
-          style={{ minHeight: "30vh", width: "50%" }}
-          className="d-flex flex-column align-items-center justify-content-start"
-        >
-          <TipsCard
-            title={
-              "You are seasoned at this activity, but you can do even better! To increase your tier, try tips below."
-            }
-            tips={["Ayo", "WAZZZup"]}
-          />
-        </div>
-      </div>
+    <div
+      className="d-flex flex-row align-items-center position-relative px-2 py-1"
+      style={{
+        borderRadius: "8px",
+        height: "8vh",
+        background:
+          "linear-gradient(90deg, rgba(100, 47, 113, 0.1) 0%, rgba(248, 231, 76, 0.1) 100%)",
+        width: isOverall ? "100%" : "49%",
+      }}
+    >
+      {tierRangeComponents()}
     </div>
   );
 };
@@ -503,28 +519,38 @@ const TipsCard = ({
 }) => {
   return (
     <div
-      className="position-relative d-flex overflow-hidden flex-column align-items-center justify-content-around w-100 px-3 pt-3 shadow-sm"
+      className={`position-relative d-flex overflow-hidden flex-${
+        isOverall ? "row" : "column"
+      } align-items-center justify-content-${
+        isOverall ? "between" : "around"
+      } w-100 px-3 pt-3 shadow-sm soft-gray-border`}
       style={{
-        height: "25vh",
-        border: "1px solid lightgray",
+        height: "30vh",
         borderRadius: "10px",
+        marginTop: isOverall ? "10vh" : 0,
       }}
     >
-      <div>
+      <div
+        style={{
+          textAlign: "left",
+          width: isOverall ? "40%" : "100%",
+          height: isOverall ? "100%" : "auto",
+        }}
+        className={``}
+      >
         <strong style={{ fontSize: "1.3em" }}>Tips</strong>
         <br />
         {title}
       </div>
       <div
-        className="d-flex flex-column align-items-center justify-content-evenly w-100"
-        style={{ height: "95%" }}
+        className={`d-flex flex-column align-items-center justify-content-evenly`}
+        style={{ height: "95%", width: isOverall ? "40%" : "100%" }}
       >
         {tips.map((tip) => (
           <div
-            className="py-2 w-100 px-2 center-child justify-content-start"
+            className="py-2 w-100 px-2 center-child soft-gray-border justify-content-start"
             style={{
               height: "5vh",
-              border: "1px solid lightgray",
               borderRadius: "10px",
             }}
           >
@@ -533,9 +559,14 @@ const TipsCard = ({
         ))}
         <div
           className="position-absolute top-0 w-100"
-          style={{ left: 0, backgroundColor: "lightgray", height: "1vh" }}
+          style={{ left: 0, backgroundColor: "#F2F2F7", height: "1vh" }}
         />
       </div>
+      {!isOverall ? (
+        <div className="d-flex flex-row py-3 align-items-cetner justify-content-end px-2 w-100">
+          <button className="cl-btn-clear">Update my profile</button>
+        </div>
+      ) : null}
     </div>
   );
 };
