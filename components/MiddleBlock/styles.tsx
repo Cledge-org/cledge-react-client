@@ -23,6 +23,7 @@ export const Card = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 5px 0;
 `;
 export const PartnerCard = styled.div`
   width: calc(100% - 36px);
