@@ -142,8 +142,32 @@ export const SubscribeWrapper = styled("div")`
 `;
 export const BlobBlock = styled("div")`
   background: center / cover url("images/gradient-blob.svg") no-repeat;
+
+  button {
+    padding: 1rem;
+  }
+
+  section {
+    max-width: 1500px;
+    height: 100%;
+  }
+
+  #intro h6,
+  #intro p {
+    color: white;
+  }
+
+  #intro h6 {
+    font-weight: 800;
+    font-size: 48px;
+  }
+
   .BlobContainer {
     padding: 5rem 18px;
+
+    button {
+      width: 100%;
+    }
 
     p {
       margin-top: 1rem;
@@ -168,12 +192,17 @@ export const BlobBlock = styled("div")`
       justify-content: center;
     }
 
+    
     .BlobContainer {
       width: 80vw;
       height: 50vh;
       border: 1px solid transparent;
       border-radius: 15px;
-      background-color: rgba(255,255,255,0.3);
+      background-color: rgba(255, 255, 255, 0.3);
+      
+      button {
+        width: 20vw;
+      }
 
       & img {
         width: 100%;
@@ -183,7 +212,7 @@ export const BlobBlock = styled("div")`
         position: absolute;
       }
     }
-  
+
     & > div > div {
       position: relative;
       display: flex;
@@ -191,27 +220,8 @@ export const BlobBlock = styled("div")`
       justify-content: space-around;
     }
   }
-
-
-  button {
-    padding: 1rem;
-  }
-
-  section {
-    max-width: 1500px;
-    height: 100%;
-  }
-
-  #intro h6,
-  #intro p {
-    color: white;
-  }
-
-  #intro h6 {
-    font-weight: 800;
-    font-size: 48px;
-  }
 `;
+
 export const MediaButton = styled("button")`
   background: #0b1142;
   display: flex;
@@ -382,11 +392,6 @@ const Home = () => {
             </div>
           </Fade>
         </BlobBlock>
-        <Contact
-          title={ContactContent.title}
-          content={ContactContent.text}
-          id="contact"
-        />
       </Container>
       <Footer
         onFeatureClick={(featureIndex) => {
