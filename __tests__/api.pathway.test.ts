@@ -219,27 +219,30 @@ beforeEach(async () => {
 
   // Add test user
   // TODO: add personalized content with tags of those of the test user
-  await createUser({
-    firebaseId: testUserFirebaseId,
-    name: "Test User",
-    address: "Test address",
-    grade: 11,
-    birthday: new Date(),
-    email: "Test email",
-    tags: testPersonalizedContentTag,
-    checkIns: testUserCheckIns,
-  });
+  
 });
 
 test("update pathway", (done) => {
   const callback = async () => {
+    const updateUserFirebaseId:string = "update User";
+    await createUser({
+      firebaseId: updateUserFirebaseId,
+      name: "Test User",
+      address: "Test address",
+      grade: 11,
+      birthday: new Date(),
+      email: "Test email",
+      tags: testPersonalizedContentTag,
+      checkIns: testUserCheckIns,
+    });
+
     const personalizedContent: PersonalizedContent = testPersonalizedContent;
     const pathwayDb: Pathway_Db = testPathway_Db;
     const pathwayModuleDb: PathwayModule_Db = testPathwayModule_Db;
     const contentProgress: ContentProgress = testContentProgress;
 
     await putPathway(pathway1ObjectId, pathwayDb);
-    await putPathwayProgress(testUserFirebaseId, { [pathwayModule1ObjectId.toString()]: [contentProgress] });
+    await putPathwayProgress(updateUserFirebaseId, { [pathwayModule1ObjectId.toString()]: [contentProgress] });
     await putPathwayModule(pathwayModule1ObjectId, pathwayModuleDb);
     await putPathwayModulePersonalizedContent(pathwayPersonalizedContentObjectId, personalizedContent);
 
@@ -251,8 +254,8 @@ test("update pathway", (done) => {
     const pathwayModuleDb2: PathwayModule_Db = testPathwayModule_Db2;
     const contentProgress2: ContentProgress = testContentProgress2;
 
-    await updateUser(testUserFirebaseId, {
-      firebaseId: testUserFirebaseId,
+    await updateUser(updateUserFirebaseId, {
+      firebaseId: updateUserFirebaseId,
       name: "Test User",
       address: "Test address",
       grade: 11,
@@ -263,14 +266,14 @@ test("update pathway", (done) => {
     });
 
     await putPathway(pathway1ObjectId, pathwayDb2);
-    await putPathwayProgress(testUserFirebaseId, { [pathwayModule1ObjectId.toString()]: [contentProgress2] });
+    await putPathwayProgress(updateUserFirebaseId, { [pathwayModule1ObjectId.toString()]: [contentProgress2] });
     await putPathwayModule(pathwayModule1ObjectId, pathwayModuleDb2)
     await putPathwayModulePersonalizedContent(pathwayPersonalizedContentObjectId, personalizedContent2);
   
     let fetchedAllPathway = await getAllPathways();
-    let fetchedAllPathwayProgress = await getAllPathwayProgress(testUserFirebaseId);
-    let fetchedPathway = await getPathway(testUserFirebaseId, pathway1ObjectId);
-    let fetchedPathwayProgress = await getPathwayProgress(testUserFirebaseId, pathway1ObjectId);
+    let fetchedAllPathwayProgress = await getAllPathwayProgress(updateUserFirebaseId);
+    let fetchedPathway = await getPathway(updateUserFirebaseId, pathway1ObjectId);
+    let fetchedPathwayProgress = await getPathwayProgress(updateUserFirebaseId, pathway1ObjectId);
 
     let allPathwayId = [];
 
@@ -295,6 +298,7 @@ test("update pathway", (done) => {
     expect(hasPathway).toBe(true);
     expect(hasPathwayProgress).toBe(true);
     expect(hasModuleProgress).toBe(true);
+
     done();
   };
   callback();
@@ -486,6 +490,17 @@ test("should add one pathway and get that one added pathway exactly", (done) => 
     const pathwayDb: Pathway_Db = testPathway_Db;
     const pathwayModuleDb: PathwayModule_Db = testPathwayModule_Db;
     const contentProgress: ContentProgress = testContentProgress;
+
+    await createUser({
+      firebaseId: testUserFirebaseId,
+      name: "Test User",
+      address: "Test address",
+      grade: 11,
+      birthday: new Date(),
+      email: "Test email",
+      tags: testPersonalizedContentTag,
+      checkIns: testUserCheckIns,
+    });
 
     await putPathway(pathway1ObjectId, pathwayDb);
     await putPathwayProgress(testUserFirebaseId, { [pathwayModule1ObjectId.toString()]: [contentProgress] });
