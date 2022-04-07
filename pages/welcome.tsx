@@ -353,7 +353,7 @@ const Home = () => {
           id="contact"
         />
       </Container>
-      {/* <Footer
+      <Footer
         onFeatureClick={(featureIndex) => {
           setCurrFeature(featureIndex);
           console.log(slideShowRef.current.offsetTop);
@@ -362,7 +362,7 @@ const Home = () => {
             behavior: "smooth",
           });
         }}
-      /> */}
+      />
     </>
   );
 };
