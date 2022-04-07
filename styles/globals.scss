@@ -1,5 +1,12 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
 
+.container-margin  {
+  @media only screen and (max-width: 767px) {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+}
+
 html,
 body {
   padding: 0;
@@ -225,7 +232,6 @@ $spacers: (
 //GLOBAL DROPDOWN STYLES -->
 .dropdown-container {
   position: relative;
-  height: 5vh;
 }
 
 .dropdown-menu-custom {
