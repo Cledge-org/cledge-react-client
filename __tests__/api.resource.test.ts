@@ -271,96 +271,96 @@ test("verify resources and verify if those resources are deleted", (done) => {
 });
 
 
-test("verify many resources and verify if those many resources are deleted", (done) => {
-  const callback = async () => {
-    // checks if there is anything in the database at the beginning of test
-    const fetchedResourceCheck = await getResourcesInfo();
-    expect(fetchedResourceCheck.articles.length).toBe(0);
-    expect(fetchedResourceCheck.videoList.length).toBe(0);
-    expect(fetchedResourceCheck.resources.length).toBe(0);
+// test("verify many resources and verify if those many resources are deleted", (done) => {
+//   const callback = async () => {
+//     // checks if there is anything in the database at the beginning of test
+//     const fetchedResourceCheck = await getResourcesInfo();
+//     expect(fetchedResourceCheck.articles.length).toBe(0);
+//     expect(fetchedResourceCheck.videoList.length).toBe(0);
+//     expect(fetchedResourceCheck.resources.length).toBe(0);
     
-    let manySize = 100;
-    let articleId = [];
-    let videoId = [];
-    let resourceId = [];
+//     let manySize = 100;
+//     let articleId = [];
+//     let videoId = [];
+//     let resourceId = [];
 
-    for (let i = 0; i < manySize; i++) {
-      const titleArticle = "Test Article" + i;
-      const article: CardArticle = {
-        source: "Test Source " + i,
-        name: titleArticle,
-        description: "Test Description " + i
-      };
+//     for (let i = 0; i < manySize; i++) {
+//       const titleArticle = "Test Article" + i;
+//       const article: CardArticle = {
+//         source: "Test Source " + i,
+//         name: titleArticle,
+//         description: "Test Description " + i
+//       };
       
-      const titleVideo = "Test Video " + i;
-      const video: CardVideo = {
-        source: "Test Source" + i,
-        name: titleVideo,
-        description: "Test Description" + i
-      };
+//       const titleVideo = "Test Video " + i;
+//       const video: CardVideo = {
+//         source: "Test Source" + i,
+//         name: titleVideo,
+//         description: "Test Description" + i
+//       };
       
-      const titleResource = "Test Resource " + i;
-      const resource: CardResource = {
-        source: "Test Source " + i,
-        name: titleResource,
-        description: "Test Description " + i
-      };
-      await putResource(undefined, article, "article");
-      await putResource(undefined, video, "video");
-      await putResource(undefined, resource, "resource");
-    }
+//       const titleResource = "Test Resource " + i;
+//       const resource: CardResource = {
+//         source: "Test Source " + i,
+//         name: titleResource,
+//         description: "Test Description " + i
+//       };
+//       await putResource(undefined, article, "article");
+//       await putResource(undefined, video, "video");
+//       await putResource(undefined, resource, "resource");
+//     }
 
-    const fetchedResources = await getResourcesInfo();
-    expect(fetchedResources.articles.length).toBe(manySize);
-    expect(fetchedResources.videoList.length).toBe(manySize);
-    expect(fetchedResources.resources.length).toBe(manySize);
+//     const fetchedResources = await getResourcesInfo();
+//     expect(fetchedResources.articles.length).toBe(manySize);
+//     expect(fetchedResources.videoList.length).toBe(manySize);
+//     expect(fetchedResources.resources.length).toBe(manySize);
 
-    for (let i = 0; i < fetchedResources.articles.length; i++) {
-      const titleArticle = "Test Article" + i;
-      const article: CardArticle = {
-        source: "Test Source " + i,
-        name: titleArticle,
-        description: "Test Description " + i
-      };
-      articleId.push(fetchedResources.articles[i]._id);
-      expect(fetchedResources.articles[i]).toMatchObject(article);
-    }
+//     for (let i = 0; i < fetchedResources.articles.length; i++) {
+//       const titleArticle = "Test Article" + i;
+//       const article: CardArticle = {
+//         source: "Test Source " + i,
+//         name: titleArticle,
+//         description: "Test Description " + i
+//       };
+//       articleId.push(fetchedResources.articles[i]._id);
+//       expect(fetchedResources.articles[i]).toMatchObject(article);
+//     }
 
-    for (let i = 0; i < fetchedResources.videoList.length; i++) {
-      const titleVideo = "Test Video " + i;
-      const video: CardVideo = {
-        source: "Test Source" + i,
-        name: titleVideo,
-        description: "Test Description" + i
-      };
-      videoId.push(fetchedResources.videoList[i]._id);
-      expect(fetchedResources.videoList[i]).toMatchObject(video);
-    }
+//     for (let i = 0; i < fetchedResources.videoList.length; i++) {
+//       const titleVideo = "Test Video " + i;
+//       const video: CardVideo = {
+//         source: "Test Source" + i,
+//         name: titleVideo,
+//         description: "Test Description" + i
+//       };
+//       videoId.push(fetchedResources.videoList[i]._id);
+//       expect(fetchedResources.videoList[i]).toMatchObject(video);
+//     }
 
-    for (let i = 0; i < fetchedResources.resources.length; i++) {
-      const titleResource = "Test Resource " + i;
-      const resource: CardResource = {
-        source: "Test Source " + i,
-        name: titleResource,
-        description: "Test Description " + i
-      };
-      resourceId.push(fetchedResources.resources[i]._id);
-      expect(fetchedResources.resources[i]).toMatchObject(resource);
-    }
+//     for (let i = 0; i < fetchedResources.resources.length; i++) {
+//       const titleResource = "Test Resource " + i;
+//       const resource: CardResource = {
+//         source: "Test Source " + i,
+//         name: titleResource,
+//         description: "Test Description " + i
+//       };
+//       resourceId.push(fetchedResources.resources[i]._id);
+//       expect(fetchedResources.resources[i]).toMatchObject(resource);
+//     }
 
-    // clears resource datbase
-    for (let i = 0; i < manySize; i++) {
-      await putResource(articleId.pop(), undefined, undefined);
-      await putResource(videoId.pop(), undefined, undefined);
-      await putResource(resourceId.pop(), undefined, undefined);
-    }
+//     // clears resource datbase
+//     for (let i = 0; i < manySize; i++) {
+//       await putResource(articleId.pop(), undefined, undefined);
+//       await putResource(videoId.pop(), undefined, undefined);
+//       await putResource(resourceId.pop(), undefined, undefined);
+//     }
 
-    // checks that database is empty
-    const fetchedResourceChecks = await getResourcesInfo();
-    expect(fetchedResourceChecks.articles.length).toBe(0);
-    expect(fetchedResourceChecks.videoList.length).toBe(0);
-    expect(fetchedResourceChecks.resources.length).toBe(0);
-    done();
-  };
-  callback();
-});
+//     // checks that database is empty
+//     const fetchedResourceChecks = await getResourcesInfo();
+//     expect(fetchedResourceChecks.articles.length).toBe(0);
+//     expect(fetchedResourceChecks.videoList.length).toBe(0);
+//     expect(fetchedResourceChecks.resources.length).toBe(0);
+//     done();
+//   };
+//   callback();
+// });

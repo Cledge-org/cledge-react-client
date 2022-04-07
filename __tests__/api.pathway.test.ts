@@ -10,7 +10,6 @@ import { MongoClient, ObjectId } from "mongodb";
 import { createUser } from "../pages/api/create-user";
 import { updateUser } from "../pages/api/update-user";
 
-
 const pathway1ObjectId = new ObjectId();
 const pathwayModule1ObjectId = new ObjectId();
 const pathwayPersonalizedContentObjectId = new ObjectId();
@@ -98,11 +97,6 @@ const testUserPathwayTag = [
   "Test User Tag 2",
   "Test User Tag 3",
 ];
-const testUserPathway: UserPathway = {
-  pathway: "Test Course 1", // need to update
-  userTags: testUserPathwayTag,
-  userCourseProgress: testPathwayProgress,
-};
 
 const testUserCheckIns = ["Test CheckIn 1", "Test CheckIn 2", "Test CheckIn 3"];
 const testDashboard: Dashboard = {
@@ -112,9 +106,7 @@ const testDashboard: Dashboard = {
   checkIns: testUserCheckIns,
 };
 
-///////////////////////////////////////////////////////////////////////////
 // UPDATE DATA
-
 const testPersonalizedContentTag2 = [
   "Test 2 Tag 1",
   "Test 2 Tag 2",
@@ -125,19 +117,19 @@ const testPersonalizedContent2: PersonalizedContent = {
   moduleId: pathwayModule1ObjectId,
   priority: 0,
   tags: testPersonalizedContentTag2,
-  name: "Test Name2",
-  type: "Test Type2",
-  url: "Test Url2",
+  name: "Test Name 2",
+  type: "Test Type 2",
+  url: "Test Url 2",
 };
 
 const testPresetContent2: PresetContent = {
   priority: 0,
-  name: "Test Name2",
-  type: "Test Type2",
-  url: "Test Url2",
+  name: "Test Name 2",
+  type: "Test Type 2",
+  url: "Test Url 2",
 };
-const testPathwayModuleName2 = "Test Name2";
-const testPathwayModuleTag2 = ["Test Pathway Module Tag2"];
+const testPathwayModuleName2 = "Test Name 2";
+const testPathwayModuleTag2 = ["Test Pathway Module Tag 2"];
 const testPathwayModule2: PathwayModule = {
   _id: pathwayModule1ObjectId,
   name: testPathwayModuleName2,
@@ -153,8 +145,8 @@ const testPathwayModule_Db2: PathwayModule_Db = {
   tags: testPathwayModuleTag2,
 };
 
-const testPathwayName2 = "Test Name2";
-const testPathwayTag2 = ["Test Pathway Tag2"];
+const testPathwayName2 = "Test Name 2";
+const testPathwayTag2 = ["Test Pathway Tag 2"];
 const testPathwayModules2 = [testPathwayModule2];
 const testPathway2: Pathway = {
   _id: pathway1ObjectId,
@@ -201,19 +193,15 @@ const testUserPathwayTag2 = [
   "Test 2 User Tag 2",
   "Test 2 User Tag 3",
 ];
-const testUserPathway2: UserPathway = {
-  pathway: "Test Course 2", // need to update
-  userTags: testUserPathwayTag2,
-  userCourseProgress: testPathwayProgress2,
-};
 
 const testUserCheckIns2 = [
   "Test 2 CheckIn 1",
   "Test 2 CheckIn 2",
   "Test 2 CheckIn 3",
 ];
+
 const testDashboard2: Dashboard = {
-  userName: "Test UserName2",
+  userName: "Test UserName 2",
   userTags: testUserPathwayTag2,
   userProgress: [testPathwayProgress2],
   checkIns: testUserCheckIns2,
@@ -235,7 +223,7 @@ beforeEach(async () => {
 
   // Add test user
   // TODO: add personalized content with tags of those of the test user
-  createUser({
+  await createUser({
     firebaseId: testUserFirebaseId,
     name: "Test User",
     address: "Test address",
@@ -245,50 +233,6 @@ beforeEach(async () => {
     tags: testPersonalizedContentTag,
     checkIns: testUserCheckIns,
   });
-});
-
-test("should add one pathway and get that one added pathway exactly", (done) => {
-  const callback = async () => {
-    // Test put functionality
-    const pathway: Pathway = testPathway;
-    const pathwayProgress: PathwayProgress = testPathwayProgress;
-    const pathwayModule: PathwayModule = testPathwayModule;
-    const personalizedContent: PersonalizedContent = testPersonalizedContent;
-    const pathwayDb: Pathway_Db = testPathway_Db;
-    const pathwayModuleDb: PathwayModule_Db = testPathwayModule_Db;
-    const contentProgress: ContentProgress = testContentProgress;
-
-    await putPathwayProgress(testUserFirebaseId, { [pathwayModule1ObjectId.toString()]: [contentProgress] });
-    await putPathway(pathway1ObjectId, pathwayDb);
-    await putPathwayModule(pathwayModule1ObjectId, pathwayModuleDb);
-    let personalizedContentId = new ObjectId();
-    await putPathwayModulePersonalizedContent(personalizedContentId, personalizedContent);
-
-    // Test get functionality - should be identical to what we put
-    const [
-      fetchedAllPathway,
-      fetchedAllPathwayProgress,
-      fetchedPathway,
-      fetchedPathwayProgress,
-    ] = await Promise.all([
-      getAllPathways(),
-      getAllPathwayProgress(testUserFirebaseId),
-      getPathway(testUserFirebaseId, pathway1ObjectId),
-      getPathwayProgress(testUserFirebaseId, pathway1ObjectId),
-    ]);
-
-    expect(fetchedAllPathway.length).toBe(1);
-    expect(fetchedAllPathwayProgress.length).toBe(testDashboard.userProgress.length);
-    expect(fetchedPathway.modules.length).toBe(testPathway_Db.modules.length);
-    expect(fetchedPathwayProgress.moduleProgress.length).toBe(testModuleProgresses.length);
-
-    expect(fetchedAllPathway[0]).toMatchObject(pathway);
-    expect(fetchedAllPathwayProgress[0]).toMatchObject(pathwayProgress);
-    expect(fetchedPathway.modules[0]).toMatchObject(pathwayModule);
-    expect(fetchedPathwayProgress.moduleProgress[0]).toMatchObject(testModuleProgresses[0]);
-    done();
-  };
-  callback();
 });
 
 test("update pathway", (done) => {
@@ -326,7 +270,7 @@ test("update pathway", (done) => {
     await putPathwayProgress(testUserFirebaseId, { [pathwayModule1ObjectId.toString()]: [contentProgress2] });
     await putPathwayModule(pathwayModule1ObjectId, pathwayModuleDb2)
     await putPathwayModulePersonalizedContent(pathwayPersonalizedContentObjectId, personalizedContent2);
-
+  
     let fetchedAllPathway = await getAllPathways();
     let fetchedAllPathwayProgress = await getAllPathwayProgress(testUserFirebaseId);
     let fetchedPathway = await getPathway(testUserFirebaseId, pathway1ObjectId);
@@ -464,7 +408,6 @@ test("verify many pathways", (done) => {
       const pathwayId = new ObjectId();
       const moduleId = new ObjectId();
       const firebaseId = "Test User Id " + j;
-      const personalizedContentObjectId = new ObjectId();
 
       pathwayIds.push(pathwayId);
       moduleIds.push(moduleId);
@@ -507,7 +450,6 @@ test("verify many pathways", (done) => {
       expect(fetchedAllPathway[i]).toMatchObject(pathways[i]);
     }
 
-
     for (let j = 0; j < manySizes; j++) {
       // Test get functionality - should be identical to what we put
       const [
@@ -537,4 +479,48 @@ test("verify many pathways", (done) => {
   callback();
 });
 
+
+test("should add one pathway and get that one added pathway exactly", (done) => {
+  const callback = async () => {
+    // Test put functionality
+    const pathway: Pathway = testPathway;
+    const pathwayProgress: PathwayProgress = testPathwayProgress;
+    const pathwayModule: PathwayModule = testPathwayModule;
+    const personalizedContent: PersonalizedContent = testPersonalizedContent;
+    const pathwayDb: Pathway_Db = testPathway_Db;
+    const pathwayModuleDb: PathwayModule_Db = testPathwayModule_Db;
+    const contentProgress: ContentProgress = testContentProgress;
+
+    await putPathway(pathway1ObjectId, pathwayDb);
+    await putPathwayProgress(testUserFirebaseId, { [pathwayModule1ObjectId.toString()]: [contentProgress] });
+    await putPathwayModule(pathwayModule1ObjectId, pathwayModuleDb);
+    let pathwayContentPersonalized = new ObjectId();
+    await putPathwayModulePersonalizedContent(pathwayContentPersonalized, personalizedContent);
+   
+    // Test get functionality - should be identical to what we put
+    const [
+      fetchedAllPathway,
+      fetchedAllPathwayProgress,
+      fetchedPathway,
+      fetchedPathwayProgress,
+    ] = await Promise.all([
+      getAllPathways(),
+      getAllPathwayProgress(testUserFirebaseId),
+      getPathway(testUserFirebaseId, pathway1ObjectId),
+      getPathwayProgress(testUserFirebaseId, pathway1ObjectId),
+    ]);
+
+    expect(fetchedAllPathway.length).toBe(1);
+    expect(fetchedAllPathwayProgress.length).toBe(testDashboard.userProgress.length);
+    expect(fetchedPathway.modules.length).toBe(testPathway_Db.modules.length);
+    expect(fetchedPathwayProgress.moduleProgress.length).toBe(testModuleProgresses.length);
+
+    expect(fetchedAllPathway[0]).toMatchObject(pathway);
+    expect(fetchedAllPathwayProgress[0]).toMatchObject(pathwayProgress);
+    expect(fetchedPathway.modules[0]).toMatchObject(pathwayModule);
+    expect(fetchedPathwayProgress.moduleProgress[0]).toMatchObject(testModuleProgresses[0]);
+    done();
+  };
+  callback();
+});
 
