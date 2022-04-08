@@ -28,7 +28,6 @@ const testArticle2: CardArticle = {
   source: "Test Source 2",
   name: titleArticle2,
   description: "Test Description 2"
-
 };
 
 const titleVideo2 = "Test Video 2";
@@ -59,7 +58,6 @@ async function deleteResources(articleId, videoId, resourceId) {
   expect(fetchedResourcesCheck.articles.length).toBe(0);
   expect(fetchedResourcesCheck.videoList.length).toBe(0);
   expect(fetchedResourcesCheck.resources.length).toBe(0);
-
 }
 
 test("should add one resource and get that one added resource exactly and verify if that resource is deleted", (done) => {
@@ -73,6 +71,7 @@ test("should add one resource and get that one added resource exactly and verify
     let articleId = [];
     let videoId = [];
     let resourceId = [];
+
     // Test put functionality
     const article: CardArticle = testArticle1;
     const video: CardVideo = testVideo1;
@@ -116,6 +115,7 @@ test("update resources and verify if the resources are deleted", (done) => {
     const article: CardArticle = testArticle1;
     const video: CardVideo = testVideo1;
     const resource: CardResource = testResource1;
+
     let updateArticle = testArticle2;
     let updateVideo = testVideo2;
     let updateResource = testResource2;
@@ -130,7 +130,6 @@ test("update resources and verify if the resources are deleted", (done) => {
     expect(fetchedResources.articles.length).toBe(1);
     expect(fetchedResources.videoList.length).toBe(1);
     expect(fetchedResources.resources.length).toBe(1);
-
 
     const article2: CardArticle = testArticle2;
     const video2: CardVideo = testVideo2;
@@ -198,6 +197,7 @@ test("verify resources and verify if those resources are deleted", (done) => {
     const article: CardArticle = testArticle1;
     const video: CardVideo = testVideo1;
     const resource: CardResource = testResource1;
+    
     let expectedArticle = testArticle1;
     let expectedVideo = testVideo1;
     let expectedResource = testResource1;

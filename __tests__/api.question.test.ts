@@ -135,7 +135,6 @@ test("should add one question and get that one added question exactly", (done) =
         expect(fetchedQuestionList.chunks[0]).toMatchObject(gradeQuestionChunks);
         expect(fetchedQuestionsProgress.questionData[0]).toMatchObject(questionList);
         expect(fetchedQuestionResponse[0]).toMatchObject(userResponse);
-
         done();
     };
     callback();
@@ -154,7 +153,6 @@ test("verify questions given an ObjectId", (done) => {
         await putQuestion(question1ObjectId, question);
         await putQuestionResponses("Test User Id", [userResponse]);
 
-
         let actualList = await getQuestionList(testQuestionListName);
         let actualProgress = await getQuestionProgress();
         let actualProgressData = actualProgress["questionData"];
@@ -163,7 +161,6 @@ test("verify questions given an ObjectId", (done) => {
         expect(actualList).toMatchObject(testQuestionList1);
         expect(actualProgressData.length).toBe(1);
         expect(actualResponses.length).toBe(1);
-
 
         let progressCount = false;
         if (actualProgressData[0]._id.equals(questionObjectId)) {
@@ -175,10 +172,8 @@ test("verify questions given an ObjectId", (done) => {
             responseCount = true;
         }
 
-
         expect(progressCount).toEqual(true);
         expect(responseCount).toEqual(true);
-
         done();
     };
     callback();
@@ -234,7 +229,6 @@ test("update question", (done) => {
         }
 
         let responseCount = false;
-
         if (actualResponses[0].questionId === updateUserResponse.questionId) {
             expect(actualResponses[0]).toEqual(updateUserResponse);
             responseCount = true;
@@ -243,7 +237,6 @@ test("update question", (done) => {
         expect(actualList).toMatchObject(testQuestionList2);
         expect(progressCount).toEqual(true);
         expect(responseCount).toEqual(true);
-
         done();
     };
     callback();
@@ -298,11 +291,12 @@ test("verify many questions", (done) => {
     }
 
     async function callback() {
-        let manySizes = 3;
+        let manySizes = 10;
         let questionListIds = [];
         let questionChunkIds = [];
         let questionIds = [];
         let userIds = [];
+
         let questionList: QuestionList[] = [];
         let gradeQuestionChunks: QuestionChunk[] = [];
         let userResponses: UserResponse[] = []
@@ -333,8 +327,8 @@ test("verify many questions", (done) => {
             gradeQuestionChunks.push(questionResult.questionChunk);
 
             await putQuestionList(questionListObjectId, questionListDb);
-            await putQuestionChunk(questionChunkObjectId, questionChunkDb),
-                await putQuestion(questionId, question);
+            await putQuestionChunk(questionChunkObjectId, questionChunkDb);
+            await putQuestion(questionId, question);
             await putQuestionResponses(userId, [questionResult.userResponse]);
         }
 
@@ -347,7 +341,6 @@ test("verify many questions", (done) => {
         ]);
 
         expect(fetchedAllQuestionsLists.length).toBe(manySizes);
-        console.log(fetchedAllQuestionsLists);
         expect(fetchedQuestionsProgress.questionData.length).toBe(manySizes);
 
         for (let i = 0; i < fetchedAllQuestionsLists.length; i++) {
