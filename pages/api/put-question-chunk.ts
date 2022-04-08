@@ -30,7 +30,7 @@ export const putQuestionChunk = async (
   questionChunkId: ObjectId | undefined,
   questionChunk: QuestionChunk_Db | undefined
 ): Promise<{ chunkId: string }> => {
-  if (questionChunk._id) {
+  if (questionChunk !== undefined && questionChunk._id) {
     // Document should not have _id field when sent to database
     delete questionChunk._id;
   }
@@ -54,7 +54,7 @@ export const putQuestionChunk = async (
         await client
           .db("questions")
           .collection("question-chunks")
-          .updateOne({ _id: questionChunkId }, { $set: questionChunk });
+          .updateOne({ _id: questionChunkId }, { $set: questionChunk }, {upsert: true});
         res({
           chunkId: questionChunkId.toString(),
         });
