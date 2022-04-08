@@ -62,39 +62,34 @@ async function deleteResources(articleId, videoId, resourceId) {
 
 test("should add one resource and get that one added resource exactly and verify if that resource is deleted", (done) => {
   const callback = async () => {
-    // checks if there is anything in the database at the beginning of test
+    // Checks if there is anything in the database at the beginning of test
     const fetchedResourceCheck = await getResourcesInfo();
     expect(fetchedResourceCheck.articles.length).toBe(0);
     expect(fetchedResourceCheck.videoList.length).toBe(0);
     expect(fetchedResourceCheck.resources.length).toBe(0);
 
-    let articleId = [];
-    let videoId = [];
-    let resourceId = [];
+    const articleId = [];
+    const videoId = [];
+    const resourceId = [];
 
-    // Test put functionality
-    const article: CardArticle = testArticle1;
-    const video: CardVideo = testVideo1;
-    const resource: CardResource = testResource1;
+    // test put functionality - manually create unique objectids for each test resource
+    await putResource(undefined, testArticle1, "article");
+    await putResource(undefined, testVideo1, "video");
+    await putResource(undefined, testResource1, "resource");
 
-    // manually create unique objectids for each test resource
-    await putResource(undefined, article, "article");
-    await putResource(undefined, video, "video");
-    await putResource(undefined, resource, "resource");
-
-    // Test get functionality - should be identical to what we put
+    // test get functionality - should be identical to what we put
     const fetchedResources = await getResourcesInfo();
     expect(fetchedResources.articles.length).toBe(1);
     expect(fetchedResources.videoList.length).toBe(1);
     expect(fetchedResources.resources.length).toBe(1);
 
-    expect(fetchedResources.articles[0]).toMatchObject(article);
+    expect(fetchedResources.articles[0]).toMatchObject(testArticle1);
     articleId.push(fetchedResources.articles[0]._id);
 
-    expect(fetchedResources.videoList[0]).toMatchObject(video);
+    expect(fetchedResources.videoList[0]).toMatchObject(testVideo1);
     videoId.push(fetchedResources.videoList[0]._id);
 
-    expect(fetchedResources.resources[0]).toMatchObject(resource);
+    expect(fetchedResources.resources[0]).toMatchObject(testResource1);
     resourceId.push(fetchedResources.resources[0]._id);
 
     // clears the resource database and checks if database is empty
@@ -112,64 +107,51 @@ test("update resources and verify if the resources are deleted", (done) => {
     expect(fetchedResourceCheck.videoList.length).toBe(0);
     expect(fetchedResourceCheck.resources.length).toBe(0);
 
-    const article: CardArticle = testArticle1;
-    const video: CardVideo = testVideo1;
-    const resource: CardResource = testResource1;
+    // test put functionality - manually create unique objectids for each test resource
+    await putResource(undefined, testArticle1, "article");
+    await putResource(undefined, testVideo1, "video");
+    await putResource(undefined, testResource1, "resource");
 
-    let updateArticle = testArticle2;
-    let updateVideo = testVideo2;
-    let updateResource = testResource2;
-
-    // manually create unique objectids for each test resource
-    await putResource(undefined, article, "article");
-    await putResource(undefined, video, "video");
-    await putResource(undefined, resource, "resource");
-
-    // get resource after put the new one to get ids
     const fetchedResources = await getResourcesInfo();
     expect(fetchedResources.articles.length).toBe(1);
     expect(fetchedResources.videoList.length).toBe(1);
     expect(fetchedResources.resources.length).toBe(1);
 
-    const article2: CardArticle = testArticle2;
-    const video2: CardVideo = testVideo2;
-    const resource2: CardResource = testResource2;
+    // test put functionality - updates the resources in the database
+    await putResource(fetchedResources.articles[0]._id, testArticle2, "article");
+    await putResource(fetchedResources.videoList[0]._id, testVideo2, "video");
+    await putResource(fetchedResources.resources[0]._id, testResource2, "resource");
 
-    // updates the resources in the database
-    await putResource(fetchedResources.articles[0]._id, article2, "article");
-    await putResource(fetchedResources.videoList[0]._id, video2, "video");
-    await putResource(fetchedResources.resources[0]._id, resource2, "resource");
+    testArticle2._id = fetchedResources.articles[0]._id;
+    testVideo2._id = fetchedResources.videoList[0]._id;
+    testResource2._id = fetchedResources.resources[0]._id;
 
-    updateArticle._id = fetchedResources.articles[0]._id;
-    updateVideo._id = fetchedResources.videoList[0]._id;
-    updateResource._id = fetchedResources.resources[0]._id;
+    const actualResource = await getResourcesInfo();
+    const actualArticles = actualResource.articles;
+    const actualVideos = actualResource.videoList;
+    const actualResources = actualResource.resources;
 
-    let actualResource = await getResourcesInfo();
-    let actualArticles = actualResource.articles;
-    let actualVideos = actualResource.videoList;
-    let actualResources = actualResource.resources;
-
-    let articleId = [];
-    let videoId = [];
-    let resourceId = [];
+    const articleId = [];
+    const videoId = [];
+    const resourceId = [];
 
     let hasArticle = false;
-    if (actualArticles[0]._id.equals(updateArticle._id)) {
-      expect(actualArticles[0]).toEqual(updateArticle);
+    if (actualArticles[0]._id.equals(testArticle2._id)) {
+      expect(actualArticles[0]).toEqual(testArticle2);
       hasArticle = true;
     }
     articleId.push(actualArticles[0]._id);
 
     let hasVideo = false;
-    if (actualVideos[0]._id.equals(updateVideo._id)) {
-      expect(actualVideos[0]).toEqual(updateVideo);
+    if (actualVideos[0]._id.equals(testVideo2._id)) {
+      expect(actualVideos[0]).toEqual(testVideo2);
       hasVideo = true;
     }
     videoId.push(actualVideos[0]._id);
 
     let hasResource = false;
-    if (actualResources[0]._id.equals(updateResource._id)) {
-      expect(actualResources[0]).toEqual(updateResource);
+    if (actualResources[0]._id.equals(testResource2._id)) {
+      expect(actualResources[0]).toEqual(testResource2);
       hasResource = true;
     }
     resourceId.push(actualResources[0]._id);
@@ -194,52 +176,44 @@ test("verify resources and verify if those resources are deleted", (done) => {
     expect(fetchedResourceCheck.videoList.length).toBe(0);
     expect(fetchedResourceCheck.resources.length).toBe(0);
 
-    const article: CardArticle = testArticle1;
-    const video: CardVideo = testVideo1;
-    const resource: CardResource = testResource1;
-    
-    let expectedArticle = testArticle1;
-    let expectedVideo = testVideo1;
-    let expectedResource = testResource1;
+    // test put functionality
+    const article1Id = new ObjectId();
+    await putResource(article1Id, testArticle1, "article");
+    const video1Id = new ObjectId();
+    await putResource(video1Id, testVideo1, "video");
+    const resource1Id = new ObjectId();
+    await putResource(resource1Id, testResource1, "resource");
 
-    let article1Id = new ObjectId();
-    await putResource(article1Id, article, "article");
-    let video1Id = new ObjectId();
-    await putResource(video1Id, video, "video");
-    let resource1Id = new ObjectId();
-    await putResource(resource1Id, resource, "resource");
+    testArticle1._id = article1Id;
+    testVideo1._id = video1Id;
+    testResource1._id = resource1Id;
 
-    expectedArticle._id = article1Id;
-    expectedVideo._id = video1Id;
-    expectedResource._id = resource1Id;
+    const actualResource = await getResourcesInfo();
+    const actualArticles = actualResource.articles;
+    const actualVideos = actualResource.videoList;
+    const actualResources = actualResource.resources;
 
-    let actualResource = await getResourcesInfo();
-    let actualArticles = actualResource.articles;
-    let actualVideos = actualResource.videoList;
-    let actualResources = actualResource.resources;
-
-    let articleId = [];
-    let videoId = [];
-    let resourceId = [];
+    const articleId = [];
+    const videoId = [];
+    const resourceId = [];
 
     let hasArticle = false;
-    if (actualArticles[0]._id.equals(expectedArticle._id)) {
-      expect(actualArticles[0]).toEqual(expectedArticle);
+    if (actualArticles[0]._id.equals(testArticle1._id)) {
+      expect(actualArticles[0]).toEqual(testArticle1);
       hasArticle = true;
     }
     articleId.push(actualArticles[0]._id);
 
     let hasVideo = false;
-    if (actualVideos[0]._id.equals(expectedVideo._id)) {
-      expect(actualVideos[0]).toEqual(expectedVideo);
+    if (actualVideos[0]._id.equals(testVideo1._id)) {
+      expect(actualVideos[0]).toEqual(testVideo1);
       hasVideo = true;
     }
     videoId.push(actualVideos[0]._id);
 
     let hasResource = false;
-
-    if (actualResources[0]._id.equals(expectedResource._id)) {
-      expect(actualResources[0]).toEqual(expectedResource);
+    if (actualResources[0]._id.equals(testResource1._id)) {
+      expect(actualResources[0]).toEqual(testResource1);
       hasResource = true;
     }
     resourceId.push(actualResources[0]._id);
@@ -264,10 +238,10 @@ test("verify many resources and verify if those many resources are deleted", (do
     expect(fetchedResourceCheck.videoList.length).toBe(0);
     expect(fetchedResourceCheck.resources.length).toBe(0);
 
-    let manySize = 10;
-    let articleId = [];
-    let videoId = [];
-    let resourceId = [];
+    const manySize = 10;
+    const articleId = [];
+    const videoId = [];
+    const resourceId = [];
 
     for (let i = 0; i < manySize; i++) {
       const titleArticle = "Test Article" + i;
