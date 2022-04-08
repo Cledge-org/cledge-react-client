@@ -168,7 +168,7 @@ test("update resources and verify if the resources are deleted", (done) => {
 });
 
 
-test("verify resources and verify if those resources are deleted", (done) => {
+test("should verify resources and verify if those resources are deleted", (done) => {
   const callback = async () => {
     // checks if there is anything in the database at the beginning of test
     const fetchedResourceCheck = await getResourcesInfo();
@@ -230,7 +230,7 @@ test("verify resources and verify if those resources are deleted", (done) => {
 });
 
 
-test("verify many resources and verify if those many resources are deleted", (done) => {
+test("should verify many resources and verify if those many resources are deleted", (done) => {
   const callback = async () => {
     // checks if there is anything in the database at the beginning of test
     const fetchedResourceCheck = await getResourcesInfo();

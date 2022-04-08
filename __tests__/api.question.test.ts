@@ -133,7 +133,7 @@ test("should add one question and get that one added question exactly", (done) =
     callback();
 });
 
-test("verify questions given an ObjectId", (done) => {
+test("should verify questions when given an ObjectId", (done) => {
     async function callback() {
         // Test put functionality given an ObjectId
         await putQuestionList(questionObjectId, testQuestionListDb1);
@@ -167,7 +167,7 @@ test("verify questions given an ObjectId", (done) => {
     callback();
 });
 
-test("update question", (done) => {
+test("should update the question and get that one updated question", (done) => {
     async function callback() {
         // Test put functionality - add the elements in the database
         await putQuestionList(questionObjectId, testQuestionListDb1);
@@ -215,7 +215,7 @@ test("update question", (done) => {
     callback();
 });
 
-test("verify many questions", (done) => {
+test("should verify many questions", (done) => {
     function createQuestion(i: string, questionId: ObjectId): {
         userResponse: UserResponse, question: Question, questionChunk: QuestionChunk,
         questionList: QuestionList, questionListDb: QuestionList_Db, questionChunkDb: QuestionChunk_Db

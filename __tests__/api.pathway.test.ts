@@ -335,7 +335,7 @@ test("should update the pathway and get that one updated pathway", (done) => {
   callback();
 });
 
-test("verify many pathways", (done) => {
+test("should verify many pathways", (done) => {
   function createPathway(i: string, pathwayId: ObjectId, moduleId: ObjectId): {
     pathwayDb: Pathway_Db, contentProgress: ContentProgress, pathwayModuleDb: PathwayModule_Db, personalizedContent: PersonalizedContent,
     pathway: Pathway, pathwayProgress: PathwayProgress, pathwayModule: PathwayModule, moduleProgress: ModuleProgress
