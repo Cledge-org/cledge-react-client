@@ -28,12 +28,14 @@ import AuthFunctions from "./api/auth/firebase-auth";
 import { ORIGIN_URL } from "../config";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
+import { useRouter } from "next/router";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    const questionResponses = await fetch(
-      `${ORIGIN_URL}/api/get-question-progress`
-    );
+    const questionResponses = await fetch(`${ORIGIN_URL}/api/get-activities`, {
+      method: "POST",
+      body: JSON.stringify({}),
+    });
     // const questionResponses = await fetch(
     //   `${ORIGIN_URL}/api/get-question-progress`
     // );
@@ -50,31 +52,17 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 };
 const Metrics: NextApplicationPage<{
-  questionData: QuestionList[];
+  activities: any;
   userTags: string[];
   userActivities: any;
   questionResponses: UserResponse[];
-}> = ({ questionData, userTags, questionResponses, userActivities }) => {
+}> = ({ activities, userTags, questionResponses, userActivities }) => {
   const session = useSession();
   const [currPage, setCurrPage] = useState("all");
   const [percentageData, setPercentageData] = useState({
     allLists: 0,
     lists: [],
   });
-  const [currUserTags, setCurrUserTags] = useState(userTags);
-  const onPercentageUpdate = () => {
-    setPercentageData({
-      allLists: calculateTotalPercent(questionData),
-      lists: questionData.map(({ chunks }) => {
-        return calculatePercentComplete(chunks);
-      }),
-    });
-  };
-  useEffect(() => {
-    //resetResponses();
-    onPercentageUpdate();
-    console.log(percentageData.lists);
-  }, []);
   const isNotEmpty = (element: any) => {
     return (
       element !== undefined &&
@@ -104,14 +92,6 @@ const Metrics: NextApplicationPage<{
     });
     return Math.round(total === 0 ? 0 : (finished / total) * 100);
   };
-  const calculateTotalPercent = (lists: QuestionList[]) => {
-    let finished = 0;
-    let total = lists.length * 100;
-    lists.forEach((item, index) => {
-      finished += calculatePercentComplete(item.chunks);
-    });
-    return Math.round((finished / total) * 100);
-  };
   console.log(percentageData.lists);
   const ECResponses = questionResponses.find(({ questionId }) => {
     return questionId === "Extracurriculars";
@@ -129,7 +109,7 @@ const Metrics: NextApplicationPage<{
           title="Metrics Overview"
           percentComplete={undefined}
         />
-        {questionData.map((list, index) => {
+        {/* {questionData.map((list, index) => {
           if (list.name === "Extracurriculars" || list.name === "Academics") {
             return (
               <DropDownTab
@@ -141,7 +121,21 @@ const Metrics: NextApplicationPage<{
               />
             );
           }
-        })}
+        })} */}
+        <DropDownTab
+          isAll
+          chunkList={[]}
+          onClick={(chunk) => setCurrPage("Extracurriculars")}
+          title={"Extracurriculars"}
+          percentComplete={undefined}
+        />
+        <DropDownTab
+          isAll
+          chunkList={[]}
+          onClick={(chunk) => setCurrPage("Academics")}
+          title={"Academics"}
+          percentComplete={undefined}
+        />
       </div>
       <div
         className="d-flex"
@@ -219,41 +213,13 @@ const Metrics: NextApplicationPage<{
                 style={{ borderBottom: "1px solid #BBBBC0" }}
                 className="pb-5"
               >
-                <div className="d-flex flex-row align-items-center w-100 cl-dark-text mb-2">
-                  <strong style={{ fontSize: "1.6em" }}>Overall Tier</strong>
-                  <button
-                    style={{
-                      outline: "none",
-                      border: "none",
-                      backgroundColor: "transparent",
-                      fontSize: "1.8em",
-                      color: "black",
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faInfoCircle} />
-                  </button>
-                </div>
+                <SubTitle title="Overall Tier" isDivider />
                 <div className="d-flex flex-column">
                   <TierIndicatorAndTips tier={7} isOverall />
                 </div>
               </div>
-              <div className="d-flex flex-row align-items-center w-100 cl-dark-text mt-5 mb-2">
-                <strong style={{ fontSize: "1.6em" }}>
-                  Individual Activities
-                </strong>
-                <button
-                  style={{
-                    outline: "none",
-                    border: "none",
-                    backgroundColor: "transparent",
-                    fontSize: "1.8em",
-                    color: "black",
-                  }}
-                >
-                  <FontAwesomeIcon icon={faInfoCircle} />
-                </button>
-              </div>
-              {questionData
+              <SubTitle title="Individual Activities" />
+              {/* {questionData
                 .find(({ name }) => name === "Extracurriculars")
                 .chunks.map((chunk) => {
                   return ECResponses.response[chunk.name].map(
@@ -278,7 +244,7 @@ const Metrics: NextApplicationPage<{
                       );
                     }
                   );
-                })}
+                })} */}
             </div>
           </div>
         ) : (
@@ -322,7 +288,7 @@ const ActivityDropdown = ({
       <div
         className={`metrics-dropdown-menu-${
           isExpanded ? "expanded" : "closed"
-        } pt-2 px-2 flex-column align-items-center justify-content-start mb-3`}
+        } pt-2 px-2 flex-column align-items-center justify-content-start mb-3 pb-3`}
         style={{
           backgroundColor: "white",
           borderTop: "none",
@@ -508,6 +474,93 @@ const TierRange = ({
     </div>
   );
 };
+const SubTitle = ({
+  title,
+  isDivider,
+}: {
+  title: string;
+  isDivider?: boolean;
+}) => {
+  const router = useRouter();
+  const [isExpanded, setIsExpanded] = useState(false);
+  return (
+    <div className="progress-dropdown-container mt-2" style={{ width: "100%" }}>
+      <div
+        className={`d-flex flex-row align-items-center w-100 cl-dark-text ${
+          isDivider ? "mb-2" : "mt-5 mb-2"
+        }`}
+      >
+        <strong style={{ fontSize: "1.6em" }}>{title}</strong>
+        <button
+          style={{
+            outline: "none",
+            border: "none",
+            backgroundColor: "transparent",
+            fontSize: "1.7em",
+            color: "black",
+          }}
+          onClick={() => {
+            setIsExpanded(!isExpanded);
+          }}
+          className="center-child"
+        >
+          <img src="/images/info-circle.svg" />
+        </button>
+      </div>
+      <div
+        className={`progress-dropdown-menu-${
+          isExpanded ? "expanded" : "closed"
+        } ${isDivider ? "mb-2" : ""}`}
+        style={{ backgroundColor: "transparent" }}
+      >
+        <div
+          className={`position-relative d-flex overflow-hidden flex-column align-items-center justify-content-around px-3 pt-3 shadow-sm soft-gray-border`}
+          style={{
+            height: "30vh",
+            borderRadius: "10px",
+            width: "50%",
+            marginTop: 0,
+          }}
+        >
+          <div
+            style={{
+              textAlign: "left",
+              width: "100%",
+              fontSize: "1.3em",
+            }}
+            className={``}
+          >
+            <strong style={{ fontSize: "1.3em" }}>
+              Already tried some of our tips?
+            </strong>
+            <br />
+            <br />
+            Update your profile to help us reaccess your tier and provide more
+            personalized tips.
+          </div>
+
+          <div
+            className="position-absolute top-0 w-100"
+            style={{ left: 0, backgroundColor: "#070452", height: "1vh" }}
+          />
+          <div className="d-flex flex-row py-3 align-items-cetner justify-content-end px-2 w-100">
+            <button
+              onClick={() => {
+                router.push({
+                  pathname: "/progress",
+                  query: { page: "Extracurriculars", chunk: "All Activities" },
+                });
+              }}
+              className="cl-btn-clear"
+            >
+              Update my profile
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 const TipsCard = ({
   title,
   tips,
@@ -517,6 +570,7 @@ const TipsCard = ({
   tips: string[];
   isOverall?: boolean;
 }) => {
+  const router = useRouter();
   return (
     <div
       className={`position-relative d-flex overflow-hidden flex-${
@@ -564,7 +618,17 @@ const TipsCard = ({
       </div>
       {!isOverall ? (
         <div className="d-flex flex-row py-3 align-items-cetner justify-content-end px-2 w-100">
-          <button className="cl-btn-clear">Update my profile</button>
+          <button
+            onClick={() => {
+              router.push({
+                pathname: "/progress",
+                query: { page: "Extracurriculars", chunk: "All Activities" },
+              });
+            }}
+            className="cl-btn-clear"
+          >
+            Update my profile
+          </button>
         </div>
       ) : null}
     </div>

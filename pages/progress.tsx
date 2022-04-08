@@ -23,6 +23,7 @@ import AuthFunctions from "./api/auth/firebase-auth";
 import { ORIGIN_URL } from "../config";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
+import { useRouter } from "next/router";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -47,6 +48,7 @@ const Progress: NextApplicationPage<{
   questionResponses: UserResponse[];
 }> = ({ questionData, userTags, questionResponses }) => {
   const session = useSession();
+  const router = useRouter();
   const [currPage, setCurrPage] = useState({ page: "all", chunk: "" });
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
   const [percentageData, setPercentageData] = useState({
@@ -65,7 +67,14 @@ const Progress: NextApplicationPage<{
   useEffect(() => {
     //resetResponses();
     onPercentageUpdate();
-    console.log(percentageData.lists);
+    if (
+      router.query.page &&
+      typeof router.query.page === "string" &&
+      typeof router.query.chunk === "string"
+    ) {
+      setCurrPage({ page: router.query.page, chunk: router.query.chunk });
+    }
+    console.log(router.query);
   }, []);
   const isNotEmpty = (element: any) => {
     return (
