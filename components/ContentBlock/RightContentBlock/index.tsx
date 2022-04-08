@@ -31,7 +31,7 @@ const RightBlock = ({
       <Fade direction="right">
         <Row justify="space-between" align="middle" id={id}>
           <Col lg={11} md={11} sm={11} xs={24}>
-            <ContentWrapper id={id}>
+            <ContentWrapper id={id} className="container-margin">
               <h6>{title}</h6>
               <Content>{content}</Content>
               <ButtonWrapper>
@@ -61,13 +61,13 @@ const RightBlock = ({
               </ButtonWrapper>
             </ContentWrapper>
           </Col>
-          {id === "intro" ? (
-            <VideoWrapper id="videoWrapper">{video}</VideoWrapper>
-          ) : (
-            <IconWrapper>
+          <Col lg={11} md={11} sm={11} xs={24}>
+            {id === "intro" ? (
+              <VideoWrapper id="videoWrapper">{video}</VideoWrapper>
+            ) : (
               <SvgIcon src={icon} width="100%" height="100%" />
-            </IconWrapper>
-          )}
+            )}
+          </Col>
         </Row>
       </Fade>
     </RightBlockContainer>

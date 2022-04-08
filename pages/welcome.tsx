@@ -10,6 +10,9 @@ import PartnerContent from "../content/PartnerContent.json";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Footer from "../components/common/Footer";
+import ECDropDown from "../components/question_components/ec_dropdown_question";
+import { Button } from "../components/common/Button";
+import { Fade } from "react-awesome-reveal";
 
 const Contact = dynamic(() => import("../components/ContactForm"));
 const MiddleBlock = dynamic(() => import("../components/MiddleBlock"));
@@ -19,25 +22,35 @@ const ContentBlock = dynamic(() => import("../components/ContentBlock"));
 const FullWidthContainer = styled("div")`
   position: relative;
   width: 100vw;
-  left: -90px;
-  padding: 0px 90px;
-
-  @media only screen and (max-width: 1024px) {
-    left: -60px;
-    padding: 0px 60px;
-  }
-
-  @media only screen and (max-width: 768px) {
-    left: -18px;
-    padding: 0px 18px;
-  }
 `;
 
 const Intro = styled(FullWidthContainer)`
   background: center / cover url("images/landing_bg.svg") no-repeat;
-  height: 100vh;
+  min-height: 110vh;
+  position: relative;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 90px 30px 90px;
+
+  @media only screen and (max-width: 767px) {
+    display: block;
+    padding-top: 0;
+  }
+
+  & > div:first-child {
+    margin-bottom: 30px;
+    @media only screen and (min-width: 767px) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+  }
+
+  section {
+    max-width: 1500px;
+  }
 
   #intro h6,
   #intro p {
@@ -55,20 +68,15 @@ const Metric = styled(FullWidthContainer)`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  padding: 30px 90px;
+  padding: 30px 150px;
 
-  @media only screen and (max-width: 1024px) {
-    padding: 30px 60px;
-  }
-
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 767px) {
     padding: 30px 18px;
   }
 
   & > div {
-    width: 33.3%;
-    flex: 1 0 auto;
     padding: 20px;
+    max-width: 400px;
 
     @media only screen and (max-width: 767px) {
       width: 100%;
@@ -90,6 +98,157 @@ const Partner = styled(FullWidthContainer)`
   margin-top: 4rem;
 `;
 
+export const SubscribeWrapper = styled("div")`
+  background: #0b1142;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  padding: 3rem;
+  border-radius: 10px;
+  max-width: 1500px;
+
+  @media only screen and (max-width: 767px) {
+    width: 100%;
+    position: static;
+  }
+
+  & > * {
+    color: white !important;
+  }
+
+  & .input > div {
+    margin: 5px 10px;
+  }
+
+  label {
+    text-align: left;
+    color: grey !important;
+    width: 100%;
+  }
+
+  & button:last-child {
+    padding: 0 10px;
+    flex: 1 1 auto !important;
+    margin: 5px 10px;
+    height: 62px;
+    @media only screen and (max-width: 767px) {
+      margin: 24px 10px;
+    }
+  }
+`;
+export const BlobBlock = styled("div")`
+  background: center / cover url("images/gradient-blob.svg") no-repeat;
+
+  button {
+    padding: 1rem;
+  }
+
+  section {
+    max-width: 1500px;
+    height: 100%;
+  }
+
+  #intro h6,
+  #intro p {
+    color: white;
+  }
+
+  #intro h6 {
+    font-weight: 800;
+    font-size: 48px;
+  }
+
+  .BlobContainer {
+    padding: 5rem 18px;
+
+    button {
+      width: 100%;
+    }
+
+    p {
+      margin-top: 1rem;
+    }
+
+    & img {
+      width: 100%;
+      margin: 3rem 0;
+    }
+  }
+
+  @media only screen and (min-width: 767px) {
+    min-height: 75vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 90px;
+
+    & > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    
+    .BlobContainer {
+      width: 80vw;
+      height: 50vh;
+      border: 1px solid transparent;
+      border-radius: 15px;
+      background-color: rgba(255, 255, 255, 0.3);
+      
+      button {
+        width: 20vw;
+      }
+
+      & img {
+        width: 100%;
+      }
+
+      div:last-child {
+        position: absolute;
+      }
+    }
+
+    & > div > div {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+  }
+`;
+
+export const MediaButton = styled("button")`
+  background: #0b1142;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  color: white;
+  height: 50px;
+  padding: 2rem 1.5rem;
+  outline: none;
+  border-color: transparent;
+  border-radius: 5px;
+  margin: 10px;
+
+  & > * {
+    color: white !important;
+  }
+
+  & > img {
+    margin-right: 10px;
+  }
+
+  @media only screen and (max-width: 767px) {
+    width: 60%;
+  }
+`;
+
 const Home = () => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
@@ -97,15 +256,62 @@ const Home = () => {
   return (
     <>
       <Container>
-        <Intro>
-          <ContentBlock
-            type="right"
-            title={IntroContent.title}
-            content={IntroContent.text}
-            button={IntroContent.button}
-            video={<YoutubeEmbed videoId="Bly0QbY3fV4" />}
-            id="intro"
-          />
+        <Intro className="container-margin">
+          <div className="w-100">
+            <ContentBlock
+              type="right"
+              title={IntroContent.title}
+              content={IntroContent.text}
+              button={IntroContent.button}
+              video={<YoutubeEmbed videoId="Bly0QbY3fV4" />}
+              id="intro"
+            />
+          </div>
+          <SubscribeWrapper>
+            <h2>Get started with our free resources</h2>
+            <p>
+              Get monthly access to free live webinars & tips from college
+              advisors!
+            </p>
+            <div className="input d-flex flex-row flex-wrap align-items-end justify-content-evenly">
+              <div className="flex-fill">
+                <label>I am a</label>
+                <ECDropDown isForWaitlist valuesList={["Parent", "Student"]} />
+              </div>
+              <div className="flex-fill">
+                <label>Email</label>
+                <input
+                  type="text"
+                  style={{ color: "black" }}
+                  placeholder="Your email"
+                />
+              </div>
+              <Button
+                key="subscribe-btn"
+                color="#F7BC76"
+                fixedWidth={true}
+                onClick={() => {}}>
+                Subscribe to our monthly tips
+              </Button>
+            </div>
+          </SubscribeWrapper>
+          <div
+            style={{
+              bottom: "5vh",
+              left: 0,
+              width: "100%",
+              margin: "30px 0",
+            }}
+            className="d-flex flex-row flex-wrap justify-content-center align-items-center">
+            <MediaButton>
+              <img src="images/whatsapp.svg" />
+              WhatsApp Community
+            </MediaButton>
+            <MediaButton>
+              <img src="images/discord.svg" />
+              Discord Community
+            </MediaButton>
+          </div>
         </Intro>
         <MiddleBlock
           id="goal"
@@ -159,11 +365,32 @@ const Home = () => {
             content={PartnerContent.text}
           />
         </Partner>
-        <Contact
-          title={ContactContent.title}
-          content={ContactContent.text}
-          id="contact"
-        />
+        <BlobBlock>
+          <Fade direction="right" className="center-child w-100">
+            <div className="BlobContainer">
+              <div style={{ color: "white" }}>
+                <strong style={{ fontSize: "2em" }}>
+                  Ready to take the next step towards your dreams?
+                </strong>
+                <p style={{ color: "white" }}>
+                  Join our Insider Program to get first access to the 24/7
+                  college chat service
+                </p>
+              </div>
+              <img src="images/insider-blob.svg" />
+              <div
+                style={{ bottom: "-2vh", left: "5vw" }}>
+                <Button
+                  key="subscribe-btn"
+                  color="#F7BC76"
+                  fixedWidth={false}
+                  onClick={() => {}}>
+                  Join Insider Program for Free ➜
+                </Button>
+              </div>
+            </div>
+          </Fade>
+        </BlobBlock>
       </Container>
       <Footer
         onFeatureClick={(featureIndex) => {

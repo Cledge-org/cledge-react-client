@@ -79,6 +79,7 @@ export default function QuestionECSubpage({
             userId: session.data.user.uid,
           }),
         });
+        // fetch(`${ORIGIN_URL}/api/put-activities`)
         store.dispatch(updateQuestionResponsesAction(userResponses));
         setIsAdding(false);
         setIsEditing(false);

@@ -7,7 +7,7 @@ import { Button } from "../common/Button";
 import Block from "../Block";
 import Input from "../common/Input";
 import TextArea from "../common/TextArea";
-import { ContactContainer, FormGroup, Span, ButtonContainer } from "./styles";
+import { ContactContainer, FormGroup, Span, ButtonContainer } from "./styles"
 
 const Contact = ({ title, content, id }: ContactProps) => {
   const { values, errors, handleChange, handleSubmit } = useForm(
@@ -28,7 +28,8 @@ const Contact = ({ title, content, id }: ContactProps) => {
       <Row justify="space-between" align="middle">
         <Col lg={12} md={11} sm={24} xs={24}>
           <Slide direction="left">
-            <Block title={title} content={content} />
+              <h6>{title}</h6>
+                <p>{content}</p>
           </Slide>
         </Col>
         <Col lg={12} md={12} sm={24} xs={24}>

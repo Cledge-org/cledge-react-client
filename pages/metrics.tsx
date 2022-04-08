@@ -32,17 +32,15 @@ import { useRouter } from "next/router";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    const questionResponses = await fetch(`${ORIGIN_URL}/api/get-activities`, {
+    const session = getSession(ctx);
+    const activities = await fetch(`${ORIGIN_URL}/api/get-activities`, {
       method: "POST",
-      body: JSON.stringify({}),
+      body: JSON.stringify({ activitiesId: (await session).user.uid }),
     });
-    // const questionResponses = await fetch(
-    //   `${ORIGIN_URL}/api/get-question-progress`
-    // );
-    let userProgressJSON = await questionResponses.json();
+    let userActivitiesJSON = await activities.json();
     return {
       props: {
-        ...userProgressJSON,
+        activities: userActivitiesJSON,
       },
     };
   } catch (err) {
@@ -52,50 +50,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 };
 const Metrics: NextApplicationPage<{
-  activities: any;
+  activities: Activities;
   userTags: string[];
-  userActivities: any;
   questionResponses: UserResponse[];
-}> = ({ activities, userTags, questionResponses, userActivities }) => {
+}> = ({ activities, userTags, questionResponses }) => {
   const session = useSession();
   const [currPage, setCurrPage] = useState("all");
-  const [percentageData, setPercentageData] = useState({
-    allLists: 0,
-    lists: [],
-  });
-  const isNotEmpty = (element: any) => {
-    return (
-      element !== undefined &&
-      element !== null &&
-      element !== "" &&
-      element !== []
-    );
-  };
-  const calculatePercentComplete = (chunks: QuestionChunk[]): number => {
-    let total: number = 0;
-    let finished: number = 0;
-    chunks.map((chunk) => {
-      total += chunk.questions.length;
-      chunk.questions.forEach((question) => {
-        let userQuestionIds: string[] = questionResponses.map(
-          ({ questionId }) => questionId
-        );
-        if (
-          userQuestionIds.includes(question._id) &&
-          isNotEmpty(
-            questionResponses[userQuestionIds.indexOf(question._id)].response
-          )
-        ) {
-          finished++;
-        }
-      });
-    });
-    return Math.round(total === 0 ? 0 : (finished / total) * 100);
-  };
-  console.log(percentageData.lists);
-  const ECResponses = questionResponses.find(({ questionId }) => {
-    return questionId === "Extracurriculars";
-  });
   return (
     <div
       className="container-fluid d-flex flex-row px-0"
@@ -172,7 +132,11 @@ const Metrics: NextApplicationPage<{
                     height: "20vh",
                   }}
                 >
-                  <TierRange tier={7} isOverall isOverview />
+                  <TierRange
+                    tier={activities?.overallTier}
+                    isOverall
+                    isOverview
+                  />
                 </div>
               </div>
               <div className="mt-2 ms-5" style={{ width: "50%" }}>
@@ -215,36 +179,22 @@ const Metrics: NextApplicationPage<{
               >
                 <SubTitle title="Overall Tier" isDivider />
                 <div className="d-flex flex-column">
-                  <TierIndicatorAndTips tier={7} isOverall />
+                  <TierIndicatorAndTips
+                    tier={activities?.overallTier}
+                    isOverall
+                  />
                 </div>
               </div>
               <SubTitle title="Individual Activities" />
-              {/* {questionData
-                .find(({ name }) => name === "Extracurriculars")
-                .chunks.map((chunk) => {
-                  return ECResponses.response[chunk.name].map(
-                    (response, index) => {
-                      const titleQuestion = response.find(
-                        ({ questionId }) =>
-                          questionId ===
-                          chunk.questions.find(
-                            ({ question }) => question === "Title"
-                          )?._id
-                      );
-                      return (
-                        <ActivityDropdown
-                          title={
-                            titleQuestion.response
-                              ? "No title given"
-                              : titleQuestion.response
-                          }
-                          content="Great job"
-                          tier={7}
-                        />
-                      );
-                    }
-                  );
-                })} */}
+              {activities?.activities?.map((activity) => {
+                return (
+                  <ActivityDropdown
+                    title={"TBD"}
+                    content={activity.description}
+                    tier={activity.tier}
+                  />
+                );
+              })}
             </div>
           </div>
         ) : (
@@ -295,11 +245,7 @@ const ActivityDropdown = ({
         }}
       >
         <div className="py-3 mb-5" style={{ fontSize: "1.2em" }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Amet ut
-          porttitor vestibulum orci aliquam sapien, risus, vitae. Tincidunt non
-          quis adipiscing odio nec at eget. Sit ipsum, lobortis elit facilisi
-          porttitor aliquet sed molestie eu. Bibendum etiam id turpis fringilla
-          orci urna, iaculis.
+          {content}
         </div>
         <div className="d-flex flex-row align-items-start justify-content-between w-100">
           <TierIndicatorAndTips tier={tier} />
