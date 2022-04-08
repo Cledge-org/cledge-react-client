@@ -45,6 +45,23 @@ const testResource2: CardResource = {
   description: "Test Description 2"
 };
 
+async function deleteResources(articleId, videoId, resourceId) {
+  // clears resource database
+  for (let i = 0; i < articleId.length; i++)
+    await putResource(articleId[i], undefined, undefined);
+  for (let i = 0; i < videoId.length; i++)
+    await putResource(videoId[i], undefined, undefined);
+  for (let i = 0; i < resourceId.length; i++)
+    await putResource(resourceId[i], undefined, undefined);
+
+  // checks that database is empty
+  const fetchedResourcesCheck = await getResourcesInfo();
+  expect(fetchedResourcesCheck.articles.length).toBe(0);
+  expect(fetchedResourcesCheck.videoList.length).toBe(0);
+  expect(fetchedResourcesCheck.resources.length).toBe(0);
+
+}
+
 test("should add one resource and get that one added resource exactly and verify if that resource is deleted", (done) => {
   const callback = async () => {
     // checks if there is anything in the database at the beginning of test
@@ -74,26 +91,15 @@ test("should add one resource and get that one added resource exactly and verify
 
     expect(fetchedResources.articles[0]).toMatchObject(article);
     articleId.push(fetchedResources.articles[0]._id);
-    
+
     expect(fetchedResources.videoList[0]).toMatchObject(video);
     videoId.push(fetchedResources.videoList[0]._id);
-    
+
     expect(fetchedResources.resources[0]).toMatchObject(resource);
     resourceId.push(fetchedResources.resources[0]._id);
 
-    // deletes element in the database
-    for (let i = 0; i < articleId.length; i++)
-      await putResource(articleId[i], undefined, undefined);
-    for (let i = 0; i < videoId.length; i++)
-      await putResource(videoId[i], undefined, undefined);
-    for (let i = 0; i < resourceId.length; i++)
-      await putResource(resourceId[i], undefined, undefined);
-
-    // checks that database is empty
-    const fetchedResourcesCheck = await getResourcesInfo();
-    expect(fetchedResourcesCheck.articles.length).toBe(0);
-    expect(fetchedResourcesCheck.videoList.length).toBe(0);
-    expect(fetchedResourcesCheck.resources.length).toBe(0);
+    // clears the resource database and checks if database is empty
+    await deleteResources(articleId, videoId, resourceId);
     done();
   };
   callback();
@@ -161,31 +167,20 @@ test("update resources and verify if the resources are deleted", (done) => {
       hasVideo = true;
     }
     videoId.push(actualVideos[0]._id);
-    
+
     let hasResource = false;
     if (actualResources[0]._id.equals(updateResource._id)) {
       expect(actualResources[0]).toEqual(updateResource);
       hasResource = true;
     }
     resourceId.push(actualResources[0]._id);
-    
+
     expect(hasArticle).toEqual(true);
     expect(hasVideo).toEqual(true);
     expect(hasResource).toEqual(true);
 
-    // clears the resource database
-    for (let i = 0; i < articleId.length; i++)
-      await putResource(articleId[i], undefined, undefined);
-    for (let i = 0; i < videoId.length; i++)
-      await putResource(videoId[i], undefined, undefined);
-    for (let i = 0; i < resourceId.length; i++)
-      await putResource(resourceId[i], undefined, undefined);
-
-    // checks that database is empty
-    const fetchedResourceChecks = await getResourcesInfo();
-    expect(fetchedResourceChecks.articles.length).toBe(0);
-    expect(fetchedResourceChecks.videoList.length).toBe(0);
-    expect(fetchedResourceChecks.resources.length).toBe(0);
+    // clears the resource database and checks if database is empty
+    await deleteResources(articleId, videoId, resourceId);
     done();
   };
   callback();
@@ -213,7 +208,7 @@ test("verify resources and verify if those resources are deleted", (done) => {
     await putResource(video1Id, video, "video");
     let resource1Id = new ObjectId();
     await putResource(resource1Id, resource, "resource");
-    
+
     expectedArticle._id = article1Id;
     expectedVideo._id = video1Id;
     expectedResource._id = resource1Id;
@@ -222,7 +217,7 @@ test("verify resources and verify if those resources are deleted", (done) => {
     let actualArticles = actualResource.articles;
     let actualVideos = actualResource.videoList;
     let actualResources = actualResource.resources;
-  
+
     let articleId = [];
     let videoId = [];
     let resourceId = [];
@@ -240,32 +235,21 @@ test("verify resources and verify if those resources are deleted", (done) => {
       hasVideo = true;
     }
     videoId.push(actualVideos[0]._id);
-    
+
     let hasResource = false;
-    
+
     if (actualResources[0]._id.equals(expectedResource._id)) {
       expect(actualResources[0]).toEqual(expectedResource);
       hasResource = true;
     }
     resourceId.push(actualResources[0]._id);
-    
+
     expect(hasArticle).toEqual(true);
     expect(hasVideo).toEqual(true);
     expect(hasResource).toEqual(true);
 
-    // clears resource database
-    for (let i = 0; i < articleId.length; i++)
-      await putResource(articleId[i], undefined, undefined);
-    for (let i = 0; i < videoId.length; i++)
-      await putResource(videoId[i], undefined, undefined);
-    for (let i = 0; i < resourceId.length; i++)
-      await putResource(resourceId[i], undefined, undefined);
-
-    // checks that the database is empty
-    const fetchedResourcesCheck = await getResourcesInfo();
-    expect(fetchedResourcesCheck.articles.length).toBe(0);
-    expect(fetchedResourcesCheck.videoList.length).toBe(0);
-    expect(fetchedResourcesCheck.resources.length).toBe(0);
+    // clears the resource database and checks if database is empty
+    await deleteResources(articleId, videoId, resourceId);
     done();
   };
   callback();
@@ -279,7 +263,7 @@ test("verify many resources and verify if those many resources are deleted", (do
     expect(fetchedResourceCheck.articles.length).toBe(0);
     expect(fetchedResourceCheck.videoList.length).toBe(0);
     expect(fetchedResourceCheck.resources.length).toBe(0);
-    
+
     let manySize = 10;
     let articleId = [];
     let videoId = [];
@@ -292,14 +276,14 @@ test("verify many resources and verify if those many resources are deleted", (do
         name: titleArticle,
         description: "Test Description " + i
       };
-      
+
       const titleVideo = "Test Video " + i;
       const video: CardVideo = {
         source: "Test Source" + i,
         name: titleVideo,
         description: "Test Description" + i
       };
-      
+
       const titleResource = "Test Resource " + i;
       const resource: CardResource = {
         source: "Test Source " + i,
@@ -349,18 +333,8 @@ test("verify many resources and verify if those many resources are deleted", (do
       expect(fetchedResources.resources[i]).toMatchObject(resource);
     }
 
-    // clears resource datbase
-    for (let i = 0; i < manySize; i++) {
-      await putResource(articleId.pop(), undefined, undefined);
-      await putResource(videoId.pop(), undefined, undefined);
-      await putResource(resourceId.pop(), undefined, undefined);
-    }
-
-    // checks that database is empty
-    const fetchedResourceChecks = await getResourcesInfo();
-    expect(fetchedResourceChecks.articles.length).toBe(0);
-    expect(fetchedResourceChecks.videoList.length).toBe(0);
-    expect(fetchedResourceChecks.resources.length).toBe(0);
+    // clears the resource database and checks if database is empty
+    await deleteResources(articleId, videoId, resourceId);
     done();
   };
   callback();

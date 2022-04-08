@@ -249,30 +249,6 @@ test("update question", (done) => {
     callback();
 });
 
-
-
-test("verify that questions are deleted so database is empty", (done) => {
-    async function callback() {
-        let [fetchedAllQuestionsLists1] = await Promise.all([getAllQuestionLists()]);
-
-        let questionListIds1 = [];
-        for (let i = 0; i < fetchedAllQuestionsLists1.length; i++) {
-            questionListIds1.push(fetchedAllQuestionsLists1[i]._id);
-        }
-
-        for (let i = 0; i < questionListIds1.length; i++) {
-            await Promise.all([
-                putQuestionList(questionListIds1[i], undefined),
-            ]);
-        }
-        [fetchedAllQuestionsLists1] = await Promise.all([getAllQuestionLists()]);
-        expect(fetchedAllQuestionsLists1.length).toBe(0);
-        done();
-    };
-    callback();
-});
-
-
 test("verify many questions", (done) => {
     function createQuestion(i: string, questionId: ObjectId): {
         userResponse: UserResponse, question: Question, questionChunk: QuestionChunk,
@@ -358,7 +334,7 @@ test("verify many questions", (done) => {
 
             await putQuestionList(questionListObjectId, questionListDb);
             await putQuestionChunk(questionChunkObjectId, questionChunkDb),
-            await putQuestion(questionId, question);
+                await putQuestion(questionId, question);
             await putQuestionResponses(userId, [questionResult.userResponse]);
         }
 
