@@ -9,7 +9,7 @@ setLogLevel("info");
 
 const serviceName = "college-search-service";
 const indexName = "college-search-index";
-const adminKey = "B6C37FA89C0A5BDD60267B82A1DC1BEF";
+const adminKey = "002FB866D4F85342A97B3D57C12D206C";
 
 const endPoint = "https://" + serviceName + ".search.windows.net/";
 
@@ -30,11 +30,14 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 export const getCollegeInfo = (): Promise<Object> => {
-    return new Promise(async(res, err) => {
+    return new Promise(async (res, err) => {
         try {
-            const searchResults = await searchClient.search(
-                // search queries
-            );
+            const searchResults = await searchClient.search("University +Washington", {
+                searchMode: "all",
+                queryType: "full",
+                top: 10
+            });
+            res(searchResults);
         } catch (e) {
             err(res);
         }
