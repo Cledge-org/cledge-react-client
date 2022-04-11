@@ -6,6 +6,7 @@ interface MCQQuestionProps {
   userAnswer: string;
   onChange: Function;
   tags: string[];
+  inEC?: boolean;
 }
 
 export default function MCQQuestion({
@@ -13,10 +14,15 @@ export default function MCQQuestion({
   userAnswer,
   onChange,
   tags,
+  inEC,
 }: MCQQuestionProps) {
   const [selected, setSelected] = useState(userAnswer?.slice());
   return (
-    <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
+    <div
+      className={`h-100 d-flex flex-column ${
+        inEC ? "align-items-start w-100" : "container-fluid align-items-center"
+      } justify-content-evenly cl-dark-text fw-bold`}
+    >
       <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
         {question.question}
       </span>
@@ -31,9 +37,9 @@ export default function MCQQuestion({
                 setSelected(op);
                 onChange(op, [tag], oldTag ? [oldTag] : []);
               }}
-              className={
+              className={`${
                 selected === op ? "mcq-answer-btn-selected" : "mcq-answer-btn"
-              }
+              } ${inEC ? "w-100" : ""}`}
             >
               {op}
             </button>

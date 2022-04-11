@@ -6,6 +6,11 @@ import { ORIGIN_URL } from "../../config";
 import { useSession } from "next-auth/react";
 import { store } from "../../utils/store";
 import { updateQuestionResponsesAction } from "../../utils/actionFunctions";
+import {
+  calculateActivityPoints,
+  calculateActivityTier,
+  calculateTotalPoints,
+} from "../../utils/metricsCalculations";
 interface QuestionECSubpageProps {
   userResponses: UserResponse[];
   isShowing: boolean;
@@ -36,6 +41,54 @@ export default function QuestionECSubpage({
       : 0
   );
   const session = useSession();
+  const getActivities = (chunkResponses): Activities => {
+    let activities = chunkResponses.map((responses) => {
+      const hoursPerWeek = parseInt(
+        responses.find(
+          ({ questionId }) => questionId === "623dfe875e2b2cf43e1b86d8"
+        ).response
+      );
+      const weeksPerYear = parseInt(
+        responses.find(
+          ({ questionId }) => questionId === "623dfe875e2b2cf43e1b86d7"
+        ).response
+      );
+      let initialObj = {
+        activityID: "???",
+        actType: responses.find(
+          ({ questionId }) => questionId === "61c6b6f2d3054b6dd0f1fc4d"
+        ).response,
+        hoursYear: hoursPerWeek * weeksPerYear,
+        yearsSpent: responses.find(
+          ({ questionId }) => questionId === "62546c01f993412f5c26c772"
+        ).response,
+        recogLevel: responses.find(
+          ({ questionId }) => questionId === "623e0e025e2b2cf43e1b86e1"
+        ).response,
+        description: responses.find(
+          ({ questionId }) => questionId === "623dfe865e2b2cf43e1b86d6"
+        ).response,
+        points: 0,
+        tier: 0,
+      };
+      initialObj.tier = calculateActivityTier(
+        hoursPerWeek,
+        weeksPerYear,
+        initialObj.yearsSpent,
+        initialObj.recogLevel
+      );
+      initialObj.points = calculateActivityPoints(initialObj.tier);
+      return initialObj;
+    });
+    const overallPoints = calculateTotalPoints(
+      activities.map(({ tier }) => tier)
+    );
+    return {
+      activities,
+      overallTier: overallPoints / 150,
+      totalPoints: overallPoints,
+    };
+  };
   if (!isShowing) {
     return null;
   }
@@ -48,11 +101,10 @@ export default function QuestionECSubpage({
         setIsEditing(false);
       }}
       onSave={async (newAnswers) => {
-        if (
-          userResponses.find(({ questionId }) => {
-            return questionId === "Extracurriculars";
-          }) === undefined
-        ) {
+        const ECResponse = userResponses?.find(({ questionId }) => {
+          return questionId === "Extracurriculars";
+        });
+        if (ECResponse === undefined) {
           userResponses.push({
             questionId: "Extracurriculars",
             response: {
@@ -60,18 +112,10 @@ export default function QuestionECSubpage({
             },
           });
         }
-        if (
-          userResponses?.find(({ questionId }) => {
-            return questionId === "Extracurriculars";
-          })?.response[chunk.name] === undefined
-        ) {
-          userResponses.find(({ questionId }) => {
-            return questionId === "Extracurriculars";
-          }).response[chunk.name] = [];
+        if (ECResponse?.response[chunk.name] === undefined) {
+          ECResponse.response[chunk.name] = [];
         }
-        userResponses.find(({ questionId }) => {
-          return questionId === "Extracurriculars";
-        }).response[chunk.name][currECIndex] = newAnswers;
+        ECResponse.response[chunk.name][currECIndex] = newAnswers;
         fetch(`${ORIGIN_URL}/api/put-question-responses`, {
           method: "POST",
           body: JSON.stringify({
@@ -79,7 +123,20 @@ export default function QuestionECSubpage({
             userId: session.data.user.uid,
           }),
         });
-        // fetch(`${ORIGIN_URL}/api/put-activities`)
+        const activities = await (
+          await fetch(`${ORIGIN_URL}/api/get-activities`, {
+            method: "POST",
+            body: JSON.stringify({ activitiesId: session.data.user.uid }),
+          })
+        ).json();
+        console.log(activities ? session.data.user.uid : null);
+        fetch(`${ORIGIN_URL}/api/put-activities`, {
+          method: "POST",
+          body: JSON.stringify({
+            activitiesId: activities ? session.data.user.uid : null,
+            acitivities: getActivities(ECResponse.response[chunk.name]),
+          }),
+        });
         store.dispatch(updateQuestionResponsesAction(userResponses));
         setIsAdding(false);
         setIsEditing(false);

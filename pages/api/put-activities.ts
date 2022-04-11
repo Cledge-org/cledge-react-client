@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getSession } from "next-auth/react";
 
 export const config = {
   api: {
@@ -10,7 +11,14 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { activitiesId, activities } = JSON.parse(req.body);
   try {
-    const result = await putActivities(activitiesId, activities);
+    const session = getSession({ req });
+    const result = await putActivities(
+      activitiesId,
+      activities,
+      (
+        await session
+      ).user.uid
+    );
     resolve.status(200).send(result);
   } catch (e) {
     resolve.status(500).send(e);
@@ -23,7 +31,8 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // are provided, will update the activities list that corresponds to the given activitiesID.
 export const putActivities = (
   activitiesId: ObjectId | undefined,
-  activities: Activities | undefined
+  activities: Activities | undefined,
+  userId: string
 ): Promise<void> => {
   if (activities !== undefined && activities._id && activitiesId) {
     // Document should not have _id field when sent to database
@@ -36,17 +45,33 @@ export const putActivities = (
         await client
           .db("metrics")
           .collection("extracurriculars")
-          .insertOne(activities);
+          .insertOne({
+            _id: new ObjectId(userId),
+            ...activities,
+          });
       } else if (activitiesId && !activities) {
         await client
           .db("metrics")
           .collection("extracurriculars")
-          .deleteOne({ _id: activitiesId });
+          .deleteOne({
+            _id:
+              activitiesId instanceof ObjectId
+                ? activitiesId
+                : new ObjectId(activitiesId),
+          });
       } else if (activitiesId && activities) {
         await client
           .db("metrics")
           .collection("extracurriculars")
-          .updateOne({ _id: activitiesId }, { $set: activities });
+          .updateOne(
+            {
+              _id:
+                activitiesId instanceof ObjectId
+                  ? activitiesId
+                  : new ObjectId(activitiesId),
+            },
+            { $set: activities }
+          );
       }
       res();
       client.close();

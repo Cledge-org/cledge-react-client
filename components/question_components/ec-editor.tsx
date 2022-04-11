@@ -7,6 +7,7 @@ import ECDropDown from "./ec_dropdown_question";
 import ECTextInputQuestion from "./ec_textinput_question";
 import ECTimeFrame from "./ec_timeframe_question";
 import CheckBoxQuestion from "./checkbox_question";
+import MCQQuestion from "./mcq_question";
 
 interface ECEditorProps {
   title?: string;
@@ -55,6 +56,41 @@ export default function ECEditor({
         {chunkQuestions.map((questionData) => {
           const { question, isConcatenable, data, type, _id } = questionData;
           console.log(userResponse);
+          if (type === "MCQ") {
+            return (
+              <MCQQuestion
+                tags={[]}
+                question={questionData}
+                inEC
+                userAnswer={
+                  isEditing &&
+                  userResponse &&
+                  userResponse.find(({ questionId }) => questionId === _id)
+                    ? userResponse.find(({ questionId }) => questionId === _id)
+                        .response
+                    : null
+                }
+                onChange={(value, newQTags, oldQTags) => {
+                  let totallyNewResponse = newResponse.slice();
+                  if (
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id
+                    )
+                  ) {
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id
+                    ).response = value;
+                  } else {
+                    totallyNewResponse.push({
+                      questionId: _id,
+                      response: value,
+                    });
+                  }
+                  setNewResponse(totallyNewResponse);
+                }}
+              />
+            );
+          }
           if (type === "CheckBox") {
             return (
               <CheckBoxQuestion

@@ -55,6 +55,7 @@ const Metrics: NextApplicationPage<{
   questionResponses: UserResponse[];
 }> = ({ activities, userTags, questionResponses }) => {
   const session = useSession();
+  console.log(activities);
   const [currPage, setCurrPage] = useState("all");
   return (
     <div
