@@ -51,7 +51,6 @@ export function getSpecificPathway(
       let modules = await Promise.all(
         pathway.modules.map((moduleId) => {
           if (pathway.name === "New Test for Faster Loading") {
-            console.error("HMM");
             console.error(moduleId);
           }
           return getSpecificModule(

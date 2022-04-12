@@ -9,11 +9,11 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { activitiesId, activities } = JSON.parse(req.body);
+  const { userId, activities } = JSON.parse(req.body);
   try {
     const session = getSession({ req });
     const result = await putActivities(
-      activitiesId,
+      userId,
       activities,
       (
         await session
@@ -30,48 +30,40 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // delete the document with the given activitiesID. If activitiesID and activities list
 // are provided, will update the activities list that corresponds to the given activitiesID.
 export const putActivities = (
-  activitiesId: ObjectId | undefined,
+  userId: string,
   activities: Activities | undefined,
-  userId: string
+  insertionId: string
 ): Promise<void> => {
-  if (activities !== undefined && activities._id && activitiesId) {
+  if (activities !== undefined && activities._id && userId) {
     // Document should not have _id field when sent to database
     delete activities._id;
   }
+  console.error(userId);
+  console.error(activities);
+  console.error(insertionId);
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
-      if (!activitiesId && activities) {
+      if (!userId && activities && insertionId) {
+        console.error("SURPRISE");
         await client
           .db("metrics")
           .collection("extracurriculars")
           .insertOne({
-            _id: new ObjectId(userId),
+            firebaseId: insertionId,
             ...activities,
           });
-      } else if (activitiesId && !activities) {
-        await client
-          .db("metrics")
-          .collection("extracurriculars")
-          .deleteOne({
-            _id:
-              activitiesId instanceof ObjectId
-                ? activitiesId
-                : new ObjectId(activitiesId),
-          });
-      } else if (activitiesId && activities) {
-        await client
-          .db("metrics")
-          .collection("extracurriculars")
-          .updateOne(
-            {
-              _id:
-                activitiesId instanceof ObjectId
-                  ? activitiesId
-                  : new ObjectId(activitiesId),
-            },
-            { $set: activities }
-          );
+      } else if (userId && !activities) {
+        await client.db("metrics").collection("extracurriculars").deleteOne({
+          firebaseId: userId,
+        });
+      } else if (userId && activities) {
+        await client.db("metrics").collection("extracurriculars").updateOne(
+          {
+            firebaseId: userId,
+          },
+          { $set: activities }
+        );
       }
       res();
       client.close();

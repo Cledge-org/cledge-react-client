@@ -1,6 +1,6 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
 
-.container-margin  {
+.container-margin {
   @media only screen and (max-width: 767px) {
     padding-left: 18px !important;
     padding-right: 18px !important;
@@ -41,6 +41,7 @@ $cl-pink-purple: #bc5090;
 $cl-orange-red: #ff6361;
 $cl-light-yellow: #f8e74c;
 $cl-soft-gray: #e0dfe8;
+$cl-super-light-gray: #fbfcff;
 
 a {
   color: inherit;
@@ -52,6 +53,9 @@ a {
 }
 .soft-gray-border {
   border: 1px solid $cl-soft-gray;
+}
+.bg-cl-super-light-gray {
+  background-color: $cl-super-light-gray;
 }
 .bg-dark-blue {
   background-color: $cl-dark-blue;

@@ -35,9 +35,14 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const session = getSession(ctx);
     const activities = await fetch(`${ORIGIN_URL}/api/get-activities`, {
       method: "POST",
-      body: JSON.stringify({ activitiesId: (await session).user.uid }),
+      body: JSON.stringify({ userId: (await session).user.uid }),
     });
-    let userActivitiesJSON = await activities.json();
+    let userActivitiesJSON = {};
+    try {
+      userActivitiesJSON = await activities.json();
+    } catch (e) {
+      userActivitiesJSON = {};
+    }
     return {
       props: {
         activities: userActivitiesJSON,
@@ -87,14 +92,14 @@ const Metrics: NextApplicationPage<{
           isAll
           chunkList={[]}
           onClick={(chunk) => setCurrPage("Extracurriculars")}
-          title={"Extracurriculars"}
+          title={"Extracurricular Metrics"}
           percentComplete={undefined}
         />
         <DropDownTab
           isAll
           chunkList={[]}
           onClick={(chunk) => setCurrPage("Academics")}
-          title={"Academics"}
+          title={"Academics Metrics"}
           percentComplete={undefined}
         />
       </div>
@@ -218,7 +223,8 @@ const ActivityDropdown = ({
   return (
     <div className="progress-dropdown-container mt-2" style={{ width: "100%" }}>
       <button
-        className="progress-dropdown-btn metrics-dropdown-btn"
+        className="progress-dropdown-btn metrics-dropdown-btn bg-cl-super-light-gray"
+        style={{ backgroundColor: "#FBFCFF" }}
         onClick={() => {
           setIsExpanded(!isExpanded);
         }}
@@ -241,7 +247,6 @@ const ActivityDropdown = ({
           isExpanded ? "expanded" : "closed"
         } pt-2 px-2 flex-column align-items-center justify-content-start mb-3 pb-3`}
         style={{
-          backgroundColor: "white",
           borderTop: "none",
         }}
       >
@@ -274,7 +279,15 @@ const TierIndicatorAndTips = ({
           title={
             "You are seasoned at this activity, but you can do even better! To increase your tier, try tips below."
           }
-          tips={["Ayo", "WAZZZup"]}
+          tips={[
+            tier >= 1 && tier <= 3
+              ? "Need further development in this category"
+              : tier >= 4 && tier <= 6
+              ? "Good extracurriculars, but you can do more!"
+              : tier >= 7 && tier <= 8
+              ? "Great extracurriculars!"
+              : "Fantastic extracurriculars! You definitely know what you’re doing!",
+          ]}
         />
       </div>
     </>
@@ -458,7 +471,7 @@ const SubTitle = ({
         className={`progress-dropdown-menu-${
           isExpanded ? "expanded" : "closed"
         } ${isDivider ? "mb-2" : ""}`}
-        style={{ backgroundColor: "transparent" }}
+        style={{ backgroundColor: "#FBFCFF" }}
       >
         <div
           className={`position-relative d-flex overflow-hidden flex-column align-items-center justify-content-around px-3 pt-3 shadow-sm soft-gray-border`}

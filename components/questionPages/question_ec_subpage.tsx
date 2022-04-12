@@ -85,7 +85,7 @@ export default function QuestionECSubpage({
     );
     return {
       activities,
-      overallTier: overallPoints / 150,
+      overallTier: Math.round(overallPoints / 150),
       totalPoints: overallPoints,
     };
   };
@@ -123,18 +123,23 @@ export default function QuestionECSubpage({
             userId: session.data.user.uid,
           }),
         });
-        const activities = await (
-          await fetch(`${ORIGIN_URL}/api/get-activities`, {
-            method: "POST",
-            body: JSON.stringify({ activitiesId: session.data.user.uid }),
-          })
-        ).json();
-        console.log(activities ? session.data.user.uid : null);
+        let activities = null;
+        try {
+          activities = await (
+            await fetch(`${ORIGIN_URL}/api/get-activities`, {
+              method: "POST",
+              body: JSON.stringify({ userId: session.data.user.uid }),
+            })
+          )?.json();
+        } catch (e) {
+          activities = null;
+        }
+        console.log(activities);
         fetch(`${ORIGIN_URL}/api/put-activities`, {
           method: "POST",
           body: JSON.stringify({
-            activitiesId: activities ? session.data.user.uid : null,
-            acitivities: getActivities(ECResponse.response[chunk.name]),
+            userId: activities ? session.data.user.uid : null,
+            activities: getActivities(ECResponse.response[chunk.name]),
           }),
         });
         store.dispatch(updateQuestionResponsesAction(userResponses));

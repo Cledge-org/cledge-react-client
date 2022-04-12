@@ -8,10 +8,10 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { activitiesId } = JSON.parse(req.body);
-  if (activitiesId) {
+  const { userId } = JSON.parse(req.body);
+  if (userId) {
     try {
-      const activities = await getActivities(activitiesId);
+      const activities = await getActivities(userId);
       resolve.status(200).send(activities);
     } catch (e) {
       resolve.status(500).send(e);
@@ -20,19 +20,22 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 // Gets all of a user's activities.
-export function getActivities(activitiesId: ObjectId): Promise<Activities> {
+export function getActivities(userId: string): Promise<Activities> {
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
       const metricsDb = client.db("metrics");
+      const all = await metricsDb
+        .collection("extracurriculars")
+        .find()
+        .toArray();
+      console.error(all);
       const extracurriculars: Activities = (await metricsDb
         .collection("extracurriculars")
         .findOne({
-          _id:
-            activitiesId instanceof ObjectId
-              ? activitiesId
-              : new ObjectId(activitiesId),
+          firebaseId: userId,
         })) as Activities;
+      console.error(extracurriculars);
       if (!extracurriculars) {
         res(null);
       } else {
@@ -45,6 +48,7 @@ export function getActivities(activitiesId: ObjectId): Promise<Activities> {
       }
       client.close();
     } catch (e) {
+      console.error(e);
       err(e);
     }
   });
