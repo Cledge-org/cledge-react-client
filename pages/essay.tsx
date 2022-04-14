@@ -7,7 +7,6 @@ import { NextApplicationPage } from "./_app";
 import { useRouter } from "next/router";
 import { getAccountInfo } from "./api/get-account";
 import AuthFunctions from "./api/auth/firebase-auth";
-import { ORIGIN_URL } from "../config";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { store } from "../utils/store";
@@ -26,132 +25,126 @@ import { ObjectId } from "mongodb";
 // This will require declaration of types for the video and the questions, and possibly other components yet to come.
 
 const pageContent = {
-  "tags": [
-      "quick-start"
-  ],
-  "name": "The “Quick Start” College Pathway",
-  "_id": "61de02937c405886579656e7",
-  "modules": [
-      {
-          "_id": "61de02937c405886579656e6",
-          "name": "Beginning with writing a college essay",
-          "presetContent": [
-            { 
-              "name": "Writing a personal statement",
-              "type": "Video",
-              "url": "https://www.youtube.com/watch?v=uk7pLY4jbDU",
-              "content": "This is where I will describe the questions that I want to ask the user! I will associate them with a specific question id, and allow for future reference without the context of the video? is that really a good idea? Maybe they can reference eachother, or perhaps just live in the same pace. Yeah that makes more sense. It seems I can change the presentation of the content by changing the type. I think I want to have multiple different items to display on one page, so I'll modify the format to be more modular with question types and arrays of items to display. Do I need an id for these? or some type of ordering? most likely yes."
-            },
-            {
-              "name": "Paths after college",
-              "type": "Video",
-              "url": "https://www.youtube.com/watch?v=lAtFF47Ce4k",
-              "content": "Put in the first sentence to your personal statement."
-            },
+  tags: ["quick-start"],
+  name: "The “Quick Start” College Pathway",
+  _id: "61de02937c405886579656e7",
+  modules: [
+    {
+      _id: "61de02937c405886579656e6",
+      name: "Beginning with writing a college essay",
+      presetContent: [
+        {
+          name: "Writing a personal statement",
+          type: "Video",
+          url: "https://www.youtube.com/watch?v=uk7pLY4jbDU",
+          content:
+            "This is where I will describe the questions that I want to ask the user! I will associate them with a specific question id, and allow for future reference without the context of the video? is that really a good idea? Maybe they can reference eachother, or perhaps just live in the same pace. Yeah that makes more sense. It seems I can change the presentation of the content by changing the type. I think I want to have multiple different items to display on one page, so I'll modify the format to be more modular with question types and arrays of items to display. Do I need an id for these? or some type of ordering? most likely yes.",
+        },
+        {
+          name: "Paths after college",
+          type: "Video",
+          url: "https://www.youtube.com/watch?v=lAtFF47Ce4k",
+          content: "Put in the first sentence to your personal statement.",
+        },
 
-              // {
-              //   "contents": [
-              //     { 
-              //       "name": "Writing a personal statement",
-              //       "type": "Video",
-              //       "url": "https://www.youtube.com/watch?v=uk7pLY4jbDU",
-              //       "content": "This is where I will describe the questions that I want to ask the user! I will associate them with a specific question id, and allow for future reference without the context of the video? is that really a good idea? Maybe they can reference eachother, or perhaps just live in the same pace. Yeah that makes more sense. It seems I can change the presentation of the content by changing the type. I think I want to have multiple different items to display on one page, so I'll modify the format to be more modular with question types and arrays of items to display. Do I need an id for these? or some type of ordering? most likely yes."
-              //     }
-              //   ],
-              // },
-              // {
-              //   "length": 
-              //   "contents": [
-              //     {
-                    
-              //       "name": "Paths after college",
-              //       "type": "Video",
-              //       "url": "https://www.youtube.com/watch?v=lAtFF47Ce4k",
-              //       "content": "Put in the first sentence to your personal statement."
-              //     },
-              //     {
-              //       "name": "general questions",
-              //       "type": "Questions",
-              //       "questions": [
-              //           {
-              //               "question": "What is your current GPA?",
-              //               "answer": "",
-              //               "type": "text"
-              //           },  
-              //           {
-              //               "question": "What is your name?",
-              //               "answer": "",
-              //               "type": "text"
-              //           }
-              //       ]
-              //     }
-                // ]
-              // }
-          ],
-          "tags": [
-              "overview",
-              "college-admissions"
-          ],
-          "personalizedContent": []
-      },
-      {
-          "_id": "61de02937c405886579656e5",
-          "name": "6 parts of the college application",
-          "presetContent": [
-              {
-                  "name": "Introduction",
-                  "type": "Video",
-                  "url": "https://www.youtube.com/watch?v=R0c8WnxLsH0",
-                  "content": "There is no secret that gets you into college. However, there are some factors that admissions officers focus on."
-              }
-          ],
-          "tags": [
-              "parts of college app"
-          ],
-          "personalizedContent": []
-      }
-  ]
-}
+        // {
+        //   "contents": [
+        //     {
+        //       "name": "Writing a personal statement",
+        //       "type": "Video",
+        //       "url": "https://www.youtube.com/watch?v=uk7pLY4jbDU",
+        //       "content": "This is where I will describe the questions that I want to ask the user! I will associate them with a specific question id, and allow for future reference without the context of the video? is that really a good idea? Maybe they can reference eachother, or perhaps just live in the same pace. Yeah that makes more sense. It seems I can change the presentation of the content by changing the type. I think I want to have multiple different items to display on one page, so I'll modify the format to be more modular with question types and arrays of items to display. Do I need an id for these? or some type of ordering? most likely yes."
+        //     }
+        //   ],
+        // },
+        // {
+        //   "length":
+        //   "contents": [
+        //     {
+
+        //       "name": "Paths after college",
+        //       "type": "Video",
+        //       "url": "https://www.youtube.com/watch?v=lAtFF47Ce4k",
+        //       "content": "Put in the first sentence to your personal statement."
+        //     },
+        //     {
+        //       "name": "general questions",
+        //       "type": "Questions",
+        //       "questions": [
+        //           {
+        //               "question": "What is your current GPA?",
+        //               "answer": "",
+        //               "type": "text"
+        //           },
+        //           {
+        //               "question": "What is your name?",
+        //               "answer": "",
+        //               "type": "text"
+        //           }
+        //       ]
+        //     }
+        // ]
+        // }
+      ],
+      tags: ["overview", "college-admissions"],
+      personalizedContent: [],
+    },
+    {
+      _id: "61de02937c405886579656e5",
+      name: "6 parts of the college application",
+      presetContent: [
+        {
+          name: "Introduction",
+          type: "Video",
+          url: "https://www.youtube.com/watch?v=R0c8WnxLsH0",
+          content:
+            "There is no secret that gets you into college. However, there are some factors that admissions officers focus on.",
+        },
+      ],
+      tags: ["parts of college app"],
+      personalizedContent: [],
+    },
+  ],
+};
 
 const pathwaysProgress = [
- 
   {
-      "finished": false,
-      "moduleProgress": [
+    finished: false,
+    moduleProgress: [
+      {
+        moduleId: "61de02937c405886579656e6",
+        finished: false,
+        contentProgress: [
           {
-              "moduleId": "61de02937c405886579656e6",
-              "finished": false,
-              "contentProgress": [
-                  {
-                      "name": "What is the goal?",
-                      "finished": false,
-                      "videoTime": 488
-                  },
-                  {
-                      "name": "Paths after college",
-                      "finished": false,
-                      "videoTime": 0
-                  }
-              ],
-              "name": "Beginning with writing a college essay"
+            name: "What is the goal?",
+            finished: false,
+            videoTime: 488,
           },
           {
-              "moduleId": "61de02937c405886579656e5",
-              "finished": false,
-              "contentProgress": [
-                  {
-                      "name": "Introduction",
-                      "finished": true,
-                      "videoTime": 231
-                  }
-              ],
-              "name": "6 parts of the college application"
-          }
-      ],
-      "name": "The “Quick Start” College Pathway",
-      "pathwayId": "61de02937c405886579656e7"
-  }
-]
+            name: "Paths after college",
+            finished: false,
+            videoTime: 0,
+          },
+        ],
+        name: "Beginning with writing a college essay",
+      },
+      {
+        moduleId: "61de02937c405886579656e5",
+        finished: false,
+        contentProgress: [
+          {
+            name: "Introduction",
+            finished: true,
+            videoTime: 231,
+          },
+        ],
+        name: "6 parts of the college application",
+      },
+    ],
+    name: "The “Quick Start” College Pathway",
+    pathwayId: "61de02937c405886579656e7",
+  },
+];
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -489,11 +482,11 @@ const Essay: NextApplicationPage<{
     }
   };
   const getSortedContent = (presetContent, personalizedContent) => {
-    let allContent = presetContent.concat(personalizedContent); 
-    if (presetContent.length === 0) { 
-      allContent = personalizedContent; 
+    let allContent = presetContent.concat(personalizedContent);
+    if (presetContent.length === 0) {
+      allContent = personalizedContent;
     }
-    allContent.sort((a, b) =>  a.priority - b.priority); //  
+    allContent.sort((a, b) => a.priority - b.priority); //
     return allContent;
   };
   const session = useSession();
@@ -511,7 +504,7 @@ const Essay: NextApplicationPage<{
       });
       // console.log(contentProgress);
       // window.onbeforeunload = (e) => {
-      //   fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
+      //   fetch(`/api/put-pathway-progress`, {
       //     method: "POST",
       //     body: JSON.stringify({
       //       contentProgress,
@@ -549,7 +542,7 @@ const Essay: NextApplicationPage<{
             });
             contentProgress[actualModule._id] = moduleProgress.contentProgress;
           });
-          // fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
+          // fetch(`/api/put-pathway-progress`, {
           //   method: "POST",
           //   body: JSON.stringify({
           //     contentProgress,

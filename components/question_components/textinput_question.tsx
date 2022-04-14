@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import QuestionSubPageHeader from "./question_subpage_header";
 import QuestionSummaryCard from "./question-summary-card";
-import { ORIGIN_URL } from "../../config";
 import { useSession } from "next-auth/react";
 interface TextInputQuestionProps {
   question: Question;
@@ -28,7 +27,7 @@ export default function TextInputQuestion({
           type="text"
           onChange={async (e) => {
             if (isGrade) {
-              await fetch(`${ORIGIN_URL}/api/update-user`, {
+              await fetch(`/api/update-user`, {
                 method: "POST",
                 body: JSON.stringify({
                   userInfo: { grade: e.target.value },

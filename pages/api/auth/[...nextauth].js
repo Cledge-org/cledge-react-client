@@ -3,7 +3,8 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AuthFunctions from "./firebase-auth";
 import { FirebaseAdapter } from "@next-auth/firebase-adapter";
-import { ORIGIN_URL } from "../../../config";
+import { getAccountInfo } from "../get-account";
+import { createUser } from "../create-user";
 
 export default NextAuth({
   pages: {
@@ -33,26 +34,17 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_SECRET,
       profile(profile) {
         try {
-          fetch(`/api/get-account`, {
-            method: "POST",
-            body: JSON.stringify({ userId: profile.sub }),
-          });
+          getAccountInfo(profile.sub);
         } catch (err) {
-          fetch("/api/create-user", {
-            method: "POST",
-            body: JSON.stringify({
-              ...{
-                name: profile.name,
-                address: "",
-                birthday: new Date(),
-                grade: -1,
-                email: profile.email,
-                tags: [],
-                checkIns: ["Onboarding Questions"],
-              },
-              userId: profile.sub,
-              email: profile.email,
-            }),
+          createUser({
+            firebaseId: profile.sub,
+            name: profile.name,
+            address: "",
+            birthday: new Date(),
+            grade: -1,
+            email: profile.email,
+            tags: [],
+            checkIns: ["Onboarding Questions"],
           }).then(async (res) => {
             console.log(res.status);
           });
@@ -67,7 +59,7 @@ export default NextAuth({
   ],
   callbacks: {
     redirect({ url, baseUrl }) {
-      return ORIGIN_URL + "/dashboard";
+      return url + "/dashboard";
     },
     jwt: async ({ token, user }) => {
       if (user) {

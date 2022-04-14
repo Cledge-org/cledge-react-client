@@ -20,7 +20,6 @@ import { redirect } from "next/dist/server/api-utils";
 import getAccountInfo from "./api/get-account";
 import { getPathwayProgress } from "./api/get-pathway-progress";
 import { getAllPathwayProgress } from "./api/get-all-pathway-progress";
-import { ORIGIN_URL } from "../config";
 import AuthFunctions from "./api/auth/firebase-auth";
 import { connect } from "react-redux";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
@@ -28,14 +27,13 @@ import ECDropDown from "../components/question_components/ec_dropdown_question";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { boolean } from "yup";
+import { getAllPathways } from "./api/get-all-pathways";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
-        allPathways: await (
-          await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
-        ).json(),
+        allPathways: JSON.parse(JSON.stringify(await getAllPathways())),
       },
     };
   } catch (err) {
@@ -277,7 +275,7 @@ const Dashboard: NextApplicationPage<{
   // const asyncUseEffect = async () => {
   //   console.time("DASHBOARD");
   //   let json = await (
-  //     await fetch(`${ORIGIN_URL}/api/get-dashboard`, {
+  //     await fetch(`/api/get-dashboard`, {
   //       method: "POST",
   //       body: JSON.stringify({ userId: session.data.user.uid }),
   //     })

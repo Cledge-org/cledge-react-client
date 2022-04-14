@@ -25,21 +25,18 @@ import { NextApplicationPage } from "./_app";
 import DropDownTab from "../components/common/DropDown_Tab";
 import CardTask from "../components/common/Card_Task";
 import AuthFunctions from "./api/auth/firebase-auth";
-import { ORIGIN_URL } from "../config";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
+import { getActivities } from "./api/get-activities";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = getSession(ctx);
-    const activities = await fetch(`${ORIGIN_URL}/api/get-activities`, {
-      method: "POST",
-      body: JSON.stringify({ userId: (await session).user.uid }),
-    });
+    const activities = await getActivities((await session).user.uid);
     let userActivitiesJSON = {};
     try {
-      userActivitiesJSON = await activities.json();
+      userActivitiesJSON = JSON.parse(JSON.stringify(activities));
     } catch (e) {
       userActivitiesJSON = {};
     }

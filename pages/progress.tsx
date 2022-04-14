@@ -20,17 +20,14 @@ import { NextApplicationPage } from "./_app";
 import DropDownTab from "../components/common/DropDown_Tab";
 import CardTask from "../components/common/Card_Task";
 import AuthFunctions from "./api/auth/firebase-auth";
-import { ORIGIN_URL } from "../config";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    const questionResponses = await fetch(
-      `${ORIGIN_URL}/api/get-question-progress`
-    );
-    let userProgressJSON = await questionResponses.json();
+    const questionProgress = await getQuestionProgress();
+    let userProgressJSON = JSON.parse(JSON.stringify(questionProgress));
     return {
       props: {
         ...userProgressJSON,

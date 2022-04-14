@@ -5,7 +5,6 @@ import Modal from "react-modal";
 import MCQQuestion from "./mcq_question";
 import CheckBoxQuestion from "./checkbox_question";
 import TextInputQuestion from "./textinput_question";
-import { ORIGIN_URL } from "../../config";
 import AuthFunctions from "../../pages/api/auth/firebase-auth";
 import { useSession } from "next-auth/react";
 import { store } from "../../utils/store";
@@ -203,7 +202,7 @@ export default function QuestionSummaryCard({
               setNewTags([]);
               setOldTags([]);
               if (question._id === "61de0b617c405886579656ec") {
-                fetch(`${ORIGIN_URL}/api/update-user`, {
+                fetch(`/api/update-user`, {
                   method: "POST",
                   body: JSON.stringify({
                     userInfo: {
@@ -237,7 +236,7 @@ export default function QuestionSummaryCard({
               }
               Promise.all(
                 [
-                  fetch(`${ORIGIN_URL}/api/put-question-responses`, {
+                  fetch(`/api/put-question-responses`, {
                     method: "POST",
                     body: JSON.stringify({
                       responses: newUserResponses,
@@ -247,7 +246,7 @@ export default function QuestionSummaryCard({
                 ].concat(
                   question.type === "MCQ" || question.type === "CheckBox"
                     ? [
-                        fetch(`${ORIGIN_URL}/api/update-user`, {
+                        fetch(`/api/update-user`, {
                           method: "POST",
                           body: JSON.stringify({
                             userInfo: { tags: userTags },

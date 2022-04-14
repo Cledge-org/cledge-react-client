@@ -2,7 +2,6 @@ import { useSession } from "next-auth/react";
 import { isLocalURL } from "next/dist/shared/lib/router/router";
 import { Router, useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { ORIGIN_URL } from "../../config";
 import { initialStateAction } from "../../utils/actionFunctions";
 import { store } from "../../utils/store";
 import Header from "./Header";
@@ -15,18 +14,19 @@ export default function Layout({ children }) {
   const [header, setHeader] = useState(<Header key_prop="initial" />);
   const asyncUseEffect = async () => {
     setLoading(true);
+    console.error(window.origin);
     if (session.data?.user?.uid && !store.getState()) {
       const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
         await Promise.all([
-          fetch(`${ORIGIN_URL}/api/get-account`, {
+          fetch(`/api/get-account`, {
             method: "POST",
             body: JSON.stringify({ userId: session.data.user.uid }),
           }),
-          fetch(`${ORIGIN_URL}/api/get-all-pathway-progress`, {
+          fetch(`/api/get-all-pathway-progress`, {
             method: "POST",
             body: JSON.stringify({ userId: session.data.user.uid }),
           }),
-          fetch(`${ORIGIN_URL}/api/get-question-responses`, {
+          fetch(`/api/get-question-responses`, {
             method: "POST",
             body: JSON.stringify({ userId: session.data.user.uid }),
           }),

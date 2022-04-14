@@ -6,16 +6,16 @@ import CheckBox from "../../components/common/CheckBox";
 import UploadPage from "../../components/common/upload-page";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { ORIGIN_URL } from "../../config";
 import { useRouter } from "next/router";
+import { getAllQuestionLists } from "../api/get-all-questions";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
-        questionMetadata: await (
-          await fetch(`${ORIGIN_URL}/api/get-all-questions`)
-        ).json(),
+        questionMetadata: JSON.parse(
+          JSON.stringify(await getAllQuestionLists())
+        ),
       },
     };
   } catch (err) {

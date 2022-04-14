@@ -8,7 +8,6 @@ import { NextApplicationPage } from "./_app";
 import { getAccountInfo } from "./api/get-account";
 import { useSession } from "next-auth/react";
 import AuthFunctions from "./api/auth/firebase-auth";
-import { ORIGIN_URL } from "../config";
 import { connect } from "react-redux";
 import { store } from "../utils/store";
 import {
@@ -41,14 +40,14 @@ const AccountPage: NextApplicationPage<{
   const session = useSession();
   const updateUserData = async () => {
     await Promise.all([
-      fetch(`${ORIGIN_URL}/api/update-user`, {
+      fetch(`/api/update-user`, {
         method: "POST",
         body: JSON.stringify({
           userInfo: { ...currUserData, _id: undefined },
           userId: session.data.user.uid,
         }),
       }),
-      fetch(`${ORIGIN_URL}/api/put-question-responses`, {
+      fetch(`/api/put-question-responses`, {
         method: "POST",
         body: JSON.stringify({
           responses: questionResponses,

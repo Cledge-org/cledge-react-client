@@ -5,19 +5,17 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { NextApplicationPage } from "../_app";
 import ECDropDown from "../../components/question_components/ec_dropdown_question";
 import UploadPage from "../../components/common/upload-page";
-import { ORIGIN_URL } from "../../config";
 import router from "next/router";
 import { getSession } from "next-auth/react";
+import { getAllPathways } from "../api/get-all-pathways";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
-        allPathways: await (
-          await fetch(`${ORIGIN_URL}/api/get-all-pathways`)
-        ).json(),
+        allPathways: JSON.parse(JSON.stringify(await getAllPathways())),
         // allModules: await (
-        //   await fetch(`${ORIGIN_URL}/api/get-all-modules`)
+        //   await fetch(`/api/get-all-modules`)
         // ).json(),
       },
     };

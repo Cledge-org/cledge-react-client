@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import ECQuestionSummaryCard from "../../components/question_components/ec_question_summary_card";
 import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
 import ECEditor from "../../components/question_components/ec-editor";
-import { ORIGIN_URL } from "../../config";
 import { useSession } from "next-auth/react";
 import { store } from "../../utils/store";
 import { updateQuestionResponsesAction } from "../../utils/actionFunctions";
@@ -116,7 +115,7 @@ export default function QuestionECSubpage({
           ECResponse.response[chunk.name] = [];
         }
         ECResponse.response[chunk.name][currECIndex] = newAnswers;
-        fetch(`${ORIGIN_URL}/api/put-question-responses`, {
+        fetch(`/api/put-question-responses`, {
           method: "POST",
           body: JSON.stringify({
             responses: userResponses,
@@ -126,7 +125,7 @@ export default function QuestionECSubpage({
         let activities = null;
         try {
           activities = await (
-            await fetch(`${ORIGIN_URL}/api/get-activities`, {
+            await fetch(`/api/get-activities`, {
               method: "POST",
               body: JSON.stringify({ userId: session.data.user.uid }),
             })
@@ -135,7 +134,7 @@ export default function QuestionECSubpage({
           activities = null;
         }
         console.log(activities);
-        fetch(`${ORIGIN_URL}/api/put-activities`, {
+        fetch(`/api/put-activities`, {
           method: "POST",
           body: JSON.stringify({
             userId: activities ? session.data.user.uid : null,

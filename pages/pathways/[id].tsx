@@ -7,7 +7,6 @@ import { NextApplicationPage } from "../_app";
 import { useRouter } from "next/router";
 import { getAccountInfo } from "../api/get-account";
 import AuthFunctions from "../api/auth/firebase-auth";
-import { ORIGIN_URL } from "../../config";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { store } from "../../utils/store";
@@ -20,17 +19,17 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = await getSession(ctx);
     console.error(ctx.query.id);
+
     return {
       props: {
-        pathwayInfo: await (
-          await fetch(`${ORIGIN_URL}/api/get-pathway`, {
-            method: "POST",
-            body: JSON.stringify({
-              userId: session.user.uid,
-              pathwayId: new ObjectId(ctx.query.id as string),
-            }),
-          })
-        ).json(),
+        pathwayInfo: JSON.parse(
+          JSON.stringify(
+            await getPathway(
+              session.user.uid,
+              new ObjectId(ctx.query.id as string)
+            )
+          )
+        ),
       },
     };
   } catch (err) {
@@ -447,7 +446,7 @@ const Pathways: NextApplicationPage<{
       });
       //console.log(contentProgress);
       window.onbeforeunload = (e) => {
-        fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
+        fetch(`/api/put-pathway-progress`, {
           method: "POST",
           body: JSON.stringify({
             contentProgress,
@@ -491,7 +490,7 @@ const Pathways: NextApplicationPage<{
             });
             contentProgress[actualModule._id] = moduleProgress.contentProgress;
           });
-          fetch(`${ORIGIN_URL}/api/put-pathway-progress`, {
+          fetch(`/api/put-pathway-progress`, {
             method: "POST",
             body: JSON.stringify({
               contentProgress,
@@ -694,4 +693,3 @@ function checkPathwayDiscrepancies(pathwayInfo: Pathway) {
     });
   };
 }
-
