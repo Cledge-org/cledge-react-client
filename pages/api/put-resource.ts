@@ -1,4 +1,3 @@
-import BSON from "bson";
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -38,15 +37,19 @@ export const putResource = async (
   resource: CardArticle | CardVideo | CardResource | undefined,
   tag: string | undefined
 ): Promise<void> => {
-  if (resource) {
-    resource.tag = tag;
-    resource.description = resource.description ? resource.description : "";
-    if (resource._id) {
-      // Document should not have _id field when sent to database
-      delete resource._id;
-    }
+  if (resource && resource._id) {
+    // Document should not have _id field when sent to database
+    delete resource._id;
   }
-
+  let resourceWithType = {};
+  if (resource) {
+    resourceWithType = {
+      name: resource.name,
+      description: resource.description,
+      source: resource.source,
+      tag: tag,
+    };
+  }
   return new Promise(async (res, err) => {
     const client = await MongoClient.connect(process.env.MONGO_URL);
     try {
@@ -54,7 +57,7 @@ export const putResource = async (
         await client
           .db("resources")
           .collection("all_resources")
-          .insertOne(resource);
+          .insertOne(resourceWithType);
       } else if (resourceId && !resource) {
         await client
           .db("resources")
@@ -64,7 +67,11 @@ export const putResource = async (
         await client
           .db("resources")
           .collection("all_resources")
-          .updateOne({ _id: resourceId }, { $set: resource }, { upsert: true });
+          .updateOne(
+            { _id: resourceId },
+            { $set: resourceWithType },
+            { upsert: true }
+          );
       }
       res();
       client.close();

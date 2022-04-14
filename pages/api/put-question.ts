@@ -30,7 +30,7 @@ export const putQuestion = async (
   questionId: ObjectId | undefined,
   question: Question | undefined
 ): Promise<{ questionId: string }> => {
-  if (question._id) {
+  if (question !== undefined && question._id) {
     // Document should not have _id field when sent to database
     delete question._id;
   }

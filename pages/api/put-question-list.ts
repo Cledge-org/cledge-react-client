@@ -30,7 +30,7 @@ export const putQuestionList = (
   questionListId: ObjectId | undefined,
   questionList: QuestionList_Db | undefined
 ): Promise<void> => {
-  if (questionList._id) {
+  if (questionList !== undefined && questionList._id) {
     // Document should not have _id field when sent to database
     delete questionList._id;
   }
@@ -51,7 +51,7 @@ export const putQuestionList = (
         await client
           .db("questions")
           .collection("question-lists")
-          .updateOne({ _id: questionListId }, { $set: questionList });
+          .updateOne({ _id: questionListId }, { $set: questionList }, {upsert:true});
       }
       res();
       client.close();
