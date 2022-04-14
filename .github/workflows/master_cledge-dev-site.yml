@@ -21,15 +21,9 @@ jobs:
         with:
           node-version: "14.x"
 
-      - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
-
       # Zip artifacts to speed things up
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -qr
+        run: zip -r release.zip *
       # We exclude node_modules and dist because the Azure Oryx/Kudu deploy runs npm install and rebuilds everything anyway...
       # If we zip them we just increase the size of the zip file and it's not needed
 
