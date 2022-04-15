@@ -33,7 +33,6 @@ function MyApp({
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   useEffect(() => {
-    process.env.NEXTAUTH_URL = window.origin;
     const endLoading = () => {
       setLoading(false);
     };
