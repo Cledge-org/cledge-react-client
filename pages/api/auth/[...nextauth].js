@@ -59,7 +59,7 @@ export default NextAuth({
   ],
   callbacks: {
     redirect({ url, baseUrl }) {
-      return url + "/dashboard";
+      return baseUrl + "/dashboard";
     },
     jwt: async ({ token, user }) => {
       if (user) {
