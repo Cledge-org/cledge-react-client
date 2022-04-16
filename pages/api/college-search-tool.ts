@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { SearchClient, AzureKeyCredential } from "@azure/search-documents";
 import { setLogLevel } from "@azure/logger";
+import { any } from "prop-types";
 
 // References:
 // https://docs.microsoft.com/en-us/javascript/api/overview/azure/search-documents-readme?view=azure-node-latest
@@ -9,7 +10,7 @@ setLogLevel("info");
 
 const serviceName = "college-search-service";
 const indexName = "college-search-index";
-const adminKey = "002FB866D4F85342A97B3D57C12D206C";
+const queryKey = "1F7801474A40D9360ED57EC698A3CF10";
 
 const endPoint = "https://" + serviceName + ".search.windows.net/";
 
@@ -17,10 +18,11 @@ const endPoint = "https://" + serviceName + ".search.windows.net/";
 const searchClient = new SearchClient(
     endPoint,
     indexName,
-    new AzureKeyCredential(adminKey)
+    new AzureKeyCredential(queryKey)
 );
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
+    const {top, count} = req.body;
     try {
       const collegeSearchResult = await getCollegeInfo();
       resolve.status(200).send(collegeSearchResult);
@@ -32,12 +34,23 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const getCollegeInfo = (): Promise<Object> => {
     return new Promise(async (res, err) => {
         try {
-            const searchResults = await searchClient.search("University +Washington", {
-                searchMode: "all",
+            const searchText = "University of Washington";
+
+            // const searchOptions = {
+            //     "searchMode": "all",
+            //     "search fields": "INSTNM"
+            // };
+            const searchResults = await searchClient.search("University of Washington", {
                 queryType: "full",
+                searchMode: "all",
+                includeTotalCount: false,
                 top: 10
             });
-            res(searchResults);
+            let output = [];
+            for await (const result of searchResults.results) {
+                output.push(result);
+            }
+            res(output.length);
         } catch (e) {
             err(res);
         }
