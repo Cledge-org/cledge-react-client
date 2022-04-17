@@ -40,17 +40,19 @@ export const getCollegeInfo = (): Promise<Object> => {
             //     "searchMode": "all",
             //     "search fields": "INSTNM"
             // };
-            const searchResults = await searchClient.search("University of Washington", {
+            const searchResults = await searchClient.search(searchText, {
                 queryType: "full",
                 searchMode: "all",
-                includeTotalCount: false,
-                top: 10
+                includeTotalCount: true,
+                top: 10,
+                searchFields: ["INSTNM"]
+                // select: ["INSTNM"]
             });
             let output = [];
             for await (const result of searchResults.results) {
-                output.push(result);
+                output.push(result.document["INSTNM"]);
             }
-            res(output.length);
+            res(output);
         } catch (e) {
             err(res);
         }
