@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { getAllQuestionLists } from "../api/get-all-questions";
+import Modal from "react-modal";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -33,6 +34,7 @@ const QuestionUploadPage: NextApplicationPage<{
   const questionListTitles = questionMetadata
     .map(({ name }) => name)
     .concat(["NEW QUESTION LIST"]);
+  const [modalOpen, setModalOpen] = useState(false);
   const [currQuestionList, setCurrQuestionList]: [
     QuestionList,
     Dispatch<SetStateAction<QuestionList>>
@@ -182,6 +184,9 @@ const QuestionUploadPage: NextApplicationPage<{
                 });
                 return;
               }
+              console.log(
+                questionMetadata.find(({ name }) => name === value)._id
+              );
               setCurrQuestionList(
                 questionMetadata.find(({ name }) => name === value)
               );
@@ -194,6 +199,18 @@ const QuestionUploadPage: NextApplicationPage<{
             valuesList={questionListTitles}
           />
         </div>
+        {currQuestionList._id === null ? null : (
+          <div className="form-group">
+            <button
+              className="cl-btn-red w-100"
+              onClick={() => {
+                setModalOpen(true);
+              }}
+            >
+              DELETE THIS QUESTION LIST
+            </button>
+          </div>
+        )}
         <div className="form-group mb-2">
           <label style={{ fontSize: "0.9em" }} className="text-muted">
             Question List Title:
@@ -560,6 +577,116 @@ const QuestionUploadPage: NextApplicationPage<{
           Add Another Chunk
         </button>
       </div>
+      <Modal
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            background: "rgba(50, 50, 50, 0.5)",
+          },
+          content: {
+            top: "30%",
+            left: "35%",
+            width: "30%",
+            height: "fit-content",
+            borderRadius: "20px",
+            borderColor: "white",
+            zIndex: 100,
+          },
+        }}
+        onRequestClose={() => {
+          setModalOpen(false);
+        }}
+        isOpen={modalOpen}
+      >
+        <div className="center-child flex-column">
+          Are you sure you want to delete this question list?
+          <div className="w-100 center-child mt-3">
+            <button
+              className="cl-btn-blue me-2"
+              onClick={async () => {
+                for (let i = 0; i < currQuestionList.chunks.length; i++) {
+                  try {
+                    let resArr = await Promise.all([
+                      ...currQuestionList.chunks[i].questions.map(
+                        (question, index) =>
+                          fetch("/api/put-question", {
+                            method: "POST",
+                            body: JSON.stringify({
+                              questionId:
+                                currQuestionList._id === null
+                                  ? "625da082d9f9ed4e88412124"
+                                  : question._id,
+                            }),
+                          })
+                      ),
+                    ]);
+                    let jsonArr = await Promise.all(
+                      resArr.map(async (res) => await res.json())
+                    );
+                    console.log(currQuestionList.chunks[i]._id);
+                    let value = await fetch("/api/put-question-chunk", {
+                      method: "POST",
+                      body: JSON.stringify({
+                        questionChunkId:
+                          currQuestionList.chunks[i]._id === null
+                            ? "625da082d9f9ed4e88412124"
+                            : currQuestionList.chunks[i]._id,
+                      }),
+                    });
+                    let unsuccessful = false;
+                    console.log(i + " " + value.status);
+                    if (value.status !== 200) {
+                      unsuccessful = true;
+                      alert(
+                        "Upload Unsuccessful! (should probably talk to Yousef or Bryan)"
+                      );
+                      return;
+                    }
+                  } catch (err) {
+                    console.error("AYO" + err);
+                  }
+                }
+                fetch("/api/put-question-list", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    questionListId:
+                      currQuestionList._id === null
+                        ? "625da082d9f9ed4e88412124"
+                        : currQuestionList._id,
+                  }),
+                })
+                  .then(async (value) => {
+                    let unsuccessful = false;
+                    console.log("LIST " + value.status);
+                    if (value.status !== 200) {
+                      unsuccessful = true;
+                      alert(
+                        "Upload Unsuccessful! (should probably talk to Yousef or Bryan)"
+                      );
+                    }
+                    if (!unsuccessful) {
+                      alert("Upload Successful!");
+                    }
+                    router.push({
+                      pathname: "/dashboard",
+                    });
+                  })
+                  .catch((err) => console.error("AYO" + err));
+              }}
+            >
+              Yes
+            </button>
+            <button
+              onClick={() => {
+                setModalOpen(false);
+              }}
+              className="cl-btn-clear ms-2"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </Modal>
     </UploadPage>
   );
 };

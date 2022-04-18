@@ -190,7 +190,12 @@ a {
   color: white !important;
   border: 1px solid $cl-blue;
 }
-
+.cl-btn-red {
+  @extend .cl-btn;
+  background-color: $cl-red !important;
+  color: white !important;
+  border: 1px solid $cl-red;
+}
 input[type="text"],
 input[type="email"],
 input[type="password"],

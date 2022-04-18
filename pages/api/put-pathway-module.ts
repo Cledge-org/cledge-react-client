@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
   const { userToken, pathwayModuleId, pathwayModule } = JSON.parse(req.body);
 
-  if (pathwayModule) {
+  if (pathwayModule || pathwayModuleId) {
     try {
       const result = await putPathwayModule(pathwayModuleId, pathwayModule);
       resolve.status(200).send(result);

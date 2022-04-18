@@ -8,6 +8,7 @@ import UploadPage from "../../components/common/upload-page";
 import router from "next/router";
 import { getSession } from "next-auth/react";
 import { getAllPathways } from "../api/get-all-pathways";
+import Modal from "react-modal";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -31,6 +32,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
   allModules: PathwayModule[];
 }> = ({ allPathways, allModules }) => {
   console.log(allModules);
+  const [modalOpen, setModalOpen] = useState(false);
   const courseTitles = allPathways.map(({ name }) => name).concat("NEW COURSE");
   const [currCourseIndex, setCurrCourseIndex] = useState(allPathways.length);
   const [currPathwayData, setCurrPathwayData]: [
@@ -239,6 +241,18 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           />
           <div className="mb-2" />
         </div>
+        {currPathwayData._id === null ? null : (
+          <div className="form-group">
+            <button
+              className="cl-btn-red w-100"
+              onClick={() => {
+                setModalOpen(true);
+              }}
+            >
+              DELETE THIS PATHWAY
+            </button>
+          </div>
+        )}
         <div className="form-group">
           <label
             style={{ fontSize: "0.9em" }}
@@ -952,6 +966,120 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           Add Another Module
         </button>
       </div>
+      <Modal
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            background: "rgba(50, 50, 50, 0.5)",
+          },
+          content: {
+            top: "30%",
+            left: "35%",
+            width: "30%",
+            height: "fit-content",
+            borderRadius: "20px",
+            borderColor: "white",
+            zIndex: 100,
+          },
+        }}
+        onRequestClose={() => {
+          setModalOpen(false);
+        }}
+        isOpen={modalOpen}
+      >
+        <div className="center-child flex-column">
+          Are you sure you want to delete this pathway?
+          <div className="w-100 center-child mt-3">
+            <button
+              className="cl-btn-blue me-2"
+              onClick={() => {
+                let sendPathwayData = currPathwayData;
+                Promise.all([
+                  ...sendPathwayData.modules.map((module, index) =>
+                    fetch("/api/put-pathway-module", {
+                      method: "POST",
+                      body: JSON.stringify({
+                        pathwayModuleId:
+                          module._id === null ? "Uh Oh" : module._id,
+                      }),
+                    })
+                  ),
+                ])
+                  .then(async (resArr) => {
+                    let personalizedContentUpload: PersonalizedContent[] = [];
+                    for (let i = 0; i < sendPathwayData.modules.length; i++) {
+                      personalizedContentUpload =
+                        personalizedContentUpload.concat(
+                          sendPathwayData.modules[i].personalizedContent.map(
+                            (personalizedContent, index) => {
+                              return {
+                                ...personalizedContent,
+                                moduleId: sendPathwayData.modules[i]._id,
+                              };
+                            }
+                          )
+                        );
+                    }
+                    Promise.all([
+                      fetch("/api/put-pathway", {
+                        method: "POST",
+                        body: JSON.stringify({
+                          pathwayId:
+                            sendPathwayData._id === null
+                              ? "Uh Oh"
+                              : sendPathwayData._id,
+                        }),
+                      }),
+                      ...personalizedContentUpload.map(
+                        async (personalizedContent) =>
+                          await fetch(
+                            "/api/put-pathway-module-personalized-content",
+                            {
+                              method: "POST",
+                              body: JSON.stringify({
+                                contentId:
+                                  personalizedContent._id === null
+                                    ? "Uh Oh"
+                                    : personalizedContent._id,
+                              }),
+                            }
+                          )
+                      ),
+                    ])
+                      .then((values) => {
+                        let unsuccessful = false;
+                        values.forEach((value, index) => {
+                          console.log(index + " " + value.status);
+                          if (value.status !== 200) {
+                            unsuccessful = true;
+                            alert(
+                              "Upload Unsuccessful! (should probably talk to Yousef or Bryan)"
+                            );
+                          }
+                        });
+                        if (!unsuccessful) {
+                          alert("Upload Successful!");
+                        }
+                        router.push({ pathname: "/dashboard" });
+                      })
+                      .catch((err) => console.error("AYO" + err));
+                  })
+                  .catch((err) => console.error("AYO2" + err));
+              }}
+            >
+              Yes
+            </button>
+            <button
+              onClick={() => {
+                setModalOpen(false);
+              }}
+              className="cl-btn-clear ms-2"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </Modal>
     </UploadPage>
   );
 };

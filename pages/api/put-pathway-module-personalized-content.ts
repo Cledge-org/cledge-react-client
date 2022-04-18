@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
   const { userToken, contentId, content } = JSON.parse(req.body);
 
-  if (content) {
+  if (content || contentId) {
     try {
       const result = await putPathwayModulePersonalizedContent(
         contentId,

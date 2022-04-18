@@ -161,6 +161,9 @@ export default function QuestionSummaryCard({
       <Modal
         ariaHideApp={false}
         style={{
+          overlay: {
+            background: "rgba(50, 50, 50, 0.5)",
+          },
           content: {
             top: "30%",
             left: "35%",

@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
   const { userToken, pathwayId, pathway } = JSON.parse(req.body);
 
-  if (pathway) {
+  if (pathway || pathwayId) {
     try {
       const result = await putPathway(
         pathwayId ? new ObjectId(pathwayId) : undefined,
