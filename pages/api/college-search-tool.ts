@@ -97,20 +97,25 @@ const processFacets = (facetString) => {
 
 // creates filters in odata syntax
 // <not?> <field> <comparison> <value>
-const createFilterExpression = (filterList, facets) => {
-    let i = 0;
+const createFilterExpression = (filterList) => {
     let filterExpressions = [];
-    while (i < filterList.length) {
+    for (let i = 0; i < filterList.length; i++) {
         let field = filterList[i].field;
+        let comparison = filterList[i].comparison;
         let value = filterList[i].value;
-
-        if (facets[field] === 'array') {
-            filterExpressions.push(`${field}/any(t: search.in(t, '${value}', ','))`);
-        } else {
-            filterExpressions.push(`${field} eq '${value}'`);
-        }
-        i++;
+        filterExpressions.push(`${field} ${comparison} '${value}'`);
     }
+    // while (i < filterList.length) {
+    //     let field = filterList[i].field;
+    //     let value = filterList[i].value;
+
+    //     if (facets[field] === 'array') {
+    //         filterExpressions.push(`${field}/any(t: search.in(t, '${value}', ','))`);
+    //     } else {
+    //         filterExpressions.push(`${field} eq '${value}'`);
+    //     }
+    //     i++;
+    // }
     return filterExpressions.join(' and ');
 }
 
