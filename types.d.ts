@@ -200,3 +200,21 @@ interface Activity {
   points: number;
   tier: number;
 }
+
+interface Academics extends WithId<Document> {
+  _id?: ObjectId;
+  classes: Class[];
+  overallClassTier: number;
+  gpa: number;
+  gpaTier: number;
+  satScore: number;
+  actScore: number;
+  overallTier: number
+}
+
+interface Class {
+  classID: number;
+  name: string;
+  tier: number;
+}
+
