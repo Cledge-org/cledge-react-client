@@ -52,8 +52,8 @@ interface CardResource {
   downvotes?: number;
 }
 
-interface ResourceVoters  extends WithId<Document> {
-  _id? : ObjectId;
+interface ResourceVoters extends WithId<Document> {
+  _id?: ObjectId;
   upvotes?: string[]; // list of user ids
   downvotes?: string[]; // lsit of user ids
 }
@@ -79,11 +79,17 @@ interface ProgressInfo {
 interface QuestionList extends WithId<Document> {
   _id?: ObjectId;
   name: string;
+  isCheckin?: boolean;
+  part?: string;
+  order?: number;
   chunks: QuestionChunk[];
 }
 interface QuestionList_Db extends WithId<Document> {
   _id?: ObjectId;
   name: string;
+  isCheckin?: boolean;
+  part?: string;
+  order?: number;
   chunks: string[]; // Document IDs of chunks
 }
 interface QuestionChunk extends WithId<Document> {

@@ -72,7 +72,12 @@ export const getQuestionListByDocument = (
         )
       )) as QuestionChunk[];
       // Populate question list chunks
-      res({ _id: list._id, name: list.name, chunks: gradeQuestionChunks });
+      res({
+        ...list,
+        _id: list._id,
+        name: list.name,
+        chunks: gradeQuestionChunks,
+      });
       if (!overrideClient) {
         client.close();
       }
@@ -99,14 +104,12 @@ const getQuestionChunk = (
       // Chunk questions are currently just question ids, we need to fetch from database
       const chunkQuestions: Question[] = (await Promise.all(
         chunk.questions.map((questionId) =>
-          questionsDb
-            .collection("question-data")
-            .findOne({
-              _id:
-                questionId instanceof ObjectId
-                  ? questionId
-                  : new ObjectId(questionId),
-            })
+          questionsDb.collection("question-data").findOne({
+            _id:
+              questionId instanceof ObjectId
+                ? questionId
+                : new ObjectId(questionId),
+          })
         )
       )) as Question[];
       res({ _id: chunk._id, name: chunk.name, questions: chunkQuestions });

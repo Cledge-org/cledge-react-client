@@ -15,7 +15,7 @@ import TabButton from "../components/common/TabButton";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "./_app";
 import Link from "next/link";
-import { Router, useRouter } from "next/router";
+import router, { Router, useRouter } from "next/router";
 import { redirect } from "next/dist/server/api-utils";
 import getAccountInfo from "./api/get-account";
 import { getPathwayProgress } from "./api/get-pathway-progress";
@@ -28,11 +28,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { boolean } from "yup";
 import { getAllPathways } from "./api/get-all-pathways";
+import { getAllCheckins } from "./api/get-all-checkins";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
+        allCheckins: JSON.parse(JSON.stringify(await getAllCheckins())),
         allPathways: JSON.parse(JSON.stringify(await getAllPathways())),
       },
     };
@@ -46,10 +48,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 // logged in landing page
 const Dashboard: NextApplicationPage<{
   allPathways: Pathway[];
+  allCheckins: QuestionList[];
   accountInfo: AccountInfo;
   pathwaysProgress: PathwayProgress[];
-}> = ({ allPathways, accountInfo, pathwaysProgress }) => {
-  console.error(allPathways);
+}> = ({ allPathways, accountInfo, pathwaysProgress, allCheckins }) => {
+  console.error(allCheckins);
   const router = useRouter();
   const session = useSession();
   const [currTab, setCurrTab] = useState("all modules");
@@ -234,10 +237,14 @@ const Dashboard: NextApplicationPage<{
     let copyOfPathways = pathwaysList.slice();
     for (let i = 0; i < copyOfPathways.length; i++) {
       let pathway = copyOfPathways[i];
-      let filteredPathways = copyOfPathways.filter(
+      let filteredCheckinsPathways = copyOfPathways.filter(
         (element) => element.part === pathway.part
       );
-      partsList.push(filteredPathways);
+      filteredCheckinsPathways.push(
+        ...allCheckins.filter(({ part }) => part === pathway.part)
+      );
+      console.log(filteredCheckinsPathways);
+      partsList.push(filteredCheckinsPathways);
       copyOfPathways = copyOfPathways.filter(
         (element) => element.part !== pathway.part
       );
@@ -255,6 +262,9 @@ const Dashboard: NextApplicationPage<{
       let finished = 0;
       let total = 0;
       part.forEach(({ subtasks }) => {
+        if (!subtasks) {
+          return;
+        }
         Object.keys(subtasks).forEach((subtask, index) => {
           if (subtasks[subtask].finished) {
             finished++;
@@ -265,7 +275,7 @@ const Dashboard: NextApplicationPage<{
       partsComponents.push(
         <PartDropDown
           progressRatio={finished / total}
-          pathwayList={part}
+          pathwayCheckinList={part}
           title={part[0].part}
         />
       );
@@ -552,14 +562,15 @@ function DashboardTabButton({
 }
 
 function PartDropDown({
-  pathwayList,
+  pathwayCheckinList,
   title,
   progressRatio,
 }: {
-  pathwayList: Array<any>;
+  pathwayCheckinList: Array<any>;
   title: string;
   progressRatio: number;
 }) {
+  console.log(pathwayCheckinList);
   const [isExpanded, setIsExpanded] = useState(false);
   const [initialized, setInitialized] = useState(false);
   useEffect(() => {
@@ -640,15 +651,34 @@ function PartDropDown({
             width: "90vw",
           }}
         >
-          {pathwayList.map(({ name, pathwayId, subtasks, videoId }, index) => (
-            <CardTask
-              url={"/pathways/[id]"}
-              correctUrl={`/pathways/${pathwayId}`}
-              title={name}
-              subtasks={subtasks}
-              videoId={videoId}
-            />
-          ))}
+          {pathwayCheckinList.map(
+            (
+              { name, pathwayId, subtasks, videoId, isCheckin, chunks },
+              index
+            ) =>
+              isCheckin ? (
+                <button
+                  className="cl-btn-blue align-self-center"
+                  style={{ height: "6vh" }}
+                  onClick={() => {
+                    router.push({
+                      pathname: "/progress",
+                      query: { page: name, chunk: chunks[0].name },
+                    });
+                  }}
+                >
+                  {name} Check-in
+                </button>
+              ) : (
+                <CardTask
+                  url={"/pathways/[id]"}
+                  correctUrl={`/pathways/${pathwayId}`}
+                  title={name}
+                  subtasks={subtasks}
+                  videoId={videoId}
+                />
+              )
+          )}
         </div>
       </div>
     </div>

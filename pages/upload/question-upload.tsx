@@ -40,6 +40,7 @@ const QuestionUploadPage: NextApplicationPage<{
     Dispatch<SetStateAction<QuestionList>>
   ] = useState({
     name: "",
+    isCheckin: false,
     _id: null,
     chunks: [
       {
@@ -130,6 +131,7 @@ const QuestionUploadPage: NextApplicationPage<{
             questionListId:
               currQuestionList._id === null ? undefined : currQuestionList._id,
             questionList: {
+              ...currQuestionList,
               name: currQuestionList.name,
               chunks: currQuestionList.chunks.map(({ name }) => name),
             },
@@ -164,6 +166,7 @@ const QuestionUploadPage: NextApplicationPage<{
                 setCurrQuestionList({
                   name: "",
                   _id: null,
+                  isCheckin: false,
                   chunks: [
                     {
                       name: "",
@@ -228,6 +231,59 @@ const QuestionUploadPage: NextApplicationPage<{
             placeholder="Enter Question Chunk Title"
           />
         </div>
+        <div className="form-group">
+          <label style={{ fontSize: "0.9em" }} className="text-muted">
+            Is Checkin ?
+          </label>
+          <CheckBox
+            selected={currQuestionList.isCheckin}
+            setSelected={(selectState) => {
+              setCurrQuestionList({
+                ...currQuestionList,
+                isCheckin: selectState,
+              });
+            }}
+          />
+        </div>
+        {currQuestionList.isCheckin ? (
+          <>
+            <div className="form-group mb-2">
+              <label style={{ fontSize: "0.9em" }} className="text-muted">
+                Part:
+              </label>
+              <input
+                value={currQuestionList.part}
+                onChange={(e) => {
+                  setCurrQuestionList({
+                    ...currQuestionList,
+                    part: e.target.value,
+                  });
+                }}
+                type="text"
+                className="px-3 form-control"
+                placeholder="Enter Part"
+              />
+            </div>
+            <div className="form-group mb-2">
+              <label style={{ fontSize: "0.9em" }} className="text-muted">
+                Order: (Lower number means it's at the beginning or higher
+                priority)
+              </label>
+              <input
+                value={currQuestionList.order}
+                onChange={(e) => {
+                  setCurrQuestionList({
+                    ...currQuestionList,
+                    order: parseInt(e.target.value),
+                  });
+                }}
+                type="text"
+                className="px-3 form-control"
+                placeholder="Enter Order"
+              />
+            </div>
+          </>
+        ) : null}
         <label style={{ fontSize: "1.2em" }} className="text-muted">
           CHUNKS:
         </label>
