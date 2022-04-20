@@ -6,7 +6,7 @@ import TabButton from "../components/common/TabButton";
 import { NextApplicationPage } from "./_app";
 import CardImage from "../components/common/Card_Image";
 import { GetServerSidePropsContext } from "next";
-import { getResourcesInfo } from "./api/get-resources";
+import { getResourcesInfo } from "./api/resources/get-resources";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faSearch } from "@fortawesome/free-solid-svg-icons";
 

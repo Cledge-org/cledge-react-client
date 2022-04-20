@@ -28,6 +28,8 @@ interface CardVideo {
   tag?: string;
   category?: string;
   description: string;
+  upvotes?: number;
+  downvotes?: number;
 }
 interface CardArticle {
   _id?: ObjectId;
@@ -36,6 +38,8 @@ interface CardArticle {
   name: string;
   tag?: string;
   category?: string;
+  upvotes?: number;
+  downvotes?: number;
 }
 interface CardResource {
   _id?: ObjectId;
@@ -44,6 +48,8 @@ interface CardResource {
   category?: string;
   tag?: string;
   description: string;
+  upvotes?: number;
+  downvotes?: number;
 }
 
 //Progress Page Types -->
