@@ -340,22 +340,27 @@ test("should add resources and upvotes and downvotes to each", (done) => {
     await putResource(videoId, testVideo1, "video");
     await putResource(resourceId, testResource1, "resource");
 
+    const userOne = "userOne";
+    const userTwo = "userTwo";
+
     for (let i = 0; i < ids.length; i++) {
-      await rateResource(ids[i], true);
-      await rateResource(ids[i], true);
-      await rateResource(ids[i], false);
-      await rateResource(ids[i], false);
+      // user one upvote. user two initial upvote turns into downvote, can only
+      // downvote once
+      await rateResource(ids[i], userOne, true);
+      await rateResource(ids[i], userTwo, true);
+      await rateResource(ids[i], userTwo, false);
+      await rateResource(ids[i], userTwo, false);
     }
 
     const updatedTestArticle1 = Object.assign({}, testArticle1);
-    updatedTestArticle1.upvotes = 2;
-    updatedTestArticle1.downvotes = 2;
+    updatedTestArticle1.upvotes = 1;
+    updatedTestArticle1.downvotes = 1;
     const updatedTestVideo1 = Object.assign({}, testVideo1);
-    updatedTestVideo1.upvotes = 2;
-    updatedTestVideo1.downvotes = 2;
+    updatedTestVideo1.upvotes = 1;
+    updatedTestVideo1.downvotes = 1;
     const updatedTestResource1 = Object.assign({}, testResource1);
-    updatedTestResource1.upvotes = 2;
-    updatedTestResource1.downvotes = 2;
+    updatedTestResource1.upvotes = 1;
+    updatedTestResource1.downvotes = 1;
 
     // test get functionality - should be identical to what we put with vote modifications
     const fetchedResources = await getResourcesInfo();

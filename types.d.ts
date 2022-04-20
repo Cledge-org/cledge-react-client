@@ -52,6 +52,12 @@ interface CardResource {
   downvotes?: number;
 }
 
+interface ResourceVoters  extends WithId<Document> {
+  _id? : ObjectId;
+  upvotes?: string[]; // list of user ids
+  downvotes?: string[]; // lsit of user ids
+}
+
 //Progress Page Types -->
 interface UserProgress_Db extends WithId<Document> {
   _id?: ObjectId;
