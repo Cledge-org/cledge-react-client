@@ -22,39 +22,111 @@ const searchClient = new SearchClient(
 );
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-    const {top, count} = req.body;
+    const {searchText, top, skip, filters, facets} = JSON.parse(req.body);
+    console.log(searchText);
+    const processedFacets = processFacets(facets);
     try {
-      const collegeSearchResult = await getCollegeInfo();
+      const collegeSearchResult = await getCollegeInfo(searchText, top, skip, filters, processedFacets);
       resolve.status(200).send(collegeSearchResult);
     } catch (e) {
       resolve.status(500).send(e);
     }
 };
 
-export const getCollegeInfo = (): Promise<Object> => {
+export const getCollegeInfo = (
+    searchText,
+    top,
+    skip,
+    filters,
+    processedFacets
+): Promise<Object> => {
     return new Promise(async (res, err) => {
         try {
-            const searchText = "University of Washington";
-
-            // const searchOptions = {
-            //     "searchMode": "all",
-            //     "search fields": "INSTNM"
-            // };
-            const searchResults = await searchClient.search(searchText, {
-                queryType: "full",
-                searchMode: "all",
+            const searchOptions = {
+                top: top,
+                skip: skip,
                 includeTotalCount: true,
-                top: 10,
-                searchFields: ["INSTNM"]
+                searchMode: "all",
+                facets: Object.keys(processedFacets),
+                filter: createFilterExpression(filters, processedFacets)
+            }
+
+                // queryType: "full",
+                // searchMode: "all",
+                // top: 10,
+                // searchFields: ["INSTNM"]
                 // select: ["INSTNM"]
+            const searchResults = await searchClient.search(searchText, {
+                searchMode: "all",
+                top: 10,
+                facets: ["TUITIONFEE_IN,values:5000|10000|15000"],
+                select: ["TUITIONFEE_IN"]
             });
             let output = [];
             for await (const result of searchResults.results) {
-                output.push(result.document["INSTNM"]);
+                output.push(result);
             }
-            res(output);
+            res(searchResults.facets);
         } catch (e) {
             err(res);
         }
     });
 };
+
+// parses facets and their types
+/*
+    facets : [
+        {
+            "field": <>,
+            "type":
+        }
+    ]
+*/
+const processFacets = (facetString) => {
+    let facets = facetString.split(",");
+    let output = {};
+    facets.forEach(function (currentFacet) {
+        if (currentFacet.indexOf('*') >= 0) {
+            output[currentFacet.replace('*', '')] = 'array';
+        } else {
+            output[currentFacet] = 'string';
+        }
+    })
+    return output;
+}
+
+// creates filters in odata syntax
+// <not?> <field> <comparison> <value>
+const createFilterExpression = (filterList, facets) => {
+    let i = 0;
+    let filterExpressions = [];
+    while (i < filterList.length) {
+        let field = filterList[i].field;
+        let value = filterList[i].value;
+
+        if (facets[field] === 'array') {
+            filterExpressions.push(`${field}/any(t: search.in(t, '${value}', ','))`);
+        } else {
+            filterExpressions.push(`${field} eq '${value}'`);
+        }
+        i++;
+    }
+    return filterExpressions.join(' and ');
+}
+
+/*
+    filter:
+    public/private
+    prestige?
+    collegetype?
+
+    in-state tuition (TUITIONFEE_IN)
+    out-of-state tuition (TUITIONFEE_OUT)
+
+    application requirements
+    SAT/ACT policy?
+    SAT average
+    TOEFL/IELTS (no information)
+
+
+*/
