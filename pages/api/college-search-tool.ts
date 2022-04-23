@@ -6,15 +6,16 @@ import { any } from "prop-types";
 // References:
 // https://docs.microsoft.com/en-us/javascript/api/overview/azure/search-documents-readme?view=azure-node-latest
 
+// Data Master List:
+// https://docs.google.com/document/d/1K6c2FKCbVZgcndtt0A7tJAf2QgC4rzy9Tmxvf-mus9M/edit
+
 setLogLevel("info");
 
 const serviceName = "college-search-service";
 const indexName = "college-search-index";
 const queryKey = "1F7801474A40D9360ED57EC698A3CF10";
-
 const endPoint = "https://" + serviceName + ".search.windows.net/";
 
-// To query and manipulate documents
 const searchClient = new SearchClient(
     endPoint,
     indexName,
@@ -22,11 +23,12 @@ const searchClient = new SearchClient(
 );
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-    const {searchText, top, skip, filters, facets} = JSON.parse(req.body);
-    console.log(searchText);
+    console.log(req.body);
+    const {searchText, top, skip, filters, facets, searchFields} = JSON.parse(req.body);
+    console.log(searchFields);
     const processedFacets = processFacets(facets);
     try {
-      const collegeSearchResult = await getCollegeInfo(searchText, top, skip, filters, processedFacets);
+      const collegeSearchResult = await getCollegeInfo(searchText, top, skip, filters, processedFacets, searchFields);
       resolve.status(200).send(collegeSearchResult);
     } catch (e) {
       resolve.status(500).send(e);
@@ -38,7 +40,8 @@ export const getCollegeInfo = (
     top,
     skip,
     filters,
-    processedFacets
+    processedFacets,
+    searchFields
 ): Promise<Object> => {
     return new Promise(async (res, err) => {
         try {
@@ -47,26 +50,18 @@ export const getCollegeInfo = (
                 skip: skip,
                 includeTotalCount: true,
                 searchMode: "all",
-                facets: Object.keys(processedFacets),
-                filter: createFilterExpression(filters, processedFacets)
+                // facets: Object.keys(processedFacets),
+                filter: createFilterExpression(filters),
+                select: ["INSTNM", "TUITIONFEE_IN"],
+                searchFields: searchFields
             }
 
-                // queryType: "full",
-                // searchMode: "all",
-                // top: 10,
-                // searchFields: ["INSTNM"]
-                // select: ["INSTNM"]
-            const searchResults = await searchClient.search(searchText, {
-                searchMode: "all",
-                top: 10,
-                facets: ["TUITIONFEE_IN,values:5000|10000|15000"],
-                select: ["TUITIONFEE_IN"]
-            });
+            const searchResults = await searchClient.search(searchText, searchOptions);
             let output = [];
             for await (const result of searchResults.results) {
                 output.push(result);
             }
-            res(searchResults.facets);
+            res(output);
         } catch (e) {
             err(res);
         }
@@ -74,6 +69,9 @@ export const getCollegeInfo = (
 };
 
 // parses facets and their types
+// Need to validate facets with frontend
+// https://docs.microsoft.com/en-us/azure/search/search-faceted-navigation
+
 /*
     facets : [
         {
@@ -86,52 +84,25 @@ const processFacets = (facetString) => {
     let facets = facetString.split(",");
     let output = {};
     facets.forEach(function (currentFacet) {
-        if (currentFacet.indexOf('*') >= 0) {
-            output[currentFacet.replace('*', '')] = 'array';
-        } else {
-            output[currentFacet] = 'string';
-        }
+
+        output[currentFacet] = 'string';
     })
     return output;
 }
 
 // creates filters in odata syntax
-// <not?> <field> <comparison> <value>
-const createFilterExpression = (filterList) => {
+// <field> <comparison> <value>
+const createFilterExpression = (filters) => {
+    console.log(filters);
     let filterExpressions = [];
-    for (let i = 0; i < filterList.length; i++) {
-        let field = filterList[i].field;
-        let comparison = filterList[i].comparison;
-        let value = filterList[i].value;
-        filterExpressions.push(`${field} ${comparison} '${value}'`);
-    }
-    // while (i < filterList.length) {
-    //     let field = filterList[i].field;
-    //     let value = filterList[i].value;
+    for (let i = 0; i < filters.length; i++) {
+        let field = filters[i].field;
+        let comparison = filters[i].comparison;
+        let value = filters[i].value;
 
-    //     if (facets[field] === 'array') {
-    //         filterExpressions.push(`${field}/any(t: search.in(t, '${value}', ','))`);
-    //     } else {
-    //         filterExpressions.push(`${field} eq '${value}'`);
-    //     }
-    //     i++;
-    // }
+        filterExpressions.push(`${field} ${comparison} ${value}`);
+        console.log(filterExpressions);
+    }
+
     return filterExpressions.join(' and ');
 }
-
-/*
-    filter:
-    public/private
-    prestige?
-    collegetype?
-
-    in-state tuition (TUITIONFEE_IN)
-    out-of-state tuition (TUITIONFEE_OUT)
-
-    application requirements
-    SAT/ACT policy?
-    SAT average
-    TOEFL/IELTS (no information)
-
-
-*/
