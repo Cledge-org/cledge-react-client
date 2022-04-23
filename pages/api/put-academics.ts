@@ -38,14 +38,14 @@ export const putAcademics = (
     // Document should not have _id field when sent to database
     delete academics._id;
   }
-  console.error(userId);
-  console.error(academics);
-  console.error(insertionId);
+  console.log(userId);
+  console.log(academics);
+  console.log(insertionId);
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
       if (!userId && academics && insertionId) {
-        console.error("SURPRISE");
+        console.log("SURPRISE");
         await client
           .db("metrics")
           .collection("academics")

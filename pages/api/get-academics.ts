@@ -29,13 +29,13 @@ export function getAcademics(userId: string): Promise<Academics> {
         .collection("academics")
         .find()
         .toArray();
-      console.error(all);
+      console.log(all);
       const academics: Academics = (await metricsDb
         .collection("academics")
         .findOne({
           firebaseId: userId,
         })) as Academics;
-      console.error(academics);
+      console.log(academics);
       if (!academics) {
         res(null);
       } else {
@@ -52,7 +52,7 @@ export function getAcademics(userId: string): Promise<Academics> {
       }
       client.close();
     } catch (e) {
-      console.error(e);
+      console.log(e);
       err(e);
     }
   });
