@@ -3,6 +3,10 @@ import styled from "styled-components";
 export const LeftContentSection = styled("section")`
   position: relative;
   padding: 7rem 0 0;
+  
+  & img {
+    margin-bottom: 3rem;
+  }
 
   @media only screen and (max-width: 1024px) {
     padding: 4rem 0 0;

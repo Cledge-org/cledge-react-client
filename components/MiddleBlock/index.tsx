@@ -15,9 +15,24 @@ interface MiddleBlockProps {
   content: string;
   button?: string;
   id: string;
+  width?: number;
 }
 
-const MiddleBlock = ({ title, content, button, id }: MiddleBlockProps) => {
+const MiddleBlock = (props: MiddleBlockProps) => {
+  console.log("hello" + props.width);
+  if (props.width >= 576) {
+    return (
+      <Slide direction="up">
+        <MiddleBlockContent {...props} />
+      </Slide>
+    )
+  } else {
+    return <MiddleBlockContent {...props} />;
+  }
+}
+
+
+const MiddleBlockContent = ({ title, content, button, id }: MiddleBlockProps) => {
   const scrollTo = (id: string) => {
     const element = document.getElementById(id) as HTMLDivElement;
     element.scrollIntoView({
@@ -26,7 +41,14 @@ const MiddleBlock = ({ title, content, button, id }: MiddleBlockProps) => {
   };
   return (
     <MiddleBlockSection id={id}>
-      <Slide direction="up">
+        <Row justify="center" align="middle">
+          <ContentWrapper className="container-margin">
+            <Col lg={24} md={24} sm={24} xs={24}>
+              <h6 style={{fontWeight: '600'}}>{title}</h6>
+              {id === "partner" ? null : <p>{content}</p>}
+            </Col>
+          </ContentWrapper>
+        </Row>
         <div>
           <Row justify="center" align="middle">
             <ContentWrapper className="container-margin">
@@ -108,7 +130,6 @@ const MiddleBlock = ({ title, content, button, id }: MiddleBlockProps) => {
             )}
           </div>
         </div>
-      </Slide>
     </MiddleBlockSection>
   );
 };

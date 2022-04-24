@@ -7,7 +7,8 @@ import MissionContent from "../content/MissionContent.json";
 import ProductContent from "../content/ProductContent.json";
 import ContactContent from "../content/ContactContent.json";
 import PartnerContent from "../content/PartnerContent.json";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useLayoutEffect } from "react";
+import Header from "../components/Header";
 import styled from "styled-components";
 import Footer from "../components/common/Footer";
 import ECDropDown from "../components/question_components/ec_dropdown_question";
@@ -249,9 +250,23 @@ export const MediaButton = styled("button")`
   }
 `;
 
+function useWindowSize() {
+  const [size, setSize] = useState([0, 0]);
+  useLayoutEffect(() => {
+    function updateSize() {
+      setSize([window.innerWidth, window.innerHeight]);
+    }
+    window.addEventListener("resize", updateSize);
+    updateSize();
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+  return size;
+}
+
 const Home = () => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
+  const [width, height] = useWindowSize();
 
   return (
     <>
@@ -317,6 +332,7 @@ const Home = () => {
           id="goal"
           title={MiddleBlockContent.title}
           content={MiddleBlockContent.text}
+          width={width}
         />
         <Metric id="metric" className="d-flex bg-dark-blue">
           <div>
@@ -344,13 +360,23 @@ const Home = () => {
           icon="landing_1.svg"
           id="about"
         />
-        <ContentBlock
-          type="right"
-          title={MissionContent.title}
-          content={MissionContent.text}
-          icon="landing_2.svg"
-          id="mission"
-        />
+        {width < 576 ? (
+          <ContentBlock
+            type="left"
+            title={MissionContent.title}
+            content={MissionContent.text}
+            icon="landing_2.svg"
+            id="mission"
+          />
+        ) : (
+          <ContentBlock
+            type="right"
+            title={MissionContent.title}
+            content={MissionContent.text}
+            icon="landing_2.svg"
+            id="mission"
+          />
+        )}
         <ContentBlock
           type="left"
           title={ProductContent.title}
@@ -378,8 +404,7 @@ const Home = () => {
                 </p>
               </div>
               <img src="images/insider-blob.svg" />
-              <div
-                style={{ bottom: "-2vh", left: "5vw" }}>
+              <div style={{ bottom: "-2vh", left: "5vw" }}>
                 <Button
                   key="subscribe-btn"
                   color="#F7BC76"
