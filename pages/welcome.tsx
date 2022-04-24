@@ -8,7 +8,6 @@ import ProductContent from "../content/ProductContent.json";
 import ContactContent from "../content/ContactContent.json";
 import PartnerContent from "../content/PartnerContent.json";
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
-import Header from "../components/Header";
 import styled from "styled-components";
 import Footer from "../components/common/Footer";
 import ECDropDown from "../components/question_components/ec_dropdown_question";
@@ -280,6 +279,7 @@ const Home = () => {
               button={IntroContent.button}
               video={<YoutubeEmbed videoId="Bly0QbY3fV4" />}
               id="intro"
+              width={width}
             />
           </div>
           <SubscribeWrapper>
