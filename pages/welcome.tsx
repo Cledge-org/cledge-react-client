@@ -40,7 +40,7 @@ const Intro = styled(FullWidthContainer)`
 
   & > div:first-child {
     margin-bottom: 30px;
-    
+
     & > div {
       width: 100%;
     }
@@ -196,14 +196,13 @@ export const BlobBlock = styled("div")`
       justify-content: center;
     }
 
-    
     .BlobContainer {
       width: 80vw;
       height: 50vh;
       border: 1px solid transparent;
       border-radius: 15px;
       background-color: rgba(255, 255, 255, 0.3);
-      
+
       button {
         width: 20vw;
       }
