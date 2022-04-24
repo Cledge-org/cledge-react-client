@@ -5,15 +5,23 @@ import { Fade } from "react-awesome-reveal";
 
 const ContentBlock = (props: ContentBlockProps) => {
   if (props.width && props.width < 576) {
-    return <ContentBlockContent {...props}></ContentBlockContent>
+    return <ContentBlockContent {...props}></ContentBlockContent>;
   } else {
-    return (
-      <Fade direction={props.type}>
-        <ContentBlockContent {...props}></ContentBlockContent>
-      </Fade>
-    );
+    if (props.type == "left") {
+      return (
+        <Fade direction="left">
+          <ContentBlockContent {...props}></ContentBlockContent>
+        </Fade>
+      );
+    } else {
+      return (
+        <Fade direction="right">
+          <ContentBlockContent {...props}></ContentBlockContent>
+        </Fade>
+      );
+    }
   }
-}
+};
 
 const ContentBlockContent = (props: ContentBlockProps) => {
   if (props.type === "left") return <LeftContentBlock {...props} />;
