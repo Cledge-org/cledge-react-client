@@ -41,14 +41,6 @@ const MiddleBlockContent = ({ title, content, button, id }: MiddleBlockProps) =>
   };
   return (
     <MiddleBlockSection id={id}>
-        <Row justify="center" align="middle">
-          <ContentWrapper className="container-margin">
-            <Col lg={24} md={24} sm={24} xs={24}>
-              <h6 style={{fontWeight: '600'}}>{title}</h6>
-              {id === "partner" ? null : <p>{content}</p>}
-            </Col>
-          </ContentWrapper>
-        </Row>
         <div>
           <Row justify="center" align="middle">
             <ContentWrapper className="container-margin">
