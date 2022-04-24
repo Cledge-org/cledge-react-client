@@ -1,5 +1,5 @@
 import { Row, Col } from "antd";
-import { Slide } from "react-awesome-reveal";
+import { Fade } from "react-awesome-reveal";
 import { Button } from "../common/Button";
 import {
   MiddleBlockSection,
@@ -22,17 +22,21 @@ const MiddleBlock = (props: MiddleBlockProps) => {
   console.log("hello" + props.width);
   if (props.width >= 576) {
     return (
-      <Slide direction="up">
+      <Fade>
         <MiddleBlockContent {...props} />
-      </Slide>
-    )
+      </Fade>
+    );
   } else {
     return <MiddleBlockContent {...props} />;
   }
-}
+};
 
-
-const MiddleBlockContent = ({ title, content, button, id }: MiddleBlockProps) => {
+const MiddleBlockContent = ({
+  title,
+  content,
+  button,
+  id,
+}: MiddleBlockProps) => {
   const scrollTo = (id: string) => {
     const element = document.getElementById(id) as HTMLDivElement;
     element.scrollIntoView({
@@ -41,10 +45,11 @@ const MiddleBlockContent = ({ title, content, button, id }: MiddleBlockProps) =>
   };
   return (
     <MiddleBlockSection id={id}>
+      <div>
         <Row justify="center" align="middle">
           <ContentWrapper className="container-margin">
             <Col lg={24} md={24} sm={24} xs={24}>
-              <h6 style={{fontWeight: '600'}}>{title}</h6>
+              <h6>{title}</h6>
               {id === "partner" ? null : <p>{content}</p>}
             </Col>
           </ContentWrapper>
@@ -78,9 +83,7 @@ const MiddleBlockContent = ({ title, content, button, id }: MiddleBlockProps) =>
           ) : (
             <CardWrapper>
               <PartnerCard>
-                <strong
-                  className="cl-dark-text"
-                  style={{ fontSize: "1.8em" }}>
+                <strong className="cl-dark-text" style={{ fontSize: "1.8em" }}>
                   Partnered with the best technologies
                 </strong>
                 <p
@@ -92,15 +95,10 @@ const MiddleBlockContent = ({ title, content, button, id }: MiddleBlockProps) =>
                   empower every student with the latest technologies to drive
                   their college counseling experience.
                 </p>
-                <img
-                  src="./images/landing_msft.svg"
-                  alt="Microsoft"
-                />
+                <img src="./images/landing_msft.svg" alt="Microsoft" />
               </PartnerCard>
               <PartnerCard>
-                <strong
-                  className="cl-dark-text"
-                  style={{ fontSize: "1.8em" }}>
+                <strong className="cl-dark-text" style={{ fontSize: "1.8em" }}>
                   Your data is secured
                 </strong>
                 <p
@@ -120,6 +118,7 @@ const MiddleBlockContent = ({ title, content, button, id }: MiddleBlockProps) =>
             </CardWrapper>
           )}
         </div>
+      </div>
     </MiddleBlockSection>
   );
 };
