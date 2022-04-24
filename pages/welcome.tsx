@@ -402,6 +402,7 @@ const Home = () => {
             id="partner"
             title={PartnerContent.title}
             content={PartnerContent.text}
+            width={width}
           />
         </Partner>
         <BlobBlock>

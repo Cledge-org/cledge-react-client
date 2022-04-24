@@ -1,5 +1,5 @@
 import { Row, Col } from "antd";
-import { Slide } from "react-awesome-reveal";
+import { Fade } from "react-awesome-reveal";
 import { Button } from "../common/Button";
 import {
   MiddleBlockSection,
@@ -22,9 +22,9 @@ const MiddleBlock = (props: MiddleBlockProps) => {
   console.log("hello" + props.width);
   if (props.width >= 576) {
     return (
-      <Slide direction="up">
+      <Fade>
         <MiddleBlockContent {...props} />
-      </Slide>
+      </Fade>
     )
   } else {
     return <MiddleBlockContent {...props} />;
