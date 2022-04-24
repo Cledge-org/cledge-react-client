@@ -5,7 +5,7 @@ export const LeftContentSection = styled("section")`
   padding: 7rem 0 0;
   
   & img {
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
   }
 
   @media only screen and (max-width: 1024px) {

@@ -279,6 +279,7 @@ const Home = () => {
               button={IntroContent.button}
               video={<YoutubeEmbed videoId="Bly0QbY3fV4" />}
               id="intro"
+              width={width}
             />
           </div>
           <SubscribeWrapper>

@@ -28,7 +28,6 @@ const RightBlock = ({
   };
   return (
     <RightBlockContainer>
-      <Fade direction="right">
         <Row justify="space-between" align="middle" id={id}>
           <Col lg={11} md={11} sm={11} xs={24}>
             <ContentWrapper id={id} className="container-margin">
@@ -69,7 +68,6 @@ const RightBlock = ({
             )}
           </Col>
         </Row>
-      </Fade>
     </RightBlockContainer>
   );
 };

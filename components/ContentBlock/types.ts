@@ -8,4 +8,5 @@ export interface ContentBlockProps {
   id: string;
   type?: string;
   video?: JSX.Element;
+  width? :number;
 }
