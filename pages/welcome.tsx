@@ -318,7 +318,7 @@ const Home = () => {
               margin: "30px 0",
             }}
             className="d-flex flex-row flex-wrap justify-content-center align-items-center">
-            <MediaButton>
+            <MediaButton onClick={window.open("www.google.com")}>
               <img src="images/whatsapp.svg" />
               WhatsApp Community
             </MediaButton>
