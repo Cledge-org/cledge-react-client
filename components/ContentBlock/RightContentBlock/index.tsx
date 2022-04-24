@@ -40,7 +40,17 @@ const RightBlock = ({
                         key={id}
                         color={item.color}
                         fixedWidth={true}
-                        onClick={() => scrollTo("about")}>
+                        onClick={() => {
+                          if (id === 0) {
+                            window.open(
+                              "https://forms.gle/M1GxLK45Yi3Esfn5A",
+                              "_blank"
+                            );
+                          }
+                          if (id === 1) {
+                            scrollTo("about");
+                          }
+                        }}>
                         {item.title}
                       </Button>
                     );

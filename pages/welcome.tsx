@@ -40,6 +40,11 @@ const Intro = styled(FullWidthContainer)`
 
   & > div:first-child {
     margin-bottom: 30px;
+    
+    & > div {
+      width: 100%;
+    }
+
     @media only screen and (min-width: 767px) {
       display: flex;
       align-items: center;
@@ -305,7 +310,9 @@ const Home = () => {
                 key="subscribe-btn"
                 color="#F7BC76"
                 fixedWidth={true}
-                onClick={() => {}}>
+                onClick={() => {
+                  window.open("https://forms.gle/M1GxLK45Yi3Esfn5A", "_blank");
+                }}>
                 Subscribe to our monthly tips
               </Button>
             </div>
@@ -318,11 +325,17 @@ const Home = () => {
               margin: "30px 0",
             }}
             className="d-flex flex-row flex-wrap justify-content-center align-items-center">
-            <MediaButton onClick={window.open("www.google.com")}>
+            <MediaButton
+              onClick={() =>
+                window.open("https://rebrand.ly/c1f9dl6", "_blank")
+              }>
               <img src="images/whatsapp.svg" />
               WhatsApp Community
             </MediaButton>
-            <MediaButton>
+            <MediaButton
+              onClick={() =>
+                window.open("https://discord.gg/CnJcZeb3", "_blank")
+              }>
               <img src="images/discord.svg" />
               Discord Community
             </MediaButton>
@@ -409,7 +422,12 @@ const Home = () => {
                   key="subscribe-btn"
                   color="#F7BC76"
                   fixedWidth={false}
-                  onClick={() => {}}>
+                  onClick={() => {
+                    window.open(
+                      "https://forms.gle/M1GxLK45Yi3Esfn5A",
+                      "_blank"
+                    );
+                  }}>
                   Join Insider Program for Free ➜
                 </Button>
               </div>
