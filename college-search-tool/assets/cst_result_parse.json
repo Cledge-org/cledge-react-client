@@ -38,5 +38,10 @@
         "Health professions and related programs": "PCIP51",
         "Business/marketing": "PCIP52",
         "History": "PCIP54"
+    },
+    "college_type_dict": {
+        "1": "Public",
+        "2": "Private non-profit",
+        "3": "Private for-profit"
     }
 }

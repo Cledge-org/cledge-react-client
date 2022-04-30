@@ -24,7 +24,7 @@ const searchClient = new SearchClient(
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     console.log(req.body);
-    const {searchText, top, skip, filters, facets, searchFields} = JSON.parse(req.body);
+    const {searchText, top, skip, filters, searchFields} = JSON.parse(req.body);
     console.log(searchFields);
     // const processedFacets = processFacets(facets);
     try {
@@ -105,7 +105,7 @@ const formatOutput = (college) => {
         "institution_url": college["INSTURL"],
         "net_price_url": college["NPCURL"],
         "location": college["CITY"] + ", " + college["STABBR"],
-        "college_type": college["CONTROL"],
+        "college_type": dicts.college_type_dict[college["CONTROL"]],
         "in-state_tuition": college["TUITIONFEE_IN"],
         "out-state_tuition": college["TUITIONFEE_OUT"],
         "abbreviation": null,
