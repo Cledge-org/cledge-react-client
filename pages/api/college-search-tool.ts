@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { SearchClient, AzureKeyCredential } from "@azure/search-documents";
-import { setLogLevel } from "@azure/logger";
-import { any } from "prop-types";
 import dicts from "../../college-search-tool/assets/cst_result_parse.json";
 
 // References:
@@ -9,8 +7,6 @@ import dicts from "../../college-search-tool/assets/cst_result_parse.json";
 
 // Data Master List:
 // https://docs.google.com/document/d/1K6c2FKCbVZgcndtt0A7tJAf2QgC4rzy9Tmxvf-mus9M/edit
-
-setLogLevel("info");
 
 const serviceName = "college-search-service";
 const indexName = "college-search-index";
@@ -59,7 +55,6 @@ export const getCollegeInfo = (
             let output = [];
             for await (const result of searchResults.results) {
                 output.push(formatOutput(result["document"]));
-                // formatOutput(result["document"])
             }
             res(output);
         } catch (e) {
