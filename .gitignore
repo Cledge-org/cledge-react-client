@@ -34,3 +34,6 @@ yarn-error.log*
 .vercel
 node_modules
 yarn.lock
+
+# data
+/college-search-tool/data/
