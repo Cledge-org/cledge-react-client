@@ -18,7 +18,6 @@ import AuthFunctions from "./api/auth/firebase-auth";
 import { useEffect, useState } from "react";
 import { Router, useRouter } from "next/router";
 import LoadingScreen from "../components/common/loading";
-import { ORIGIN_URL } from "../config";
 import { initialStateAction } from "../utils/actionFunctions";
 
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {

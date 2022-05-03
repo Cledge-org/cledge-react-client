@@ -3,49 +3,32 @@ import styled from "styled-components";
 export const StyledContainer = styled("div")<any>`
   position: relative;
   width: 100%;
-  padding: 0 90px;
   border-top: ${(p) => (p.border ? "1px solid #CDD1D4" : "")};
-
-  @media only screen and (max-width: 1024px) {
-    padding: 0 60px;
-  }
-
-  @media only screen and (max-width: 768px) {
-    padding: 0 18px;
-  }
-
-  @media only screen and (max-width: 414px) {
-    padding: 0 18px;
-  }
 
   a:hover {
     color: #18216d;
   }
 
   input,
-  textarea {
+  textarea,
+  .ec-dropdown-btn {
     border-radius: 4px;
     border: 0;
-    background: rgb(241, 242, 243);
     transition: all 0.3s ease-in-out;
     outline: none;
     width: 100%;
     padding: 1rem 1.25rem;
 
     :focus-within {
-      background: none;
       box-shadow: #2e186a 0px 0px 0px 1px;
     }
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
   h6 {
     color: #1a2169;
     font-size: 36px;
     line-height: 1.18;
+    font-weight: 700;
 
     @media only screen and (max-width: 890px) {
       font-size: 32px;

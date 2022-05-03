@@ -3,7 +3,6 @@ import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "../_app";
 import ECDropDown from "../../components/question_components/ec_dropdown_question";
 import UploadPage from "../../components/common/upload-page";
-import { ORIGIN_URL } from "../../config";
 
 // logged in landing page
 const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
@@ -20,7 +19,7 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
         let resourceSendData = {};
         resourceSendData[resourceType.toLowerCase()] = resourceData;
         console.log(resourceSendData);
-        fetch(`${ORIGIN_URL}/api/put-resource-${resourceType.toLowerCase()}`, {
+        fetch(`/api/resources/put-resource-${resourceType.toLowerCase()}`, {
           method: "POST",
           body: JSON.stringify(resourceSendData),
         }).then((res) => {
@@ -38,7 +37,7 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
         }}
         defaultValue={resourceType}
         valuesList={[
-          "Extracurricular",
+          "Extracurriculars",
           "Essay",
           "Application",
           "Standardized Tests",

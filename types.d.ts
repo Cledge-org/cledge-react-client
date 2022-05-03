@@ -25,22 +25,37 @@ interface CardVideo {
   _id?: ObjectId;
   source: string;
   name: string;
-  category: string;
-  description?: string;
+  tag?: string;
+  category?: string;
+  description: string;
+  upvotes?: number;
+  downvotes?: number;
 }
 interface CardArticle {
   _id?: ObjectId;
   description: string;
   source: string;
   name: string;
-  category: string;
+  tag?: string;
+  category?: string;
+  upvotes?: number;
+  downvotes?: number;
 }
 interface CardResource {
   _id?: ObjectId;
   source: string;
   name: string;
-  category: string;
-  description?: string;
+  category?: string;
+  tag?: string;
+  description: string;
+  upvotes?: number;
+  downvotes?: number;
+}
+
+interface ResourceVoters extends WithId<Document> {
+  _id?: ObjectId;
+  upvotes?: string[]; // list of user ids
+  downvotes?: string[]; // lsit of user ids
 }
 
 //Progress Page Types -->
@@ -64,11 +79,17 @@ interface ProgressInfo {
 interface QuestionList extends WithId<Document> {
   _id?: ObjectId;
   name: string;
+  isCheckin?: boolean;
+  part?: string;
+  order?: number;
   chunks: QuestionChunk[];
 }
 interface QuestionList_Db extends WithId<Document> {
   _id?: ObjectId;
   name: string;
+  isCheckin?: boolean;
+  part?: string;
+  order?: number;
   chunks: string[]; // Document IDs of chunks
 }
 interface QuestionChunk extends WithId<Document> {
@@ -166,3 +187,40 @@ interface PersonalizedContent extends WithId<Document> {
   url: string;
   content?: string;
 }
+
+// Student Metrics
+interface Activities extends WithId<Document> {
+  _id?: ObjectId;
+  activities: Activity[];
+  overallTier: number;
+  totalPoints: number;
+}
+
+interface Activity {
+  activityID: number;
+  actType: string;
+  hoursYear: number;
+  yearsSpent: number;
+  recogLevel: number;
+  description: string;
+  points: number;
+  tier: number;
+}
+
+interface Academics extends WithId<Document> {
+  _id?: ObjectId;
+  classes: Class[];
+  overallClassTier: number;
+  gpa: number;
+  gpaTier: number;
+  satScore: number;
+  actScore: number;
+  overallTier: number
+}
+
+interface Class {
+  classID: number;
+  name: string;
+  tier: number;
+}
+

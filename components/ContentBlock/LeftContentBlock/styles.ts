@@ -3,22 +3,13 @@ import styled from "styled-components";
 export const LeftContentSection = styled("section")`
   position: relative;
   padding: 7rem 0 0;
+  
+  & img {
+    margin-bottom: 1rem;
+  }
 
   @media only screen and (max-width: 1024px) {
     padding: 4rem 0 0;
-  }
-`;
-
-export const IconWrapper = styled.div`
-  position: relative;
-  left: -90px;
-
-  @media only screen and (max-width: 1024px) {
-    left: -60px;
-  }
-
-  @media only screen and (max-width: 768px) {
-    left: -18px
   }
 `;
 
@@ -29,6 +20,11 @@ export const Content = styled("p")`
 export const ContentWrapper = styled("div")`
   position: relative;
   max-width: 540px;
+  margin: auto;
+
+  h6 {
+    font-weight: 800;
+  }
 
   @media only screen and (max-width: 575px) {
     padding-top: 4rem;

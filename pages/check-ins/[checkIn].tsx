@@ -14,7 +14,6 @@ import { NextApplicationPage } from "../_app";
 import { GetServerSidePropsContext } from "next";
 import TextInputQuestion from "../../components/question_components/textinput_question";
 import { useRouter } from "next/router";
-import { ORIGIN_URL } from "../../config";
 import AuthFunctions from "../api/auth/firebase-auth";
 import { useSession } from "next-auth/react";
 import { connect } from "react-redux";
@@ -30,7 +29,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     let firstCheckIn = ctx.query.checkIn.indexOf(",");
     let checkIn = await (
-      await fetch(`${ORIGIN_URL}/api/get-question-list`, {
+      await fetch(`/api/get-question-list`, {
         method: "POST",
         body: JSON.stringify({
           //THIS WORKS
@@ -110,7 +109,7 @@ const CheckIn: NextApplicationPage<{
       ({ questionId }) => questionId === "61de0b617c405886579656ec"
     )?.response;
     await Promise.all([
-      fetch(`${ORIGIN_URL}/api/update-user`, {
+      fetch(`/api/update-user`, {
         method: "POST",
         body: JSON.stringify({
           userInfo: {
@@ -127,7 +126,7 @@ const CheckIn: NextApplicationPage<{
           userId: session.data.user.uid,
         }),
       }),
-      fetch(`${ORIGIN_URL}/api/put-question-responses`, {
+      fetch(`/api/put-question-responses`, {
         method: "POST",
         body: JSON.stringify({
           responses: newUserResponses,

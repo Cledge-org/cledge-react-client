@@ -7,6 +7,7 @@ interface QuestionSubPageHeaderProps {
   subText?: string | JSX.Element;
   isExtracurricular?: boolean;
   onAddNew?: Function;
+  isMetrics?: boolean;
 }
 export default function QuestionSubPageHeader({
   title,
@@ -14,10 +15,13 @@ export default function QuestionSubPageHeader({
   subText,
   isExtracurricular,
   onAddNew,
+  isMetrics,
 }: QuestionSubPageHeaderProps) {
   return (
     <div
-      className="d-flex flex-row justify-content-between align-items-center px-3 mx-5"
+      className={`d-flex flex-row justify-content-${
+        isMetrics ? "start" : "between px-3"
+      } align-items-center mx-5`}
       style={{ height: "15%" }}
     >
       <div className="question-subpage-title">
@@ -32,7 +36,7 @@ export default function QuestionSubPageHeader({
         >
           Add New
         </button>
-      ) : (
+      ) : isMetrics ? null : (
         <div style={{ width: "10vh" }}>
           <CircularProgressbarWithChildren
             strokeWidth={10}

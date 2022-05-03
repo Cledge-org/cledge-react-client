@@ -46,10 +46,10 @@ export default function Footer({
               />
             </a>
           </div>
-          <br />© 2021 Cledge
+          <br />© 2022 Cledge
         </div>
 
-        <div className="col-12 col-md-3 mx-auto mt-5 mt-md-0">
+        {/* <div className="col-12 col-md-3 mx-auto mt-5 mt-md-0">
           <h6 className="title mb-4 cl-translucent-white">FEATURES</h6>
           <ul className="list-unstyled">
             <li className="mt-2">
@@ -93,116 +93,12 @@ export default function Footer({
               </a>
             </li>
           </ul>
-        </div>
-        <div className="col-12 col-md-3 mx-auto mt-5 mt-md-0">
-          <h6 className="title mb-4 cl-translucent-white">MORE RESOURCES</h6>
-          <ul className="list-unstyled">
-            <li className="mt-2">
-              <a
-                onClick={() => {
-                  onFeatureClick(0);
-                }}
-                className="cl-white"
-              >
-                Easy Guides
-              </a>
-            </li>
-            <li className="mt-2">
-              <a
-                onClick={() => {
-                  onFeatureClick(1);
-                }}
-                className="cl-white"
-              >
-                Webinars
-              </a>
-            </li>
-            <li className="mt-2">
-              <a
-                onClick={() => {
-                  onFeatureClick(3);
-                }}
-                className="cl-white"
-              >
-                Cledge Articles
-              </a>
-            </li>
-            <li className="mt-2">
-              <a
-                onClick={() => {
-                  onFeatureClick(2);
-                }}
-                className="cl-white"
-              >
-                Livestreams
-              </a>
-            </li>
-            <li className="mt-2">
-              <a
-                onClick={() => {
-                  onFeatureClick(2);
-                }}
-                className="cl-white"
-              >
-                Resources
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div className="col-12 col-md-3 mx-auto mt-5 mt-md-0">
-          <h6 className="title mb-4 cl-translucent-white">ABOUT</h6>
-          <ul className="list-unstyled">
-            <li className="mt-2">
-              <a
-                onClick={() => {
-                  onFeatureClick(0);
-                }}
-                className="cl-white"
-              >
-                About Us
-              </a>
-            </li>
-            <li className="mt-2">
-              <a
-                onClick={() => {
-                  onFeatureClick(1);
-                }}
-                className="cl-white"
-              >
-                Our Mission
-              </a>
-            </li>
-            <li className="mt-2">
-              <a
-                onClick={() => {
-                  onFeatureClick(3);
-                }}
-                className="cl-white"
-              >
-                Careers
-              </a>
-            </li>
-            <li className="mt-2">
-              <a
-                onClick={() => {
-                  onFeatureClick(2);
-                }}
-                className="cl-white"
-              >
-                Contact
-              </a>
-            </li>
-            <li className="mt-2">
-              <a
-                onClick={() => {
-                  onFeatureClick(2);
-                }}
-                className="cl-white"
-              >
-                Terms & Condition
-              </a>
-            </li>
-          </ul>
+        </div> */}
+        <div className="col-12 col-md-3  mt-5 mt-md-0">
+          <h6 className="title mb-4 cl-translucent-white">MORE</h6>
+          <a href="mailto:ayan@cledge.org" className="cl-white">
+            Get in Touch
+          </a>
         </div>
       </div>
     </footer>

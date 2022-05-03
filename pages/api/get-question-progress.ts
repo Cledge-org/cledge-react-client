@@ -1,8 +1,5 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getAccountInfo } from "./get-account";
-import { getQuestionResponses } from "./get-question-responses";
-import AuthFunctions from "./auth/firebase-auth";
 import { getAllQuestionLists } from "./get-all-questions";
 
 export const config = {

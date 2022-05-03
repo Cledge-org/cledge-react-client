@@ -1,5 +1,12 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
 
+.container-margin {
+  @media only screen and (max-width: 767px) {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+}
+
 html,
 body {
   padding: 0;
@@ -29,6 +36,12 @@ $cl-orange: #f7bc76;
 $font-family-base: "Montserrat", sans-serif;
 $cl-yellow: #f7bc76;
 $cl-red: #ff6060;
+$cl-purple: #58508d;
+$cl-pink-purple: #bc5090;
+$cl-orange-red: #ff6361;
+$cl-light-yellow: #f8e74c;
+$cl-soft-gray: #e0dfe8;
+$cl-super-light-gray: #fbfcff;
 
 a {
   color: inherit;
@@ -38,9 +51,17 @@ a {
 * {
   box-sizing: border-box;
 }
-
+.soft-gray-border {
+  border: 1px solid $cl-soft-gray;
+}
+.bg-cl-super-light-gray {
+  background-color: $cl-super-light-gray;
+}
 .bg-dark-blue {
   background-color: $cl-dark-blue;
+}
+.bg-cl-dark-text {
+  background-color: $cl-dark-text;
 }
 .bg-light-blue {
   background-color: $cl-light-blue;
@@ -53,6 +74,18 @@ a {
 }
 .bg-cl-white {
   background-color: $cl-white;
+}
+.bg-cl-purple {
+  background-color: $cl-purple;
+}
+.bg-cl-pink-purple {
+  background-color: $cl-pink-purple;
+}
+.bg-cl-orange-red {
+  background-color: $cl-orange-red;
+}
+.bg-cl-light-yellow {
+  background-color: $cl-light-yellow;
 }
 .cl-white {
   color: $cl-white;
@@ -157,7 +190,12 @@ a {
   color: white !important;
   border: 1px solid $cl-blue;
 }
-
+.cl-btn-red {
+  @extend .cl-btn;
+  background-color: $cl-red !important;
+  color: white !important;
+  border: 1px solid $cl-red;
+}
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -221,11 +259,20 @@ $spacers: (
     $spacer * 10,
   ),
 );
+.ms-05 {
+  margin-left: 0.2vw;
+}
+.mx-05 {
+  margin-left: 0.2vw;
+  margin-right: 0.2vw;
+}
+.me-05 {
+  margin-right: 0.2vw;
+}
 
 //GLOBAL DROPDOWN STYLES -->
 .dropdown-container {
   position: relative;
-  height: 5vh;
 }
 
 .dropdown-menu-custom {

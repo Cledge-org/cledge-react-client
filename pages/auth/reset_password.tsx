@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { ORIGIN_URL } from "../../config";
+
 export default function resetpassword() {
   const [email, setEmail] = useState("");
   const router = useRouter();
@@ -32,7 +32,7 @@ export default function resetpassword() {
           <div className="col px-0">
             <button
               onClick={() => {
-                fetch(`${ORIGIN_URL}/api/reset-password`, {
+                fetch(`/api/reset-password`, {
                   method: "POST",
                   body: JSON.stringify({ email }),
                 }).then((res) => {

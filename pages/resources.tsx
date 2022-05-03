@@ -6,8 +6,7 @@ import TabButton from "../components/common/TabButton";
 import { NextApplicationPage } from "./_app";
 import CardImage from "../components/common/Card_Image";
 import { GetServerSidePropsContext } from "next";
-import { getResourcesInfo } from "./api/get-resources";
-import { ORIGIN_URL } from "../config";
+import { getResourcesInfo } from "./api/resources/get-resources";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faSearch } from "@fortawesome/free-solid-svg-icons";
 
@@ -15,9 +14,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
-        resourcesInfo: await (
-          await fetch(`${ORIGIN_URL}/api/get-resources`)
-        ).json(),
+        resourcesInfo: JSON.parse(JSON.stringify(await getResourcesInfo())),
       },
     };
   } catch (err) {
@@ -32,7 +29,7 @@ const Resources: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
 }) => {
   const resourceTypes = [
     "All",
-    "Extracurricular",
+    "Extracurriculars",
     "Essay",
     "Application",
     "Standardized Tests",

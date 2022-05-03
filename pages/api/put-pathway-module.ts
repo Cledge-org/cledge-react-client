@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
   const { userToken, pathwayModuleId, pathwayModule } = JSON.parse(req.body);
 
-  if (pathwayModule) {
+  if (pathwayModule || pathwayModuleId) {
     try {
       const result = await putPathwayModule(pathwayModuleId, pathwayModule);
       resolve.status(200).send(result);
@@ -30,14 +30,14 @@ export const putPathwayModule = (
   pathwayModuleId: ObjectId | undefined,
   pathwayModule: PathwayModule_Db | undefined
 ): Promise<{ moduleId: ObjectId }> => {
-  if (pathwayModule._id) {
+  if (pathwayModule !== undefined && pathwayModule._id) {
     // Document should not have _id field when sent to database
     delete pathwayModule._id;
   }
-  if (!(pathwayModuleId instanceof ObjectId)) {
+  if (pathwayModuleId && !(pathwayModuleId instanceof ObjectId)) {
     pathwayModuleId = new ObjectId(pathwayModuleId);
   }
-  console.error(pathwayModuleId);
+  //console.error(pathwayModuleId);
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
@@ -52,6 +52,7 @@ export const putPathwayModule = (
           .db("pathways")
           .collection("modules")
           .deleteOne({ _id: pathwayModuleId });
+        res({ moduleId: pathwayModuleId });
       } else if (pathwayModuleId && pathwayModule) {
         await client
           .db("pathways")
@@ -61,7 +62,6 @@ export const putPathwayModule = (
             { $set: pathwayModule },
             { upsert: true }
           );
-        console.error(pathwayModuleId);
         res({ moduleId: pathwayModuleId });
       }
       client.close();

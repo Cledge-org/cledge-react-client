@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
   const { userToken, pathwayId, pathway } = JSON.parse(req.body);
 
-  if (pathway) {
+  if (pathway || pathwayId) {
     try {
       const result = await putPathway(
         pathwayId ? new ObjectId(pathwayId) : undefined,
@@ -32,13 +32,15 @@ export const putPathway = async (
   pathwayId: ObjectId | undefined,
   pathway: Pathway_Db | undefined
 ): Promise<void> => {
-  if (pathway._id) {
+  if (pathway !== undefined && pathway._id) {
     // Document should not have _id field when sent to database
     delete pathway._id;
   }
-  pathway.modules = pathway.modules.map((module) => {
-    return module instanceof ObjectId ? module : new ObjectId(module);
-  });
+  if (pathway !== undefined) {
+    pathway.modules = pathway.modules.map((module) => {
+      return module instanceof ObjectId ? module : new ObjectId(module);
+    });
+  }
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);

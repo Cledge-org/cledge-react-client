@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userToken, questionId, question } = JSON.parse(req.body);
 
-  if (question) {
+  if (question || questionId) {
     try {
       const result = await putQuestion(questionId, question);
       resolve.status(200).send(result);
@@ -30,9 +30,12 @@ export const putQuestion = async (
   questionId: ObjectId | undefined,
   question: Question | undefined
 ): Promise<{ questionId: string }> => {
-  if (question._id) {
+  if (question !== undefined && question._id) {
     // Document should not have _id field when sent to database
     delete question._id;
+  }
+  if (questionId && !(questionId instanceof ObjectId)) {
+    questionId = new ObjectId(questionId);
   }
   return new Promise(async (res, err) => {
     try {
@@ -53,11 +56,11 @@ export const putQuestion = async (
         res({
           questionId: questionId.toString(),
         });
-      } else if(questionId && question) {
+      } else if (questionId && question) {
         await client
           .db("questions")
           .collection("question-data")
-          .updateOne({ _id: questionId }, { $set: question }, {upsert: true});
+          .updateOne({ _id: questionId }, { $set: question }, { upsert: true });
         res({
           questionId: questionId.toString(),
         });

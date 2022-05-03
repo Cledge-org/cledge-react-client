@@ -44,7 +44,7 @@ export const updateUser = async (
       await client
         .db("users")
         .collection("users")
-        .updateOne({ firebaseId }, { $set: user });
+        .updateOne({ firebaseId }, { $set: user }, {upsert : true});
       res();
       client.close();
     } catch (e) {

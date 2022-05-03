@@ -5,7 +5,6 @@ import type { Provider } from "next-auth/providers";
 import GoogleProvider from "next-auth/providers/google";
 import AuthFunctions from "../api/auth/firebase-auth";
 import { useRouter } from "next/router";
-import { ORIGIN_URL } from "../../config";
 import { store } from "../../utils/store";
 import { initialStateAction } from "../../utils/actionFunctions";
 import LoadingScreen from "../../components/common/loading";

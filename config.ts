@@ -1,11 +1,8 @@
-//***IMPORTANT!***
-//CHANGE THE URL TO:
-//https://cledge-testing.azurewebsites.net
-//OR https://cledge-dev-site.azurewebsites.net
-//OR https://www.cledge.org
-//BEFORE BUILDING AND DEPLOYING
-export const ORIGIN_URL = "http://localhost:3000";
-process.env.NEXTAUTH_URL = ORIGIN_URL;
+process.env.NEXTAUTH_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://cledge-dev-site.azurewebsites.net"
+    : "http://localhost:3000";
+
 export const actions = {
   NEW_QUESTION_RESPONSE: "newQuestionResponse",
   UDPATE_QUESTION_RESPONSE: "updateQuestionResponse",

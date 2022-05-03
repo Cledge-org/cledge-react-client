@@ -203,3 +203,109 @@
 .bottom-border-pathway-filter {
   margin-bottom: calc($spacer * 0.5 - 1px);
 }
+//METRICS PAGE STYLES -->
+.metrics-tier-range {
+  @extend .py-2;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: white;
+}
+.metrics-dropdown-menu-closed {
+  background-color: $cl-white;
+  display: flex;
+  border: none;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 0;
+  animation-name: metrics-close;
+  animation-duration: 600ms;
+}
+@keyframes metrics-close {
+  0% {
+    max-height: 80vh;
+    overflow: visible;
+    background-color: $cl-super-light-gray;
+    border: 1px solid $cl-soft-gray;
+  }
+  100% {
+    max-height: 0;
+    background-color: $cl-white;
+    border: 0px solid $cl-soft-gray;
+    overflow: hidden;
+  }
+}
+@keyframes metrics-expand {
+  0% {
+    max-height: 0;
+    overflow: hidden;
+    background-color: $cl-white;
+    border: 0px solid $cl-soft-gray;
+  }
+  100% {
+    max-height: 100vh;
+    background-color: $cl-super-light-gray;
+    border: 1px solid $cl-soft-gray;
+    overflow: visible;
+  }
+}
+.metrics-dropdown-menu-expanded {
+  background-color: $cl-super-light-gray;
+  @extend .soft-gray-border;
+  display: flex;
+  flex-direction: column;
+  animation-name: metrics-expand;
+  animation-duration: 600ms;
+}
+.metrics-dropdown-btn {
+  @extend .cl-dark-text;
+  @extend .px-3;
+  @extend .py-3;
+  .icon-close {
+    animation-name: rotateReverse;
+    animation-duration: 600ms;
+    animation-fill-mode: forwards;
+  }
+  @keyframes rotateReverse {
+    0% {
+      transform: rotate(180deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(180deg);
+    }
+  }
+  .icon-open {
+    animation-fill-mode: forwards;
+    animation-name: rotate;
+    animation-duration: 600ms;
+  }
+  @extend .soft-gray-border;
+  background-color: white;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: none;
+  &:active,
+  &:focus,
+  &:checked {
+    box-shadow: none;
+    @extend .soft-gray-border;
+    background-color: white;
+    @extend .cl-dark-text;
+  }
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+    @extend .soft-gray-border;
+    background-color: white;
+    @extend .cl-dark-text;
+  }
+}

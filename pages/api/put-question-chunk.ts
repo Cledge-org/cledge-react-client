@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userToken, questionChunkId, questionChunk } = JSON.parse(req.body);
 
-  if (questionChunk) {
+  if (questionChunk || questionChunkId) {
     try {
       const result = await putQuestionChunk(questionChunkId, questionChunk);
       resolve.status(200).send(result);
@@ -30,9 +30,12 @@ export const putQuestionChunk = async (
   questionChunkId: ObjectId | undefined,
   questionChunk: QuestionChunk_Db | undefined
 ): Promise<{ chunkId: string }> => {
-  if (questionChunk._id) {
+  if (questionChunk !== undefined && questionChunk._id) {
     // Document should not have _id field when sent to database
     delete questionChunk._id;
+  }
+  if (questionChunkId && !(questionChunkId instanceof ObjectId)) {
+    questionChunkId = new ObjectId(questionChunkId);
   }
   return new Promise(async (res, err) => {
     try {
@@ -50,11 +53,18 @@ export const putQuestionChunk = async (
           .db("questions")
           .collection("question-chunks")
           .deleteOne({ _id: questionChunkId });
+        res({
+          chunkId: questionChunkId.toString(),
+        });
       } else if (questionChunkId && questionChunk) {
         await client
           .db("questions")
           .collection("question-chunks")
-          .updateOne({ _id: questionChunkId }, { $set: questionChunk });
+          .updateOne(
+            { _id: questionChunkId },
+            { $set: questionChunk },
+            { upsert: true }
+          );
         res({
           chunkId: questionChunkId.toString(),
         });
