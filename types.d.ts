@@ -25,7 +25,7 @@ interface CardVideo {
   _id?: ObjectId;
   source: string;
   name: string;
-  tag?: string;
+  tag: string;
   category?: string;
   description: string;
   upvotes?: number;
@@ -36,7 +36,7 @@ interface CardArticle {
   description: string;
   source: string;
   name: string;
-  tag?: string;
+  tag: string;
   category?: string;
   upvotes?: number;
   downvotes?: number;
@@ -46,7 +46,7 @@ interface CardResource {
   source: string;
   name: string;
   category?: string;
-  tag?: string;
+  tag: string;
   description: string;
   upvotes?: number;
   downvotes?: number;

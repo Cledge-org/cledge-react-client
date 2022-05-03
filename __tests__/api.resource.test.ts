@@ -8,6 +8,7 @@ const testArticle1: CardArticle = {
   source: "Test Source",
   name: titleArticle,
   description: "Test Description",
+  tag: ""
 };
 
 const titleVideo = "Test Video";
@@ -15,6 +16,7 @@ const testVideo1: CardVideo = {
   source: "Test Source",
   name: titleVideo,
   description: "Test Description",
+  tag: ""
 };
 
 const titleResource = "Test Resource";
@@ -22,6 +24,7 @@ const testResource1: CardResource = {
   source: "Test Source",
   name: titleResource,
   description: "Test Description",
+  tag: ""
 };
 
 const titleArticle2 = "Test Article 2";
@@ -29,6 +32,7 @@ const testArticle2: CardArticle = {
   source: "Test Source 2",
   name: titleArticle2,
   description: "Test Description 2",
+  tag: ""
 };
 
 const titleVideo2 = "Test Video 2";
@@ -36,6 +40,7 @@ const testVideo2: CardVideo = {
   source: "Test Source 2",
   name: titleVideo2,
   description: "Test Description 2",
+  tag: ""
 };
 
 const titleResource2 = "Test Resource 2";
@@ -43,6 +48,7 @@ const testResource2: CardResource = {
   source: "Test Source 2",
   name: titleResource2,
   description: "Test Description 2",
+  tag: ""
 };
 
 async function deleteResources(articleIds, videoIds, resourceIds) {
@@ -256,6 +262,7 @@ test("should verify many resources and verify if those many resources are delete
         source: "Test Source " + i,
         name: titleArticle,
         description: "Test Description " + i,
+        tag: ""
       };
 
       const titleVideo = "Test Video " + i;
@@ -263,6 +270,7 @@ test("should verify many resources and verify if those many resources are delete
         source: "Test Source" + i,
         name: titleVideo,
         description: "Test Description" + i,
+        tag: ""
       };
 
       const titleResource = "Test Resource " + i;
@@ -270,6 +278,7 @@ test("should verify many resources and verify if those many resources are delete
         source: "Test Source " + i,
         name: titleResource,
         description: "Test Description " + i,
+        tag: ""
       };
       await putResource(undefined, article, "article");
       await putResource(undefined, video, "video");
@@ -287,6 +296,7 @@ test("should verify many resources and verify if those many resources are delete
         source: "Test Source " + i,
         name: titleArticle,
         description: "Test Description " + i,
+        tag: ""
       };
       articleIds.push(fetchedResources.articles[i]._id);
       expect(fetchedResources.articles[i]).toMatchObject(article);
@@ -298,6 +308,7 @@ test("should verify many resources and verify if those many resources are delete
         source: "Test Source" + i,
         name: titleVideo,
         description: "Test Description" + i,
+        tag: ""
       };
       videoIds.push(fetchedResources.videoList[i]._id);
       expect(fetchedResources.videoList[i]).toMatchObject(video);
@@ -309,6 +320,7 @@ test("should verify many resources and verify if those many resources are delete
         source: "Test Source " + i,
         name: titleResource,
         description: "Test Description " + i,
+        tag: ""
       };
       resourceIds.push(fetchedResources.resources[i]._id);
       expect(fetchedResources.resources[i]).toMatchObject(resource);
