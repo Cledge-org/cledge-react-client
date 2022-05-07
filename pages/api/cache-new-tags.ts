@@ -32,14 +32,15 @@ export const putResourceTags = (): Promise<void> => {
   });
 };
 
-export const getTagsFromList = (tagname: string) : Promise<Array<string>> => {
+export const getTagsFromList = (tag: string) : Promise<Array<string>> => {
   return new Promise(async (res, err) => {
     try {
       let selectedTags = [];
       for (let i = 0; i < resources_tag_list.length; i++) {
-        if (resources_tag_list[i].startsWith(tagname))
+        if (resources_tag_list[i].includes(tag))
           selectedTags.push(resources_tag_list[i]);
       }
+      selectedTags.sort((a: string, b: string) =>  levenshteinDistance(a, tag) - levenshteinDistance(b, tag));
       return selectedTags;
     } catch (e) {
       err(res);
@@ -92,9 +93,10 @@ export function getPathWayTags(tag: string): Promise<Array<string>> {
     try {
       let selectedTags = [];
       for (let i = 0; i < pathway_tag_list.length; i++) {
-          if (pathway_tag_list[i].startsWith(tag))
+          if (pathway_tag_list[i].includes(tag))
             selectedTags.push(pathway_tag_list[i]);
       }
+      selectedTags.sort((a: string, b: string) =>  levenshteinDistance(a, tag) - levenshteinDistance(b, tag));
       return selectedTags;
     } catch (e) {
       err(e);
@@ -102,3 +104,34 @@ export function getPathWayTags(tag: string): Promise<Array<string>> {
   });
 }
 
+
+
+const levenshteinDistance = (a: string, b: string) => { 
+  if (a.length === 0) 
+    return b.length;  
+  if (b.length === 0)
+    return a.length;
+  var matrix = [];
+  // increment along the first column of each row  
+  var i;  
+  for (i = 0; i <= b.length; i++) {    
+    matrix[i] = [i];  
+  }
+  // increment each column in the first row  
+  var j;  
+  for (j = 0; j <= a.length; j++) {  
+    matrix[0][j] = j;  
+  }
+  // Fill in the rest of the matrix  
+  for (i = 1; i <= b.length; i++) {    
+    for (j = 1; j <= a.length; j++) {      
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {       
+        matrix[i][j] = matrix[i - 1][j - 1];     
+      } else {       
+                                // substitution           // insertion                   // deletion 
+        matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1));  
+      }   
+    }  
+  }
+  return matrix[b.length][a.length];
+};
