@@ -1,8 +1,8 @@
-import { Db, MongoClient, ObjectId } from "mongodb";
 import { getResourcesInfo } from "./resources/get-resources";
-import { putResource } from "./resources/put-resource";
+import { getAllPathways } from "./get-all-pathways";
 
-const tag_list = []
+const resources_tag_list = [];
+const pathway_tag_list = [];
 
 export const config = {
   api: {
@@ -10,149 +10,95 @@ export const config = {
   },
 };
 
-export const getResources = (tagname: string): Promise<ResourcesInfo> => {
+export const putResourceTags = (): Promise<void> => {
   return new Promise(async (res, err) => {
     try {
-      const fetchedResourceCheck = await getResourcesInfo();
-      let articles = fetchedResourceCheck.articles;
-      let videos = fetchedResourceCheck.videoList;
-      let resources = fetchedResourceCheck.resources;
-
-      const selectedArticles: CardArticle[] = [];
-      const selectedVideos: CardVideo[] = [];
-      const selectedResources: CardResource[] = [];
-
+      let fetchedResources = await getResourcesInfo();
+      let articles = fetchedResources.articles;
+      let videos = fetchedResources.videoList;
+      let resources = fetchedResources.resources;
       for (let i = 0; i < articles.length; i++) {
-        if (articles[i].tag.startsWith(tagname))
-         selectedArticles.push(articles[i]);
+          resources_tag_list.push(articles[i].tag);
       }
-
       for (let i = 0; i < videos.length; i++) {
-        if (videos[i].tag.startsWith(tagname))
-          selectedVideos.push(videos[i]);
+          resources_tag_list.push(videos[i].tag);
       }
-
       for (let i = 0; i < resources.length; i++) {
-        if (resources[i].tag.startsWith(tagname))
-          selectedResources.push(resources[i]);
+          resources_tag_list.push(resources[i].tag);
       }
-
-      res({ selectedVideos, selectedArticles, selectedResources});
     } catch (e) {
       err(res);
     }
   });
 };
 
-export const putResourceInfo = (newTag: string, oldTag: string, deliminator: string) : Promise<void> => {
+export const getTagsFromList = (tagname: string) : Promise<Array<string>> => {
   return new Promise(async (res, err) => {
-    const fetchedResourceCheck = await getResourcesInfo();
-    let articles = fetchedResourceCheck.articles;
-    let videos = fetchedResourceCheck.videoList;
-    let resources = fetchedResourceCheck.resources;
-    /*
-    for (let i = 0; i < articles.length; i++) {
-      if (articles[i].tag == oldTag)
-        articles[i].tag = newTag;
+    try {
+      let selectedTags = [];
+      for (let i = 0; i < resources_tag_list.length; i++) {
+        if (resources_tag_list[i].startsWith(tagname))
+          selectedTags.push(resources_tag_list[i]);
+      }
+      return selectedTags;
+    } catch (e) {
+      err(res);
     }
-    for (let i = 0; i < videos.length; i++) {
-      if (videos[i].tag == oldTag)
-        videos[i].tag = newTag;
-    }
-    for (let i = 0; i < resources.length; i++) {
-      if (resources[i].tag == oldTag)
-        resources[i].tag = newTag;
-    }
-    */
-    await Promise.all([
-      articles.map((article) => putResource(article._id, article, newTag))
-    ]);
-
-    await Promise.all([
-      videos.map((article) => putResource(article._id, article, newTag))
-    ]);
-
-    await Promise.all([
-      resources.map((article) => putResource(article._id, article, newTag))
-    ]);
-    // DO WE ONLY WANT 1 TAG PER RESOURCE? OR CAN WE HAVE MULTIPLE TAGS IN A RESOURCE?
-    // Currently, just updated every tag with the new tag
   });
 };
 
-// Gets all the pathway modules and content for a pathway ID and specific user (firebaseId)
-export function getPathway(
-  userId: string,
-  tagName: string
-): Promise<Pathway> {
+// Implementation In Progress!
+
+// // Pathways has 3 set of tags to look through
+// //  1st Tag: Pathway Object itself   -- RIGHT NOW JUST CHECKS PATHWAY
+// //  2nd tag: PathWayModule Object (which is stored in each Pathway)
+// //  3rd tag: PersonalizedContent (inside each PathwayModule)
+// // They all have tags we probably wanna look through
+// export function getTaggedPathwayMultiple(tagName: string, deliminator: string) : Promise<void> {
+//   return new Promise(async (res, err) => {
+//     try {
+//       const selectedTags = [];
+//       const splitTags = tagName.split(deliminator);
+//       for (let i = 0; i < splitTags.length; i++) {
+//         for (let j = 0; j < pathway_tag_list.length; j++) {
+//             const pathwayTag = pathway_tag_list[j].split(deliminator);
+//             // for (let k = 0; k < pathwayTag.length; k++) {
+//             //   if (pathwayTag)
+//             // }
+//         }
+//       }
+//     } catch (e) {
+//       err(e);
+//     }
+//   });
+// }
+
+export function putPathWayTags(): Promise<void> {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(process.env.MONGO_URL);
-      const pathwaysDb = client.db("pathways");
-      const usersDb = client.db("users");
-      const [pathway, accountInfo]: [Pathway_Db, AccountInfo] =
-        await Promise.all([
-          pathwaysDb.collection("pathways").findOne({
-            tag: tagName
-          }) as Promise<Pathway_Db>,
-          usersDb.collection("users").findOne({
-            firebaseId: userId,
-          }) as Promise<AccountInfo>,
-        ]);
-      let modules: PathwayModule[] = await Promise.all(
-        pathway.modules.map((moduleId) =>
-          getModule(moduleId, pathwaysDb, accountInfo.tags, tagName)
-        )
-      );
-      modules = modules.filter((x) => x !== null);
-      res({
-        tags: pathway.tags,
-        name: pathway.name,
-        _id: pathway._id,
-        order: pathway.order,
-        part: pathway.part,
-        modules,
-      });
-      client.close();
+      let fetchedAllPathway = await getAllPathways();
+      for (let i = 0; i < fetchedAllPathway.length; i++) {
+        let fetchedTag = fetchedAllPathway[i].tags;
+        pathway_tag_list.push(fetchedTag);
+      }
     } catch (e) {
       err(e);
     }
   });
 }
 
-export const getModule = (
-  moduleId: ObjectId,
-  pathwaysDb: Db,
-  userTags: string[],
-  tagName: string
-): Promise<PathwayModule | null> => {
+export function getPathWayTags(tag: string): Promise<Array<string>> {
   return new Promise(async (res, err) => {
     try {
-      const [module, personalizedContent]: [
-        PathwayModule_Db,
-        PersonalizedContent[]
-      ] = await Promise.all([
-        pathwaysDb.collection("modules").findOne({
-          tag: tagName
-        }) as Promise<PathwayModule_Db>,
-        pathwaysDb
-          .collection("personalized-content")
-          .find({ tags: { $in: userTags }, moduleId })
-          .toArray() as Promise<PersonalizedContent[]>,
-      ]);
-      if (!module) {
-        res(null);
-      } else {
-        res({
-          _id: module._id,
-          name: module.name,
-          presetContent: module.presetContent,
-          tags: module.tags,
-          personalizedContent,
-        });
+      let selectedTags = [];
+      for (let i = 0; i < pathway_tag_list.length; i++) {
+          if (pathway_tag_list[i].startsWith(tag))
+            selectedTags.push(pathway_tag_list[i]);
       }
+      return selectedTags;
     } catch (e) {
       err(e);
     }
   });
-};
+}
+
