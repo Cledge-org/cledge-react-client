@@ -48,32 +48,6 @@ export const getTagsFromList = (tag: string) : Promise<Array<string>> => {
   });
 };
 
-// Implementation In Progress!
-
-// // Pathways has 3 set of tags to look through
-// //  1st Tag: Pathway Object itself   -- RIGHT NOW JUST CHECKS PATHWAY
-// //  2nd tag: PathWayModule Object (which is stored in each Pathway)
-// //  3rd tag: PersonalizedContent (inside each PathwayModule)
-// // They all have tags we probably wanna look through
-// export function getTaggedPathwayMultiple(tagName: string, deliminator: string) : Promise<void> {
-//   return new Promise(async (res, err) => {
-//     try {
-//       const selectedTags = [];
-//       const splitTags = tagName.split(deliminator);
-//       for (let i = 0; i < splitTags.length; i++) {
-//         for (let j = 0; j < pathway_tag_list.length; j++) {
-//             const pathwayTag = pathway_tag_list[j].split(deliminator);
-//             // for (let k = 0; k < pathwayTag.length; k++) {
-//             //   if (pathwayTag)
-//             // }
-//         }
-//       }
-//     } catch (e) {
-//       err(e);
-//     }
-//   });
-// }
-
 export function putPathWayTags(): Promise<void> {
   return new Promise(async (res, err) => {
     try {
