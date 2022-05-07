@@ -2,13 +2,15 @@ import { getResourcesInfo } from "../pages/api/resources/get-resources";
 import { putResource } from "../pages/api/resources/put-resource";
 import { ObjectId } from "mongodb";
 import { rateResource } from "../pages/api/resources/rate-resource";
+import { putResourceTags } from "../pages/api/cache-new-tags";
+import { getResourceTags } from "../pages/api/cache-new-tags";
 
 const titleArticle = "Test Article";
 const testArticle1: CardArticle = {
   source: "Test Source",
   name: titleArticle,
   description: "Test Description",
-  tag: ""
+  tag: "article"
 };
 
 const titleVideo = "Test Video";
@@ -16,7 +18,7 @@ const testVideo1: CardVideo = {
   source: "Test Source",
   name: titleVideo,
   description: "Test Description",
-  tag: ""
+  tag: "video"
 };
 
 const titleResource = "Test Resource";
@@ -24,7 +26,7 @@ const testResource1: CardResource = {
   source: "Test Source",
   name: titleResource,
   description: "Test Description",
-  tag: ""
+  tag: "resource"
 };
 
 const titleArticle2 = "Test Article 2";
@@ -32,7 +34,7 @@ const testArticle2: CardArticle = {
   source: "Test Source 2",
   name: titleArticle2,
   description: "Test Description 2",
-  tag: ""
+  tag: "article"
 };
 
 const titleVideo2 = "Test Video 2";
@@ -40,7 +42,7 @@ const testVideo2: CardVideo = {
   source: "Test Source 2",
   name: titleVideo2,
   description: "Test Description 2",
-  tag: ""
+  tag: "video"
 };
 
 const titleResource2 = "Test Resource 2";
@@ -48,7 +50,7 @@ const testResource2: CardResource = {
   source: "Test Source 2",
   name: titleResource2,
   description: "Test Description 2",
-  tag: ""
+  tag: "resource"
 };
 
 async function deleteResources(articleIds, videoIds, resourceIds) {
@@ -262,7 +264,7 @@ test("should verify many resources and verify if those many resources are delete
         source: "Test Source " + i,
         name: titleArticle,
         description: "Test Description " + i,
-        tag: ""
+        tag: "article"
       };
 
       const titleVideo = "Test Video " + i;
@@ -270,7 +272,7 @@ test("should verify many resources and verify if those many resources are delete
         source: "Test Source" + i,
         name: titleVideo,
         description: "Test Description" + i,
-        tag: ""
+        tag: "video"
       };
 
       const titleResource = "Test Resource " + i;
@@ -278,7 +280,7 @@ test("should verify many resources and verify if those many resources are delete
         source: "Test Source " + i,
         name: titleResource,
         description: "Test Description " + i,
-        tag: ""
+        tag: "resource"
       };
       await putResource(undefined, article, "article");
       await putResource(undefined, video, "video");
@@ -296,7 +298,7 @@ test("should verify many resources and verify if those many resources are delete
         source: "Test Source " + i,
         name: titleArticle,
         description: "Test Description " + i,
-        tag: ""
+        tag: "article"
       };
       articleIds.push(fetchedResources.articles[i]._id);
       expect(fetchedResources.articles[i]).toMatchObject(article);
@@ -308,7 +310,7 @@ test("should verify many resources and verify if those many resources are delete
         source: "Test Source" + i,
         name: titleVideo,
         description: "Test Description" + i,
-        tag: ""
+        tag: "video"
       };
       videoIds.push(fetchedResources.videoList[i]._id);
       expect(fetchedResources.videoList[i]).toMatchObject(video);
@@ -320,7 +322,7 @@ test("should verify many resources and verify if those many resources are delete
         source: "Test Source " + i,
         name: titleResource,
         description: "Test Description " + i,
-        tag: ""
+        tag: "resource"
       };
       resourceIds.push(fetchedResources.resources[i]._id);
       expect(fetchedResources.resources[i]).toMatchObject(resource);
@@ -386,6 +388,56 @@ test("should add resources and upvotes and downvotes to each", (done) => {
     // clears the resource database and checks if database is empty
     await deleteResources([articleId], [videoId], [resourceId]);
 
+    done();
+  };
+  callback();
+});
+
+test("should add resources and get appropriate tag", (done) => {
+  const callback = async () => {
+    // Checks if there is anything in the database at the beginning of test
+    const fetchedResourceCheck = await getResourcesInfo();
+    expect(fetchedResourceCheck.articles.length).toBe(0);
+    expect(fetchedResourceCheck.videoList.length).toBe(0);
+    expect(fetchedResourceCheck.resources.length).toBe(0);
+
+    const articleId = new ObjectId();
+    const videoId = new ObjectId();
+    const resourceId = new ObjectId();
+
+    // test put functionality - manually create unique objectids for each test resource
+    await Promise.all([
+      putResource(articleId, testArticle1, "article"),
+      putResource(videoId, testVideo1, "video"),
+      putResource(resourceId, testResource1, "resource")
+    ]);
+    // test put functionality
+    await putResourceTags();
+    
+    // tests get functionality
+    const [selectedTags1, selectedTags2, selectedTags3, selectedTags4, selectedTags5] = await Promise.all([
+      getResourceTags("art"), getResourceTags("article"), getResourceTags("cle"), getResourceTags("tic"), getResourceTags("res")
+    ]);
+    /*const selectedTags1 = await getResourceTags("art");
+    const selectedTags2 = await getResourceTags("article");
+    const selectedTags3 = await getResourceTags("cle");
+    const selectedTags4 = await getResourceTags("tic");
+    const selectedTags5 = await getResourceTags("res");*/
+   
+    const expectedTag = "article";
+    expect(selectedTags1.length).toBe(1);
+    expect(selectedTags1[0]).toBe(expectedTag);
+    expect(selectedTags2.length).toBe(1);
+    expect(selectedTags2[0]).toBe(expectedTag);
+    expect(selectedTags3.length).toBe(1);
+    expect(selectedTags3[0]).toBe(expectedTag);
+    expect(selectedTags4.length).toBe(1);
+    expect(selectedTags4[0]).toBe(expectedTag);
+    expect(selectedTags5.length).toBe(0);
+
+    // clears the resource database and checks if database is empty
+    await deleteResources([articleId], [videoId], [resourceId]);
+    
     done();
   };
   callback();

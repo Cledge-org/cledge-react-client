@@ -32,7 +32,7 @@ export const putResourceTags = (): Promise<void> => {
   });
 };
 
-export const getTagsFromList = (tag: string) : Promise<Array<string>> => {
+export const getResourceTags = (tag: string) : Promise<Array<string>> => {
   return new Promise(async (res, err) => {
     try {
       let selectedTags = [];
@@ -77,8 +77,6 @@ export function getPathWayTags(tag: string): Promise<Array<string>> {
     }
   });
 }
-
-
 
 const levenshteinDistance = (a: string, b: string) => { 
   if (a.length === 0) 
