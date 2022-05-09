@@ -9,7 +9,7 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
-  const { userToken, resourceId, resource, tag } = req.body;
+  const { userToken, resourceId, resource, tag } = JSON.parse(req.body);
 
   // use this line only if resourceId is not an ObjectId type;
   // change line 27 resourceId into resourceObId

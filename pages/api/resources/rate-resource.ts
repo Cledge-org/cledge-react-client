@@ -9,7 +9,7 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
-  const { userToken, userId, resourceId, vote } = req.body;
+  const { userToken, userId, resourceId, vote } = JSON.parse(req.body);
   if (resourceId) {
     try {
       const result = await rateResource(resourceId, userId, vote);
