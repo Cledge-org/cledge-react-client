@@ -23,6 +23,7 @@ import AuthFunctions from "./api/auth/firebase-auth";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
+import QuestionACSubpage from "../components/questionPages/question-ac-subpage";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -242,7 +243,10 @@ const Progress: NextApplicationPage<{
         ) : (
           questionData
             .map((list) => {
-              if (list.name !== "Extracurriculars") {
+              if (
+                list.name !== "Extracurriculars" &&
+                list.name !== "Academics"
+              ) {
                 return (
                   <QuestionSummaryPage
                     userTags={currUserTags}
@@ -267,6 +271,22 @@ const Progress: NextApplicationPage<{
                     .chunks.map((chunk) => {
                       return (
                         <QuestionECSubpage
+                          key={chunk.name}
+                          userResponses={questionResponses}
+                          chunk={chunk}
+                          isShowing={currPage.chunk === chunk.name}
+                        />
+                      );
+                    })
+                : []
+            )
+            .concat(
+              questionData.find(({ name }) => name === "Academics")
+                ? questionData
+                    .find(({ name }) => name === "Academics")
+                    .chunks.map((chunk) => {
+                      return (
+                        <QuestionACSubpage
                           key={chunk.name}
                           userResponses={questionResponses}
                           chunk={chunk}
