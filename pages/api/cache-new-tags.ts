@@ -13,10 +13,10 @@ export const config = {
 export const putResourceTags = (): Promise<void> => {
   return new Promise(async (res, err) => {
     try {
-      let fetchedResources = await getResourcesInfo();
-      let articles = fetchedResources.articles;
-      let videos = fetchedResources.videoList;
-      let resources = fetchedResources.resources;
+      const fetchedResources = await getResourcesInfo();
+      const articles = fetchedResources.articles;
+      const videos = fetchedResources.videoList;
+      const resources = fetchedResources.resources;
       for (let i = 0; i < articles.length; i++) {
           resources_tag_list.push(articles[i].tag);
       }
@@ -26,8 +26,9 @@ export const putResourceTags = (): Promise<void> => {
       for (let i = 0; i < resources.length; i++) {
           resources_tag_list.push(resources[i].tag);
       }
+      res();
     } catch (e) {
-      err(res);
+      err(e);
     }
   });
 };
@@ -35,43 +36,46 @@ export const putResourceTags = (): Promise<void> => {
 export const getResourceTags = (tag: string) : Promise<Array<string>> => {
   return new Promise(async (res, err) => {
     try {
-      let selectedTags = [];
+      const selectedTags = [];
       for (let i = 0; i < resources_tag_list.length; i++) {
         if (resources_tag_list[i].includes(tag))
           selectedTags.push(resources_tag_list[i]);
       }
       selectedTags.sort((a: string, b: string) =>  levenshteinDistance(a, tag) - levenshteinDistance(b, tag));
-      return selectedTags;
+      res(selectedTags);
     } catch (e) {
-      err(res);
+      err(e);
     }
   });
 };
 
-export function putPathWayTags(): Promise<void> {
+export function putPathwayTags(): Promise<void> {
   return new Promise(async (res, err) => {
     try {
-      let fetchedAllPathway = await getAllPathways();
+      const fetchedAllPathway = await getAllPathways();
       for (let i = 0; i < fetchedAllPathway.length; i++) {
-        let fetchedTag = fetchedAllPathway[i].tags;
-        pathway_tag_list.push(fetchedTag);
+        const fetchedTag = fetchedAllPathway[i].tags;
+        console.log(fetchedTag);
+        for (let j = 0; j < fetchedTag.length; j++)
+          pathway_tag_list.push(fetchedTag[j]);
       }
+      res();
     } catch (e) {
       err(e);
     }
   });
 }
 
-export function getPathWayTags(tag: string): Promise<Array<string>> {
+export function getPathwayTags(tag: string): Promise<Array<string>> {
   return new Promise(async (res, err) => {
     try {
-      let selectedTags = [];
+      const selectedTags = [];
       for (let i = 0; i < pathway_tag_list.length; i++) {
           if (pathway_tag_list[i].includes(tag))
             selectedTags.push(pathway_tag_list[i]);
       }
       selectedTags.sort((a: string, b: string) =>  levenshteinDistance(a, tag) - levenshteinDistance(b, tag));
-      return selectedTags;
+      res(selectedTags);
     } catch (e) {
       err(e);
     }

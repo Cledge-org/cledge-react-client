@@ -413,18 +413,47 @@ test("should add resources and get appropriate tag", (done) => {
     ]);
     // test put functionality
     await putResourceTags();
-    
-    // tests get functionality
-    const [selectedTags1, selectedTags2, selectedTags3, selectedTags4, selectedTags5] = await Promise.all([
+
+    // tests get functionality for article
+    let [selectedTags1, selectedTags2, selectedTags3, selectedTags4, selectedTags5] = await Promise.all([
       getResourceTags("art"), getResourceTags("article"), getResourceTags("cle"), getResourceTags("tic"), getResourceTags("res")
     ]);
-    /*const selectedTags1 = await getResourceTags("art");
-    const selectedTags2 = await getResourceTags("article");
-    const selectedTags3 = await getResourceTags("cle");
-    const selectedTags4 = await getResourceTags("tic");
-    const selectedTags5 = await getResourceTags("res");*/
-   
-    const expectedTag = "article";
+
+    let expectedTag = "article";
+    expect(selectedTags1.length === 1);
+    expect(selectedTags1[0] === expectedTag);
+    expect(selectedTags2.length === 1);
+    expect(selectedTags2[0] === expectedTag);
+    expect(selectedTags3.length === 1);
+    expect(selectedTags3[0] === expectedTag);
+    expect(selectedTags4.length === 1);
+    expect(selectedTags4[0] === expectedTag);
+    expect(selectedTags5.length === 1);
+    expect(selectedTags5[0] !== expectedTag);
+
+    // tests get functionality for video
+    [selectedTags1, selectedTags2, selectedTags3, selectedTags4, selectedTags5] = await Promise.all([
+      getResourceTags("vid"), getResourceTags("video"), getResourceTags("eo"), getResourceTags("d"), getResourceTags("article")
+    ]);
+
+    expectedTag = "video";
+    expect(selectedTags1.length === 1);
+    expect(selectedTags1[0] === expectedTag);
+    expect(selectedTags2.length === 1);
+    expect(selectedTags2[0] === expectedTag);
+    expect(selectedTags3.length === 1);
+    expect(selectedTags3[0] === expectedTag);
+    expect(selectedTags4.length === 1);
+    expect(selectedTags4[0] === expectedTag);
+    expect(selectedTags5.length === 1);
+    expect(selectedTags5[0] !== expectedTag);
+
+    // tests get functionality for resource
+    [selectedTags1, selectedTags2, selectedTags3, selectedTags4, selectedTags5] = await Promise.all([
+      getResourceTags("res"), getResourceTags("resource"), getResourceTags("sou"), getResourceTags("rce"), getResourceTags("video")
+    ]);
+
+    expectedTag = "resource";
     expect(selectedTags1.length).toBe(1);
     expect(selectedTags1[0]).toBe(expectedTag);
     expect(selectedTags2.length).toBe(1);
@@ -433,11 +462,13 @@ test("should add resources and get appropriate tag", (done) => {
     expect(selectedTags3[0]).toBe(expectedTag);
     expect(selectedTags4.length).toBe(1);
     expect(selectedTags4[0]).toBe(expectedTag);
-    expect(selectedTags5.length).toBe(0);
+    expect(selectedTags5.length).toBe(1);
+    if (selectedTags5[0] === expectedTag)
+      expect(false).toBe(true);
 
     // clears the resource database and checks if database is empty
     await deleteResources([articleId], [videoId], [resourceId]);
-    
+
     done();
   };
   callback();
