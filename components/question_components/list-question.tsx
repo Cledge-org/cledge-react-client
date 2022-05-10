@@ -154,9 +154,10 @@ const ListQuestion = ({
     questionsResponses?.forEach((response, index) => {
       renderedQuestions.push(
         <div>
-          {questions.map((question) =>
-            getQuestionType(question, response[question._id], index)
-          )}
+          {questions.map((question) => {
+            console.log(response[question._id]);
+            return getQuestionType(question, response[question._id], index);
+          })}
         </div>
       );
     });

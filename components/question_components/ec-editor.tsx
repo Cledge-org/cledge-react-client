@@ -249,11 +249,11 @@ export default function ECEditor({
                 responses={response?.response?.questionsResponses}
                 onChange={(value, index, questionId) => {
                   let totallyNewResponse = newResponse.slice();
-                  const foundResponse = totallyNewResponse.find(
+                  let foundResponse = totallyNewResponse.find(
                     ({ questionId }) => questionId === _id
                   );
                   if (foundResponse) {
-                    if (foundResponse.response) {
+                    if (!foundResponse.response) {
                       foundResponse.response = {
                         numResponse: -1,
                         questionsResponses: [],
@@ -261,12 +261,13 @@ export default function ECEditor({
                     }
                     if (!foundResponse.response.questionsResponses[index]) {
                       foundResponse.response.questionsResponses.push({});
-                    } else {
-                      foundResponse.response.questionsResponses[index][
-                        questionId
-                      ].response = value;
                     }
+                    console.log(foundResponse.response);
+                    foundResponse.response.questionsResponses[index][
+                      questionId
+                    ] = value;
                   } else {
+                    console.log("NOT FOUND");
                     totallyNewResponse.push({
                       questionId: _id,
                       response: { numResponse: -1, questionsResponses: [] },

@@ -50,7 +50,9 @@ export default function ECQuestionSummaryCard({
               <div className="name">{question.toLocaleUpperCase()}</div>
               <div className="value">
                 {questionFound !== undefined
-                  ? questionFound.response instanceof Array
+                  ? type === "ListQuestion"
+                    ? questionFound.response.numResponse
+                    : questionFound.response instanceof Array
                     ? questionFound.response.reduce((prev, curr) => {
                         return prev === "" ? curr : prev + ", " + curr;
                       }, "")

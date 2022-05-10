@@ -504,11 +504,22 @@ const QuestionUploadPage: NextApplicationPage<{
                                 style={{ fontSize: "0.9em" }}
                                 className="text-muted"
                               >
-                                Question ID:
+                                Question ID: Inner
                               </label>
                               <input
                                 value={dataValue._id}
                                 type="text"
+                                onChange={(e) => {
+                                  let currQuestionListCopy = currQuestionList;
+                                  currQuestionListCopy.chunks[
+                                    chunkIndex
+                                  ].questions[questionIndex].data[
+                                    dataIndex
+                                  ]._id = e.target.value;
+                                  setCurrQuestionList({
+                                    ...currQuestionListCopy,
+                                  });
+                                }}
                                 className="px-3 form-control"
                                 placeholder="No ID"
                               />
