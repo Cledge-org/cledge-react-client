@@ -5,11 +5,7 @@ import ACEditor from "../../components/question_components/ec-editor";
 import { useSession } from "next-auth/react";
 import { store } from "../../utils/store";
 import { updateQuestionResponsesAction } from "../../utils/actionFunctions";
-import {
-  calculateActivityPoints,
-  calculateActivityTier,
-  calculateTotalPoints,
-} from "../../utils/metricsCalculations";
+
 interface QuestionACSubpageProps {
   userResponses: UserResponse[];
   isShowing: boolean;
@@ -40,54 +36,54 @@ export default function QuestionACSubpage({
       : 0
   );
   const session = useSession();
-  const getAcademics = (chunkResponses): Activities => {
-    let academics = chunkResponses.map((responses) => {
-      const hoursPerWeek = parseInt(
-        responses.find(
-          ({ questionId }) => questionId === "623dfe875e2b2cf43e1b86d8"
-        ).response
-      );
-      const weeksPerYear = parseInt(
-        responses.find(
-          ({ questionId }) => questionId === "623dfe875e2b2cf43e1b86d7"
-        ).response
-      );
-      let initialObj = {
-        activityID: "???",
-        actType: responses.find(
-          ({ questionId }) => questionId === "61c6b6f2d3054b6dd0f1fc4d"
-        ).response,
-        hoursYear: hoursPerWeek * weeksPerYear,
-        yearsSpent: responses.find(
-          ({ questionId }) => questionId === "62546c01f993412f5c26c772"
-        ).response,
-        recogLevel: responses.find(
-          ({ questionId }) => questionId === "623e0e025e2b2cf43e1b86e1"
-        ).response,
-        description: responses.find(
-          ({ questionId }) => questionId === "623dfe865e2b2cf43e1b86d6"
-        ).response,
-        points: 0,
-        tier: 0,
-      };
-      initialObj.tier = calculateActivityTier(
-        hoursPerWeek,
-        weeksPerYear,
-        initialObj.yearsSpent,
-        initialObj.recogLevel
-      );
-      initialObj.points = calculateActivityPoints(initialObj.tier);
-      return initialObj;
-    });
-    const overallPoints = calculateTotalPoints(
-      academics.map(({ tier }) => tier)
-    );
-    return {
-      activities: academics,
-      overallTier: Math.round(overallPoints / 150),
-      totalPoints: overallPoints,
-    };
-  };
+  // const getAcademics = (chunkResponses): Activities => {
+  //   let academics = chunkResponses.map((responses) => {
+  //     const hoursPerWeek = parseInt(
+  //       responses.find(
+  //         ({ questionId }) => questionId === "623dfe875e2b2cf43e1b86d8"
+  //       ).response
+  //     );
+  //     const weeksPerYear = parseInt(
+  //       responses.find(
+  //         ({ questionId }) => questionId === "623dfe875e2b2cf43e1b86d7"
+  //       ).response
+  //     );
+  //     let initialObj = {
+  //       activityID: "???",
+  //       actType: responses.find(
+  //         ({ questionId }) => questionId === "61c6b6f2d3054b6dd0f1fc4d"
+  //       ).response,
+  //       hoursYear: hoursPerWeek * weeksPerYear,
+  //       yearsSpent: responses.find(
+  //         ({ questionId }) => questionId === "62546c01f993412f5c26c772"
+  //       ).response,
+  //       recogLevel: responses.find(
+  //         ({ questionId }) => questionId === "623e0e025e2b2cf43e1b86e1"
+  //       ).response,
+  //       description: responses.find(
+  //         ({ questionId }) => questionId === "623dfe865e2b2cf43e1b86d6"
+  //       ).response,
+  //       points: 0,
+  //       tier: 0,
+  //     };
+  //     initialObj.tier = calculateActivityTier(
+  //       hoursPerWeek,
+  //       weeksPerYear,
+  //       initialObj.yearsSpent,
+  //       initialObj.recogLevel
+  //     );
+  //     initialObj.points = calculateActivityPoints(initialObj.tier);
+  //     return initialObj;
+  //   });
+  //   const overallPoints = calculateTotalPoints(
+  //     academics.map(({ tier }) => tier)
+  //   );
+  //   return {
+  //     activities: academics,
+  //     overallTier: Math.round(overallPoints / 150),
+  //     totalPoints: overallPoints,
+  //   };
+  // };
   if (!isShowing) {
     return null;
   }

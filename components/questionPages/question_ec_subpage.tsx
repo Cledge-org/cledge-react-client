@@ -6,9 +6,9 @@ import { useSession } from "next-auth/react";
 import { store } from "../../utils/store";
 import { updateQuestionResponsesAction } from "../../utils/actionFunctions";
 import {
-  calculateActivityPoints,
-  calculateActivityTier,
-  calculateTotalPoints,
+  calculateECActivityPoints,
+  calculateECActivityTier,
+  calculateECTotalPoints,
 } from "../../utils/metricsCalculations";
 interface QuestionECSubpageProps {
   userResponses: UserResponse[];
@@ -70,16 +70,16 @@ export default function QuestionECSubpage({
         points: 0,
         tier: 0,
       };
-      initialObj.tier = calculateActivityTier(
+      initialObj.tier = calculateECActivityTier(
         hoursPerWeek,
         weeksPerYear,
         initialObj.yearsSpent,
         initialObj.recogLevel
       );
-      initialObj.points = calculateActivityPoints(initialObj.tier);
+      initialObj.points = calculateECActivityPoints(initialObj.tier);
       return initialObj;
     });
-    const overallPoints = calculateTotalPoints(
+    const overallPoints = calculateECTotalPoints(
       activities.map(({ tier }) => tier)
     );
     return {

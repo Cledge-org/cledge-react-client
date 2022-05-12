@@ -1,4 +1,4 @@
-export const calculateActivityTier = (
+export const calculateECActivityTier = (
   hoursPerWeek: number,
   weeksPerYear: number,
   yearsSpent: number,
@@ -29,7 +29,7 @@ export const calculateActivityTier = (
   }
   return tier;
 };
-export const calculateTotalPoints = (tiers: number[]) => {
+export const calculateECTotalPoints = (tiers: number[]) => {
   let overallPoints = 0;
   tiers.forEach((tier) => {
     let multiplier = 1;
@@ -44,7 +44,7 @@ export const calculateTotalPoints = (tiers: number[]) => {
   });
   return overallPoints;
 };
-export const calculateActivityPoints = (tier) => {
+export const calculateECActivityPoints = (tier) => {
   let multiplier = 1;
   if (tier >= 4 && tier <= 6) {
     multiplier = 1.5;
@@ -54,4 +54,29 @@ export const calculateActivityPoints = (tier) => {
     multiplier = 3;
   }
   return tier * 5 * multiplier;
+};
+export const calculateACActivityTier = (
+  applicantLevel: number,
+  gpa: number,
+  classTypes: string[]
+) => {
+  let tier = 0;
+  let gpaTier = 0;
+  if (applicantLevel === 2) {
+    // gpaTier = Math.floor( 6.3 / (1 + Math.exp(-0.3376 * (gpa - 1))) - 2.15);
+    gpaTier = Math.floor(
+      -2.96209 * Math.log(0.713480623 * (6.3 / (gpa + 2.15) - 1))
+    );
+  } else if (applicantLevel === 1) {
+    gpaTier = Math.floor(-5.65291 * Math.log(0.83786 * (8 / (gpa + 3) - 1)));
+  } else {
+    gpaTier = Math.floor((11 / 3) * gpa - 8 / 3);
+  }
+  let classTier = 0;
+  classTypes.forEach((classType) => {
+    classTier += classType === "Regular" ? 1 : classType === "Honors" ? 2.5 : 4;
+  });
+  classTier = Math.floor(classTier / classTypes.length);
+  tier = Math.round((classTier + gpaTier) / 2);
+  return tier;
 };
