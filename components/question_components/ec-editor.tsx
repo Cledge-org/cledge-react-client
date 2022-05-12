@@ -266,12 +266,6 @@ export default function ECEditor({
                     foundResponse.response.questionsResponses[index][
                       questionId
                     ] = value;
-                  } else {
-                    console.log("NOT FOUND");
-                    totallyNewResponse.push({
-                      questionId: _id,
-                      response: { numResponse: -1, questionsResponses: [] },
-                    });
                   }
                   setNewResponse(totallyNewResponse);
                 }}
@@ -287,7 +281,10 @@ export default function ECEditor({
                   if (!foundResponse) {
                     totallyNewResponse.push({
                       questionId: _id,
-                      response: { numResponse: -1, questionsResponses: [] },
+                      response: {
+                        numResponse: value,
+                        questionsResponses: [new Array(value).map(() => ({}))],
+                      },
                     });
                   } else {
                     foundResponse.response.numResponse = value;

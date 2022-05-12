@@ -20,6 +20,8 @@ interface QuestionSummaryCardProps {
   question: Question;
   userAnswers: UserResponse[];
   userTags: string[];
+  isAC?: boolean;
+  allAnswers?: UserResponse[];
   onUpdate: Function;
 }
 
@@ -27,6 +29,8 @@ export default function QuestionSummaryCard({
   question,
   userAnswers,
   onUpdate,
+  isAC,
+  allAnswers,
   userTags,
 }: QuestionSummaryCardProps) {
   const [displayingQuestion, setDisplayingQuestion] = useState(false);
@@ -36,7 +40,7 @@ export default function QuestionSummaryCard({
     UserResponse,
     Dispatch<SetStateAction<UserResponse>>
   ] = useState(
-    userAnswers.find((response) => {
+    userAnswers?.find((response) => {
       return response.questionId === question._id;
     })
       ? userAnswers.find((response) => {
@@ -50,7 +54,7 @@ export default function QuestionSummaryCard({
   ] = useState(
     JSON.parse(
       JSON.stringify(
-        userAnswers.find((response) => {
+        userAnswers?.find((response) => {
           return response.questionId === question._id;
         })
           ? userAnswers.find((response) => {
@@ -186,89 +190,166 @@ export default function QuestionSummaryCard({
         <div className="center-child w-100">
           <button
             onClick={async () => {
-              let newUserResponses = userAnswers;
-              let indexOfResponse = newUserResponses.findIndex(
-                ({ questionId }) => {
-                  return questionId === userAnswer.questionId;
-                }
-              );
-              console.log(indexOfResponse);
-              if (indexOfResponse !== -1) {
-                newUserResponses[indexOfResponse] = userAnswer;
-              } else {
-                newUserResponses.push(userAnswer);
-              }
-              userTags.filter((value) => !oldTags.includes(value));
-              userTags.length === 0
-                ? (userTags = newTags)
-                : (userTags = userTags.concat(newTags));
-              setNewTags([]);
-              setOldTags([]);
-              if (question._id === "61de0b617c405886579656ec") {
-                fetch(`/api/update-user`, {
-                  method: "POST",
-                  body: JSON.stringify({
-                    userInfo: {
-                      grade: parseInt(
-                        userAnswer.response.includes("9")
-                          ? "9"
-                          : userAnswer.response.substring(
-                              0,
-                              userAnswer.response.indexOf("t")
-                            )
-                      ),
+              if (isAC) {
+                let newUserResponses = allAnswers;
+                if (
+                  !newUserResponses?.find(({ questionId }) => {
+                    return questionId === "Academics";
+                  })
+                ) {
+                  newUserResponses.push({
+                    questionId: "Academics",
+                    response: {
+                      "All Academics": {
+                        generalQuestions: [],
+                        semesterQuestions: [],
+                      },
                     },
-                    userId: session.data.user.uid,
-                  }),
-                }).then(() => {
+                  });
+                }
+                let generalQuestions = newUserResponses?.find(
+                  ({ questionId }) => {
+                    return questionId === "Academics";
+                  }
+                ).response["All Academics"].generalQuestions;
+                let indexOfResponse = generalQuestions.findIndex(
+                  ({ questionId }) => {
+                    return questionId === userAnswer.questionId;
+                  }
+                );
+                console.log(indexOfResponse);
+                if (indexOfResponse !== -1) {
+                  generalQuestions[indexOfResponse] = userAnswer;
+                } else {
+                  generalQuestions.push(userAnswer);
+                }
+                userTags.filter((value) => !oldTags.includes(value));
+                userTags.length === 0
+                  ? (userTags = newTags)
+                  : (userTags = userTags.concat(newTags));
+                setNewTags([]);
+                setOldTags([]);
+                Promise.all(
+                  [
+                    fetch(`/api/put-question-responses`, {
+                      method: "POST",
+                      body: JSON.stringify({
+                        responses: newUserResponses,
+                        userId: session.data.user.uid,
+                      }),
+                    }),
+                  ].concat(
+                    question.type === "MCQ" || question.type === "CheckBox"
+                      ? [
+                          fetch(`/api/update-user`, {
+                            method: "POST",
+                            body: JSON.stringify({
+                              userInfo: { tags: userTags },
+                              userId: session.data.user.uid,
+                            }),
+                          }),
+                        ]
+                      : []
+                  )
+                ).then((reses) => {
+                  reses.forEach((res) => {
+                    console.log(res.status);
+                  });
+                  store.dispatch(updateTagsAction(userTags));
                   store.dispatch(
-                    updateAccountAction({
-                      ...store.getState().accountInfo,
-                      grade: parseInt(
-                        userAnswer.response.includes("9")
-                          ? "9"
-                          : userAnswer.response.substring(
-                              0,
-                              userAnswer.response.indexOf("t")
-                            )
-                      ),
-                      _id: undefined,
-                    })
+                    updateQuestionResponsesAction(newUserResponses)
                   );
+                  onUpdate(userTags);
+                  setOriginalAnswer(userAnswer);
+                  setDisplayingQuestion(false);
                 });
-              }
-              Promise.all(
-                [
-                  fetch(`/api/put-question-responses`, {
+              } else {
+                let newUserResponses = userAnswers;
+                let indexOfResponse = newUserResponses.findIndex(
+                  ({ questionId }) => {
+                    return questionId === userAnswer.questionId;
+                  }
+                );
+                console.log(indexOfResponse);
+                if (indexOfResponse !== -1) {
+                  newUserResponses[indexOfResponse] = userAnswer;
+                } else {
+                  newUserResponses.push(userAnswer);
+                }
+                userTags.filter((value) => !oldTags.includes(value));
+                userTags.length === 0
+                  ? (userTags = newTags)
+                  : (userTags = userTags.concat(newTags));
+                setNewTags([]);
+                setOldTags([]);
+                if (question._id === "61de0b617c405886579656ec") {
+                  fetch(`/api/update-user`, {
                     method: "POST",
                     body: JSON.stringify({
-                      responses: newUserResponses,
+                      userInfo: {
+                        grade: parseInt(
+                          userAnswer.response.includes("9")
+                            ? "9"
+                            : userAnswer.response.substring(
+                                0,
+                                userAnswer.response.indexOf("t")
+                              )
+                        ),
+                      },
                       userId: session.data.user.uid,
                     }),
-                  }),
-                ].concat(
-                  question.type === "MCQ" || question.type === "CheckBox"
-                    ? [
-                        fetch(`/api/update-user`, {
-                          method: "POST",
-                          body: JSON.stringify({
-                            userInfo: { tags: userTags },
-                            userId: session.data.user.uid,
+                  }).then(() => {
+                    store.dispatch(
+                      updateAccountAction({
+                        ...store.getState().accountInfo,
+                        grade: parseInt(
+                          userAnswer.response.includes("9")
+                            ? "9"
+                            : userAnswer.response.substring(
+                                0,
+                                userAnswer.response.indexOf("t")
+                              )
+                        ),
+                        _id: undefined,
+                      })
+                    );
+                  });
+                }
+                Promise.all(
+                  [
+                    fetch(`/api/put-question-responses`, {
+                      method: "POST",
+                      body: JSON.stringify({
+                        responses: newUserResponses,
+                        userId: session.data.user.uid,
+                      }),
+                    }),
+                  ].concat(
+                    question.type === "MCQ" || question.type === "CheckBox"
+                      ? [
+                          fetch(`/api/update-user`, {
+                            method: "POST",
+                            body: JSON.stringify({
+                              userInfo: { tags: userTags },
+                              userId: session.data.user.uid,
+                            }),
                           }),
-                        }),
-                      ]
-                    : []
-                )
-              ).then((reses) => {
-                reses.forEach((res) => {
-                  console.log(res.status);
+                        ]
+                      : []
+                  )
+                ).then((reses) => {
+                  reses.forEach((res) => {
+                    console.log(res.status);
+                  });
+                  store.dispatch(updateTagsAction(userTags));
+                  store.dispatch(
+                    updateQuestionResponsesAction(newUserResponses)
+                  );
+                  onUpdate(userTags);
+                  setOriginalAnswer(userAnswer);
+                  setDisplayingQuestion(false);
                 });
-                store.dispatch(updateTagsAction(userTags));
-                store.dispatch(updateQuestionResponsesAction(newUserResponses));
-                onUpdate(userTags);
-                setOriginalAnswer(userAnswer);
-                setDisplayingQuestion(false);
-              });
+              }
             }}
             className="general-submit-btn mt-2"
           >

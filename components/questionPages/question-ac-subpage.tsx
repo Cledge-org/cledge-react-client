@@ -5,6 +5,8 @@ import ACEditor from "../../components/question_components/ec-editor";
 import { useSession } from "next-auth/react";
 import { store } from "../../utils/store";
 import { updateQuestionResponsesAction } from "../../utils/actionFunctions";
+import { calculateACActivityTier } from "../../utils/metricsCalculations";
+import QuestionSummaryCard from "../question_components/question-summary-card";
 
 interface QuestionACSubpageProps {
   userResponses: UserResponse[];
@@ -19,65 +21,41 @@ export default function QuestionACSubpage({
   inMetrics,
   chunk,
 }: QuestionACSubpageProps) {
-  const chunkExists =
-    userResponses?.find(({ questionId }) => {
-      return questionId === "Academics";
-    }) &&
-    userResponses?.find(({ questionId }) => {
-      return questionId === "Academics";
-    })?.response[chunk.name];
+  const chunkResponses = userResponses?.find(({ questionId }) => {
+    return questionId === "Academics";
+  });
+  const chunkExists = chunkResponses?.response[chunk.name]?.semesterQuestions;
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currACIndex, setCurrACIndex] = useState(
     chunkExists
       ? userResponses?.find(({ questionId }) => {
           return questionId === "Academics";
-        })?.response[chunk.name].length
+        })?.response[chunk.name].semesterQuestions.length
       : 0
   );
   const session = useSession();
-  // const getAcademics = (chunkResponses): Activities => {
+  // const getAcademics = (chunkResponses) => {
   //   let academics = chunkResponses.map((responses) => {
-  //     const hoursPerWeek = parseInt(
+  //     const semesterGPA = parseInt(
   //       responses.find(
   //         ({ questionId }) => questionId === "623dfe875e2b2cf43e1b86d8"
   //       ).response
   //     );
-  //     const weeksPerYear = parseInt(
+  //     const semesterClasses = parseInt(
   //       responses.find(
   //         ({ questionId }) => questionId === "623dfe875e2b2cf43e1b86d7"
   //       ).response
   //     );
   //     let initialObj = {
-  //       activityID: "???",
-  //       actType: responses.find(
-  //         ({ questionId }) => questionId === "61c6b6f2d3054b6dd0f1fc4d"
-  //       ).response,
-  //       hoursYear: hoursPerWeek * weeksPerYear,
-  //       yearsSpent: responses.find(
-  //         ({ questionId }) => questionId === "62546c01f993412f5c26c772"
-  //       ).response,
-  //       recogLevel: responses.find(
-  //         ({ questionId }) => questionId === "623e0e025e2b2cf43e1b86e1"
-  //       ).response,
-  //       description: responses.find(
-  //         ({ questionId }) => questionId === "623dfe865e2b2cf43e1b86d6"
-  //       ).response,
   //       points: 0,
   //       tier: 0,
   //     };
-  //     initialObj.tier = calculateActivityTier(
-  //       hoursPerWeek,
-  //       weeksPerYear,
-  //       initialObj.yearsSpent,
-  //       initialObj.recogLevel
-  //     );
-  //     initialObj.points = calculateActivityPoints(initialObj.tier);
   //     return initialObj;
   //   });
-  //   const overallPoints = calculateTotalPoints(
-  //     academics.map(({ tier }) => tier)
-  //   );
+  //   const overallTier = calculateACActivityTier(
+  //     , ,
+  //   )
   //   return {
   //     activities: academics,
   //     overallTier: Math.round(overallPoints / 150),
@@ -103,14 +81,15 @@ export default function QuestionACSubpage({
           userResponses.push({
             questionId: "Academics",
             response: {
-              [chunk.name]: [],
+              [chunk.name]: { semesterQuestions: [], generalQuestions: [] },
             },
           });
         }
         if (ACResponse?.response[chunk.name] === undefined) {
-          ACResponse.response[chunk.name] = [];
+          ACResponse.response[chunk.name].semesterQuestions = [];
         }
-        ACResponse.response[chunk.name][currACIndex] = newAnswers;
+        ACResponse.response[chunk.name].semesterQuestions[currACIndex] =
+          newAnswers;
         fetch(`/api/put-question-responses`, {
           method: "POST",
           body: JSON.stringify({
@@ -138,6 +117,9 @@ export default function QuestionACSubpage({
         //   }),
         // });
         store.dispatch(updateQuestionResponsesAction(userResponses));
+        if (isAdding) {
+          setCurrACIndex((currACIndex) => currACIndex + 1);
+        }
         setIsAdding(false);
         setIsEditing(false);
       }}
@@ -146,10 +128,10 @@ export default function QuestionACSubpage({
         chunkExists &&
         userResponses.find(({ questionId }) => {
           return questionId === "Academics";
-        }).response[chunk.name][currACIndex]
+        }).response[chunk.name].semesterQuestions[currACIndex]
           ? userResponses.find(({ questionId }) => {
               return questionId === "Academics";
-            }).response[chunk.name][currACIndex]
+            }).response[chunk.name].semesterQuestions[currACIndex]
           : []
       }
     />
@@ -174,11 +156,13 @@ export default function QuestionACSubpage({
               .find(({ questionId }) => {
                 return questionId === "Academics";
               })
-              .response[chunk.name].map((response, index) => {
+              .response[chunk.name].semesterQuestions.map((response, index) => {
                 return (
                   <ACQuestionSummaryCard
                     response={response}
-                    chunkQuestions={chunk.questions}
+                    chunkQuestions={chunk.questions.filter(
+                      ({ _id }) => _id === "627950c272f6d134f0b63665"
+                    )}
                     onClick={() => {
                       setCurrACIndex(index);
                       setIsEditing(true);
@@ -187,6 +171,20 @@ export default function QuestionACSubpage({
                 );
               })
           : []}
+        {chunk.questions.map((question) =>
+          question._id === "627950c272f6d134f0b63665" ? null : (
+            <QuestionSummaryCard
+              userTags={[]}
+              isAC
+              onUpdate={() => {}}
+              question={question}
+              allAnswers={userResponses}
+              userAnswers={
+                chunkResponses?.response[chunk.name]?.generalQuestions
+              }
+            />
+          )
+        )}
       </div>
     </div>
   );

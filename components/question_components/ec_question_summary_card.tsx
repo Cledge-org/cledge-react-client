@@ -19,6 +19,7 @@ export default function ECQuestionSummaryCard({
   onClick,
 }: ECQuestionSummaryCardProps) {
   const [displayingQuestion, setDisplayingQuestion] = useState(false);
+  console.log(response);
   const titleQuestion = response.find(
     ({ questionId }) =>
       questionId ===
@@ -41,25 +42,54 @@ export default function ECQuestionSummaryCard({
         </button>
       </div>
       <div className="w-100 d-flex flex-column align-items-center justify-content-center ecsummary-info-container">
-        {chunkQuestions.map(({ question, type, _id }) => {
+        {chunkQuestions.map(({ question, type, _id, data }) => {
           const questionFound = response.find(
             ({ questionId }) => _id === questionId
           );
           return question !== "Title" ? (
-            <div className="ecsummary-info-section">
-              <div className="name">{question.toLocaleUpperCase()}</div>
-              <div className="value">
-                {questionFound !== undefined
-                  ? type === "ListQuestion"
-                    ? questionFound.response.numResponse
-                    : questionFound.response instanceof Array
-                    ? questionFound.response.reduce((prev, curr) => {
-                        return prev === "" ? curr : prev + ", " + curr;
-                      }, "")
-                    : questionFound.response
-                  : "Not Answered"}
+            <>
+              <div className="ecsummary-info-section">
+                <div className="name">{question.toLocaleUpperCase()}</div>
+                <div className="value">
+                  {questionFound !== undefined
+                    ? type === "ListQuestion"
+                      ? questionFound.response.numResponse
+                      : questionFound.response instanceof Array
+                      ? questionFound.response.reduce((prev, curr) => {
+                          return prev === "" ? curr : prev + ", " + curr;
+                        }, "")
+                      : questionFound.response
+                    : "Not Answered"}
+                </div>
               </div>
-            </div>
+              {type === "ListQuestion"
+                ? questionFound.response.questionsResponses.map(
+                    (questionResponse) => {
+                      return data.map(({ question, _id }, index) => {
+                        const subQuestionFound = questionResponse[_id];
+                        return (
+                          <div className="ecsummary-info-section">
+                            <div className="name">
+                              {question.toLocaleUpperCase() + ` ${index + 1}`}
+                            </div>
+                            <div className="value">
+                              {subQuestionFound !== undefined
+                                ? subQuestionFound instanceof Array
+                                  ? subQuestionFound.reduce((prev, curr) => {
+                                      return prev === ""
+                                        ? curr
+                                        : prev + ", " + curr;
+                                    }, "")
+                                  : subQuestionFound
+                                : "Not Answered"}
+                            </div>
+                          </div>
+                        );
+                      });
+                    }
+                  )
+                : null}
+            </>
           ) : null;
         })}
       </div>
