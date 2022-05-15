@@ -49,13 +49,12 @@ export const getResourceTags = (tag: string) : Promise<Array<string>> => {
   });
 };
 
-export function putPathwayTags(): Promise<void> {
+export const putPathwayTags = (): Promise<void> => {
   return new Promise(async (res, err) => {
     try {
       const fetchedAllPathway = await getAllPathways();
       for (let i = 0; i < fetchedAllPathway.length; i++) {
         const fetchedTag = fetchedAllPathway[i].tags;
-        console.log(fetchedTag);
         for (let j = 0; j < fetchedTag.length; j++)
           pathway_tag_list.push(fetchedTag[j]);
       }
@@ -66,7 +65,7 @@ export function putPathwayTags(): Promise<void> {
   });
 }
 
-export function getPathwayTags(tag: string): Promise<Array<string>> {
+export const getPathwayTags = (tag: string): Promise<Array<string>> => {
   return new Promise(async (res, err) => {
     try {
       const selectedTags = [];

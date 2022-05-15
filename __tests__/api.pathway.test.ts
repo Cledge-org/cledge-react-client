@@ -510,21 +510,14 @@ test("should add pathways and get appropriate tag", (done) => {
     const testUserFirebaseId = "Test User Id";
     await createNewUser(testUserFirebaseId);
 
-
-
     // test put functionality  
     await putPathway(pathway1ObjectId, testPathway_Db);
-    // await putPathwayProgress(testUserFirebaseId, { [pathwayModule1ObjectId.toString()]: [testContentProgress] });
-    // await putPathwayModule(pathwayModule1ObjectId, testPathwayModule_Db);
-    // const pathwayContentPersonalized = new ObjectId();
-    // await putPathwayModulePersonalizedContent(pathwayContentPersonalized, testPersonalizedContent);
 
     // test put functionality
     await putPathwayTags();
 
     // Checks if there is anything in the database at the beginning of test
     const fetchedPathway = await getAllPathways();
-
 
     // tests get functionality for article
     let [selectedTags1, selectedTags2, selectedTags3, selectedTags4, selectedTags5, selectedTags6] = await Promise.all([
