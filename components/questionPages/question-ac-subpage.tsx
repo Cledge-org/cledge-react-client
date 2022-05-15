@@ -5,8 +5,13 @@ import ACEditor from "../../components/question_components/ec-editor";
 import { useSession } from "next-auth/react";
 import { store } from "../../utils/store";
 import { updateQuestionResponsesAction } from "../../utils/actionFunctions";
-import { calculateACActivityTier } from "../../utils/metricsCalculations";
 import QuestionSummaryCard from "../question_components/question-summary-card";
+import {
+  calculateACActivityTier,
+  calculateClassTiers,
+  calculateGPATier,
+  getAllClassesFormatted,
+} from "../../utils/metricsCalculations";
 
 interface QuestionACSubpageProps {
   userResponses: UserResponse[];
@@ -35,33 +40,66 @@ export default function QuestionACSubpage({
       : 0
   );
   const session = useSession();
-  // const getAcademics = (chunkResponses) => {
-  //   let academics = chunkResponses.map((responses) => {
-  //     const semesterGPA = parseInt(
-  //       responses.find(
-  //         ({ questionId }) => questionId === "623dfe875e2b2cf43e1b86d8"
-  //       ).response
-  //     );
-  //     const semesterClasses = parseInt(
-  //       responses.find(
-  //         ({ questionId }) => questionId === "623dfe875e2b2cf43e1b86d7"
-  //       ).response
-  //     );
-  //     let initialObj = {
-  //       points: 0,
-  //       tier: 0,
-  //     };
-  //     return initialObj;
-  //   });
-  //   const overallTier = calculateACActivityTier(
-  //     , ,
-  //   )
-  //   return {
-  //     activities: academics,
-  //     overallTier: Math.round(overallPoints / 150),
-  //     totalPoints: overallPoints,
-  //   };
-  // };
+  const getAcademics = (chunkResponses): Academics => {
+    let classTypes = chunkResponses.semesterQuestions.reduce(
+      (prevResponses, responses) => {
+        const semesterCourses = responses.find(
+          ({ questionId }) => questionId === "627950c272f6d134f0b63665"
+        ).response.questionsResponses;
+        const courseNumTypes = semesterCourses;
+        return prevResponses.concat(courseNumTypes);
+      },
+      []
+    );
+    let applicantLevel = userResponses.find(
+      ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
+    )?.response;
+    if (!applicantLevel) {
+      applicantLevel = "Average";
+    }
+    const gpa = parseFloat(
+      chunkResponses.generalQuestions.find(
+        ({ questionId }) => questionId === "62435e6620b74f4eb00ac8f5"
+      ).response
+    );
+    if (!gpa) {
+      return null;
+    }
+    const applicantLevelNum =
+      applicantLevel === "Competitive"
+        ? 2
+        : applicantLevel === "Average"
+        ? 1
+        : 0;
+    const gpaTier = calculateGPATier(applicantLevelNum, gpa);
+    const everyClassTier = getAllClassesFormatted(classTypes);
+    const classTiers = calculateClassTiers(
+      classTypes.map(({ courseLevel }) => courseLevel)
+    );
+    const overallTier = calculateACActivityTier(
+      applicantLevelNum,
+      gpa,
+      classTypes
+    );
+
+    return {
+      classes: everyClassTier,
+      overallClassTier: classTiers,
+      gpa,
+      gpaTier,
+      satScore: parseInt(
+        chunkResponses.generalQuestions.find(
+          ({ questionId }) => questionId == "627a7bff145665a4e88ace07"
+        )?.response
+      ),
+      actScore: parseInt(
+        chunkResponses.generalQuestions.find(
+          ({ questionId }) => questionId == "627a7bff145665a4e88ace08"
+        )?.response
+      ),
+      overallTier: overallTier,
+    };
+  };
   if (!isShowing) {
     return null;
   }
@@ -97,25 +135,25 @@ export default function QuestionACSubpage({
             userId: session.data.user.uid,
           }),
         });
-        // let academics = null;
-        // try {
-        //   academics = await (
-        //     await fetch(`/api/get-academics`, {
-        //       method: "POST",
-        //       body: JSON.stringify({ userId: session.data.user.uid }),
-        //     })
-        //   )?.json();
-        // } catch (e) {
-        //   academics = null;
-        // }
-        // console.log(academics);
-        // fetch(`/api/put-academics`, {
-        //   method: "POST",
-        //   body: JSON.stringify({
-        //     userId: academics ? session.data.user.uid : null,
-        //     academics: getAcademics(ACResponse.response[chunk.name]),
-        //   }),
-        // });
+        let academics = null;
+        try {
+          academics = await (
+            await fetch(`/api/get-academics`, {
+              method: "POST",
+              body: JSON.stringify({ userId: session.data.user.uid }),
+            })
+          )?.json();
+        } catch (e) {
+          academics = null;
+        }
+        console.log(academics);
+        fetch(`/api/put-academics`, {
+          method: "POST",
+          body: JSON.stringify({
+            userId: academics ? session.data.user.uid : null,
+            academics: getAcademics(ACResponse.response[chunk.name]),
+          }),
+        });
         store.dispatch(updateQuestionResponsesAction(userResponses));
         if (isAdding) {
           setCurrACIndex((currACIndex) => currACIndex + 1);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowDown,
@@ -29,19 +29,25 @@ import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { getActivities } from "./api/get-activities";
+import { getAcademics } from "./api/get-academics";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = getSession(ctx);
     const activities = await getActivities((await session).user.uid);
+    const academics = await getAcademics((await session).user.uid);
     let userActivitiesJSON = {};
+    let userAcademicsJSON = {};
     try {
       userActivitiesJSON = JSON.parse(JSON.stringify(activities));
+      userAcademicsJSON = JSON.parse(JSON.stringify(academics));
     } catch (e) {
       userActivitiesJSON = {};
+      userAcademicsJSON = {};
     }
     return {
       props: {
+        academics: userAcademicsJSON,
         activities: userActivitiesJSON,
       },
     };
@@ -53,9 +59,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 const Metrics: NextApplicationPage<{
   activities: Activities;
+  academics: Academics;
   userTags: string[];
   questionResponses: UserResponse[];
-}> = ({ activities, userTags, questionResponses }) => {
+}> = ({ activities, academics, userTags, questionResponses }) => {
   const session = useSession();
   console.log(activities);
   const [currPage, setCurrPage] = useState("all");
@@ -201,7 +208,48 @@ const Metrics: NextApplicationPage<{
             </div>
           </div>
         ) : (
-          []
+          <div
+            className="container-fluid d-flex flex-column"
+            style={{ flex: 1 }}
+          >
+            <QuestionSubPageHeader
+              title="Acamdemics Metrics"
+              percentage={undefined}
+              isMetrics
+              subText=""
+            />
+            <div className="tab-content h-100 mx-5">
+              <div
+                style={{ borderBottom: "1px solid #BBBBC0" }}
+                className="pb-5"
+              >
+                <SubTitle title="Overall Academics Tier" isDivider />
+                <div className="d-flex flex-column">
+                  <TierIndicatorAndTips
+                    tier={academics?.overallTier}
+                    isOverall
+                  />
+                </div>
+              </div>
+              <SubTitle title="Details" />
+              <ActivityDropdown
+                title={"GPA"}
+                content={""}
+                tier={academics.gpaTier}
+              />
+              <ActivityDropdown
+                title={"Coursework"}
+                content={""}
+                tier={academics.overallClassTier}
+              />
+              <ActivityDropdown
+                title={"SAT/ACT"}
+                content={""}
+                customContent={<div></div>}
+                tier={-1}
+              />
+            </div>
+          </div>
         )}
       </div>
     </div>
@@ -211,10 +259,12 @@ const ActivityDropdown = ({
   title,
   tier,
   content,
+  customContent,
 }: {
   title: string;
   tier: number;
   content: string;
+  customContent?: ReactElement;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
@@ -251,7 +301,7 @@ const ActivityDropdown = ({
           {content}
         </div>
         <div className="d-flex flex-row align-items-start justify-content-between w-100">
-          <TierIndicatorAndTips tier={tier} />
+          {customContent ?? <TierIndicatorAndTips tier={tier} />}
         </div>
       </div>
     </div>

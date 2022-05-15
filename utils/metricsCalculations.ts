@@ -61,6 +61,29 @@ export const calculateACActivityTier = (
   classTypes: string[]
 ) => {
   let tier = 0;
+  let classTier = calculateClassTiers(classTypes);
+  let gpaTier = calculateGPATier(applicantLevel, gpa);
+  tier = Math.round((classTier + gpaTier) / 2);
+  return tier;
+};
+export const calculateClassTiers = (classTypes: string[]) => {
+  let classTier = 0;
+  classTypes.forEach((classType) => {
+    classTier += classType === "Regular" ? 1 : classType === "Honors" ? 2.5 : 4;
+  });
+  classTier = Math.floor(classTier / classTypes.length);
+  return classTier;
+};
+export const getAllClassesFormatted = (classTypes: any[]) => {
+  return classTypes.map(({ courseName, courseLevel }, index) => {
+    return {
+      classID: index,
+      name: courseName,
+      tier: courseLevel === "Regular" ? 1 : courseLevel === "Honors" ? 2.5 : 4,
+    };
+  });
+};
+export const calculateGPATier = (applicantLevel: number, gpa: number) => {
   let gpaTier = 0;
   if (applicantLevel === 2) {
     // gpaTier = Math.floor( 6.3 / (1 + Math.exp(-0.3376 * (gpa - 1))) - 2.15);
@@ -72,11 +95,5 @@ export const calculateACActivityTier = (
   } else {
     gpaTier = Math.floor((11 / 3) * gpa - 8 / 3);
   }
-  let classTier = 0;
-  classTypes.forEach((classType) => {
-    classTier += classType === "Regular" ? 1 : classType === "Honors" ? 2.5 : 4;
-  });
-  classTier = Math.floor(classTier / classTypes.length);
-  tier = Math.round((classTier + gpaTier) / 2);
-  return tier;
+  return gpaTier;
 };
