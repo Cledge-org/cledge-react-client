@@ -9,6 +9,7 @@ import { putPathway } from "../pages/api/put-pathway";
 import { MongoClient, ObjectId } from "mongodb";
 import { createUser } from "../pages/api/create-user";
 import { updateUser } from "../pages/api/update-user";
+import { getPathwayTags, putPathwayTags } from "../pages/api/cache-new-tags";
 
 const testPersonalizedContentTag = ["Test Tag 1", "Test Tag 2", "Test Tag 3"];
 const pathwayModule1ObjectId = new ObjectId();
@@ -420,12 +421,12 @@ test("should verify many pathways", (done) => {
 
     return {
       pathwayDb: testPathway_Db,
-      contentProgress: testContentProgress, 
-      pathwayModuleDb: testPathwayModule_Db, 
+      contentProgress: testContentProgress,
+      pathwayModuleDb: testPathwayModule_Db,
       personalizedContent: testPersonalizedContent,
-      pathway: testPathway, 
-      pathwayProgress: testPathwayProgress, 
-      pathwayModule: testPathwayModule, 
+      pathway: testPathway,
+      pathwayProgress: testPathwayProgress,
+      pathwayModule: testPathwayModule,
       moduleProgress: testModuleProgress
     }
   }
@@ -447,10 +448,10 @@ test("should verify many pathways", (done) => {
       const firebaseId = "Test User Id " + j;
 
       const pathwayResult = createPathway(j + "", pathwayId, moduleId);
-  
+
       pathwayIds.push(pathwayId);
       moduleIds.push(moduleId);
-      firebaseIds.push(firebaseId);      
+      firebaseIds.push(firebaseId);
       pathways.push(pathwayResult.pathway);
       pathwayModule.push(pathwayResult.pathwayModule);
       pathwayProgress.push(pathwayResult.pathwayProgress);
@@ -458,7 +459,7 @@ test("should verify many pathways", (done) => {
 
       // creates a new user
       await createNewUser(firebaseId);
-      
+
       // test put functionality
       await putPathway(pathwayId, pathwayResult.pathwayDb);
       await putPathwayProgress(firebaseId, { [moduleId.toString()]: [pathwayResult.contentProgress] });
@@ -497,6 +498,45 @@ test("should verify many pathways", (done) => {
         expect(fetchedPathwayProgress.moduleProgress[i]).toMatchObject(moduleProgresses[j]);
       }
     }
+    done();
+  };
+  callback();
+});
+
+test("should add pathways and get appropriate tag", (done) => {
+  const callback = async () => {
+
+    // creates a new user
+    const testUserFirebaseId = "Test User Id";
+    await createNewUser(testUserFirebaseId);
+
+    // test put functionality  
+    await putPathway(pathway1ObjectId, testPathway_Db);
+
+    // test put functionality
+    await putPathwayTags();
+
+    // Checks if there is anything in the database at the beginning of test
+    const fetchedPathway = await getAllPathways();
+
+    // tests get functionality for article
+    let [selectedTags1, selectedTags2, selectedTags3, selectedTags4, selectedTags5, selectedTags6] = await Promise.all([
+      getPathwayTags("Test"), getPathwayTags("Test Pathway"), getPathwayTags("Pathway"), getPathwayTags("Test Pathway Tag"), getPathwayTags("way"), getPathwayTags("xyz")
+    ]);
+
+    let expectedTag = "Test Pathway Tag";
+    expect(selectedTags1.length).toBe(1);
+    expect(selectedTags1[0]).toBe(expectedTag);
+    expect(selectedTags2.length).toBe(1);
+    expect(selectedTags2[0]).toBe(expectedTag);
+    expect(selectedTags3.length).toBe(1);
+    expect(selectedTags3[0]).toBe(expectedTag);
+    expect(selectedTags4.length).toBe(1);
+    expect(selectedTags4[0]).toBe(expectedTag);
+    expect(selectedTags5.length).toBe(1);
+    expect(selectedTags5[0]).toBe(expectedTag);
+    expect(selectedTags6.length).toBe(0);
+
     done();
   };
   callback();

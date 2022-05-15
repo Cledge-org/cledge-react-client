@@ -57,7 +57,7 @@ export const putResource = async (
         await client
           .db("resources")
           .collection("all_resources")
-          .insertOne(resourceWithType);
+          .insertOne(resourceWithType); 
       } else if (resourceId && !resource) {
         await client
           .db("resources")
