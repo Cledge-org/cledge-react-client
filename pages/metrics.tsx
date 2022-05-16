@@ -166,7 +166,11 @@ const Metrics: NextApplicationPage<{
                     height: "20vh",
                   }}
                 >
-                  <TierRange tier={7} isOverall isOverview />
+                  <TierRange
+                    tier={academics?.overallTier}
+                    isOverall
+                    isOverview
+                  />
                 </div>
               </div>
             </div>
@@ -245,7 +249,64 @@ const Metrics: NextApplicationPage<{
               <ActivityDropdown
                 title={"SAT/ACT"}
                 content={""}
-                customContent={<div></div>}
+                customContent={
+                  <>
+                    <div
+                      style={{ width: "49%" }}
+                      className="d-flex flex-column align-items-center"
+                    >
+                      <div className="w-75">
+                        {academics?.satScore && (
+                          <>
+                            <div
+                              className="cl-dark-text fw-bold py-2 w-100"
+                              style={{
+                                borderBottom: "2px solid lightgray",
+                                fontSize: "1.3em",
+                              }}
+                            >
+                              Your SAT score
+                            </div>
+                            <div className="py-2" style={{ fontSize: "1.2em" }}>
+                              {academics.satScore}
+                            </div>
+                          </>
+                        )}
+                        {academics?.actScore && (
+                          <>
+                            <div
+                              className="cl-dark-text fw-bold py-2 w-100"
+                              style={{
+                                borderBottom: "2px solid lightgray",
+                                fontSize: "1.4em",
+                              }}
+                            >
+                              Your SAT score
+                            </div>
+                            <div className="py-2" style={{ fontSize: "1.3em" }}>
+                              {academics.actScore}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        minHeight: "30vh",
+                        width: "50%",
+                      }}
+                      className="d-flex flex-column align-items-center justify-content-start"
+                    >
+                      <TipsCard
+                        isOverall={false}
+                        title={
+                          "You definitely know what you are doing! To increase your tier, try our tips and update your profile to help us reaccess your tier."
+                        }
+                        tips={[]}
+                      />
+                    </div>
+                  </>
+                }
                 tier={-1}
               />
             </div>
