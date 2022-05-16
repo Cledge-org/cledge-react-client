@@ -1,4 +1,4 @@
-import AccountPage from "../MainPages/AccountPage/AccountPage";
+import AccountPage from "../main-pages/AccountPage/AccountPage";
 const Account = () => {
   return <AccountPage />;
 };

@@ -1,16 +1,8 @@
 import type { NextPage } from "next";
 import Welcome from "./welcome";
-import Dashboard from "./dashboard";
-import Resources from "./resources";
-import resources from "./resources";
-import Footer from "../../components/common/Footer";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import Progress from "./progress";
+import LoadingScreen from "../common/components/Loading/Loading";
 import { useSession } from "next-auth/react";
-import Signup from "./auth/signup";
-import LoadingScreen from "../../components/common/loading";
-import { Router, useRouter } from "next/router";
-import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();

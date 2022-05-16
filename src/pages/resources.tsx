@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from "next";
-import ResourcesPage from "../MainPages/ResourcesPage/ResourcesPage";
+import ResourcesPage from "../main-pages/ResourcesPage/ResourcesPage";
 import { getResourcesInfo } from "./api/resources/get-resources";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {

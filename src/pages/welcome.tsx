@@ -1,4 +1,4 @@
-import WelcomePage from "../MainPages/WelcomePage/WelcomePage";
+import WelcomePage from "../main-pages/WelcomePage/WelcomePage";
 
 const Welcome = () => {
   return <WelcomePage />;

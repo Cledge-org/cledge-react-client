@@ -1,4 +1,4 @@
-import ResourcesUploadPage from "../../MainPages/UploadPages/ResourcesUploadPage/ResourcesUploadPage";
+import ResourcesUploadPage from "../../main-pages/UploadPages/ResourcesUploadPage/ResourcesUploadPage";
 
 const Resources = () => {
   return <ResourcesUploadPage />;

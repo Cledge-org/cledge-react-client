@@ -1,6 +1,6 @@
 import React from "react";
 import { GetServerSidePropsContext } from "next";
-import CheckInPage from "../../MainPages/CheckInPage/CheckInPage";
+import CheckInPage from "../../main-pages/CheckInPage/CheckInPage";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {

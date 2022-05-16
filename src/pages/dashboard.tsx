@@ -2,7 +2,7 @@ import React from "react";
 import { GetServerSidePropsContext } from "next";
 import { getAllPathways } from "./api/get-all-pathways";
 import { getAllCheckins } from "./api/get-all-checkins";
-import DashboardPage from "../MainPages/DashboardPage/DashboardPage";
+import DashboardPage from "../main-pages/DashboardPage/DashboardPage";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {

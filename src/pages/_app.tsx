@@ -6,7 +6,7 @@ import "../styles/components.scss";
 import "../styles/question_components.scss";
 import "../styles/testing.css";
 import "antd/dist/antd.css";
-import MyAppPage from "../MainPages/AppPage/AppPage";
+import MyAppPage from "../main-pages/AppPage/AppPage";
 const MyApp = ({ Component, pageProps }) => {
   return <MyAppPage Component={Component} pageProps={pageProps} />;
 };

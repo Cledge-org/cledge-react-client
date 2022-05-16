@@ -3,7 +3,7 @@ import { GetServerSidePropsContext } from "next";
 import { getPathway } from "../api/get-pathway";
 import { getSession } from "next-auth/react";
 import { ObjectId } from "mongodb";
-import PathwayPage from "../../MainPages/PathwayPage/PathwayPage";
+import PathwayPage from "../../main-pages/PathwayPage/PathwayPage";
 
 //profile progress/ question summary page
 

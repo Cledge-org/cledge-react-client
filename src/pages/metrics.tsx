@@ -2,7 +2,7 @@ import React from "react";
 import { GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import { getActivities } from "./api/get-activities";
-import MetricsPage from "../MainPages/MetricsPage/MetricsPage";
+import MetricsPage from "../main-pages/MetricsPage/MetricsPage";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
