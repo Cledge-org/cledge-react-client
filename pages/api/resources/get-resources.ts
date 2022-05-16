@@ -19,6 +19,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const getResourcesInfo = (): Promise<ResourcesInfo> => {
   return new Promise(async (res, err) => {
     try {
+
       const client = await MongoClient.connect(process.env.MONGO_URL);
       const resource_db = client.db("resources");
       const [videoList, articles, resources] = await Promise.all([
@@ -32,15 +33,7 @@ export const getResourcesInfo = (): Promise<ResourcesInfo> => {
           CardResource[]
         >,
       ]);
-      videoList.forEach(function (currentValue) {
-        delete currentValue.tag;
-      });
-      articles.forEach(function (currentValue) {
-        delete currentValue.tag;
-      });
-      resources.forEach(function (currentValue) {
-        delete currentValue.tag;
-      });
+      
       res({ videoList, articles, resources });
       client.close();
     } catch (e) {
