@@ -1,0 +1,82 @@
+import { useSession } from "next-auth/react";
+import { isLocalURL } from "next/dist/shared/lib/router/router";
+import { Router, useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { initialStateAction } from "../../src/common/utils/redux/actionFunctions";
+import { store } from "../../src/common/utils/redux/store";
+import Header from "./Header";
+import LoadingScreen from "./loading";
+
+export default function Layout({ children }) {
+  const router = useRouter();
+  const session = useSession();
+  const [loading, setLoading] = useState(false);
+  const [header, setHeader] = useState(<Header key_prop="initial" />);
+  const asyncUseEffect = async () => {
+    setLoading(true);
+    console.error(window.origin);
+    if (session.data?.user?.uid && !store.getState()) {
+      const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
+        await Promise.all([
+          fetch(`/api/get-account`, {
+            method: "POST",
+            body: JSON.stringify({ userId: session.data.user.uid }),
+          }),
+          fetch(`/api/get-all-pathway-progress`, {
+            method: "POST",
+            body: JSON.stringify({ userId: session.data.user.uid }),
+          }),
+          fetch(`/api/get-question-responses`, {
+            method: "POST",
+            body: JSON.stringify({ userId: session.data.user.uid }),
+          }),
+        ]);
+      const [accountInfoJSON, pathwaysProgressJSON, questionResponsesJSON] =
+        await Promise.all([
+          accountInfoRes.json(),
+          pathwaysProgressRes.json(),
+          questionResponsesRes.json(),
+        ]);
+      console.log(pathwaysProgressJSON);
+      store.dispatch(
+        initialStateAction({
+          accountInfo: accountInfoJSON,
+          pathwaysProgress: pathwaysProgressJSON,
+          questionResponses: questionResponsesJSON,
+        })
+      );
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
+    asyncUseEffect();
+  }, [session]);
+  useEffect(() => {
+    let numTimes = 1;
+    const endLoading = () => {
+      setLoading(false);
+    };
+    const endLoadingShowNewHeader = () => {
+      setLoading(false);
+      numTimes++;
+      setHeader(<Header key_prop={numTimes.toString()} />);
+    };
+    const startLoading = () => {
+      setLoading(true);
+    };
+    Router.events.on("routeChangeStart", startLoading);
+    Router.events.on("routeChangeError", endLoading);
+    Router.events.on("routeChangeComplete", endLoadingShowNewHeader);
+    return () => {
+      Router.events.off("routeChangeComplete", endLoadingShowNewHeader);
+      Router.events.off("routeChangeStart", startLoading);
+      Router.events.off("routeChangeError", endLoading);
+    };
+  }, []);
+  return (
+    <div>
+      {router.pathname === "/check-ins/[checkIn]" ? null : header}
+      {loading ? <LoadingScreen /> : <main>{children}</main>}
+    </div>
+  );
+}
