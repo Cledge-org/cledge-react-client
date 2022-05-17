@@ -13,7 +13,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": [
+        "src/types/types.d.ts",
+        "src/types/auth.d.ts",
+        "src/types/redux.d.ts"
+      ]
+    }
     // "sourceMap": true // used to debug the program
   },
   "include": [

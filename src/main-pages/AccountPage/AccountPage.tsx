@@ -13,6 +13,7 @@ import {
   updateQuestionResponsesAction,
 } from "../../utils/redux/actionFunctions";
 import { AccountInfo, UserResponse } from "../../types/types";
+import LoadingScreen from "../../common/components/Loading/Loading";
 
 // account page
 
@@ -20,6 +21,9 @@ const AccountPage: NextApplicationPage<{
   accountInfo: AccountInfo;
   questionResponses: UserResponse[];
 }> = ({ accountInfo, questionResponses }) => {
+  if (!accountInfo) {
+    return <LoadingScreen />;
+  }
   const [modalOpen, setModalOpen] = useState(false);
   const [currUserData, setCurrUserData]: [
     AccountInfo,
@@ -256,6 +260,6 @@ function InfoSection({ name, value, onEdit }: InfoSectionProps) {
 }
 AccountPage.requireAuth = true;
 export default connect((state) => ({
-  accountInfo: state.accountInfo,
-  questionResponses: state.questionResponses,
+  accountInfo: state?.accountInfo,
+  questionResponses: state?.questionResponses,
 }))(AccountPage);

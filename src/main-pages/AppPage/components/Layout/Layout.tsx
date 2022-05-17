@@ -7,14 +7,18 @@ import Header from "../../../../common/components/Header/Header";
 import LoadingScreen from "../../../../common/components/Loading/Loading";
 
 export default function Layout({ children }) {
+  console.error("I EXIST");
   const router = useRouter();
   const session = useSession();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [header, setHeader] = useState(<Header key_prop="initial" />);
   const asyncUseEffect = async () => {
-    setLoading(true);
+    // setLoading(true);
     console.error(window.origin);
+    console.log("WERE IN");
+    console.log(session?.data?.user?.uid);
     if (session.data?.user?.uid && !store.getState()) {
+      console.log("THERE'S A USER");
       const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
         await Promise.all([
           fetch(`/api/get-account`, {
@@ -37,7 +41,7 @@ export default function Layout({ children }) {
           questionResponsesRes.json(),
         ]);
       console.log(pathwaysProgressJSON);
-      store.dispatch(
+      await store.dispatch(
         initialStateAction({
           accountInfo: accountInfoJSON,
           pathwaysProgress: pathwaysProgressJSON,
@@ -45,9 +49,14 @@ export default function Layout({ children }) {
         })
       );
     }
-    setLoading(false);
+    if (session.status !== "loading") {
+      console.log("WERE NOT LOADING");
+      console.log(session);
+      setLoading(false);
+    }
   };
   useEffect(() => {
+    console.log(session);
     asyncUseEffect();
   }, [session]);
   useEffect(() => {
@@ -75,7 +84,7 @@ export default function Layout({ children }) {
   return (
     <div>
       {router.pathname === "/check-ins/[checkIn]" ? null : header}
-      {loading ? <LoadingScreen /> : <main>{children}</main>}
+      {loading ? <LoadingScreen /> : <div>{children}</div>}
     </div>
   );
 }

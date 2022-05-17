@@ -63,7 +63,7 @@ export default NextAuth({
     },
     jwt: async ({ token, user }) => {
       if (user) {
-        console.error("AYO" + user.uid);
+        console.error(user.uid);
         token.uid = user.uid;
       }
       return Promise.resolve(token);
@@ -74,6 +74,7 @@ export default NextAuth({
       // session.user = user
       session.user.uid = token.uid;
       session.accessToken = token.accessToken;
+      console.error("UID: " + token.uid);
       return Promise.resolve(session);
     },
   },

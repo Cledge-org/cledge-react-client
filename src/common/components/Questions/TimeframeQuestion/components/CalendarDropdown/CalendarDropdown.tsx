@@ -8,9 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
-import Dropdown from "react-dropdown";
-import QuestionSubPageHeader from "./question_subpage_header";
-import ECDropDown from "./ec_dropdown_question";
+import DropDownQuestion from "../../../DropdownQuestion/DropdownQuestion";
 
 interface ECCalendarDropDownProps {
   onChange: Function;
@@ -128,21 +126,21 @@ export default function ECCalendarDropDown({
       >
         <div className="d-flex justify-content-center align-items-center pt-2">
           <div className="me-2" style={{ width: "25%" }}>
-            <ECDropDown
+            <DropDownQuestion
               key={"-months"}
               forCalendar
               onChange={() => {}}
               defaultValue={months[chosen.getMonth() - 1]}
               valuesList={months}
-            ></ECDropDown>
+            ></DropDownQuestion>
           </div>
           <div className="ms-2" style={{ width: "25%" }}>
-            <ECDropDown
+            <DropDownQuestion
               forCalendar
               key={"-years"}
               defaultValue={chosen.getFullYear().toString()}
               valuesList={years}
-            ></ECDropDown>
+            ></DropDownQuestion>
           </div>
         </div>
         <div className="d-flex flex-column justify-content-evenly align-items-center pt-3">

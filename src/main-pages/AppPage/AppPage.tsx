@@ -9,7 +9,6 @@ import ProtectedComponent from "../../common/components/ProtectedComponent/Prote
 import { useEffect, useState } from "react";
 import { Router, useRouter } from "next/router";
 import LoadingScreen from "../../common/components/Loading/Loading";
-import { initialStateAction } from "../../utils/redux/actionFunctions";
 
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
   requireAuth?: boolean;
@@ -21,6 +20,7 @@ function MyApp({
   Component: NextApplicationPage;
   pageProps: any;
 }) {
+  console.log(pageProps.session);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   useEffect(() => {

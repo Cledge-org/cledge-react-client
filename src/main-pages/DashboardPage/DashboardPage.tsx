@@ -16,15 +16,8 @@ import { connect } from "react-redux";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { boolean } from "yup";
 import CardTask from "../../common/components/Cards/CardTask/CardTask";
 import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
-import {
-  Pathway,
-  QuestionList,
-  AccountInfo,
-  PathwayProgress,
-} from "../../types/types";
 
 // logged in landing page
 const DashboardPage: NextApplicationPage<{
@@ -665,4 +658,7 @@ function PartDropDown({
   );
 }
 DashboardPage.requireAuth = true;
-export default DashboardPage;
+export default connect((state) => ({
+  accountInfo: state.accountInfo,
+  pathwaysProgress: state.pathwaysProgress,
+}))(DashboardPage);

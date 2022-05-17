@@ -1,7 +1,3 @@
-import { auto } from "@popperjs/core";
-import { AppProps } from "next/dist/shared/lib/router/router";
-import { ComponentProps, ComponentPropsWithoutRef, useEffect } from "react";
-
 export interface CardProps {
   title: String;
   url?: string;
