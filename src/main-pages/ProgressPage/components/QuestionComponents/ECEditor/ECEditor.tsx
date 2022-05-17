@@ -1,13 +1,12 @@
 import { faArrowLeft, faUnderline } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import QuestionSubPageHeader from "./question_subpage_header";
-import ECCalendarDropDown from "./ec_calendar_dropdown";
-import ECDropDown from "./ec_dropdown_question";
-import ECTextInputQuestion from "./ec_textinput_question";
-import ECTimeFrame from "./ec_timeframe_question";
-import CheckBoxQuestion from "./checkbox_question";
-import MCQQuestion from "./mcq_question";
+import CheckBoxQuestion from "../../../../../common/components/Questions/CheckboxQuestion/CheckboxQuestion";
+import DropDownQuestion from "../../../../../common/components/Questions/DropdownQuestion/DropdownQuestion";
+import MCQQuestion from "../../../../../common/components/Questions/MCQQuestion/MCQQuestion";
+import TextInputQuestion from "../../../../../common/components/Questions/TextInputQuestion/TextInputQuestion";
+import ECTimeFrame from "../../../../../common/components/Questions/TimeframeQuestion/ECTimeframeQuestion";
+import { Question, UserResponse } from "../../../../../types/types";
 
 interface ECEditorProps {
   title?: string;
@@ -128,7 +127,7 @@ export default function ECEditor({
           }
           if (type === "ECDropDown") {
             return (
-              <ECDropDown
+              <DropDownQuestion
                 isConcatenable={isConcatenable}
                 valuesList={data}
                 onChange={(value) => {
@@ -165,9 +164,9 @@ export default function ECEditor({
           }
           if (type === "ECTextInput") {
             return (
-              <ECTextInputQuestion
-                questionTitle={question}
-                userResponse={
+              <TextInputQuestion
+                question={questionData}
+                userAnswer={
                   isEditing &&
                   userResponse &&
                   userResponse.find(({ questionId }) => questionId === _id)
@@ -175,7 +174,6 @@ export default function ECEditor({
                         .response
                     : ""
                 }
-                placeholder={""}
                 onChange={(value) => {
                   let totallyNewResponse = newResponse.slice();
                   if (

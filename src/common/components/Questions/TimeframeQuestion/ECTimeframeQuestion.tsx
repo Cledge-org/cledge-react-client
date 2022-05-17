@@ -9,9 +9,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import Dropdown from "react-dropdown";
-import QuestionSubPageHeader from "./question_subpage_header";
-import ECCalendarDropDown from "./ec_calendar_dropdown";
-import ECDropDown from "./ec_dropdown_question";
+import ECCalendarDropDown from "./components/CalendarDropdown/CalendarDropdown";
 
 interface ECCalendarDropDownProps {
   defaultStart: Date;

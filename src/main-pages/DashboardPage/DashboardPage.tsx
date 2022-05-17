@@ -7,11 +7,6 @@ import React, {
   useState,
 } from "react";
 import { useSession } from "next-auth/react";
-import Card from "../../components/common/Card";
-import CardVideo from "../../components/common/Card_Video";
-import CardText from "../../components/common/Card_Text";
-import CardTask from "../../components/common/Card_Task";
-import TabButton from "../../components/common/TabButton";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "../AppPage/AppPage";
 import Link from "next/link";
@@ -19,19 +14,25 @@ import router, { Router, useRouter } from "next/router";
 import { redirect } from "next/dist/server/api-utils";
 import { connect } from "react-redux";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
-import ECDropDown from "../../components/question_components/ec_dropdown_question";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { boolean } from "yup";
+import CardTask from "../../common/components/Cards/CardTask/CardTask";
+import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
+import {
+  Pathway,
+  QuestionList,
+  AccountInfo,
+  PathwayProgress,
+} from "../../types/types";
 
 // logged in landing page
-const Dashboard: NextApplicationPage<{
+const DashboardPage: NextApplicationPage<{
   allPathways: Pathway[];
   allCheckins: QuestionList[];
   accountInfo: AccountInfo;
   pathwaysProgress: PathwayProgress[];
 }> = ({ allPathways, accountInfo, pathwaysProgress, allCheckins }) => {
-  console.error(allCheckins);
   const router = useRouter();
   const session = useSession();
   const [currTab, setCurrTab] = useState("all modules");
@@ -446,7 +447,7 @@ const Dashboard: NextApplicationPage<{
             flex: "1",
           }}
         />
-        <ECDropDown
+        <DropDownQuestion
           isForDashboard
           isForWaitlist
           onChange={(value) => {}}
@@ -663,8 +664,5 @@ function PartDropDown({
     </div>
   );
 }
-Dashboard.requireAuth = true;
-export default connect((state) => ({
-  accountInfo: state.accountInfo,
-  pathwaysProgress: state.pathwaysProgress,
-}))(Dashboard);
+DashboardPage.requireAuth = true;
+export default DashboardPage;

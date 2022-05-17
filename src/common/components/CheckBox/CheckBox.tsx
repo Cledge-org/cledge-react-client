@@ -1,7 +1,6 @@
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import QuestionSubPageHeader from "../QuestionComponents/question_subpage_header";
 
 interface CheckBoxProps {
   selected: boolean;

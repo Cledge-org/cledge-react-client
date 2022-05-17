@@ -1,13 +1,12 @@
 import { Row, Col } from "antd";
 import { Slide, Zoom } from "react-awesome-reveal";
 import { ContactProps, ValidationTypeProps } from "./types";
-import { useForm } from "../../../../common/components/common/utils/useForm";
-import validate from "../../../../common/components/common/utils/validationRules";
-import { Button } from "../../../../common/components/common/Button";
-import Block from "../../../../common/components/Block";
-import Input from "../../../../common/components/common/Input";
-import TextArea from "../../../../common/components/common/TextArea";
+import { Button } from "../Button/Button";
+import Input from "../Input/Input";
+import TextArea from "../TextArea/TextArea";
 import { ContactContainer, FormGroup, Span, ButtonContainer } from "./styles";
+import validate from "../../../../utils/validation/validationRules";
+import { useForm } from "../../../../utils/hooks/useForm";
 
 const Contact = ({ title, content, id }: ContactProps) => {
   const { values, errors, handleChange, handleSubmit } = useForm(

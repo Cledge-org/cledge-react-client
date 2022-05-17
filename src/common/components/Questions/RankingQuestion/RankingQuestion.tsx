@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import QuestionSubPageHeader from "./question_subpage_header";
-import CheckBox from "../common/CheckBox";
-import ECDropDown from "./ec_dropdown_question";
+import { Question } from "../../../../types/types";
+import DropDownQuestion from "../DropdownQuestion/DropdownQuestion";
 
 interface RankingQuestionProps {
   question: Question;
@@ -45,7 +44,7 @@ export default function RankingQuestion({
                 {index + 1 + "."}
               </div>
               <div style={{ width: "90%" }}>
-                <ECDropDown
+                <DropDownQuestion
                   rankings={selected}
                   defaultValue={selected[index]}
                   isForWaitlist

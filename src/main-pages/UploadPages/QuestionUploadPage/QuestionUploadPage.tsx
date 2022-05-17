@@ -1,13 +1,14 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { GetServerSidePropsContext } from "next";
-import { NextApplicationPage } from "../../../pages/_app";
-import ECDropDown from "../../../components/question_components/ec_dropdown_question";
-import CheckBox from "../../../components/common/CheckBox";
-import UploadPage from "../../../components/common/upload-page";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import Modal from "react-modal";
+import CheckBox from "../../../common/components/CheckBox/CheckBox";
+import { QuestionList, Question } from "../../../types/types";
+import { NextApplicationPage } from "../../AppPage/AppPage";
+import UploadPage from "../components/UploadPage/UploadPage";
+import DropDownQuestion from "../../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 
 // logged in landing page
 const QuestionUploadPage: NextApplicationPage<{
@@ -142,7 +143,7 @@ const QuestionUploadPage: NextApplicationPage<{
           <label style={{ fontSize: "0.9em" }} className="text-muted">
             Current Question List:
           </label>
-          <ECDropDown
+          <DropDownQuestion
             isForWaitlist
             onChange={(value) => {
               if (value === "NEW QUESTION LIST") {
@@ -387,7 +388,7 @@ const QuestionUploadPage: NextApplicationPage<{
                     <label style={{ fontSize: "0.9em" }} className="text-muted">
                       Question Type:
                     </label>
-                    <ECDropDown
+                    <DropDownQuestion
                       isForWaitlist
                       onChange={(value) => {
                         let currQuestionListCopy = currQuestionList;
@@ -405,7 +406,7 @@ const QuestionUploadPage: NextApplicationPage<{
                         "Ranking",
                         "ECTimeFrame",
                         "ECTextInput",
-                        "ECDropDown",
+                        "DropDownQuestion",
                       ]}
                     />
                   </div>
@@ -415,7 +416,7 @@ const QuestionUploadPage: NextApplicationPage<{
                     </label>
                     <div className="d-flex flex-row w-100 flex-wrap">
                       {currQuestion.data.map((value, index) =>
-                        currQuestion.type === "ECDropDown" ? (
+                        currQuestion.type === "DropDownQuestion" ? (
                           <div className="form-group">
                             <input
                               value={value}
@@ -497,7 +498,7 @@ const QuestionUploadPage: NextApplicationPage<{
                         className="align-self-center align-items-center justify-content-center"
                         onClick={() => {
                           let currQuestionListCopy = currQuestionList;
-                          if (currQuestion.type === "ECDropDown") {
+                          if (currQuestion.type === "DropDownQuestion") {
                             currQuestionListCopy.chunks[chunkIndex].questions[
                               questionIndex
                             ].data.push("");

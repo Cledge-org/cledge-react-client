@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-import Card from "./Card";
-import { CardProps } from "./Card";
+import Card, { CardProps } from "../Card/Card";
 
 interface CardTextProps extends CardProps {
   snippet: String;

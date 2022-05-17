@@ -6,9 +6,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState, useRef } from "react";
 import Dropdown from "react-dropdown";
-import QuestionSubPageHeader from "./question_subpage_header";
 
-interface ECDropDownProps {
+interface DropDownQuestionProps {
   isConcatenable?: boolean;
   title: string;
   placeholder: string;
@@ -23,7 +22,7 @@ interface ECDropDownProps {
   key: String;
   isForDashboard?: boolean;
 }
-const defaultProps: ECDropDownProps = {
+const defaultProps: DropDownQuestionProps = {
   isConcatenable: false,
   title: "Achievements",
   placeholder: "Pick some tags...",
@@ -41,7 +40,7 @@ function useOutsideAlerter(ref, handleClickOutside) {
     };
   }, [ref]);
 }
-export default function ECDropDown({
+export default function DropDownQuestion({
   isConcatenable,
   title,
   placeholder,
@@ -55,7 +54,7 @@ export default function ECDropDown({
   questionTitle,
   isForDashboard,
   onChange,
-}: ECDropDownProps) {
+}: DropDownQuestionProps) {
   const [chosen, setChosen] = useState(
     //WORKS!!!
     isConcatenable && defaultValue instanceof Array
@@ -203,4 +202,4 @@ export default function ECDropDown({
     </div>
   );
 }
-ECDropDown.defaultProps = defaultProps;
+DropDownQuestion.defaultProps = defaultProps;

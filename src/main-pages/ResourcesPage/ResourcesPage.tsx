@@ -1,28 +1,17 @@
 import { useState } from "react";
-import Card from "../../components/common/Card";
-import CardVideo from "../../components/common/Card_Video";
-import CardText from "../../components/common/Card_Text";
-import TabButton from "../../components/common/TabButton";
 import { NextApplicationPage } from "../AppPage/AppPage";
-import CardImage from "../../components/common/Card_Image";
 import { GetServerSidePropsContext } from "next";
-import { getResourcesInfo } from "./api/resources/get-resources";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faSearch } from "@fortawesome/free-solid-svg-icons";
-
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  try {
-    return {
-      props: {
-        resourcesInfo: JSON.parse(JSON.stringify(await getResourcesInfo())),
-      },
-    };
-  } catch (err) {
-    console.log(err);
-    ctx.res.end();
-    return { props: {} as never };
-  }
-};
+import CardImage from "../../common/components/Cards/CardImage/CardImage";
+import CardText from "../../common/components/Cards/CardText/CardText";
+import VideoCard from "../../common/components/Cards/CardVideo/CardVideo";
+import {
+  ResourcesInfo,
+  CardResource,
+  CardArticle,
+  CardVideo,
+} from "../../types/types";
 
 const ResourcesPage: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
   resourcesInfo,
@@ -183,7 +172,7 @@ const ResourcesPage: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
                 textGradient={"light"}
               />
             ) : element.type === "video" ? (
-              <CardVideo
+              <VideoCard
                 title={element.name}
                 textGradient={"light"}
                 videoUrl={element.source}

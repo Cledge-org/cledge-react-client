@@ -1,43 +1,15 @@
 import React, { useEffect, useState } from "react";
-import YoutubeEmbed from "../../components/common/YoutubeEmbed";
-import DropDownTab from "../../components/common/DropDown_Tab";
 import { GetServerSidePropsContext } from "next";
-import { getPathway } from "../api/get-pathway";
 import { NextApplicationPage } from "../AppPage/AppPage";
 import { useRouter } from "next/router";
-import { getAccountInfo } from "../api/get-account";
-import AuthFunctions from "../api/auth/firebase-auth";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
-import { store } from "../../common/utils/redux/store";
-import { updatePathwayProgressAction } from "../../common/utils/redux/actionFunctions";
-import { ObjectId } from "mongodb";
+import DropDownTab from "../../common/components/DropDownTab/DropDownTab";
+import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
+import { Pathway, PathwayProgress, ContentProgress } from "../../types/types";
+import { updatePathwayProgressAction } from "../../utils/redux/actionFunctions";
+import { store } from "../../utils/redux/store";
 
-//profile progress/ question summary page
-
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  try {
-    const session = await getSession(ctx);
-    console.error(ctx.query.id);
-
-    return {
-      props: {
-        pathwayInfo: JSON.parse(
-          JSON.stringify(
-            await getPathway(
-              session.user.uid,
-              new ObjectId(ctx.query.id as string)
-            )
-          )
-        ),
-      },
-    };
-  } catch (err) {
-    //console.log(err);
-    ctx.res.end();
-    return { props: {} as never };
-  }
-};
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];

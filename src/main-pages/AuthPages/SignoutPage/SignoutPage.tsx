@@ -1,7 +1,7 @@
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { clearState } from "../../../common/utils/redux/actionFunctions";
-import { store } from "../../../common/utils/redux/store";
+import { clearState } from "../../../utils/redux/actionFunctions";
+import { store } from "../../../utils/redux/store";
 
 // my accounts page
 const SignOutPage = () => {

@@ -3,42 +3,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 import { AppProps } from "next/dist/shared/lib/router/router";
-import QuestionSummaryPage from "../../components/questionPages/question_summary_subpage";
 import {
   buildStyles,
   CircularProgressbar,
   CircularProgressbarWithChildren,
 } from "react-circular-progressbar";
-import TabButton from "../../components/common/TabButton";
-import CardText from "../../components/common/Card_Text";
-import CardCheckIn from "../../components/common/Card_CheckIn";
-import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
-import QuestionECSubpage from "../../components/questionPages/question_ec_subpage";
 import { GetServerSidePropsContext } from "next";
-import { getQuestionProgress } from "./api/get-question-progress";
-import { NextApplicationPage } from "../AppPage/AppPage";
-import DropDownTab from "../../components/common/DropDown_Tab";
-import CardTask from "../../components/common/Card_Task";
-import AuthFunctions from "./api/auth/firebase-auth";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
-//profile progress/ question summary page
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  try {
-    const questionProgress = await getQuestionProgress();
-    let userProgressJSON = JSON.parse(JSON.stringify(questionProgress));
-    return {
-      props: {
-        ...userProgressJSON,
-      },
-    };
-  } catch (err) {
-    console.log(err);
-    ctx.res.end();
-    return { props: {} as never };
-  }
-};
+import CardCheckIn from "../../common/components/Cards/CardCheckIn/CardCheckIn";
+import DropDownTab from "../../common/components/DropDownTab/DropDownTab";
+import TabButton from "../../common/components/TabButton/TabButton";
+import { QuestionList, UserResponse, QuestionChunk } from "../../types/types";
+import { NextApplicationPage } from "../AppPage/AppPage";
+import QuestionSubPageHeader from "./components/QuestionComponents/SubpageHeader/SubpageHeader";
+import QuestionECSubpage from "./components/QuestionSubPages/QuestionECSubpage/QuestionECSubpage";
+import QuestionSummarySubpage from "./components/QuestionSubPages/QuestionSummarySubpage/QuestionSummarySubpage";
+
 const Progress: NextApplicationPage<{
   questionData: QuestionList[];
   userTags: string[];
@@ -244,7 +226,7 @@ const Progress: NextApplicationPage<{
             .map((list) => {
               if (list.name !== "Extracurriculars") {
                 return (
-                  <QuestionSummaryPage
+                  <QuestionSummarySubpage
                     userTags={currUserTags}
                     viaChunk={currPage.chunk}
                     isShowing={currPage.page === list.name}

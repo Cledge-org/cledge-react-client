@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import QuestionSubPageHeader from "../../../../main-pages/ProgressPage/components/QuestionComponents/SubpageHeader/SubpageHeader";
-import QuestionSummaryCard from "../../../../main-pages/ProgressPage/components/QuestionComponents/QuestionSummaryCard/QuestionSummaryCard";
 import { useSession } from "next-auth/react";
+import { Question } from "../../../../types/types";
 interface TextInputQuestionProps {
   question: Question;
   userAnswer: string;

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getProviders, signIn } from "next-auth/react";
 import type { Provider } from "next-auth/providers";
 import GoogleProvider from "next-auth/providers/google";
-import AuthFunctions from "../api/auth/firebase-auth";
+import AuthFunctions from "../../../pages/api/auth/firebase-auth";
 
 const SignUpPage = () => {
   const incorrectPassStr =

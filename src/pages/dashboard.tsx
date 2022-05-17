@@ -3,6 +3,7 @@ import { GetServerSidePropsContext } from "next";
 import { getAllPathways } from "./api/get-all-pathways";
 import { getAllCheckins } from "./api/get-all-checkins";
 import DashboardPage from "../main-pages/DashboardPage/DashboardPage";
+import { connect } from "react-redux";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -19,7 +20,22 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 };
 
-const Dashboard = ({ allCheckins, allPathways }) => {
-  return <DashboardPage allPathways={allPathways} allCheckins={allCheckins} />;
+const Dashboard = ({
+  allCheckins,
+  allPathways,
+  accountInfo,
+  pathwaysProgress,
+}) => {
+  return (
+    <DashboardPage
+      allPathways={allPathways}
+      allCheckins={allCheckins}
+      accountInfo={accountInfo}
+      pathwaysProgress={pathwaysProgress}
+    />
+  );
 };
-export default Dashboard;
+export default connect((state) => ({
+  accountInfo: state.accountInfo,
+  pathwaysProgress: state.pathwaysProgress,
+}))(Dashboard);

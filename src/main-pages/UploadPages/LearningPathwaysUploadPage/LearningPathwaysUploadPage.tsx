@@ -3,29 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GetServerSidePropsContext } from "next";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { NextApplicationPage } from "../../AppPage/AppPage";
-import ECDropDown from "../../../components/question_components/ec_dropdown_question";
-import UploadPage from "../../../components/common/upload-page";
 import router from "next/router";
 import { getSession } from "next-auth/react";
-import { getAllPathways } from "../api/get-all-pathways";
 import Modal from "react-modal";
+import { Pathway, PersonalizedContent } from "../../../types/types";
+import UploadPage from "../components/UploadPage/UploadPage";
+import DropDownQuestion from "../../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  try {
-    return {
-      props: {
-        allPathways: JSON.parse(JSON.stringify(await getAllPathways())),
-        // allModules: await (
-        //   await fetch(`/api/get-all-modules`)
-        // ).json(),
-      },
-    };
-  } catch (err) {
-    console.log(err);
-    ctx.res.end();
-    return { props: {} as never };
-  }
-};
 // logged in landing page
 const LearningPathwaysUploadPage: NextApplicationPage<{
   allPathways: Pathway[];
@@ -187,7 +171,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           >
             CURRENT PATHWAY:
           </label>
-          <ECDropDown
+          <DropDownQuestion
             isForWaitlist
             onChange={(value) => {
               if (value === "NEW COURSE") {
@@ -559,7 +543,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                             >
                               Type:
                             </label>
-                            <ECDropDown
+                            <DropDownQuestion
                               isForWaitlist
                               onChange={(value) => {
                                 let course = currPathwayData;
@@ -757,7 +741,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                               >
                                 Type:
                               </label>
-                              <ECDropDown
+                              <DropDownQuestion
                                 isForWaitlist
                                 onChange={(value) => {
                                   let course = currPathwayData;

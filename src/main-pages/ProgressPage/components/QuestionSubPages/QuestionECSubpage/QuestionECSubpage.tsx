@@ -1,15 +1,21 @@
-import React, { useState } from "react";
-import ECQuestionSummaryCard from "../QuestionComponents/ec_question_summary_card";
-import QuestionSubPageHeader from "../QuestionComponents/question_subpage_header";
-import ECEditor from "../QuestionComponents/ec-editor";
 import { useSession } from "next-auth/react";
-import { store } from "../../src/common/utils/redux/store";
-import { updateQuestionResponsesAction } from "../../src/common/utils/redux/actionFunctions";
+import React, { useState } from "react";
 import {
-  calculateActivityPoints,
+  UserResponse,
+  QuestionChunk,
+  Activities,
+} from "../../../../../types/types";
+import { updateQuestionResponsesAction } from "../../../../../utils/redux/actionFunctions";
+import { store } from "../../../../../utils/redux/store";
+import {
   calculateActivityTier,
+  calculateActivityPoints,
   calculateTotalPoints,
-} from "../../src/common/utils/student-metrics/metricsCalculations";
+} from "../../../../../utils/student-metrics/metricsCalculations";
+import ECEditor from "../../QuestionComponents/ECEditor/ECEditor";
+import ECQuestionSummaryCard from "../../QuestionComponents/ECQuestionSummaryCard/ECQuestionSummaryCard";
+import QuestionSubPageHeader from "../../QuestionComponents/SubpageHeader/SubpageHeader";
+
 interface QuestionECSubpageProps {
   userResponses: UserResponse[];
   isShowing: boolean;

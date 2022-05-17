@@ -1,23 +1,15 @@
-import "bootstrap/dist/css/bootstrap.css";
-import "../styles/globals.scss";
-import "../styles/question_pages.scss";
-import "../styles/main_pages.scss";
-import "../styles/components.scss";
-import "../styles/question_components.scss";
-import "../styles/testing.css";
-import "antd/dist/antd.css";
 import { SessionProvider as AuthProvider, useSession } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
 import Layout from "./components/Layout/Layout";
-import { store } from "../../utils/Redux/store";
+import { store } from "../../utils/redux/store";
 import { Provider } from "react-redux";
 import ProtectedComponent from "../../common/components/ProtectedComponent/ProtectedComponent";
 import { useEffect, useState } from "react";
 import { Router, useRouter } from "next/router";
 import LoadingScreen from "../../common/components/Loading/Loading";
-import { initialStateAction } from "../../utils/Redux/actionFunctions";
+import { initialStateAction } from "../../utils/redux/actionFunctions";
 
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
   requireAuth?: boolean;

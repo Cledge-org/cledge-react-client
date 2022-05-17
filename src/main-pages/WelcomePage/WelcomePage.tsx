@@ -1,23 +1,28 @@
 import dynamic from "next/dynamic";
-import IntroContent from "../content/IntroContent.json";
-import MiddleBlockContent from "../content/MiddleBlockContent.json";
-import YoutubeEmbed from "../../components/common/YoutubeEmbed";
-import AboutContent from "../content/AboutContent.json";
-import MissionContent from "../content/MissionContent.json";
-import ProductContent from "../content/ProductContent.json";
-import ContactContent from "../content/ContactContent.json";
-import PartnerContent from "../content/PartnerContent.json";
-import { useEffect, useRef, useState, useLayoutEffect } from "react";
-import styled from "styled-components";
-import Footer from "../../components/common/Footer";
-import ECDropDown from "../../components/question_components/ec_dropdown_question";
-import { Button } from "../../components/common/Button";
-import { Fade } from "react-awesome-reveal";
 
-const Contact = dynamic(() => import("../../components/ContactForm"));
-const MiddleBlock = dynamic(() => import("../../components/MiddleBlock"));
-const Container = dynamic(() => import("../../components/common/Container"));
-const ContentBlock = dynamic(() => import("../../components/ContentBlock"));
+import IntroContent from "./content/IntroContent.json";
+import AboutContent from "./content/AboutContent.json";
+import MissionContent from "./content/MissionContent.json";
+import ProductContent from "./content/ProductContent.json";
+import ContactContent from "./content/ContactContent.json";
+import MiddleBlockContent from "./content/MiddleBlockContent.json";
+import PartnerContent from "./content/PartnerContent.json";
+import { useEffect, useRef, useState, useLayoutEffect } from "react";
+import Footer from "./components/Footer/Footer";
+import styled from "styled-components";
+import { Fade } from "react-awesome-reveal";
+import { Button } from "./components/Button/Button";
+import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
+import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
+
+const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
+const MiddleBlock = dynamic(
+  () => import("./components/MiddleBlock/MiddleBlock")
+);
+const Container = dynamic(() => import("./components/Container/Container"));
+const ContentBlock = dynamic(
+  () => import("./components/ContentBlock/ContentBlock")
+);
 
 const FullWidthContainer = styled("div")`
   position: relative;
@@ -295,7 +300,10 @@ const WelcomePage = () => {
             <div className="input d-flex flex-row flex-wrap align-items-end justify-content-evenly">
               <div className="flex-fill">
                 <label>I am a</label>
-                <ECDropDown isForWaitlist valuesList={["Parent", "Student"]} />
+                <DropDownQuestion
+                  isForWaitlist
+                  valuesList={["Parent", "Student"]}
+                />
               </div>
               <div className="flex-fill">
                 <label>Email</label>

@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "react-modal";
-import MCQQuestion from "./mcq_question";
-import CheckBoxQuestion from "./checkbox_question";
-import TextInputQuestion from "./textinput_question";
+import { UserResponse, Question } from "../../../../../types/types";
+
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface ECQuestionSummaryCardProps {

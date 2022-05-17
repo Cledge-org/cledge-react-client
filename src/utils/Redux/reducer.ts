@@ -1,6 +1,6 @@
 import { DefaultRootState } from "react-redux";
 import { Action, Reducer } from "redux";
-import { actions } from "../../../../config";
+import { actions } from "../../../config";
 
 export const reducer: Reducer<any, any> = (
   state: DefaultRootState | undefined,

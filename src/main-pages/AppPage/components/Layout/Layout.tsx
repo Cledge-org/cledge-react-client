@@ -1,11 +1,10 @@
 import { useSession } from "next-auth/react";
-import { isLocalURL } from "next/dist/shared/lib/router/router";
 import { Router, useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { initialStateAction } from "../../src/common/utils/redux/actionFunctions";
-import { store } from "../../src/common/utils/redux/store";
-import Header from "./Header";
-import LoadingScreen from "./loading";
+import { initialStateAction } from "../../../../utils/redux/actionFunctions";
+import { store } from "../../../../utils/redux/store";
+import Header from "../../../../common/components/Header/Header";
+import LoadingScreen from "../../../../common/components/Loading/Loading";
 
 export default function Layout({ children }) {
   const router = useRouter();

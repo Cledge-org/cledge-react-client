@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "../../AppPage/AppPage";
-import ECDropDown from "../../../components/question_components/ec_dropdown_question";
-import UploadPage from "../../../components/common/upload-page";
+import DropDownQuestion from "../../../common/components/Questions/DropdownQuestion/DropdownQuestion";
+import UploadPage from "../components/UploadPage/UploadPage";
 
 // logged in landing page
 const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
@@ -27,7 +27,7 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
         });
       }}
     >
-      <ECDropDown
+      <DropDownQuestion
         isForWaitlist
         onChange={(value) => {
           setResourceData({
@@ -46,7 +46,7 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
           "Scholarship",
         ]}
       />
-      <ECDropDown
+      <DropDownQuestion
         isForWaitlist
         onChange={(value) => {
           console.log(value);

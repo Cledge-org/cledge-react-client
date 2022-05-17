@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import Card from "./Card";
-import { CardProps } from "./Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,

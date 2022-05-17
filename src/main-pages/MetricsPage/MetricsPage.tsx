@@ -8,49 +8,20 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 import { AppProps } from "next/dist/shared/lib/router/router";
-import QuestionSummaryPage from "../../components/questionPages/question_summary_subpage";
 import {
   buildStyles,
   CircularProgressbar,
   CircularProgressbarWithChildren,
 } from "react-circular-progressbar";
-import TabButton from "../../components/common/TabButton";
-import CardText from "../../components/common/Card_Text";
-import CardCheckIn from "../../components/common/Card_CheckIn";
-import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
-import QuestionECSubpage from "../../components/questionPages/question_ec_subpage";
 import { GetServerSidePropsContext } from "next";
-import { getQuestionProgress } from "./api/get-question-progress";
 import { NextApplicationPage } from "../AppPage/AppPage";
-import DropDownTab from "../../components/common/DropDown_Tab";
-import CardTask from "../../components/common/Card_Task";
-import AuthFunctions from "./api/auth/firebase-auth";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
-import { getActivities } from "./api/get-activities";
-//profile progress/ question summary page
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  try {
-    const session = getSession(ctx);
-    const activities = await getActivities((await session).user.uid);
-    let userActivitiesJSON = {};
-    try {
-      userActivitiesJSON = JSON.parse(JSON.stringify(activities));
-    } catch (e) {
-      userActivitiesJSON = {};
-    }
-    return {
-      props: {
-        activities: userActivitiesJSON,
-      },
-    };
-  } catch (err) {
-    console.log(err);
-    ctx.res.end();
-    return { props: {} as never };
-  }
-};
+import DropDownTab from "../../common/components/DropDownTab/DropDownTab";
+import { Activities, UserResponse } from "../../types/types";
+import QuestionSubPageHeader from "../ProgressPage/components/QuestionComponents/SubpageHeader/SubpageHeader";
+
 const Metrics: NextApplicationPage<{
   activities: Activities;
   userTags: string[];

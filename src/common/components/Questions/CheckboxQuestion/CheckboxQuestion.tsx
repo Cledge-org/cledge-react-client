@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import QuestionSubPageHeader from "./question_subpage_header";
-import CheckBox from "../common/CheckBox";
+import { Question } from "../../../../types/types";
+import CheckBox from "../../CheckBox/CheckBox";
 
 interface CheckBoxQuestionProps {
   question: Question;

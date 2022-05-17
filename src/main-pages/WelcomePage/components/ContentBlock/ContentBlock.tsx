@@ -1,5 +1,5 @@
-import LeftContentBlock from "./LeftContentBlock";
-import RightContentBlock from "./RightContentBlock";
+import LeftContentBlock from "./components/LeftContentBlock/LeftContentBlock";
+import RightContentBlock from "./components/RightContentBlock/RightContentBlock";
 import { ContentBlockProps } from "./types";
 import { Fade } from "react-awesome-reveal";
 

@@ -1,61 +1,20 @@
 import React, { useState } from "react";
-import QuestionSubPageHeader from "../../components/question_components/question_subpage_header";
-import ECTextInputQuestion from "../../components/question_components/ec_textinput_question";
-import ECDropDown from "../../components/question_components/ec_dropdown_question";
-import MCQQuestion from "../../components/question_components/mcq_question";
-import Slider from "../../components/question_components/slider";
-import CheckBoxQuestion from "../../components/question_components/checkbox_question";
-import ECQuestionSummaryCard from "../../components/question_components/ec_question_summary_card";
-import { Button, ProgressBar } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
-import ECEditor from "../../components/question_components/ec-editor";
 import { NextApplicationPage } from "../AppPage/AppPage";
-import { GetServerSidePropsContext } from "next";
-import TextInputQuestion from "../../components/question_components/textinput_question";
 import { useRouter } from "next/router";
-import AuthFunctions from "../api/auth/firebase-auth";
 import { useSession } from "next-auth/react";
 import { connect } from "react-redux";
-import { store } from "../../common/utils/redux/store";
+import { ProgressBar } from "react-bootstrap";
+import CheckBoxQuestion from "../../common/components/Questions/CheckboxQuestion/CheckboxQuestion";
+import MCQQuestion from "../../common/components/Questions/MCQQuestion/MCQQuestion";
+import RankingQuestion from "../../common/components/Questions/RankingQuestion/RankingQuestion";
+import TextInputQuestion from "../../common/components/Questions/TextInputQuestion/TextInputQuestion";
+import { Question, UserResponse } from "../../types/types";
 import {
   updateAccountAction,
-  updateQuestionResponsesAction,
   updateTagsAndCheckInsAction,
-} from "../../common/utils/redux/actionFunctions";
-import RankingQuestion from "../../components/question_components/ranking_question";
-
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  try {
-    let firstCheckIn = ctx.query.checkIn.indexOf(",");
-    let checkIn = await (
-      await fetch(`/api/get-question-list`, {
-        method: "POST",
-        body: JSON.stringify({
-          //THIS WORKS
-          listName: new String(ctx.query.checkIn).substring(
-            0,
-            firstCheckIn === -1 ? ctx.query.checkIn.length : firstCheckIn
-          ) as string,
-        }),
-      })
-    ).json();
-    console.error(checkIn);
-    let checkInData = checkIn.chunks[0].questions;
-    for (let i = 1; i < checkIn.chunks.length; i++) {
-      checkInData = checkInData.concat(checkIn.chunks[i].questions);
-    }
-    return {
-      props: {
-        checkInData,
-      },
-    };
-  } catch (err) {
-    console.error(err);
-    ctx.res.end();
-    return { props: {} as never };
-  }
-};
+  updateQuestionResponsesAction,
+} from "../../utils/redux/actionFunctions";
+import { store } from "../../utils/redux/store";
 
 const CheckIn: NextApplicationPage<{
   checkInData: Question[];

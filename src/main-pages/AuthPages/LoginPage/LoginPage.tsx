@@ -1,13 +1,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getProviders, signIn, useSession } from "next-auth/react";
-import type { Provider } from "next-auth/providers";
-import GoogleProvider from "next-auth/providers/google";
-import AuthFunctions from "../api/auth/firebase-auth";
 import { useRouter } from "next/router";
-import { store } from "../../../common/utils/redux/store";
-import { initialStateAction } from "../../../common/utils/redux/actionFunctions";
-import LoadingScreen from "../../../components/common/loading";
+import LoadingScreen from "../../../common/components/Loading/Loading";
 
 const LoginPage = () => {
   var [formData, setFormData] = useState({

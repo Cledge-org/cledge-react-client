@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import QuestionSubPageHeader from "./question_subpage_header";
+import { Question } from "../../../../types/types";
 
 interface MCQQuestionProps {
   question: Question;

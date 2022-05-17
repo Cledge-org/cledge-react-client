@@ -7,11 +7,12 @@ import TextInputQuestion from "../../common/components/Questions/TextInputQuesti
 import { NextApplicationPage } from "../AppPage/AppPage";
 import { useSession } from "next-auth/react";
 import { connect } from "react-redux";
-import { store } from "../../utils/Redux/store";
+import { store } from "../../utils/redux/store";
 import {
   updateAccountAction,
   updateQuestionResponsesAction,
-} from "../../utils/Redux/actionFunctions";
+} from "../../utils/redux/actionFunctions";
+import { AccountInfo, UserResponse } from "../../types/types";
 
 // account page
 

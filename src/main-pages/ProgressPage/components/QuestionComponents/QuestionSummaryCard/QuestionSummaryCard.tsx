@@ -2,18 +2,19 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "react-modal";
-import MCQQuestion from "./mcq_question";
-import CheckBoxQuestion from "./checkbox_question";
-import TextInputQuestion from "./textinput_question";
-import AuthFunctions from "../../src/pages/api/auth/firebase-auth";
 import { useSession } from "next-auth/react";
-import { store } from "../../src/common/utils/redux/store";
+import CheckBoxQuestion from "../../../../../common/components/Questions/CheckboxQuestion/CheckboxQuestion";
+import MCQQuestion from "../../../../../common/components/Questions/MCQQuestion/MCQQuestion";
+import RankingQuestion from "../../../../../common/components/Questions/RankingQuestion/RankingQuestion";
+import TextInputQuestion from "../../../../../common/components/Questions/TextInputQuestion/TextInputQuestion";
+import { Question, UserResponse } from "../../../../../types/types";
 import {
   updateAccountAction,
-  updateQuestionResponsesAction,
   updateTagsAction,
-} from "../../src/common/utils/redux/actionFunctions";
-import RankingQuestion from "./ranking_question";
+  updateQuestionResponsesAction,
+} from "../../../../../utils/redux/actionFunctions";
+import { store } from "../../../../../utils/redux/store";
+
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface QuestionSummaryCardProps {

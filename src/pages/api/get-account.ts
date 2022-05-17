@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { AccountInfo } from "../../types/types";
 
 export const config = {
   api: {
@@ -10,7 +11,7 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userId } = JSON.parse(req.body);
-
+  console.error("UID: " + userId);
   if (userId) {
     try {
       const accountInfo = await getAccountInfo(userId);
@@ -38,7 +39,7 @@ export const getAccountInfo = async (
           .collection("users")
           .findOne({ firebaseId: userId })) as AccountInfo
       );
-      if(!overrideClient) {
+      if (!overrideClient) {
         client.close();
       }
     } catch (e) {

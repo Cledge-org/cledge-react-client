@@ -1,9 +1,8 @@
 import { AppProps } from "next/dist/shared/lib/router/router";
 import { ComponentProps, ComponentPropsWithoutRef, useEffect } from "react";
-import Card from "./Card";
-import { CardProps } from "./Card";
 import Iframe from "react-iframe";
-import YoutubeEmbed from "./YoutubeEmbed";
+import YoutubeEmbed from "../../YoutubeEmbed/YoutubeEmbed";
+import Card, { CardProps } from "../Card/Card";
 
 interface CardVideoProps extends CardProps {
   videoUrl: string;
