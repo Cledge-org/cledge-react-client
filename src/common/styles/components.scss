@@ -1,5 +1,5 @@
 @import "../../../node_modules/bootstrap/scss/bootstrap";
-@import "./globals.scss";
+@import "./globals-styles.scss";
 
 @mixin gradient-text($fromColor, $toColor) {
   background: -webkit-linear-gradient(left, $fromColor, $toColor);

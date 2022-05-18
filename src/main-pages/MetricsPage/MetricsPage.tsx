@@ -18,7 +18,7 @@ import { NextApplicationPage } from "../AppPage/AppPage";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
-import DropDownTab from "../../common/components/DropDownTab/DropDownTab";
+import DropDownTab from "../../common/components/DropdownTab/DropdownTab";
 import { Activities, UserResponse } from "../../types/types";
 import QuestionSubPageHeader from "../ProgressPage/components/QuestionComponents/SubpageHeader/SubpageHeader";
 

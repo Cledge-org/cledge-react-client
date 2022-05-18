@@ -4,7 +4,7 @@ import { NextApplicationPage } from "../AppPage/AppPage";
 import { useRouter } from "next/router";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
-import DropDownTab from "../../common/components/DropDownTab/DropDownTab";
+import DropDownTab from "../../common/components/DropdownTab/DropdownTab";
 import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
 import { Pathway, PathwayProgress, ContentProgress } from "../../types/types";
 import { updatePathwayProgressAction } from "../../utils/redux/actionFunctions";

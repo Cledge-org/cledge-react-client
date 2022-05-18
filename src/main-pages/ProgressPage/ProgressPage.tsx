@@ -13,7 +13,7 @@ import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import CardCheckIn from "../../common/components/Cards/CardCheckIn/CardCheckIn";
-import DropDownTab from "../../common/components/DropDownTab/DropDownTab";
+import DropDownTab from "../../common/components/DropdownTab/DropdownTab";
 import TabButton from "../../common/components/TabButton/TabButton";
 import { QuestionList, UserResponse, QuestionChunk } from "../../types/types";
 import { NextApplicationPage } from "../AppPage/AppPage";

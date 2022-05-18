@@ -1,0 +1,13 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "src/common/components/globals-styles.scss";
+
+.ec-text-input {
+  @extend .bg-light-gray;
+  width: 100%;
+  border: 1px solid $cl-light-gray;
+  &:active,
+  &:focus {
+    @extend .bg-light-gray;
+    border: 1px solid $cl-light-gray;
+  }
+}

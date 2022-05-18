@@ -1,0 +1,39 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "src/common/components/globals-styles.scss";
+
+.day-btn {
+  @extend .center-child;
+  outline: none;
+  border: 1px solid white;
+  height: 45px;
+  width: 45px;
+  border-radius: 22.5px;
+  background-color: white;
+  transition: background-color 200ms;
+  &:hover {
+    background-color: $cl-light-gray;
+  }
+}
+.day-btn-chosen {
+  @extend .day-btn;
+  color: white;
+  background-color: $cl-blue;
+  &:hover {
+    background-color: rgba($color: $cl-blue, $alpha: 0.6);
+  }
+}
+.weekday-titles {
+  font-weight: bold;
+  width: 45px;
+  height: 45px;
+  text-align: center;
+}
+.ec-calendar-dropdown-menu {
+  width: 100%;
+  border: 1px solid transparent;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 30px 84px rgba(19, 10, 46, 0.08),
+    0px 8px 32px rgba(19, 10, 46, 0.07), 0px 3px 14px rgba(19, 10, 46, 0.03),
+    0px 1px 3px rgba(19, 10, 46, 0.13);
+}

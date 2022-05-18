@@ -1,0 +1,15 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "src/common/components/globals-styles.scss";
+
+.dashboard-dropdown-hover {
+  @extend .px-1;
+  @extend .py-2;
+  @extend .mt-3;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  transition: 200ms;
+  background-color: transparent;
+}
+.dashboard-dropdown-hover:hover {
+  background-color: $cl-light-gray;
+}

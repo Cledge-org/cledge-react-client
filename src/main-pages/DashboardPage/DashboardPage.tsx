@@ -1,11 +1,4 @@
-import React, {
-  JSXElementConstructor,
-  ReactElement,
-  ReactNodeArray,
-  ReactPortal,
-  useEffect,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "../AppPage/AppPage";
@@ -18,6 +11,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import CardTask from "../../common/components/Cards/CardTask/CardTask";
 import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
+import {
+  Pathway,
+  QuestionList,
+  AccountInfo,
+  PathwayProgress,
+} from "src/types/types";
+import PartDropDown from "./components/PartDropdown/PartDropdown";
+import DashboardTabButton from "./components/DashboardTabButton/DashboardTabButton";
 
 // logged in landing page
 const DashboardPage: NextApplicationPage<{
@@ -492,171 +493,7 @@ const DashboardPage: NextApplicationPage<{
     </div>
   );
 };
-interface DashboardTabButtonProps {
-  onClick: Function;
-  title: String;
-  currTab: String;
-}
-function DashboardTabButton({
-  onClick,
-  title,
-  currTab,
-}: DashboardTabButtonProps) {
-  const cledgeBlue = "#2651ed";
-  const midGray = "#656565";
-  const lowerCaseName = title.toLowerCase();
-  return (
-    <li
-      className="general-tab-nav-btn col-3 col-lg-2 flex-column"
-      id={lowerCaseName + "-tab"}
-      style={{ border: "none" }}
-      onClick={() => {
-        onClick(lowerCaseName);
-      }}
-    >
-      <div
-        style={{
-          width: "fit-content",
-          color: currTab === lowerCaseName ? cledgeBlue : midGray,
-          fontWeight: currTab === lowerCaseName ? 700 : 500,
-        }}
-      >
-        {title}
-      </div>
-      <div
-        style={{
-          height: "3px",
-          width: "100%",
-          backgroundColor: currTab === lowerCaseName ? cledgeBlue : midGray,
-        }}
-      />
-    </li>
-  );
-}
 
-function PartDropDown({
-  pathwayCheckinList,
-  title,
-  progressRatio,
-}: {
-  pathwayCheckinList: Array<any>;
-  title: string;
-  progressRatio: number;
-}) {
-  console.log(pathwayCheckinList);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [initialized, setInitialized] = useState(false);
-  useEffect(() => {
-    setInitialized(true);
-  }, []);
-  return (
-    <div className="progress-dropdown-container w-100 d-flex flex-row align-items-stretch">
-      <div className="align-items-center">
-        <div
-          style={{
-            marginTop: "2em",
-            width: "2em",
-            height: "2em",
-            border: "1px solid transparent",
-            borderRadius: "1em",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              height: `${progressRatio * 100}%`,
-              backgroundColor: "#2651ed",
-            }}
-          />
-          <div
-            style={{
-              height: `${(1 - progressRatio) * 100}%`,
-              backgroundColor: "#f2f2f7",
-            }}
-          />
-        </div>
-        <div
-          style={{
-            height: "90%",
-            width: "2px",
-            marginTop: "5px",
-            marginLeft: "calc(1em - 1px)",
-            borderLeft: "2px dashed #656565",
-            backgroundColor: "transparent",
-          }}
-        />
-      </div>
-      <div className="d-flex flex-column">
-        <button
-          className="progress-dropdown-btn justify-content-between dashboard-dropdown-hover mb-2 ms-2"
-          style={{
-            width: "10vw",
-            maxWidth: "30%",
-            minWidth: "15%",
-          }}
-          onClick={() => {
-            setIsExpanded(!isExpanded);
-          }}
-        >
-          <div className="text ms-3 cl-dark-text" style={{ fontSize: "1.3em" }}>
-            {title}
-          </div>
-          <div
-            className={`${
-              isExpanded ? "center-child icon-open" : "center-child icon-close"
-            } ms-3 me-2`}
-            style={{ width: "12px", height: "12px" }}
-          >
-            <FontAwesomeIcon icon={faChevronDown} />
-          </div>
-        </button>
-        <div
-          className={`${
-            // initialized
-            //   ? "progress-dropdown-menu-closed-no-animation"
-            isExpanded
-              ? "progress-dropdown-menu-expanded"
-              : "progress-dropdown-menu-closed"
-          } flex-row flex-wrap`}
-          style={{
-            backgroundColor: "transparent",
-            flex: 1,
-            width: "90vw",
-          }}
-        >
-          {pathwayCheckinList.map(
-            (
-              { name, pathwayId, subtasks, videoId, isCheckin, chunks },
-              index
-            ) =>
-              isCheckin ? (
-                <button
-                  className="cl-btn-blue align-self-center"
-                  style={{ height: "6vh" }}
-                  onClick={() => {
-                    router.push({
-                      pathname: "/progress",
-                      query: { page: name, chunk: chunks[0].name },
-                    });
-                  }}
-                >
-                  {name} Check-in
-                </button>
-              ) : (
-                <CardTask
-                  url={"/pathways/[id]"}
-                  correctUrl={`/pathways/${pathwayId}`}
-                  title={name}
-                  subtasks={subtasks}
-                  videoId={videoId}
-                />
-              )
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
 DashboardPage.requireAuth = true;
 export default connect((state) => ({
   accountInfo: state.accountInfo,

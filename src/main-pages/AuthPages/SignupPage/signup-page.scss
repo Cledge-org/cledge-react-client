@@ -1,0 +1,14 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "src/common/styles/globals-styles.scss";
+
+.auth-bottom-nav {
+  @extend .mt-3;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.split-input {
+  width: 47%;
+}

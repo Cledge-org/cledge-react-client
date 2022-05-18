@@ -14,14 +14,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": "./",
-    "paths": {
-      "*": [
-        "src/types/types.d.ts",
-        "src/types/auth.d.ts",
-        "src/types/redux.d.ts"
-      ]
-    }
+    "baseUrl": "./"
     // "sourceMap": true // used to debug the program
   },
   "include": [

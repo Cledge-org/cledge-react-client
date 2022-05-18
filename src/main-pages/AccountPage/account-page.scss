@@ -1,0 +1,58 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "src/common/styles/globals-styles.scss";
+
+.myaccount-info-section {
+  font-size: 0.9em;
+  @extend .pt-1;
+  @extend .pb-3;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.3);
+  .name {
+    display: flex;
+    color: $cl-mid-gray;
+    font-size: 0.85em;
+    font-weight: 600;
+    flex: 0.8;
+  }
+  .info-container {
+    @extend .cl-dark-text;
+    display: flex;
+    font-weight: 600;
+    align-items: center;
+    justify-content: space-between;
+    flex: 2;
+    .icon-btn {
+      background-color: transparent;
+      outline: none;
+      border: 1px solid transparent;
+      width: 3vw;
+      height: 3vw;
+      border-radius: 1.5vw;
+      &:hover {
+        background-color: rgba($color: $cl-light-gray, $alpha: 0.5);
+      }
+    }
+  }
+}
+.myaccount-blob {
+  @extend .px-4;
+  @extend .py-4;
+  @extend .mb-3;
+  border: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.3);
+  border-radius: 20px;
+  height: fit-content;
+  .title {
+    @extend .cl-dark-text;
+    font-size: 1em;
+    font-weight: 600;
+  }
+  div:last-of-type {
+    border-bottom: none;
+  }
+}
+@media screen and (max-width: 800px) {
+  .myaccount-blob {
+    width: 65vw;
+  }
+}

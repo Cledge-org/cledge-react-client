@@ -14,7 +14,6 @@ import {
 } from "../../utils/redux/actionFunctions";
 import { AccountInfo, UserResponse } from "../../types/types";
 import LoadingScreen from "../../common/components/Loading/Loading";
-
 // account page
 
 const AccountPage: NextApplicationPage<{
