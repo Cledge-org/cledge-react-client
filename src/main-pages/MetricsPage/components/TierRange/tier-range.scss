@@ -1,0 +1,9 @@
+@import "src/common/styles/global-styles.scss";
+@import "node_modules/bootstrap/scss/bootstrap";
+
+.metrics-tier-range {
+  @extend .py-2;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: white;
+}

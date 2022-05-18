@@ -1,4 +1,6 @@
 @import "node_modules/bootstrap/scss/bootstrap";
+@import "src/common/styles/palette.scss";
+@import "src/common/styles/typography.scss";
 
 .container-margin {
   @media only screen and (max-width: 767px) {
@@ -30,6 +32,12 @@ a {
 * {
   box-sizing: border-box;
 }
+@mixin gradient-text($fromColor, $toColor) {
+  background: -webkit-linear-gradient(left, $fromColor, $toColor);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .soft-gray-border {
   border: 1px solid $cl-soft-gray;
 }
@@ -211,11 +219,6 @@ a {
   }
 }
 
-.footer {
-  background-color: pink;
-  margin-top: auto;
-}
-
 $spacers: (
   0: 0,
   1: (
@@ -262,27 +265,28 @@ $spacers: (
   z-index: 1000;
 }
 
-.questionnaire-container {
-  height: 80%;
+@mixin gradient-text($fromColor, $toColor) {
+  background: -webkit-linear-gradient(left, $fromColor, $toColor);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.questionnaire-question {
-  transform: scale(0.8, 0.8);
-  -ms-transform: scale(0.8, 0.8); /* IE 9 */
-  -webkit-transform: scale(0.8, 0.8); /* Safari and Chrome */
-  -o-transform: scale(0.8, 0.8); /* Opera */
-  -moz-transform: scale(0.8, 0.8); /* Firefox */
+.red-purple-text-gradient {
+  @include gradient-text($fromColor: $cl-red, $toColor: $cl-blue);
 }
-//NAV STYLES -->
-.nav-regular {
-  @extend .shadow-sm;
-  @extend .navbar-light;
-  color: $cl-blue !important;
-  background-color: white;
+.blue-purple-text-gradient {
+  @include gradient-text($fromColor: #3b68df, $toColor: #8d32d4);
+}
+.page-container-100 {
+  height: 100vh;
+  width: 100%;
+  overflow: auto;
+  align-items: center;
 }
 
-.nav-transparent {
-  @extend .navbar-dark;
-  color: white;
-  background-color: transparent;
+.page-container-50 {
+  height: 50vh;
+  width: 100%;
+  overflow: auto;
+  align-items: center;
 }

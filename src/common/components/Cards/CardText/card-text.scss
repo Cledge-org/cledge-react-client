@@ -3,20 +3,14 @@
 @import "src/common/styles/palette.scss";
 @import "src/common/styles/typography.scss";
 
-.ec-editor-btn-back {
-  @extend .center-child;
+.article-btn {
   outline: none;
+  color: $cl-blue;
+  width: fit-content;
   background-color: transparent;
   border: 1px solid transparent;
-  border-radius: 36px;
-  padding: 20px;
-  position: absolute;
-  transition: background-color 200ms;
-  top: 2vh;
-  left: 2vw;
-  width: 72px;
-  height: 72px;
+  border-radius: 3px;
   &:hover {
-    background-color: rgba($color: $cl-light-gray, $alpha: 0.5);
+    background-color: rgba($color: $cl-blue, $alpha: 15%);
   }
 }

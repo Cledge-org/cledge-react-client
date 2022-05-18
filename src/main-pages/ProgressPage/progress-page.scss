@@ -1,5 +1,7 @@
+@import "src/common/styles/global-styles.scss";
 @import "node_modules/bootstrap/scss/bootstrap";
-@import "src/common/components/globals-styles.scss";
+@import "src/common/styles/palette.scss";
+@import "src/common/styles/typography.scss";
 
 .progress-dropdown-menu-closed {
   background-color: $cl-light-gray;

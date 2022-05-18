@@ -3,13 +3,17 @@
 @import "src/common/styles/palette.scss";
 @import "src/common/styles/typography.scss";
 
-.ec-text-input {
-  @extend .bg-light-gray;
+.card-title {
+  @extend .ms-3;
+  @extend .mt-3;
+  font-weight: 900;
+  font-size: 2.25em;
+}
+.card-container {
+  border-radius: 20px;
+  height: 100%;
   width: 100%;
-  border: 1px solid $cl-light-gray;
-  &:active,
-  &:focus {
-    @extend .bg-light-gray;
-    border: 1px solid $cl-light-gray;
+  &:hover {
+    cursor: pointer;
   }
 }

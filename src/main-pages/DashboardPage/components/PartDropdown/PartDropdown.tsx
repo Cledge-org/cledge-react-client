@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import router from "next/router";
 import React, { useState, useEffect } from "react";
 import CardTask from "src/common/components/Cards/CardTask/CardTask";
+import "./part-dropdown.module.scss";
 
 function PartDropDown({
   pathwayCheckinList,

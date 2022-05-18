@@ -1,5 +1,7 @@
-@import "../../../node_modules/bootstrap/scss/bootstrap";
-@import "./globals-styles.scss";
+@import "src/common/styles/global-styles.scss";
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "src/common/styles/palette.scss";
+@import "src/common/styles/typography.scss";
 
 .question-subpage-title {
   font-weight: 800;
