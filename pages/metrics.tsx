@@ -297,13 +297,13 @@ const Metrics: NextApplicationPage<{
                       }}
                       className="d-flex flex-column align-items-center justify-content-start"
                     >
-                      <TipsCard
+                      {/* <TipsCard
                         isOverall={false}
                         title={
                           "You definitely know what you are doing! To increase your tier, try our tips and update your profile to help us reaccess your tier."
                         }
                         tips={[]}
-                      />
+                      /> */}
                     </div>
                   </>
                 }
@@ -331,8 +331,8 @@ const ActivityDropdown = ({
   return (
     <div className="progress-dropdown-container mt-2" style={{ width: "100%" }}>
       <button
-        className="progress-dropdown-btn metrics-dropdown-btn bg-cl-super-light-gray"
-        style={{ backgroundColor: "#FBFCFF" }}
+        className="progress-dropdown-btn metrics-dropdown-btn"
+        // style={{ backgroundColor: "#FBFCFF" }}
         onClick={() => {
           setIsExpanded(!isExpanded);
         }}
@@ -382,7 +382,7 @@ const TierIndicatorAndTips = ({
         style={{ minHeight: "30vh", width: isOverall ? "100%" : "50%" }}
         className="d-flex flex-column align-items-center justify-content-start"
       >
-        <TipsCard
+        {/* <TipsCard
           isOverall={isOverall}
           title={
             "You are seasoned at this activity, but you can do even better! To increase your tier, try tips below."
@@ -396,7 +396,7 @@ const TierIndicatorAndTips = ({
               ? "Great extracurriculars!"
               : "Fantastic extracurriculars! You definitely know what you’re doing!",
           ]}
-        />
+        /> */}
       </div>
     </>
   );

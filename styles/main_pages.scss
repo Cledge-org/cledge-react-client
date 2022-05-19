@@ -224,10 +224,11 @@
   0% {
     max-height: 80vh;
     overflow: visible;
-    background-color: $cl-super-light-gray;
     border: 1px solid $cl-soft-gray;
+    border-top: none;
   }
   100% {
+    border-top: none;
     max-height: 0;
     background-color: $cl-white;
     border: 0px solid $cl-soft-gray;
@@ -236,20 +237,20 @@
 }
 @keyframes metrics-expand {
   0% {
+    border-top: none;
     max-height: 0;
     overflow: hidden;
     background-color: $cl-white;
     border: 0px solid $cl-soft-gray;
   }
   100% {
+    border-top: none;
     max-height: 100vh;
-    background-color: $cl-super-light-gray;
     border: 1px solid $cl-soft-gray;
     overflow: visible;
   }
 }
 .metrics-dropdown-menu-expanded {
-  background-color: $cl-super-light-gray;
   @extend .soft-gray-border;
   display: flex;
   flex-direction: column;
