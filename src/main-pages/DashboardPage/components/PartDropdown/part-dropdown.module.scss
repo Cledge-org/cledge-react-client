@@ -1,10 +1,11 @@
-@use "src/common/styles/global-styles" as global-styles;
-@use "src/common/styles/palette" as palette;
+@use "src/common/styles/palette";
+@use "src/common/styles/typography";
+@use "node_modules/bootstrap/scss/bootstrap";
 
 .dashboard-dropdown-hover {
-  // @extend bootstrap.;
-  // @extend bootstrap.py-2;
-  // @extend bootstrap.mt-3;
+  // @extend bootstrap.px-3;
+  @extend bootstrap.py-2;
+  @extend bootstrap.mt-3;
   border: 1px solid transparent;
   border-radius: 8px;
   transition: 200ms;

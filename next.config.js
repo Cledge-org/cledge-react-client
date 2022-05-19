@@ -10,6 +10,16 @@ const regexEqual = (x, y) => {
     x.multiline === y.multiline
   );
 };
+// Overrides for css-loader plugin
+function cssLoaderOptions(modules) {
+  const { getLocalIdent, ...others } = modules; // Need to delete getLocalIdent else localIdentName doesn't work
+  return {
+    ...others,
+    localIdentName: "[hash:base64:6]",
+    exportLocalsConvention: "camelCaseOnly",
+    mode: "local",
+  };
+}
 module.exports = {
   reactStrictMode: true,
   eslint: {
@@ -30,15 +40,21 @@ module.exports = {
       (rule) => typeof rule.oneOf === "object"
     );
     if (oneOf) {
-      const moduleCssRule = oneOf.oneOf.find((rule) =>
-        regexEqual(rule.test, /\.module\.scss$/)
+      // Find the module which targets *.scss|*.sass files
+      const moduleSassRule = oneOf.oneOf.find((rule) =>
+        regexEqual(rule.test, /\.module\.(scss|sass)$/)
       );
-      if (moduleCssRule) {
-        const cssLoader = moduleCssRule.use.find(({ loader }) =>
-          loader.includes("sass-loader")
+
+      if (moduleSassRule) {
+        // Get the config object for css-loader plugin
+        const cssLoader = moduleSassRule.use.find(({ loader }) =>
+          loader.includes("css-loader")
         );
         if (cssLoader) {
-          cssLoader.options.modules.mode = "local";
+          cssLoader.options = {
+            ...cssLoader.options,
+            modules: cssLoaderOptions(cssLoader.options.modules),
+          };
         }
       }
     }

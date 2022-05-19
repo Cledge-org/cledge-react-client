@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import router from "next/router";
 import React, { useState, useEffect } from "react";
 import CardTask from "src/common/components/Cards/CardTask/CardTask";
-import "./part-dropdown.module.scss";
+import styles from "./part-dropdown.module.scss";
 
 function PartDropDown({
   pathwayCheckinList,
@@ -14,14 +14,16 @@ function PartDropDown({
   title: string;
   progressRatio: number;
 }) {
-  console.log(pathwayCheckinList);
+  console.log(styles);
   const [isExpanded, setIsExpanded] = useState(false);
   const [initialized, setInitialized] = useState(false);
   useEffect(() => {
     setInitialized(true);
   }, []);
   return (
-    <div className="progress-dropdown-container w-100 d-flex flex-row align-items-stretch">
+    <div
+      className={`progress-dropdown-container w-100 d-flex flex-row align-items-stretch`}
+    >
       <div className="align-items-center">
         <div
           style={{
@@ -59,7 +61,7 @@ function PartDropDown({
       </div>
       <div className="d-flex flex-column">
         <button
-          className="progress-dropdown-btn justify-content-between dashboard-dropdown-hover mb-2 ms-2"
+          className={`progress-dropdown-btn justify-content-between ${styles["dashboardDropdownHover"]} mb-2 ms-2`}
           style={{
             width: "10vw",
             maxWidth: "30%",
