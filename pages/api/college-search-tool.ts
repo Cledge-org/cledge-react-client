@@ -154,6 +154,10 @@ const formatOutput = (college) => {
             "2 or More Races": college["UGDS_2MOR"],
             "Non-resident Aliens": college["UGDS_NRA"],
             "Unknown": college["UGDS_UNKN"]
+        },
+        "college_fit_metric": {
+            "target": college["TARGET_TIER"],
+            "safety": college["SAFETY_TIER"]
         }
     };
     return output;
