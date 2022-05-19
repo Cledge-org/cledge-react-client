@@ -573,5 +573,7 @@
     "UAGRNTP": "integer",
     "UPGRNTP": "integer",
     "UFLOANP": "integer",
-    "AGRNT_A": "integer"
+    "AGRNT_A": "integer",
+    "TARGET_TIER": "integer",
+    "SAFETY_TIER": "integer"
 }
