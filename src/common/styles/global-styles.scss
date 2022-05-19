@@ -1,6 +1,6 @@
-@import "node_modules/bootstrap/scss/bootstrap";
-@import "src/common/styles/palette.scss";
-@import "src/common/styles/typography.scss";
+@use "node_modules/bootstrap/scss/bootstrap";
+@use "src/common/styles/palette.scss" as palette;
+@use "src/common/styles/typography";
 
 .container-margin {
   @media only screen and (max-width: 767px) {
@@ -39,67 +39,67 @@ a {
 }
 
 .soft-gray-border {
-  border: 1px solid $cl-soft-gray;
+  border: 1px solid palette.$cl-soft-gray;
 }
 .bg-cl-super-light-gray {
-  background-color: $cl-super-light-gray;
+  background-color: palette.$cl-super-light-gray;
 }
 .bg-dark-blue {
-  background-color: $cl-dark-blue;
+  background-color: palette.$cl-dark-blue;
 }
 .bg-cl-dark-text {
-  background-color: $cl-dark-text;
+  background-color: palette.$cl-dark-text;
 }
 .bg-light-blue {
-  background-color: $cl-light-blue;
+  background-color: palette.$cl-light-blue;
 }
 .bg-light-gray {
-  background-color: $cl-light-gray;
+  background-color: palette.$cl-light-gray;
 }
 .bg-cl-blue {
-  background-color: $cl-blue;
+  background-color: palette.$cl-blue;
 }
 .bg-cl-white {
-  background-color: $cl-white;
+  background-color: palette.$cl-white;
 }
 .bg-cl-purple {
-  background-color: $cl-purple;
+  background-color: palette.$cl-purple;
 }
 .bg-cl-pink-purple {
-  background-color: $cl-pink-purple;
+  background-color: palette.$cl-pink-purple;
 }
 .bg-cl-orange-red {
-  background-color: $cl-orange-red;
+  background-color: palette.$cl-orange-red;
 }
 .bg-cl-light-yellow {
-  background-color: $cl-light-yellow;
+  background-color: palette.$cl-light-yellow;
 }
 .cl-white {
-  color: $cl-white;
+  color: palette.$cl-white;
 }
 .cl-translucent-white {
-  color: $cl-translucent-white;
+  color: palette.$cl-translucent-white;
 }
 .cl-blue {
-  color: $cl-blue;
+  color: palette.$cl-blue;
 }
 .cl-mid-gray {
-  color: $cl-mid-gray;
+  color: palette.$cl-mid-gray;
 }
 .cl-light-gray {
-  color: $cl-light-gray;
+  color: palette.$cl-light-gray;
 }
 .cl-dark-text {
-  color: $cl-dark-text;
+  color: palette.$cl-dark-text;
 }
 .cl-black {
-  color: $cl-black;
+  color: palette.$cl-black;
 }
 .cl-yellow {
-  color: $cl-yellow;
+  color: palette.$cl-yellow;
 }
 .cl-red {
-  color: $cl-red;
+  color: palette.$cl-red;
 }
 .hover-pointer:hover {
   cursor: pointer;
@@ -110,48 +110,48 @@ a {
   justify-content: center;
 }
 .bg-light-gray {
-  background-color: $cl-light-gray;
+  background-color: palette.$cl-light-gray;
 }
 .cl-btn-gray {
   @extend .cl-btn;
-  color: $cl-dark-text;
-  background-color: $cl-light-gray;
-  border: 1px solid $cl-light-gray;
+  color: palette.$cl-dark-text;
+  background-color: palette.$cl-light-gray;
+  border: 1px solid palette.$cl-light-gray;
   &:hover,
   &:active:hover {
     box-shadow: none;
-    background-color: rgba($color: $cl-light-gray, $alpha: 0.9);
-    border-color: rgba($color: $cl-light-gray, $alpha: 0.9);
+    background-color: rgba($color: palette.$cl-light-gray, $alpha: 0.9);
+    border-color: rgba($color: palette.$cl-light-gray, $alpha: 0.9);
   }
 }
 .cl-btn-clear {
   @extend .cl-btn;
   transition: 200ms;
-  color: $cl-dark-text;
-  background-color: $cl-white;
-  border: 1px solid $cl-dark-blue;
+  color: palette.$cl-dark-text;
+  background-color: palette.$cl-white;
+  border: 1px solid palette.$cl-dark-blue;
   &:hover,
   &:active:hover {
     box-shadow: none;
-    color: $cl-white;
-    background-color: rgba($color: $cl-dark-blue, $alpha: 0.9);
-    border-color: rgba($color: $cl-white, $alpha: 0.9);
+    color: palette.$cl-white;
+    background-color: rgba($color: palette.$cl-dark-blue, $alpha: 0.9);
+    border-color: rgba($color: palette.$cl-white, $alpha: 0.9);
   }
 }
 
 .cl-btn-gray-selected {
   @extend .cl-btn-gray;
-  background-color: $cl-orange;
-  border: 1px solid $cl-orange;
+  background-color: palette.$cl-orange;
+  border: 1px solid palette.$cl-orange;
   &:hover,
   &:active:hover {
     box-shadow: none;
-    background-color: $cl-light-gray;
+    background-color: palette.$cl-light-gray;
   }
 }
 .cl-btn {
   font-weight: 500;
-  @include button-size(
+  @include bootstrap.button-size(
     $padding-x: 1.5vw,
     $padding-y: 1.5vh,
     $font-size: 0.9em,
@@ -173,22 +173,22 @@ a {
 
 .cl-btn-blue {
   @extend .cl-btn;
-  background-color: $cl-blue !important;
+  background-color: palette.$cl-blue !important;
   color: white !important;
-  border: 1px solid $cl-blue;
+  border: 1px solid palette.$cl-blue;
 }
 .cl-btn-red {
   @extend .cl-btn;
-  background-color: $cl-red !important;
+  background-color: palette.$cl-red !important;
   color: white !important;
-  border: 1px solid $cl-red;
+  border: 1px solid palette.$cl-red;
 }
 input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="number"] {
-  @extend .px-3;
-  @extend .py-3;
+  @extend.px-3;
+  @extend.py-3;
   border-radius: 15px;
   &:active,
   &:focus {
@@ -207,38 +207,38 @@ a {
 }
 .general-submit-btn {
   @extend .cl-dark-text;
-  @extend .py-2;
-  @extend .px-4;
+  @extend.py-2;
+  @extend.px-4;
   font-weight: bold;
   outline: none;
   border: 1px solid transparent;
   border-radius: 3px;
   background-color: transparent;
   &:hover {
-    background-color: $cl-light-blue;
+    background-color: palette.$cl-light-blue;
   }
 }
 
 $spacers: (
   0: 0,
   1: (
-    $spacer * 0.25,
+    bootstrap.$spacer * 0.25,
   ),
   2: (
-    $spacer * 0.5,
+    bootstrap.$spacer * 0.5,
   ),
-  3: $spacer,
+  3: bootstrap.$spacer,
   4: (
-    $spacer * 1.5,
+    bootstrap.$spacer * 1.5,
   ),
   5: (
-    $spacer * 3,
+    bootstrap.$spacer * 3,
   ),
   6: (
-    $spacer * 5,
+    bootstrap.$spacer * 5,
   ),
   7: (
-    $spacer * 10,
+    bootstrap.$spacer * 10,
   ),
 );
 .ms-05 {
@@ -272,7 +272,10 @@ $spacers: (
 }
 
 .red-purple-text-gradient {
-  @include gradient-text($fromColor: $cl-red, $toColor: $cl-blue);
+  @include gradient-text(
+    $fromColor: palette.$cl-red,
+    $toColor: palette.$cl-blue
+  );
 }
 .blue-purple-text-gradient {
   @include gradient-text($fromColor: #3b68df, $toColor: #8d32d4);
