@@ -1,6 +1,6 @@
-@use "node_modules/bootstrap/scss/bootstrap";
-@use "src/common/styles/palette.scss" as palette;
-@use "src/common/styles/typography";
+@use "node_modules/bootstrap/scss/bootstrap" as *;
+@use "./palette.module.scss" as *;
+@use "./typography.module.scss" as *;
 
 .container-margin {
   @media only screen and (max-width: 767px) {
@@ -39,67 +39,67 @@ a {
 }
 
 .soft-gray-border {
-  border: 1px solid palette.$cl-soft-gray;
+  border: 1px solid $cl-soft-gray;
 }
 .bg-cl-super-light-gray {
-  background-color: palette.$cl-super-light-gray;
+  background-color: $cl-super-light-gray;
 }
 .bg-dark-blue {
-  background-color: palette.$cl-dark-blue;
+  background-color: $cl-dark-blue;
 }
 .bg-cl-dark-text {
-  background-color: palette.$cl-dark-text;
+  background-color: $cl-dark-text;
 }
 .bg-light-blue {
-  background-color: palette.$cl-light-blue;
+  background-color: $cl-light-blue;
 }
 .bg-light-gray {
-  background-color: palette.$cl-light-gray;
+  background-color: $cl-light-gray;
 }
 .bg-cl-blue {
-  background-color: palette.$cl-blue;
+  background-color: $cl-blue;
 }
 .bg-cl-white {
-  background-color: palette.$cl-white;
+  background-color: $cl-white;
 }
 .bg-cl-purple {
-  background-color: palette.$cl-purple;
+  background-color: $cl-purple;
 }
 .bg-cl-pink-purple {
-  background-color: palette.$cl-pink-purple;
+  background-color: $cl-pink-purple;
 }
 .bg-cl-orange-red {
-  background-color: palette.$cl-orange-red;
+  background-color: $cl-orange-red;
 }
 .bg-cl-light-yellow {
-  background-color: palette.$cl-light-yellow;
+  background-color: $cl-light-yellow;
 }
 .cl-white {
-  color: palette.$cl-white;
+  color: $cl-white;
 }
 .cl-translucent-white {
-  color: palette.$cl-translucent-white;
+  color: $cl-translucent-white;
 }
 .cl-blue {
-  color: palette.$cl-blue;
+  color: $cl-blue;
 }
 .cl-mid-gray {
-  color: palette.$cl-mid-gray;
+  color: $cl-mid-gray;
 }
 .cl-light-gray {
-  color: palette.$cl-light-gray;
+  color: $cl-light-gray;
 }
 .cl-dark-text {
-  color: palette.$cl-dark-text;
+  color: $cl-dark-text;
 }
 .cl-black {
-  color: palette.$cl-black;
+  color: $cl-black;
 }
 .cl-yellow {
-  color: palette.$cl-yellow;
+  color: $cl-yellow;
 }
 .cl-red {
-  color: palette.$cl-red;
+  color: $cl-red;
 }
 .hover-pointer:hover {
   cursor: pointer;
@@ -110,48 +110,48 @@ a {
   justify-content: center;
 }
 .bg-light-gray {
-  background-color: palette.$cl-light-gray;
+  background-color: $cl-light-gray;
 }
 .cl-btn-gray {
   @extend .cl-btn;
-  color: palette.$cl-dark-text;
-  background-color: palette.$cl-light-gray;
-  border: 1px solid palette.$cl-light-gray;
+  color: $cl-dark-text;
+  background-color: $cl-light-gray;
+  border: 1px solid $cl-light-gray;
   &:hover,
   &:active:hover {
     box-shadow: none;
-    background-color: rgba($color: palette.$cl-light-gray, $alpha: 0.9);
-    border-color: rgba($color: palette.$cl-light-gray, $alpha: 0.9);
+    background-color: rgba($color: $cl-light-gray, $alpha: 0.9);
+    border-color: rgba($color: $cl-light-gray, $alpha: 0.9);
   }
 }
 .cl-btn-clear {
   @extend .cl-btn;
   transition: 200ms;
-  color: palette.$cl-dark-text;
-  background-color: palette.$cl-white;
-  border: 1px solid palette.$cl-dark-blue;
+  color: $cl-dark-text;
+  background-color: $cl-white;
+  border: 1px solid $cl-dark-blue;
   &:hover,
   &:active:hover {
     box-shadow: none;
-    color: palette.$cl-white;
-    background-color: rgba($color: palette.$cl-dark-blue, $alpha: 0.9);
-    border-color: rgba($color: palette.$cl-white, $alpha: 0.9);
+    color: $cl-white;
+    background-color: rgba($color: $cl-dark-blue, $alpha: 0.9);
+    border-color: rgba($color: $cl-white, $alpha: 0.9);
   }
 }
 
 .cl-btn-gray-selected {
   @extend .cl-btn-gray;
-  background-color: palette.$cl-orange;
-  border: 1px solid palette.$cl-orange;
+  background-color: $cl-orange;
+  border: 1px solid $cl-orange;
   &:hover,
   &:active:hover {
     box-shadow: none;
-    background-color: palette.$cl-light-gray;
+    background-color: $cl-light-gray;
   }
 }
 .cl-btn {
   font-weight: 500;
-  @include bootstrap.button-size(
+  @include button-size(
     $padding-x: 1.5vw,
     $padding-y: 1.5vh,
     $font-size: 0.9em,
@@ -173,15 +173,15 @@ a {
 
 .cl-btn-blue {
   @extend .cl-btn;
-  background-color: palette.$cl-blue !important;
+  background-color: $cl-blue !important;
   color: white !important;
-  border: 1px solid palette.$cl-blue;
+  border: 1px solid $cl-blue;
 }
 .cl-btn-red {
   @extend .cl-btn;
-  background-color: palette.$cl-red !important;
+  background-color: $cl-red !important;
   color: white !important;
-  border: 1px solid palette.$cl-red;
+  border: 1px solid $cl-red;
 }
 input[type="text"],
 input[type="email"],
@@ -215,30 +215,30 @@ a {
   border-radius: 3px;
   background-color: transparent;
   &:hover {
-    background-color: palette.$cl-light-blue;
+    background-color: $cl-light-blue;
   }
 }
 
 $spacers: (
   0: 0,
   1: (
-    bootstrap.$spacer * 0.25,
+    $spacer * 0.25,
   ),
   2: (
-    bootstrap.$spacer * 0.5,
+    $spacer * 0.5,
   ),
-  3: bootstrap.$spacer,
+  3: $spacer,
   4: (
-    bootstrap.$spacer * 1.5,
+    $spacer * 1.5,
   ),
   5: (
-    bootstrap.$spacer * 3,
+    $spacer * 3,
   ),
   6: (
-    bootstrap.$spacer * 5,
+    $spacer * 5,
   ),
   7: (
-    bootstrap.$spacer * 10,
+    $spacer * 10,
   ),
 );
 .ms-05 {
@@ -253,10 +253,6 @@ $spacers: (
 }
 
 //GLOBAL DROPDOWN STYLES -->
-.dropdown-container {
-  position: relative;
-}
-
 .dropdown-menu-custom {
   position: absolute;
   top: 130%;
@@ -264,7 +260,143 @@ $spacers: (
   flex-direction: column;
   z-index: 1000;
 }
-
+.dropdown-container {
+  transition: height 1s;
+  height: fit-content;
+}
+.dropdown-btn {
+  @include button-size(
+    $padding-x: 1vw,
+    $padding-y: 2.5vh,
+    $font-size: 0.9em,
+    $border-radius: 0
+  );
+  position: relative;
+  .text {
+    font-weight: bold;
+    font-size: 1.25em;
+    .percentage {
+      font-weight: normal;
+      color: $cl-secondary-text;
+      font-size: 0.85em;
+      @extend .ms-3;
+    }
+  }
+  .icon-close {
+    animation-name: rotateReverse;
+    animation-duration: 600ms;
+    animation-fill-mode: forwards;
+  }
+  @keyframes rotateReverse {
+    0% {
+      color: $cl-blue;
+      transform: rotate(180deg);
+    }
+    100% {
+      color: $cl-mid-gray;
+      transform: rotate(0deg);
+    }
+  }
+  @keyframes rotate {
+    0% {
+      color: $cl-mid-gray;
+      transform: rotate(0deg);
+    }
+    100% {
+      color: $cl-blue;
+      transform: rotate(180deg);
+    }
+  }
+  .icon-open {
+    animation-fill-mode: forwards;
+    animation-name: rotate;
+    animation-duration: 600ms;
+  }
+  background-color: $cl-light-gray;
+  border: none;
+  border-top: 2px solid rgba($color: $cl-secondary-text, $alpha: 0.7);
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: none;
+  &:active,
+  &:focus,
+  &:checked {
+    box-shadow: none;
+  }
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+  }
+}
+.dropdown-menu-closed {
+  background-color: $cl-light-gray;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 0;
+  animation-name: close;
+  animation-duration: 600ms;
+}
+.dropdown-menu-closed-no-animation {
+  background-color: $cl-light-gray;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 0;
+}
+@keyframes close {
+  0% {
+    max-height: 30vh;
+    overflow: visible;
+  }
+  100% {
+    max-height: 0;
+    overflow: hidden;
+  }
+}
+@keyframes expand {
+  0% {
+    max-height: 0;
+    overflow: hidden;
+  }
+  100% {
+    max-height: 50vh;
+    overflow: visible;
+  }
+}
+.dropdown-menu-expanded {
+  background-color: $cl-light-gray;
+  display: flex;
+  flex-direction: column;
+  animation-name: expand;
+  animation-duration: 600ms;
+}
+.dropdown-menu-btn {
+  @extend .pt-2;
+  @extend .pb-2;
+  width: 100%;
+  outline: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  height: fit-content;
+  background-color: $cl-light-gray;
+  .text {
+    @extend .ps-4;
+    text-align: left;
+    line-height: normal;
+  }
+  .icon {
+    color: $cl-mid-gray;
+    @extend .ps-3;
+  }
+}
+.dropdown-menu-btn-selected {
+  @extend .dropdown-menu-btn;
+  background-color: $cl-light-blue;
+}
 @mixin gradient-text($fromColor, $toColor) {
   background: -webkit-linear-gradient(left, $fromColor, $toColor);
   -webkit-background-clip: text;
@@ -272,10 +404,7 @@ $spacers: (
 }
 
 .red-purple-text-gradient {
-  @include gradient-text(
-    $fromColor: palette.$cl-red,
-    $toColor: palette.$cl-blue
-  );
+  @include gradient-text($fromColor: $cl-red, $toColor: $cl-blue);
 }
 .blue-purple-text-gradient {
   @include gradient-text($fromColor: #3b68df, $toColor: #8d32d4);

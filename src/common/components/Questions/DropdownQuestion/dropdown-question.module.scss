@@ -1,11 +1,6 @@
-@import "src/common/styles/global-styles.scss";
-@import "src/common/styles/palette.scss";
+@use "src/common/styles" as *;
 
-@import "node_modules/bootstrap/scss/bootstrap";
-@import "src/common/styles/palette.scss";
-@import "src/common/styles/typography.scss";
-
-.ec-dropdown-btn {
+.dropdown-question-btn {
   @extend .cl-mid-gray;
   @extend .px-3;
   @extend .py-3;
@@ -63,7 +58,7 @@
     @extend .cl-mid-gray;
   }
 }
-.ec-dropdown-menu {
+.dropdown-question-menu {
   z-index: 1000;
   div:first-of-type {
     border: 1px solid transparent;
@@ -103,7 +98,7 @@
     background: rgba($color: $cl-mid-gray, $alpha: 0.7);
   }
   background-color: white;
-  .ec-dropdown-item {
+  .dropdown-item {
     @extend .py-2;
     @extend .px-3;
     @extend .cl-dark-text;
@@ -120,7 +115,7 @@
       cursor: pointer;
     }
   }
-  .ec-dropdown-item-picked {
+  .dropdown-item-picked {
     @extend .dropdown-item;
     @extend .px-3;
     @extend .py-2;

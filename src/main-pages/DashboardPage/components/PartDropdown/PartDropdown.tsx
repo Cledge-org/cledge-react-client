@@ -22,7 +22,7 @@ function PartDropDown({
   }, []);
   return (
     <div
-      className={`progress-dropdown-container w-100 d-flex flex-row align-items-stretch`}
+      className={`dropdown-container w-100 d-flex flex-row align-items-stretch`}
     >
       <div className="align-items-center">
         <div
@@ -61,7 +61,7 @@ function PartDropDown({
       </div>
       <div className="d-flex flex-column">
         <button
-          className={`progress-dropdown-btn justify-content-between ${styles["dashboardDropdownHover"]} mb-2 ms-2`}
+          className={`dropdown-btn justify-content-between ${styles["dashboardDropdownHover"]} mb-2 ms-2`}
           style={{
             width: "10vw",
             maxWidth: "30%",
@@ -86,10 +86,8 @@ function PartDropDown({
         <div
           className={`${
             // initialized
-            //   ? "progress-dropdown-menu-closed-no-animation"
-            isExpanded
-              ? "progress-dropdown-menu-expanded"
-              : "progress-dropdown-menu-closed"
+            //   ? "dropdown-menu-closed-no-animation"
+            isExpanded ? "dropdown-menu-expanded" : "dropdown-menu-closed"
           } flex-row flex-wrap`}
           style={{
             backgroundColor: "transparent",

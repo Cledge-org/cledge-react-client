@@ -10,7 +10,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { CSSTransition } from "react-transition-group";
-
+import classNames from "classnames";
+import styles from "./card-task.module.scss";
 interface CardTaskProps {
   subtasks: any;
   correctUrl: string;
@@ -92,7 +93,10 @@ export default function CardTask({
             console.log("MOUSE OUT");
             setIsHovering(false);
           }}
-          className={`d-flex flex-column align-items-center px-2 hover-pointer w-100 card-task-container`}
+          className={classNames(
+            `d-flex flex-column align-items-center px-2 hover-pointer w-100`,
+            styles.cardTaskContainer
+          )}
         >
           <div className="w-100">
             <div

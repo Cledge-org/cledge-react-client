@@ -7,9 +7,10 @@ import {
   faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
 import React, { useEffect, useRef, useState } from "react";
 import DropDownQuestion from "../../../DropdownQuestion/DropdownQuestion";
-
+import styles from "./calendar-dropdown.module.scss";
 interface ECCalendarDropDownProps {
   onChange: Function;
   initialDate: Date;
@@ -81,7 +82,7 @@ export default function ECCalendarDropDown({
                 );
               }}
               className={
-                chosen.getDay() === copy ? "day-btn-chosen" : "day-btn"
+                chosen.getDay() === copy ? styles.dayBtnChosen : styles.dayBtn
               }
             >
               {copy}
@@ -121,7 +122,10 @@ export default function ECCalendarDropDown({
       </button>
       <div
         ref={wrapperRef}
-        className="dropdown-menu-custom ec-calendar-dropdown-menu"
+        className={classNames(
+          "dropdown-menu-custom",
+          styles.calendarDropdownMenu
+        )}
         style={{ display: isOpen ? "flex" : "none" }}
       >
         <div className="d-flex justify-content-center align-items-center pt-2">
@@ -145,13 +149,13 @@ export default function ECCalendarDropDown({
         </div>
         <div className="d-flex flex-column justify-content-evenly align-items-center pt-3">
           <div className="d-flex w-100 justify-content-evenly align-items-center">
-            <div className="weekday-titles">Mo</div>
-            <div className="weekday-titles">Tu</div>
-            <div className="weekday-titles">We</div>
-            <div className="weekday-titles">Th</div>
-            <div className="weekday-titles">Fr</div>
-            <div className="weekday-titles">Sa</div>
-            <div className="weekday-titles">Su</div>
+            <div className={styles.weekdayTitles}>Mo</div>
+            <div className={styles.weekdayTitles}>Tu</div>
+            <div className={styles.weekdayTitles}>We</div>
+            <div className={styles.weekdayTitles}>Th</div>
+            <div className={styles.weekdayTitles}>Fr</div>
+            <div className={styles.weekdayTitles}>Sa</div>
+            <div className={styles.weekdayTitles}>Su</div>
           </div>
           {buildDays()}
         </div>

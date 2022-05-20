@@ -6,6 +6,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
+import styles from "./dropdown-tab.module.scss";
 
 export default function DropDownTab({
   chunkList,
@@ -32,9 +33,9 @@ export default function DropDownTab({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <div className="progress-dropdown-container">
+    <div className="dropdown-container">
       <button
-        className="progress-dropdown-btn"
+        className="dropdown-btn"
         onClick={() => {
           if (isAll) {
             onClick();
@@ -62,9 +63,7 @@ export default function DropDownTab({
       </button>
       <div
         className={
-          isExpanded
-            ? "progress-dropdown-menu-expanded"
-            : "progress-dropdown-menu-closed"
+          isExpanded ? "dropdown-menu-expanded" : "dropdown-menu-closed"
         }
       >
         {chunkList.map((chunkTitle, index) => (
@@ -79,8 +78,8 @@ export default function DropDownTab({
             className={
               currSelectedPath ===
               title + (isPathway ? chunkTitle.name : chunkTitle)
-                ? "progress-dropdown-menu-btn-selected"
-                : "progress-dropdown-menu-btn"
+                ? "dropdown-menu-btn-selected"
+                : "dropdown-menu-btn"
             }
             key={index.toString()}
           >

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Question } from "../../../../types/types";
 import CheckBox from "../../CheckBox/CheckBox";
-
+import styles from "./checkbox-question.module.scss";
 interface CheckBoxQuestionProps {
   question: Question;
   userAnswers: string[];
@@ -66,8 +66,8 @@ export default function CheckBoxQuestion({
               }}
               className={
                 selected.includes(op)
-                  ? "checkbox-mcq-variant-selected"
-                  : "checkbox-mcq-variant"
+                  ? styles.checkboxMcqVariantSelected
+                  : styles.checkboxMcqVariant
               }
               style={inEC ? { width: "100%" } : {}}
             >

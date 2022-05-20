@@ -17,6 +17,7 @@
     "baseUrl": "./"
     // "sourceMap": true // used to debug the program
   },
+  "plugins": [{ "name": "typescript-plugin-css-modules" }],
   "include": [
     "next-env.d.ts",
     "src/types/types.d.ts",

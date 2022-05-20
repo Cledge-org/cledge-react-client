@@ -4,9 +4,9 @@ import {
   faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
 import React, { useEffect, useState, useRef } from "react";
-import Dropdown from "react-dropdown";
-
+import styles from "./dropdown-question.module.scss";
 interface DropDownQuestionProps {
   isConcatenable?: boolean;
   title: string;
@@ -128,11 +128,11 @@ export default function DropDownQuestion({
           {questionTitle}
         </div>
       ) : null}
-      <div ref={wrapperRef} className="dropdown-container">
+      <div ref={wrapperRef} style={{ position: "relative" }}>
         <button
-          className={`ec-dropdown-btn ${isForWaitlist ? "bg-white" : ""} ${
-            isForDashboard ? "py-0 bottom-border-pathway-filter" : ""
-          }`}
+          className={`${styles.dropdownQuestionBtn} ${
+            isForWaitlist ? "bg-white" : ""
+          } ${isForDashboard ? "py-0 bottom-border-pathway-filter" : ""}`}
           style={
             isForDashboard
               ? {
@@ -171,7 +171,10 @@ export default function DropDownQuestion({
           </div>
         </button>
         <div
-          className="dropdown-menu-custom ec-dropdown-menu"
+          className={classNames(
+            `dropdown-menu-custom`,
+            styles.dropdownQuestionMenu
+          )}
           style={
             !forCalendar && !isForWaitlist
               ? { display: isOpen ? "flex" : "none" }
@@ -184,15 +187,14 @@ export default function DropDownQuestion({
                 changeChosen(name);
               }}
               key={name}
-              className={
-                itemIsPicked(name)
-                  ? !forCalendar
-                    ? "ec-dropdown-item-picked"
-                    : "ec-dropdown-item-picked center-child"
-                  : !forCalendar
-                  ? "ec-dropdown-item"
-                  : "ec-dropdown-item center-child"
-              }
+              className={classNames({
+                ["dropdown-item-picked"]: itemIsPicked(name) && !forCalendar,
+                ["dropdown-item-picked center-child"]:
+                  itemIsPicked(name) && forCalendar,
+                ["dropdown-item"]: !itemIsPicked(name) && !forCalendar,
+                ["dropdown-item center-child"]:
+                  !itemIsPicked(name) && forCalendar,
+              })}
             >
               {name}
             </button>

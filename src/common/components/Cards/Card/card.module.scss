@@ -1,0 +1,16 @@
+@use "src/common/styles" as *;
+
+.card-title {
+  @extend .ms-3;
+  @extend .mt-3;
+  font-weight: 900;
+  font-size: 2.25em;
+}
+.card-container {
+  border-radius: 20px;
+  height: 100%;
+  width: 100%;
+  &:hover {
+    cursor: pointer;
+  }
+}

@@ -1,9 +1,4 @@
-@import "src/common/styles/global-styles.scss";
-@import "src/common/styles/palette.scss";
-
-@import "node_modules/bootstrap/scss/bootstrap";
-@import "src/common/styles/palette.scss";
-@import "src/common/styles/typography.scss";
+@use "src/common/styles" as *;
 
 .mcq-answer-btn {
   @extend .py-3;

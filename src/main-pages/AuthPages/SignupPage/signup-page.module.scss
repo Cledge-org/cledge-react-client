@@ -1,7 +1,4 @@
-@import "src/common/styles/global-styles.scss";
-@import "src/common/styles/palette.scss";
-
-@import "node_modules/bootstrap/scss/bootstrap";
+@use "src/common/styles" as *;
 
 .auth-bottom-nav {
   @extend .mt-3;

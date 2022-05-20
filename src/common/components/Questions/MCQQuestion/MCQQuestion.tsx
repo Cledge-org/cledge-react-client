@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Question } from "../../../../types/types";
+import styles from "./mcq-question.module.scss";
 
 interface MCQQuestionProps {
   question: Question;
@@ -38,7 +39,9 @@ export default function MCQQuestion({
                 onChange(op, [tag], oldTag ? [oldTag] : []);
               }}
               className={`${
-                selected === op ? "mcq-answer-btn-selected" : "mcq-answer-btn"
+                selected === op
+                  ? styles.mcqAnswerBtnSelected
+                  : styles.mcqAnswerBtn
               } ${inEC ? "w-100" : ""}`}
             >
               {op}

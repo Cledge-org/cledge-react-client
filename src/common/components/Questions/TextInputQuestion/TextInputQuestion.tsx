@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Question } from "../../../../types/types";
+import styles from "./text-input-question.module.scss";
+import classNames from "classnames";
 interface TextInputQuestionProps {
   question: Question;
   userAnswer: string;
@@ -29,7 +31,7 @@ export default function TextInputQuestion({
         <input
           value={currValue}
           type="text"
-          className="form-control ec-text-input"
+          className={classNames("form-control", styles.ecTextInput)}
           placeholder={question.helpText}
           onChange={(e) => {
             setCurrValue(e.target.value);

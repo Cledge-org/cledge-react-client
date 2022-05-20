@@ -1,16 +1,14 @@
-@use "src/common/styles/palette";
-@use "src/common/styles/typography";
-@use "node_modules/bootstrap/scss/bootstrap";
+@use "src/common/styles" as *;
 
 .dashboard-dropdown-hover {
   // @extend bootstrap.px-3;
-  @extend bootstrap.py-2;
-  @extend bootstrap.mt-3;
+  @extend .py-2;
+  @extend .mt-3;
   border: 1px solid transparent;
   border-radius: 8px;
   transition: 200ms;
   background-color: transparent;
 }
 .dashboard-dropdown-hover:hover {
-  background-color: palette.$cl-light-gray;
+  background-color: $cl-light-gray;
 }

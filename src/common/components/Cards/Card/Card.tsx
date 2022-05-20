@@ -1,23 +1,24 @@
 export interface CardProps {
   title: String;
   url?: string;
-  classNames?: string;
+  className?: string;
   child?: any;
   textGradient: "light" | "dark";
   isCardTask?: boolean;
 }
-
+import styles from "./card.module.scss";
+import classNames from "classnames";
 export default function Card({
   isCardTask,
   title,
   child,
   url,
-  classNames = "col-lg-4 col-md-6 col-xs-12 p-3 px-4",
+  className = "col-lg-4 col-md-6 col-xs-12 p-3 px-4",
   textGradient,
 }: CardProps) {
   return (
     <div
-      className={classNames}
+      className={className}
       onClick={() => {
         if (isCardTask !== undefined && !isCardTask) {
           location.href = url;
@@ -26,14 +27,17 @@ export default function Card({
     >
       <div
         style={{ minHeight: "35vh" }}
-        className="card-container px-4 w-100 h-100 d-flex flex-column shadow"
+        className={classNames(
+          styles.cardContainer,
+          "px-4 w-100 h-100 d-flex flex-column shadow"
+        )}
       >
         <div
-          className={
-            textGradient === "light"
-              ? "card-title pt-2 red-purple-text-gradient"
-              : "card-title pt-2 blue-purple-text-gradient"
-          }
+          className={classNames(
+            styles.cardTitle,
+            { ["red-purple-text-gradient"]: textGradient === "light" },
+            { ["blue-purple-text-gradient"]: textGradient !== "light" }
+          )}
         >
           {title}
         </div>

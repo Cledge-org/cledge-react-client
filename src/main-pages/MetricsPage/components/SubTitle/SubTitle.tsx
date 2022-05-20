@@ -10,7 +10,7 @@ const SubTitle = ({
   const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <div className="progress-dropdown-container mt-2" style={{ width: "100%" }}>
+    <div className="dropdown-container mt-2" style={{ width: "100%" }}>
       <div
         className={`d-flex flex-row align-items-center w-100 cl-dark-text ${
           isDivider ? "mb-2" : "mt-5 mb-2"
@@ -34,9 +34,9 @@ const SubTitle = ({
         </button>
       </div>
       <div
-        className={`progress-dropdown-menu-${
-          isExpanded ? "expanded" : "closed"
-        } ${isDivider ? "mb-2" : ""}`}
+        className={`dropdown-menu-${isExpanded ? "expanded" : "closed"} ${
+          isDivider ? "mb-2" : ""
+        }`}
         style={{ backgroundColor: "#FBFCFF" }}
       >
         <div

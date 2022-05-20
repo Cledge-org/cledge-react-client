@@ -2,7 +2,7 @@ import { useSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
+import styles from "./header.module.scss";
 export default function Header({ key_prop }: { key_prop: string }) {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -18,7 +18,7 @@ export default function Header({ key_prop }: { key_prop: string }) {
   if (router.pathname === "/") {
     navclass = "position-fixed fixed-top";
   } else {
-    navclass = "nav-regular";
+    navclass = styles.navRegular;
   }
 
   useEffect(() => {
@@ -137,10 +137,10 @@ export default function Header({ key_prop }: { key_prop: string }) {
       key={key_prop}
       className={`w-100 navbar cl-blue navbar-expand-md px-3 ${navclass} ${
         scrollState !== "scrolling" && router.pathname === "/"
-          ? "position-absolute top-0 start-0 nav-transparent"
+          ? `position-absolute top-0 start-0 ${styles.navTransparent}`
           : scrollState !== "scrolling"
-          ? "sticky-top nav-regular shadow-none"
-          : "sticky-top nav-regular"
+          ? `sticky-top ${styles.navRegular} shadow-none`
+          : `sticky-top ${styles.navRegular}`
       }`}
       style={{ zIndex: 2000 }}
     >

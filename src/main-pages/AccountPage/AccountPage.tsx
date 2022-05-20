@@ -14,6 +14,8 @@ import {
 } from "../../utils/redux/actionFunctions";
 import { AccountInfo, UserResponse } from "../../types/types";
 import LoadingScreen from "../../common/components/Loading/Loading";
+import InfoSection from "./components/InfoSection/InfoSection";
+import styles from "./account-page.module.scss";
 // account page
 
 const AccountPage: NextApplicationPage<{
@@ -86,10 +88,10 @@ const AccountPage: NextApplicationPage<{
           Personal Info
         </span>
         <div className="py-3" />
-        <div className="myaccount-blob">
+        <div className={styles.myaccountBlob}>
           <span className="title">Basic Info</span>
           <div className="pb-3" />
-          <div className="myaccount-info-section">
+          <div className={styles.myaccountInfoSection}>
             <span className="name align-self-start">PHOTO</span>
             <div className="info-container">
               <div
@@ -239,24 +241,7 @@ const AccountPage: NextApplicationPage<{
     </div>
   );
 };
-interface InfoSectionProps {
-  name: string;
-  value: any;
-  onEdit: Function;
-}
-function InfoSection({ name, value, onEdit }: InfoSectionProps) {
-  return (
-    <div className="myaccount-info-section">
-      <span className="name">{name.toUpperCase()}</span>
-      <div className="info-container">
-        {value}
-        <button className="icon-btn" onClick={() => onEdit()}>
-          <FontAwesomeIcon icon={faPencilAlt} style={{ width: "20px" }} />
-        </button>
-      </div>
-    </div>
-  );
-}
+
 AccountPage.requireAuth = true;
 export default connect((state) => ({
   accountInfo: state?.accountInfo,

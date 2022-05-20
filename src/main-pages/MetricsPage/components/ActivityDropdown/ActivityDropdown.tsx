@@ -13,9 +13,9 @@ const ActivityDropdown = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <div className="progress-dropdown-container mt-2" style={{ width: "100%" }}>
+    <div className="dropdown-container mt-2" style={{ width: "100%" }}>
       <button
-        className="progress-dropdown-btn metrics-dropdown-btn bg-cl-super-light-gray"
+        className="dropdown-btn metrics-dropdown-btn bg-cl-super-light-gray"
         style={{ backgroundColor: "#FBFCFF" }}
         onClick={() => {
           setIsExpanded(!isExpanded);
