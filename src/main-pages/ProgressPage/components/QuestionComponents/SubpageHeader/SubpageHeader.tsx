@@ -1,7 +1,7 @@
 import React from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
-
-interface QuestionSubPageHeaderProps {
+import styles from "./subpage-header.module.scss";
+interface SubPageHeaderProps {
   title: string;
   percentage: number;
   subText?: string | JSX.Element;
@@ -9,14 +9,14 @@ interface QuestionSubPageHeaderProps {
   onAddNew?: Function;
   isMetrics?: boolean;
 }
-export default function QuestionSubPageHeader({
+export default function SubPageHeader({
   title,
   percentage,
   subText,
   isExtracurricular,
   onAddNew,
   isMetrics,
-}: QuestionSubPageHeaderProps) {
+}: SubPageHeaderProps) {
   return (
     <div
       className={`d-flex flex-row justify-content-${
@@ -24,9 +24,9 @@ export default function QuestionSubPageHeader({
       } align-items-center mx-5`}
       style={{ height: "15%" }}
     >
-      <div className="question-subpage-title">
+      <div className={styles.questionSubpageTitle}>
         {title}
-        <div className="sub-text">{subText}</div>
+        <div className={styles.subText}>{subText}</div>
       </div>
       {isExtracurricular ? (
         <button

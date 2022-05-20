@@ -1,4 +1,6 @@
+import classNames from "classnames";
 import React from "react";
+import styles from "./tier-range.module.scss";
 const TierRange = ({
   tier,
   isOverall,
@@ -77,7 +79,10 @@ const TierRange = ({
       const tiers = [multiplied - 2, multiplied - 1, multiplied];
       tierRangeComponents.push(
         <div
-          className="position-relative d-flex flex-row align-items-center justify-content-evenly ms-2 metrics-tier-range"
+          className={classNames(
+            "position-relative d-flex flex-row align-items-center justify-content-evenly ms-2",
+            styles.metricsTierRange
+          )}
           style={{ flex: 1, height: "100%" }}
         >
           {tiers.map((currTier, index) => {

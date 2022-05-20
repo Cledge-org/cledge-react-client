@@ -14,7 +14,8 @@ import {
   updateQuestionResponsesAction,
 } from "../../../../../utils/redux/actionFunctions";
 import { store } from "../../../../../utils/redux/store";
-
+import styles from "./question-summary-card.module.scss";
+import classNames from "classnames";
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface QuestionSummaryCardProps {
@@ -136,14 +137,25 @@ export default function QuestionSummaryCard({
     console.log(oldTags);
   }, [newTags, oldTags]);
   return (
-    <div className="w-100 d-flex flex-column justify-content-evenly qsummary-card-container mt-3">
-      <div className="d-flex justify-content-between align-items-center px-4 pt-3 question-text">
+    <div
+      className={classNames(
+        "w-100 d-flex flex-column justify-content-evenly",
+        styles.qsummaryCardContainer,
+        "mt-3"
+      )}
+    >
+      <div
+        className={classNames(
+          "d-flex justify-content-between align-items-center px-4 pt-3",
+          styles.questionText
+        )}
+      >
         {question.question}
         <button
           onClick={() => {
             setDisplayingQuestion(true);
           }}
-          className="icon-btn center-child"
+          className={classNames(styles.iconBtn, "center-child")}
         >
           <div style={{ width: "40%" }}>
             <FontAwesomeIcon icon={faPencilAlt} />

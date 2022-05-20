@@ -5,6 +5,8 @@ import { getProviders, signIn } from "next-auth/react";
 import type { Provider } from "next-auth/providers";
 import GoogleProvider from "next-auth/providers/google";
 import AuthFunctions from "../../../pages/api/auth/firebase-auth";
+import styles from "./signup-page.module.scss";
+import classNames from "classnames";
 
 const SignUpPage = () => {
   const incorrectPassStr =
@@ -131,7 +133,7 @@ const SignUpPage = () => {
           })}
         </div>
         <div className="d-flex flex-row justify-content-between align-items-center mx-0 px-0">
-          <div className="form-group mt-3 split-input">
+          <div className={classNames("form-group mt-3", styles.splitInput)}>
             <label
               style={{ fontSize: "0.9em" }}
               className="text-muted"
@@ -241,7 +243,7 @@ const SignUpPage = () => {
             Sign Up with {GoogleProvider.name}
           </button>
         </div> */}
-        <div className="auth-bottom-nav">
+        <div className={styles.authBottomNav}>
           <div className="px-0">
             <Link href="api/auth/login">
               <a className="cl-blue">Already have an Account?</a>

@@ -16,6 +16,7 @@ import { AccountInfo, UserResponse } from "../../types/types";
 import LoadingScreen from "../../common/components/Loading/Loading";
 import InfoSection from "./components/InfoSection/InfoSection";
 import styles from "./account-page.module.scss";
+import classNames from "classnames";
 // account page
 
 const AccountPage: NextApplicationPage<{
@@ -89,11 +90,13 @@ const AccountPage: NextApplicationPage<{
         </span>
         <div className="py-3" />
         <div className={styles.myaccountBlob}>
-          <span className="title">Basic Info</span>
+          <span className={styles.title}>Basic Info</span>
           <div className="pb-3" />
           <div className={styles.myaccountInfoSection}>
-            <span className="name align-self-start">PHOTO</span>
-            <div className="info-container">
+            <span className={classNames(styles.name, "align-self-start")}>
+              PHOTO
+            </span>
+            <div className={styles.infoContainer}>
               <div
                 className="bg-cl-blue center-child"
                 style={{
@@ -146,7 +149,7 @@ const AccountPage: NextApplicationPage<{
           />
           <InfoSection name="PASSWORD" value="******" onEdit={() => {}} />
         </div>
-        <div className="myaccount-blob">
+        <div className={styles.myaccountBlob}>
           <span className="title">Contact Info</span>
           <InfoSection
             name="Email"
@@ -160,7 +163,7 @@ const AccountPage: NextApplicationPage<{
             }}
           />
         </div>
-        <div className="myaccount-blob">
+        <div className={styles.myaccountBlob}>
           <span className="title">Academic Info</span>
           <InfoSection
             name="Grade"

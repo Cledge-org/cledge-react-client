@@ -15,6 +15,7 @@ import {
   updateQuestionResponsesAction,
 } from "../../utils/redux/actionFunctions";
 import { store } from "../../utils/redux/store";
+import styles from "./check-in-page.module.scss";
 
 const CheckIn: NextApplicationPage<{
   checkInData: Question[];

@@ -132,14 +132,16 @@ export default function DropDownQuestion({
         <button
           className={`${styles.dropdownQuestionBtn} ${
             isForWaitlist ? "bg-white" : ""
-          } ${isForDashboard ? "py-0 bottom-border-pathway-filter" : ""}`}
+          } ${
+            isForDashboard ? "py-0 " + styles.bottomBorderPathwayFilter : ""
+          }`}
           style={
             isForDashboard
               ? {
                   border: "none",
                   borderRadius: 0,
                   height: "87%",
-                  borderBottom: "3px solid #656565",
+                  // borderBottom: "3px solid #656565",
                   backgroundColor: "transparent",
                   color: "#070452",
                 }
@@ -163,7 +165,9 @@ export default function DropDownQuestion({
             : chosen.toString()}
           <div
             className={
-              isOpen ? "center-child icon-open" : "center-child icon-close"
+              isOpen
+                ? "center-child " + styles.iconOpen
+                : "center-child " + styles.iconClose
             }
             style={{ width: "12px", height: "10px" }}
           >
@@ -188,11 +192,11 @@ export default function DropDownQuestion({
               }}
               key={name}
               className={classNames({
-                ["dropdown-item-picked"]: itemIsPicked(name) && !forCalendar,
-                ["dropdown-item-picked center-child"]:
+                [styles.dropdownItemPicked]: itemIsPicked(name) && !forCalendar,
+                [styles.dropdownItemPicked + " center-child"]:
                   itemIsPicked(name) && forCalendar,
-                ["dropdown-item"]: !itemIsPicked(name) && !forCalendar,
-                ["dropdown-item center-child"]:
+                [styles.dropdownItem]: !itemIsPicked(name) && !forCalendar,
+                [styles.dropdownItem + " center-child"]:
                   !itemIsPicked(name) && forCalendar,
               })}
             >

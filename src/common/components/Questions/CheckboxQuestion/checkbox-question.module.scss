@@ -1,5 +1,23 @@
 @use "src/common/styles" as *;
 
+.mcq-answer-btn {
+  @extend .py-3;
+  @extend .cl-dark-text;
+  @extend .my-2;
+  @extend .ps-4;
+  font-weight: bold;
+  font-size: 1em;
+  text-align: start;
+  width: 90%;
+  background-color: $cl-light-gray;
+  outline: none;
+  border-radius: 15px;
+  border: 1px solid transparent;
+  &:hover {
+    background-color: rgba($color: $cl-mid-gray, $alpha: 0.2);
+  }
+}
+
 .checkbox-mcq-variant {
   @extend .mcq-answer-btn;
   @extend .px-4;

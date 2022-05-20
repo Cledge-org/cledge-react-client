@@ -7,7 +7,7 @@ import MCQQuestion from "../../../../../common/components/Questions/MCQQuestion/
 import TextInputQuestion from "../../../../../common/components/Questions/TextInputQuestion/TextInputQuestion";
 import ECTimeFrame from "../../../../../common/components/Questions/TimeframeQuestion/ECTimeframeQuestion";
 import { Question, UserResponse } from "../../../../../types/types";
-
+import styles from "./ec-editor.module.scss";
 interface ECEditorProps {
   title?: string;
   onSave: Function;
@@ -38,7 +38,7 @@ export default function ECEditor({
         onClick={() => {
           onAbort();
         }}
-        className="ec-editor-btn-back"
+        className={styles.ecEditorBtnBack}
       >
         <FontAwesomeIcon icon={faArrowLeft} color="#000000" />
       </button>
@@ -165,6 +165,7 @@ export default function ECEditor({
           if (type === "ECTextInput") {
             return (
               <TextInputQuestion
+                isDark
                 question={questionData}
                 userAnswer={
                   isEditing &&

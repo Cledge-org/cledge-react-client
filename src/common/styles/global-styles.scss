@@ -422,3 +422,29 @@ $spacers: (
   overflow: auto;
   align-items: center;
 }
+.default-tab-pane {
+  @extend .container-fluid;
+  display: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+.tab-active {
+  @extend .default-tab-pane;
+  display: flex;
+}
+.general-tab-nav-btn {
+  transition: 500ms;
+  outline: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  border: 1px solid transparent;
+  border-radius: 2.5px;
+  &:hover {
+    cursor: pointer;
+    background: rgba($color: #000000, $alpha: 0.1);
+  }
+}

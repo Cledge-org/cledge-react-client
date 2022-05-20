@@ -411,7 +411,13 @@ const DashboardPage: NextApplicationPage<{
       </div>
       <br />
       <br />
-      <div className="d-flex flex-row w-100 px-5 ms-5 mb-3">
+      <div
+        className="d-flex flex-row w-100 px-5 ms-5 mb-3"
+        style={{
+          borderBottom: "3px solid #656565",
+          maxWidth: "95vw",
+        }}
+      >
         <div className="ms-2" />
         <DashboardTabButton
           onClick={() => {
@@ -434,13 +440,7 @@ const DashboardPage: NextApplicationPage<{
           title="Finished Tasks"
           currTab={currTab}
         />
-        <div
-          className="bottom-border-pathway-filter"
-          style={{
-            borderBottom: "3px solid #656565",
-            flex: "1",
-          }}
-        />
+        <div style={{ flex: 1 }} />
         <DropDownQuestion
           isForDashboard
           isForWaitlist

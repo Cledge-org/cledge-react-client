@@ -30,13 +30,13 @@ function DashboardTabButton({
       >
         {title}
       </div>
-      <div
+      {/* <div
         style={{
           height: "3px",
           width: "100%",
           backgroundColor: currTab === lowerCaseName ? cledgeBlue : midGray,
         }}
-      />
+      /> */}
     </li>
   );
 }

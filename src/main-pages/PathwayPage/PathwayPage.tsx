@@ -4,12 +4,12 @@ import { NextApplicationPage } from "../AppPage/AppPage";
 import { useRouter } from "next/router";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
-import DropDownTab from "../../common/components/DropdownTab/DropdownTab";
 import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
 import { Pathway, PathwayProgress, ContentProgress } from "../../types/types";
 import { updatePathwayProgressAction } from "../../utils/redux/actionFunctions";
+import DropDownTab from "../../common/components/DropdownTab/DropdownTab";
 import { store } from "../../utils/redux/store";
-
+import styles from "./pathway-page.module.scss";
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
@@ -376,7 +376,7 @@ const Pathways: NextApplicationPage<{
               />
             </div>
             <div className="container-fluid center-child flex-column py-5">
-              <div className="pathway-description">
+              <div className={styles.pathwayDescription}>
                 <span
                   className="fw-bold cl-dark-text"
                   style={{ fontSize: "1.7em" }}
@@ -592,7 +592,7 @@ const Pathways: NextApplicationPage<{
                               />
                             </div>
                             <div className="container-fluid center-child flex-column py-5">
-                              <div className="pathway-description">
+                              <div className={styles.pathwayDescription}>
                                 <span
                                   className="fw-bold cl-dark-text"
                                   style={{ fontSize: "1.7em" }}

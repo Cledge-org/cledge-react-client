@@ -1,31 +1,5 @@
 @use "src/common/styles" as *;
 
-.resources-tab-pane {
-  @extend .container-fluid;
-  display: none;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-}
-.resources-active {
-  @extend .resources-tab-pane;
-  display: flex;
-}
-.general-tab-nav-btn {
-  transition: 500ms;
-  outline: none;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5em;
-  border: 1px solid transparent;
-  border-radius: 2.5px;
-  &:hover {
-    cursor: pointer;
-    background: rgba($color: #000000, $alpha: 0.1);
-  }
-}
 .resources-tab-nav-btn {
   @extend .px-4;
   @extend .mx-3;

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getProviders, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import LoadingScreen from "../../../common/components/Loading/Loading";
+import styles from "./login-page.module.scss";
 
 const LoginPage = () => {
   var [formData, setFormData] = useState({
@@ -82,7 +83,7 @@ const LoginPage = () => {
         </div> */}
         <div className="px-0 align-self-start mt-3">
           <Link href="/auth/reset_password">
-            <a className="forgot-password-btn">Forgot Password</a>
+            <a className={styles.forgotPasswordBtn}>Forgot Password</a>
           </Link>
         </div>
         <div className="auth-bottom-nav">

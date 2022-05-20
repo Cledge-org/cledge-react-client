@@ -56,7 +56,7 @@ const TipsCard = ({
         />
       </div>
       {!isOverall ? (
-        <div className="d-flex flex-row py-3 align-items-cetner justify-content-end px-2 w-100">
+        <div className="d-flex flex-row py-3 align-items-center justify-content-end px-2 w-100">
           <button
             onClick={() => {
               router.push({

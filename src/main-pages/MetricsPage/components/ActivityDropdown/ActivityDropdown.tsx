@@ -1,7 +1,10 @@
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
 import React, { useState } from "react";
 import TierIndicatorAndTips from "../TierIndicatorAndTips/TierIndicatorAndTips";
+import styles from "./activity-dropdown.module.scss";
+
 const ActivityDropdown = ({
   title,
   tier,
@@ -15,7 +18,7 @@ const ActivityDropdown = ({
   return (
     <div className="dropdown-container mt-2" style={{ width: "100%" }}>
       <button
-        className="dropdown-btn metrics-dropdown-btn bg-cl-super-light-gray"
+        className={`dropdown-btn ${styles.metricsDropdownBtn} bg-cl-super-light-gray`}
         style={{ backgroundColor: "#FBFCFF" }}
         onClick={() => {
           setIsExpanded(!isExpanded);
@@ -35,9 +38,13 @@ const ActivityDropdown = ({
         </div>
       </button>
       <div
-        className={`metrics-dropdown-menu-${
-          isExpanded ? "expanded" : "closed"
-        } pt-2 px-2 flex-column align-items-center justify-content-start mb-3 pb-3`}
+        className={classNames(
+          {
+            [styles.metricsDropdownMenuExpanded]: isExpanded,
+            [styles.metricsDropdownMenuClosed]: !isExpanded,
+          },
+          "pt-2 px-2 flex-column align-items-center justify-content-start mb-3 pb-3"
+        )}
         style={{
           borderTop: "none",
         }}

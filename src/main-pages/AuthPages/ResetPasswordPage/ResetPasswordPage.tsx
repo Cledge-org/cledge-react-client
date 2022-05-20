@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-
+import styles from "./reset-password-page.module.scss";
 const ResetPasswordPage = () => {
   const [email, setEmail] = useState("");
   const router = useRouter();

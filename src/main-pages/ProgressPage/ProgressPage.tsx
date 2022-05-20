@@ -150,10 +150,10 @@ const Progress: NextApplicationPage<{
             </ul>
             <div className="tab-content h-100">
               <div
-                className={`resources-tab-pane flex-row justify-content-start align-items-center
+                className={`default-tab-pane flex-row justify-content-start align-items-center
                   ${
                     currAllSectionTab === "upcoming"
-                      ? " resources-active  d-flex "
+                      ? " tab-active  d-flex "
                       : ""
                   }
                 `}
@@ -187,10 +187,10 @@ const Progress: NextApplicationPage<{
                   ))}
               </div>
               <div
-                className={`resources-tab-pane flex-row justify-content-start align-items-center
+                className={`default-tab-pane flex-row justify-content-start align-items-center
                   ${
                     currAllSectionTab === "finished"
-                      ? " resources-active  d-flex "
+                      ? " tab-active  d-flex "
                       : ""
                   }
                 `}

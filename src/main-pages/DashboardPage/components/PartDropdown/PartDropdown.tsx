@@ -61,7 +61,7 @@ function PartDropDown({
       </div>
       <div className="d-flex flex-column">
         <button
-          className={`dropdown-btn justify-content-between ${styles["dashboardDropdownHover"]} mb-2 ms-2`}
+          className={`dropdown-btn justify-content-between ${styles.dashboardDropdownHover} mb-2 ms-2`}
           style={{
             width: "10vw",
             maxWidth: "30%",

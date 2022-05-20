@@ -12,6 +12,8 @@ import {
   CardArticle,
   CardVideo,
 } from "../../types/types";
+import styles from "./resources-page.module.scss";
+import classNames from "classnames";
 
 const ResourcesPage: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
   resourcesInfo,
@@ -112,7 +114,12 @@ const ResourcesPage: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
         </button> */}
       </div>
       <div className="d-flex flex-row justify-content-center">
-        <div className="d-flex flex-row justify-content-start align-items-center search-container">
+        <div
+          className={classNames(
+            "d-flex flex-row justify-content-start align-items-center",
+            styles.searchContainer
+          )}
+        >
           <div className="p-1 cl-mid-gray" style={{ width: "30px" }}>
             <FontAwesomeIcon icon={faSearch} />
           </div>
@@ -120,7 +127,7 @@ const ResourcesPage: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
             onChange={(e) => {
               setSearchTxt(e.target.value);
             }}
-            className="py-1 search-input"
+            className={classNames("py-1", styles.searchInput)}
             type="text"
             placeholder="What would you like to know?"
           />
@@ -213,7 +220,7 @@ function ResourcesTabButton({
   const lowerCaseName = title.toLowerCase();
   return (
     <li
-      className="resources-tab-nav-btn"
+      className={styles.resourcesTabNavBtn}
       id={lowerCaseName + "-tab"}
       onClick={() => {
         onClick(lowerCaseName);

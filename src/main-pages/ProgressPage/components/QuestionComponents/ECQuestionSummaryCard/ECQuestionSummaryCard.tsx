@@ -5,7 +5,8 @@ import Modal from "react-modal";
 import { UserResponse, Question } from "../../../../../types/types";
 
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
-
+import styles from "./ec-question-summary-card.module.scss";
+import classNames from "classnames";
 interface ECQuestionSummaryCardProps {
   response: UserResponse[];
   chunkQuestions: Question[];
@@ -25,7 +26,13 @@ export default function ECQuestionSummaryCard({
   );
   console.log(response);
   return (
-    <div className="w-100 d-flex flex-column justify-content-evenly qsummary-card-container mt-3">
+    <div
+      className={classNames(
+        "w-100 d-flex flex-column justify-content-evenly",
+        styles.qsummaryCardContainer,
+        "mt-3"
+      )}
+    >
       <div className="d-flex justify-content-between align-items-center px-4 pt-3 question-text">
         {titleQuestion ? titleQuestion.response : "No Title Given"}
         <button onClick={() => onClick()} className="icon-btn center-child">
@@ -39,7 +46,12 @@ export default function ECQuestionSummaryCard({
           </div>
         </button>
       </div>
-      <div className="w-100 d-flex flex-column align-items-center justify-content-center ecsummary-info-container">
+      <div
+        className={classNames(
+          "w-100 d-flex flex-column align-items-center justify-content-center",
+          styles.ecsummaryInfoContainer
+        )}
+      >
         {chunkQuestions.map(({ question, type, _id }) => {
           const questionFound = response.find(
             ({ questionId }) => _id === questionId
