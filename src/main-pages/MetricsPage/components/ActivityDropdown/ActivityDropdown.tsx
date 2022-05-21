@@ -9,17 +9,19 @@ const ActivityDropdown = ({
   title,
   tier,
   content,
+  customContent,
 }: {
   title: string;
   tier: number;
   content: string;
+  customContent?: ReactElement;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div className="dropdown-container mt-2" style={{ width: "100%" }}>
       <button
         className={`dropdown-btn ${styles.metricsDropdownBtn} bg-cl-super-light-gray`}
-        style={{ backgroundColor: "#FBFCFF" }}
+        // style={{ backgroundColor: "#FBFCFF" }}
         onClick={() => {
           setIsExpanded(!isExpanded);
         }}
@@ -53,7 +55,7 @@ const ActivityDropdown = ({
           {content}
         </div>
         <div className="d-flex flex-row align-items-start justify-content-between w-100">
-          <TierIndicatorAndTips tier={tier} />
+          {customContent ?? <TierIndicatorAndTips tier={tier} />}
         </div>
       </div>
     </div>

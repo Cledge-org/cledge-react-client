@@ -19,7 +19,7 @@ import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import DropdownTab from "../../common/components/DropdownTab/DropdownTab";
-import { Activities, UserResponse } from "../../types/types";
+import { Activities, UserResponse, Academics } from "../../types/types";
 import QuestionSubPageHeader from "../ProgressPage/components/QuestionComponents/SubpageHeader/SubpageHeader";
 import ActivityDropdown from "./components/ActivityDropdown/ActivityDropdown";
 import SubTitle from "./components/SubTitle/SubTitle";
@@ -31,7 +31,8 @@ const Metrics: NextApplicationPage<{
   activities: Activities;
   userTags: string[];
   questionResponses: UserResponse[];
-}> = ({ activities, userTags, questionResponses }) => {
+  academics: Academics;
+}> = ({ activities, userTags, questionResponses, academics }) => {
   const session = useSession();
   console.log(activities);
   const [currPage, setCurrPage] = useState("all");
@@ -136,7 +137,11 @@ const Metrics: NextApplicationPage<{
                       height: "20vh",
                     }}
                   >
-                    <TierRange tier={7} isOverall isOverview />
+                    <TierRange
+                      tier={academics?.overallTier}
+                      isOverall
+                      isOverview
+                    />
                   </div>
                 </div>
               </div>
@@ -178,7 +183,111 @@ const Metrics: NextApplicationPage<{
               </div>
             </div>
           ) : (
-            []
+            <div
+              className="container-fluid d-flex flex-column"
+              style={{ flex: 1 }}
+            >
+              <QuestionSubPageHeader
+                title="Acamdemics Metrics"
+                percentage={undefined}
+                isMetrics
+                subText=""
+              />
+              <div className="tab-content h-100 mx-5">
+                <div
+                  style={{ borderBottom: "1px solid #BBBBC0" }}
+                  className="pb-5"
+                >
+                  <SubTitle title="Overall Academics Tier" isDivider />
+                  <div className="d-flex flex-column">
+                    <TierIndicatorAndTips
+                      tier={academics?.overallTier}
+                      isOverall
+                    />
+                  </div>
+                </div>
+                <SubTitle title="Details" />
+                <ActivityDropdown
+                  title={"GPA"}
+                  content={""}
+                  tier={academics.gpaTier}
+                />
+                <ActivityDropdown
+                  title={"Coursework"}
+                  content={""}
+                  tier={academics.overallClassTier}
+                />
+                <ActivityDropdown
+                  title={"SAT/ACT"}
+                  content={""}
+                  customContent={
+                    <>
+                      <div
+                        style={{ width: "49%" }}
+                        className="d-flex flex-column align-items-center"
+                      >
+                        <div className="w-75">
+                          {academics?.satScore && (
+                            <>
+                              <div
+                                className="cl-dark-text fw-bold py-2 w-100"
+                                style={{
+                                  borderBottom: "2px solid lightgray",
+                                  fontSize: "1.3em",
+                                }}
+                              >
+                                Your SAT score
+                              </div>
+                              <div
+                                className="py-2"
+                                style={{ fontSize: "1.2em" }}
+                              >
+                                {academics.satScore}
+                              </div>
+                            </>
+                          )}
+                          {academics?.actScore && (
+                            <>
+                              <div
+                                className="cl-dark-text fw-bold py-2 w-100"
+                                style={{
+                                  borderBottom: "2px solid lightgray",
+                                  fontSize: "1.4em",
+                                }}
+                              >
+                                Your SAT score
+                              </div>
+                              <div
+                                className="py-2"
+                                style={{ fontSize: "1.3em" }}
+                              >
+                                {academics.actScore}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          minHeight: "30vh",
+                          width: "50%",
+                        }}
+                        className="d-flex flex-column align-items-center justify-content-start"
+                      >
+                        {/* <TipsCard
+                        isOverall={false}
+                        title={
+                          "You definitely know what you are doing! To increase your tier, try our tips and update your profile to help us reaccess your tier."
+                        }
+                        tips={[]}
+                      /> */}
+                      </div>
+                    </>
+                  }
+                  tier={-1}
+                />
+              </div>
+            </div>
           )}
         </div>
       </div>

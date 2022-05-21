@@ -107,6 +107,16 @@ export const callPutActivities = async (activities: Activities) => {
     }),
   });
 };
+export const callPutAcademics = async (academics: Academics) => {
+  const session = getSession();
+  return await fetch(`/api/put-academics`, {
+    method: "POST",
+    body: JSON.stringify({
+      userId: academics ? (await session).user.uid : null,
+      academics,
+    }),
+  });
+};
 export const callPutPathwayModule = async ({
   pathwayModule,
   pathwayModuleId,

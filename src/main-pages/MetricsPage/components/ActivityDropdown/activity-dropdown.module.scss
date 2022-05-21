@@ -14,7 +14,6 @@
   0% {
     max-height: 80vh;
     overflow: visible;
-    background-color: $cl-super-light-gray;
     border: 1px solid $cl-soft-gray;
   }
   100% {
@@ -33,13 +32,11 @@
   }
   100% {
     max-height: 100vh;
-    background-color: $cl-super-light-gray;
     border: 1px solid $cl-soft-gray;
     overflow: visible;
   }
 }
 .metrics-dropdown-menu-expanded {
-  background-color: $cl-super-light-gray;
   @extend .soft-gray-border;
   display: flex;
   flex-direction: column;

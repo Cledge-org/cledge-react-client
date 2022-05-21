@@ -18,14 +18,16 @@
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
     // "sourceMap": true // used to debug the program
   },
-  // "files": [
-  //   "next-env.d.ts",
-  //   "./src/types/types.d.ts",
-  //   "src/types/auth.d.ts",
-  //   "src/types/redux.d.ts",
-  //   "src/pages/api/auth/[...nextauth].js",
-  //   "src/pages/_document.js"
-  // ],
-  "include": ["src/**/*"],
+  "include": [
+    "next-env.d.ts",
+    "./src/types/types.d.ts",
+    "./src/types/auth.d.ts",
+    "./src/types/redux.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.d.ts",
+    "pages/api/auth/[...nextauth].js",
+    "pages/_document.js"
+  ],
   "exclude": ["node_modules"]
 }

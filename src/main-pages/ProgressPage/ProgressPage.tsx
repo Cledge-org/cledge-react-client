@@ -19,6 +19,7 @@ import { QuestionList, UserResponse, QuestionChunk } from "../../types/types";
 import { NextApplicationPage } from "../AppPage/AppPage";
 import QuestionSubPageHeader from "./components/QuestionComponents/SubpageHeader/SubpageHeader";
 import QuestionECSubpage from "./components/QuestionSubPages/QuestionECSubpage/QuestionECSubpage";
+import QuestionACSubpage from "./components/QuestionSubPages/QuestionACSubpage/QuestionACSubpage";
 import QuestionSummarySubpage from "./components/QuestionSubPages/QuestionSummarySubpage/QuestionSummarySubpage";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 
@@ -61,7 +62,7 @@ const Progress: NextApplicationPage<{
       element !== undefined &&
       element !== null &&
       element !== "" &&
-      element !== []
+      element?.length > 0
     );
   };
   const calculatePercentComplete = (chunks: QuestionChunk[]): number => {
@@ -251,6 +252,22 @@ const Progress: NextApplicationPage<{
                       .chunks.map((chunk) => {
                         return (
                           <QuestionECSubpage
+                            key={chunk.name}
+                            userResponses={questionResponses}
+                            chunk={chunk}
+                            isShowing={currPage.chunk === chunk.name}
+                          />
+                        );
+                      })
+                  : []
+              )
+              .concat(
+                questionData.find(({ name }) => name === "Academics")
+                  ? questionData
+                      .find(({ name }) => name === "Academics")
+                      .chunks.map((chunk) => {
+                        return (
+                          <QuestionACSubpage
                             key={chunk.name}
                             userResponses={questionResponses}
                             chunk={chunk}

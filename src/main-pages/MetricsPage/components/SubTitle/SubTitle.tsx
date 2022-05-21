@@ -37,7 +37,7 @@ const SubTitle = ({
         className={`dropdown-menu-${isExpanded ? "expanded" : "closed"} ${
           isDivider ? "mb-2" : ""
         }`}
-        style={{ backgroundColor: "#FBFCFF" }}
+        style={{ backgroundColor: "white" }}
       >
         <div
           className={`position-relative d-flex overflow-hidden flex-column align-items-center justify-content-around px-3 pt-3 shadow-sm soft-gray-border`}

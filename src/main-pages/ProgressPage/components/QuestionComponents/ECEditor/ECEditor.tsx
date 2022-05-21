@@ -5,7 +5,8 @@ import CheckBoxQuestion from "../../../../../common/components/Questions/Checkbo
 import DropDownQuestion from "../../../../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 import MCQQuestion from "../../../../../common/components/Questions/MCQQuestion/MCQQuestion";
 import TextInputQuestion from "../../../../../common/components/Questions/TextInputQuestion/TextInputQuestion";
-import ECTimeFrame from "../../../../../common/components/Questions/TimeframeQuestion/ECTimeframeQuestion";
+import ECTimeFrame from "../../../../../common/components/Questions/TimeframeQuestion/TimeframeQuestion";
+import ListQuestion from "../../../../../common/components/Questions/ListQuestion/ListQuestion";
 import { Question, UserResponse } from "../../../../../types/types";
 import styles from "./ec-editor.module.scss";
 interface ECEditorProps {
@@ -238,10 +239,87 @@ export default function ECEditor({
               />
             );
           }
+          if (type === "ListQuestion") {
+            let response = userResponse.find(
+              ({ questionId }) => questionId === _id
+            );
+            return (
+              <ListQuestion
+                responses={response?.response?.questionsResponses}
+                onChange={(value, index, questionId) => {
+                  let totallyNewResponse = newResponse.slice();
+                  let foundResponse = totallyNewResponse.find(
+                    ({ questionId }) => questionId === _id
+                  );
+                  if (foundResponse) {
+                    if (!foundResponse.response) {
+                      foundResponse.response = {
+                        numResponse: -1,
+                        questionsResponses: [],
+                      };
+                    }
+                    if (!foundResponse.response.questionsResponses[index]) {
+                      foundResponse.response.questionsResponses.push({});
+                    }
+                    console.log(foundResponse.response);
+                    foundResponse.response.questionsResponses[index][
+                      questionId
+                    ] = value;
+                  }
+                  setNewResponse(totallyNewResponse);
+                }}
+                title={question}
+                listMax={12}
+                questions={data}
+                numResponse={response?.response?.numResponse}
+                onNumResponseChange={(value) => {
+                  let totallyNewResponse = newResponse.slice();
+                  const foundResponse = totallyNewResponse.find(
+                    ({ questionId }) => questionId === _id
+                  );
+                  if (!foundResponse) {
+                    totallyNewResponse.push({
+                      questionId: _id,
+                      response: {
+                        numResponse: value,
+                        questionsResponses: [new Array(value).map(() => ({}))],
+                      },
+                    });
+                  } else {
+                    foundResponse.response.numResponse = value;
+                  }
+                  if (
+                    value > foundResponse?.response?.questionsResponses?.length
+                  ) {
+                    for (
+                      let i = 0;
+                      i <
+                      value -
+                        foundResponse?.response?.questionsResponses?.length;
+                      i++
+                    ) {
+                      foundResponse.response.questionsResponses.push({});
+                    }
+                  } else {
+                    foundResponse?.response?.questionsResponses?.splice(
+                      value - 1,
+                      foundResponse?.response?.questionsResponses?.length -
+                        value
+                    );
+                  }
+                  console.log(totallyNewResponse);
+                  setNewResponse(totallyNewResponse);
+                }}
+              />
+            );
+          }
           return null;
         })}
         <button
-          onClick={() => onSave(newResponse)}
+          onClick={() => {
+            console.log(newResponse);
+            onSave(newResponse);
+          }}
           className="cl-btn-blue align-self-center mt-5"
           style={{ transform: "scale(1.2)" }}
         >
