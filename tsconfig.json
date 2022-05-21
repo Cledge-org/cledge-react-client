@@ -14,19 +14,18 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
     // "sourceMap": true // used to debug the program
   },
-  "plugins": [{ "name": "typescript-plugin-css-modules" }],
-  "include": [
-    "next-env.d.ts",
-    "src/types/types.d.ts",
-    "src/types/auth.d.ts",
-    "src/types/redux.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "src/pages/api/auth/[...nextauth].js].js",
-    "src/pages/_document.jst.js"
-  ],
+  // "files": [
+  //   "next-env.d.ts",
+  //   "./src/types/types.d.ts",
+  //   "src/types/auth.d.ts",
+  //   "src/types/redux.d.ts",
+  //   "src/pages/api/auth/[...nextauth].js",
+  //   "src/pages/_document.js"
+  // ],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

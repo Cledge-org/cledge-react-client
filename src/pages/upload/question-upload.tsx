@@ -19,7 +19,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 
 // logged in landing page
-const QuestionUpload = () => {
-  return <QuestionUploadPage />;
+const QuestionUpload = ({ questionMetadata }) => {
+  return <QuestionUploadPage questionMetadata={questionMetadata} />;
 };
 export default QuestionUpload;

@@ -1,0 +1,26 @@
+@use "src/common/styles" as *;
+
+.checkbox-container {
+  @extend .center-child;
+  width: 2vw;
+  height: 2vw;
+  border: 1px solid transparent;
+  background-color: transparent;
+  border-radius: 1vw;
+  &:hover {
+    background-color: rgba($color: $cl-mid-gray, $alpha: 0.2);
+    cursor: pointer;
+  }
+  .checkbox {
+    @extend .center-child;
+    background-color: transparent;
+    border: 3px solid $cl-mid-gray;
+    height: 1vw;
+    width: 1vw;
+  }
+  .checkbox-true {
+    @extend .checkbox;
+    background-color: $cl-blue;
+    border-color: $cl-blue;
+  }
+}

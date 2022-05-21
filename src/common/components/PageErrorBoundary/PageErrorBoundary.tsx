@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { ReactElement } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { alertSlackError } from "src/utils/apiCalls";
@@ -7,12 +8,13 @@ const PageErrorBoundary = ({
 }: {
   children: ReactElement | string | ReactElement[];
 }) => {
+  const router = useRouter();
   return (
     <ErrorBoundary
       FallbackComponent={() => (
         <div
           style={{ width: "100vw", height: "100vh" }}
-          className="center-child"
+          className="center-child flex-column"
         >
           <span style={{ fontSize: "1.4em" }}>Uh Oh</span>
           <strong style={{ fontSize: "1.3em" }}>
@@ -25,9 +27,11 @@ const PageErrorBoundary = ({
       onError={(error) => {
         if (process.env.NEXTAUTH_URL !== "http://localhost:3000") {
           alertSlackError(
-            `${error.name as string}\n\n${error.message as string}\n\n${
-              error.stack as string
-            }\n\n${error.cause && (error.cause.stack as string)}\n\n`
+            `${process.env.NEXTAUTH_URL + router.pathname}\n${
+              error.name as string
+            }\n\n${error.message as string}\n\n${error.stack as string}\n\n${
+              error.cause && (error.cause.stack as string)
+            }\n\n`
           );
         }
       }}

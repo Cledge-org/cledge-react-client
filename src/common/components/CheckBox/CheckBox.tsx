@@ -1,6 +1,7 @@
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
+import styles from "./check-box.module.scss";
 
 interface CheckBoxProps {
   selected: boolean;
@@ -13,9 +14,9 @@ export default function CheckBox({ selected, setSelected }: CheckBoxProps) {
       onClick={() => {
         setSelected(!selected);
       }}
-      className="checkbox-container"
+      className={styles.checkboxContainer}
     >
-      <div className={selected ? "checkbox-true" : "checkbox"}>
+      <div className={selected ? styles.checkboxTrue : styles.checkbox}>
         {selected ? <FontAwesomeIcon icon={faCheck} color="#ffffff" /> : null}
       </div>
     </button>

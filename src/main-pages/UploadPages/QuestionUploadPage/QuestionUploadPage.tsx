@@ -9,6 +9,11 @@ import { QuestionList, Question } from "../../../types/types";
 import { NextApplicationPage } from "../../AppPage/AppPage";
 import UploadPage from "../components/UploadPage/UploadPage";
 import DropDownQuestion from "../../../common/components/Questions/DropdownQuestion/DropdownQuestion";
+import {
+  callPutQuestion,
+  callPutQuestionChunk,
+  callPutQuestionList,
+} from "src/utils/apiCalls";
 
 // logged in landing page
 const QuestionUploadPage: NextApplicationPage<{
@@ -66,16 +71,13 @@ const QuestionUploadPage: NextApplicationPage<{
           try {
             let resArr = await Promise.all([
               ...currQuestionList.chunks[i].questions.map((question, index) =>
-                fetch("/api/put-question", {
-                  method: "POST",
-                  body: JSON.stringify({
-                    questionId:
-                      currQuestionList._id === null ? undefined : question._id,
-                    question: {
-                      ...question,
-                      _id: undefined,
-                    },
-                  }),
+                callPutQuestion({
+                  questionId:
+                    currQuestionList._id === null ? undefined : question._id,
+                  question: {
+                    ...question,
+                    _id: undefined,
+                  },
                 })
               ),
             ]);
@@ -83,18 +85,15 @@ const QuestionUploadPage: NextApplicationPage<{
               resArr.map(async (res) => await res.json())
             );
             console.log(currQuestionList.chunks[i]._id);
-            let value = await fetch("/api/put-question-chunk", {
-              method: "POST",
-              body: JSON.stringify({
-                questionChunkId:
-                  currQuestionList.chunks[i]._id === null
-                    ? undefined
-                    : currQuestionList.chunks[i]._id,
-                questionChunk: {
-                  name: currQuestionList.chunks[i].name,
-                  questions: jsonArr.map(({ questionId }) => questionId),
-                },
-              }),
+            let value = await callPutQuestionChunk({
+              questionChunkId:
+                currQuestionList.chunks[i]._id === null
+                  ? undefined
+                  : currQuestionList.chunks[i]._id,
+              questionChunk: {
+                name: currQuestionList.chunks[i].name,
+                questions: jsonArr.map(({ questionId }) => questionId),
+              },
             });
             let unsuccessful = false;
             console.log(i + " " + value.status);
@@ -109,17 +108,14 @@ const QuestionUploadPage: NextApplicationPage<{
             console.error("AYO" + err);
           }
         }
-        fetch("/api/put-question-list", {
-          method: "POST",
-          body: JSON.stringify({
-            questionListId:
-              currQuestionList._id === null ? undefined : currQuestionList._id,
-            questionList: {
-              ...currQuestionList,
-              name: currQuestionList.name,
-              chunks: currQuestionList.chunks.map(({ name }) => name),
-            },
-          }),
+        callPutQuestionList({
+          questionListId:
+            currQuestionList._id === null ? undefined : currQuestionList._id,
+          questionList: {
+            ...currQuestionList,
+            name: currQuestionList.name,
+            chunks: currQuestionList.chunks.map(({ name }) => name),
+          },
         })
           .then(async (value) => {
             let unsuccessful = false;
@@ -649,14 +645,11 @@ const QuestionUploadPage: NextApplicationPage<{
                     let resArr = await Promise.all([
                       ...currQuestionList.chunks[i].questions.map(
                         (question, index) =>
-                          fetch("/api/put-question", {
-                            method: "POST",
-                            body: JSON.stringify({
-                              questionId:
-                                currQuestionList._id === null
-                                  ? "625da082d9f9ed4e88412124"
-                                  : question._id,
-                            }),
+                          callPutQuestion({
+                            questionId:
+                              currQuestionList._id === null
+                                ? "625da082d9f9ed4e88412124"
+                                : question._id,
                           })
                       ),
                     ]);
@@ -664,14 +657,11 @@ const QuestionUploadPage: NextApplicationPage<{
                       resArr.map(async (res) => await res.json())
                     );
                     console.log(currQuestionList.chunks[i]._id);
-                    let value = await fetch("/api/put-question-chunk", {
-                      method: "POST",
-                      body: JSON.stringify({
-                        questionChunkId:
-                          currQuestionList.chunks[i]._id === null
-                            ? "625da082d9f9ed4e88412124"
-                            : currQuestionList.chunks[i]._id,
-                      }),
+                    let value = await callPutQuestionChunk({
+                      questionChunkId:
+                        currQuestionList.chunks[i]._id === null
+                          ? "625da082d9f9ed4e88412124"
+                          : currQuestionList.chunks[i]._id,
                     });
                     let unsuccessful = false;
                     console.log(i + " " + value.status);
@@ -686,14 +676,11 @@ const QuestionUploadPage: NextApplicationPage<{
                     console.error("AYO" + err);
                   }
                 }
-                fetch("/api/put-question-list", {
-                  method: "POST",
-                  body: JSON.stringify({
-                    questionListId:
-                      currQuestionList._id === null
-                        ? "625da082d9f9ed4e88412124"
-                        : currQuestionList._id,
-                  }),
+                callPutQuestionList({
+                  questionListId:
+                    currQuestionList._id === null
+                      ? "625da082d9f9ed4e88412124"
+                      : currQuestionList._id,
                 })
                   .then(async (value) => {
                     let unsuccessful = false;

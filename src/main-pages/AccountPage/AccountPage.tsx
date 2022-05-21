@@ -31,9 +31,6 @@ const AccountPage: NextApplicationPage<{
   accountInfo: AccountInfo;
   questionResponses: UserResponse[];
 }> = ({ accountInfo, questionResponses }) => {
-  if (!accountInfo) {
-    return <LoadingScreen />;
-  }
   const [modalOpen, setModalOpen] = useState(false);
   const [currUserData, setCurrUserData]: [
     AccountInfo,

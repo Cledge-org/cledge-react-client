@@ -3,8 +3,17 @@ import { getSession } from "next-auth/react";
 import {
   AccountInfo,
   Activities,
+  CardArticle,
+  CardResource,
+  CardVideo,
   Pathway,
+  PathwayModule,
+  PathwayModule_Db,
+  PersonalizedContent,
   Question,
+  QuestionChunk,
+  QuestionList,
+  QuestionList_Db,
   UserResponse,
 } from "src/types/types";
 
@@ -70,16 +79,91 @@ export const callPutQuestion = async ({
     }),
   });
 };
-//TODO: Update callPutResource to new apis
-export const callPutResource = () => {};
+export const callPutResource = async ({
+  resourceId,
+  resource,
+  tag,
+}: {
+  resourceId?: ObjectId;
+  resource?: CardArticle | CardVideo | CardResource | undefined;
+  tag?: string | undefined;
+}) => {
+  return await fetch("/api/resources/put-resource", {
+    method: "POST",
+    body: JSON.stringify({
+      resourceId,
+      resource,
+      tag,
+    }),
+  });
+};
 export const callPutActivities = async (activities: Activities) => {
   const session = getSession();
-
   return await fetch(`/api/put-activities`, {
     method: "POST",
     body: JSON.stringify({
       userId: activities ? (await session).user.uid : null,
       activities,
+    }),
+  });
+};
+export const callPutPathwayModule = async ({
+  pathwayModule,
+  pathwayModuleId,
+}: {
+  pathwayModule?: PathwayModule_Db;
+  pathwayModuleId?: ObjectId;
+}) => {
+  return await fetch("/api/put-pathway-module", {
+    method: "POST",
+    body: JSON.stringify({
+      pathwayModuleId,
+      pathwayModule,
+    }),
+  });
+};
+export const callPutPathwayModulePersonalizedContent = async ({
+  content,
+  contentId,
+}: {
+  content?: PersonalizedContent;
+  contentId?: ObjectId;
+}) => {
+  return await fetch("/api/put-pathway-module-personalized-content", {
+    method: "POST",
+    body: JSON.stringify({
+      contentId,
+      content,
+    }),
+  });
+};
+export const callPutQuestionChunk = async ({
+  questionChunk,
+  questionChunkId,
+}: {
+  questionChunk?: QuestionChunk;
+  questionChunkId?: ObjectId;
+}) => {
+  return await fetch("/api/put-question-chunk", {
+    method: "POST",
+    body: JSON.stringify({
+      questionChunkId,
+      questionChunk,
+    }),
+  });
+};
+export const callPutQuestionList = async ({
+  questionList,
+  questionListId,
+}: {
+  questionList?: QuestionList_Db;
+  questionListId?: ObjectId;
+}) => {
+  return await fetch("/api/put-question-list", {
+    method: "POST",
+    body: JSON.stringify({
+      questionListId,
+      questionList,
     }),
   });
 };

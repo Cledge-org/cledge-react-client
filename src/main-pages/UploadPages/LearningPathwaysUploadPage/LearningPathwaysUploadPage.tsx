@@ -9,6 +9,11 @@ import Modal from "react-modal";
 import { Pathway, PersonalizedContent } from "../../../types/types";
 import UploadPage from "../components/UploadPage/UploadPage";
 import DropDownQuestion from "../../../common/components/Questions/DropdownQuestion/DropdownQuestion";
+import {
+  callPutPathway,
+  callPutPathwayModule,
+  callPutPathwayModulePersonalizedContent,
+} from "src/utils/apiCalls";
 
 // logged in landing page
 const LearningPathwaysUploadPage: NextApplicationPage<{
@@ -79,16 +84,13 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
         });
         Promise.all([
           ...sendPathwayData.modules.map((module, index) =>
-            fetch("/api/put-pathway-module", {
-              method: "POST",
-              body: JSON.stringify({
-                pathwayModuleId: module._id === null ? undefined : module._id,
-                pathwayModule: {
-                  name: module.name,
-                  presetContent: module.presetContent,
-                  tags: module.tags,
-                },
-              }),
+            callPutPathwayModule({
+              pathwayModuleId: module._id === null ? undefined : module._id,
+              pathwayModule: {
+                name: module.name,
+                presetContent: module.presetContent,
+                tags: module.tags,
+              },
             })
           ),
         ])
@@ -111,33 +113,27 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               );
             }
             Promise.all([
-              fetch("/api/put-pathway", {
-                method: "POST",
-                body: JSON.stringify({
-                  pathwayId:
-                    sendPathwayData._id === null
-                      ? undefined
-                      : sendPathwayData._id,
-                  pathway: {
-                    tags: sendPathwayData.tags,
-                    modules: jsonArr.map(({ moduleId }) => moduleId),
-                    name: sendPathwayData.name,
-                    order: sendPathwayData.order,
-                    part: sendPathwayData.part,
-                  },
-                }),
+              callPutPathway({
+                pathwayId:
+                  sendPathwayData._id === null
+                    ? undefined
+                    : sendPathwayData._id,
+                pathway: {
+                  tags: sendPathwayData.tags,
+                  modules: jsonArr.map(({ moduleId }) => moduleId),
+                  name: sendPathwayData.name,
+                  order: sendPathwayData.order,
+                  part: sendPathwayData.part,
+                },
               }),
               ...personalizedContentUpload.map(
                 async (personalizedContent) =>
-                  await fetch("/api/put-pathway-module-personalized-content", {
-                    method: "POST",
-                    body: JSON.stringify({
-                      contentId:
-                        personalizedContent._id === null
-                          ? undefined
-                          : personalizedContent._id,
-                      content: { ...personalizedContent, _id: undefined },
-                    }),
+                  await callPutPathwayModulePersonalizedContent({
+                    contentId:
+                      personalizedContent._id === null
+                        ? undefined
+                        : personalizedContent._id,
+                    content: { ...personalizedContent, _id: undefined },
                   })
               ),
             ])
@@ -978,12 +974,9 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 let sendPathwayData = currPathwayData;
                 Promise.all([
                   ...sendPathwayData.modules.map((module, index) =>
-                    fetch("/api/put-pathway-module", {
-                      method: "POST",
-                      body: JSON.stringify({
-                        pathwayModuleId:
-                          module._id === null ? "Uh Oh" : module._id,
-                      }),
+                    callPutPathwayModule({
+                      pathwayModuleId:
+                        module._id === null ? "Uh Oh" : module._id,
                     })
                   ),
                 ])
@@ -1003,29 +996,20 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                         );
                     }
                     Promise.all([
-                      fetch("/api/put-pathway", {
-                        method: "POST",
-                        body: JSON.stringify({
-                          pathwayId:
-                            sendPathwayData._id === null
-                              ? "Uh Oh"
-                              : sendPathwayData._id,
-                        }),
+                      callPutPathway({
+                        pathwayId:
+                          sendPathwayData._id === null
+                            ? "Uh Oh"
+                            : sendPathwayData._id,
                       }),
                       ...personalizedContentUpload.map(
                         async (personalizedContent) =>
-                          await fetch(
-                            "/api/put-pathway-module-personalized-content",
-                            {
-                              method: "POST",
-                              body: JSON.stringify({
-                                contentId:
-                                  personalizedContent._id === null
-                                    ? "Uh Oh"
-                                    : personalizedContent._id,
-                              }),
-                            }
-                          )
+                          await callPutPathwayModulePersonalizedContent({
+                            contentId:
+                              personalizedContent._id === null
+                                ? "Uh Oh"
+                                : personalizedContent._id,
+                          })
                       ),
                     ])
                       .then((values) => {
