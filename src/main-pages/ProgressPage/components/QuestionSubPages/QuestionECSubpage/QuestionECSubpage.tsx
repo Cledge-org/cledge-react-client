@@ -1,6 +1,10 @@
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import {
+  callPutActivities,
+  callPutQuestionResponses,
+} from "src/utils/apiCalls";
+import {
   UserResponse,
   QuestionChunk,
   Activities,
@@ -121,13 +125,7 @@ export default function QuestionECSubpage({
           ECResponse.response[chunk.name] = [];
         }
         ECResponse.response[chunk.name][currECIndex] = newAnswers;
-        fetch(`/api/put-question-responses`, {
-          method: "POST",
-          body: JSON.stringify({
-            responses: userResponses,
-            userId: session.data.user.uid,
-          }),
-        });
+        callPutQuestionResponses(userResponses);
         let activities = null;
         try {
           activities = await (
@@ -140,13 +138,7 @@ export default function QuestionECSubpage({
           activities = null;
         }
         console.log(activities);
-        fetch(`/api/put-activities`, {
-          method: "POST",
-          body: JSON.stringify({
-            userId: activities ? session.data.user.uid : null,
-            activities: getActivities(ECResponse.response[chunk.name]),
-          }),
-        });
+        callPutActivities(getActivities(ECResponse.response[chunk.name]));
         store.dispatch(updateQuestionResponsesAction(userResponses));
         setIsAdding(false);
         setIsEditing(false);

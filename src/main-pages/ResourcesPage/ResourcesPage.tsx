@@ -14,6 +14,8 @@ import {
 } from "../../types/types";
 import styles from "./resources-page.module.scss";
 import classNames from "classnames";
+import ResourcesTabButton from "./components/ResourcesTabButton/ResourcesTabButton";
+import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 
 const ResourcesPage: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
   resourcesInfo,
@@ -93,154 +95,119 @@ const ResourcesPage: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
     return filteredItems;
   };
   return (
-    <div className="d-flex flex-column vh-100">
-      <div className="d-flex flex-row justify-content-center">
-        {resourceTypes.map((type) => {
-          return (
-            <ResourcesTabButton
-              onClick={() => {
-                setCurrTab(type.toLowerCase());
-              }}
-              title={type}
-              currTab={currTab}
-            />
-          );
-        })}
-        {/* <button className="cl-btn-clear d-flex flex-row align-items-center justify-content-evenly">
+    <PageErrorBoundary>
+      <div className="d-flex flex-column vh-100">
+        <div className="d-flex flex-row justify-content-center">
+          {resourceTypes.map((type) => {
+            return (
+              <ResourcesTabButton
+                onClick={() => {
+                  setCurrTab(type.toLowerCase());
+                }}
+                title={type}
+                currTab={currTab}
+              />
+            );
+          })}
+          {/* <button className="cl-btn-clear d-flex flex-row align-items-center justify-content-evenly">
           <div className="pe-2" style={{ width: "24px" }}>
             <FontAwesomeIcon icon={faFilter} />
           </div>
           Filter
         </button> */}
-      </div>
-      <div className="d-flex flex-row justify-content-center">
-        <div
-          className={classNames(
-            "d-flex flex-row justify-content-start align-items-center",
-            styles.searchContainer
-          )}
-        >
-          <div className="p-1 cl-mid-gray" style={{ width: "30px" }}>
-            <FontAwesomeIcon icon={faSearch} />
+        </div>
+        <div className="d-flex flex-row justify-content-center">
+          <div
+            className={classNames(
+              "d-flex flex-row justify-content-start align-items-center",
+              styles.searchContainer
+            )}
+          >
+            <div className="p-1 cl-mid-gray" style={{ width: "30px" }}>
+              <FontAwesomeIcon icon={faSearch} />
+            </div>
+            <input
+              onChange={(e) => {
+                setSearchTxt(e.target.value);
+              }}
+              className={classNames("py-1", styles.searchInput)}
+              type="text"
+              placeholder="What would you like to know?"
+            />
           </div>
-          <input
-            onChange={(e) => {
-              setSearchTxt(e.target.value);
-            }}
-            className={classNames("py-1", styles.searchInput)}
-            type="text"
-            placeholder="What would you like to know?"
-          />
+        </div>
+        <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
+          {resourceTypes.map((type) => {
+            let currType = type.toLowerCase();
+            const filteredResources = resourcesInfo.resources
+              .filter(({ category }) =>
+                currType === "all"
+                  ? true
+                  : category
+                  ? currType === category
+                  : true
+              )
+              .map((resource) => ({ ...resource, type: "resource" }))
+              .concat(
+                resourcesInfo.articles
+                  .filter(({ category }) =>
+                    currType === "all"
+                      ? true
+                      : category
+                      ? currType === category
+                      : true
+                  )
+                  .map((article) => ({ ...article, type: "article" }))
+              )
+              .concat(
+                resourcesInfo.videoList
+                  .filter(({ category }) =>
+                    currType === "all"
+                      ? true
+                      : category
+                      ? currType === category
+                      : true
+                  )
+                  .map((video) => ({ ...video, type: "video" }))
+              );
+            const searchedResources = searchAlg(
+              searchTxt,
+              filteredResources,
+              filteredResources
+            ).map((element) =>
+              element.type === "resource" ? (
+                <CardImage
+                  snippet=""
+                  title={element.name}
+                  textGradient={"light"}
+                />
+              ) : element.type === "video" ? (
+                <VideoCard
+                  title={element.name}
+                  textGradient={"light"}
+                  videoUrl={element.source}
+                />
+              ) : (
+                <CardText
+                  snippet={element.description}
+                  title={element.name}
+                  textGradient={"light"}
+                />
+              )
+            );
+            return currTab === currType ? (
+              <div className="row jusify-content-evenly">
+                {searchedResources.length === 0
+                  ? "No resources match your search"
+                  : null}
+                {searchedResources}
+              </div>
+            ) : null;
+          })}
         </div>
       </div>
-      <div className="container-fluid align-self-center mx-0 col justify-content-evenly">
-        {resourceTypes.map((type) => {
-          let currType = type.toLowerCase();
-          const filteredResources = resourcesInfo.resources
-            .filter(({ category }) =>
-              currType === "all"
-                ? true
-                : category
-                ? currType === category
-                : true
-            )
-            .map((resource) => ({ ...resource, type: "resource" }))
-            .concat(
-              resourcesInfo.articles
-                .filter(({ category }) =>
-                  currType === "all"
-                    ? true
-                    : category
-                    ? currType === category
-                    : true
-                )
-                .map((article) => ({ ...article, type: "article" }))
-            )
-            .concat(
-              resourcesInfo.videoList
-                .filter(({ category }) =>
-                  currType === "all"
-                    ? true
-                    : category
-                    ? currType === category
-                    : true
-                )
-                .map((video) => ({ ...video, type: "video" }))
-            );
-          const searchedResources = searchAlg(
-            searchTxt,
-            filteredResources,
-            filteredResources
-          ).map((element) =>
-            element.type === "resource" ? (
-              <CardImage
-                snippet=""
-                title={element.name}
-                textGradient={"light"}
-              />
-            ) : element.type === "video" ? (
-              <VideoCard
-                title={element.name}
-                textGradient={"light"}
-                videoUrl={element.source}
-              />
-            ) : (
-              <CardText
-                snippet={element.description}
-                title={element.name}
-                textGradient={"light"}
-              />
-            )
-          );
-          return currTab === currType ? (
-            <div className="row jusify-content-evenly">
-              {searchedResources.length === 0
-                ? "No resources match your search"
-                : null}
-              {searchedResources}
-            </div>
-          ) : null;
-        })}
-      </div>
-    </div>
+    </PageErrorBoundary>
   );
 };
-interface ResourcesTabButtonProps {
-  onClick: Function;
-  title: String;
-  currTab: String;
-}
-function ResourcesTabButton({
-  onClick,
-  title,
-  currTab,
-}: ResourcesTabButtonProps) {
-  const cledgeBlue = "#2651ed";
-  const midGray = "#656565";
-  const lowerCaseName = title.toLowerCase();
-  return (
-    <li
-      className={styles.resourcesTabNavBtn}
-      id={lowerCaseName + "-tab"}
-      onClick={() => {
-        onClick(lowerCaseName);
-      }}
-      style={
-        currTab === lowerCaseName
-          ? {
-              backgroundColor: "rgba(0, 0, 0, 0.1)",
-            }
-          : {}
-      }
-    >
-      <div
-        style={{
-          width: "fit-content",
-        }}
-      >
-        {title}
-      </div>
-    </li>
-  );
-}
+
 export default ResourcesPage;

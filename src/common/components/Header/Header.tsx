@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { useSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
@@ -136,13 +137,17 @@ export default function Header({ key_prop }: { key_prop: string }) {
     // </nav>
     <nav
       key={key_prop}
-      className={`w-100 navbar cl-blue navbar-expand-md px-3 ${navclass} ${
+      className={classNames(
+        `w-100 navbar cl-blue navbar-expand-md px-3`,
+        navclass,
         scrollState !== "scrolling" && router.pathname === "/"
           ? `position-absolute top-0 start-0 ${styles.navTransparent}`
-          : scrollState !== "scrolling"
-          ? `sticky-top ${styles.navRegular} shadow-none`
-          : `sticky-top ${styles.navRegular}`
-      }`}
+          : "sticky-top",
+        {
+          [styles.navRegularNoShadow]:
+            scrollState !== "scrolling" && router.pathname !== "/",
+        }
+      )}
       style={{ zIndex: 2000 }}
     >
       <div className="container-fluid">

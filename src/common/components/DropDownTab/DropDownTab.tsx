@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import styles from "./dropdown-tab.module.scss";
 
-export default function DropDownTab({
+export default function DropdownTab({
   chunkList,
   title,
   percentComplete,

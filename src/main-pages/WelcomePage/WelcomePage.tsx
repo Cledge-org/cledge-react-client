@@ -14,6 +14,7 @@ import { Fade } from "react-awesome-reveal";
 import { Button } from "./components/Button/Button";
 import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
+import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
 const MiddleBlock = dynamic(
@@ -277,7 +278,7 @@ const WelcomePage = () => {
   const [width, height] = useWindowSize();
 
   return (
-    <>
+    <PageErrorBoundary>
       <Container>
         <Intro className="container-margin">
           <div className="w-100">
@@ -458,7 +459,7 @@ const WelcomePage = () => {
           });
         }}
       />
-    </>
+    </PageErrorBoundary>
   );
 };
 

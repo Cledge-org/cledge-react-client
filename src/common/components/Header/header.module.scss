@@ -6,6 +6,12 @@
   color: $cl-blue !important;
   background-color: white;
 }
+.nav-regular-no-shadow {
+  @extend .shadow-none;
+  @extend .navbar-light;
+  color: $cl-blue !important;
+  background-color: white;
+}
 
 .nav-transparent {
   @extend .navbar-dark;

@@ -16,6 +16,7 @@ import {
 } from "../../utils/redux/actionFunctions";
 import { store } from "../../utils/redux/store";
 import styles from "./check-in-page.module.scss";
+import { callPutQuestionResponses } from "src/utils/apiCalls";
 
 const CheckIn: NextApplicationPage<{
   checkInData: Question[];
@@ -86,13 +87,7 @@ const CheckIn: NextApplicationPage<{
           userId: session.data.user.uid,
         }),
       }),
-      fetch(`/api/put-question-responses`, {
-        method: "POST",
-        body: JSON.stringify({
-          responses: newUserResponses,
-          userId: session.data.user.uid,
-        }),
-      }),
+      callPutQuestionResponses(newUserResponses),
     ]).then((values) => {
       store.dispatch(
         updateAccountAction({

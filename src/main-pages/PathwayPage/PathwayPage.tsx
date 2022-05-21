@@ -7,9 +7,11 @@ import { connect } from "react-redux";
 import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
 import { Pathway, PathwayProgress, ContentProgress } from "../../types/types";
 import { updatePathwayProgressAction } from "../../utils/redux/actionFunctions";
-import DropDownTab from "../../common/components/DropdownTab/DropdownTab";
+import DropdownTab from "../../common/components/DropdownTab/DropdownTab";
 import { store } from "../../utils/redux/store";
 import styles from "./pathway-page.module.scss";
+import { callPutPathwayProgress } from "src/utils/apiCalls";
+import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
@@ -418,13 +420,7 @@ const Pathways: NextApplicationPage<{
       });
       //console.log(contentProgress);
       window.onbeforeunload = (e) => {
-        fetch(`/api/put-pathway-progress`, {
-          method: "POST",
-          body: JSON.stringify({
-            contentProgress,
-            userId: session.data.user.uid,
-          }),
-        }).then((res) => {
+        callPutPathwayProgress(contentProgress).then((res) => {
           let newProgress = allPathwayProgress.slice();
           newProgress[
             newProgress.findIndex(
@@ -462,13 +458,7 @@ const Pathways: NextApplicationPage<{
             });
             contentProgress[actualModule._id] = moduleProgress.contentProgress;
           });
-          fetch(`/api/put-pathway-progress`, {
-            method: "POST",
-            body: JSON.stringify({
-              contentProgress,
-              userId: session.data.user.uid,
-            }),
-          }).then((res) => {
+          callPutPathwayProgress(contentProgress).then((res) => {
             let newProgress = allPathwayProgress.slice();
             newProgress[
               newProgress.findIndex(
@@ -484,7 +474,7 @@ const Pathways: NextApplicationPage<{
     };
   }, []);
   return (
-    <>
+    <PageErrorBoundary>
       <div
         className="container-fluid d-flex flex-row px-0"
         style={{ height: "94vh" }}
@@ -508,7 +498,7 @@ const Pathways: NextApplicationPage<{
                 };
               }
               return (
-                <DropDownTab
+                <DropdownTab
                   isFinishedModule={currModuleProgress?.finished}
                   isFinishedContent={currModuleProgress?.contentProgress?.map(
                     ({ finished }) => finished
@@ -626,7 +616,7 @@ const Pathways: NextApplicationPage<{
         </div>
         {currPage}
       </div>
-    </>
+    </PageErrorBoundary>
   );
 };
 

@@ -16,6 +16,7 @@ import {
 import { store } from "../../../../../utils/redux/store";
 import styles from "./question-summary-card.module.scss";
 import classNames from "classnames";
+import { callPutQuestionResponses } from "src/utils/apiCalls";
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface QuestionSummaryCardProps {
@@ -251,15 +252,7 @@ export default function QuestionSummaryCard({
                 });
               }
               Promise.all(
-                [
-                  fetch(`/api/put-question-responses`, {
-                    method: "POST",
-                    body: JSON.stringify({
-                      responses: newUserResponses,
-                      userId: session.data.user.uid,
-                    }),
-                  }),
-                ].concat(
+                [callPutQuestionResponses(newUserResponses)].concat(
                   question.type === "MCQ" || question.type === "CheckBox"
                     ? [
                         fetch(`/api/update-user`, {

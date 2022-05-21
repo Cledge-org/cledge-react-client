@@ -13,13 +13,14 @@ import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import CardCheckIn from "../../common/components/Cards/CardCheckIn/CardCheckIn";
-import DropDownTab from "../../common/components/DropdownTab/DropdownTab";
+import DropdownTab from "../../common/components/DropdownTab/DropdownTab";
 import TabButton from "../../common/components/TabButton/TabButton";
 import { QuestionList, UserResponse, QuestionChunk } from "../../types/types";
 import { NextApplicationPage } from "../AppPage/AppPage";
 import QuestionSubPageHeader from "./components/QuestionComponents/SubpageHeader/SubpageHeader";
 import QuestionECSubpage from "./components/QuestionSubPages/QuestionECSubpage/QuestionECSubpage";
 import QuestionSummarySubpage from "./components/QuestionSubPages/QuestionSummarySubpage/QuestionSummarySubpage";
+import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 
 const Progress: NextApplicationPage<{
   questionData: QuestionList[];
@@ -94,173 +95,175 @@ const Progress: NextApplicationPage<{
   };
   console.log(percentageData.lists);
   return (
-    <div
-      className="container-fluid d-flex flex-row px-0"
-      style={{ minHeight: "100vh" }}
-    >
-      <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
-        <DropDownTab
-          isAll
-          chunkList={[]}
-          onClick={() => setCurrPage({ page: "all", chunk: "" })}
-          title="All Sections"
-          percentComplete={undefined}
-        />
-        {questionData.map((list, index) => {
-          return (
-            <DropDownTab
-              isExtracurricular={list.name === "Extracurriculars"}
-              chunkList={list.chunks.map((chunk) => chunk.name)}
-              onClick={(chunk) =>
-                setCurrPage({ page: list.name, chunk: chunk })
-              }
-              title={list.name}
-              percentComplete={percentageData.lists[index]}
-            />
-          );
-        })}
-      </div>
+    <PageErrorBoundary>
       <div
-        className="d-flex"
-        style={{
-          flex: 3,
-        }}
+        className="container-fluid d-flex flex-row px-0"
+        style={{ minHeight: "100vh" }}
       >
-        {currPage.page === "all" ? (
-          <div
-            className="container-fluid d-flex flex-column"
-            style={{ flex: 1 }}
-          >
-            <QuestionSubPageHeader
-              title="Profile Completion"
-              percentage={percentageData.allLists}
-              subText="This is just a placeholder"
-            />
-            <ul className="nav ms-5" role="tablist">
-              <TabButton
-                currTab={currAllSectionTab}
-                onClick={setCurrAllSectionTab.bind(this)}
-                title={"Upcoming"}
+        <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
+          <DropdownTab
+            isAll
+            chunkList={[]}
+            onClick={() => setCurrPage({ page: "all", chunk: "" })}
+            title="All Sections"
+            percentComplete={undefined}
+          />
+          {questionData.map((list, index) => {
+            return (
+              <DropdownTab
+                isExtracurricular={list.name === "Extracurriculars"}
+                chunkList={list.chunks.map((chunk) => chunk.name)}
+                onClick={(chunk) =>
+                  setCurrPage({ page: list.name, chunk: chunk })
+                }
+                title={list.name}
+                percentComplete={percentageData.lists[index]}
               />
-              <TabButton
-                currTab={currAllSectionTab}
-                onClick={setCurrAllSectionTab.bind(this)}
-                title={"Finished"}
+            );
+          })}
+        </div>
+        <div
+          className="d-flex"
+          style={{
+            flex: 3,
+          }}
+        >
+          {currPage.page === "all" ? (
+            <div
+              className="container-fluid d-flex flex-column"
+              style={{ flex: 1 }}
+            >
+              <QuestionSubPageHeader
+                title="Profile Completion"
+                percentage={percentageData.allLists}
+                subText="This is just a placeholder"
               />
-            </ul>
-            <div className="tab-content h-100">
-              <div
-                className={`default-tab-pane flex-row justify-content-start align-items-center
+              <ul className="nav ms-5" role="tablist">
+                <TabButton
+                  currTab={currAllSectionTab}
+                  onClick={setCurrAllSectionTab.bind(this)}
+                  title={"Upcoming"}
+                />
+                <TabButton
+                  currTab={currAllSectionTab}
+                  onClick={setCurrAllSectionTab.bind(this)}
+                  title={"Finished"}
+                />
+              </ul>
+              <div className="tab-content h-100">
+                <div
+                  className={`default-tab-pane flex-row justify-content-start align-items-center
                   ${
                     currAllSectionTab === "upcoming"
                       ? " tab-active  d-flex "
                       : ""
                   }
                 `}
-                id="upcoming"
-              >
-                {questionData
-                  .filter(({ chunks }, index) => {
-                    return percentageData.lists[index] < 100;
-                  })
-                  .map(({ name, chunks }, index) => (
-                    <CardCheckIn
-                      snippet={
-                        <ul className="p-0 ps-3">
-                          {chunks.map(({ name }) => (
-                            <li>{name}</li>
-                          ))}
-                        </ul>
-                      }
-                      title={name}
-                      onCardClick={() => {
-                        setCurrPage({ page: name, chunk: chunks[0].name });
-                      }}
-                      textGradient={"light"}
-                      percentComplete={
-                        percentageData.lists.filter((value) => value < 100)[
-                          index
-                        ]
-                      }
-                      isFinished={false}
-                    />
-                  ))}
-              </div>
-              <div
-                className={`default-tab-pane flex-row justify-content-start align-items-center
+                  id="upcoming"
+                >
+                  {questionData
+                    .filter(({ chunks }, index) => {
+                      return percentageData.lists[index] < 100;
+                    })
+                    .map(({ name, chunks }, index) => (
+                      <CardCheckIn
+                        snippet={
+                          <ul className="p-0 ps-3">
+                            {chunks.map(({ name }) => (
+                              <li>{name}</li>
+                            ))}
+                          </ul>
+                        }
+                        title={name}
+                        onCardClick={() => {
+                          setCurrPage({ page: name, chunk: chunks[0].name });
+                        }}
+                        textGradient={"light"}
+                        percentComplete={
+                          percentageData.lists.filter((value) => value < 100)[
+                            index
+                          ]
+                        }
+                        isFinished={false}
+                      />
+                    ))}
+                </div>
+                <div
+                  className={`default-tab-pane flex-row justify-content-start align-items-center
                   ${
                     currAllSectionTab === "finished"
                       ? " tab-active  d-flex "
                       : ""
                   }
                 `}
-                id="finished"
-              >
-                {questionData
-                  .filter(({ chunks }, index) => {
-                    return percentageData.lists[index] === 100;
-                  })
-                  .map(({ name, chunks }) => (
-                    <CardCheckIn
-                      snippet={
-                        <ul className="p-0 ps-3">
-                          {chunks.map(({ name }) => (
-                            <li>{name}</li>
-                          ))}
-                        </ul>
-                      }
-                      title={name}
-                      onCardClick={() => {
-                        setCurrPage({ page: name, chunk: chunks[0].name });
-                      }}
-                      textGradient={"light"}
-                      percentComplete={100}
-                      isFinished={true}
-                    />
-                  ))}
+                  id="finished"
+                >
+                  {questionData
+                    .filter(({ chunks }, index) => {
+                      return percentageData.lists[index] === 100;
+                    })
+                    .map(({ name, chunks }) => (
+                      <CardCheckIn
+                        snippet={
+                          <ul className="p-0 ps-3">
+                            {chunks.map(({ name }) => (
+                              <li>{name}</li>
+                            ))}
+                          </ul>
+                        }
+                        title={name}
+                        onCardClick={() => {
+                          setCurrPage({ page: name, chunk: chunks[0].name });
+                        }}
+                        textGradient={"light"}
+                        percentComplete={100}
+                        isFinished={true}
+                      />
+                    ))}
+                </div>
               </div>
             </div>
-          </div>
-        ) : (
-          questionData
-            .map((list) => {
-              if (list.name !== "Extracurriculars") {
-                return (
-                  <QuestionSummarySubpage
-                    userTags={currUserTags}
-                    viaChunk={currPage.chunk}
-                    isShowing={currPage.page === list.name}
-                    listTitle={list.name}
-                    onPercentageUpdate={(newTags) => {
-                      onPercentageUpdate();
-                      setCurrUserTags(newTags);
-                    }}
-                    chunks={list.chunks}
-                    userAnswers={{ responses: questionResponses }}
-                    percentComplete={calculatePercentComplete(list.chunks)}
-                  />
-                );
-              }
-            })
-            .concat(
-              questionData.find(({ name }) => name === "Extracurriculars")
-                ? questionData
-                    .find(({ name }) => name === "Extracurriculars")
-                    .chunks.map((chunk) => {
-                      return (
-                        <QuestionECSubpage
-                          key={chunk.name}
-                          userResponses={questionResponses}
-                          chunk={chunk}
-                          isShowing={currPage.chunk === chunk.name}
-                        />
-                      );
-                    })
-                : []
-            )
-        )}
+          ) : (
+            questionData
+              .map((list) => {
+                if (list.name !== "Extracurriculars") {
+                  return (
+                    <QuestionSummarySubpage
+                      userTags={currUserTags}
+                      viaChunk={currPage.chunk}
+                      isShowing={currPage.page === list.name}
+                      listTitle={list.name}
+                      onPercentageUpdate={(newTags) => {
+                        onPercentageUpdate();
+                        setCurrUserTags(newTags);
+                      }}
+                      chunks={list.chunks}
+                      userAnswers={{ responses: questionResponses }}
+                      percentComplete={calculatePercentComplete(list.chunks)}
+                    />
+                  );
+                }
+              })
+              .concat(
+                questionData.find(({ name }) => name === "Extracurriculars")
+                  ? questionData
+                      .find(({ name }) => name === "Extracurriculars")
+                      .chunks.map((chunk) => {
+                        return (
+                          <QuestionECSubpage
+                            key={chunk.name}
+                            userResponses={questionResponses}
+                            chunk={chunk}
+                            isShowing={currPage.chunk === chunk.name}
+                          />
+                        );
+                      })
+                  : []
+              )
+          )}
+        </div>
       </div>
-    </div>
+    </PageErrorBoundary>
   );
 };
 

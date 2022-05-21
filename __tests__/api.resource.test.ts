@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import { rateResource } from "../src/pages/api/resources/rate-resource";
 import { putResourceTags } from "../src/pages/api/cache-new-tags";
 import { getResourceTags } from "../src/pages/api/cache-new-tags";
+import { CardArticle, CardVideo, CardResource } from "src/types/types";
 
 const titleArticle = "Test Article";
 const testArticle1: CardArticle = {

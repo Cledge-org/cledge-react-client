@@ -19,6 +19,7 @@ import {
 } from "src/types/types";
 import PartDropDown from "./components/PartDropdown/PartDropdown";
 import DashboardTabButton from "./components/DashboardTabButton/DashboardTabButton";
+import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 
 // logged in landing page
 const DashboardPage: NextApplicationPage<{
@@ -330,8 +331,9 @@ const DashboardPage: NextApplicationPage<{
     sortedParts = sortIntoParts(currentTasks.concat(finishedTasks));
   }
   return (
-    <div className="vh-100">
-      {/* {session.data?.user?.email === "test31@gmail.com" ? (
+    <PageErrorBoundary>
+      <div className="vh-100">
+        {/* {session.data?.user?.email === "test31@gmail.com" ? (
         <button
           onClick={() => {
             setIsInUserView(false);
@@ -341,156 +343,157 @@ const DashboardPage: NextApplicationPage<{
         </button>
       ) : null} */}
 
-      <div
-        className="w-full md:w-auto"
-        style={{ backgroundColor: "lightgray" }}
-      >
         <div
-          className="w-full md:w-auto py-5 d-flex flex-row justify-content-around"
-          style={{ backgroundColor: "#F2F2F7" }}
+          className="w-full md:w-auto"
+          style={{ backgroundColor: "lightgray" }}
         >
-          <div className="px-5">
-            <button
-              onClick={() => {
-                setIsInUserView(false);
-              }}
-            >
-              Switch to Admin View
-            </button>
-            <h1>
-              <strong style={{ color: "#2651ED", fontSize: "1em" }}>
-                Personalized 12th grade videos for {accountInfo.name}
-              </strong>
-            </h1>
-            <h2>
-              <strong className="" style={{ fontSize: "1.3em" }}>
-                Need more personalized videos?
-              </strong>
-            </h2>
-            <h3 className="" style={{ fontSize: "1.6em" }}>
-              The learning modules are tailored to you based on your current
-              checkin
-              <br></br>
-              progress. Complete the checkin questions to receive more
-              personalized content!
-            </h3>
-          </div>
           <div
-            className="d-flex flex-row align-items-center justify-content-between align-self-end"
-            style={{ height: "10vh", width: "20vw" }}
+            className="w-full md:w-auto py-5 d-flex flex-row justify-content-around"
+            style={{ backgroundColor: "#F2F2F7" }}
           >
-            <div style={{ width: "4vw" }}>
-              <CircularProgressbarWithChildren
-                strokeWidth={10}
-                children={
-                  <div
-                    style={{ fontWeight: "bold", fontSize: "1.1em" }}
-                  >{`${percentage}%`}</div>
-                }
-                className="center-child"
-                styles={{
-                  text: {
-                    fontWeight: "bold",
-                  },
-                  trail: {
-                    stroke: "#d6d6d6",
-                  },
-                  path: {
-                    transition: "stroke-dashoffset 0.5s ease 0s",
-                    stroke: "#2651ed",
-                  },
+            <div className="px-5">
+              <button
+                onClick={() => {
+                  setIsInUserView(false);
                 }}
-                value={percentage}
-              />
+              >
+                Switch to Admin View
+              </button>
+              <h1>
+                <strong style={{ color: "#2651ED", fontSize: "1em" }}>
+                  Personalized 12th grade videos for {accountInfo.name}
+                </strong>
+              </h1>
+              <h2>
+                <strong className="" style={{ fontSize: "1.3em" }}>
+                  Need more personalized videos?
+                </strong>
+              </h2>
+              <h3 className="" style={{ fontSize: "1.6em" }}>
+                The learning modules are tailored to you based on your current
+                checkin
+                <br></br>
+                progress. Complete the checkin questions to receive more
+                personalized content!
+              </h3>
             </div>
-            <button style={{ height: "6vh" }} className="cl-btn-blue">
-              Update Checkin Questions
-            </button>
+            <div
+              className="d-flex flex-row align-items-center justify-content-between align-self-end"
+              style={{ height: "10vh", width: "20vw" }}
+            >
+              <div style={{ width: "4vw" }}>
+                <CircularProgressbarWithChildren
+                  strokeWidth={10}
+                  children={
+                    <div
+                      style={{ fontWeight: "bold", fontSize: "1.1em" }}
+                    >{`${percentage}%`}</div>
+                  }
+                  className="center-child"
+                  styles={{
+                    text: {
+                      fontWeight: "bold",
+                    },
+                    trail: {
+                      stroke: "#d6d6d6",
+                    },
+                    path: {
+                      transition: "stroke-dashoffset 0.5s ease 0s",
+                      stroke: "#2651ed",
+                    },
+                  }}
+                  value={percentage}
+                />
+              </div>
+              <button style={{ height: "6vh" }} className="cl-btn-blue">
+                Update Checkin Questions
+              </button>
+            </div>
+          </div>
+        </div>
+        <br />
+        <br />
+        <div
+          className="d-flex flex-row w-100 px-5 ms-5 mb-3"
+          style={{
+            borderBottom: "3px solid #656565",
+            maxWidth: "95vw",
+          }}
+        >
+          <div className="ms-2" />
+          <DashboardTabButton
+            onClick={() => {
+              setCurrTab("all modules");
+            }}
+            title="All Modules"
+            currTab={currTab}
+          />
+          <DashboardTabButton
+            onClick={() => {
+              setCurrTab("current tasks");
+            }}
+            title="Current Tasks"
+            currTab={currTab}
+          />
+          <DashboardTabButton
+            onClick={() => {
+              setCurrTab("finished tasks");
+            }}
+            title="Finished Tasks"
+            currTab={currTab}
+          />
+          <div style={{ flex: 1 }} />
+          <DropDownQuestion
+            isForDashboard
+            isForWaitlist
+            onChange={(value) => {}}
+            defaultValue={"11th Grade"}
+            valuesList={["11th Grade", "12th Grade"]}
+          />
+          <div className="me-4" />
+        </div>
+        <div className="container-fluid align-self-center mx-0 px-5 pb-5 mx-5 justify-content-evenly">
+          <div className="row w-100 flex-wrap">
+            {currTab === "current tasks" ? (
+              sortedParts.length > 0 ? (
+                sortedParts
+              ) : (
+                <div
+                  className="container-fluid center-child"
+                  style={{ height: "40vh" }}
+                >
+                  You have no current tasks.
+                </div>
+              )
+            ) : null}
+            {currTab === "finished tasks" ? (
+              finishedTasks.length > 0 ? (
+                sortedParts
+              ) : (
+                <div
+                  className="container-fluid center-child"
+                  style={{ height: "40vh" }}
+                >
+                  Any finished tasks will appear here.
+                </div>
+              )
+            ) : null}
+            {currTab === "all modules" ? (
+              sortedParts.length > 0 ? (
+                sortedParts
+              ) : (
+                <div
+                  className="container-fluid center-child"
+                  style={{ height: "40vh" }}
+                >
+                  Any modules will appear here.
+                </div>
+              )
+            ) : null}
           </div>
         </div>
       </div>
-      <br />
-      <br />
-      <div
-        className="d-flex flex-row w-100 px-5 ms-5 mb-3"
-        style={{
-          borderBottom: "3px solid #656565",
-          maxWidth: "95vw",
-        }}
-      >
-        <div className="ms-2" />
-        <DashboardTabButton
-          onClick={() => {
-            setCurrTab("all modules");
-          }}
-          title="All Modules"
-          currTab={currTab}
-        />
-        <DashboardTabButton
-          onClick={() => {
-            setCurrTab("current tasks");
-          }}
-          title="Current Tasks"
-          currTab={currTab}
-        />
-        <DashboardTabButton
-          onClick={() => {
-            setCurrTab("finished tasks");
-          }}
-          title="Finished Tasks"
-          currTab={currTab}
-        />
-        <div style={{ flex: 1 }} />
-        <DropDownQuestion
-          isForDashboard
-          isForWaitlist
-          onChange={(value) => {}}
-          defaultValue={"11th Grade"}
-          valuesList={["11th Grade", "12th Grade"]}
-        />
-        <div className="me-4" />
-      </div>
-      <div className="container-fluid align-self-center mx-0 px-5 pb-5 mx-5 justify-content-evenly">
-        <div className="row w-100 flex-wrap">
-          {currTab === "current tasks" ? (
-            sortedParts.length > 0 ? (
-              sortedParts
-            ) : (
-              <div
-                className="container-fluid center-child"
-                style={{ height: "40vh" }}
-              >
-                You have no current tasks.
-              </div>
-            )
-          ) : null}
-          {currTab === "finished tasks" ? (
-            finishedTasks.length > 0 ? (
-              sortedParts
-            ) : (
-              <div
-                className="container-fluid center-child"
-                style={{ height: "40vh" }}
-              >
-                Any finished tasks will appear here.
-              </div>
-            )
-          ) : null}
-          {currTab === "all modules" ? (
-            sortedParts.length > 0 ? (
-              sortedParts
-            ) : (
-              <div
-                className="container-fluid center-child"
-                style={{ height: "40vh" }}
-              >
-                Any modules will appear here.
-              </div>
-            )
-          ) : null}
-        </div>
-      </div>
-    </div>
+    </PageErrorBoundary>
   );
 };
 
