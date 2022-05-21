@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { PersonalizedContent } from "src/@types/types";
 
 export const config = {
   api: {

@@ -1,5 +1,14 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import {
+  AccountInfo,
+  ContentProgress,
+  ModuleProgress,
+  PathwayModule_Db,
+  PathwayProgress,
+  Pathway_Db,
+  PersonalizedContent,
+} from "src/@types/types";
 
 export const config = {
   api: {
@@ -38,14 +47,10 @@ export function getPathwayProgress(
         AccountInfo,
         Record<string, ContentProgress[]>
       ] = await Promise.all([
-        pathwaysDb
-          .collection("pathways")
-          .findOne({
-            _id:
-              pathwayId instanceof ObjectId
-                ? pathwayId
-                : new ObjectId(pathwayId),
-          }) as Promise<Pathway_Db>,
+        pathwaysDb.collection("pathways").findOne({
+          _id:
+            pathwayId instanceof ObjectId ? pathwayId : new ObjectId(pathwayId),
+        }) as Promise<Pathway_Db>,
         usersDb
           .collection("users")
           .findOne({ firebaseId: userId }) as Promise<AccountInfo>,
@@ -111,7 +116,7 @@ export async function getSpecificPathwayProgress(
 async function getSpecificModuleProgress(
   userTags: string[],
   progressByModule: Record<string, ContentProgress[]>,
-  moduleId:ObjectId,
+  moduleId: ObjectId,
   pathwaysDb: Db
 ): Promise<ModuleProgress> {
   return new Promise(async (res, err) => {

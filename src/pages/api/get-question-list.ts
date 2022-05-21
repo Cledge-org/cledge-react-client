@@ -1,5 +1,12 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import {
+  QuestionList,
+  QuestionList_Db,
+  QuestionChunk,
+  QuestionChunk_Db,
+  Question,
+} from "src/@types/types";
 
 export const config = {
   api: {

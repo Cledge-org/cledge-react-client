@@ -5,7 +5,7 @@ import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import Modal from "react-modal";
 import CheckBox from "../../../common/components/CheckBox/CheckBox";
-import { QuestionList, Question } from "../../../types/types";
+import { QuestionList, Question } from "../../../@types/types";
 import { NextApplicationPage } from "../../AppPage/AppPage";
 import UploadPage from "../components/UploadPage/UploadPage";
 import DropDownQuestion from "../../../common/components/Questions/DropdownQuestion/DropdownQuestion";

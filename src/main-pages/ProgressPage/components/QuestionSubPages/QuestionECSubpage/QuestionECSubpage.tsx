@@ -8,7 +8,7 @@ import {
   UserResponse,
   QuestionChunk,
   Activities,
-} from "../../../../../types/types";
+} from "../../../../../@types/types";
 import { updateQuestionResponsesAction } from "../../../../../utils/redux/actionFunctions";
 import { store } from "../../../../../utils/redux/store";
 import {

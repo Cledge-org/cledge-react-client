@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { AccountInfo } from "../../types/types";
+import { AccountInfo } from "../../@types/types";
 
 export const config = {
   api: {

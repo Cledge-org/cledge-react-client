@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Question } from "../../../../types/types";
+import { Question } from "../../../../@types/types";
 import styles from "./mcq-question.module.scss";
 
 interface MCQQuestionProps {

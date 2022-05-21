@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Question } from "../../../../types/types";
+import { Question } from "../../../../@types/types";
 import DropDownQuestion from "../DropdownQuestion/DropdownQuestion";
 
 interface RankingQuestionProps {

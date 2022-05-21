@@ -14,15 +14,19 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
+    "typeRoots": ["node_modules/@types", "src/@types/*"],
     "baseUrl": "./",
-    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+    "paths": {
+      "*": ["src/@types/*"]
+    }
     // "sourceMap": true // used to debug the program
   },
   "include": [
     "next-env.d.ts",
-    "./src/types/types.d.ts",
-    "./src/types/auth.d.ts",
-    "./src/types/redux.d.ts",
+    "src/@types/types.d.ts",
+    "src/@types/auth.d.ts",
+    "src/@types/redux.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "**/*.d.ts",

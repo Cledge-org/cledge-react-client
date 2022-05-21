@@ -3,7 +3,7 @@ interface Window {
   onYouTubeIframeAPIReady: any;
 }
 //Account Page Types -->
-interface AccountInfo extends WithId<Document> {
+export interface AccountInfo extends WithId<Document> {
   _id?: ObjectId;
   firebaseId: string;
   name: string;

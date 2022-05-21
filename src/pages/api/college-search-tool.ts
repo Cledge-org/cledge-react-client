@@ -46,7 +46,7 @@ export const getCollegeInfo = (
 ): Promise<Object> => {
   return new Promise(async (res, err) => {
     try {
-      const searchOptions = {
+      const searchOptions: any = {
         top: top,
         skip: skip,
         includeTotalCount: true,

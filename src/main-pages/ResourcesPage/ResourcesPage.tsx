@@ -11,7 +11,7 @@ import {
   CardResource,
   CardArticle,
   CardVideo,
-} from "../../types/types";
+} from "../../@types/types";
 import styles from "./resources-page.module.scss";
 import classNames from "classnames";
 import ResourcesTabButton from "./components/ResourcesTabButton/ResourcesTabButton";

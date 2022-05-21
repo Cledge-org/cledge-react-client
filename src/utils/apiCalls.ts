@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { getSession } from "next-auth/react";
 import {
+  Academics,
   AccountInfo,
   Activities,
   CardArticle,
@@ -15,7 +16,7 @@ import {
   QuestionList,
   QuestionList_Db,
   UserResponse,
-} from "src/types/types";
+} from "src/@types/types";
 
 export const callPutQuestionResponses = async (
   newUserResponses: UserResponse[]

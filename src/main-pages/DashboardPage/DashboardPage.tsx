@@ -16,7 +16,7 @@ import {
   QuestionList,
   AccountInfo,
   PathwayProgress,
-} from "src/types/types";
+} from "src/@types/types";
 import PartDropDown from "./components/PartDropdown/PartDropdown";
 import DashboardTabButton from "./components/DashboardTabButton/DashboardTabButton";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";

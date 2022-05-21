@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { Academics } from "src/@types/types";
 
 export const config = {
   api: {
@@ -25,10 +26,7 @@ export function getAcademics(userId: string): Promise<Academics> {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
       const metricsDb = client.db("metrics");
-      const all = await metricsDb
-        .collection("academics")
-        .find()
-        .toArray();
+      const all = await metricsDb.collection("academics").find().toArray();
       console.log(all);
       const academics: Academics = (await metricsDb
         .collection("academics")

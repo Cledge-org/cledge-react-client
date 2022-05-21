@@ -1,6 +1,7 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import assert from "assert";
+import { AccountInfo } from "types";
 
 export const config = {
   api: {
@@ -44,7 +45,7 @@ export const updateUser = async (
       await client
         .db("users")
         .collection("users")
-        .updateOne({ firebaseId }, { $set: user }, {upsert : true});
+        .updateOne({ firebaseId }, { $set: user }, { upsert: true });
       res();
       client.close();
     } catch (e) {
