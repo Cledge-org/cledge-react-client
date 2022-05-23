@@ -7,7 +7,7 @@ import MCQQuestion from "../../../../../common/components/Questions/MCQQuestion/
 import TextInputQuestion from "../../../../../common/components/Questions/TextInputQuestion/TextInputQuestion";
 import ECTimeFrame from "../../../../../common/components/Questions/TimeframeQuestion/TimeframeQuestion";
 import ListQuestion from "../../../../../common/components/Questions/ListQuestion/ListQuestion";
-import { Question, UserResponse } from "../../../../../@types/types";
+
 import styles from "./ec-editor.module.scss";
 interface ECEditorProps {
   title?: string;

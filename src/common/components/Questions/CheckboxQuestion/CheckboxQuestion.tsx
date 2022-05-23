@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Question } from "../../../../@types/types";
+
 import CheckBox from "../../CheckBox/CheckBox";
 import styles from "./checkbox-question.module.scss";
 interface CheckBoxQuestionProps {

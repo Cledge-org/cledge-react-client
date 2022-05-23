@@ -1,6 +1,5 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { UserResponse, UserProgress_Db } from "src/@types/types";
 
 export const config = {
   api: {

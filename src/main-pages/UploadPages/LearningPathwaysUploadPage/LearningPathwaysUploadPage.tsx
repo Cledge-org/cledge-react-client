@@ -6,7 +6,7 @@ import { NextApplicationPage } from "../../AppPage/AppPage";
 import router from "next/router";
 import { getSession } from "next-auth/react";
 import Modal from "react-modal";
-import { Pathway, PersonalizedContent } from "../../../@types/types";
+
 import UploadPage from "../components/UploadPage/UploadPage";
 import DropDownQuestion from "../../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 import {

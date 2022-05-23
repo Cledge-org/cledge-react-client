@@ -1,22 +1,5 @@
 import { ObjectId } from "mongodb";
 import { getSession } from "next-auth/react";
-import {
-  Academics,
-  AccountInfo,
-  Activities,
-  CardArticle,
-  CardResource,
-  CardVideo,
-  Pathway,
-  PathwayModule,
-  PathwayModule_Db,
-  PersonalizedContent,
-  Question,
-  QuestionChunk,
-  QuestionList,
-  QuestionList_Db,
-  UserResponse,
-} from "src/@types/types";
 
 export const callPutQuestionResponses = async (
   newUserResponses: UserResponse[]

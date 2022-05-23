@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ECDropDown from "../QuestionComponents/ec_dropdown_question";
+import DropDownQuestion from "src/common/components/Questions/DropdownQuestion/DropdownQuestion";
 
 export default () => {
   const [waitlistForm, updateWaitlistForm] = useState({
@@ -39,7 +39,7 @@ export default () => {
             >
               I AM A...
             </div>
-            <ECDropDown
+            <DropDownQuestion
               isForWaitlist
               defaultValue="Student"
               valuesList={["Student", "Parent", "Educator", "Other"]}
@@ -90,7 +90,7 @@ export default () => {
 
           <div className="d-flex flex-row justify-content-between align-items-center pt-4 pb-5">
             <div className="text-muted ">I AM INTERESTED IN STUDYING...</div>
-            <ECDropDown
+            <DropDownQuestion
               isForWaitlist
               defaultValue="General"
               valuesList={[

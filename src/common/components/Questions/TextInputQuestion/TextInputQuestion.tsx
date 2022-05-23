@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
-import { Question } from "../../../../@types/types";
+
 import styles from "./text-input-question.module.scss";
 import classNames from "classnames";
 interface TextInputQuestionProps {

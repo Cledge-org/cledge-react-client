@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "react-modal";
-import { UserResponse, Question } from "../../../../../@types/types";
 
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 import styles from "./ec-question-summary-card.module.scss";
@@ -36,7 +35,10 @@ export default function ECQuestionSummaryCard({
     >
       <div className="d-flex justify-content-between align-items-center px-4 pt-3 question-text">
         {titleQuestion ? titleQuestion.response : "No Title Given"}
-        <button onClick={() => onClick()} className="icon-btn center-child">
+        <button
+          onClick={() => onClick()}
+          className={classNames(styles.iconBtn, "center-child")}
+        >
           <div
             onClick={() => {
               setDisplayingQuestion(true);
@@ -47,26 +49,23 @@ export default function ECQuestionSummaryCard({
           </div>
         </button>
       </div>
-<<<<<<< HEAD:src/main-pages/ProgressPage/components/QuestionComponents/ECQuestionSummaryCard/ECQuestionSummaryCard.tsx
       <div
         className={classNames(
           "w-100 d-flex flex-column align-items-center justify-content-center",
           styles.ecsummaryInfoContainer
         )}
       >
-        {chunkQuestions.map(({ question, type, _id }) => {
-=======
-      <div className="w-100 d-flex flex-column align-items-center justify-content-center ecsummary-info-container">
         {chunkQuestions.map(({ question, type, _id, data }) => {
->>>>>>> master:components/question_components/ec_question_summary_card.tsx
           const questionFound = response.find(
             ({ questionId }) => _id === questionId
           );
           return question !== "Title" ? (
             <>
-              <div className="ecsummary-info-section">
-                <div className="name">{question.toLocaleUpperCase()}</div>
-                <div className="value">
+              <div className={styles.ecsummaryInfoSection}>
+                <div className={styles.name}>
+                  {question.toLocaleUpperCase()}
+                </div>
+                <div className={styles.value}>
                   {questionFound !== undefined
                     ? type === "ListQuestion"
                       ? questionFound.response.numResponse
@@ -84,11 +83,11 @@ export default function ECQuestionSummaryCard({
                       return data.map(({ question, _id }, index) => {
                         const subQuestionFound = questionResponse[_id];
                         return (
-                          <div className="ecsummary-info-section">
-                            <div className="name">
+                          <div className={styles.ecsummaryInfoSection}>
+                            <div className={styles.name}>
                               {question.toLocaleUpperCase() + ` ${index + 1}`}
                             </div>
-                            <div className="value">
+                            <div className={styles.value}>
                               {subQuestionFound !== undefined
                                 ? subQuestionFound instanceof Array
                                   ? subQuestionFound.reduce((prev, curr) => {

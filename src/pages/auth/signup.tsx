@@ -1,4 +1,4 @@
-import SignUpPage from "../../main-pages/AuthPages/SignupPage/SignupPage";
+import SignUpPage from "src/main-pages/AuthPages/SignupPage/SignUpPage";
 
 const SignUp = () => {
   return <SignUpPage />;

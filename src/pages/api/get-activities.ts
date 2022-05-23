@@ -1,6 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Activities } from "src/@types/types";
 
 export const config = {
   api: {

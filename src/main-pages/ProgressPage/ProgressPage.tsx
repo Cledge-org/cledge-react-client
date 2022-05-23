@@ -14,14 +14,14 @@ import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import CardCheckIn from "../../common/components/Cards/CardCheckIn/CardCheckIn";
 import TabButton from "../../common/components/TabButton/TabButton";
-import { QuestionList, UserResponse, QuestionChunk } from "../../@types/types";
+
 import { NextApplicationPage } from "../AppPage/AppPage";
 import QuestionSubPageHeader from "./components/QuestionComponents/SubpageHeader/SubpageHeader";
 import QuestionECSubpage from "./components/QuestionSubPages/QuestionECSubpage/QuestionECSubpage";
 import QuestionACSubpage from "./components/QuestionSubPages/QuestionACSubpage/QuestionACSubpage";
 import QuestionSummarySubpage from "./components/QuestionSubPages/QuestionSummarySubpage/QuestionSummarySubpage";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
-import DropdownTab from "src/common/components/DropdownTab/DropDownTab";
+import DropdownTab from "src/common/components/DropdownTab/DropdownTab";
 
 const Progress: NextApplicationPage<{
   questionData: QuestionList[];
@@ -227,7 +227,10 @@ const Progress: NextApplicationPage<{
           ) : (
             questionData
               .map((list) => {
-                if (list.name !== "Extracurriculars") {
+                if (
+                  list.name !== "Extracurriculars" &&
+                  list.name !== "Academics"
+                ) {
                   return (
                     <QuestionSummarySubpage
                       userTags={currUserTags}

@@ -1,14 +1,5 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import {
-  AccountInfo,
-  ContentProgress,
-  ModuleProgress,
-  PathwayModule_Db,
-  PathwayProgress,
-  Pathway_Db,
-  PersonalizedContent,
-} from "src/@types/types";
 
 export const config = {
   api: {

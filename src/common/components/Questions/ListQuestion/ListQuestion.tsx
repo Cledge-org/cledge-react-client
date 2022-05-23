@@ -42,10 +42,11 @@ const ListQuestion = ({
     response: any,
     index: number
   ): JSX.Element => {
-    if (question.type === "TextInput") {
+    if (question.type === "TextInput" || question.type === "ECTextInput") {
       return (
         <TextInputQuestion
           question={question}
+          isDark={question.type === "ECTextInput"}
           userAnswer={response}
           onChange={(answer) => {
             onChange(answer, index, question._id);

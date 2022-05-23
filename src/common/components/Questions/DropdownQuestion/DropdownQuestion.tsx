@@ -93,7 +93,7 @@ export default function DropDownQuestion({
         ? defaultValue.includes(itemName)
         : chosen.includes(" " + itemName);
     }
-    return chosen === "" || chosen === []
+    return chosen === "" || chosen?.length === 0
       ? defaultValue === itemName
       : chosen === itemName;
   };
@@ -150,7 +150,7 @@ export default function DropDownQuestion({
           onClick={() => setIsOpen(!isOpen)}
         >
           {!forCalendar &&
-          (defaultValue === "" || defaultValue === [] || !defaultValue)
+          (defaultValue === "" || defaultValue?.length === 0 || !defaultValue)
             ? chosen.length === 0
               ? placeholder
               : !isConcatenable

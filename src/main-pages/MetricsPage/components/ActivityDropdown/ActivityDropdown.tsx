@@ -1,7 +1,7 @@
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import TierIndicatorAndTips from "../TierIndicatorAndTips/TierIndicatorAndTips";
 import styles from "./activity-dropdown.module.scss";
 

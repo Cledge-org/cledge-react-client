@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { QuestionChunk, UserProgress } from "../../../../../@types/types";
+
 import QuestionSummaryCard from "../../QuestionComponents/QuestionSummaryCard/QuestionSummaryCard";
 import QuestionSubPageHeader from "../../QuestionComponents/SubpageHeader/SubpageHeader";
 

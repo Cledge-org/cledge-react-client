@@ -12,7 +12,7 @@ import {
   updateAccountAction,
   updateQuestionResponsesAction,
 } from "../../utils/redux/actionFunctions";
-import { AccountInfo, UserResponse } from "../../@types/types";
+
 import LoadingScreen from "../../common/components/Loading/Loading";
 import InfoSection from "./components/InfoSection/InfoSection";
 import styles from "./account-page.module.scss";

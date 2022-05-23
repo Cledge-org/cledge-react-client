@@ -6,12 +6,6 @@ import { faFilter, faSearch } from "@fortawesome/free-solid-svg-icons";
 import CardImage from "../../common/components/Cards/CardImage/CardImage";
 import CardText from "../../common/components/Cards/CardText/CardText";
 import VideoCard from "../../common/components/Cards/CardVideo/CardVideo";
-import {
-  ResourcesInfo,
-  CardResource,
-  CardArticle,
-  CardVideo,
-} from "../../@types/types";
 import styles from "./resources-page.module.scss";
 import classNames from "classnames";
 import ResourcesTabButton from "./components/ResourcesTabButton/ResourcesTabButton";

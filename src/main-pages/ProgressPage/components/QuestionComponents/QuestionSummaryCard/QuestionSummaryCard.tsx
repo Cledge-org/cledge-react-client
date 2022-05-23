@@ -7,7 +7,7 @@ import CheckBoxQuestion from "../../../../../common/components/Questions/Checkbo
 import MCQQuestion from "../../../../../common/components/Questions/MCQQuestion/MCQQuestion";
 import RankingQuestion from "../../../../../common/components/Questions/RankingQuestion/RankingQuestion";
 import TextInputQuestion from "../../../../../common/components/Questions/TextInputQuestion/TextInputQuestion";
-import { Question, UserResponse } from "../../../../../@types/types";
+
 import {
   updateAccountAction,
   updateTagsAction,

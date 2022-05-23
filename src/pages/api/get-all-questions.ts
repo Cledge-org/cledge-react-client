@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { QuestionList, QuestionList_Db } from "src/@types/types";
+
 import { getQuestionListByDocument } from "./get-question-list";
 
 export const config = {

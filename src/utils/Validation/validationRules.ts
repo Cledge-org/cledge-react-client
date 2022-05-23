@@ -1,5 +1,3 @@
-import { validateProps } from "../../@types/types";
-
 export default function validate(values: validateProps) {
   let errors = {} as validateProps;
 

@@ -25,15 +25,9 @@ module.exports = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  build: {
-    loaders: {
-      scss: {
-        sassOptions: {
-          quietDeps: true,
-        },
-      },
-    },
-  },
+  // sassOptions: {
+  //   quietDeps: true,
+  // },
   env: {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     AZURE_CLIENT_ID: process.env.AZURE_CLIENT_ID,

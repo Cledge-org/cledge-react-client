@@ -5,7 +5,7 @@ import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import Modal from "react-modal";
 import CheckBox from "../../../common/components/CheckBox/CheckBox";
-import { QuestionList, Question } from "../../../@types/types";
+
 import { NextApplicationPage } from "../../AppPage/AppPage";
 import UploadPage from "../components/UploadPage/UploadPage";
 import DropDownQuestion from "../../../common/components/Questions/DropdownQuestion/DropdownQuestion";
@@ -402,12 +402,8 @@ const QuestionUploadPage: NextApplicationPage<{
                         "Ranking",
                         "ECTimeFrame",
                         "ECTextInput",
-<<<<<<< HEAD:src/main-pages/UploadPages/QuestionUploadPage/QuestionUploadPage.tsx
                         "DropDownQuestion",
-=======
-                        "ECDropDown",
                         "ListQuestion",
->>>>>>> master:pages/upload/question-upload.tsx
                       ]}
                     />
                   </div>
@@ -416,13 +412,8 @@ const QuestionUploadPage: NextApplicationPage<{
                       Data:
                     </label>
                     <div className="d-flex flex-row w-100 flex-wrap">
-<<<<<<< HEAD:src/main-pages/UploadPages/QuestionUploadPage/QuestionUploadPage.tsx
-                      {currQuestion.data.map((value, index) =>
-                        currQuestion.type === "DropDownQuestion" ? (
-=======
                       {currQuestion.data.map((dataValue, dataIndex) =>
-                        currQuestion.type === "ECDropDown" ? (
->>>>>>> master:pages/upload/question-upload.tsx
+                        currQuestion.type === "DropDownQuestion" ? (
                           <div className="form-group">
                             <input
                               value={dataValue}
@@ -520,7 +511,7 @@ const QuestionUploadPage: NextApplicationPage<{
                               >
                                 Question Type:
                               </label>
-                              <ECDropDown
+                              <DropDownQuestion
                                 isForWaitlist
                                 onChange={(value) => {
                                   let currQuestionListCopy = currQuestionList;

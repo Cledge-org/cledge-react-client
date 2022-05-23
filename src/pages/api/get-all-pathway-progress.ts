@@ -1,11 +1,5 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import {
-  PathwayProgress,
-  Pathway_Db,
-  AccountInfo,
-  ContentProgress,
-} from "src/@types/types";
 import { getSpecificPathwayProgress } from "./get-pathway-progress";
 
 export const config = {

@@ -1,7 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
-import { Academics } from "src/@types/types";
 
 export const config = {
   api: {

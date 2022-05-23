@@ -11,12 +11,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import CardTask from "../../common/components/Cards/CardTask/CardTask";
 import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
-import {
-  Pathway,
-  QuestionList,
-  AccountInfo,
-  PathwayProgress,
-} from "src/@types/types";
 import PartDropDown from "./components/PartDropdown/PartDropdown";
 import DashboardTabButton from "./components/DashboardTabButton/DashboardTabButton";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";

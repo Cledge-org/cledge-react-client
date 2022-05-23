@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+
 export default function YoutubeEmbed({
   videoId,
   isPathway,
@@ -79,7 +80,7 @@ export default function YoutubeEmbed({
           minWidth: "300px",
           minHeight: "200px",
           width: "100%",
-          height: "100%"
+          height: "100%",
         }}
       />
     </div>
