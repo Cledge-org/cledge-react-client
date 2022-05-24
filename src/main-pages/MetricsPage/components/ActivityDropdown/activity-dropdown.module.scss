@@ -45,8 +45,6 @@
 }
 .metrics-dropdown-btn {
   @extend .cl-dark-text;
-  @extend .px-3;
-  @extend .py-3;
   .icon-close {
     animation-name: rotateReverse;
     animation-duration: 600ms;

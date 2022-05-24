@@ -81,7 +81,8 @@ const TierRange = ({
         <div
           className={classNames(
             "position-relative d-flex flex-row align-items-center justify-content-evenly ms-2",
-            styles.metricsTierRange
+            styles.metricsTierRange,
+            "py-2"
           )}
           style={{ flex: 1, height: "100%" }}
         >

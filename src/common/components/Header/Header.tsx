@@ -20,7 +20,7 @@ export default function Header({ key_prop }: { key_prop: string }) {
   if (router.pathname === "/") {
     navclass = "position-fixed fixed-top";
   } else {
-    navclass = styles.navRegular;
+    navclass = styles.navRegular + " shadow-sm";
   }
 
   useEffect(() => {
@@ -144,7 +144,7 @@ export default function Header({ key_prop }: { key_prop: string }) {
           ? `position-absolute top-0 start-0 ${styles.navTransparent}`
           : "sticky-top",
         {
-          [styles.navRegularNoShadow]:
+          [styles.navRegularNoShadow + " shadow-none"]:
             scrollState !== "scrolling" && router.pathname !== "/",
         }
       )}

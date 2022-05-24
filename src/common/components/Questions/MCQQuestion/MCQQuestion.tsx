@@ -42,7 +42,7 @@ export default function MCQQuestion({
                 selected === op
                   ? styles.mcqAnswerBtnSelected
                   : styles.mcqAnswerBtn
-              } ${inEC ? "w-100" : ""}`}
+              } ${inEC ? "w-100" : ""} py-3 ps-4 my-2`}
             >
               {op}
             </button>

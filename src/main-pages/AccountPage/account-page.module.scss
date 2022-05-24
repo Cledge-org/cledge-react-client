@@ -2,8 +2,6 @@
 
 .myaccount-info-section {
   font-size: 0.9em;
-  @extend .pt-1;
-  @extend .pb-3;
   display: flex;
   align-items: center;
   border-bottom: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.3);
@@ -35,9 +33,6 @@
   }
 }
 .myaccount-blob {
-  @extend .px-4;
-  @extend .py-4;
-  @extend .mb-3;
   border: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.3);
   border-radius: 20px;
   height: fit-content;

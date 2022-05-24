@@ -61,7 +61,7 @@ export default function ECQuestionSummaryCard({
           );
           return question !== "Title" ? (
             <>
-              <div className={styles.ecsummaryInfoSection}>
+              <div className={classNames(styles.ecsummaryInfoSection, "py-3")}>
                 <div className={styles.name}>
                   {question.toLocaleUpperCase()}
                 </div>
@@ -83,7 +83,12 @@ export default function ECQuestionSummaryCard({
                       return data.map(({ question, _id }, index) => {
                         const subQuestionFound = questionResponse[_id];
                         return (
-                          <div className={styles.ecsummaryInfoSection}>
+                          <div
+                            className={classNames(
+                              styles.ecsummaryInfoSection,
+                              "py-3"
+                            )}
+                          >
                             <div className={styles.name}>
                               {question.toLocaleUpperCase() + ` ${index + 1}`}
                             </div>

@@ -12,6 +12,7 @@ import { store } from "../../utils/redux/store";
 import styles from "./pathway-page.module.scss";
 import { callPutPathwayProgress } from "src/utils/apiCalls";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
+import classNames from "classnames";
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
@@ -378,7 +379,7 @@ const Pathways: NextApplicationPage<{
               />
             </div>
             <div className="container-fluid center-child flex-column py-5">
-              <div className={styles.pathwayDescription}>
+              <div className={classNames(styles.pathwayDescription, "pb-2")}>
                 <span
                   className="fw-bold cl-dark-text"
                   style={{ fontSize: "1.7em" }}
@@ -582,7 +583,12 @@ const Pathways: NextApplicationPage<{
                               />
                             </div>
                             <div className="container-fluid center-child flex-column py-5">
-                              <div className={styles.pathwayDescription}>
+                              <div
+                                className={classNames(
+                                  styles.pathwayDescription,
+                                  "pb-2"
+                                )}
+                              >
                                 <span
                                   className="fw-bold cl-dark-text"
                                   style={{ fontSize: "1.7em" }}

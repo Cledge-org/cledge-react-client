@@ -1,6 +1,6 @@
-@use "node_modules/bootstrap/scss/bootstrap" as *;
 @use "./palette.module.scss" as *;
 @use "./typography.module.scss" as *;
+@use "node_modules/bootstrap/scss/bootstrap" as *;
 
 .container-margin {
   @media only screen and (max-width: 767px) {
@@ -241,6 +241,7 @@ $spacers: (
     $spacer * 10,
   ),
 );
+
 .ms-05 {
   margin-left: 0.2vw;
 }

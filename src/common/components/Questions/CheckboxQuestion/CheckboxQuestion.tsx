@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 
 import CheckBox from "../../CheckBox/CheckBox";
@@ -64,11 +65,12 @@ export default function CheckBoxQuestion({
                 console.log(tag);
                 changeSelected(op);
               }}
-              className={
+              className={classNames(
                 selected.includes(op)
                   ? styles.checkboxMcqVariantSelected
-                  : styles.checkboxMcqVariant
-              }
+                  : styles.checkboxMcqVariant,
+                "ps-4 py-2 my-2 px-4"
+              )}
               style={inEC ? { width: "100%" } : {}}
             >
               {op}

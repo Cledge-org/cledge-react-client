@@ -130,7 +130,7 @@ export default function DropDownQuestion({
       ) : null}
       <div ref={wrapperRef} style={{ position: "relative" }}>
         <button
-          className={`${styles.dropdownQuestionBtn} ${
+          className={`${styles.dropdownQuestionBtn + " px-3 py-3"} ${
             isForWaitlist ? "bg-white" : ""
           } ${
             isForDashboard ? "py-0 " + styles.bottomBorderPathwayFilter : ""
@@ -177,7 +177,8 @@ export default function DropDownQuestion({
         <div
           className={classNames(
             `dropdown-menu-custom`,
-            styles.dropdownQuestionMenu
+            styles.dropdownQuestionMenu,
+            "shadow-sm"
           )}
           style={
             !forCalendar && !isForWaitlist
@@ -191,14 +192,18 @@ export default function DropDownQuestion({
                 changeChosen(name);
               }}
               key={name}
-              className={classNames({
-                [styles.dropdownItemPicked]: itemIsPicked(name) && !forCalendar,
-                [styles.dropdownItemPicked + " center-child"]:
-                  itemIsPicked(name) && forCalendar,
-                [styles.dropdownItem]: !itemIsPicked(name) && !forCalendar,
-                [styles.dropdownItem + " center-child"]:
-                  !itemIsPicked(name) && forCalendar,
-              })}
+              className={classNames(
+                {
+                  [styles.dropdownItemPicked]:
+                    itemIsPicked(name) && !forCalendar,
+                  [styles.dropdownItemPicked + " center-child"]:
+                    itemIsPicked(name) && forCalendar,
+                  [styles.dropdownItem]: !itemIsPicked(name) && !forCalendar,
+                  [styles.dropdownItem + " center-child"]:
+                    !itemIsPicked(name) && forCalendar,
+                },
+                "py-2 px-3"
+              )}
             >
               {name}
             </button>

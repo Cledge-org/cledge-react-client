@@ -1,7 +1,6 @@
 @use "src/common/styles" as *;
 
 .ecsummary-info-section {
-  @extend .py-3;
   border-bottom: 2px solid $cl-light-gray;
   width: 95.5%;
   display: flex;

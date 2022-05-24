@@ -1,7 +1,6 @@
 @use "src/common/styles" as *;
 
 .auth-bottom-nav {
-  @extend .mt-3;
   width: 100%;
   display: flex;
   flex-direction: row;

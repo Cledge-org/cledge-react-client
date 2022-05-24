@@ -245,7 +245,7 @@ const SignUpPage = () => {
             Sign Up with {GoogleProvider.name}
           </button>
         </div> */}
-          <div className={styles.authBottomNav}>
+          <div className={classNames(styles.authBottomNav, "mt-3")}>
             <div className="px-0">
               <Link href="api/auth/login">
                 <a className="cl-blue">Already have an Account?</a>

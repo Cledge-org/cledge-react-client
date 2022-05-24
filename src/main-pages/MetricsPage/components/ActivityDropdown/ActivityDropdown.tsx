@@ -20,7 +20,7 @@ const ActivityDropdown = ({
   return (
     <div className="dropdown-container mt-2" style={{ width: "100%" }}>
       <button
-        className={`dropdown-btn ${styles.metricsDropdownBtn} bg-cl-super-light-gray`}
+        className={`dropdown-btn ${styles.metricsDropdownBtn} bg-cl-super-light-gray px-3 py-3`}
         // style={{ backgroundColor: "#FBFCFF" }}
         onClick={() => {
           setIsExpanded(!isExpanded);

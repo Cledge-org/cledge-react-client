@@ -83,10 +83,12 @@ const AccountPage: NextApplicationPage<{
             Personal Info
           </span>
           <div className="py-3" />
-          <div className={styles.myaccountBlob}>
+          <div className={classNames(styles.myaccountBlob, "px-4 py-4 mb-3")}>
             <span className={styles.title}>Basic Info</span>
             <div className="pb-3" />
-            <div className={styles.myaccountInfoSection}>
+            <div
+              className={classNames(styles.myaccountInfoSection, "pt-1 pb-3")}
+            >
               <span className={classNames(styles.name, "align-self-start")}>
                 PHOTO
               </span>
@@ -143,7 +145,7 @@ const AccountPage: NextApplicationPage<{
             />
             <InfoSection name="PASSWORD" value="******" onEdit={() => {}} />
           </div>
-          <div className={styles.myaccountBlob}>
+          <div className={classNames(styles.myaccountBlob, "px-4 py-4 mb-3")}>
             <span className="title">Contact Info</span>
             <InfoSection
               name="Email"
@@ -157,7 +159,7 @@ const AccountPage: NextApplicationPage<{
               }}
             />
           </div>
-          <div className={styles.myaccountBlob}>
+          <div className={classNames(styles.myaccountBlob, "px-4 py-4 mb-3")}>
             <span className="title">Academic Info</span>
             <InfoSection
               name="Grade"

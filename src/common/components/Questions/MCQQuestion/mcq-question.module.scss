@@ -1,10 +1,7 @@
 @use "src/common/styles" as *;
 
 .mcq-answer-btn {
-  @extend .py-3;
   @extend .cl-dark-text;
-  @extend .my-2;
-  @extend .ps-4;
   font-weight: bold;
   font-size: 1em;
   text-align: start;

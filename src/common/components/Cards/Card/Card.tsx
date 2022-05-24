@@ -36,7 +36,8 @@ export default function Card({
           className={classNames(
             styles.cardTitle,
             { ["red-purple-text-gradient"]: textGradient === "light" },
-            { ["blue-purple-text-gradient"]: textGradient !== "light" }
+            { ["blue-purple-text-gradient"]: textGradient !== "light" },
+            "ms-3 mt-3"
           )}
         >
           {title}

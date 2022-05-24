@@ -1,5 +1,6 @@
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
 import React from "react";
 import styles from "./info-section.module.scss";
 interface InfoSectionProps {
@@ -9,7 +10,7 @@ interface InfoSectionProps {
 }
 function InfoSection({ name, value, onEdit }: InfoSectionProps) {
   return (
-    <div className={styles.myaccountInfoSection}>
+    <div className={classNames(styles.myaccountInfoSection, "pt-1 pb-3")}>
       <span className={styles.name}>{name.toUpperCase()}</span>
       <div className={styles.infoContainer}>
         {value}

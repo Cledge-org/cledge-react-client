@@ -8,6 +8,8 @@
   @extend .bg-cl-white;
   @extend .py-2;
   transition: all 200ms ease-in-out;
+  transition-duration: 200ms;
+  transition-timing-function: ease-in-out;
   position: absolute;
   z-index: 1000;
 }

@@ -8,11 +8,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 import { AppProps } from "next/dist/shared/lib/router/router";
-import {
-  buildStyles,
-  CircularProgressbar,
-  CircularProgressbarWithChildren,
-} from "react-circular-progressbar";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "../AppPage/AppPage";
 import { getSession, useSession } from "next-auth/react";

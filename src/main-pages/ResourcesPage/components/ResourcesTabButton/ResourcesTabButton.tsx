@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import styles from "./resources-tab-button.module.scss";
 interface ResourcesTabButtonProps {
   onClick: Function;
@@ -14,7 +15,7 @@ function ResourcesTabButton({
   const lowerCaseName = title.toLowerCase();
   return (
     <li
-      className={styles.resourcesTabNavBtn}
+      className={classNames(styles.resourcesTabNavBtn, "px-3 mx-3 py-2")}
       id={lowerCaseName + "-tab"}
       onClick={() => {
         onClick(lowerCaseName);

@@ -1,13 +1,12 @@
 @use "src/common/styles" as *;
+@use "node_modules/bootstrap/scss/bootstrap" as *;
 
 .nav-regular {
-  @extend .shadow-sm;
   @extend .navbar-light;
   color: $cl-blue !important;
   background-color: white;
 }
 .nav-regular-no-shadow {
-  @extend .shadow-none;
   @extend .navbar-light;
   color: $cl-blue !important;
   background-color: white;

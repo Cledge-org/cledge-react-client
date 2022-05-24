@@ -114,7 +114,8 @@ const ResourcesPage: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
           <div
             className={classNames(
               "d-flex flex-row justify-content-start align-items-center",
-              styles.searchContainer
+              styles.searchContainer,
+              "px-2 mt-3"
             )}
           >
             <div className="p-1 cl-mid-gray" style={{ width: "30px" }}>

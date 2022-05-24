@@ -1,9 +1,6 @@
 @use "src/common/styles" as *;
 
 .resources-tab-nav-btn {
-  @extend .px-4;
-  @extend .mx-3;
-  @extend .py-2;
   transition: 500ms;
   outline: none;
   color: $cl-dark-text;

@@ -1,10 +1,10 @@
 @use "src/common/styles" as *;
+@use "node_modules/bootstrap/scss/bootstrap" as *;
 
 .pathway-description {
-  @extend .pb-2;
   width: 90%;
   border-bottom: 1px solid rgba($color: $cl-mid-gray, $alpha: 0.7);
 }
 .bottom-border-pathway-filter {
-  margin-bottom: calc($spacer * 0.5 - 1px);
+  @extend .mb-1;
 }
