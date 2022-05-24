@@ -20,16 +20,58 @@ const searchClient = new SearchClient(
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     console.log(req.body);
-    const {searchText, top, skip, filters, searchFields} = JSON.parse(req.body);
-    console.log(searchFields);
-    // const processedFacets = processFacets(facets);
-    try {
-      const collegeSearchResult = await getCollegeInfo(searchText, top, skip, filters, searchFields);
-      resolve.status(200).send(collegeSearchResult);
-    } catch (e) {
-      resolve.status(500).send(e);
+    const reqBodyJson = JSON.parse(req.body);
+    if (reqBodyJson["mode"] && reqBodyJson["mode"] === "metric") {
+        try {
+            const collegeMetricResult = await getCollegeMetrics();
+            resolve.status(200).send(collegeMetricResult);
+        } catch (e) {
+            resolve.status(500).send(e);
+        }
+    } else {
+        const {searchText, top, skip, filters, searchFields} = JSON.parse(req.body);
+        try {
+            const collegeSearchResult = await getCollegeInfo(searchText, top, skip, filters, searchFields);
+            resolve.status(200).send(collegeSearchResult);
+        } catch (e) {
+            resolve.status(500).send(e);
+        }
     }
 };
+
+/*
+    {<college name>: [<>, <>]}
+*/
+
+/*
+ {
+     "mode": "metric"
+
+ }
+*/
+export const getCollegeMetrics = (): Promise<Object> => {
+    return new Promise(async (res, err) => {
+        try {
+            const selectFields: string[] = ["INSTNM", "TARGET_TIER", "SAFETY_TIER"];
+            const searchResults = await searchClient.search("*", {
+                top: 7000,
+                skip: 0,
+                includeTotalCount: true,
+                searchMode: "all",
+                select: selectFields
+            });
+            let output = {};
+            for await (const result of searchResults.results) {
+                const curCollege = result["document"];
+                output[curCollege["INSTNM"]] = [curCollege["TARGET_TIER"], curCollege["SAFETY_TIER"]];
+            }
+            res(output);
+        } catch (e) {
+            err(res);
+        }
+    })
+}
+
 
 export const getCollegeInfo = (
     searchText,
@@ -40,18 +82,18 @@ export const getCollegeInfo = (
 ): Promise<Object> => {
     return new Promise(async (res, err) => {
         try {
-            const searchOptions = {
+
+            // "*"
+            const searchResults = await searchClient.search(searchText, {
                 top: top,
                 skip: skip,
                 includeTotalCount: true,
                 searchMode: "all",
                 // facets: Object.keys(processedFacets),
                 filter: createFilterExpression(filters),
-                // select: ,
+                // select: ["SAFETY_TIER", "TARGET"],
                 searchFields: searchFields
-            }
-
-            const searchResults = await searchClient.search(searchText, searchOptions);
+            });
             let output = [];
             for await (const result of searchResults.results) {
                 output.push(formatOutput(result["document"]));
