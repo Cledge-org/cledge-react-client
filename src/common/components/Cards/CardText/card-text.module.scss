@@ -1,0 +1,13 @@
+@use "src/common/styles" as *;
+
+.article-btn {
+  outline: none;
+  color: $cl-blue;
+  width: fit-content;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  &:hover {
+    background-color: rgba($color: $cl-blue, $alpha: 15%);
+  }
+}

@@ -1,0 +1,6 @@
+@use "src/common/styles" as *;
+.forgot-password-btn {
+  color: $cl-mid-gray;
+  font-weight: 600;
+  font-size: 0.8em;
+}

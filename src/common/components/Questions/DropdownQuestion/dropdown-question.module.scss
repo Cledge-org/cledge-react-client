@@ -1,0 +1,132 @@
+@use "src/common/styles" as *;
+
+.dropdown-question-btn {
+  @extend .cl-mid-gray;
+
+  .icon-close {
+    animation-name: rotateReverse;
+    animation-duration: 600ms;
+    animation-fill-mode: forwards;
+  }
+
+  .icon-open {
+    animation-fill-mode: forwards;
+    animation-name: rotate;
+    animation-duration: 600ms;
+  }
+
+  border: 1px solid $cl-light-gray;
+  background-color: $cl-light-gray;
+  border-radius: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: none;
+  &:active,
+  &:focus,
+  &:checked {
+    box-shadow: none;
+    border: 1px solid $cl-light-gray;
+    background-color: $cl-light-gray;
+    @extend .cl-mid-gray;
+  }
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+    border: 1px solid $cl-light-gray;
+    background-color: $cl-light-gray;
+    @extend .cl-mid-gray;
+  }
+}
+
+.dropdown-question-menu {
+  z-index: 1000;
+  div:first-of-type {
+    border: 1px solid transparent;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  div:last-of-type {
+    border: 1px solid transparent;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  border: 1px solid transparent;
+  border-radius: 10px;
+  right: 0;
+  width: 40%;
+  max-height: 30vh;
+  overflow-y: auto;
+  background-color: white;
+
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $cl-light-gray;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $cl-mid-gray;
+    border-radius: 10px;
+    &:hover {
+      background: rgba($color: $cl-mid-gray, $alpha: 0.7);
+    }
+  }
+
+  .dropdown-item {
+    @extend .cl-dark-text;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: background-color 200ms;
+    &:hover {
+      @extend .bg-light-gray;
+      cursor: pointer;
+    }
+  }
+
+  .dropdown-item-picked {
+    @extend .dropdown-item;
+    font-size: 0.95em;
+    color: white;
+    font-weight: 500;
+    transition: background-color 200ms;
+    background-color: $cl-blue;
+    &:hover {
+      color: $cl-blue;
+      cursor: pointer;
+      color: $cl-blue;
+    }
+  }
+}
+
+@keyframes rotateReverse {
+  0% {
+    color: $cl-blue;
+    transform: rotate(180deg);
+  }
+  100% {
+    color: $cl-mid-gray;
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes rotate {
+  0% {
+    color: $cl-mid-gray;
+    transform: rotate(0deg);
+  }
+  100% {
+    color: $cl-blue;
+    transform: rotate(180deg);
+  }
+}

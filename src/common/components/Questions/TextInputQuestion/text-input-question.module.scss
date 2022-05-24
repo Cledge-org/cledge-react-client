@@ -1,0 +1,12 @@
+@use "src/common/styles" as *;
+
+.ec-text-input {
+  @extend .bg-light-gray;
+  width: 100%;
+  border: 1px solid $cl-light-gray;
+  &:active,
+  &:focus {
+    @extend .bg-light-gray;
+    border: 1px solid $cl-light-gray;
+  }
+}

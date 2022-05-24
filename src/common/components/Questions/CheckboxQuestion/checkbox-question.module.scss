@@ -1,0 +1,30 @@
+@use "src/common/styles" as *;
+
+.mcq-answer-btn {
+  @extend .cl-dark-text;
+  font-weight: bold;
+  font-size: 1em;
+  text-align: start;
+  width: 90%;
+  background-color: $cl-light-gray;
+  outline: none;
+  border-radius: 15px;
+  border: 1px solid transparent;
+  &:hover {
+    background-color: rgba($color: $cl-mid-gray, $alpha: 0.2);
+  }
+}
+
+.checkbox-mcq-variant {
+  @extend .mcq-answer-btn;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.checkbox-mcq-variant-selected {
+  @extend .checkbox-mcq-variant;
+  background-color: $cl-orange;
+  &:hover {
+    background-color: $cl-orange;
+  }
+}
