@@ -55,7 +55,38 @@ export const getQuestionList = (
     }
   });
 };
-
+export const getQuestionListById = (
+  _id: ObjectId,
+  overrideClient?: MongoClient
+): Promise<QuestionList> => {
+  return new Promise(async (res, err) => {
+    try {
+      const client =
+        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
+      const questionsDb = client.db("questions");
+      const gradeQuestionList: QuestionList_Db = (await questionsDb
+        .collection("question-lists")
+        .findOne({ _id })) as QuestionList_Db;
+      // Question list chunks are currently just chunk ids, we need to fetch from database
+      const gradeQuestionChunks: QuestionChunk[] = (await Promise.all(
+        gradeQuestionList.chunks.map((chunkName: any) =>
+          getQuestionChunk(chunkName, questionsDb)
+        )
+      )) as QuestionChunk[];
+      // Populate question list chunks
+      res({
+        _id: gradeQuestionList._id,
+        name: gradeQuestionList.name,
+        chunks: gradeQuestionChunks,
+      });
+      if (!overrideClient) {
+        client.close();
+      }
+    } catch (e) {
+      err(e);
+    }
+  });
+};
 // Gets and populates list given its database document
 export const getQuestionListByDocument = (
   list: QuestionList_Db,

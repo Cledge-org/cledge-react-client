@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export declare global {
   interface Window {
     YT: any;
@@ -264,5 +266,24 @@ export declare global {
     name: string;
     message: string;
     email: string;
+  }
+  interface PathwayPart_Db {
+    _id?: ObjectId;
+    order: number;
+    name: string;
+    dynamicRoutes: {
+      type: string;
+      routeId: ObjectId;
+    }[];
+  }
+  interface PathwayPart {
+    _id?: ObjectId;
+    order: number;
+    name: string;
+    dynamicRoutes: DynamicPartRoute[];
+  }
+  interface DynamicPartRoute {
+    type: string;
+    route: any;
   }
 }

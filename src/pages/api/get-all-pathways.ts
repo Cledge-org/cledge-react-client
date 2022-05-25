@@ -75,7 +75,7 @@ export function getSpecificPathway(
 }
 
 // Gets specific module given its id and database
-function getSpecificModule(
+export function getSpecificModule(
   moduleId: ObjectId,
   pathwaysDb: Db
 ): Promise<PathwayModule | null> {

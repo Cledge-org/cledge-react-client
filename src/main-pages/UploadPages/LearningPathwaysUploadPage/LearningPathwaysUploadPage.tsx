@@ -976,7 +976,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                   ...sendPathwayData.modules.map((module, index) =>
                     callPutPathwayModule({
                       pathwayModuleId:
-                        module._id === null ? "Uh Oh" : module._id,
+                        module._id === null ? undefined : module._id,
                     })
                   ),
                 ])
@@ -999,7 +999,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                       callPutPathway({
                         pathwayId:
                           sendPathwayData._id === null
-                            ? "Uh Oh"
+                            ? undefined
                             : sendPathwayData._id,
                       }),
                       ...personalizedContentUpload.map(
@@ -1007,7 +1007,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                           await callPutPathwayModulePersonalizedContent({
                             contentId:
                               personalizedContent._id === null
-                                ? "Uh Oh"
+                                ? undefined
                                 : personalizedContent._id,
                           })
                       ),
