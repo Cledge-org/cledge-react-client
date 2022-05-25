@@ -125,7 +125,7 @@ const ResourcesPage: NextApplicationPage<{ resourcesInfo: ResourcesInfo }> = ({
               onChange={(e) => {
                 setSearchTxt(e.target.value);
               }}
-              className={classNames("py-1", styles.searchInput)}
+              className={classNames("py-2", styles.searchInput)}
               type="text"
               placeholder="What would you like to know?"
             />

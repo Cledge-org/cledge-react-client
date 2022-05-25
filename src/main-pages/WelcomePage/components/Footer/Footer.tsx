@@ -1,4 +1,4 @@
-import styles from "../../styles/Home.module.css";
+import styles from "./footer.module.scss";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -31,18 +31,21 @@ export default function Footer({
           <br />
           <div className="mt-3">
             <a href="https://www.linkedin.com/company/cledge/">
-              <FontAwesomeIcon icon={faLinkedin} className="social-icon" />
+              <FontAwesomeIcon
+                icon={faLinkedin}
+                className={styles.socialIcon}
+              />
             </a>
             <a href="https://www.facebook.com/cledge.org">
               <FontAwesomeIcon
                 icon={faFacebookSquare}
-                className="social-icon"
+                className={styles.socialIcon}
               />
             </a>
             <a href="https://www.instagram.com/hello.cledge/">
               <FontAwesomeIcon
                 icon={faInstagramSquare}
-                className="social-icon"
+                className={styles.socialIcon}
               />
             </a>
           </div>

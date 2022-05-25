@@ -62,7 +62,7 @@ module.exports = {
     GOOGLE_ID: process.env.GOOGLE_ID,
     GOOGLE_SECRET: process.env.GOOGLE_SECRET,
   },
-  webpack: (config) => {
+  webpack: (config, { dev }) => {
     const oneOf = config.module.rules.find(
       (rule) => typeof rule.oneOf === "object"
     );
@@ -85,6 +85,9 @@ module.exports = {
         }
       }
     }
+    // if (dev) {
+    //   config.devtool = "cheap-module-source-map";
+    // }
     return config;
   },
 };

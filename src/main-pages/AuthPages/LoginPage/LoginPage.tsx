@@ -83,47 +83,47 @@ const LoginPage = () => {
             Sign in with {GoogleProvider.name}
           </button>
         </div> */}
-          <div className="px-0 align-self-start mt-3">
-            <Link href="/auth/reset_password">
-              <a className={styles.forgotPasswordBtn}>Forgot Password</a>
-            </Link>
-          </div>
-          <div className="auth-bottom-nav">
-            <div className="px-0">
+
+          <div className={styles.authBottomNav}>
+            <div className="px-0 align-self-start mt-3">
+              <Link href="/auth/reset-password">
+                <a className={styles.forgotPasswordBtn}>Forgot Password</a>
+              </Link>
+            </div>
+            <div className="px-0 mt-3">
               <Link href="/auth/signup">
                 <a className="cl-blue">Create Account</a>
               </Link>
             </div>
-
-            <div className="px-0">
-              <input
-                type="submit"
-                value={"Log In"}
-                className="btn btn-primary cl-btn-blue"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const emailStr = "Email must be formatted correctly";
-                  if (
-                    !formData.email.includes("@") ||
-                    !formData.email.includes(".")
-                  ) {
-                    if (!errorMessages.includes(emailStr)) {
-                      errorMessages.push(emailStr);
-                      setErrorMessages([...errorMessages]);
-                    }
-                    return;
-                  } else if (errorMessages.includes(emailStr)) {
-                    errorMessages.splice(errorMessages.indexOf(emailStr), 1);
+          </div>
+          <div className="px-0">
+            <input
+              type="submit"
+              value={"Log In"}
+              className="btn btn-primary cl-btn-blue"
+              onClick={(e) => {
+                e.preventDefault();
+                const emailStr = "Email must be formatted correctly";
+                if (
+                  !formData.email.includes("@") ||
+                  !formData.email.includes(".")
+                ) {
+                  if (!errorMessages.includes(emailStr)) {
+                    errorMessages.push(emailStr);
                     setErrorMessages([...errorMessages]);
                   }
-                  signIn("credentials", {
-                    password: formData.password,
-                    email: formData.email,
-                    callbackUrl: `${window.location.origin}/dashboard`,
-                  });
-                }}
-              />
-            </div>
+                  return;
+                } else if (errorMessages.includes(emailStr)) {
+                  errorMessages.splice(errorMessages.indexOf(emailStr), 1);
+                  setErrorMessages([...errorMessages]);
+                }
+                signIn("credentials", {
+                  password: formData.password,
+                  email: formData.email,
+                  callbackUrl: `${window.location.origin}/dashboard`,
+                });
+              }}
+            />
           </div>
         </form>
       </div>

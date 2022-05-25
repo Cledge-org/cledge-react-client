@@ -18,7 +18,7 @@ export default function Header({ key_prop }: { key_prop: string }) {
   var navclass = "";
 
   if (router.pathname === "/") {
-    navclass = "position-fixed fixed-top";
+    navclass = styles.navRegular + " shadow-sm position-fixed fixed-top";
   } else {
     navclass = styles.navRegular + " shadow-sm";
   }
@@ -139,13 +139,13 @@ export default function Header({ key_prop }: { key_prop: string }) {
       key={key_prop}
       className={classNames(
         `w-100 navbar cl-blue navbar-expand-md px-3`,
-        navclass,
         scrollState !== "scrolling" && router.pathname === "/"
           ? `position-absolute top-0 start-0 ${styles.navTransparent}`
           : "sticky-top",
         {
           [styles.navRegularNoShadow + " shadow-none"]:
             scrollState !== "scrolling" && router.pathname !== "/",
+          [navclass]: scrollState === "scrolling",
         }
       )}
       style={{ zIndex: 2000 }}
