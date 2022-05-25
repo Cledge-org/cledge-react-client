@@ -153,7 +153,8 @@ const formatOutput = (college) => {
         "introduction": null,
         "urbanization": college["LOCALE2"],
         "religious_affiliation": college["RELAFFIL"],
-        "standard_address": college["CITY"] + ", " + college["STABBR"] + ", " + college["ZIP"],
+        "standard_address": college["ADDR"] + "\n" + college["CITY"] + ", " + college["STABBR"] + " " + college["ZIP"],
+        "contact_phone_num": college["GENTELE"],
         "application_requirement": null,
         "sat/act_score": {
             "sat_critical_reading_25": college["SATVR25"],
@@ -170,7 +171,16 @@ const formatOutput = (college) => {
             "act_cumulative_75": college["ACTCM75"],
             "sat_avg": college["SAT_AVG"]
         },
-        "acceptance_rate": college["ADM_RATE"],
+        "acceptance_rate": {
+            "acceptance_rate_total": college["ADM_RATE"],
+            "acceptance_rate_men": college["DVADM02"] / 100,
+            "acceptance_rate_women": college["DVADM03"] / 100,
+            "commit_rate_men": college["DVADM08"] / 100,
+            "commit_rate_women": college["DVADM09"] / 100
+        },
+        "submit_sat_percent": college["SATPCT"] / 100,
+        "submit_act_percent": college["ACTPCT"] / 100,
+        "offer_rotc": dicts.offer_rotc[college["SLO5"]],
         "applicants_per_year": null,
         "matriculation_rate": null,
         "student_faculty_ratio": null,
@@ -181,10 +191,20 @@ const formatOutput = (college) => {
         "retention_rate_lt_4_years": college["RET_FTL4"],
         "4_year_graduation_rate": college["C150_4"],
         "6_year_graduation_rate": null,
+        "open_admission_policy": dicts.open_adm_policy[college["OPENADMP"]],
         "admission policy": {
             "coeducational": null,
             "men_only": college["MENONLY"] == 1,
             "women_only": college["WOMENONLY"] == 1
+        },
+        "admission_factors": {
+            "high_school_gpa": dicts.adm_factors[college["ADMCON1"]],
+            "high_school_rank": dicts.adm_factors[college["ADMCON2"]],
+            "high_school_record": dicts.adm_factors[college["ADMCON3"]],
+            "completion_college_prep": dicts.adm_factors[college["ADMCON4"]],
+            "letters_of_recommendation": dicts.adm_factors[college["ADMCON5"]],
+            "formal_demonstration_of_competencies": dicts.adm_factors[college["ADMCON6"]],
+            "standardized_test_scores": dicts.adm_factors[college["ADMCON7"]]
         },
         "student_ethnicity_ratio": {
             "White": college["UGDS_WHITE"],

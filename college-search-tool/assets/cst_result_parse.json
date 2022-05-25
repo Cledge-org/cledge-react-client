@@ -43,5 +43,25 @@
         "1": "Public",
         "2": "Private non-profit",
         "3": "Private for-profit"
+    },
+    "open_adm_policy": {
+        "1": "Yes",
+        "2": "No",
+        "-1": "Not reported",
+        "-2": "N/A"
+    },
+    "adm_factors": {
+        "1": "Required",
+        "2": "Recommended",
+        "3": "Neither required nor recommended",
+        "5": "Considered but not required",
+        "-1": "Not reported",
+        "-2": "N/A"
+    },
+    "offer_rotc": {
+        "1": "Yes",
+        "0": "Implied no",
+        "-1": "Not reported",
+        "-2": "N/A"
     }
 }
