@@ -20,7 +20,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
 // Admin API. Gets all pathways and their modules, with all their preset and
 // personalized contents
-export function getAllParts(): Promise<PathwayPart[]> {
+export function getAllParts(): Promise<PathwayPart_Db[]> {
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
@@ -32,7 +32,7 @@ export function getAllParts(): Promise<PathwayPart[]> {
       res(
         (await Promise.all(
           parts.map(({ _id }) => getSpecificPart(_id))
-        )) as PathwayPart[]
+        )) as PathwayPart_Db[]
       );
       client.close();
     } catch (e) {
@@ -40,7 +40,7 @@ export function getAllParts(): Promise<PathwayPart[]> {
     }
   });
 }
-export function getSpecificPart(partId: ObjectId): Promise<PathwayPart> {
+export function getSpecificPart(partId: ObjectId): Promise<PathwayPart_Db> {
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
@@ -50,22 +50,24 @@ export function getSpecificPart(partId: ObjectId): Promise<PathwayPart> {
         .findOne({
           _id: partId instanceof ObjectId ? partId : new ObjectId(partId),
         })) as PathwayPart_Db;
-
-      let dynamicRoutes: DynamicPartRoute[] = await Promise.all(
-        part.dynamicRoutes.map(({ type, routeId }) => ({
-          type,
-          route:
-            type === "pathway"
-              ? getSpecificPathwayById(routeId)
-              : getQuestionListById(routeId),
-        }))
-      );
-      dynamicRoutes = dynamicRoutes.filter((x) => x !== null);
+      //!UNCOMMENT THE CODE BELOW IF YOU WANT THE PATHWAY/CHECKIN OBJECT AS WELL
+      //   let dynamicRoutes: DynamicPartRoute[] = await Promise.all(
+      //     part.dynamicRoutes.map(async ({ type, routeId }) => ({
+      //       type,
+      //       route:
+      //         type === "pathway"
+      //           ? await getSpecificPathwayById(
+      //               routeId instanceof ObjectId ? routeId : new ObjectId(routeId)
+      //             )
+      //           : await getQuestionListById(routeId),
+      //     }))
+      //   );
+      //   dynamicRoutes = dynamicRoutes.filter((x) => x !== null);
       res({
         name: part.name,
         _id: part._id,
         order: part.order,
-        dynamicRoutes,
+        dynamicRoutes: part.dynamicRoutes,
       });
       client.close();
     } catch (e) {

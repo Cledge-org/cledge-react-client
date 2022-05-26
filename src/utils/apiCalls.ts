@@ -161,6 +161,21 @@ export const callPutQuestionList = async ({
     }),
   });
 };
+export const callPutPathwayPart = async ({
+  part,
+  partId,
+}: {
+  part?: PathwayPart_Db;
+  partId?: ObjectId | string;
+}) => {
+  return await fetch(`/api/put-pathway-part`, {
+    method: "POST",
+    body: JSON.stringify({
+      part,
+      partId,
+    }),
+  });
+};
 export const alertSlackError = (error: string) => {
   fetch(
     "https://hooks.slack.com/services/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",

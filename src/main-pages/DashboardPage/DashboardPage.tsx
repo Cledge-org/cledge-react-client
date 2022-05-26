@@ -295,6 +295,15 @@ const DashboardPage: NextApplicationPage<{
           <button
             onClick={() => {
               router.push({
+                pathname: "/upload/pathways-part-upload",
+              });
+            }}
+          >
+            Pathway Parts
+          </button>
+          <button
+            onClick={() => {
+              router.push({
                 pathname: "/upload/resources-upload",
               });
             }}
