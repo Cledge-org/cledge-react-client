@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "../AppPage/AppPage";
@@ -17,11 +17,10 @@ import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageError
 
 // logged in landing page
 const DashboardPage: NextApplicationPage<{
-  allPathways: Pathway[];
-  allCheckins: QuestionList[];
+  dashboardParts: PathwayPart[];
   accountInfo: AccountInfo;
   pathwaysProgress: PathwayProgress[];
-}> = ({ allPathways, accountInfo, pathwaysProgress, allCheckins }) => {
+}> = ({ dashboardParts, accountInfo, pathwaysProgress }) => {
   const router = useRouter();
   const session = useSession();
   const [currTab, setCurrTab] = useState("all modules");
@@ -42,6 +41,13 @@ const DashboardPage: NextApplicationPage<{
   useEffect(() => {
     let totalPathways = 0;
     let finishedPathways = 0;
+    const allPathways = dashboardParts
+      .map(({ dynamicRoutes }) => {
+        return dynamicRoutes.map(({ route }) => route);
+      })
+      .reduce((prev, curr) => {
+        return prev.concat(curr);
+      }, []);
     allPathways?.forEach((pathway) => {
       if (
         !pathwaysProgress.find(({ pathwayId }) => {
@@ -59,7 +65,7 @@ const DashboardPage: NextApplicationPage<{
     });
     setPercentage(Math.round((finishedPathways / totalPathways) * 100));
   }, []);
-  const getCurrentTasks = () => {
+  const getCurrentTasks = (allPathways) => {
     let noProgress = [];
     allPathways?.forEach((pathway) => {
       if (
@@ -99,9 +105,11 @@ const DashboardPage: NextApplicationPage<{
       }
     });
     return pathwaysProgress
-      .filter(({ finished }) => {
+      .filter(({ finished, pathwayId }) => {
         console.log(finished);
-        return !finished;
+        return (
+          !finished && allPathways.find(({ _id }) => parseId(_id) === pathwayId)
+        );
       })
       .map(({ moduleProgress, name, pathwayId }) => {
         let realPathway = allPathways.find(
@@ -153,10 +161,12 @@ const DashboardPage: NextApplicationPage<{
       })
       .concat(noProgress);
   };
-  const getFinishedTasks = () => {
+  const getFinishedTasks = (allPathways) => {
     let pathwaysList = pathwaysProgress
-      .filter(({ finished }) => {
-        return finished;
+      .filter(({ finished, pathwayId }) => {
+        return (
+          finished && allPathways.find(({ _id }) => parseId(_id) === pathwayId)
+        );
       })
       .map(({ moduleProgress, name, pathwayId }) => {
         let realPathway = allPathways.find(
@@ -186,71 +196,57 @@ const DashboardPage: NextApplicationPage<{
       });
     return pathwaysList;
   };
-  const sortIntoParts = (pathwaysList) => {
-    console.log(pathwaysList);
-    let partsList = [];
-    pathwaysList.sort((a, b) => {
-      if (!a.part) {
-        a.part = "0. No Part";
-        a.order = 0;
-      }
-      if (!b.part) {
-        b.part = "0. No Part";
-        b.order = 0;
-      }
-      return (
-        parseInt(b.part.substring(0, b.part.indexOf("."))) -
-        parseInt(a.part.substring(0, a.part.indexOf(".")))
-      );
-    });
-    let copyOfPathways = pathwaysList.slice();
-    for (let i = 0; i < copyOfPathways.length; i++) {
-      let pathway = copyOfPathways[i];
-      let filteredCheckinsPathways = copyOfPathways.filter(
-        (element) => element.part === pathway.part
-      );
-      filteredCheckinsPathways.push(
-        ...allCheckins.filter(({ part }) => part === pathway.part)
-      );
-      console.log(filteredCheckinsPathways);
-      partsList.push(filteredCheckinsPathways);
-      copyOfPathways = copyOfPathways.filter(
-        (element) => element.part !== pathway.part
-      );
-      i = -1;
-    }
-    partsList.sort((a, b) => {
-      return (
-        parseInt(a[0].part.substring(0, a[0].part.indexOf("."))) -
-        parseInt(b[0].part.substring(0, b[0].part.indexOf(".")))
-      );
-    });
-    let partsComponents = [];
-    partsList.forEach((part) => {
-      part.sort((a, b) => b.order - a.order);
-      let finished = 0;
-      let total = 0;
-      part.forEach(({ subtasks }) => {
-        if (!subtasks) {
-          return;
+  const sortPathwaysCheckins = (
+    currentTasks,
+    finishedTasks,
+    checkIns,
+    originalArr
+  ) => {
+    return originalArr
+      .map(({ type, route }) => {
+        if (type === "pathway") {
+          return (
+            (currentTasks &&
+              currentTasks.find(({ pathwayId }) => pathwayId === route._id)) ||
+            (finishedTasks &&
+              finishedTasks.find(({ pathwayId }) => pathwayId === route._id))
+          );
         }
-        Object.keys(subtasks).forEach((subtask, index) => {
-          if (subtasks[subtask].finished) {
-            finished++;
-          }
-        });
-        total += Object.keys(subtasks).length;
-      });
-      partsComponents.push(
-        <PartDropDown
-          progressRatio={finished / total}
-          pathwayCheckinList={part}
-          title={part[0].part}
-        />
-      );
-    });
-    return partsComponents;
+        return checkIns.find(({ _id }) => _id === route._id);
+      })
+      .filter((route) => route !== undefined);
   };
+  const partComponents = useMemo(() => {
+    return dashboardParts
+      .map((part) => {
+        const allPathways = part.dynamicRoutes
+          .filter(({ type }) => type === "pathway")
+          .map(({ route }) => route);
+        const currTaskPathways = getCurrentTasks(allPathways);
+        const finishedPathways = getFinishedTasks(allPathways);
+        const sortedRoutes = sortPathwaysCheckins(
+          currTab !== "finished tasks" && currTaskPathways,
+          currTab !== "current tasks" && finishedPathways,
+          part.dynamicRoutes
+            .filter(({ type }) => type === "checkin")
+            .map(({ route }) => route),
+          part.dynamicRoutes
+        );
+        return (
+          sortedRoutes.length > 0 && (
+            <PartDropDown
+              progressRatio={
+                finishedPathways.length /
+                (currTaskPathways.length + finishedPathways.length)
+              }
+              pathwayCheckinList={sortedRoutes}
+              title={`${part.order}. ${part.name}`}
+            />
+          )
+        );
+      })
+      .filter((part) => part);
+  }, [currTab, dashboardParts, accountInfo, pathwaysProgress]);
   // const asyncUseEffect = async () => {
   //   console.time("DASHBOARD");
   //   let json = await (
@@ -322,16 +318,6 @@ const DashboardPage: NextApplicationPage<{
         </div>
       </div>
     );
-  }
-  let currentTasks = getCurrentTasks();
-  let finishedTasks = getFinishedTasks();
-  let sortedParts = [];
-  if (currTab === "current tasks") {
-    sortedParts = sortIntoParts(currentTasks);
-  } else if (currTab === "finished tasks") {
-    sortedParts = sortIntoParts(finishedTasks);
-  } else {
-    sortedParts = sortIntoParts(currentTasks.concat(finishedTasks));
   }
   return (
     <PageErrorBoundary>
@@ -457,42 +443,22 @@ const DashboardPage: NextApplicationPage<{
         </div>
         <div className="container-fluid align-self-center mx-0 px-5 pb-5 mx-5 justify-content-evenly">
           <div className="row w-100 flex-wrap">
-            {currTab === "current tasks" ? (
-              sortedParts.length > 0 ? (
-                sortedParts
-              ) : (
-                <div
-                  className="container-fluid center-child"
-                  style={{ height: "40vh" }}
-                >
-                  You have no current tasks.
-                </div>
-              )
-            ) : null}
-            {currTab === "finished tasks" ? (
-              finishedTasks.length > 0 ? (
-                sortedParts
-              ) : (
-                <div
-                  className="container-fluid center-child"
-                  style={{ height: "40vh" }}
-                >
-                  Any finished tasks will appear here.
-                </div>
-              )
-            ) : null}
-            {currTab === "all modules" ? (
-              sortedParts.length > 0 ? (
-                sortedParts
-              ) : (
-                <div
-                  className="container-fluid center-child"
-                  style={{ height: "40vh" }}
-                >
-                  Any modules will appear here.
-                </div>
-              )
-            ) : null}
+            {partComponents.length > 0 ? (
+              partComponents
+            ) : (
+              <div
+                className="container-fluid center-child"
+                style={{ height: "40vh" }}
+              >
+                You have no{" "}
+                {currTab === "finished tasks"
+                  ? "finished"
+                  : currTab === "current tasks"
+                  ? "current"
+                  : ""}
+                tasks.
+              </div>
+            )}
           </div>
         </div>
       </div>

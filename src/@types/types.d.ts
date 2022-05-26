@@ -87,16 +87,12 @@ export declare global {
     _id?: ObjectId;
     name: string;
     isCheckin?: boolean;
-    part?: string;
-    order?: number;
     chunks: QuestionChunk[];
   }
   interface QuestionList_Db extends WithId<Document> {
     _id?: ObjectId;
     name: string;
     isCheckin?: boolean;
-    part?: string;
-    order?: number;
     chunks: string[]; // Document IDs of chunks
   }
   interface QuestionChunk extends WithId<Document> {
@@ -152,16 +148,12 @@ export declare global {
     _id?: ObjectId;
     name: string;
     modules: PathwayModule[];
-    part: string;
-    order: number;
     tags: string[];
   }
   interface Pathway_Db extends WithId<Document> {
     _id?: ObjectId;
     tags: string[];
     modules: ObjectId[]; // Module document IDs
-    part: string;
-    order: number;
     name: string;
   }
   interface PathwayModule {
@@ -271,10 +263,7 @@ export declare global {
     _id?: ObjectId;
     order: number;
     name: string;
-    dynamicRoutes: {
-      type: string;
-      routeId: ObjectId;
-    }[];
+    dynamicRoutes: DynamicPartRouteID[];
   }
   interface PathwayPart {
     _id?: ObjectId;
@@ -285,5 +274,9 @@ export declare global {
   interface DynamicPartRoute {
     type: string;
     route: any;
+  }
+  interface DynamicPartRouteID {
+    type: string;
+    routeId: ObjectId;
   }
 }

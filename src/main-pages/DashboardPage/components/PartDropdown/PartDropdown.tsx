@@ -14,9 +14,9 @@ function PartDropDown({
   title: string;
   progressRatio: number;
 }) {
-  console.log(styles);
   const [isExpanded, setIsExpanded] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  console.log(pathwayCheckinList);
   useEffect(() => {
     setInitialized(true);
   }, []);

@@ -38,7 +38,7 @@ export const callPutPathway = async ({
   pathwayId,
 }: {
   pathway?: Pathway;
-  pathwayId?: ObjectId;
+  pathwayId?: ObjectId | string;
 }) => {
   return await fetch("/api/put-pathway", {
     method: "POST",
@@ -53,7 +53,7 @@ export const callPutQuestion = async ({
   questionId,
 }: {
   question?: Question;
-  questionId?: ObjectId;
+  questionId?: ObjectId | string;
 }) => {
   return await fetch("/api/put-question", {
     method: "POST",
@@ -68,7 +68,7 @@ export const callPutResource = async ({
   resource,
   tag,
 }: {
-  resourceId?: ObjectId;
+  resourceId?: ObjectId | string;
   resource?: CardArticle | CardVideo | CardResource | undefined;
   tag?: string | undefined;
 }) => {
@@ -106,7 +106,7 @@ export const callPutPathwayModule = async ({
   pathwayModuleId,
 }: {
   pathwayModule?: PathwayModule_Db;
-  pathwayModuleId?: ObjectId;
+  pathwayModuleId?: ObjectId | string;
 }) => {
   return await fetch("/api/put-pathway-module", {
     method: "POST",
@@ -121,7 +121,7 @@ export const callPutPathwayModulePersonalizedContent = async ({
   contentId,
 }: {
   content?: PersonalizedContent;
-  contentId?: ObjectId;
+  contentId?: ObjectId | string;
 }) => {
   return await fetch("/api/put-pathway-module-personalized-content", {
     method: "POST",
@@ -136,7 +136,7 @@ export const callPutQuestionChunk = async ({
   questionChunkId,
 }: {
   questionChunk?: QuestionChunk;
-  questionChunkId?: ObjectId;
+  questionChunkId?: ObjectId | string;
 }) => {
   return await fetch("/api/put-question-chunk", {
     method: "POST",
@@ -151,7 +151,7 @@ export const callPutQuestionList = async ({
   questionListId,
 }: {
   questionList?: QuestionList_Db;
-  questionListId?: ObjectId;
+  questionListId?: ObjectId | string;
 }) => {
   return await fetch("/api/put-question-list", {
     method: "POST",

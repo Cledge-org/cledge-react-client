@@ -77,6 +77,7 @@ export const getQuestionListById = (
       res({
         _id: gradeQuestionList._id,
         name: gradeQuestionList.name,
+        isCheckin: gradeQuestionList.isCheckin,
         chunks: gradeQuestionChunks,
       });
       if (!overrideClient) {

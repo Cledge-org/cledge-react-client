@@ -28,8 +28,6 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
   ] = useState({
     _id: null,
     name: "",
-    part: "",
-    order: -1,
     modules: [
       {
         _id: null,
@@ -122,8 +120,6 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                   tags: sendPathwayData.tags,
                   modules: jsonArr.map(({ moduleId }) => moduleId),
                   name: sendPathwayData.name,
-                  order: sendPathwayData.order,
-                  part: sendPathwayData.part,
                 },
               }),
               ...personalizedContentUpload.map(
@@ -174,8 +170,6 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 setCurrPathwayData({
                   _id: null,
                   name: "",
-                  part: "",
-                  order: -1,
                   modules: [
                     {
                       _id: null,
@@ -251,51 +245,6 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             className="px-3 form-control"
             id="course-name"
             placeholder="Enter course name"
-          />
-        </div>
-        <div className="form-group">
-          <label
-            style={{ fontSize: "0.9em" }}
-            className="text-muted"
-            htmlFor="course-part"
-          >
-            Part (Example: "1. Starting Pathways"):
-          </label>
-          <input
-            value={currPathwayData.part}
-            onChange={(e) =>
-              setCurrPathwayData({
-                ...currPathwayData,
-                part: e.target.value,
-              })
-            }
-            type="text"
-            className="px-3 form-control"
-            id="course-part"
-            placeholder="Enter part"
-          />
-        </div>
-        <div className="form-group">
-          <label
-            style={{ fontSize: "0.9em" }}
-            className="text-muted"
-            htmlFor="course-order"
-          >
-            Order: (Lower number means it's at the beginning or higher priority)
-          </label>
-          <input
-            value={currPathwayData.order}
-            onChange={(e) => {
-              console.log(parseInt(e.target.value));
-              setCurrPathwayData({
-                ...currPathwayData,
-                order: parseInt(e.target.value),
-              });
-            }}
-            type="number"
-            className="px-3 form-control"
-            id="course-order"
-            placeholder="Enter order"
           />
         </div>
         <div className="form-group">
