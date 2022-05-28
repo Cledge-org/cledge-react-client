@@ -21,34 +21,23 @@ const searchClient = new SearchClient(
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     console.log(req.body);
     const reqBodyJson = JSON.parse(req.body);
-    if (reqBodyJson["mode"] && reqBodyJson["mode"] === "metric") {
-        try {
+    try {
+        if (reqBodyJson["mode"] && reqBodyJson["mode"] === "metric") {
             const collegeMetricResult = await getCollegeMetrics();
             resolve.status(200).send(collegeMetricResult);
-        } catch (e) {
-            resolve.status(500).send(e);
-        }
-    } else {
-        const {searchText, top, skip, filters, searchFields} = JSON.parse(req.body);
-        try {
+        } else {
+            const {searchText, top, skip, filters, searchFields} = JSON.parse(req.body);
             const collegeSearchResult = await getCollegeInfo(searchText, top, skip, filters, searchFields);
             resolve.status(200).send(collegeSearchResult);
-        } catch (e) {
-            resolve.status(500).send(e);
         }
+    } catch (e) {
+        resolve.status(500).send(e);
     }
+
 };
 
-/*
-    {<college name>: [<>, <>]}
-*/
-
-/*
- {
-     "mode": "metric"
-
- }
-*/
+// Get a dictionary that maps college name with safety & target tiers
+// *Only for college fit metrics*
 export const getCollegeMetrics = (): Promise<Object> => {
     return new Promise(async (res, err) => {
         try {
@@ -73,7 +62,8 @@ export const getCollegeMetrics = (): Promise<Object> => {
     })
 }
 
-
+// Return a list of colleges that contains formatted attributes
+// *For Searching colleges based on filters and search text*
 export const getCollegeInfo = (
     searchText,
     top,
@@ -83,7 +73,6 @@ export const getCollegeInfo = (
 ): Promise<Object> => {
     return new Promise(async (res, err) => {
         try {
-            // "*"
             const searchResults = await searchClient.search(searchText, {
                 top: top,
                 skip: skip,
