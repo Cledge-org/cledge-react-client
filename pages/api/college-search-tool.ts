@@ -19,7 +19,6 @@ const searchClient = new SearchClient(
 );
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-    console.log(req.body);
     const reqBodyJson = JSON.parse(req.body);
     try {
         if (reqBodyJson["mode"] && reqBodyJson["mode"] === "metric") {
@@ -78,9 +77,7 @@ export const getCollegeInfo = (
                 skip: skip,
                 includeTotalCount: true,
                 searchMode: "all",
-                // facets: Object.keys(processedFacets),
                 filter: createFilterExpression(filters),
-                // select: ["SAFETY_TIER", "TARGET"],
                 searchFields: searchFields
             });
             let output = [];
@@ -97,7 +94,6 @@ export const getCollegeInfo = (
 // creates filters in odata syntax
 // <field> : <value>
 const createFilterExpression = (filters) => {
-    console.log(72, filters);
     let filterExpressions = [];
     Object.keys(filters).forEach(function(currentValue) {
         let curKey = currentValue.split(" ");
@@ -119,7 +115,6 @@ const createFilterExpression = (filters) => {
         let value = filters[i].value;
 
         filterExpressions.push(`${field} ${comparison} ${value}`);
-        console.log(filterExpressions);
     }
 
     return filterExpressions.join(' and ');
