@@ -1,0 +1,476 @@
+@use "./palette.module.scss" as *;
+@use "./typography.module.scss" as *;
+// @use "node_modules/bootstrap/scss/bootstrap" as *;
+
+.container-margin {
+  @media only screen and (max-width: 767px) {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  height: 100%;
+  width: 100vw;
+  overflow-x: hidden;
+}
+div,
+button {
+  font-family: "Montserrat", sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+@mixin gradient-text($fromColor, $toColor) {
+  background: -webkit-linear-gradient(left, $fromColor, $toColor);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.soft-gray-border {
+  border: 1px solid $cl-soft-gray;
+}
+.bg-cl-super-light-gray {
+  background-color: $cl-super-light-gray;
+}
+.bg-dark-blue {
+  background-color: $cl-dark-blue;
+}
+.bg-cl-dark-text {
+  background-color: $cl-dark-text;
+}
+.bg-light-blue {
+  background-color: $cl-light-blue;
+}
+.bg-light-gray {
+  background-color: $cl-light-gray;
+}
+.bg-cl-blue {
+  background-color: $cl-blue;
+}
+.bg-cl-white {
+  background-color: $cl-white;
+}
+.bg-cl-purple {
+  background-color: $cl-purple;
+}
+.bg-cl-pink-purple {
+  background-color: $cl-pink-purple;
+}
+.bg-cl-orange-red {
+  background-color: $cl-orange-red;
+}
+.bg-cl-light-yellow {
+  background-color: $cl-light-yellow;
+}
+.cl-white {
+  color: $cl-white;
+}
+.cl-translucent-white {
+  color: $cl-translucent-white;
+}
+.cl-blue {
+  color: $cl-blue;
+}
+.cl-mid-gray {
+  color: $cl-mid-gray;
+}
+.cl-light-gray {
+  color: $cl-light-gray;
+}
+.cl-dark-text {
+  color: $cl-dark-text;
+}
+.cl-black {
+  color: $cl-black;
+}
+.cl-yellow {
+  color: $cl-yellow;
+}
+.cl-red {
+  color: $cl-red;
+}
+.hover-pointer:hover {
+  cursor: pointer;
+}
+.center-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bg-light-gray {
+  background-color: $cl-light-gray;
+}
+.cl-btn-gray {
+  @extend .cl-btn;
+  color: $cl-dark-text;
+  background-color: $cl-light-gray;
+  border: 1px solid $cl-light-gray;
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+    background-color: rgba($color: $cl-light-gray, $alpha: 0.9);
+    border-color: rgba($color: $cl-light-gray, $alpha: 0.9);
+  }
+}
+.cl-btn-clear {
+  @extend .cl-btn;
+  transition: 200ms;
+  color: $cl-dark-text;
+  background-color: $cl-white;
+  border: 1px solid $cl-dark-blue;
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+    color: $cl-white;
+    background-color: rgba($color: $cl-dark-blue, $alpha: 0.9);
+    border-color: rgba($color: $cl-white, $alpha: 0.9);
+  }
+}
+
+.cl-btn-gray-selected {
+  @extend .cl-btn-gray;
+  background-color: $cl-orange;
+  border: 1px solid $cl-orange;
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+    background-color: $cl-light-gray;
+  }
+}
+.cl-btn {
+  font-weight: 500;
+  border-radius: 15px;
+  padding-left: 1.5vw;
+  padding-right: 1.5vw;
+  padding-top: 1.5vh;
+  padding-bottom: 1.5vh;
+  font-size: 0.9em;
+  // @include button-size(
+  //   $padding-x: 1.5vw,
+  //   $padding-y: 1.5vh,
+  //   $font-size: 0.9em,
+  //   $border-radius: 15px
+  // );
+  box-shadow: none;
+  &:active,
+  &:focus,
+  &:checked {
+    box-shadow: none;
+  }
+  &:hover,
+  &:active:hover {
+    font-weight: 500;
+    box-shadow: none;
+    filter: brightness(130%);
+  }
+}
+
+.cl-btn-blue {
+  @extend .cl-btn;
+  background-color: $cl-blue !important;
+  color: white !important;
+  border: 1px solid $cl-blue;
+}
+.cl-btn-red {
+  @extend .cl-btn;
+  background-color: $cl-red !important;
+  color: white !important;
+  border: 1px solid $cl-red;
+}
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"] {
+  // @extend.px-3;
+  // @extend.py-3;
+  padding-top: 1em;
+  padding-left: 1.5em;
+  padding-bottom: 1em;
+  padding-right: 1.5em;
+  border-radius: 15px;
+  &:active,
+  &:focus {
+    box-shadow: none;
+  }
+}
+h1 {
+  font-family: "Montserrat", sans-serif;
+}
+h2 {
+  font-family: "Montserrat", sans-serif;
+}
+
+a {
+  text-decoration: none !important;
+}
+.general-submit-btn {
+  @extend .cl-dark-text;
+  // @extend.py-2;
+  // @extend.px-4;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-left: 1em;
+  padding-right: 1em;
+  font-weight: bold;
+  outline: none;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background-color: transparent;
+  &:hover {
+    background-color: $cl-light-blue;
+  }
+}
+
+// $spacers: (
+//   0: 0,
+//   1: (
+//     $spacer * 0.25,
+//   ),
+//   2: (
+//     $spacer * 0.5,
+//   ),
+//   3: $spacer,
+//   4: (
+//     $spacer * 1.5,
+//   ),
+//   5: (
+//     $spacer * 3,
+//   ),
+//   6: (
+//     $spacer * 5,
+//   ),
+//   7: (
+//     $spacer * 10,
+//   ),
+// );
+
+.ms-05 {
+  margin-left: 0.2vw;
+}
+.mx-05 {
+  margin-left: 0.2vw;
+  margin-right: 0.2vw;
+}
+.me-05 {
+  margin-right: 0.2vw;
+}
+
+//GLOBAL DROPDOWN STYLES -->
+.dropdown-menu-custom {
+  position: absolute;
+  top: 130%;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+.dropdown-container {
+  transition: height 1s;
+  height: fit-content;
+}
+.dropdown-btn {
+  padding-left: 1vw;
+  padding-right: 1vw;
+  font-size: 0.9em;
+  padding-top: 2.5vh;
+  padding-bottom: 2.5vh;
+  // @include button-size(
+  //   $padding-x: 1vw,
+  //   $padding-y: 2.5vh,
+  //   $font-size: 0.9em,
+  //   $border-radius: 0
+  // );
+  position: relative;
+  .text {
+    font-weight: bold;
+    font-size: 1.25em;
+    .percentage {
+      font-weight: normal;
+      color: $cl-secondary-text;
+      font-size: 0.85em;
+      margin-left: 1.5em;
+      // @extend .ms-3;
+    }
+  }
+  .icon-close {
+    animation-name: rotateReverse;
+    animation-duration: 600ms;
+    animation-fill-mode: forwards;
+  }
+  @keyframes rotateReverse {
+    0% {
+      color: $cl-blue;
+      transform: rotate(180deg);
+    }
+    100% {
+      color: $cl-mid-gray;
+      transform: rotate(0deg);
+    }
+  }
+  @keyframes rotate {
+    0% {
+      color: $cl-mid-gray;
+      transform: rotate(0deg);
+    }
+    100% {
+      color: $cl-blue;
+      transform: rotate(180deg);
+    }
+  }
+  .icon-open {
+    animation-fill-mode: forwards;
+    animation-name: rotate;
+    animation-duration: 600ms;
+  }
+  background-color: $cl-light-gray;
+  border: none;
+  border-top: 2px solid rgba($color: $cl-secondary-text, $alpha: 0.7);
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: none;
+  &:active,
+  &:focus,
+  &:checked {
+    box-shadow: none;
+  }
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+  }
+}
+.dropdown-menu-closed {
+  background-color: $cl-light-gray;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 0;
+  animation-name: close;
+  animation-duration: 600ms;
+}
+.dropdown-menu-closed-no-animation {
+  background-color: $cl-light-gray;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 0;
+}
+@keyframes close {
+  0% {
+    max-height: 30vh;
+    overflow: visible;
+  }
+  100% {
+    max-height: 0;
+    overflow: hidden;
+  }
+}
+@keyframes expand {
+  0% {
+    max-height: 0;
+    overflow: hidden;
+  }
+  100% {
+    max-height: 50vh;
+    overflow: visible;
+  }
+}
+.dropdown-menu-expanded {
+  background-color: $cl-light-gray;
+  display: flex;
+  flex-direction: column;
+  animation-name: expand;
+  animation-duration: 600ms;
+}
+.dropdown-menu-btn {
+  // @extend .pt-2;
+  // @extend .pb-2;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  width: 100%;
+  outline: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  height: fit-content;
+  background-color: $cl-light-gray;
+  .text {
+    // @extend .ps-4;
+    padding-left: 3em;
+    text-align: left;
+    line-height: normal;
+  }
+  .icon {
+    color: $cl-mid-gray;
+    padding-left: 1.5em;
+    // @extend .ps-3;
+  }
+}
+.dropdown-menu-btn-selected {
+  @extend .dropdown-menu-btn;
+  background-color: $cl-light-blue;
+}
+@mixin gradient-text($fromColor, $toColor) {
+  background: -webkit-linear-gradient(left, $fromColor, $toColor);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.red-purple-text-gradient {
+  @include gradient-text($fromColor: $cl-red, $toColor: $cl-blue);
+}
+.blue-purple-text-gradient {
+  @include gradient-text($fromColor: #3b68df, $toColor: #8d32d4);
+}
+.page-container-100 {
+  height: 100vh;
+  width: 100%;
+  overflow: auto;
+  align-items: center;
+}
+
+.page-container-50 {
+  height: 50vh;
+  width: 100%;
+  overflow: auto;
+  align-items: center;
+}
+.default-tab-pane {
+  // @extend .container-fluid;
+  width: 100%;
+  display: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+.tab-active {
+  @extend .default-tab-pane;
+  display: flex;
+}
+.general-tab-nav-btn {
+  transition: 500ms;
+  outline: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  border: 1px solid transparent;
+  border-radius: 2.5px;
+  &:hover {
+    cursor: pointer;
+    background: rgba($color: #000000, $alpha: 0.1);
+  }
+}

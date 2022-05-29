@@ -1,0 +1,19 @@
+@use "src/common/styles" as *;
+
+.search-container {
+  border: 2px solid rgba($color: #000000, $alpha: 0.1);
+  border-radius: 10px;
+  min-width: fit-content;
+  width: 25vw;
+  .search-input {
+    width: 18vw;
+    &:active,
+    &:focus {
+      box-shadow: none;
+      border: none;
+      outline: none;
+    }
+    font-size: 1.1em;
+    border: none;
+  }
+}

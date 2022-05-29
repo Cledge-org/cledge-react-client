@@ -1,0 +1,19 @@
+@use "src/common/styles" as *;
+
+.ec-editor-btn-back {
+  @extend .center-child;
+  outline: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 36px;
+  padding: 20px;
+  position: absolute;
+  transition: background-color 200ms;
+  top: 2vh;
+  left: 2vw;
+  width: 72px;
+  height: 72px;
+  &:hover {
+    background-color: rgba($color: $cl-light-gray, $alpha: 0.5);
+  }
+}
