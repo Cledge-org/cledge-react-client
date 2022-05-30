@@ -18,13 +18,12 @@ const searchClient = new SearchClient(
     new AzureKeyCredential(queryKey)
 );
 
-console.log(111);
-
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
+    console.log(req.body);
     const reqBodyJson = JSON.parse(req.body);
     try {
         if (reqBodyJson["mode"] && reqBodyJson["mode"] === "metric") {
-            const collegeMetricResult = await getCollegeMetrics();
+            const collegeMetricResult = await getCollegeMetrics(reqBodyJson["userTier"]);
             resolve.status(200).send(collegeMetricResult);
         } else {
             const {searchText, top, skip, filters, searchFields} = JSON.parse(req.body);
@@ -39,7 +38,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
 // Get a dictionary that maps college name with safety & target tiers
 // *Only for college fit metrics*
-export const getCollegeMetrics = (): Promise<Object> => {
+export const getCollegeMetrics = (userTier): Promise<Object> => {
     return new Promise(async (res, err) => {
         try {
             const selectFields: string[] = ["INSTNM", "TARGET_TIER", "SAFETY_TIER"];
@@ -54,7 +53,10 @@ export const getCollegeMetrics = (): Promise<Object> => {
             let output = {};
             for await (const result of searchResults.results) {
                 const curCollege = result["document"];
-                output[curCollege["INSTNM"]] = [curCollege["TARGET_TIER"], curCollege["SAFETY_TIER"]];
+                const curTargetTier = curCollege["TARGET_TIER"];
+                const curSafetyTier = curCollege["SAFETY_TIER"];
+                const collegeLabel = getCollegeLabel(userTier, curTargetTier, curSafetyTier);
+                output[curCollege["INSTNM"]] = collegeLabel;
             }
             res(output);
         } catch (e) {
@@ -302,4 +304,14 @@ const formatStudyDisciplines = (college, cds_categories) => {
         studyDisciplines[curDisName] = college[cds_categories[curDisName]];
     });
     return studyDisciplines;
+}
+
+const getCollegeLabel = (userTier, targetTier, safetyTier) => {
+    if (userTier < targetTier) {
+        return 2;
+    } else if (userTier >= safetyTier) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
