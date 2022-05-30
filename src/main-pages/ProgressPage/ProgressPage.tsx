@@ -70,9 +70,10 @@ const Progress: NextApplicationPage<{
           ({ questionId }) => questionId
         );
         if (
-          userQuestionIds.includes(question._id) &&
+          userQuestionIds.includes(question._id.toString()) &&
           isNotEmpty(
-            questionResponses[userQuestionIds.indexOf(question._id)].response
+            questionResponses[userQuestionIds.indexOf(question._id.toString())]
+              .response
           )
         ) {
           finished++;

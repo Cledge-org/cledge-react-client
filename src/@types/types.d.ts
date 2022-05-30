@@ -172,19 +172,30 @@ export declare global {
   interface PresetContent {
     priority: number;
     name: string;
+    content?: any[];
+  }
+  interface PathwayBlogContent {
+    type: string;
+    blogId: ObjectId | string;
+  }
+  interface PathwayVideo {
     type: string;
     url: string;
-    content?: string;
+    title: string;
+    description: string;
+    videoSource: string;
   }
-  interface PersonalizedContent extends WithId<Document> {
+  interface PathwayQuestion {
+    type: string;
+    question: string;
+    questionType: string;
+    data?: any[];
+    helpText: string;
+  }
+  interface PersonalizedContent extends PresetContent, WithId<Document> {
     _id?: ObjectId;
     moduleId: ObjectId;
-    priority: number;
     tags: string[];
-    name: string;
-    type: string;
-    url: string;
-    content?: string;
   }
 
   // Student Metrics

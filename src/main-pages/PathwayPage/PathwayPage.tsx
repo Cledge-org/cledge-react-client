@@ -417,7 +417,8 @@ const Pathways: NextApplicationPage<{
         let actualModule = pathwayInfo.modules.find((module) => {
           return module._id === moduleProgress.moduleId;
         });
-        contentProgress[actualModule._id] = moduleProgress.contentProgress;
+        contentProgress[actualModule._id.toString()] =
+          moduleProgress.contentProgress;
       });
       //console.log(contentProgress);
       window.onbeforeunload = (e) => {
@@ -457,7 +458,8 @@ const Pathways: NextApplicationPage<{
             let actualModule = pathwayInfo.modules.find((module) => {
               return module._id === moduleProgress.moduleId;
             });
-            contentProgress[actualModule._id] = moduleProgress.contentProgress;
+            contentProgress[actualModule._id.toString()] =
+              moduleProgress.contentProgress;
           });
           callPutPathwayProgress(contentProgress).then((res) => {
             let newProgress = allPathwayProgress.slice();
