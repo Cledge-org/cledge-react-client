@@ -172,25 +172,29 @@ export declare global {
   interface PresetContent {
     priority: number;
     name: string;
+    primaryType: "text" | "video" | "image" | "question";
     content?: any[];
   }
-  interface PathwayBlogContent {
-    type: string;
-    blogId: ObjectId | string;
+  interface PathwaySubContent {
+    type: "text" | "video" | "image" | "question";
   }
-  interface PathwayVideo {
-    type: string;
+  interface PathwayTextContent extends PathwaySubContent {
+    text: string;
+  }
+  interface PathwayVideo extends PathwaySubContent {
     url: string;
     title: string;
     description: string;
     videoSource: string;
   }
-  interface PathwayQuestion {
-    type: string;
+  interface PathwayQuestion extends PathwaySubContent {
     question: string;
     questionType: string;
     data?: any[];
     helpText: string;
+  }
+  interface PathwayImage extends PathwaySubContent {
+    base64Img: string;
   }
   interface PersonalizedContent extends PresetContent, WithId<Document> {
     _id?: ObjectId;

@@ -12,6 +12,7 @@
   "dependencies": {
     "@azure/logger": "^1.0.3",
     "@azure/search-documents": "^11.2.1",
+    "@emotion/css": "^11.9.0",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
@@ -63,6 +64,9 @@
     "react-transition-group": "^4.4.2",
     "redux": "^4.1.2",
     "sass": "^1.52.0",
+    "slate": "^0.80.0",
+    "slate-history": "^0.66.0",
+    "slate-react": "^0.80.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.3",
     "typescript-plugin-css-modules": "^3.4.0",

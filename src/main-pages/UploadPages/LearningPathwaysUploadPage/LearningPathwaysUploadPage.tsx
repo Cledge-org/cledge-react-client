@@ -15,6 +15,7 @@ import {
   callPutPathwayModulePersonalizedContent,
 } from "src/utils/apiCalls";
 import UploadTextInput from "src/main-pages/UploadPages/components/UploadTextInput/UploadTextInput";
+import ContentUpload from "src/main-pages/UploadPages/LearningPathwaysUploadPage/components/ContentUpload/ContentUpload";
 
 // logged in landing page
 const LearningPathwaysUploadPage: NextApplicationPage<{
@@ -36,6 +37,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
         presetContent: [
           {
             priority: -1,
+            primaryType: "video",
             name: "",
             content: [],
           },
@@ -45,6 +47,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             moduleId: null,
             _id: null,
             priority: -1,
+            primaryType: "video",
             content: [],
             tags: ["", ""],
             name: "",
@@ -175,6 +178,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                         {
                           priority: -1,
                           name: "",
+                          primaryType: "video",
                           content: [],
                         },
                       ],
@@ -183,6 +187,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                           moduleId: null,
                           _id: null,
                           priority: -1,
+                          primaryType: "video",
                           content: [],
                           tags: ["", ""],
                           name: "",
@@ -368,301 +373,20 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                     Preset Content:
                   </label>
                   <div className="ms-4">
-                    {module.presetContent.map((preset, contentIndex) => {
-                      return (
-                        <div className="d-flex w-100 align-items-center">
-                          <button
-                            className="me-2"
-                            style={{
-                              width: "36px",
-                              height: "36px",
-                              color: "red",
-                            }}
-                            onClick={() => {
-                              let course = currPathwayData;
-                              course.modules[index].presetContent.splice(
-                                contentIndex,
-                                1
-                              );
-                              setCurrPathwayData({
-                                ...currPathwayData,
-                                modules: course.modules,
-                              });
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faTrash} />
-                          </button>
-                          <div className="w-75">
-                            <UploadTextInput
-                              title="Preset Name"
-                              onChange={(e) => {
-                                let course = currPathwayData;
-                                course.modules[index].presetContent[
-                                  contentIndex
-                                ].name = e.target.value;
-                                setCurrPathwayData({
-                                  ...currPathwayData,
-                                  modules: course.modules,
-                                });
-                              }}
-                              placeholder="Enter preset name"
-                              value={preset.name}
-                            />
-                            <UploadTextInput
-                              title="Priority"
-                              onChange={(e) => {
-                                let course = currPathwayData;
-                                course.modules[index].presetContent[
-                                  contentIndex
-                                ].priority = parseInt(e.target.value);
-                                setCurrPathwayData({
-                                  ...currPathwayData,
-                                  modules: course.modules,
-                                });
-                              }}
-                              isNumber
-                              placeholder="Enter priority"
-                              value={preset.priority}
-                            />
-                            <div className="form-group">
-                              <label
-                                style={{ fontSize: "0.9em" }}
-                                className="text-muted"
-                                htmlFor={`preset-content-${
-                                  module.name + contentIndex
-                                }`}
-                              >
-                                Content:
-                              </label>
-                              {preset.content.map(
-                                (content, subContentIndex) => {
-                                  return (
-                                    <div className="ms-2">
-                                      <div className="py-1" />
-                                      <label
-                                        style={{ fontSize: "0.9em" }}
-                                        className="text-muted"
-                                      >
-                                        Type:
-                                      </label>
-                                      <DropDownQuestion
-                                        isForWaitlist
-                                        onChange={(value) => {
-                                          let course = currPathwayData;
-                                          course.modules[index].presetContent[
-                                            contentIndex
-                                          ].content[subContentIndex].type =
-                                            value;
-                                          setCurrPathwayData({
-                                            ...currPathwayData,
-                                            modules: course.modules,
-                                          });
-                                        }}
-                                        defaultValue={content.type}
-                                        placeholder="Pick Content Type"
-                                        valuesList={[
-                                          "video",
-                                          "question",
-                                          "blog",
-                                        ]}
-                                      />
-                                      <div className="py-2" />
-                                      {content.type === "blog" ? (
-                                        <>
-                                          //TODO: FETCH BLOGS AND ADD THEM HERE
-                                          <div className="form-group">
-                                            <label
-                                              style={{ fontSize: "0.9em" }}
-                                              className="text-muted"
-                                            >
-                                              blogId:
-                                            </label>
-                                            <DropDownQuestion
-                                              isForWaitlist
-                                              onChange={(value) => {}}
-                                              defaultValue={content.blogId}
-                                              placeholder="Pick Content Type"
-                                              valuesList={[]}
-                                            />
-                                          </div>
-                                        </>
-                                      ) : content.type === "question" ? (
-                                        <>
-                                          <UploadTextInput
-                                            title="Question"
-                                            onChange={(e) => {
-                                              let course = currPathwayData;
-                                              course.modules[
-                                                index
-                                              ].presetContent[
-                                                contentIndex
-                                              ].content[
-                                                subContentIndex
-                                              ].question = e.target.value;
-                                              setCurrPathwayData({
-                                                ...currPathwayData,
-                                                modules: course.modules,
-                                              });
-                                            }}
-                                            placeholder="Enter question"
-                                            value={content.question}
-                                          />
-                                          <div className="form-group">
-                                            <label
-                                              style={{ fontSize: "0.9em" }}
-                                              className="text-muted"
-                                            >
-                                              questionType:
-                                            </label>
-                                            <DropDownQuestion
-                                              isForWaitlist
-                                              onChange={(value) => {
-                                                let course = currPathwayData;
-                                                course.modules[
-                                                  index
-                                                ].presetContent[
-                                                  contentIndex
-                                                ].content[
-                                                  subContentIndex
-                                                ].questionType = value;
-                                                setCurrPathwayData({
-                                                  ...currPathwayData,
-                                                  modules: course.modules,
-                                                });
-                                              }}
-                                              defaultValue={
-                                                content.questionType
-                                              }
-                                              placeholder="Pick Question Type"
-                                              valuesList={[
-                                                "PathwayMCQ",
-                                                "PathwayTextInput",
-                                                "PathwayTextArea",
-                                                "PathwayCheckBox",
-                                                "PathwayLinearQuestion",
-                                                "PathwayDropdown",
-                                              ]}
-                                            />
-                                          </div>
-                                          {content.data.map(() => {
-                                            return {};
-                                          })}
-                                          <UploadTextInput
-                                            title="helpText"
-                                            onChange={(e) => {
-                                              let course = currPathwayData;
-                                              course.modules[
-                                                index
-                                              ].presetContent[
-                                                contentIndex
-                                              ].content[
-                                                subContentIndex
-                                              ].helpText = e.target.value;
-                                              setCurrPathwayData({
-                                                ...currPathwayData,
-                                                modules: course.modules,
-                                              });
-                                            }}
-                                            placeholder="Enter helpText"
-                                            value={content.helpText}
-                                          />
-                                        </>
-                                      ) : (
-                                        content.type === "video" && (
-                                          <>
-                                            <UploadTextInput
-                                              title="url"
-                                              onChange={(e) => {
-                                                let course = currPathwayData;
-                                                course.modules[
-                                                  index
-                                                ].presetContent[
-                                                  contentIndex
-                                                ].content[subContentIndex].url =
-                                                  e.target.value;
-                                                setCurrPathwayData({
-                                                  ...currPathwayData,
-                                                  modules: course.modules,
-                                                });
-                                              }}
-                                              placeholder="Enter url"
-                                              value={content.url}
-                                            />
-                                            <UploadTextInput
-                                              title="title"
-                                              onChange={(e) => {
-                                                let course = currPathwayData;
-                                                course.modules[
-                                                  index
-                                                ].presetContent[
-                                                  contentIndex
-                                                ].content[
-                                                  subContentIndex
-                                                ].title = e.target.value;
-                                                setCurrPathwayData({
-                                                  ...currPathwayData,
-                                                  modules: course.modules,
-                                                });
-                                              }}
-                                              placeholder="Enter title"
-                                              value={content.title}
-                                            />
-                                            <UploadTextInput
-                                              title="description"
-                                              onChange={(e) => {
-                                                let course = currPathwayData;
-                                                course.modules[
-                                                  index
-                                                ].presetContent[
-                                                  contentIndex
-                                                ].content[
-                                                  subContentIndex
-                                                ].description = e.target.value;
-                                                setCurrPathwayData({
-                                                  ...currPathwayData,
-                                                  modules: course.modules,
-                                                });
-                                              }}
-                                              placeholder="Enter description"
-                                              value={content.description}
-                                            />
-                                            <UploadTextInput
-                                              title="Video Source"
-                                              onChange={(e) => {
-                                                let course = currPathwayData;
-                                                course.modules[
-                                                  index
-                                                ].presetContent[
-                                                  contentIndex
-                                                ].content[
-                                                  subContentIndex
-                                                ].videoSource = e.target.value;
-                                                setCurrPathwayData({
-                                                  ...currPathwayData,
-                                                  modules: course.modules,
-                                                });
-                                              }}
-                                              placeholder="Enter video source"
-                                              value={content.videoSource}
-                                            />
-                                          </>
-                                        )
-                                      )}
-                                    </div>
-                                  );
-                                }
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
+                    <ContentUpload
+                      module={module}
+                      currPathwayData={currPathwayData}
+                      index={index}
+                      setCurrPathwayData={setCurrPathwayData}
+                      isPersonalized={false}
+                    />
                     <button
                       onClick={() => {
                         let course = currPathwayData;
                         course.modules[index].presetContent.push({
                           priority: -1,
                           name: "",
+                          primaryType: "video",
                           content: [],
                         });
                         setCurrPathwayData({
@@ -682,139 +406,13 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                     Personalized Content:
                   </label>
                   <div className="ms-4">
-                    {module.personalizedContent.map(
-                      (personalized, contentIndex) => {
-                        return (
-                          <div className="d-flex w-100 align-items-center">
-                            <button
-                              className="me-2"
-                              style={{
-                                width: "36px",
-                                height: "36px",
-                                color: "red",
-                              }}
-                              onClick={() => {
-                                let course = currPathwayData;
-                                course.modules[
-                                  index
-                                ].personalizedContent.splice(contentIndex, 1);
-                                setCurrPathwayData({
-                                  ...currPathwayData,
-                                  modules: course.modules,
-                                });
-                              }}
-                            >
-                              <FontAwesomeIcon icon={faTrash} />
-                            </button>
-                            <div className="w-75">
-                              <UploadTextInput
-                                title="Personalized Name"
-                                onChange={(e) => {
-                                  let course = currPathwayData;
-                                  course.modules[index].personalizedContent[
-                                    contentIndex
-                                  ].name = e.target.value;
-                                  setCurrPathwayData({
-                                    ...currPathwayData,
-                                    modules: course.modules,
-                                  });
-                                }}
-                                placeholder="Enter personalized name"
-                                value={personalized.name}
-                              />
-                              <UploadTextInput
-                                title="Personalized Priority"
-                                onChange={(e) => {
-                                  let course = currPathwayData;
-                                  course.modules[index].personalizedContent[
-                                    contentIndex
-                                  ].priority = parseInt(e.target.value);
-                                  setCurrPathwayData({
-                                    ...currPathwayData,
-                                    modules: course.modules,
-                                  });
-                                }}
-                                isNumber
-                                placeholder="Enter personalized priority"
-                                value={personalized.priority}
-                              />
-                              <div className="form-group">
-                                <label
-                                  style={{ fontSize: "0.9em" }}
-                                  className="text-muted"
-                                  htmlFor={`personalized-content-${
-                                    module.name + contentIndex
-                                  }`}
-                                >
-                                  Content:
-                                </label>
-                                {personalized.content.map(() => {})}
-                              </div>
-                              <div className="form-group">
-                                <label
-                                  style={{ fontSize: "0.9em" }}
-                                  className="text-muted"
-                                  htmlFor={`personalized-content-tags-${
-                                    module.name + contentIndex
-                                  }`}
-                                >
-                                  Content Tags:
-                                </label>
-                                <div className="d-flex flex-row w-100 flex-wrap">
-                                  {currPathwayData.modules[
-                                    index
-                                  ].personalizedContent[contentIndex].tags.map(
-                                    (tag, tagIndex) => (
-                                      <input
-                                        value={tag}
-                                        onChange={(e) => {
-                                          let course = currPathwayData;
-                                          course.modules[
-                                            index
-                                          ].personalizedContent[
-                                            contentIndex
-                                          ].tags[tagIndex] = e.target.value;
-                                          setCurrPathwayData({
-                                            ...currPathwayData,
-                                            modules: course.modules,
-                                          });
-                                        }}
-                                        type="text"
-                                        className="px-3 form-control me-2 mt-2"
-                                        style={{ width: "10vw" }}
-                                        id={`personalized-content-tags-${
-                                          module.name + contentIndex
-                                        }`}
-                                        placeholder="Enter content tag"
-                                      />
-                                    )
-                                  )}
-                                  <button
-                                    style={{
-                                      width: "24px",
-                                      height: "24px",
-                                    }}
-                                    className="align-self-center align-items-center justify-content-center"
-                                    onClick={() => {
-                                      let course = currPathwayData;
-                                      course.modules[index].personalizedContent[
-                                        contentIndex
-                                      ].tags.push("");
-                                      setCurrPathwayData({
-                                        ...currPathwayData,
-                                        modules: course.modules,
-                                      });
-                                    }}
-                                  >
-                                    <FontAwesomeIcon icon={faPlus} />
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      }
-                    )}
+                    <ContentUpload
+                      module={module}
+                      currPathwayData={currPathwayData}
+                      index={index}
+                      setCurrPathwayData={setCurrPathwayData}
+                      isPersonalized={true}
+                    />
                     <button
                       onClick={() => {
                         let course = currPathwayData;
@@ -822,6 +420,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                           moduleId: null,
                           _id: null,
                           priority: -1,
+                          primaryType: "video",
                           name: "",
                           content: [],
                           tags: [""],
@@ -850,6 +449,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 {
                   priority: -1,
                   name: "",
+                  primaryType: "video",
                   content: [],
                 },
               ],
@@ -859,6 +459,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                   _id: null,
                   priority: -1,
                   name: "",
+                  primaryType: "video",
                   content: [],
                   tags: [""],
                 },
