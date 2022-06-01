@@ -1,8 +1,9 @@
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DropDownQuestion from "src/common/components/Questions/DropdownQuestion/DropdownQuestion";
+import RichTextEditor from "src/common/components/RichTextEditor/RichTextEditor";
 import UploadTextInput from "src/main-pages/UploadPages/components/UploadTextInput/UploadTextInput";
-import { Editor } from "slate";
+
 const ContentUpload = ({
   module,
   currPathwayData,
@@ -75,7 +76,7 @@ const ContentUpload = ({
               />
               <div className="py-1" />
               <label style={{ fontSize: "0.9em" }} className="text-muted">
-                Type:
+                Primary Type:
               </label>
               <DropDownQuestion
                 isForWaitlist
@@ -158,7 +159,7 @@ const ContentUpload = ({
                 </label>
                 {overallContent.content.map((content, subContentIndex) => {
                   return (
-                    <div className="ms-2">
+                    <div className="ms-5">
                       <div className="py-1" />
                       <label
                         style={{ fontSize: "0.9em" }}
@@ -170,9 +171,34 @@ const ContentUpload = ({
                         isForWaitlist
                         onChange={(value) => {
                           let course = currPathwayData;
+                          const newContent =
+                            value === "video"
+                              ? {
+                                  url: "",
+                                  title: "",
+                                  description: "",
+                                  videoSource: "",
+                                }
+                              : value === "text"
+                              ? {
+                                  text: [],
+                                }
+                              : value === "image"
+                              ? {
+                                  url: "",
+                                }
+                              : {
+                                  question: "",
+                                  questionType: "",
+                                  data: [],
+                                  helpText: "",
+                                };
                           course.modules[index][contentType][
                             contentIndex
-                          ].content[subContentIndex].type = value;
+                          ].content[subContentIndex] = {
+                            type: value,
+                            ...newContent,
+                          };
                           setCurrPathwayData({
                             ...currPathwayData,
                             modules: course.modules,
@@ -184,7 +210,9 @@ const ContentUpload = ({
                       />
                       <div className="py-2" />
                       {content.type === "text" ? (
-                        <></>
+                        <>
+                          <RichTextEditor />
+                        </>
                       ) : content.type === "question" ? (
                         <>
                           <UploadTextInput
@@ -208,7 +236,7 @@ const ContentUpload = ({
                               style={{ fontSize: "0.9em" }}
                               className="text-muted"
                             >
-                              questionType:
+                              Question Type:
                             </label>
                             <DropDownQuestion
                               isForWaitlist
@@ -242,7 +270,7 @@ const ContentUpload = ({
                               Data:
                             </label>
                             <div className="d-flex flex-row w-100 flex-wrap">
-                              {content.data.map((option) => (
+                              {content.data?.map((option) => (
                                 <input
                                   value={option}
                                   onChange={(e) => {
@@ -393,6 +421,20 @@ const ContentUpload = ({
                     </div>
                   );
                 })}
+                <button
+                  onClick={() => {
+                    let course = currPathwayData;
+                    course.modules[index][contentType][
+                      contentIndex
+                    ].content.push({ type: "" });
+                    setCurrPathwayData({
+                      ...currPathwayData,
+                      modules: course.modules,
+                    });
+                  }}
+                >
+                  Add New Sub Content
+                </button>
               </div>
             </div>
           </div>
