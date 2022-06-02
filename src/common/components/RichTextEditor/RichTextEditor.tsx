@@ -26,15 +26,16 @@ const TEXT_ALIGN_TYPES = ["left", "center", "right", "justify"];
 const RichTextEditor = () => {
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
+  const fontSizePluginOptions = { initialFontSize: 12 };
+  const withMoreOptions = (editor) => {};
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
-
   return (
     <div
       className="px-4"
       style={{ width: "fit-content", border: "2px solid lightgray" }}
     >
       <Slate editor={editor} value={initialValue}>
-        <Toolbar>
+        <Toolbar plu>
           <MarkButton format="bold" icon="format_bold" />
           <MarkButton format="italic" icon="format_italic" />
           <MarkButton format="underline" icon="format_underlined" />

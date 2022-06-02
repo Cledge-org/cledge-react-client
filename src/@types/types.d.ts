@@ -194,7 +194,7 @@ export declare global {
     helpText: string;
   }
   interface PathwayImage extends PathwaySubContent {
-    base64Img: string;
+    image: string;
   }
   interface PersonalizedContent extends PresetContent, WithId<Document> {
     _id?: ObjectId;
