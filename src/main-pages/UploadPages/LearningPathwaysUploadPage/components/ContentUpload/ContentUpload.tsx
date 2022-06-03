@@ -233,7 +233,33 @@ const ContentUpload = ({
                         <div className="py-2" />
                         {content.type === "text" ? (
                           <>
-                            <RichTextEditor />
+                            <RichTextEditor
+                              initialValue={
+                                content.text && content.text.length > 0
+                                  ? content.text
+                                  : [
+                                      {
+                                        type: "paragraph",
+                                        children: [
+                                          {
+                                            text: "This is a placeholder...",
+                                            bold: true,
+                                          },
+                                        ],
+                                      },
+                                    ]
+                              }
+                              onChange={(text) => {
+                                let course = currPathwayData;
+                                course.modules[index][contentType][
+                                  contentIndex
+                                ].content[subContentIndex].text = text;
+                                setCurrPathwayData({
+                                  ...currPathwayData,
+                                  modules: course.modules,
+                                });
+                              }}
+                            />
                           </>
                         ) : content.type === "question" ? (
                           <>

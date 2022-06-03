@@ -106,6 +106,8 @@ export type CustomText = {
   bold?: boolean;
   italic?: boolean;
   code?: boolean;
+  "font-size"?: string;
+  "font-color"?: string;
   text: string;
 };
 

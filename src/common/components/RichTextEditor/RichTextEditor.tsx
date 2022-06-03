@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import isHotkey from "is-hotkey";
 import { Editable, withReact, useSlate, Slate } from "slate-react";
 import {
@@ -6,12 +6,17 @@ import {
   Transforms,
   createEditor,
   Descendant,
+  Range,
+  Text,
   Element as SlateElement,
 } from "slate";
 import { withHistory } from "slate-history";
 import { Toolbar } from "src/common/components/RichTextEditor/components/Toolbar/Toolbar";
 import { Button } from "src/common/components/RichTextEditor/components/Button/Button";
 import { Icon } from "src/common/components/RichTextEditor/components/Icon/Icon";
+import DropDownQuestion from "src/common/components/Questions/DropdownQuestion/DropdownQuestion";
+import { CustomEditor } from "src/@types/slate";
+import { CompactPicker } from "react-color";
 
 const HOTKEYS = {
   "mod+b": "bold",
@@ -23,23 +28,37 @@ const HOTKEYS = {
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 const TEXT_ALIGN_TYPES = ["left", "center", "right", "justify"];
 
-const RichTextEditor = () => {
+const RichTextEditor = ({
+  onChange,
+  initialValue,
+}: {
+  onChange: Function;
+  initialValue: Descendant[];
+}) => {
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
-  const fontSizePluginOptions = { initialFontSize: 12 };
-  const withMoreOptions = (editor) => {};
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  console.log(initialValue);
   return (
     <div
       className="px-4"
       style={{ width: "fit-content", border: "2px solid lightgray" }}
     >
-      <Slate editor={editor} value={initialValue}>
-        <Toolbar plu>
+      <Slate
+        onChange={(text) => {
+          onChange(text);
+        }}
+        editor={editor}
+        value={initialValue}
+      >
+        <Toolbar>
           <MarkButton format="bold" icon="format_bold" />
           <MarkButton format="italic" icon="format_italic" />
           <MarkButton format="underline" icon="format_underlined" />
           <MarkButton format="code" icon="code" />
+          <MarkButton format="font-size-52px" icon="plus" />
+          <FontSizeDropdown />
+          <FontColorDropdown />
           <BlockButton format="heading-one" icon="looks_one" />
           <BlockButton format="heading-two" icon="looks_two" />
           <BlockButton format="block-quote" icon="format_quote" />
@@ -60,6 +79,7 @@ const RichTextEditor = () => {
             for (const hotkey in HOTKEYS) {
               if (isHotkey(hotkey, event as any)) {
                 event.preventDefault();
+
                 const mark = HOTKEYS[hotkey];
                 toggleMark(editor, mark);
               }
@@ -104,14 +124,78 @@ const toggleBlock = (editor, format) => {
     Transforms.wrapNodes(editor, block);
   }
 };
-
-const toggleMark = (editor, format) => {
+const FontColorDropdown = () => {
+  const editor = useSlate();
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="position-relative">
+      <div
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
+        style={{
+          width: "20px",
+          height: "20px",
+          backgroundColor:
+            (Editor.marks(editor) && Editor.marks(editor)["font-color"]) ??
+            "black",
+        }}
+      />
+      <div className="position-absolute" style={{ zIndex: 100 }}>
+        {isOpen && (
+          <CompactPicker
+            passedStyles={{ backgroundColor: "white" }}
+            onChange={({ hex }) => {
+              Transforms.setNodes(
+                editor,
+                { "font-color": hex },
+                { match: Text.isText, split: true }
+              );
+              setIsOpen(false);
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+const FontSizeDropdown = () => {
+  const editor = useSlate();
+  const fontSizes = () => {
+    let fontSizes = [];
+    for (let i = 0; i <= 64; i++) {
+      fontSizes.push(`${i + 8}px`);
+    }
+    return fontSizes;
+  };
+  return (
+    <DropDownQuestion
+      isForWaitlist
+      buttonStyles={{ width: "20%", padding: 0 }}
+      onChange={(fontSize) => {
+        Transforms.setNodes(
+          editor,
+          { "font-size": fontSize },
+          { match: Text.isText, split: true }
+        );
+        //toggleMark(editor, `font-size`, fontSize);
+      }}
+      defaultValue={
+        (Editor.marks(editor) && Editor.marks(editor)["font-size"]) ?? "14px"
+      }
+      valuesList={fontSizes()}
+    />
+  );
+};
+const toggleMark = (editor: CustomEditor, format, customVal?: any) => {
   const isActive = isMarkActive(editor, format);
-
+  console.log(isActive);
   if (isActive) {
     Editor.removeMark(editor, format);
   } else {
-    Editor.addMark(editor, format, true);
+    console.log("adding mark");
+    console.log(Editor.string(editor, editor.selection));
+    Editor.addMark(editor, format, customVal ?? true);
   }
 };
 
@@ -134,7 +218,7 @@ const isBlockActive = (editor, format, blockType = "type") => {
 
 const isMarkActive = (editor, format) => {
   const marks = Editor.marks(editor);
-  return marks ? marks[format] === true : false;
+  return marks && marks[format];
 };
 
 const Element = ({ attributes, children, element }) => {
@@ -201,7 +285,12 @@ const Leaf = ({ attributes, children, leaf }) => {
   if (leaf.underline) {
     children = <u>{children}</u>;
   }
-
+  if (leaf["font-size"]) {
+    children = <span style={{ fontSize: leaf["font-size"] }}>{children}</span>;
+  }
+  if (leaf["font-color"]) {
+    children = <span style={{ color: leaf["font-color"] }}>{children}</span>;
+  }
   return <span {...attributes}>{children}</span>;
 };
 
@@ -238,41 +327,5 @@ const MarkButton = ({ format, icon }) => {
     </Button>
   );
 };
-
-const initialValue: Descendant[] = [
-  {
-    type: "paragraph",
-    children: [
-      { text: "This is editable " },
-      { text: "rich", bold: true },
-      { text: " text, " },
-      { text: "much", italic: true },
-      { text: " better than a " },
-      { text: "<textarea>", code: true },
-      { text: "!" },
-    ],
-  },
-  {
-    type: "paragraph",
-    children: [
-      {
-        text: "Since it's rich text, you can do things like turn a selection of text ",
-      },
-      { text: "bold", bold: true },
-      {
-        text: ", or add a semantically rendered block quote in the middle of the page, like this:",
-      },
-    ],
-  },
-  {
-    type: "block-quote",
-    children: [{ text: "A wise quote." }],
-  },
-  {
-    type: "paragraph",
-    align: "center",
-    children: [{ text: "Try it out for yourself!" }],
-  },
-];
 
 export default RichTextEditor;

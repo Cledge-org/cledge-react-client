@@ -20,6 +20,8 @@ interface DropDownQuestionProps {
   index?: number;
   rankings?: string[];
   key: String;
+  containerStyles?: React.CSSProperties;
+  buttonStyles?: React.CSSProperties;
   isForDashboard?: boolean;
 }
 const defaultProps: DropDownQuestionProps = {
@@ -54,6 +56,8 @@ export default function DropDownQuestion({
   questionTitle,
   isForDashboard,
   onChange,
+  containerStyles,
+  buttonStyles,
 }: DropDownQuestionProps) {
   const [chosen, setChosen] = useState(
     //WORKS!!!
@@ -73,6 +77,7 @@ export default function DropDownQuestion({
     setChosen((prevChosen) => {
       if (!isConcatenable) {
         onChange(value, setChosen);
+        setIsOpen(false);
         return value;
       }
       let prevChosenArr = prevChosen instanceof Array ? prevChosen.slice() : [];
@@ -118,7 +123,11 @@ export default function DropDownQuestion({
           ? "w-100 d-flex flex-column justify-content-evenly pt-5"
           : "w-100 d-flex flex-column justify-content-evenly"
       }
-      style={isForDashboard ? { flex: "0.2" } : {}}
+      style={
+        isForDashboard
+          ? { flex: "0.2", ...containerStyles }
+          : { ...containerStyles }
+      }
     >
       {!forCalendar && !isForWaitlist ? (
         <div
@@ -144,8 +153,9 @@ export default function DropDownQuestion({
                   // borderBottom: "3px solid #656565",
                   backgroundColor: "transparent",
                   color: "#070452",
+                  ...buttonStyles,
                 }
-              : {}
+              : { ...buttonStyles }
           }
           onClick={() => setIsOpen(!isOpen)}
         >
