@@ -76,6 +76,7 @@ export const getCollegeInfo = (
 ): Promise<Object> => {
     return new Promise(async (res, err) => {
         try {
+            console.log(createFilterExpression(filters));
             const searchResults = await searchClient.search(searchText, {
                 top: top,
                 skip: skip,
@@ -103,23 +104,24 @@ const createFilterExpression = (filters) => {
         let curKey = currentValue.split(" ");
 
         let curItemValue = filters[currentValue];
-        if (curKey.length === 1) {
-            filterExpressions.push(`${currentValue} eq ${curItemValue}`);
+        if (Array.isArray(curItemValue)) {
+            let filterCheckBoxExpression = [];
+            curItemValue.forEach(function(curSelection) {
+                filterCheckBoxExpression.push(`${currentValue} eq ${curSelection}`);
+            });
+            filterExpressions.push(filterCheckBoxExpression.join(' or '));
         } else {
-            if (curKey[1] === "min") {
-                filterExpressions.push(`${curKey[0]} ge ${curItemValue}`);
-            } else if (curKey[1] === "max") {
-                filterExpressions.push(`${curKey[0]} le ${curItemValue}`);
+            if (curKey.length === 1) {
+                filterExpressions.push(`${currentValue} eq ${curItemValue}`);
+            } else {
+                if (curKey[1] === "min") {
+                    filterExpressions.push(`${curKey[0]} ge ${curItemValue}`);
+                } else if (curKey[1] === "max") {
+                    filterExpressions.push(`${curKey[0]} le ${curItemValue}`);
+                }
             }
         }
     })
-    for (let i = 0; i < filters.length; i++) {
-        let field = filters[i].field;
-        let comparison = filters[i].comparison;
-        let value = filters[i].value;
-
-        filterExpressions.push(`${field} ${comparison} ${value}`);
-    }
 
     return filterExpressions.join(' and ');
 }
