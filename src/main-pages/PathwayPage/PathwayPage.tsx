@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "../AppPage/AppPage";
 import { useRouter } from "next/router";
@@ -13,23 +13,20 @@ import styles from "./pathway-page.module.scss";
 import { callPutPathwayProgress } from "src/utils/apiCalls";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import classNames from "classnames";
+import PathwayQuestion from "src/main-pages/PathwayPage/components/PathwayQuestion/PathwayQuestion";
+import { Editable, Slate, withReact } from "slate-react";
+import { createEditor } from "slate";
+import {
+  faBook,
+  faImage,
+  faMoneyCheck,
+  faVideo,
+} from "@fortawesome/free-solid-svg-icons";
+import RichText from "src/common/components/RichText/RichText";
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
 }> = ({ pathwayInfo, pathwaysProgress }) => {
-  const [currContent, setCurrContent] = useState(null);
-  // const [allPathwayProgress, setAllPathwayProgress] = useState(
-  //   pathwaysProgress.slice()
-  // );
-  // const session = useSession();
-  // const checkForDiscrepancies = checkPathwayDiscrepancies(pathwayInfo);
-  useEffect(() => {
-    let currContent = getSortedContent(
-      pathwayInfo.modules[0].presetContent,
-      pathwayInfo.modules[0].personalizedContent
-    )[0];
-    setCurrContent(currContent);
-  }, []);
   const getSortedContent = (presetContent, personalizedContent) => {
     let allContent = presetContent.concat(personalizedContent);
     if (presetContent.length === 0) {
@@ -38,13 +35,28 @@ const Pathways: NextApplicationPage<{
     allContent.sort((a, b) => a.priority - b.priority);
     return allContent;
   };
+  const [currContent, setCurrContent] = useState(
+    getSortedContent(
+      pathwayInfo.modules[0].presetContent,
+      pathwayInfo.modules[0].personalizedContent
+    )[0]
+  );
+  // const [allPathwayProgress, setAllPathwayProgress] = useState(
+  //   pathwaysProgress.slice()
+  // );
+  // const session = useSession();
+  // const checkForDiscrepancies = checkPathwayDiscrepancies(pathwayInfo);
+
   return (
     <PageErrorBoundary>
       <div
         className="container-fluid d-flex flex-row px-0"
         style={{ height: "94vh" }}
       >
-        <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
+        <div
+          className="d-flex flex-column bg-light-gray"
+          style={{ flex: 1, height: "100%" }}
+        >
           {pathwayInfo.modules.map(
             (
               { name, presetContent, personalizedContent, _id },
@@ -54,6 +66,18 @@ const Pathways: NextApplicationPage<{
                 <DropdownTab
                   isFinishedModule={false}
                   isFinishedContent={[false]}
+                  icons={getSortedContent(
+                    presetContent,
+                    personalizedContent
+                  ).map(({ primaryType }) =>
+                    primaryType === "video"
+                      ? faVideo
+                      : primaryType === "text"
+                      ? faBook
+                      : primaryType === "image"
+                      ? faImage
+                      : faMoneyCheck
+                  )}
                   currSelectedPath={currContent.name}
                   chunkList={getSortedContent(
                     presetContent,
@@ -81,51 +105,79 @@ const Pathways: NextApplicationPage<{
           )}
         </div>
         <div className="d-flex flex-column" style={{ flex: 3 }}>
-          {currContent.content.map(({ type }) => {
+          {currContent.content.map((content) => {
+            const { type } = content;
             return type === "video" ? (
-              <>
-                <div className="w-100" style={{ height: "55%" }}>
-                  <YoutubeEmbed
-                    isPathway
-                    key={`youtube-container-${currContent.url.substring(
-                      currContent.url.indexOf("v=") !== -1
-                        ? currContent.url.indexOf("v=") + 2
-                        : currContent.url.lastIndexOf("/") + 1
-                    )}`}
-                    isVideoFinished={false}
-                    videoTime={0}
-                    onVideoTimeUpdate={(player) => {}}
-                    videoId={currContent.url.substring(
-                      currContent.url.indexOf("v=") !== -1
-                        ? currContent.url.indexOf("v=") + 2
-                        : currContent.url.lastIndexOf("/") + 1
-                    )}
+              <div className="center-child">
+                <div style={{ width: "90%", height: "100vh" }}>
+                  <div className="w-100" style={{ height: "60%" }}>
+                    <YoutubeEmbed
+                      isPathway
+                      key={`youtube-container-${content.url.substring(
+                        content.url.indexOf("v=") !== -1
+                          ? content.url.indexOf("v=") + 2
+                          : content.url.lastIndexOf("/") + 1
+                      )}`}
+                      isVideoFinished={false}
+                      videoTime={0}
+                      onVideoTimeUpdate={(player) => {}}
+                      videoId={content.url.substring(
+                        content.url.indexOf("v=") !== -1
+                          ? content.url.indexOf("v=") + 2
+                          : content.url.lastIndexOf("/") + 1
+                      )}
+                    />
+                  </div>
+                  <div className="w-100 center-child flex-column py-5">
+                    <div className={classNames("pb-2 w-100")}>
+                      <span
+                        className="fw-bold cl-dark-text"
+                        style={{ fontSize: "1.7em" }}
+                      >
+                        {content.title}
+                      </span>
+                    </div>
+                    <div
+                      className={classNames(styles.pathwayDescription, "pb-2")}
+                    >
+                      <span
+                        className="fw-bold cl-dark-text"
+                        style={{ fontSize: "1.3em" }}
+                      >
+                        Video Source: {content.videoSource}
+                      </span>
+                    </div>
+                    <div className="mt-3 w-100">
+                      <div className="text-start">{content.description}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : type === "text" ? (
+              <div className="center-child w-100">
+                <div style={{ width: "60%" }}>
+                  <RichText text={content.text} />
+                </div>
+              </div>
+            ) : type === "image" ? (
+              <div className="d-flex flex-column align-items-center w-100">
+                <img className="w-50" src={content.image} />
+                <div className="w-50 text-start">{content.description}</div>
+              </div>
+            ) : (
+              type === "question" && (
+                <div>
+                  <PathwayQuestion
+                    type={"question"}
+                    question={content.question}
+                    questionType={content.questionType}
+                    userAnswers={[]}
+                    onUpdate={() => {}}
+                    helpText={content.helpText}
+                    data={content.data}
                   />
                 </div>
-                <div className="container-fluid center-child flex-column py-5">
-                  <div
-                    className={classNames(styles.pathwayDescription, "pb-2")}
-                  >
-                    <span
-                      className="fw-bold cl-dark-text"
-                      style={{ fontSize: "1.7em" }}
-                    >
-                      {currContent.name}
-                    </span>
-                  </div>
-                  <div className="ms-5 mt-3 w-100">
-                    <div className="ms-5 text-start">{currContent.content}</div>
-                  </div>
-                </div>
-              </>
-            ) : type === "text" ? (
-              <div></div>
-            ) : type === "image" ? (
-              <div></div>
-            ) : type === "question" ? (
-              <div />
-            ) : (
-              <div></div>
+              )
             );
           })}
         </div>

@@ -56,8 +56,6 @@ const RichTextEditor = ({
           <MarkButton format="italic" icon="format_italic" />
           <MarkButton format="underline" icon="format_underlined" />
           <MarkButton format="code" icon="code" />
-          <MarkButton format="font-size-52px" icon="plus" />
-          <FontSizeDropdown />
           <FontColorDropdown />
           <BlockButton format="heading-one" icon="looks_one" />
           <BlockButton format="heading-two" icon="looks_two" />
@@ -68,6 +66,7 @@ const RichTextEditor = ({
           <BlockButton format="center" icon="format_align_center" />
           <BlockButton format="right" icon="format_align_right" />
           <BlockButton format="justify" icon="format_align_justify" />
+          <FontSizeDropdown />
         </Toolbar>
         <Editable
           renderElement={renderElement}
@@ -126,6 +125,7 @@ const toggleBlock = (editor, format) => {
 };
 const FontColorDropdown = () => {
   const editor = useSlate();
+
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="position-relative">
@@ -144,6 +144,46 @@ const FontColorDropdown = () => {
       <div className="position-absolute" style={{ zIndex: 100 }}>
         {isOpen && (
           <CompactPicker
+            colors={[
+              "#070452",
+              "#2651ED",
+              "#4D4D4D",
+              "#999999",
+              "#FFFFFF",
+              "#F44E3B",
+              "#FE9200",
+              "#FCDC00",
+              "#DBDF00",
+              "#A4DD00",
+              "#68CCCA",
+              "#73D8FF",
+              "#AEA1FF",
+              "#FDA1FF",
+              "#333333",
+              "#808080",
+              "#cccccc",
+              "#D33115",
+              "#E27300",
+              "#FCC400",
+              "#B0BC00",
+              "#68BC00",
+              "#16A5A5",
+              "#009CE0",
+              "#7B64FF",
+              "#FA28FF",
+              "#000000",
+              "#666666",
+              "#B3B3B3",
+              "#9F0500",
+              "#C45100",
+              "#FB9E00",
+              "#808900",
+              "#194D33",
+              "#0C797D",
+              "#0062B1",
+              "#653294",
+              "#AB149E",
+            ]}
             passedStyles={{ backgroundColor: "white" }}
             onChange={({ hex }) => {
               Transforms.setNodes(
@@ -171,7 +211,11 @@ const FontSizeDropdown = () => {
   return (
     <DropDownQuestion
       isForWaitlist
-      buttonStyles={{ width: "20%", padding: 0 }}
+      containerStyles={{ margin: 0 }}
+      buttonStyles={{
+        width: "20%",
+        fontSize: "12px",
+      }}
       onChange={(fontSize) => {
         Transforms.setNodes(
           editor,

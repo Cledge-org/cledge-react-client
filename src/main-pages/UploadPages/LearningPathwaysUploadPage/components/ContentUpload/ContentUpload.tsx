@@ -242,8 +242,42 @@ const ContentUpload = ({
                                         type: "paragraph",
                                         children: [
                                           {
-                                            text: "This is a placeholder...",
+                                            text: "This is a placeholder",
                                             bold: true,
+                                            "font-size": "28px",
+                                            "font-color": "#070452",
+                                          },
+                                        ],
+                                      },
+                                      {
+                                        type: "paragraph",
+                                        children: [
+                                          {
+                                            text: "This is a placeholder",
+                                            bold: true,
+                                            "font-size": "22px",
+                                            "font-color": "#070452",
+                                          },
+                                        ],
+                                      },
+                                      {
+                                        type: "paragraph",
+                                        children: [
+                                          {
+                                            text: "This is a placeholder",
+                                            bold: true,
+                                            "font-size": "18px",
+                                            "font-color": "#070452",
+                                          },
+                                        ],
+                                      },
+                                      {
+                                        type: "paragraph",
+                                        children: [
+                                          {
+                                            text: "This is a placeholder",
+                                            "font-size": "14px",
+                                            "font-color": "#070452",
                                           },
                                         ],
                                       },

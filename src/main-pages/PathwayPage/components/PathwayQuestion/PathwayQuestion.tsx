@@ -30,8 +30,11 @@ interface PathwayQuestionCardProps extends PathwayQuestion {
 }
 
 export default function PathwayQuestion({
-  question,
   userAnswers,
+  question,
+  questionType,
+  data,
+  helpText,
   onUpdate,
   allAnswers,
 }: PathwayQuestionCardProps) {
@@ -39,90 +42,82 @@ export default function PathwayQuestion({
   const [userAnswer, setUserAnswer]: [
     UserResponse,
     Dispatch<SetStateAction<UserResponse>>
-  ] = useState(
-    userAnswers?.find((response) => {
-      return response.questionId === question._id;
-    })
-      ? userAnswers.find((response) => {
-          return response.questionId === question._id;
-        })
-      : { questionId: question._id, response: null }
-  );
-  const [originalAnswer, setOriginalAnswer]: [
-    UserResponse,
-    Dispatch<SetStateAction<UserResponse>>
-  ] = useState(
-    JSON.parse(
-      JSON.stringify(
-        userAnswers?.find((response) => {
-          return response.questionId === question._id;
-        })
-          ? userAnswers.find((response) => {
-              return response.questionId === question._id;
-            })
-          : { questionId: question._id, response: null }
-      )
-    )
-  );
+  ] = useState();
+  // const [originalAnswer, setOriginalAnswer]: [
+  //   UserResponse,
+  //   Dispatch<SetStateAction<UserResponse>>
+  // ] = useState(
+  //   JSON.parse(
+  //     JSON.stringify(
+  //       userAnswers?.find((response) => {
+  //         return response.questionId === question._id;
+  //       })
+  //         ? userAnswers.find((response) => {
+  //             return response.questionId === question._id;
+  //           })
+  //         : { questionId: question._id, response: null }
+  //     )
+  //   )
+  // );
   const session = useSession();
-  const getQuestion = useMemo((): JSX.Element => {
-    if (question.type === "TextInput") {
-      return (
-        <TextInputQuestion
-          question={question}
-          userAnswer={userAnswer?.response}
-          onChange={(answer) => {
-            setUserAnswer({ ...userAnswer, response: answer });
-          }}
-        />
-      );
-    }
-    if (question.type === "Ranking") {
-      return (
-        <RankingQuestion
-          question={question}
-          tags={[]}
-          userAnswers={userAnswer?.response}
-          onChange={(answer) => {
-            setUserAnswer({ ...userAnswer, response: answer });
-          }}
-        />
-      );
-    }
-    if (question.type === "MCQ") {
-      return (
-        <MCQQuestion
-          tags={[]}
-          question={question}
-          userAnswer={userAnswer?.response}
-          onChange={(answer, newQTags, oldQTags) => {
-            setUserAnswer({ ...userAnswer, response: answer });
-          }}
-        />
-      );
-    }
-    if (question.type === "CheckBox") {
-      return (
-        <CheckBoxQuestion
-          tags={[]}
-          question={question}
-          userAnswers={userAnswer?.response}
-          onChange={(answer, newQTags, oldQTags) => {
-            setUserAnswer({ ...userAnswer, response: answer });
-          }}
-        />
-      );
-    }
-    return (
-      <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
-        <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-          {question.question}
-        </span>
-        <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
-          <div className="w-75">{userAnswer.response ?? "No answer"}</div>
-        </div>
-      </div>
-    );
-  }, [userAnswer, question]);
-  return <div>{getQuestion}</div>;
+  // const getQuestion = useMemo((): JSX.Element => {
+  //   if (questionType === "TextInput") {
+  //     return (
+  //       <TextInputQuestion
+  //         question={question}
+  //         userAnswer={userAnswer?.response}
+  //         onChange={(answer) => {
+  //           setUserAnswer({ ...userAnswer, response: answer });
+  //         }}
+  //       />
+  //     );
+  //   }
+  //   if (questionType === "Ranking") {
+  //     return (
+  //       <RankingQuestion
+  //         question={question}
+  //         tags={[]}
+  //         userAnswers={userAnswer?.response}
+  //         onChange={(answer) => {
+  //           setUserAnswer({ ...userAnswer, response: answer });
+  //         }}
+  //       />
+  //     );
+  //   }
+  //   if (questionType === "MCQ") {
+  //     return (
+  //       <MCQQuestion
+  //         tags={[]}
+  //         question={question}
+  //         userAnswer={userAnswer?.response}
+  //         onChange={(answer, newQTags, oldQTags) => {
+  //           setUserAnswer({ ...userAnswer, response: answer });
+  //         }}
+  //       />
+  //     );
+  //   }
+  //   if (questionType === "CheckBox") {
+  //     return (
+  //       <CheckBoxQuestion
+  //         tags={[]}
+  //         question={question}
+  //         userAnswers={userAnswer?.response}
+  //         onChange={(answer, newQTags, oldQTags) => {
+  //           setUserAnswer({ ...userAnswer, response: answer });
+  //         }}
+  //       />
+  //     );
+  //   }
+  //   return (
+  //     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
+  //       <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
+  //         {question.question}
+  //       </span>
+  //       <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
+  //         <div className="w-75">{userAnswer.response ?? "No answer"}</div>
+  //       </div>
+  //     </div>
+  //   );
+  // }, [userAnswer, question]);
+  return <div></div>;
 }

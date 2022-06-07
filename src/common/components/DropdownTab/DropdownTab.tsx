@@ -1,3 +1,4 @@
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faCheckCircle } from "@fortawesome/free-regular-svg-icons";
 import {
   faChevronDown,
@@ -15,6 +16,7 @@ export default function DropdownTab({
   isAll,
   onClick,
   isExtracurricular,
+  icons,
   isPathway,
   currSelectedPath,
   isFinishedModule,
@@ -30,6 +32,7 @@ export default function DropdownTab({
   isFinishedContent?: boolean[];
   isFinishedModule?: boolean;
   currSelectedPath?: string;
+  icons?: IconProp[];
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
@@ -103,7 +106,11 @@ export default function DropdownTab({
                     : {}
                 }
                 icon={
-                  isPathway
+                  icons[index]
+                    ? isFinishedModule || isFinishedContent[index]
+                      ? faCheckCircle
+                      : icons[index]
+                    : isPathway
                     ? isFinishedModule || isFinishedContent[index]
                       ? faCheckCircle
                       : chunkTitle.type.toLowerCase() === "article"
