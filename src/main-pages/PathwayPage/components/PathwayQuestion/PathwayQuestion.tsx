@@ -24,100 +24,118 @@ import CheckBoxQuestion from "src/common/components/Questions/CheckboxQuestion/C
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface PathwayQuestionCardProps extends PathwayQuestion {
-  userAnswers: UserResponse[];
-  allAnswers?: UserResponse[];
+  // userAnswers: UserResponse[];
+  // allAnswers?: UserResponse[];
+  number: number;
   onUpdate: Function;
 }
 
 export default function PathwayQuestion({
-  userAnswers,
+  // userAnswers,
   question,
   questionType,
   data,
   helpText,
+  number,
   onUpdate,
-  allAnswers,
-}: PathwayQuestionCardProps) {
+}: // allAnswers,
+PathwayQuestionCardProps) {
   const [displayingQuestion, setDisplayingQuestion] = useState(false);
   const [userAnswer, setUserAnswer]: [
     UserResponse,
     Dispatch<SetStateAction<UserResponse>>
+  ] = useState({ response: "", questionId: "" });
+  const [originalAnswer, setOriginalAnswer]: [
+    UserResponse,
+    Dispatch<SetStateAction<any>>
   ] = useState();
-  // const [originalAnswer, setOriginalAnswer]: [
-  //   UserResponse,
-  //   Dispatch<SetStateAction<UserResponse>>
-  // ] = useState(
-  //   JSON.parse(
-  //     JSON.stringify(
-  //       userAnswers?.find((response) => {
-  //         return response.questionId === question._id;
-  //       })
-  //         ? userAnswers.find((response) => {
-  //             return response.questionId === question._id;
-  //           })
-  //         : { questionId: question._id, response: null }
-  //     )
-  //   )
-  // );
   const session = useSession();
-  // const getQuestion = useMemo((): JSX.Element => {
-  //   if (questionType === "TextInput") {
-  //     return (
-  //       <TextInputQuestion
-  //         question={question}
-  //         userAnswer={userAnswer?.response}
-  //         onChange={(answer) => {
-  //           setUserAnswer({ ...userAnswer, response: answer });
-  //         }}
-  //       />
-  //     );
-  //   }
-  //   if (questionType === "Ranking") {
-  //     return (
-  //       <RankingQuestion
-  //         question={question}
-  //         tags={[]}
-  //         userAnswers={userAnswer?.response}
-  //         onChange={(answer) => {
-  //           setUserAnswer({ ...userAnswer, response: answer });
-  //         }}
-  //       />
-  //     );
-  //   }
-  //   if (questionType === "MCQ") {
-  //     return (
-  //       <MCQQuestion
-  //         tags={[]}
-  //         question={question}
-  //         userAnswer={userAnswer?.response}
-  //         onChange={(answer, newQTags, oldQTags) => {
-  //           setUserAnswer({ ...userAnswer, response: answer });
-  //         }}
-  //       />
-  //     );
-  //   }
-  //   if (questionType === "CheckBox") {
-  //     return (
-  //       <CheckBoxQuestion
-  //         tags={[]}
-  //         question={question}
-  //         userAnswers={userAnswer?.response}
-  //         onChange={(answer, newQTags, oldQTags) => {
-  //           setUserAnswer({ ...userAnswer, response: answer });
-  //         }}
-  //       />
-  //     );
-  //   }
-  //   return (
-  //     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
-  //       <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-  //         {question.question}
-  //       </span>
-  //       <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
-  //         <div className="w-75">{userAnswer.response ?? "No answer"}</div>
-  //       </div>
-  //     </div>
-  //   );
-  // }, [userAnswer, question]);
-  return <div></div>;
+  const getQuestion = useMemo((): JSX.Element => {
+    if (questionType === "TextInput") {
+      return (
+        <TextInputQuestion
+          isPathwayQuestion
+          question={{
+            question: `${number} ${question}`,
+            questionType,
+            data,
+            helpText,
+            type: "question",
+          }}
+          userAnswer={userAnswer?.response}
+          onChange={(answer) => {
+            setUserAnswer({ ...userAnswer, response: answer });
+          }}
+        />
+      );
+    }
+    if (questionType === "Ranking") {
+      return (
+        <RankingQuestion
+          isPathwayQuestion
+          question={{
+            question: `${number} ${question}`,
+            questionType,
+            data,
+            helpText,
+            type: "question",
+          }}
+          tags={[]}
+          userAnswers={userAnswer?.response}
+          onChange={(answer) => {
+            setUserAnswer({ ...userAnswer, response: answer });
+          }}
+        />
+      );
+    }
+    if (questionType === "MCQ") {
+      return (
+        <MCQQuestion
+          tags={[]}
+          isPathwayQuestion
+          question={{
+            question: `${number} ${question}`,
+            questionType,
+            data,
+            helpText,
+            type: "question",
+          }}
+          userAnswer={userAnswer?.response}
+          onChange={(answer, newQTags, oldQTags) => {
+            setUserAnswer({ ...userAnswer, response: answer });
+          }}
+        />
+      );
+    }
+    if (questionType === "CheckBox") {
+      return (
+        <CheckBoxQuestion
+          tags={[]}
+          isPathwayQuestion
+          question={{
+            question: `${number} ${question}`,
+            questionType,
+            data,
+            helpText,
+            type: "question",
+          }}
+          userAnswers={userAnswer?.response}
+          onChange={(answer, newQTags, oldQTags) => {
+            setUserAnswer({ ...userAnswer, response: answer });
+          }}
+        />
+      );
+    }
+    return (
+      <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
+        <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
+          {`${number} ${question}`}
+        </span>
+        <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
+          <div className="w-75">{userAnswer.response ?? "No answer"}</div>
+        </div>
+      </div>
+    );
+  }, [userAnswer, question]);
+  return <div>{getQuestion}</div>;
 }

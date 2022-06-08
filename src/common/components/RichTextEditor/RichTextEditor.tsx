@@ -184,7 +184,6 @@ const FontColorDropdown = () => {
               "#653294",
               "#AB149E",
             ]}
-            passedStyles={{ backgroundColor: "white" }}
             onChange={({ hex }) => {
               Transforms.setNodes(
                 editor,

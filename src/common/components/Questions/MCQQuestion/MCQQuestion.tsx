@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import styles from "./mcq-question.module.scss";
 
 interface MCQQuestionProps {
-  question: Question;
+  isPathwayQuestion?: boolean;
+  question: Question | PathwayQuestion;
   userAnswer: string;
   onChange: Function;
   tags: string[];
@@ -15,6 +16,7 @@ export default function MCQQuestion({
   userAnswer,
   onChange,
   tags,
+  isPathwayQuestion,
   inEC,
 }: MCQQuestionProps) {
   const [selected, setSelected] = useState(userAnswer?.slice());
@@ -44,6 +46,26 @@ export default function MCQQuestion({
                   : styles.mcqAnswerBtn
               } ${inEC ? "w-100" : ""} py-3 ps-4 my-2`}
             >
+              {isPathwayQuestion && (
+                <div
+                  style={{
+                    width: "2em",
+                    height: "2em",
+                    border: "2px solid darkgray",
+                    borderRadius: "1em",
+                  }}
+                >
+                  {selected === op && (
+                    <div
+                      style={{
+                        width: "90%",
+                        height: "90%",
+                        borderRadius: "45%",
+                      }}
+                    />
+                  )}
+                </div>
+              )}
               {op}
             </button>
           );

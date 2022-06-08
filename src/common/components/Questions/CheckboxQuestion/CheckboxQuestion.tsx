@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import CheckBox from "../../CheckBox/CheckBox";
 import styles from "./checkbox-question.module.scss";
 interface CheckBoxQuestionProps {
-  question: Question;
+  isPathwayQuestion?: boolean;
+  question: Question | PathwayQuestion;
   userAnswers: string[];
   onChange: Function;
   tags: string[];
@@ -15,6 +16,7 @@ export default function CheckBoxQuestion({
   question,
   userAnswers,
   onChange,
+  isPathwayQuestion,
   inEC,
   tags,
 }: CheckBoxQuestionProps) {

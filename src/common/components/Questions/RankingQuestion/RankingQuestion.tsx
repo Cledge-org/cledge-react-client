@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import DropDownQuestion from "../DropdownQuestion/DropdownQuestion";
 
 interface RankingQuestionProps {
-  question: Question;
+  isPathwayQuestion?: boolean;
+  question: Question | PathwayQuestion;
   userAnswers: string[];
   onChange: Function;
   tags: string[];
@@ -13,6 +14,7 @@ export default function RankingQuestion({
   question,
   userAnswers,
   onChange,
+  isPathwayQuestion,
   tags,
 }: RankingQuestionProps) {
   const [selected, setSelected] = useState(

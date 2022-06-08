@@ -32,6 +32,7 @@
     "@slate-editor/font-size-plugin": "^5.1.0",
     "@slate-editor/list-plugin": "^5.1.0",
     "@svgr/webpack": "^6.2.1",
+    "@types/react-color": "^3.0.6",
     "@types/react-fontawesome": "^1.6.5",
     "@types/react-modal": "^3.12.1",
     "@types/styled-components": "^5.1.24",
