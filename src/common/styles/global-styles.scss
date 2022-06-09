@@ -176,7 +176,12 @@ a {
     filter: brightness(130%);
   }
 }
-
+.w-60 {
+  width: 60%;
+}
+.w-85 {
+  width: 85%;
+}
 .cl-btn-blue {
   @extend .cl-btn;
   background-color: $cl-blue !important;

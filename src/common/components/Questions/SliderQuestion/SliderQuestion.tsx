@@ -10,7 +10,7 @@ interface SliderProps {
   plus?: boolean;
   onChange: Function;
 }
-export default function Slider({
+export default function SliderQuestion({
   title = undefined,
   min,
   max,

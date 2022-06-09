@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "../AppPage/AppPage";
 import { useRouter } from "next/router";
@@ -23,6 +23,7 @@ import {
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
 import RichText from "src/common/components/RichText/RichText";
+import SubPageHeader from "src/common/components/SubpageHeader/SubpageHeader";
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
@@ -46,17 +47,93 @@ const Pathways: NextApplicationPage<{
   // );
   // const session = useSession();
   // const checkForDiscrepancies = checkPathwayDiscrepancies(pathwayInfo);
-
+  const getContent = useCallback(() => {
+    let questionNumber = 0;
+    return currContent.content.map((content) => {
+      const { type } = content;
+      if (type === "question") {
+        questionNumber++;
+      }
+      return type === "video" ? (
+        <div className="center-child pt-4">
+          <div style={{ width: "90%", height: "100vh" }}>
+            <div className="w-100" style={{ height: "60%" }}>
+              <YoutubeEmbed
+                isPathway
+                key={`youtube-container-${content.url.substring(
+                  content.url.indexOf("v=") !== -1
+                    ? content.url.indexOf("v=") + 2
+                    : content.url.lastIndexOf("/") + 1
+                )}`}
+                isVideoFinished={false}
+                videoTime={0}
+                onVideoTimeUpdate={(player) => {}}
+                videoId={content.url.substring(
+                  content.url.indexOf("v=") !== -1
+                    ? content.url.indexOf("v=") + 2
+                    : content.url.lastIndexOf("/") + 1
+                )}
+              />
+            </div>
+            <div className="w-100 center-child flex-column py-5">
+              <div className={classNames("pb-2 w-100")}>
+                <span
+                  className="fw-bold cl-dark-text"
+                  style={{ fontSize: "1.7em" }}
+                >
+                  {content.title}
+                </span>
+              </div>
+              <div className={classNames(styles.pathwayDescription, "pb-2")}>
+                <span
+                  className="fw-bold cl-dark-text"
+                  style={{ fontSize: "1.3em" }}
+                >
+                  Video Source: {content.videoSource}
+                </span>
+              </div>
+              <div className="mt-3 w-100">
+                <div className="text-start">{content.description}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : type === "text" ? (
+        <div className="center-child w-100">
+          <div className="w-60">
+            <RichText text={content.text} />
+          </div>
+        </div>
+      ) : type === "image" ? (
+        <div className="d-flex flex-column align-items-center w-100">
+          <img className="w-60" src={content.image} />
+          <div className="w-60 text-start">{content.description}</div>
+        </div>
+      ) : (
+        type === "question" && (
+          <div className="w-60 align-self-center">
+            <PathwayQuestion
+              type={"question"}
+              question={content.question}
+              questionType={content.questionType}
+              number={questionNumber}
+              // userAnswers={[]}
+              onUpdate={() => {}}
+              helpText={content.helpText}
+              data={content.data}
+            />
+          </div>
+        )
+      );
+    });
+  }, [currContent]);
   return (
     <PageErrorBoundary>
       <div
         className="container-fluid d-flex flex-row px-0"
-        style={{ height: "94vh" }}
+        style={{ minHeight: "94vh", height: "fit-content" }}
       >
-        <div
-          className="d-flex flex-column bg-light-gray"
-          style={{ flex: 1, height: "100%" }}
-        >
+        <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
           {pathwayInfo.modules.map(
             (
               { name, presetContent, personalizedContent, _id },
@@ -105,81 +182,14 @@ const Pathways: NextApplicationPage<{
           )}
         </div>
         <div className="d-flex flex-column" style={{ flex: 3 }}>
-          {currContent.content.map((content) => {
-            const { type } = content;
-            return type === "video" ? (
-              <div className="center-child">
-                <div style={{ width: "90%", height: "100vh" }}>
-                  <div className="w-100" style={{ height: "60%" }}>
-                    <YoutubeEmbed
-                      isPathway
-                      key={`youtube-container-${content.url.substring(
-                        content.url.indexOf("v=") !== -1
-                          ? content.url.indexOf("v=") + 2
-                          : content.url.lastIndexOf("/") + 1
-                      )}`}
-                      isVideoFinished={false}
-                      videoTime={0}
-                      onVideoTimeUpdate={(player) => {}}
-                      videoId={content.url.substring(
-                        content.url.indexOf("v=") !== -1
-                          ? content.url.indexOf("v=") + 2
-                          : content.url.lastIndexOf("/") + 1
-                      )}
-                    />
-                  </div>
-                  <div className="w-100 center-child flex-column py-5">
-                    <div className={classNames("pb-2 w-100")}>
-                      <span
-                        className="fw-bold cl-dark-text"
-                        style={{ fontSize: "1.7em" }}
-                      >
-                        {content.title}
-                      </span>
-                    </div>
-                    <div
-                      className={classNames(styles.pathwayDescription, "pb-2")}
-                    >
-                      <span
-                        className="fw-bold cl-dark-text"
-                        style={{ fontSize: "1.3em" }}
-                      >
-                        Video Source: {content.videoSource}
-                      </span>
-                    </div>
-                    <div className="mt-3 w-100">
-                      <div className="text-start">{content.description}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : type === "text" ? (
-              <div className="center-child w-100">
-                <div style={{ width: "60%" }}>
-                  <RichText text={content.text} />
-                </div>
-              </div>
-            ) : type === "image" ? (
-              <div className="d-flex flex-column align-items-center w-100">
-                <img className="w-50" src={content.image} />
-                <div className="w-50 text-start">{content.description}</div>
-              </div>
-            ) : (
-              type === "question" && (
-                <div>
-                  <PathwayQuestion
-                    type={"question"}
-                    question={content.question}
-                    questionType={content.questionType}
-                    userAnswers={[]}
-                    onUpdate={() => {}}
-                    helpText={content.helpText}
-                    data={content.data}
-                  />
-                </div>
-              )
-            );
-          })}
+          {currContent.primaryType === "question" && (
+            <SubPageHeader
+              title={"Quiz"}
+              isExtracurricular
+              percentage={undefined}
+            />
+          )}
+          {getContent()}
         </div>
       </div>
     </PageErrorBoundary>

@@ -21,6 +21,8 @@ import RankingQuestion from "src/common/components/Questions/RankingQuestion/Ran
 import TextInputQuestion from "src/common/components/Questions/TextInputQuestion/TextInputQuestion";
 import MCQQuestion from "src/common/components/Questions/MCQQuestion/MCQQuestion";
 import CheckBoxQuestion from "src/common/components/Questions/CheckboxQuestion/CheckboxQuestion";
+import DropDownQuestion from "src/common/components/Questions/DropdownQuestion/DropdownQuestion";
+import SliderQuestion from "src/common/components/Questions/SliderQuestion/SliderQuestion";
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface PathwayQuestionCardProps extends PathwayQuestion {
@@ -51,12 +53,12 @@ PathwayQuestionCardProps) {
   ] = useState();
   const session = useSession();
   const getQuestion = useMemo((): JSX.Element => {
-    if (questionType === "TextInput") {
+    if (questionType === "PathwayTextInput") {
       return (
         <TextInputQuestion
           isPathwayQuestion
           question={{
-            question: `${number} ${question}`,
+            question: `${number}. ${question}`,
             questionType,
             data,
             helpText,
@@ -69,32 +71,47 @@ PathwayQuestionCardProps) {
         />
       );
     }
-    if (questionType === "Ranking") {
+    if (questionType === "PathwayDropdown") {
       return (
-        <RankingQuestion
-          isPathwayQuestion
-          question={{
-            question: `${number} ${question}`,
-            questionType,
-            data,
-            helpText,
-            type: "question",
-          }}
-          tags={[]}
-          userAnswers={userAnswer?.response}
-          onChange={(answer) => {
-            setUserAnswer({ ...userAnswer, response: answer });
-          }}
-        />
+        <div className="w-100">
+          <DropDownQuestion
+            isForWaitlist
+            isForDashboard
+            defaultValue={userAnswer?.response}
+            valuesList={data}
+            onChange={(answer) => {
+              setUserAnswer({ ...userAnswer, response: answer });
+            }}
+          />
+        </div>
       );
     }
-    if (questionType === "MCQ") {
+    // if (questionType === "PathwayRanking") {
+    //   return (
+    //     <RankingQuestion
+    //       isPathwayQuestion
+    //       question={{
+    //         question: `${number}. ${question}`,
+    //         questionType,
+    //         data,
+    //         helpText,
+    //         type: "question",
+    //       }}
+    //       tags={[]}
+    //       userAnswers={userAnswer?.response}
+    //       onChange={(answer) => {
+    //         setUserAnswer({ ...userAnswer, response: answer });
+    //       }}
+    //     />
+    //   );
+    // }
+    if (questionType === "PathwayMCQ") {
       return (
         <MCQQuestion
           tags={[]}
           isPathwayQuestion
           question={{
-            question: `${number} ${question}`,
+            question: `${number}. ${question}`,
             questionType,
             data,
             helpText,
@@ -107,13 +124,13 @@ PathwayQuestionCardProps) {
         />
       );
     }
-    if (questionType === "CheckBox") {
+    if (questionType === "PathwayCheckBox") {
       return (
         <CheckBoxQuestion
           tags={[]}
           isPathwayQuestion
           question={{
-            question: `${number} ${question}`,
+            question: `${number}. ${question}`,
             questionType,
             data,
             helpText,
@@ -125,6 +142,9 @@ PathwayQuestionCardProps) {
           }}
         />
       );
+    }
+    if (questionType === "PathwayLinearQuestion") {
+      return <SliderQuestion min={"0"} max={"5"} onChange={() => {}} />;
     }
     return (
       <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
