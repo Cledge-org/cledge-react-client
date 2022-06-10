@@ -1,0 +1,11 @@
+@use "src/common/styles" as *;
+
+.dashboard-dropdown-hover {
+  border: 1px solid transparent;
+  border-radius: 8px;
+  transition: 200ms;
+  background-color: transparent;
+}
+.dashboard-dropdown-hover:hover {
+  background-color: $cl-light-gray;
+}

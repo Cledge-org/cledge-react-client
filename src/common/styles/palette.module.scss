@@ -1,0 +1,43 @@
+$cl-white: #ffffff;
+$cl-translucent-white: #ffffff66;
+$cl-light-blue: #d9e1fc;
+$cl-blue: #2651ed;
+$cl-dark-blue: #0b1142;
+$cl-dark-text: #070452;
+$cl-light-gray: #f2f2f7;
+$cl-mid-gray: #656565;
+$cl-secondary-text: #b7b7b7;
+$cl-dark-gray: #222222;
+$cl-black: #000000;
+$cl-orange: #f7bc76;
+$cl-yellow: #f7bc76;
+$cl-red: #ff6060;
+$cl-purple: #58508d;
+$cl-pink-purple: #bc5090;
+$cl-orange-red: #ff6361;
+$cl-light-yellow: #f8e74c;
+$cl-soft-gray: #e0dfe8;
+$cl-super-light-gray: #fbfcff;
+
+:export {
+  $cl-white: $cl-white;
+  $cl-translucent-white: $cl-translucent-white;
+  $cl-light-blue: $cl-light-blue;
+  $cl-blue: $cl-blue;
+  $cl-dark-blue: $cl-dark-blue;
+  $cl-dark-text: $cl-dark-text;
+  $cl-light-gray: $cl-light-gray;
+  $cl-mid-gray: $cl-mid-gray;
+  $cl-secondary-text: $cl-secondary-text;
+  $cl-dark-gray: $cl-dark-gray;
+  $cl-black: $cl-black;
+  $cl-orange: $cl-orange;
+  $cl-yellow: $cl-yellow;
+  $cl-red: $cl-red;
+  $cl-purple: $cl-purple;
+  $cl-pink-purple: $cl-pink-purple;
+  $cl-orange-red: $cl-orange-red;
+  $cl-light-yellow: $cl-light-yellow;
+  $cl-soft-gray: $cl-soft-gray;
+  $cl-super-light-gray: $cl-super-light-gray;
+}
