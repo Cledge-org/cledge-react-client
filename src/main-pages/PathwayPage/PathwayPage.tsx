@@ -42,15 +42,16 @@ const Pathways: NextApplicationPage<{
       pathwayInfo.modules[0].personalizedContent
     )[0]
   );
-  // const [allPathwayProgress, setAllPathwayProgress] = useState(
-  //   pathwaysProgress.slice()
-  // );
-  // const session = useSession();
-  // const checkForDiscrepancies = checkPathwayDiscrepancies(pathwayInfo);
+  const [allPathwayProgress, setAllPathwayProgress] = useState(
+    pathwaysProgress.slice()
+  );
+  const session = useSession();
+  const checkForDiscrepancies = checkPathwayDiscrepancies(pathwayInfo);
   const getContent = useCallback(() => {
     let questionNumber = 0;
     return currContent.content.map((content) => {
       const { type } = content;
+      // let currContentProgress =
       if (type === "question") {
         questionNumber++;
       }
@@ -121,6 +122,7 @@ const Pathways: NextApplicationPage<{
               onUpdate={() => {}}
               helpText={content.helpText}
               data={content.data}
+              id={content.id}
             />
           </div>
         )

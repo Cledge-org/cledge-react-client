@@ -142,7 +142,24 @@ export declare global {
   interface ContentProgress {
     finished: boolean;
     name: string;
+    subContentProgress: (
+      | PathwayQuestionProgress
+      | PathwayVideoProgress
+      | PathwayTextProgress
+    )[];
+  }
+  interface SubContentProgress {
+    id: string;
+    finished: boolean;
+  }
+  interface PathwayQuestionProgress extends SubContentProgress {
+    questionAnswer: any;
+  }
+  interface PathwayVideoProgress extends SubContentProgress {
     videoTime: number;
+  }
+  interface PathwayTextProgress extends SubContentProgress {
+    textProgress: number;
   }
   interface Pathway {
     _id?: ObjectId;
@@ -177,6 +194,7 @@ export declare global {
   }
   interface PathwaySubContent {
     type: "text" | "video" | "image" | "question";
+    id: string;
   }
   interface PathwayTextContent extends PathwaySubContent {
     text: string;

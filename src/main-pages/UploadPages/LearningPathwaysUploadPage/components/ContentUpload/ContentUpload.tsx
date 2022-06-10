@@ -21,6 +21,13 @@ const ContentUpload = ({
     ? module.personalizedContent
     : module.presetContent;
   const contentType = isPersonalized ? "personalizedContent" : "presetContent";
+  const generateSubContentId = (type: string) => {
+    let randId = "";
+    for (let i = 0; i < 6; i++) {
+      randId += Math.floor(Math.random() * 10).toString();
+    }
+    return type + randId;
+  };
   return (
     <>
       {content.map((overallContent, contentIndex) => {
@@ -221,6 +228,10 @@ const ContentUpload = ({
                               type: value,
                               ...newContent,
                             };
+                            course.modules[index][contentType][
+                              contentIndex
+                            ].content[subContentIndex].id =
+                              generateSubContentId(value);
                             setCurrPathwayData({
                               ...currPathwayData,
                               modules: course.modules,
