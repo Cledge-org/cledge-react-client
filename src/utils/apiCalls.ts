@@ -23,7 +23,9 @@ export const callUpdateUser = async (userInfo: AccountInfo) => {
     }),
   });
 };
-export const callPutPathwayProgress = async (contentProgress) => {
+export const callPutPathwayProgress = async (
+  contentProgress: Record<string, ContentProgress[]>
+) => {
   const session = getSession();
   return await fetch(`/api/put-pathway-progress`, {
     method: "POST",

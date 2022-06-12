@@ -28,30 +28,129 @@ const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
 }> = ({ pathwayInfo, pathwaysProgress }) => {
-  const getSortedContent = (presetContent, personalizedContent) => {
-    let allContent = presetContent.concat(personalizedContent);
+  const addPathwayProgress = () => {
+    pathwaysProgress.push({
+      pathwayId: pathwayInfo._id,
+      moduleProgress: [],
+      finished: false,
+      name: pathwayInfo.name,
+    });
+  };
+  if (
+    !pathwaysProgress
+      .slice()
+      .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
+  ) {
+    addPathwayProgress();
+  }
+  const getSortedContent = (
+    presetContent: PresetContent[],
+    personalizedContent: PersonalizedContent[]
+  ) => {
+    let allContent: (PresetContent | PersonalizedContent)[] =
+      presetContent.concat(personalizedContent);
     if (presetContent.length === 0) {
       allContent = personalizedContent;
     }
     allContent.sort((a, b) => a.priority - b.priority);
     return allContent;
   };
+  const [currModuleId, setCurrModuleId] = useState(pathwayInfo.modules[0]._id);
+  const currPathwayProgress = useMemo(
+    () =>
+      pathwaysProgress
+        .slice()
+        .find(({ pathwayId }) => pathwayId === pathwayInfo._id),
+    [pathwaysProgress]
+  );
+  useEffect(() => {
+    checkPathwayDiscrepancies(pathwayInfo)(currPathwayProgress);
+  }, []);
   const [currContent, setCurrContent] = useState(
     getSortedContent(
       pathwayInfo.modules[0].presetContent,
       pathwayInfo.modules[0].personalizedContent
     )[0]
   );
-  const [allPathwayProgress, setAllPathwayProgress] = useState(
-    pathwaysProgress.slice()
+  const [moduleProgress, setModuleProgress] = useState<
+    Record<string, ContentProgress[]>
+  >(
+    currPathwayProgress.moduleProgress.reduce((prev, curr) => {
+      return {
+        ...prev,
+        [curr.moduleId]: curr.contentProgress,
+      };
+    }, {})
   );
   const session = useSession();
-  const checkForDiscrepancies = checkPathwayDiscrepancies(pathwayInfo);
+  useEffect(() => {
+    callPutPathwayProgress(moduleProgress).then((res) => {
+      let newProgress = pathwaysProgress.slice();
+      newProgress[
+        newProgress.findIndex(
+          ({ pathwayId }) => pathwayId === currPathwayProgress.pathwayId
+        )
+      ] = currPathwayProgress;
+      store.dispatch(updatePathwayProgressAction(newProgress));
+    });
+  }, [moduleProgress]);
+  const updateContentProgress = (newContentProgress: ContentProgress) => {
+    let allModuleContentProgress = moduleProgress[currModuleId] ?? [];
+    const contentIndex = allModuleContentProgress.findIndex(
+      ({ name }) => name === newContentProgress.name
+    );
+    if (contentIndex === -1) {
+      allModuleContentProgress.push(newContentProgress);
+    } else {
+      allModuleContentProgress[contentIndex] = newContentProgress;
+    }
+    setModuleProgress({
+      ...moduleProgress,
+      [currModuleId]: allModuleContentProgress,
+    });
+  };
+  const updateSubContentProgress = (
+    newSubContentProgress:
+      | PathwayQuestionProgress
+      | PathwayVideoProgress
+      | PathwayTextProgress
+  ) => {
+    console.log(newSubContentProgress);
+    let currContentProgress = moduleProgress[currModuleId].find(
+      ({ name }) => name === currContent.name
+    );
+    const subContentIndex = currContentProgress.subContentProgress.findIndex(
+      ({ id }) => id === newSubContentProgress.id
+    );
+
+    if (subContentIndex === -1) {
+      currContentProgress.subContentProgress.push(newSubContentProgress);
+    } else {
+      currContentProgress.subContentProgress[subContentIndex] =
+        newSubContentProgress;
+    }
+    if (
+      currContentProgress.subContentProgress.reduce(
+        (prev, curr) => prev && curr.finished,
+        true
+      )
+    ) {
+      currContentProgress.finished = true;
+    } else {
+      currContentProgress.finished = false;
+    }
+    updateContentProgress(currContentProgress);
+  };
   const getContent = useCallback(() => {
     let questionNumber = 0;
     return currContent.content.map((content) => {
       const { type } = content;
-      // let currContentProgress =
+      const currSubContentProgress = moduleProgress[currModuleId]
+        .find(({ name }) => name === currContent.name)
+        .subContentProgress.find(({ id }) => id === content.id) || {
+        id: content.id,
+        finished: false,
+      };
       if (type === "question") {
         questionNumber++;
       }
@@ -66,9 +165,22 @@ const Pathways: NextApplicationPage<{
                     ? content.url.indexOf("v=") + 2
                     : content.url.lastIndexOf("/") + 1
                 )}`}
-                isVideoFinished={false}
-                videoTime={0}
-                onVideoTimeUpdate={(player) => {}}
+                isVideoFinished={currSubContentProgress?.finished}
+                videoTime={
+                  ("videoTime" in currSubContentProgress &&
+                    currSubContentProgress.videoTime) ||
+                  0
+                }
+                onVideoTimeUpdate={(player) => {
+                  if (player.getPlayerState() === 1) {
+                    updateSubContentProgress({
+                      ...currSubContentProgress,
+                      videoTime: Math.round(player.getCurrentTime()),
+                      finished:
+                        player.getDuration() - player.getCurrentTime() < 30,
+                    });
+                  }
+                }}
                 videoId={content.url.substring(
                   content.url.indexOf("v=") !== -1
                     ? content.url.indexOf("v=") + 2
@@ -118,8 +230,22 @@ const Pathways: NextApplicationPage<{
               question={content.question}
               questionType={content.questionType}
               number={questionNumber}
-              // userAnswers={[]}
-              onUpdate={() => {}}
+              userAnswer={
+                ("questionAnswer" in currSubContentProgress &&
+                  currSubContentProgress.questionAnswer) ||
+                undefined
+              }
+              onUpdate={(answer) => {
+                console.log("Whot is op");
+                updateSubContentProgress({
+                  ...currSubContentProgress,
+                  questionAnswer: answer,
+                  finished:
+                    typeof answer !== "undefined" &&
+                    answer.length > 0 &&
+                    answer !== "",
+                });
+              }}
               helpText={content.helpText}
               data={content.data}
               id={content.id}
@@ -141,14 +267,15 @@ const Pathways: NextApplicationPage<{
               { name, presetContent, personalizedContent, _id },
               moduleIndex
             ) => {
+              const moduleSortedContent = getSortedContent(
+                presetContent,
+                personalizedContent
+              );
               return (
                 <DropdownTab
                   isFinishedModule={false}
                   isFinishedContent={[false]}
-                  icons={getSortedContent(
-                    presetContent,
-                    personalizedContent
-                  ).map(({ primaryType }) =>
+                  icons={moduleSortedContent.map(({ primaryType }) =>
                     primaryType === "video"
                       ? faVideo
                       : primaryType === "text"
@@ -158,13 +285,13 @@ const Pathways: NextApplicationPage<{
                       : faMoneyCheck
                   )}
                   currSelectedPath={currContent.name}
-                  chunkList={getSortedContent(
-                    presetContent,
-                    personalizedContent
-                  ).map(({ name, type }) => {
-                    return { name, type };
-                  })}
+                  chunkList={moduleSortedContent.map(
+                    ({ name, primaryType }) => {
+                      return { name, type: primaryType };
+                    }
+                  )}
                   onClick={(contentTitle) => {
+                    setCurrModuleId(_id);
                     let currContent = presetContent.find(
                       ({ name }) => name === contentTitle
                     );

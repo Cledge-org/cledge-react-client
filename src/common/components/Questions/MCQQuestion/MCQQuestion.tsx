@@ -19,6 +19,7 @@ export default function MCQQuestion({
   isPathwayQuestion,
   inEC,
 }: MCQQuestionProps) {
+  console.log(userAnswer);
   const [selected, setSelected] = useState(userAnswer?.slice());
   console.log(palette);
   return (

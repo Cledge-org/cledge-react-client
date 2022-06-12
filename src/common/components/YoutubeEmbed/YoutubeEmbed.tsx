@@ -20,7 +20,6 @@ export default function YoutubeEmbed({
   //*************************************
   const [player, setPlayer] = useState(null);
   const [intervalId, setIntervalId] = useState(null);
-  console.log(videoTime);
   useEffect(() => {
     console.log("UPDATING");
   }, [intervalId]);
@@ -29,14 +28,12 @@ export default function YoutubeEmbed({
       setIntervalId(
         setInterval(() => {
           setPlayer((player) => {
-            console.log(videoId);
             onVideoTimeUpdate(player);
             return player;
           });
         }, 10000)
       );
     }
-    console.log(videoId);
     if (!window.YT) {
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";

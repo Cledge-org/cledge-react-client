@@ -26,32 +26,26 @@ import SliderQuestion from "src/common/components/Questions/SliderQuestion/Slide
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface PathwayQuestionCardProps extends PathwayQuestion {
-  // userAnswers: UserResponse[];
-  // allAnswers?: UserResponse[];
+  userAnswer: any;
   number: number;
   onUpdate: Function;
 }
 
 export default function PathwayQuestion({
-  // userAnswers,
   question,
   questionType,
   data,
   helpText,
+  userAnswer,
   number,
   onUpdate,
 }: // allAnswers,
 PathwayQuestionCardProps) {
   const [displayingQuestion, setDisplayingQuestion] = useState(false);
-  const [userAnswer, setUserAnswer]: [
-    UserResponse,
-    Dispatch<SetStateAction<UserResponse>>
-  ] = useState({ response: "", questionId: "" });
   const [originalAnswer, setOriginalAnswer]: [
     UserResponse,
     Dispatch<SetStateAction<any>>
   ] = useState();
-  const session = useSession();
   const getQuestion = useMemo((): JSX.Element => {
     if (questionType === "PathwayTextInput") {
       return (
@@ -64,9 +58,9 @@ PathwayQuestionCardProps) {
             helpText,
             type: "question",
           }}
-          userAnswer={userAnswer?.response}
+          userAnswer={userAnswer}
           onChange={(answer) => {
-            setUserAnswer({ ...userAnswer, response: answer });
+            onUpdate(answer);
           }}
         />
       );
@@ -77,10 +71,10 @@ PathwayQuestionCardProps) {
           <DropDownQuestion
             isForWaitlist
             isForDashboard
-            defaultValue={userAnswer?.response}
+            defaultValue={userAnswer}
             valuesList={data}
             onChange={(answer) => {
-              setUserAnswer({ ...userAnswer, response: answer });
+              onUpdate(answer);
             }}
           />
         </div>
@@ -117,9 +111,9 @@ PathwayQuestionCardProps) {
             helpText,
             type: "question",
           }}
-          userAnswer={userAnswer?.response}
-          onChange={(answer, newQTags, oldQTags) => {
-            setUserAnswer({ ...userAnswer, response: answer });
+          userAnswer={userAnswer}
+          onChange={(answer) => {
+            onUpdate(answer);
           }}
         />
       );
@@ -136,9 +130,9 @@ PathwayQuestionCardProps) {
             helpText,
             type: "question",
           }}
-          userAnswers={userAnswer?.response}
-          onChange={(answer, newQTags, oldQTags) => {
-            setUserAnswer({ ...userAnswer, response: answer });
+          userAnswers={userAnswer}
+          onChange={(answer) => {
+            onUpdate(answer);
           }}
         />
       );
@@ -149,10 +143,10 @@ PathwayQuestionCardProps) {
     return (
       <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
         <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-          {`${number} ${question}`}
+          {`${number}. ${question}`}
         </span>
         <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
-          <div className="w-75">{userAnswer.response ?? "No answer"}</div>
+          <div className="w-75">{userAnswer ?? "No answer"}</div>
         </div>
       </div>
     );
