@@ -1,4 +1,6 @@
 import { initializeApp } from "firebase/app";
+import AdminAuth from "src/pages/api/auth/user-and-token-auth";
+
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -10,6 +12,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   sendPasswordResetEmail,
+  getIdTokenResult,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 
@@ -31,6 +34,7 @@ class AuthFunctions {
       ).then(() => {
         return signInWithEmailAndPassword(firebaseAuth, email, password);
       });
+      await AdminAuth.validateAdmin(user.user.getIdToken());
       return user.user;
     } catch (err) {
       console.error(err);
@@ -55,6 +59,8 @@ class AuthFunctions {
         console.error(err);
       });
   }
+
+  
   // static async signInGoogle() {
   //   await firebaseAuth
   //     .signInWithPopup(firebaseAuth.getAuth(), this.googleProvider)
