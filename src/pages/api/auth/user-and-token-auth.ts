@@ -12,26 +12,6 @@ const firebaseApp = initializeApp(firebaseCreds);
 const firebaseAuth = getAuth(firebaseApp);
 const firebaseAdminAuth = AdminAuth.getAuth(firebaseApp);
 class AuthFunctions {
-  static async authenticateUser() {
-    await getAuth().currentUser.getIdToken(true).then(function(idToken) {
-      firebaseAdminAuth.verifyIdToken(idToken).then(decodedIdToken => {
-        console.log('ID Token correctly decoded', decodedIdToken);
-        firebaseAdminAuth.getUser(decodedIdToken.uid).then((userRecord) => {
-          return true;
-        }).catch(error => {
-          console.error('Error while getting Firebase User record:', error);
-          return false;
-         });
-        }).catch(error => {
-         console.error('Error while verifying Firebase ID token:', error);
-         return false;
-        });
-      }).catch(function(error) {
-      // Handle error
-      return false;
-    });
-  }
-
   static async validateAdmin(idToken: string | undefined) {
     if (!idToken) {
       idToken = await getAuth().currentUser.getIdToken(true);

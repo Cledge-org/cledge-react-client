@@ -34,7 +34,8 @@ class AuthFunctions {
       ).then(() => {
         return signInWithEmailAndPassword(firebaseAuth, email, password);
       });
-      await AdminAuth.validateAdmin(user.user.getIdToken());
+      let idToken = await user.user.getIdToken();
+      await AdminAuth.validateAdmin(idToken);
       return user.user;
     } catch (err) {
       console.error(err);
