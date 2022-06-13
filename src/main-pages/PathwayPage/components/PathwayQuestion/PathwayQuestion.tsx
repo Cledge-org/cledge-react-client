@@ -65,12 +65,35 @@ PathwayQuestionCardProps) {
         />
       );
     }
+    if (questionType === "PathwayTextArea") {
+      return (
+        <TextInputQuestion
+          isPathwayQuestion
+          isTextArea
+          question={{
+            question: `${number}. ${question}`,
+            questionType,
+            data,
+            helpText,
+            type: "question",
+          }}
+          userAnswer={userAnswer}
+          onChange={(answer) => {
+            onUpdate(answer);
+          }}
+        />
+      );
+    }
     if (questionType === "PathwayDropdown") {
       return (
-        <div className="w-100">
+        <div
+          className={`container-fluid h-100 d-flex flex-column align-items-start justify-content-evenly w-100 cl-dark-text fw-bold`}
+        >
+          <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
+            {number}. {question}
+          </span>
           <DropDownQuestion
             isForWaitlist
-            isForDashboard
             defaultValue={userAnswer}
             valuesList={data}
             onChange={(answer) => {
@@ -138,7 +161,17 @@ PathwayQuestionCardProps) {
       );
     }
     if (questionType === "PathwayLinearQuestion") {
-      return <SliderQuestion min={"0"} max={"5"} onChange={() => {}} />;
+      return (
+        <SliderQuestion
+          min={"0"}
+          isPathwayQuestion
+          title={`${number}. ${question}`}
+          max={"5"}
+          onChange={(value) => {
+            onUpdate(value);
+          }}
+        />
+      );
     }
     return (
       <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">

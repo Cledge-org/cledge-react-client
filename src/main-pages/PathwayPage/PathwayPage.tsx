@@ -129,16 +129,13 @@ const Pathways: NextApplicationPage<{
       currContentProgress.subContentProgress[subContentIndex] =
         newSubContentProgress;
     }
-    if (
+    currContentProgress.finished =
       currContentProgress.subContentProgress.reduce(
         (prev, curr) => prev && curr.finished,
         true
-      )
-    ) {
-      currContentProgress.finished = true;
-    } else {
-      currContentProgress.finished = false;
-    }
+      ) &&
+      currContentProgress.subContentProgress.length >=
+        currContent.content.length;
     updateContentProgress(currContentProgress);
   };
   const getContent = useCallback(() => {

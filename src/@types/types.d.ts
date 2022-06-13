@@ -164,6 +164,7 @@ export declare global {
   interface Pathway {
     _id?: ObjectId;
     name: string;
+    coverImage: string | ArrayBuffer;
     modules: PathwayModule[];
     tags: string[];
   }

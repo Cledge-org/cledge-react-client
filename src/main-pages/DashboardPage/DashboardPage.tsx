@@ -41,7 +41,7 @@ const DashboardPage: NextApplicationPage<{
   useEffect(() => {
     let totalPathways = 0;
     let finishedPathways = 0;
-    const allPathways = dashboardParts
+    const allPathways: Pathway[] = dashboardParts
       .map(({ dynamicRoutes }) => {
         return dynamicRoutes.map(({ route }) => route);
       })
@@ -65,7 +65,7 @@ const DashboardPage: NextApplicationPage<{
     });
     setPercentage(Math.round((finishedPathways / totalPathways) * 100));
   }, []);
-  const getCurrentTasks = (allPathways) => {
+  const getCurrentTasks = (allPathways: Pathway[]) => {
     let noProgress = [];
     allPathways?.forEach((pathway) => {
       if (
@@ -88,19 +88,11 @@ const DashboardPage: NextApplicationPage<{
               );
           }
         );
-        const firstUrl = pathway?.modules[0]?.presetContent[0]?.url;
-        const videoId = firstUrl?.substring(
-          firstUrl?.indexOf("v=") !== -1
-            ? firstUrl?.indexOf("v=") + 2
-            : firstUrl?.lastIndexOf("/") + 1
-        );
         noProgress.push({
           name: pathway.name,
           pathwayId: pathway._id,
           subtasks,
-          videoId,
-          part: pathway.part,
-          order: pathway.order,
+          videoId: "",
         });
       }
     });
@@ -143,20 +135,11 @@ const DashboardPage: NextApplicationPage<{
             }
           }
         );
-        const firstUrl = realPathway?.modules[0]?.presetContent[0]?.url;
-        const videoId = firstUrl?.substring(
-          firstUrl?.indexOf("v=") !== -1
-            ? firstUrl?.indexOf("v=") + 2
-            : firstUrl?.lastIndexOf("/") + 1
-        );
-        console.log(subtasks);
         return {
           name,
           pathwayId,
           subtasks,
-          videoId,
-          part: realPathway.part,
-          order: realPathway.order,
+          videoId: "",
         };
       })
       .concat(noProgress);

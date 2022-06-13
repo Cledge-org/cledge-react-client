@@ -30,6 +30,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
   ] = useState({
     _id: null,
     name: "",
+    coverImage: "",
     modules: [
       {
         _id: null,
@@ -58,9 +59,6 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
     ],
     tags: ["", ""],
   });
-  useEffect(() => {
-    console.log(allPathways);
-  }, []);
   return (
     <UploadPage
       onUpload={() => {
@@ -117,6 +115,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                     ? undefined
                     : sendPathwayData._id,
                 pathway: {
+                  coverImage: sendPathwayData.coverImage,
                   tags: sendPathwayData.tags,
                   modules: jsonArr.map(({ moduleId }) => moduleId),
                   name: sendPathwayData.name,
@@ -170,6 +169,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 setCurrPathwayData({
                   _id: null,
                   name: "",
+                  coverImage: "",
                   modules: [
                     {
                       _id: null,
@@ -233,6 +233,36 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           placeholder="Enter pathway name"
           value={currPathwayData.name}
         />
+        <div className="form-group">
+          <img
+            style={{ objectFit: "contain", width: "50%" }}
+            src={currPathwayData.coverImage as string}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(event) => {
+              if (event.target.files && event.target.files[0]) {
+                const img = event.target.files[0];
+                let reader = new FileReader();
+                reader.onload = (e) => {
+                  const imgURL = e.target.result;
+                  let course = currPathwayData;
+                  course.coverImage = imgURL;
+                  setCurrPathwayData({
+                    ...currPathwayData,
+                    tags: course.tags,
+                  });
+                  setCurrPathwayData({
+                    ...currPathwayData,
+                    coverImage: course.coverImage,
+                  });
+                };
+                reader.readAsDataURL(img);
+              }
+            }}
+          />
+        </div>
         <div className="form-group">
           <label
             style={{ fontSize: "0.9em" }}
