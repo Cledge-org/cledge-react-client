@@ -173,6 +173,7 @@ export declare global {
     tags: string[];
     modules: ObjectId[]; // Module document IDs
     name: string;
+    coverImage: string | ArrayBuffer;
   }
   interface PathwayModule {
     _id?: ObjectId;

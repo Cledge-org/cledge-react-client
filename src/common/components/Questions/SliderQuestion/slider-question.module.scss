@@ -2,15 +2,15 @@
 
 .questionnaire-slider::-webkit-slider-thumb {
   background: $cl-blue;
-  z-index: 100;
+  display: none;
 }
 .questionnaire-slider::-moz-range-thumb {
   background: $cl-blue;
-  z-index: 100;
+  display: none;
 }
 .questionnaire-slider::-ms-thumb {
   background: $cl-blue;
-  z-index: 100;
+  display: none;
 }
 
 .questionnaire-slider {

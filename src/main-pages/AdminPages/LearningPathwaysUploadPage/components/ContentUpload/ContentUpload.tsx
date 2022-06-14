@@ -2,7 +2,7 @@ import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DropDownQuestion from "src/common/components/Questions/DropdownQuestion/DropdownQuestion";
 import RichTextEditor from "src/common/components/RichTextEditor/RichTextEditor";
-import UploadTextInput from "src/main-pages/UploadPages/components/UploadTextInput/UploadTextInput";
+import UploadTextInput from "src/main-pages/AdminPages/components/UploadTextInput/UploadTextInput";
 
 const ContentUpload = ({
   module,

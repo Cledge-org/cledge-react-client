@@ -14,8 +14,8 @@ import {
   callPutPathwayModule,
   callPutPathwayModulePersonalizedContent,
 } from "src/utils/apiCalls";
-import UploadTextInput from "src/main-pages/UploadPages/components/UploadTextInput/UploadTextInput";
-import ContentUpload from "src/main-pages/UploadPages/LearningPathwaysUploadPage/components/ContentUpload/ContentUpload";
+import UploadTextInput from "src/main-pages/AdminPages/components/UploadTextInput/UploadTextInput";
+import ContentUpload from "src/main-pages/AdminPages/LearningPathwaysUploadPage/components/ContentUpload/ContentUpload";
 
 // logged in landing page
 const LearningPathwaysUploadPage: NextApplicationPage<{

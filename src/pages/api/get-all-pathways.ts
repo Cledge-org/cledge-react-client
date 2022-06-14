@@ -63,8 +63,7 @@ export function getSpecificPathway(
       res({
         name: pathway.name,
         _id: pathway._id,
-        order: pathway.order,
-        part: pathway.part,
+        coverImage: pathway.coverImage,
         modules,
         tags: pathway.tags,
       });

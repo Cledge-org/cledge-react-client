@@ -36,13 +36,13 @@ export default function SliderQuestion({
       } justify-content-center w-100 cl-dark-text fw-bold my-4`}
     >
       {typeof title !== "undefined" && (
-        <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
+        <span className="pt-4 pb-4" style={{ fontSize: "1.4em" }}>
           {title}
         </span>
       )}
       <div
         className="w-100 position-relative center-child"
-        style={{ height: "2em" }}
+        style={{ height: "fit-content" }}
       >
         <input
           type="range"
@@ -51,6 +51,7 @@ export default function SliderQuestion({
             styles.questionnaireSlider,
             "w-100"
           )}
+          disabled
           min={min}
           max={max}
           step={step}
@@ -61,19 +62,26 @@ export default function SliderQuestion({
           }}
         />
         <div
-          className="w-100 position-absolute"
-          style={{ top: "2em", right: "1em" }}
+          className="position-absolute"
+          style={{ top: "2em", left: "-0.25em", width: "99%" }}
         >
           {range.map((value) => (
-            <div
+            <button
+              onClick={() => {
+                onChange(value.toString());
+                setSliderData(value.toString());
+              }}
               style={{
                 position: "absolute",
                 left: `${100 * (value / (range.length - 1))}%`,
                 bottom: "0.5em",
                 width: "2em",
                 height: "2em",
+                border: `2px solid ${
+                  sliderData == value ? "#2651ED" : "lightgray"
+                }`,
                 borderRadius: "1em",
-                backgroundColor: "white",
+                backgroundColor: sliderData == value ? "#DEDEFF" : "white",
               }}
             />
           ))}

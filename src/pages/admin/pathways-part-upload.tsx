@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from "next";
 import { getAllPathways } from "../api/get-all-pathways";
-import LearningPathwaysUploadPage from "../../main-pages/UploadPages/LearningPathwaysUploadPage/LearningPathwaysUploadPage";
-import PathwayPartsUploadPage from "src/main-pages/UploadPages/PathwayPartsUpload/PathwayPartsUpload";
+import LearningPathwaysUploadPage from "../../main-pages/AdminPages/LearningPathwaysUploadPage/LearningPathwaysUploadPage";
+import PathwayPartsUploadPage from "src/main-pages/AdminPages/PathwayPartsUpload/PathwayPartsUpload";
 import { getAllParts } from "src/pages/api/get-all-pathway-parts";
 import { getAllCheckins } from "src/pages/api/get-all-checkins";
 

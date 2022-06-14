@@ -54,7 +54,7 @@ export default function TextInputQuestion({
               onChange(e.target.value);
             }}
             rows={8}
-            className="form-control w-75"
+            className={`form-control w-${isPathwayQuestion ? "100" : "75"}`}
             placeholder={question.helpText}
           />
         </div>
@@ -114,8 +114,8 @@ export default function TextInputQuestion({
             setCurrValue(e.target.value);
             onChange(e.target.value);
           }}
-          className="form-control w-75"
-          placeholder="Your response..."
+          className={`form-control w-${isPathwayQuestion ? "100" : "75"}`}
+          placeholder={question.helpText ?? "Your response..."}
         />
       </div>
       {/* <button className="general-submit-btn mt-2">SUBMIT</button> */}

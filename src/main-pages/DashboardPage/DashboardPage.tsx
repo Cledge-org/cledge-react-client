@@ -265,7 +265,7 @@ const DashboardPage: NextApplicationPage<{
           <button
             onClick={() => {
               router.push({
-                pathname: "/upload/learning-pathways-upload",
+                pathname: "/admin/learning-pathways-upload",
               });
             }}
           >
@@ -274,7 +274,7 @@ const DashboardPage: NextApplicationPage<{
           <button
             onClick={() => {
               router.push({
-                pathname: "/upload/pathways-part-upload",
+                pathname: "/admin/pathways-part-upload",
               });
             }}
           >
@@ -283,7 +283,16 @@ const DashboardPage: NextApplicationPage<{
           <button
             onClick={() => {
               router.push({
-                pathname: "/upload/resources-upload",
+                pathname: "/admin/student-progress-download",
+              });
+            }}
+          >
+            Download User Pathway Progress
+          </button>
+          <button
+            onClick={() => {
+              router.push({
+                pathname: "/admin/resources-upload",
               });
             }}
           >
@@ -292,7 +301,7 @@ const DashboardPage: NextApplicationPage<{
           <button
             onClick={() => {
               router.push({
-                pathname: "/upload/question-upload",
+                pathname: "/admin/question-upload",
               });
             }}
           >

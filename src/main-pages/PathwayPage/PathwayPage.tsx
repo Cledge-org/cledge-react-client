@@ -272,14 +272,8 @@ const Pathways: NextApplicationPage<{
                 <DropdownTab
                   isFinishedModule={false}
                   isFinishedContent={[false]}
-                  icons={moduleSortedContent.map(({ primaryType }) =>
-                    primaryType === "video"
-                      ? faVideo
-                      : primaryType === "text"
-                      ? faBook
-                      : primaryType === "image"
-                      ? faImage
-                      : faMoneyCheck
+                  icons={moduleSortedContent.map(
+                    ({ primaryType }) => primaryType
                   )}
                   currSelectedPath={currContent.name}
                   chunkList={moduleSortedContent.map(
@@ -309,11 +303,7 @@ const Pathways: NextApplicationPage<{
         </div>
         <div className="d-flex flex-column" style={{ flex: 3 }}>
           {currContent.primaryType === "question" && (
-            <SubPageHeader
-              title={"Quiz"}
-              isExtracurricular
-              percentage={undefined}
-            />
+            <SubPageHeader title={"Quiz"} isMetrics percentage={undefined} />
           )}
           {getContent()}
         </div>
