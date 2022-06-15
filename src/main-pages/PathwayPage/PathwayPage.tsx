@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "../AppPage/AppPage";
 import { useRouter } from "next/router";
@@ -13,472 +13,250 @@ import styles from "./pathway-page.module.scss";
 import { callPutPathwayProgress } from "src/utils/apiCalls";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import classNames from "classnames";
+import PathwayQuestion from "src/main-pages/PathwayPage/components/PathwayQuestion/PathwayQuestion";
+import { Editable, Slate, withReact } from "slate-react";
+import { createEditor } from "slate";
+import {
+  faBook,
+  faImage,
+  faMoneyCheck,
+  faVideo,
+} from "@fortawesome/free-solid-svg-icons";
+import RichText from "src/common/components/RichText/RichText";
+import SubPageHeader from "src/common/components/SubpageHeader/SubpageHeader";
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
 }> = ({ pathwayInfo, pathwaysProgress }) => {
-  const [currPage, setCurrPage] = useState(null);
-  const [currSelected, setCurrSelected] = useState("");
-  const [allPathwayProgress, setAllPathwayProgress] = useState(
-    pathwaysProgress.slice()
-  );
-  //console.warn(pathwayInfo);
-  //console.warn(allPathwayProgress);
-  const checkForDiscrepancies = checkPathwayDiscrepancies(pathwayInfo);
-  const checkIfModuleFinished = (
-    newPathwayProgress: PathwayProgress[],
-    pathwayIndex,
-    moduleIndex
-  ) => {
-    let currModuleProgress =
-      newPathwayProgress[pathwayIndex].moduleProgress[moduleIndex];
-    let pathwayModuleIndex = pathwayInfo.modules.findIndex(({ _id }) => {
-      return currModuleProgress.moduleId === _id;
-    });
-    if (
-      currModuleProgress.contentProgress.length <
-      pathwayInfo.modules[pathwayModuleIndex].personalizedContent.length +
-        pathwayInfo.modules[pathwayModuleIndex].presetContent.length
-    ) {
-      return false;
-    }
-    let allContentFinished = true;
-    currModuleProgress.contentProgress.forEach(({ finished }) => {
-      if (!finished) {
-        allContentFinished = false;
-      }
-    });
-    currModuleProgress.finished = allContentFinished;
-    return allContentFinished;
-  };
-  const checkIfPathwayFinished = (
-    newPathwayProgress: PathwayProgress[],
-    pathwayIndex
-  ) => {
-    let currPathwayProgress = newPathwayProgress[pathwayIndex];
-    if (
-      currPathwayProgress.moduleProgress.length < pathwayInfo.modules.length
-    ) {
-      return;
-    }
-    let allContentFinished = true;
-    currPathwayProgress.moduleProgress.forEach((moduleProgress, index) => {
-      let finished = checkIfModuleFinished(
-        newPathwayProgress,
-        pathwayIndex,
-        index
-      );
-      if (!finished) {
-        allContentFinished = false;
-      }
-    });
-    currPathwayProgress.finished = allContentFinished;
-    return;
-  };
-  const addNewPathwayProgress = (
-    newPathwayProgress: PathwayProgress[],
-    moduleTitle,
-    moduleId,
-    currContent,
-    player
-  ) => {
-    newPathwayProgress.push({
+  const addPathwayProgress = () => {
+    pathwaysProgress.push({
       pathwayId: pathwayInfo._id,
+      moduleProgress: [],
+      finished: false,
       name: pathwayInfo.name,
-      moduleProgress: [
-        {
-          moduleId,
-          name: moduleTitle,
-          contentProgress: [
-            {
-              name: currContent.name,
-              finished:
-                currContent.type.toLowerCase() === "article"
-                  ? true
-                  : player.getDuration() - player.getCurrentTime() < 30,
-              videoTime:
-                currContent.type.toLowerCase() === "article"
-                  ? 0
-                  : Math.round(player.getCurrentTime()),
-            },
-          ],
-          finished: false,
-        },
-      ],
-      finished: false,
     });
-    checkIfPathwayFinished(newPathwayProgress, newPathwayProgress.length - 1);
-    setAllPathwayProgress(newPathwayProgress);
   };
-  const addNewModuleProgress = (
-    newPathwayProgress: PathwayProgress[],
-    pathwayIndex,
-    moduleTitle,
-    moduleId,
-    currContent,
-    player
-  ) => {
-    newPathwayProgress[pathwayIndex].moduleProgress.push({
-      moduleId,
-      name: moduleTitle,
-      contentProgress: [
-        {
-          name: currContent.name,
-          finished:
-            currContent.type.toLowerCase() === "article"
-              ? true
-              : player.getDuration() - player.getCurrentTime() < 30,
-          videoTime:
-            currContent.type.toLowerCase() === "article"
-              ? 0
-              : Math.round(player.getCurrentTime()),
-        },
-      ],
-      finished: false,
-    });
-    checkIfPathwayFinished(newPathwayProgress, pathwayIndex);
-    setAllPathwayProgress(newPathwayProgress);
-  };
-  const addNewContentProgress = (
-    newPathwayProgress: PathwayProgress[],
-    pathwayIndex,
-    moduleIndex,
-    currContent,
-    player
-  ) => {
-    newPathwayProgress[pathwayIndex].moduleProgress[
-      moduleIndex
-    ].contentProgress.push({
-      name: currContent.name,
-      finished:
-        currContent.type.toLowerCase() === "article"
-          ? true
-          : player.getDuration() - player.getCurrentTime() < 30,
-      videoTime:
-        currContent.type.toLowerCase() === "article"
-          ? 0
-          : Math.round(player.getCurrentTime()),
-    });
-    checkIfPathwayFinished(newPathwayProgress, pathwayIndex);
-    setAllPathwayProgress(newPathwayProgress);
-  };
-  const setArticleToFinished = (currContent, moduleTitle, moduleId) => {
-    let pathwayProgress = allPathwayProgress.find(
-      ({ pathwayId }) => pathwayId === pathwayInfo._id
-    );
-    if (!pathwayProgress) {
-      let newPathwayProgress = allPathwayProgress.slice();
-      addNewPathwayProgress(
-        newPathwayProgress,
-        moduleTitle,
-        moduleId,
-        currContent,
-        undefined
-      );
-    } else {
-      let indexOfModule = pathwayProgress.moduleProgress.findIndex(
-        (moduleProgress) => {
-          return moduleProgress.moduleId === moduleId;
-        }
-      );
-      //console.log(moduleTitle);
-      //console.log(indexOfModule);
-      if (indexOfModule === -1) {
-        let newPathwayProgress = allPathwayProgress.slice();
-        addNewModuleProgress(
-          newPathwayProgress,
-          newPathwayProgress.indexOf(pathwayProgress),
-          moduleTitle,
-          moduleId,
-          currContent,
-          undefined
-        );
-      }
-      let indexOfContent = pathwayProgress.moduleProgress[
-        indexOfModule
-      ].contentProgress.findIndex((contentProgress, index) => {
-        return contentProgress.name === currContent.name;
-      });
-      if (indexOfContent === -1) {
-        let newPathwayProgress = allPathwayProgress.slice();
-        addNewContentProgress(
-          newPathwayProgress,
-          newPathwayProgress.indexOf(pathwayProgress),
-          indexOfModule,
-          currContent,
-          undefined
-        );
-      } else {
-        pathwayProgress.moduleProgress[indexOfModule].contentProgress[
-          indexOfContent
-        ] = {
-          ...pathwayProgress.moduleProgress[indexOfModule].contentProgress[
-            indexOfContent
-          ],
-          finished: true,
-        };
-        let newPathwayProgress = allPathwayProgress.slice();
-        checkIfPathwayFinished(
-          newPathwayProgress,
-          newPathwayProgress.indexOf(pathwayProgress)
-        );
-        setAllPathwayProgress(newPathwayProgress);
-      }
-    }
-  };
-  const onVideoTimeUpdate = (player, currContent, moduleTitle, moduleId) => {
-    if (player) {
-      let pathwayProgress = allPathwayProgress.find(
-        ({ pathwayId }) => pathwayId === pathwayInfo._id
-      );
-      if (!pathwayProgress) {
-        let newPathwayProgress = allPathwayProgress.slice();
-        addNewPathwayProgress(
-          newPathwayProgress,
-          moduleTitle,
-          moduleId,
-          currContent,
-          player
-        );
-      } else {
-        let indexOfModule = pathwayProgress.moduleProgress.findIndex(
-          (moduleProgress) => {
-            return moduleProgress.moduleId === moduleId;
-          }
-        );
-        //console.log(moduleTitle);
-        //console.log(indexOfModule);
-        if (indexOfModule === -1) {
-          let newPathwayProgress = allPathwayProgress.slice();
-          addNewModuleProgress(
-            newPathwayProgress,
-            newPathwayProgress.indexOf(pathwayProgress),
-            moduleTitle,
-            moduleId,
-            currContent,
-            player
-          );
-        } else {
-          let indexOfContent = pathwayProgress.moduleProgress[
-            indexOfModule
-          ].contentProgress.findIndex((contentProgress, index) => {
-            return contentProgress.name === currContent.name;
-          });
-          if (indexOfContent === -1) {
-            let newPathwayProgress = allPathwayProgress.slice();
-            addNewContentProgress(
-              newPathwayProgress,
-              newPathwayProgress.indexOf(pathwayProgress),
-              indexOfModule,
-              currContent,
-              player
-            );
-          } else {
-            if (player.getDuration() - player.getCurrentTime() < 30) {
-              pathwayProgress.moduleProgress[indexOfModule].contentProgress[
-                indexOfContent
-              ] = {
-                ...pathwayProgress.moduleProgress[indexOfModule]
-                  .contentProgress[indexOfContent],
-                finished: true,
-              };
-            }
-            pathwayProgress.moduleProgress[indexOfModule].contentProgress[
-              indexOfContent
-            ] = {
-              ...pathwayProgress.moduleProgress[indexOfModule].contentProgress[
-                indexOfContent
-              ],
-              videoTime: Math.round(player.getCurrentTime()),
-            };
-            let newPathwayProgress = allPathwayProgress.slice();
-            checkIfPathwayFinished(
-              newPathwayProgress,
-              newPathwayProgress.indexOf(pathwayProgress)
-            );
-            setAllPathwayProgress(newPathwayProgress);
-          }
-        }
-      }
-    }
-  };
-  useEffect(() => {
-    let currModuleProgress = allPathwayProgress
+  if (
+    !pathwaysProgress
+      .slice()
       .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
-      ?.moduleProgress?.find(
-        ({ moduleId }) => moduleId === pathwayInfo.modules[0]._id
-      );
-    if (!currModuleProgress) {
-      currModuleProgress = {
-        contentProgress: [],
-        moduleId: pathwayInfo.modules[0]._id,
-        finished: false,
-        name: pathwayInfo.modules[0].name,
-      };
-    }
-    let currContent = getSortedContent(
-      pathwayInfo.modules[0].presetContent,
-      pathwayInfo.modules[0].personalizedContent
-    )[0];
-    //console.log(
-    //   currContent.url.substring(currContent.url.lastIndexOf("v=") + 2)
-    // );
-    if (currContent.type.toLowerCase() === "article") {
-      setArticleToFinished(
-        currContent,
-        pathwayInfo.modules[0].name,
-        pathwayInfo.modules[0]._id
-      );
-    }
-    setCurrSelected(pathwayInfo.modules[0].name + currContent.name);
-    setCurrPage(
-      <div className="d-flex flex-column" style={{ flex: 3 }}>
-        {currContent.type.toLowerCase() === "video" ? (
-          <>
-            <div className="w-100" style={{ height: "55%" }}>
-              <YoutubeEmbed
-                isPathway
-                key={`youtube-container-${currContent.url.substring(
-                  currContent.url.indexOf("v=") !== -1
-                    ? currContent.url.indexOf("v=") + 2
-                    : currContent.url.lastIndexOf("/") + 1
-                )}`}
-                isVideoFinished={
-                  currModuleProgress.contentProgress.find(
-                    (contentProgress, index) => {
-                      return contentProgress.name === currContent.name;
-                    }
-                  )?.finished
-                }
-                videoTime={
-                  currModuleProgress.contentProgress.find(
-                    (contentProgress, index) => {
-                      return contentProgress.name === currContent.name;
-                    }
-                  )?.videoTime
-                    ? currModuleProgress.contentProgress.find(
-                        (contentProgress, index) => {
-                          return contentProgress.name === currContent.name;
-                        }
-                      ).videoTime
-                    : 0
-                }
-                onVideoTimeUpdate={(player) =>
-                  onVideoTimeUpdate(
-                    player,
-                    currContent,
-                    pathwayInfo.modules[0].name,
-                    pathwayInfo.modules[0]._id
-                  )
-                }
-                videoId={currContent.url.substring(
-                  currContent.url.indexOf("v=") !== -1
-                    ? currContent.url.indexOf("v=") + 2
-                    : currContent.url.lastIndexOf("/") + 1
-                )}
-              />
-            </div>
-            <div className="container-fluid center-child flex-column py-5">
-              <div className={classNames(styles.pathwayDescription, "pb-2")}>
-                <span
-                  className="fw-bold cl-dark-text"
-                  style={{ fontSize: "1.7em" }}
-                >
-                  {currContent.name}
-                </span>
-              </div>
-              <div className="mt-3 ms-5 w-100">
-                <div className="ms-5 text-start">{currContent.content}</div>
-              </div>
-            </div>
-          </>
-        ) : (
-          <embed src={currContent.url} className="w-100 h-100" />
-        )}
-      </div>
-    );
-  }, []);
-  const getSortedContent = (presetContent, personalizedContent) => {
-    let allContent = presetContent.concat(personalizedContent);
+  ) {
+    addPathwayProgress();
+  }
+  const getSortedContent = (
+    presetContent: PresetContent[],
+    personalizedContent: PersonalizedContent[]
+  ) => {
+    let allContent: (PresetContent | PersonalizedContent)[] =
+      presetContent.concat(personalizedContent);
     if (presetContent.length === 0) {
       allContent = personalizedContent;
     }
     allContent.sort((a, b) => a.priority - b.priority);
     return allContent;
   };
+  const [currModuleId, setCurrModuleId] = useState(pathwayInfo.modules[0]._id);
+  const currPathwayProgress = useMemo(
+    () =>
+      pathwaysProgress
+        .slice()
+        .find(({ pathwayId }) => pathwayId === pathwayInfo._id),
+    [pathwaysProgress]
+  );
+  useEffect(() => {
+    checkPathwayDiscrepancies(pathwayInfo)(currPathwayProgress);
+  }, []);
+  const [currContent, setCurrContent] = useState(
+    getSortedContent(
+      pathwayInfo.modules[0].presetContent,
+      pathwayInfo.modules[0].personalizedContent
+    )[0]
+  );
+  const [moduleProgress, setModuleProgress] = useState<
+    Record<string, ContentProgress[]>
+  >(
+    currPathwayProgress.moduleProgress.reduce((prev, curr) => {
+      return {
+        ...prev,
+        [curr.moduleId]: curr.contentProgress,
+      };
+    }, {})
+  );
   const session = useSession();
   useEffect(() => {
-    let contentProgress: Record<string, ContentProgress[]> = {};
-    let pathwayProgress = allPathwayProgress.find(
-      (pathwayProgress) => pathwayProgress.pathwayId === pathwayInfo._id
+    callPutPathwayProgress(moduleProgress).then((res) => {
+      let newProgress = pathwaysProgress.slice();
+      newProgress[
+        newProgress.findIndex(
+          ({ pathwayId }) => pathwayId === currPathwayProgress.pathwayId
+        )
+      ] = currPathwayProgress;
+      store.dispatch(updatePathwayProgressAction(newProgress));
+    });
+  }, [moduleProgress]);
+  const updateContentProgress = (newContentProgress: ContentProgress) => {
+    let allModuleContentProgress = moduleProgress[currModuleId] ?? [];
+    const contentIndex = allModuleContentProgress.findIndex(
+      ({ name }) => name === newContentProgress.name
     );
-    if (pathwayProgress) {
-      pathwayProgress.moduleProgress.forEach((moduleProgress, index) => {
-        let actualModule = pathwayInfo.modules.find((module) => {
-          return module._id === moduleProgress.moduleId;
-        });
-        contentProgress[actualModule._id] = moduleProgress.contentProgress;
-      });
-      //console.log(contentProgress);
-      window.onbeforeunload = (e) => {
-        callPutPathwayProgress(contentProgress).then((res) => {
-          let newProgress = allPathwayProgress.slice();
-          newProgress[
-            newProgress.findIndex(
-              ({ pathwayId }) => pathwayId === pathwayProgress.pathwayId
-            )
-          ] = pathwayProgress;
-          store.dispatch(updatePathwayProgressAction(newProgress));
-          //console.log(res.status);
-        });
-      };
+    if (contentIndex === -1) {
+      allModuleContentProgress.push(newContentProgress);
+    } else {
+      allModuleContentProgress[contentIndex] = newContentProgress;
     }
-  }, [allPathwayProgress]);
-  useEffect(() => {
-    if (
-      allPathwayProgress.find(
-        (pathwayProgress) => pathwayProgress.pathwayId === pathwayInfo._id
-      )
-    ) {
-      checkForDiscrepancies(
-        allPathwayProgress.find(
-          (pathwayProgress) => pathwayProgress.pathwayId === pathwayInfo._id
+    setModuleProgress({
+      ...moduleProgress,
+      [currModuleId]: allModuleContentProgress,
+    });
+  };
+  const updateSubContentProgress = (
+    newSubContentProgress:
+      | PathwayQuestionProgress
+      | PathwayVideoProgress
+      | PathwayTextProgress
+  ) => {
+    console.log(newSubContentProgress);
+    let currContentProgress = moduleProgress[currModuleId].find(
+      ({ name }) => name === currContent.name
+    );
+    const subContentIndex = currContentProgress.subContentProgress.findIndex(
+      ({ id }) => id === newSubContentProgress.id
+    );
+
+    if (subContentIndex === -1) {
+      currContentProgress.subContentProgress.push(newSubContentProgress);
+    } else {
+      currContentProgress.subContentProgress[subContentIndex] =
+        newSubContentProgress;
+    }
+    currContentProgress.finished =
+      currContentProgress.subContentProgress.reduce(
+        (prev, curr) => prev && curr.finished,
+        true
+      ) &&
+      currContentProgress.subContentProgress.length >=
+        currContent.content.length;
+    updateContentProgress(currContentProgress);
+  };
+  const getContent = useCallback(() => {
+    let questionNumber = 0;
+    return currContent.content.map((content) => {
+      const { type } = content;
+      const currSubContentProgress = moduleProgress[currModuleId]
+        .find(({ name }) => name === currContent.name)
+        .subContentProgress.find(({ id }) => id === content.id) || {
+        id: content.id,
+        finished: false,
+      };
+      if (type === "question") {
+        questionNumber++;
+      }
+      return type === "video" ? (
+        <div className="center-child pt-4">
+          <div style={{ width: "90%", height: "100vh" }}>
+            <div className="w-100" style={{ height: "60%" }}>
+              <YoutubeEmbed
+                isPathway
+                key={`youtube-container-${content.url.substring(
+                  content.url.indexOf("v=") !== -1
+                    ? content.url.indexOf("v=") + 2
+                    : content.url.lastIndexOf("/") + 1
+                )}`}
+                isVideoFinished={currSubContentProgress?.finished}
+                videoTime={
+                  ("videoTime" in currSubContentProgress &&
+                    currSubContentProgress.videoTime) ||
+                  0
+                }
+                onVideoTimeUpdate={(player) => {
+                  if (player.getPlayerState() === 1) {
+                    updateSubContentProgress({
+                      ...currSubContentProgress,
+                      videoTime: Math.round(player.getCurrentTime()),
+                      finished:
+                        player.getDuration() - player.getCurrentTime() < 30,
+                    });
+                  }
+                }}
+                videoId={content.url.substring(
+                  content.url.indexOf("v=") !== -1
+                    ? content.url.indexOf("v=") + 2
+                    : content.url.lastIndexOf("/") + 1
+                )}
+              />
+            </div>
+            <div className="w-100 center-child flex-column py-5">
+              <div className={classNames("pb-2 w-100")}>
+                <span
+                  className="fw-bold cl-dark-text"
+                  style={{ fontSize: "1.7em" }}
+                >
+                  {content.title}
+                </span>
+              </div>
+              <div className={classNames(styles.pathwayDescription, "pb-2")}>
+                <span
+                  className="fw-bold cl-dark-text"
+                  style={{ fontSize: "1.3em" }}
+                >
+                  Video Source: {content.videoSource}
+                </span>
+              </div>
+              <div className="mt-3 w-100">
+                <div className="text-start">{content.description}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : type === "text" ? (
+        <div className="center-child w-100">
+          <div className="w-60">
+            <RichText text={content.text} />
+          </div>
+        </div>
+      ) : type === "image" ? (
+        <div className="d-flex flex-column align-items-center w-100">
+          <img className="w-60" src={content.image} />
+          <div className="w-60 text-start">{content.description}</div>
+        </div>
+      ) : (
+        type === "question" && (
+          <div className="w-60 align-self-center">
+            <PathwayQuestion
+              type={"question"}
+              question={content.question}
+              questionType={content.questionType}
+              number={questionNumber}
+              userAnswer={
+                ("questionAnswer" in currSubContentProgress &&
+                  currSubContentProgress.questionAnswer) ||
+                undefined
+              }
+              onUpdate={(answer) => {
+                console.log("Whot is op");
+                updateSubContentProgress({
+                  ...currSubContentProgress,
+                  questionAnswer: answer,
+                  finished:
+                    typeof answer !== "undefined" &&
+                    answer.length > 0 &&
+                    answer !== "",
+                });
+              }}
+              helpText={content.helpText}
+              data={content.data}
+              id={content.id}
+            />
+          </div>
         )
       );
-    }
-    return () => {
-      setAllPathwayProgress((allPathwayProgress) => {
-        let contentProgress: Record<string, ContentProgress[]> = {};
-        let pathwayProgress = allPathwayProgress.find(
-          (pathwayProgress) => pathwayProgress.pathwayId === pathwayInfo._id
-        );
-        if (pathwayProgress) {
-          pathwayProgress.moduleProgress.forEach((moduleProgress, index) => {
-            let actualModule = pathwayInfo.modules.find((module) => {
-              return module._id === moduleProgress.moduleId;
-            });
-            contentProgress[actualModule._id] = moduleProgress.contentProgress;
-          });
-          callPutPathwayProgress(contentProgress).then((res) => {
-            let newProgress = allPathwayProgress.slice();
-            newProgress[
-              newProgress.findIndex(
-                ({ pathwayId }) => pathwayId === pathwayProgress.pathwayId
-              )
-            ] = pathwayProgress;
-            store.dispatch(updatePathwayProgressAction(newProgress));
-            //console.log(res.status);
-          });
-        }
-        return allPathwayProgress;
-      });
-    };
-  }, []);
+    });
+  }, [currContent]);
   return (
     <PageErrorBoundary>
       <div
         className="container-fluid d-flex flex-row px-0"
-        style={{ height: "94vh" }}
+        style={{ minHeight: "94vh", height: "fit-content" }}
       >
         <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
           {pathwayInfo.modules.map(
@@ -486,32 +264,25 @@ const Pathways: NextApplicationPage<{
               { name, presetContent, personalizedContent, _id },
               moduleIndex
             ) => {
-              let currModuleProgress = allPathwayProgress
-                .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
-                ?.moduleProgress?.find(({ moduleId }) => moduleId === _id);
-              //console.warn(currModuleProgress);
-              if (!currModuleProgress) {
-                currModuleProgress = {
-                  contentProgress: [],
-                  moduleId: pathwayInfo.modules[0]._id,
-                  finished: false,
-                  name: pathwayInfo.modules[0].name,
-                };
-              }
+              const moduleSortedContent = getSortedContent(
+                presetContent,
+                personalizedContent
+              );
               return (
                 <DropdownTab
-                  isFinishedModule={currModuleProgress?.finished}
-                  isFinishedContent={currModuleProgress?.contentProgress?.map(
-                    ({ finished }) => finished
+                  isFinishedModule={false}
+                  isFinishedContent={[false]}
+                  icons={moduleSortedContent.map(
+                    ({ primaryType }) => primaryType
                   )}
-                  currSelectedPath={currSelected}
-                  chunkList={getSortedContent(
-                    presetContent,
-                    personalizedContent
-                  ).map(({ name, type }) => {
-                    return { name, type };
-                  })}
+                  currSelectedPath={currContent.name}
+                  chunkList={moduleSortedContent.map(
+                    ({ name, primaryType }) => {
+                      return { name, type: primaryType };
+                    }
+                  )}
                   onClick={(contentTitle) => {
+                    setCurrModuleId(_id);
                     let currContent = presetContent.find(
                       ({ name }) => name === contentTitle
                     );
@@ -520,97 +291,7 @@ const Pathways: NextApplicationPage<{
                         ({ name }) => name === contentTitle
                       );
                     }
-                    console.log(pathwaysProgress);
-                    if (currContent.type.toLowerCase() === "article") {
-                      setArticleToFinished(currContent, name, _id);
-                    }
-                    setCurrSelected(name + contentTitle);
-                    setCurrPage(
-                      <div className="d-flex flex-column" style={{ flex: 3 }}>
-                        {currContent.type.toLowerCase() === "video" ? (
-                          <>
-                            <div className="w-100" style={{ height: "55%" }}>
-                              <YoutubeEmbed
-                                isPathway
-                                key={`youtube-container-${currContent.url.substring(
-                                  currContent.url.indexOf("v=") !== -1
-                                    ? currContent.url.indexOf("v=") + 2
-                                    : currContent.url.lastIndexOf("/") + 1
-                                )}`}
-                                isVideoFinished={
-                                  currModuleProgress.contentProgress.find(
-                                    (contentProgress, index) => {
-                                      return (
-                                        contentProgress.name ===
-                                        currContent.name
-                                      );
-                                    }
-                                  )?.finished
-                                }
-                                videoTime={
-                                  currModuleProgress.contentProgress.find(
-                                    (contentProgress, index) => {
-                                      return (
-                                        contentProgress.name ===
-                                        currContent.name
-                                      );
-                                    }
-                                  )?.videoTime
-                                    ? currModuleProgress.contentProgress.find(
-                                        (contentProgress, index) => {
-                                          return (
-                                            contentProgress.name ===
-                                            currContent.name
-                                          );
-                                        }
-                                      ).videoTime
-                                    : 0
-                                }
-                                onVideoTimeUpdate={(player) =>
-                                  //WORKS!!!!!!!!!!!!!!!
-                                  onVideoTimeUpdate(
-                                    player,
-                                    currContent,
-                                    name,
-                                    _id
-                                  )
-                                }
-                                videoId={currContent.url.substring(
-                                  currContent.url.indexOf("v=") !== -1
-                                    ? currContent.url.indexOf("v=") + 2
-                                    : currContent.url.lastIndexOf("/") + 1
-                                )}
-                              />
-                            </div>
-                            <div className="container-fluid center-child flex-column py-5">
-                              <div
-                                className={classNames(
-                                  styles.pathwayDescription,
-                                  "pb-2"
-                                )}
-                              >
-                                <span
-                                  className="fw-bold cl-dark-text"
-                                  style={{ fontSize: "1.7em" }}
-                                >
-                                  {currContent.name}
-                                </span>
-                              </div>
-                              <div className="ms-5 mt-3 w-100">
-                                <div className="ms-5 text-start">
-                                  {currContent.content}
-                                </div>
-                              </div>
-                            </div>
-                          </>
-                        ) : (
-                          <embed
-                            src={currContent.url}
-                            className="w-100 h-100"
-                          />
-                        )}
-                      </div>
-                    );
+                    setCurrContent(currContent);
                   }}
                   title={name}
                   isPathway
@@ -620,7 +301,12 @@ const Pathways: NextApplicationPage<{
             }
           )}
         </div>
-        {currPage}
+        <div className="d-flex flex-column" style={{ flex: 3 }}>
+          {currContent.primaryType === "question" && (
+            <SubPageHeader title={"Quiz"} isMetrics percentage={undefined} />
+          )}
+          {getContent()}
+        </div>
       </div>
     </PageErrorBoundary>
   );

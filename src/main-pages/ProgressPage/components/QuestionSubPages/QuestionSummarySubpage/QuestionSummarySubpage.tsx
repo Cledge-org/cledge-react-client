@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import QuestionSummaryCard from "../../QuestionComponents/QuestionSummaryCard/QuestionSummaryCard";
-import QuestionSubPageHeader from "../../QuestionComponents/SubpageHeader/SubpageHeader";
+import QuestionSubPageHeader from "../../../../../common/components/SubpageHeader/SubpageHeader";
 
 interface QuestionSummarySubpageProps {
   listTitle: string;

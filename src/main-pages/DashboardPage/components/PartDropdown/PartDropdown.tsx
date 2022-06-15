@@ -14,9 +14,9 @@ function PartDropDown({
   title: string;
   progressRatio: number;
 }) {
-  console.log(styles);
   const [isExpanded, setIsExpanded] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  console.log(pathwayCheckinList);
   useEffect(() => {
     setInitialized(true);
   }, []);
@@ -97,7 +97,7 @@ function PartDropDown({
         >
           {pathwayCheckinList.map(
             (
-              { name, pathwayId, subtasks, videoId, isCheckin, chunks },
+              { name, pathwayId, subtasks, coverImage, isCheckin, chunks },
               index
             ) =>
               isCheckin ? (
@@ -119,7 +119,7 @@ function PartDropDown({
                   correctUrl={`/pathways/${pathwayId}`}
                   title={name}
                   subtasks={subtasks}
-                  videoId={videoId}
+                  coverImage={coverImage}
                 />
               )
           )}
