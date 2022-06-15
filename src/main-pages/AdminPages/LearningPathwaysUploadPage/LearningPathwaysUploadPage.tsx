@@ -234,6 +234,9 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           value={currPathwayData.name}
         />
         <div className="form-group">
+          <label style={{ fontSize: "0.9em" }} className="text-muted">
+            Cover Image:
+          </label>
           <img
             style={{ objectFit: "contain", width: "50%" }}
             src={currPathwayData.coverImage as string}

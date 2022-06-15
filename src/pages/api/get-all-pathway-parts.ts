@@ -94,6 +94,7 @@ export function getSpecificPathwayById(pathwayId: ObjectId): Promise<Pathway> {
       modules = modules.filter((x) => x !== null);
       res({
         tags: pathway.tags,
+        coverImage: pathway.coverImage,
         name: pathway.name,
         _id: pathway._id,
         modules,

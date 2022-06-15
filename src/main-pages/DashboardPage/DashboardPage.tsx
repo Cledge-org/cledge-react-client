@@ -144,7 +144,7 @@ const DashboardPage: NextApplicationPage<{
       })
       .concat(noProgress);
   };
-  const getFinishedTasks = (allPathways) => {
+  const getFinishedTasks = (allPathways: Pathway[]) => {
     let pathwaysList = pathwaysProgress
       .filter(({ finished, pathwayId }) => {
         return (
@@ -162,19 +162,12 @@ const DashboardPage: NextApplicationPage<{
             ({ finished }) => finished
           );
         });
-        const firstUrl = realPathway?.modules[0]?.presetContent[0]?.url;
-        const videoId = firstUrl?.substring(
-          firstUrl.indexOf("v=") !== -1
-            ? firstUrl?.indexOf("v=") + 2
-            : firstUrl?.lastIndexOf("/") + 1
-        );
+        console.log(realPathway.coverImage);
         return {
           name,
           pathwayId,
           subtasks,
-          videoId,
-          part: realPathway.part,
-          order: realPathway.order,
+          coverImage: realPathway.coverImage,
         };
       });
     return pathwaysList;

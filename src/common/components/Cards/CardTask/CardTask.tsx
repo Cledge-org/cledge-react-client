@@ -28,7 +28,7 @@ export default function CardTask({
   correctUrl,
 }: CardTaskProps) {
   useEffect(() => {}, []);
-  console.log(subtasks);
+  console.log(coverImage);
   let [height, setHeight] = useState(0);
   const innerRef: React.MutableRefObject<HTMLDivElement> = useRef();
   const [isHovering, setIsHovering] = useState(false);
