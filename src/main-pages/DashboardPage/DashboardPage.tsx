@@ -92,7 +92,7 @@ const DashboardPage: NextApplicationPage<{
           name: pathway.name,
           pathwayId: pathway._id,
           subtasks,
-          videoId: "",
+          coverImage: pathway.coverImage,
         });
       }
     });
@@ -139,7 +139,7 @@ const DashboardPage: NextApplicationPage<{
           name,
           pathwayId,
           subtasks,
-          videoId: "",
+          coverImage: realPathway.coverImage,
         };
       })
       .concat(noProgress);

@@ -97,7 +97,7 @@ function PartDropDown({
         >
           {pathwayCheckinList.map(
             (
-              { name, pathwayId, subtasks, videoId, isCheckin, chunks },
+              { name, pathwayId, subtasks, coverImage, isCheckin, chunks },
               index
             ) =>
               isCheckin ? (
@@ -119,7 +119,7 @@ function PartDropDown({
                   correctUrl={`/pathways/${pathwayId}`}
                   title={name}
                   subtasks={subtasks}
-                  videoId={videoId}
+                  coverImage={coverImage}
                 />
               )
           )}

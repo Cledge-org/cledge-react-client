@@ -15,7 +15,7 @@ import styles from "./card-task.module.scss";
 interface CardTaskProps {
   subtasks: any;
   correctUrl: string;
-  videoId: string;
+  coverImage: string;
   title: string;
   url: string;
 }
@@ -24,7 +24,7 @@ export default function CardTask({
   title,
   url,
   subtasks,
-  videoId,
+  coverImage,
   correctUrl,
 }: CardTaskProps) {
   useEffect(() => {}, []);
@@ -66,7 +66,7 @@ export default function CardTask({
         className="d-flex flex-column align-items-center col-lg-3 col-3 col-md-3 col-xs-8 position-relative"
       >
         <div
-          key={title + videoId}
+          key={title}
           ref={innerRef}
           onMouseOver={() => {
             if (!isHovering) {
@@ -103,11 +103,8 @@ export default function CardTask({
               className="position-relative"
               style={{ aspectRatio: "16/9", width: "100%" }}
             >
-              {videoId?.length === 11 ? (
-                <img
-                  src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
-                  style={{ width: "100%" }}
-                />
+              {coverImage ? (
+                <img src={coverImage} style={{ width: "100%" }} />
               ) : (
                 <div
                   style={{ backgroundColor: "lightgray" }}

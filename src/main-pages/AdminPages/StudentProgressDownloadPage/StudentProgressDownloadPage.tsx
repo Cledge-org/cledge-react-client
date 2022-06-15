@@ -1,6 +1,7 @@
-import pdfMake from "pdfmake";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
 import { getPathwayProgressToDownload } from "src/utils/apiCalls";
-
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 const StudentProgressDownloadPage = ({
   allStudents,
 }: {
@@ -17,26 +18,51 @@ const StudentProgressDownloadPage = ({
           {name}
           <button
             onClick={async () => {
+              console.log(firebaseId);
               const userPathwayProgress = await getPathwayProgressToDownload(
                 firebaseId
               );
-              pdfMake.fonts = {
-                Roboto: {
-                  normal:
-                    "src/main-pages/AdminPages/StudentProgressDownloadPage/fonts/Roboto-Regular.ttf",
-                  bold: "./fonts/Roboto-Regular.ttf",
-                  italics: "./fonts/Roboto-Regular.ttf",
-                  bolditalics: "./fonts/Roboto-Regular.ttf",
-                },
+              const document = {
+                content: [{ text: "Pathway Progress", color: "black" }],
               };
+              document.content.push({
+                text: " ",
+                color: "black",
+              });
+              userPathwayProgress.forEach(
+                ({ name, moduleProgress, finished }) => {
+                  document.content.push({
+                    text: "Pathway: " + name,
+                    color: finished ? "green" : "red",
+                  });
+                  moduleProgress.forEach(
+                    ({ name, contentProgress, finished }) => {
+                      document.content.push({
+                        text: "|      Module: " + name,
+                        color: finished ? "green" : "red",
+                      });
+                      contentProgress.forEach(({ name, finished }) => {
+                        document.content.push({
+                          text: "$            Content: " + name,
+                          color: finished ? "green" : "red",
+                        });
+                      });
+                    }
+                  );
+                  document.content.push({ text: " ", color: "black" });
+                }
+              );
+              userPathwayProgress;
               pdfMake
-                .createPdf({
-                  content: [
-                    { text: "Pathway Progress", fontFamily: "Arial" },
-                    { text: userPathwayProgress, fontFamily: "Arial" },
-                  ],
-                })
-                .download();
+                .createPdf(document)
+                .download(
+                  `${name
+                    .split(" ")
+                    .reduce(
+                      (prev, curr) => prev + curr,
+                      ""
+                    )}_PathwayProgress.pdf`
+                );
             }}
           >
             Download {name}'s Pathway Progress

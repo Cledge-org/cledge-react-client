@@ -184,11 +184,13 @@ export const alertSlackError = (error: string) => {
     { method: "POST", body: JSON.stringify({ text: error }) }
   );
 };
-export const getPathwayProgressToDownload = async (firebaseId) => {
-  return await fetch(`/api/get-all-pathway-progress`, {
-    method: "POST",
-    body: JSON.stringify({
-      userId: firebaseId,
-    }),
-  });
+export const getPathwayProgressToDownload = async (firebaseId: string) => {
+  return (await (
+    await fetch(`/api/get-all-pathway-progress`, {
+      method: "POST",
+      body: JSON.stringify({
+        userId: firebaseId,
+      }),
+    })
+  ).json()) as PathwayProgress[];
 };
