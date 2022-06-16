@@ -167,3 +167,17 @@ export const alertSlackError = (error: string) => {
     { method: "POST", body: JSON.stringify({ text: error }) }
   );
 };
+export const callCreateUser = async (
+  email: string,
+  password: string,
+  initialObj
+) => {
+  return await fetch(`/api/auth/signup`, {
+    method: "POST",
+    body: JSON.stringify({
+      email,
+      password,
+      initialObj,
+    }),
+  });
+};
