@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import  AdminAuth  from "firebase-admin/auth";
+import AdminAuth from "firebase-admin/auth";
 
 const firebaseCreds = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
@@ -25,22 +25,21 @@ class AuthFunctions {
       } else {
         return false;
       }
-    })
+    });
 
     // Lookup the user associated with the specified uid
     await firebaseAdminAuth.getUser(uid).then((userRecord) => {
       // Claims can be accessed on the user record
-      console.log(userRecord.customClaims['admin']);
-    })   
+      console.log(userRecord.customClaims["admin"]);
+    });
     return true;
   }
 
   static async setAdminPriviledge(isAdmin: boolean) {
     // Set admin priviledge
     let uid = firebaseAuth.currentUser.uid;
-    await firebaseAdminAuth.setCustomUserClaims(uid, { admin: isAdmin })
+    await firebaseAdminAuth.setCustomUserClaims(uid, { admin: isAdmin });
   }
 }
 
 export default AuthFunctions;
-

@@ -181,6 +181,11 @@ export default function Header({ key_prop }: { key_prop: string }) {
                   <span className={`${colors}`}>My Learning</span>
                 </a>
               </Link>
+              <Link href="/chatbot">
+                <a className="nav-link" style={{ fontWeight: 600 }}>
+                  <span className={`${colors}`}>Chatbot</span>
+                </a>
+              </Link>
               <Link href="/resources">
                 <a className="nav-link" style={{ fontWeight: 600 }}>
                   <span className={`${colors}`}>Resources</span>

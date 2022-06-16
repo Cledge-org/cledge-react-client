@@ -225,45 +225,6 @@ const QuestionUploadPage: NextApplicationPage<{
             }}
           />
         </div>
-        {currQuestionList.isCheckin ? (
-          <>
-            <div className="form-group mb-2">
-              <label style={{ fontSize: "0.9em" }} className="text-muted">
-                Part:
-              </label>
-              <input
-                value={currQuestionList.part}
-                onChange={(e) => {
-                  setCurrQuestionList({
-                    ...currQuestionList,
-                    part: e.target.value,
-                  });
-                }}
-                type="text"
-                className="px-3 form-control"
-                placeholder="Enter Part"
-              />
-            </div>
-            <div className="form-group mb-2">
-              <label style={{ fontSize: "0.9em" }} className="text-muted">
-                Order: (Lower number means it's at the beginning or higher
-                priority)
-              </label>
-              <input
-                value={currQuestionList.order}
-                onChange={(e) => {
-                  setCurrQuestionList({
-                    ...currQuestionList,
-                    order: parseInt(e.target.value),
-                  });
-                }}
-                type="text"
-                className="px-3 form-control"
-                placeholder="Enter Order"
-              />
-            </div>
-          </>
-        ) : null}
         <label style={{ fontSize: "1.2em" }} className="text-muted">
           CHUNKS:
         </label>
@@ -373,7 +334,7 @@ const QuestionUploadPage: NextApplicationPage<{
                       </label>
                       <input
                         disabled
-                        value={currQuestion._id}
+                        value={currQuestion._id.toString()}
                         type="text"
                         className="px-3 form-control"
                         placeholder="No ID"

@@ -15,7 +15,7 @@ import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import DropdownTab from "../../common/components/DropdownTab/DropdownTab";
 
-import QuestionSubPageHeader from "../ProgressPage/components/QuestionComponents/SubpageHeader/SubpageHeader";
+import QuestionSubPageHeader from "../../common/components/SubpageHeader/SubpageHeader";
 import ActivityDropdown from "./components/ActivityDropdown/ActivityDropdown";
 import SubTitle from "./components/SubTitle/SubTitle";
 import TierIndicatorAndTips from "./components/TierIndicatorAndTips/TierIndicatorAndTips";

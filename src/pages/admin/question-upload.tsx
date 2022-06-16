@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from "next";
 import { getAllQuestionLists } from "../api/get-all-questions";
-import QuestionUploadPage from "../../main-pages/UploadPages/QuestionUploadPage/QuestionUploadPage";
+import QuestionUploadPage from "../../main-pages/AdminPages/QuestionUploadPage/QuestionUploadPage";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
