@@ -97,7 +97,7 @@ export default function Header({ key_prop }: { key_prop: string }) {
     //               <span className={`${colors}`}>My Learning</span>
     //             </a>
     //           </Link>
-    //           <Link href="/resources">
+    //           <Link href="/blogs">
     //             <a className="nav-link" style={{ fontWeight: 600 }}>
     //               <span className={`${colors}`}>Resources</span>
     //             </a>
@@ -120,7 +120,7 @@ export default function Header({ key_prop }: { key_prop: string }) {
     //         </div>
     //       ) : (
     //         <div className="navbar-nav">
-    //           <Link href="/resources">
+    //           <Link href="/blogs">
     //             <a className="nav-link" style={{ fontWeight: 600 }}>
     //               <span className={`${colors}`}>Resources</span>
     //             </a>
@@ -186,7 +186,7 @@ export default function Header({ key_prop }: { key_prop: string }) {
                   <span className={`${colors}`}>Chatbot</span>
                 </a>
               </Link>
-              <Link href="/resources">
+              <Link href="/blogs">
                 <a className="nav-link" style={{ fontWeight: 600 }}>
                   <span className={`${colors}`}>Resources</span>
                 </a>
@@ -214,7 +214,7 @@ export default function Header({ key_prop }: { key_prop: string }) {
             </div>
           ) : (
             <div className="navbar-nav">
-              <Link href="/resources">
+              <Link href="/blogs">
                 <a className="nav-link" style={{ fontWeight: 600 }}>
                   <span className={`${colors}`}>Resources</span>
                 </a>

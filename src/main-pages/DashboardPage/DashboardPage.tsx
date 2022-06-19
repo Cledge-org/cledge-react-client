@@ -300,8 +300,18 @@ const DashboardPage: NextApplicationPage<{
           >
             User Progress Questions
           </button>
+          <button
+            onClick={() => {
+              router.push({
+                pathname: "/admin/blog-upload",
+              });
+            }}
+          >
+            Blog
+          </button>
         </div>
       </div>
+      
     );
   }
   return (
