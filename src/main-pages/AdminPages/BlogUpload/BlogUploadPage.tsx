@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NextApplicationPage } from "../../AppPage/AppPage";
 import UploadPage from "../components/UploadPage/UploadPage";
+import DropDownQuestion from "../../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 import MdEditor from "react-markdown-editor-lite";
 import markIt from 'markdown-it';
 import 'react-markdown-editor-lite/lib/index.css'
@@ -15,7 +16,8 @@ const BlogUploadPage: NextApplicationPage<{}> = ({}) => {
     date: "",
     description: "",
     content: "",
-    image: ""
+    image: "",
+    topics: ""
   });
   const md = new markIt();
   const uploadImage = (e) => {
@@ -144,6 +146,35 @@ const BlogUploadPage: NextApplicationPage<{}> = ({}) => {
             id="description"
             placeholder="Enter Description"
           />
+        </div>
+
+        <div className="form-group">
+          <label
+            style={{ fontSize: "0.9em" }}
+            className="text-muted"
+            htmlFor="topic"
+          >
+            Topic:
+          </label>
+        <DropDownQuestion
+          isForWaitlist
+          onChange={(value) => {
+            setResourceData({
+              ...resourceData,
+              topics: value,
+            });
+          }}
+          defaultValue=""
+          valuesList={[
+            "Extracurriculars",
+            "Essay",
+            "Application",
+            "Standardized Tests",
+            "Academics",
+            "Grades",
+            "Scholarships",
+          ]}
+        />
         </div>
 
         <div className="form-group">
