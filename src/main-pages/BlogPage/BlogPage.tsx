@@ -17,7 +17,7 @@ const BlogPage = ({
     <>
     <div className='container-fluid d-flex px-0'>
       <div> 
-        <div className='align-items-center ms-5 p-5 me-5'>
+        <div className='ms-5 p-5 me-5'>
         <h1 className="ms-5">Blogs</h1>
           <div 
             className='card-body row'
@@ -31,7 +31,7 @@ const BlogPage = ({
             }).filter((val) => {
               if (topicFilter == "") {
                 return val;
-              } else if (val.topics == topicFilter) {
+              } else if (val.topics.includes(topicFilter)) {
                 return val;
               }
             }).map((blog) => (
@@ -48,11 +48,17 @@ const BlogPage = ({
                       description={blog.description}
                       imageURL={blog.image}
                     />
-                    <div className='btn btn-light rounded-pill mb-4 mx-3'>
-                        {blog.topics}
-                    </div>
                   </a>
                 </Link>
+                <div className='mx-1'>
+                  {blog.topics.map(function (topic) {
+                    return (
+                      <div className='btn btn-light rounded-pill mb-4 mx-2'>
+                        {topic}
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
             ))}
           </div>
@@ -60,7 +66,7 @@ const BlogPage = ({
       </div>
       <div className='col-md-4 border-start h-12'>
         <div className="d-flex flex-row justify-content-center mt-4">
-          <div className="d-flex flex-row justify-content-start align-items-center search-container">
+          <div className="d-flex justify-content-start align-items-center search-container">
             <div className="p-1 cl-mid-gray" style={{ width: "30px" }}>
               <FontAwesomeIcon icon={faSearch} />
             </div>

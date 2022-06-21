@@ -17,7 +17,7 @@ const BlogUploadPage: NextApplicationPage<{}> = ({}) => {
     description: "",
     content: "",
     image: "",
-    topics: ""
+    topics: [],
   });
   const md = new markIt();
   const uploadImage = (e) => {
@@ -161,7 +161,7 @@ const BlogUploadPage: NextApplicationPage<{}> = ({}) => {
           onChange={(value) => {
             setResourceData({
               ...resourceData,
-              topics: value,
+              topics: [value],
             });
           }}
           defaultValue=""
