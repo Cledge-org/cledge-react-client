@@ -36,7 +36,7 @@
     "@types/react-fontawesome": "^1.6.5",
     "@types/react-modal": "^3.12.1",
     "@types/styled-components": "^5.1.24",
-    "acorn": "^8.7.0",
+    "acorn-globals": "^6.0.0",
     "antd": "^4.10.3",
     "axios": "^0.21.1",
     "bootstrap": "^5.1.3",
