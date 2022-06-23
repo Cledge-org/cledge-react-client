@@ -7,7 +7,6 @@ import Header from "../../../../common/components/Header/Header";
 import LoadingScreen from "../../../../common/components/Loading/Loading";
 
 export default function Layout({ children }) {
-  console.error("I EXIST");
   const router = useRouter();
   const session = useSession();
   const [loading, setLoading] = useState(true);
@@ -15,10 +14,8 @@ export default function Layout({ children }) {
   const asyncUseEffect = async () => {
     // setLoading(true);
     console.error(window.origin);
-    console.log("WERE IN");
     console.log(session?.data?.user?.uid);
     if (session.data?.user?.uid && !store.getState()) {
-      console.log("THERE'S A USER");
       const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
         await Promise.all([
           fetch(`/api/get-account`, {
@@ -50,7 +47,6 @@ export default function Layout({ children }) {
       );
     }
     if (session.status !== "loading") {
-      console.log("WERE NOT LOADING");
       console.log(session);
       setLoading(false);
     }

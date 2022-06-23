@@ -1,32 +1,26 @@
-import { initializeApp } from "firebase/app";
+import { FirebaseApp, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import AdminAuth from "firebase-admin/auth";
+import { getAuth as getAdminAuth } from "firebase-admin/auth";
+import { initializeApp as initializeAdminApp } from "firebase-admin/app";
+import { firebaseAuth } from "src/pages/api/auth/firebase-auth";
 
-const firebaseCreds = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-};
-
-const firebaseApp = initializeApp(firebaseCreds);
-const firebaseAuth = getAuth(firebaseApp);
-const firebaseAdminAuth = AdminAuth.getAuth(firebaseApp);
-class AuthFunctions {
+const firebaseAdminAuth = getAdminAuth();
+class AdminAuthFunctions {
   static async validateAdmin(idToken: string | undefined) {
     if (!idToken) {
       idToken = await getAuth().currentUser.getIdToken(true);
     }
     let uid;
     // Verify the ID token first
-    await firebaseAdminAuth.verifyIdToken(idToken).then((claims) => {
-      if (claims.admin === true) {
-        // Allow access to requested admin resource
-        uid = claims.uid;
-      } else {
-        return false;
-      }
-    });
+    const claims = await firebaseAdminAuth.verifyIdToken(idToken);
+    if (claims.admin === true) {
+      // Allow access to requested admin resource
+      uid = claims.uid;
+    } else {
+      return false;
+    }
 
+    console.error(uid);
     // Lookup the user associated with the specified uid
     await firebaseAdminAuth.getUser(uid).then((userRecord) => {
       // Claims can be accessed on the user record
@@ -42,4 +36,4 @@ class AuthFunctions {
   }
 }
 
-export default AuthFunctions;
+export default AdminAuthFunctions;

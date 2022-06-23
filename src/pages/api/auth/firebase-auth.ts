@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
 import AdminAuth from "src/pages/api/auth/user-and-token-auth";
-
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -22,8 +21,8 @@ const firebaseCreds = {
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
 };
 // console.error(firebaseCreds);
-const firebaseApp = initializeApp(firebaseCreds);
-const firebaseAuth = getAuth(firebaseApp);
+export const firebaseApp = initializeApp(firebaseCreds);
+export const firebaseAuth = getAuth(firebaseApp);
 const provider = new GoogleAuthProvider();
 class AuthFunctions {
   static async signInEmail(email: string, password: string) {
@@ -61,7 +60,6 @@ class AuthFunctions {
       });
   }
 
-  
   // static async signInGoogle() {
   //   await firebaseAuth
   //     .signInWithPopup(firebaseAuth.getAuth(), this.googleProvider)
