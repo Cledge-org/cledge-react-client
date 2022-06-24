@@ -18,6 +18,7 @@ import {
   getApp,
   initializeApp as initializeAdminApp,
 } from "firebase-admin/app";
+
 const firebaseCreds = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -28,7 +29,7 @@ export const firebaseApp = initializeApp(firebaseCreds);
 export const firebaseAuth = getAuth(firebaseApp);
 const firebaseAdminAuth = getAdminAuth(initializeAdminApp(firebaseCreds));
 const provider = new GoogleAuthProvider();
-class AuthFunctions {
+export class AuthFunctions {
   static async signInEmail(email: string, password: string) {
     try {
       let user = await setPersistence(
@@ -38,7 +39,7 @@ class AuthFunctions {
         return signInWithEmailAndPassword(firebaseAuth, email, password);
       });
       let idToken = await user.user.getIdToken();
-      await AdminAuthFunctions.validateAdmin(idToken);
+      await this.validateAdmin(idToken);
       return user.user;
     } catch (err) {
       console.error(err);
@@ -79,9 +80,6 @@ class AuthFunctions {
       console.error(err);
     });
   }
-}
-
-class AdminAuthFunctions {
   static async validateAdmin(idToken: string | undefined) {
     if (!idToken) {
       idToken = await getAuth().currentUser.getIdToken(true);
@@ -112,4 +110,4 @@ class AdminAuthFunctions {
   }
 }
 
-export { AdminAuthFunctions, AuthFunctions };
+export default AuthFunctions;

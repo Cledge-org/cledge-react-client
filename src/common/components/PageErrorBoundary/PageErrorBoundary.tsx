@@ -7,7 +7,7 @@ const PageErrorBoundary = ({
   children,
 }: {
   children: ReactElement | string | ReactElement[];
-}): React.ReactNode => {
+}) => {
   const router = useRouter();
   return (
     <ErrorBoundary
