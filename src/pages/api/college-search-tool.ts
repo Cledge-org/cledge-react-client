@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { SearchClient, AzureKeyCredential } from "@azure/search-documents";
 import dicts from "../../../college-search-tool/assets/cst_result_parse.json";
+import { ObjectSchema } from "yup";
 
 // References:
 // https://docs.microsoft.com/en-us/javascript/api/overview/azure/search-documents-readme?view=azure-node-latest
@@ -166,13 +167,13 @@ const formatOutput = (college) => {
         },
         "acceptance_rate": {
             "acceptance_rate_total": college["ADM_RATE"],
-            "acceptance_rate_men": college["DVADM02"] / 100,
-            "acceptance_rate_women": college["DVADM03"] / 100,
-            "commit_rate_men": college["DVADM08"] / 100,
-            "commit_rate_women": college["DVADM09"] / 100
+            "acceptance_rate_men": college["DVADM02"],
+            "acceptance_rate_women": college["DVADM03"],
+            "commit_rate_men": college["DVADM08"],
+            "commit_rate_women": college["DVADM09"]
         },
-        "submit_sat_percent": college["SATPCT"] / 100,
-        "submit_act_percent": college["ACTPCT"] / 100,
+        "submit_sat_percent": college["SATPCT"],
+        "submit_act_percent": college["ACTPCT"],
         "offer_rotc": dicts.binary[college["SLO5"]],
         "ncaa": {
             "member_ncaa": dicts.binary[college["ASSOC1"]],
@@ -186,6 +187,7 @@ const formatOutput = (college) => {
         "student_faculty_ratio": college["STUFACR"],
         "calendar_system": dicts.calendar_system[college["CALSYS"]],
         "study_disciplines": formatStudyDisciplines(college, dicts.cds_categories),
+        "bachelor_degree_disciplines": formatBachlStudyDisciplines(college, dicts.cds_categories_bachl),
         "enrollment": {
             "total_undergrad": college["EFUG"],
             "total_grad": college["EFGRAD"],
@@ -193,11 +195,12 @@ const formatOutput = (college) => {
             "first_year_students": null,
             "enrolled_men": college["ENRLM"],
             "enrolled_women": college["ENRLW"],
-            "admission_yield": college["DVADM04"] / 100
+            "admission_yield": college["DVADM04"]
         },
-        "percent_undergrad_out_state": college["RMOUSTTP"] / 100,
-        "percent_undergrad_in_state": college["RMINSTTP"] / 100,
-        "percent_undergrad_residence_unknown": college["RMUNKNWP"] / 100,
+        "percent_first_gen": college["FIRST_GEN"],
+        "percent_undergrad_out_state": college["RMOUSTTP"],
+        "percent_undergrad_in_state": college["RMINSTTP"],
+        "percent_undergrad_residence_unknown": college["RMUNKNWP"],
         "instructional_staff": {
             "total": college["SAINSTT"],
             "women": college["SAINSTW"],
@@ -240,8 +243,8 @@ const formatOutput = (college) => {
         "carnegie_class_18_size_setting": dicts.carnegie_class_18_size_setting[college["C18SZSET"]],
         "retention_rate_4_years": college["RET_FT4"],
         "retention_rate_lt_4_years": college["RET_FTL4"],
-        "4_year_graduation_rate": college["BAGR100"] / 100,
-        "6_year_graduation_rate": college["BAGR150"] / 100,
+        "4_year_graduation_rate": college["BAGR100"],
+        "6_year_graduation_rate": college["BAGR150"],
         "num_no_pell_stafford_loan_award_lt4_academic_150": college["NRCMOBA"],
         "num_no_pell_stafford_loan_award_150": college["NRCMTOT"],
         "open_admission_policy": dicts.binary_2[college["OPENADMP"]],
@@ -261,15 +264,15 @@ const formatOutput = (college) => {
         },
         "tt_undergrad": college["SCFA2"],
         "percent_full_time_first_time_finance": {
-            "any_aid": college["ANYAIDP"] / 100,
-            "pell_grants": college["PGRNT_P"] / 100,
-            "other_federal_grant_aid": college["OFGRT_P"] / 100,
-            "federal_loan": college["FLOAN_P"] / 100,
-            "other_loan": college["OLOAN_P"] / 100
+            "any_aid": college["ANYAIDP"],
+            "pell_grants": college["PGRNT_P"],
+            "other_federal_grant_aid": college["OFGRT_P"],
+            "federal_loan": college["FLOAN_P"],
+            "other_loan": college["OLOAN_P"]
         },
-        "percent_undergrad_grant_aid": college["UAGRNTP"] / 100,
-        "percent_undergrad_pell_grant": college["UPGRNTP"] / 100,
-        "percent_undergrad_federal_loan": college["UFLOANP"] / 100,
+        "percent_undergrad_grant_aid": college["UAGRNTP"],
+        "percent_undergrad_pell_grant": college["UPGRNTP"],
+        "percent_undergrad_federal_loan": college["UFLOANP"],
         "avg_grant_aid": college["AGRNT_A"],
         "avg_grant_scholarship_19_20": {
             "0_30": college["GIS4A12"],
@@ -284,17 +287,51 @@ const formatOutput = (college) => {
         "grand_total_women": college["EFAGE08"],
         "total_enrollment_size": college["ENRTOT"],
         "student_ethnicity_ratio": {
-            "white": college["PCTENRWH"] / 100,
-            "black_african_american": college["PCTENRBK"] / 100,
-            "hispanic_or_latino": college["PCTENRHS"] / 100,
-            "asian_or_native_hawaiian_pacific_islander": college["PCTENRAP"] / 100,
-            "american_indian_or_alaska_native": college["PCTENRAN"] / 100,
-            "non_resident_aliens": college["PCTENRNR"] / 100,
-            "unknown": college["PCTENRUN"] / 100
+            "white": college["UGDS_WHITE"],
+            "black_african_american": college["UGDS_BLACK"],
+            "hispanic_or_latino": college["UGDS_HISP"],
+            "asian": college["UGDS_ASIAN"],
+            "american_indian_or_alaska_native": college["UGDS_AIAN"],
+            "native_hawaiian_or_pacific_islander": college["UGDS_NHPI"],
+            "non_resident_aliens": college["UGDS_NRA"],
+            "unknown": college["UGDS_UNKN"],
+            "two_or_more_races": college["UGDS_2MOR"]
         },
-        "college_fit_metric": {
-            "target": college["TARGET_TIER"],
-            "safety": college["SAFETY_TIER"]
+        "family_income_public": {
+            "0_30": college["NPT41_PUB"],
+            "30_48": college["NPT42_PUB"],
+            "48_75": college["NPT43_PUB"],
+            "75_110": college["NPT44_PUB"],
+            "110+": college["NPT45_PUB"]
+        },
+        "family_income_private": {
+            "0_30": college["NPT41_PRIV"],
+            "30_48": college["NPT42_PRIV"],
+            "48_75": college["NPT43_PRIV"],
+            "75_110": college["NPT44_PRIV"],
+            "110+": college["NPT45_PRIV"]
+        },
+        "median_debt": {
+            "completed": college["GRAD_DEBT_MDN"],
+            "0_30": college["LO_INC_DEBT_MDN"],
+            "30_75": college["MD_INC_DEBT_MDN"],
+            "75+": college["HI_INC_DEBT_MDN"],
+            "first_gen": college["FIRSTGEN_DEBT_MDN"],
+            "not_first_gen": college["NOTFIRSTGEN_DEBT_MDN"],
+        },
+        "unemployment_rate": college["UNEMP_RATE"],
+        "10_yrs_after_entry.working_not_enrolled": {
+            "mean_earnings": college["MN_EARN_WNE_P10"],
+            "earnings_percentile.10": college["PCT10_EARN_WNE_P10"],
+            "earnings_percentile.25": college["PCT25_EARN_WNE_P10"],
+            "earnings_percentile.75": college["PCT75_EARN_WNE_P10"],
+            "earnings_percentile.90": college["PCT90_EARN_WNE_P10"]
+        },
+        "6_yrs_after_entry.working_not_enrolled": {
+            "earnings_percentile.10": college["PCT10_EARN_WNE_P6"],
+            "earnings_percentile.25": college["PCT25_EARN_WNE_P6"],
+            "earnings_percentile.75": college["PCT75_EARN_WNE_P6"],
+            "earnings_percentile.90": college["PCT90_EARN_WNE_P6"]
         }
     };
     return output;
@@ -306,6 +343,14 @@ const formatStudyDisciplines = (college, cds_categories) => {
         studyDisciplines[curDisName] = college[cds_categories[curDisName]];
     });
     return studyDisciplines;
+}
+
+const formatBachlStudyDisciplines = (college, cds_categories_bachl) => {
+    const bachl = {};
+    Object.keys(cds_categories_bachl).forEach(function(curDisName) {
+        bachl[curDisName] = college[cds_categories_bachl[curDisName]] == 1;
+    });
+    return bachl;
 }
 
 const getCollegeLabel = (userTier, targetTier, safetyTier) => {
