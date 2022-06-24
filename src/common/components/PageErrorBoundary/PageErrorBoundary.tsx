@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { ReactElement } from "react";
+import { ComponentType, ReactElement } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { alertSlackError } from "src/utils/apiCalls";
 
@@ -7,7 +7,7 @@ const PageErrorBoundary = ({
   children,
 }: {
   children: ReactElement | string | ReactElement[];
-}) => {
+}): React.ReactNode => {
   const router = useRouter();
   return (
     <ErrorBoundary

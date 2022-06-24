@@ -9,6 +9,7 @@ import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import LeftPannel from "src/main-pages/ChatbotPage/components/LeftPanel/LeftPanel";
 import styles from "./chatbot-page.module.scss";
 import Message from "src/main-pages/ChatbotPage/components/LeftPanel/components/Message/Message";
+import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 
 const Chatbot = ({
   accountInfo,
@@ -63,7 +64,7 @@ const Chatbot = ({
     );
   }
   return (
-    <>
+    <PageErrorBoundary>
       {isMobile ? (
         <button
           className="position-absolute cl-btn-blue center-child shadow"
@@ -181,7 +182,7 @@ const Chatbot = ({
           </form>
         </div>
       </div>
-    </>
+    </PageErrorBoundary>
   );
 };
 

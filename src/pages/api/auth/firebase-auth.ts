@@ -1,5 +1,4 @@
 import { initializeApp } from "firebase/app";
-import AdminAuth from "src/pages/api/auth/user-and-token-auth";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -14,7 +13,11 @@ import {
   getIdTokenResult,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
-
+import { getAuth as getAdminAuth } from "firebase-admin/auth";
+import {
+  getApp,
+  initializeApp as initializeAdminApp,
+} from "firebase-admin/app";
 const firebaseCreds = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -23,6 +26,7 @@ const firebaseCreds = {
 // console.error(firebaseCreds);
 export const firebaseApp = initializeApp(firebaseCreds);
 export const firebaseAuth = getAuth(firebaseApp);
+const firebaseAdminAuth = getAdminAuth(initializeAdminApp(firebaseCreds));
 const provider = new GoogleAuthProvider();
 class AuthFunctions {
   static async signInEmail(email: string, password: string) {
@@ -34,7 +38,7 @@ class AuthFunctions {
         return signInWithEmailAndPassword(firebaseAuth, email, password);
       });
       let idToken = await user.user.getIdToken();
-      await AdminAuth.validateAdmin(idToken);
+      await AdminAuthFunctions.validateAdmin(idToken);
       return user.user;
     } catch (err) {
       console.error(err);
@@ -77,4 +81,35 @@ class AuthFunctions {
   }
 }
 
-export default AuthFunctions;
+class AdminAuthFunctions {
+  static async validateAdmin(idToken: string | undefined) {
+    if (!idToken) {
+      idToken = await getAuth().currentUser.getIdToken(true);
+    }
+    let uid;
+    // Verify the ID token first
+    const claims = await firebaseAdminAuth.verifyIdToken(idToken);
+    if (claims.admin === true) {
+      // Allow access to requested admin resource
+      uid = claims.uid;
+    } else {
+      return false;
+    }
+
+    console.error(uid);
+    // Lookup the user associated with the specified uid
+    await firebaseAdminAuth.getUser(uid).then((userRecord) => {
+      // Claims can be accessed on the user record
+      console.log(userRecord.customClaims["admin"]);
+    });
+    return true;
+  }
+
+  static async setAdminPriviledge(isAdmin: boolean) {
+    // Set admin priviledge
+    let uid = firebaseAuth.currentUser.uid;
+    await firebaseAdminAuth.setCustomUserClaims(uid, { admin: isAdmin });
+  }
+}
+
+export { AdminAuthFunctions, AuthFunctions };
