@@ -29,7 +29,7 @@ jobs:
           
       # Zip artifacts to speed things up
       - name: Zip artifact for deployment
-        run: zip  -r release.zip ./* .env.local -x "node_modules/*" ".vscode/*"
+        run: zip  -r release.zip ./* .env.local -x "node_modules/*" ".vscode/*" "package-lock.json"
       # We exclude node_modules and dist because the Azure Oryx/Kudu deploy runs npm install and rebuilds everything anyway...
       # If we zip them we just increase the size of the zip file and it's not needed
 
