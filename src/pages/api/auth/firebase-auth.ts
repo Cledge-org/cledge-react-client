@@ -24,12 +24,21 @@ const firebaseCreds = {
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
 };
+const getAdminApp = (appName?: string) => {
+  try {
+    return getApp(appName);
+  } catch (err) {
+    return undefined;
+  }
+};
 // console.error(firebaseCreds);
 export const firebaseApp = initializeApp(firebaseCreds);
 export const firebaseAuth = getAuth(firebaseApp);
-const firebaseAdminAuth = getAdminAuth(initializeAdminApp(firebaseCreds));
+const firebaseAdminAuth = getAdminAuth(
+  getAdminApp(firebaseApp.name) ?? initializeAdminApp(firebaseCreds)
+);
 const provider = new GoogleAuthProvider();
-export class AuthFunctions {
+class AuthFunctions {
   static async signInEmail(email: string, password: string) {
     try {
       let user = await setPersistence(
