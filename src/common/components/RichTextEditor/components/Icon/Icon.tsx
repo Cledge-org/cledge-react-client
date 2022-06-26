@@ -1,6 +1,6 @@
 import React, { Ref, PropsWithChildren } from "react";
 import ReactDOM from "react-dom";
-import { cx, css } from "@emotion/css";
+import classNames from "classnames";
 
 interface BaseProps {
   className: string;
@@ -16,14 +16,8 @@ export const Icon = React.forwardRef(
     <span
       {...props}
       ref={ref}
-      className={cx(
-        "material-icons",
-        className,
-        css`
-          font-size: 18px;
-          vertical-align: text-bottom;
-        `
-      )}
+      style={{ fontSize: "18px", verticalAlign: "text-bottom" }}
+      className={classNames("material-icons", className)}
     />
   )
 );

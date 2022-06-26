@@ -12,7 +12,6 @@
   "dependencies": {
     "@azure/logger": "^1.0.3",
     "@azure/search-documents": "^11.2.1",
-    "@emotion/css": "^11.9.0",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
@@ -27,10 +26,6 @@
     "@popperjs/core": "^2.10.1",
     "@ramonak/react-progress-bar": "^3.2.1",
     "@reduxjs/toolkit": "^1.6.1",
-    "@slate-editor/color-plugin": "^5.1.0",
-    "@slate-editor/font-family-plugin": "^5.1.0",
-    "@slate-editor/font-size-plugin": "^5.1.0",
-    "@slate-editor/list-plugin": "^5.1.0",
     "@svgr/webpack": "^6.2.1",
     "@types/react-color": "^3.0.6",
     "@types/react-fontawesome": "^1.6.5",

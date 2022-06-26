@@ -1,6 +1,5 @@
 import React, { Ref, PropsWithChildren } from "react";
 import ReactDOM from "react-dom";
-import { cx, css } from "@emotion/css";
 import { Menu } from "src/common/components/RichTextEditor/components/Toolbar/components/Menu/Menu";
 
 interface BaseProps {
@@ -17,16 +16,14 @@ export const Toolbar = React.forwardRef(
     <Menu
       {...props}
       ref={ref}
-      className={cx(
-        className,
-        css`
-          position: relative;
-          padding: 1px 18px 17px;
-          margin: 0 -20px;
-          border-bottom: 2px solid #eee;
-          margin-bottom: 20px;
-        `
-      )}
+      style={{
+        position: "relative",
+        padding: "1px 18px 17px",
+        margin: "0 -20px",
+        borderBottom: "2px solid #eee",
+        marginBottom: "20px",
+      }}
+      className={className}
     />
   )
 );
