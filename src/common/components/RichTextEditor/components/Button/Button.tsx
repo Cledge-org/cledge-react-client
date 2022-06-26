@@ -1,6 +1,5 @@
 import React, { Ref, PropsWithChildren } from "react";
 import ReactDOM from "react-dom";
-import { cx, css } from "@emotion/css";
 
 interface BaseProps {
   className: string;
@@ -26,19 +25,17 @@ export const Button = React.forwardRef(
     <span
       {...props}
       ref={ref}
-      className={cx(
-        className,
-        css`
-          cursor: pointer;
-          color: ${reversed
-            ? active
-              ? "white"
-              : "#aaa"
-            : active
-            ? "black"
-            : "#ccc"};
-        `
-      )}
+      style={{
+        cursor: "pointer",
+        color: reversed
+          ? active
+            ? "white"
+            : "#aaa"
+          : active
+          ? "black"
+          : "#ccc",
+      }}
+      className={className}
     />
   )
 );

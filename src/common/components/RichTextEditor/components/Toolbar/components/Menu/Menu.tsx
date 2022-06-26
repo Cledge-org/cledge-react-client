@@ -1,7 +1,7 @@
+import classNames from "classnames";
 import React, { Ref, PropsWithChildren } from "react";
 import ReactDOM from "react-dom";
-import { cx, css } from "@emotion/css";
-
+import styles from "./menu.module.scss";
 interface BaseProps {
   className: string;
   [key: string]: unknown;
@@ -13,20 +13,6 @@ export const Menu = React.forwardRef(
     { className, ...props }: PropsWithChildren<BaseProps>,
     ref: Ref<OrNull<HTMLDivElement>>
   ) => (
-    <div
-      {...props}
-      ref={ref}
-      className={cx(
-        className,
-        css`
-          & > * {
-            display: inline-block;
-          }
-          & > * + * {
-            margin-left: 15px;
-          }
-        `
-      )}
-    />
+    <div {...props} ref={ref} className={classNames(className, styles.menu)} />
   )
 );
