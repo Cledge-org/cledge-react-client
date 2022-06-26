@@ -19,9 +19,9 @@ export default function MCQQuestion({
   isPathwayQuestion,
   inEC,
 }: MCQQuestionProps) {
-  console.log(userAnswer);
+  //console.log(userAnswer);
   const [selected, setSelected] = useState(userAnswer?.slice());
-  console.log(palette);
+  //console.log(palette);
   return (
     <div
       className={`h-100 d-flex flex-column ${

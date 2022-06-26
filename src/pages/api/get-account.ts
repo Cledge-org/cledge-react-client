@@ -10,7 +10,6 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
   const { userId } = JSON.parse(req.body);
-  console.error("UID: " + userId);
   if (userId) {
     try {
       const accountInfo = await getAccountInfo(userId);

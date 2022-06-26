@@ -24,7 +24,7 @@ export default function CheckBoxQuestion({
     userAnswers ? userAnswers.slice() : []
   );
   useEffect(() => {
-    console.log(selected);
+    //console.log(selected);
   }, [selected]);
   let changeSelected = (value: string) => {
     let selectedCopy = selected.slice();
@@ -82,7 +82,7 @@ export default function CheckBoxQuestion({
                   changeSelected(singleData);
                   return;
                 }
-                console.log(tag);
+                //console.log(tag);
                 changeSelected(op);
               }}
               className={classNames(

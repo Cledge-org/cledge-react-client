@@ -61,7 +61,7 @@ const AccountPage: NextApplicationPage<{
         } else {
           store.dispatch(updateQuestionResponsesAction(questionResponses));
         }
-        console.log(res.status);
+        //console.log(res.status);
       });
     });
   };
@@ -73,7 +73,7 @@ const AccountPage: NextApplicationPage<{
     }
   }, [currQuestion]);
   useEffect(() => {
-    console.log(currUserData);
+    //console.log(currUserData);
   }, [currUserData]);
   return (
     <PageErrorBoundary>
@@ -143,9 +143,20 @@ const AccountPage: NextApplicationPage<{
                 });
               }}
             />
-            <InfoSection name="PASSWORD" value="******" onEdit={() => {}} />
+            <InfoSection
+              name="PASSWORD"
+              value="******"
+              onEdit={() => {
+                fetch(`/api/reset-password`, {
+                  method: "POST",
+                  body: JSON.stringify({ email: currUserData.email }),
+                }).then((res) => {
+                  //console.log(res.status);
+                });
+              }}
+            />
           </div>
-          <div className={classNames(styles.myaccountBlob, "px-4 py-4 mb-3")}>
+          {/* <div className={classNames(styles.myaccountBlob, "px-4 py-4 mb-3")}>
             <span className="title">Contact Info</span>
             <InfoSection
               name="Email"
@@ -158,7 +169,7 @@ const AccountPage: NextApplicationPage<{
                 });
               }}
             />
-          </div>
+          </div> */}
           <div className={classNames(styles.myaccountBlob, "px-4 py-4 mb-3")}>
             <span className="title">Academic Info</span>
             <InfoSection

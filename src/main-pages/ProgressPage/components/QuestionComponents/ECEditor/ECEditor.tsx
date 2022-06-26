@@ -55,7 +55,7 @@ export default function ECEditor({
         </span>
         {chunkQuestions.map((questionData) => {
           const { question, isConcatenable, data, type, _id } = questionData;
-          console.log(userResponse);
+          //console.log(userResponse);
           if (type === "MCQ") {
             return (
               <MCQQuestion
@@ -133,7 +133,7 @@ export default function ECEditor({
                 valuesList={data}
                 onChange={(value) => {
                   let totallyNewResponse = newResponse.slice();
-                  console.log(value);
+                  //console.log(value);
                   if (
                     totallyNewResponse.find(
                       ({ questionId }) => questionId === _id
@@ -261,7 +261,7 @@ export default function ECEditor({
                     if (!foundResponse.response.questionsResponses[index]) {
                       foundResponse.response.questionsResponses.push({});
                     }
-                    console.log(foundResponse.response);
+                    //console.log(foundResponse.response);
                     foundResponse.response.questionsResponses[index][
                       questionId
                     ] = value;
@@ -307,7 +307,7 @@ export default function ECEditor({
                         value
                     );
                   }
-                  console.log(totallyNewResponse);
+                  //console.log(totallyNewResponse);
                   setNewResponse(totallyNewResponse);
                 }}
               />
@@ -317,7 +317,7 @@ export default function ECEditor({
         })}
         <button
           onClick={() => {
-            console.log(newResponse);
+            //console.log(newResponse);
             onSave(newResponse);
           }}
           className="cl-btn-blue align-self-center mt-5"

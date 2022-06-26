@@ -120,7 +120,7 @@ const LoginPage = () => {
                 signIn("credentials", {
                   password: formData.password,
                   email: formData.email,
-                  callbackUrl: `${window.location.origin}/dashboard`,
+                  callbackUrl: `${window.location.origin}/chatbot`,
                 });
               }}
             />

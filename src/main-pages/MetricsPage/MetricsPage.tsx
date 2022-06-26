@@ -29,7 +29,7 @@ const Metrics: NextApplicationPage<{
   academics: Academics;
 }> = ({ activities, userTags, questionResponses, academics }) => {
   const session = useSession();
-  console.log(activities);
+  //console.log(activities);
   const [currPage, setCurrPage] = useState("all");
   return (
     <PageErrorBoundary>

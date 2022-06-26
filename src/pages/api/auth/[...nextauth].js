@@ -46,7 +46,7 @@ export default NextAuth({
             tags: [],
             checkIns: ["Onboarding Questions"],
           }).then(async (res) => {
-            console.log(res.status);
+            //console.log(res.status);
           });
         }
         return {
@@ -59,7 +59,7 @@ export default NextAuth({
   ],
   callbacks: {
     redirect({ url, baseUrl }) {
-      return baseUrl + "/dashboard";
+      return url;
     },
     jwt: async ({ token, user }) => {
       if (user) {
@@ -74,7 +74,6 @@ export default NextAuth({
       // session.user = user
       session.user.uid = token.uid;
       session.accessToken = token.accessToken;
-      console.error("UID: " + token.uid);
       return Promise.resolve(session);
     },
   },

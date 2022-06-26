@@ -26,13 +26,13 @@ export function getAcademics(userId: string): Promise<Academics> {
       const client = await MongoClient.connect(process.env.MONGO_URL);
       const metricsDb = client.db("metrics");
       const all = await metricsDb.collection("academics").find().toArray();
-      console.log(all);
+      //console.log(all);
       const academics: Academics = (await metricsDb
         .collection("academics")
         .findOne({
           firebaseId: userId,
         })) as Academics;
-      console.log(academics);
+      //console.log(academics);
       if (!academics) {
         res(null);
       } else {
@@ -49,7 +49,7 @@ export function getAcademics(userId: string): Promise<Academics> {
       }
       client.close();
     } catch (e) {
-      console.log(e);
+      //console.log(e);
       err(e);
     }
   });

@@ -16,7 +16,7 @@ function PartDropDown({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [initialized, setInitialized] = useState(false);
-  console.log(pathwayCheckinList);
+  //console.log(pathwayCheckinList);
   useEffect(() => {
     setInitialized(true);
   }, []);

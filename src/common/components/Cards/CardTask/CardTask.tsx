@@ -28,7 +28,7 @@ export default function CardTask({
   correctUrl,
 }: CardTaskProps) {
   useEffect(() => {}, []);
-  console.log(coverImage);
+  //console.log(coverImage);
   let [height, setHeight] = useState(0);
   const innerRef: React.MutableRefObject<HTMLDivElement> = useRef();
   const [isHovering, setIsHovering] = useState(false);
@@ -57,7 +57,7 @@ export default function CardTask({
     }
   }, [innerRef]);
   useEffect(() => {
-    console.log(isHovering);
+    //console.log(isHovering);
   }, [isHovering]);
   return (
     <Link href={url} as={correctUrl}>
@@ -70,7 +70,7 @@ export default function CardTask({
           ref={innerRef}
           onMouseOver={() => {
             if (!isHovering) {
-              console.log("MOUSE OVER");
+              //console.log("MOUSE OVER");
               setIsHovering((prevIsHovering) => {
                 return prevIsHovering ? false : true;
               });
@@ -79,7 +79,7 @@ export default function CardTask({
             // if (innerRef?.current) {
             //   const bottom = innerRef.current.getBoundingClientRect().bottom;
             //   if (bottom > window.innerHeight) {
-            //     console.log(bottom - window.innerHeight);
+            //     //console.log(bottom - window.innerHeight);
             //     // setTimeout(() => {
             //     document.body.scroll({
             //       behavior: "smooth",
@@ -90,7 +90,7 @@ export default function CardTask({
             // }
           }}
           onMouseOut={() => {
-            console.log("MOUSE OUT");
+            //console.log("MOUSE OUT");
             setIsHovering(false);
           }}
           className={classNames(

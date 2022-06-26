@@ -1,15 +1,17 @@
 import { faChevronDown, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { minHeight } from "@mui/system";
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { fixControlledValue } from "antd/lib/input/Input";
 import { connect } from "react-redux";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import LeftPannel from "src/main-pages/ChatbotPage/components/LeftPanel/LeftPanel";
 import styles from "./chatbot-page.module.scss";
-import Message from "src/main-pages/ChatbotPage/components/LeftPanel/components/Message/Message";
+import Message from "src/main-pages/ChatbotPage/components/Message/Message";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
+import { callGetChatbotResponse } from "src/utils/apiCalls";
+import { useRouter } from "next/router";
 
 const Chatbot = ({
   accountInfo,
@@ -18,41 +20,91 @@ const Chatbot = ({
   accountInfo: AccountInfo;
   questionResponses: UserResponse[];
 }) => {
-  const [messagesList, setMessagesList] = useState([]);
+  const [messagesList, setMessagesList] = useState<
+    {
+      message: string | ReactElement;
+      isOnLeft: boolean;
+      isAnswer?: boolean;
+      question?: string;
+    }[]
+  >([
+    {
+      isOnLeft: true,
+      message: (
+        <>
+          <strong>
+            Hello there! I’m XYZ, your AI college advisor. Before we get started
+            here are a few things to help you get the most out of my
+            capabilities.
+          </strong>
+          <ol type="1">
+            <li>Try to ask only one question at a time.</li>
+            <li>
+              If you have issues getting a new answer, view the Best Practices
+              on the left side of your screen.
+            </li>
+            <li>
+              If issues continue and you are still not satisfied with your
+              answer, click the “Ask a real counselor” button on the left side
+              of your screen and you will receive an updated answer in your
+              email within 48 hours.
+            </li>
+          </ol>
+        </>
+      ),
+    },
+  ]);
   const [currMessageText, setCurrMessageText] = useState("");
   const scrollRef = useRef(null);
   const [showingFirstScreen, setShowingFirstScreen] = useState(true);
-  const [accessCode, setAccessCode] = useState("");
-  const [isIncorrectAccessCode, setIsIncorrectAccessCode] = useState(false);
   const size = useWindowSize();
   const isMobile = size.width < 800;
+  const router = useRouter();
 
   useEffect(() => {
-    console.log(messagesList);
+    //console.log(messagesList);
   }, [messagesList]);
   const handleMessageSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const copyOfMessages = messagesList.slice();
-    copyOfMessages.push({ message: currMessageText, isOnLeft: true });
+    const messageOriginal = currMessageText;
+    copyOfMessages.push({ message: currMessageText, isOnLeft: false });
     setMessagesList(copyOfMessages);
+    setCurrMessageText("");
     copyOfMessages.push({
       message: <div className={styles.chatbotLoading}>...</div>,
-      isOnLeft: false,
+      isOnLeft: true,
     });
     setMessagesList(copyOfMessages);
     scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    setCurrMessageText("");
-    const response = await rephraseSentence(
+    const response = await callGetChatbotResponse(
       currMessageText,
-      "Judges Bot",
-      questionResponses
+      accountInfo.name,
+      questionResponses.filter(({ questionId }) => {
+        return (
+          questionId === "627e8fe7e97c3c14537dc7f5" ||
+          questionId === "61c6b6f2d3054b6dd0f1fc40" ||
+          questionId === "61c6b6f2d3054b6dd0f1fc4b"
+        );
+      })
     ).then((data) => data);
     const copyOfMessages2 = copyOfMessages.slice(0, -1);
-    copyOfMessages2.push({ message: response, isOnLeft: false });
+    copyOfMessages2.push({
+      message: response,
+      isOnLeft: true,
+      isAnswer: true,
+      question: messageOriginal,
+    });
     setMessagesList(copyOfMessages2);
     scrollRef.current.scrollIntoView({ behavior: "smooth" });
   };
+  if (accountInfo.checkIns.length > 0) {
+    router.push({
+      pathname: "/check-ins/[checkIn]",
+      query: { checkIn: accountInfo.checkIns },
+    });
+  }
   if (isMobile && showingFirstScreen) {
     return (
       <LeftPannel
@@ -78,7 +130,6 @@ const Chatbot = ({
           }}
           disabled={false}
           onClick={() => {
-            console.log("DADDY");
             setShowingFirstScreen(true);
           }}
         >
@@ -86,34 +137,23 @@ const Chatbot = ({
         </button>
       ) : null}
       <div
-        style={{ minHeight: "100vh", height: "max-content" }}
+        style={{
+          height: "93vh",
+        }}
         className="w-100 d-flex flex-row position-relative"
       >
         {isMobile ? null : <LeftPannel />}
-        {/* https://www.youtube.com/watch?v=P6rNIDnejsg for expandable side pannel */}
         <div
-          className="d-flex flex-column align-items-center container-fluid"
-          style={{ minHeight: "100%" }}
+          className="d-flex flex-column container-fluid"
+          style={{ minHeight: "100%", width: isMobile ? "100%" : "70%" }}
         >
-          {/* {isMobile ? : } */}
-          {/* <div
-          id="messages"
-          className="d-flex flex-column justify-content-evenly overflow-auto px-2"
-          style={{
-            flex: 1,
-            width: "90%",
-          }}
-        >
-          {messagesList.map(({ message, isOnLeft }, index) => (
-            <Message key={index} message={message} isOnLeft={isOnLeft} />
-          ))}
-        </div> */}
           <div
             id="scrollableDiv"
+            className={styles.messageScroll}
             style={{
               height: "100%",
               width: "100%",
-              overflow: "auto",
+              overflowY: "auto",
               display: "flex",
               flexDirection: "column-reverse",
             }}
@@ -122,7 +162,7 @@ const Chatbot = ({
               <p className="align-self-center mb-5 pb-5">No message history</p>
             ) : null}
             <InfiniteScroll
-              className="pb-5"
+              className="pb-5 pe-1"
               dataLength={messagesList.length} //This is important field to render the next data
               next={null}
               hasMore={true}
@@ -133,13 +173,21 @@ const Chatbot = ({
                 </p>
               } // https://www.npmjs.com/package/react-infinite-scroll-component for infinite scroll
             >
-              {messagesList.map(({ message, isOnLeft }, index) => (
-                <Message key={index} message={message} isOnLeft={isOnLeft} />
-              ))}
+              {messagesList.map(
+                ({ message, isOnLeft, isAnswer, question }, index) => (
+                  <Message
+                    key={index}
+                    question={question}
+                    message={message}
+                    userName={accountInfo.name}
+                    isOnLeft={isOnLeft}
+                    isAnswer={isAnswer}
+                  />
+                )
+              )}
               <div ref={scrollRef} />
             </InfiniteScroll>
           </div>
-
           <form
             onSubmit={handleMessageSubmit}
             id="messageInputContainer"
@@ -186,40 +234,7 @@ const Chatbot = ({
   );
 };
 
-const rephraseSentence = async (
-  message: string,
-  username: string,
-  questionResponses: UserResponse[]
-) => {
-  return await fetch(
-    "https://pacific-lowlands-20884.herokuapp.com/questions/",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        question: message,
-        username: username,
-        rating: "2.00",
-        answer: "default post answer",
-        student_info: questionResponses,
-      }),
-    }
-  )
-    .then((response) => response.json())
-    .then(
-      (data) =>
-        // console.log(data);
-        data.answer
-    )
-    .catch((error) => {
-      console.log(error);
-      return "Sorry, no server is currently running";
-    });
-};
-
-Chatbot.requireAuth = false;
+Chatbot.requireAuth = true;
 // export default connect((state) => ({
 //   accountInfo: state.accountInfo,
 // }))(Chatbot);

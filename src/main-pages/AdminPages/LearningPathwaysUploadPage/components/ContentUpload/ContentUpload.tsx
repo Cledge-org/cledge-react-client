@@ -436,7 +436,7 @@ const ContentUpload = ({
                                   let reader = new FileReader();
                                   reader.onload = (e) => {
                                     const imgURL = e.target.result;
-                                    console.log(imgURL);
+                                    //console.log(imgURL);
                                     let course = currPathwayData;
                                     course.modules[index][contentType][
                                       contentIndex

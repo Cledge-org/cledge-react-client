@@ -208,3 +208,65 @@ export const getPathwayProgressToDownload = async (firebaseId: string) => {
     })
   ).json()) as PathwayProgress[];
 };
+export const callGetChatbotResponse = async (
+  message: string,
+  username: string,
+  questionResponses: UserResponse[]
+) => {
+  return await fetch(
+    "https://cledge-chatbot-service.azurewebsites.net/v1/api",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question: message,
+        username,
+        student_info: questionResponses,
+      }),
+    }
+  )
+    .then((response) => response.text())
+    .catch((error) => {
+      console.error(error);
+      return "Sorry, the chatbot seems to be experiencing difficulties right now!";
+    });
+};
+export const callChatbotVote = (
+  question: string,
+  answer: string,
+  vote: boolean,
+  username: string
+) => {
+  fetch(`https://cledge-chatbot-service.azurewebsites.net/v1/vote_api`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      question,
+      answer,
+      username,
+      vote,
+    }),
+  });
+};
+export const callGetQuestionResponses = async (userId: string) => {
+  return await fetch(`/api/get-question-responses`, {
+    method: "POST",
+    body: JSON.stringify({ userId }),
+  });
+};
+export const callGetAccount = async (userId: string) => {
+  return await fetch(`/api/get-account`, {
+    method: "POST",
+    body: JSON.stringify({ userId }),
+  });
+};
+export const callGetAllPathwayProgress = async (userId: string) => {
+  return await fetch(`/api/get-all-pathway-progress`, {
+    method: "POST",
+    body: JSON.stringify({ userId }),
+  });
+};

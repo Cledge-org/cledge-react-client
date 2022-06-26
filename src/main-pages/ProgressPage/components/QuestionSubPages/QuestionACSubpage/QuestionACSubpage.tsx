@@ -144,7 +144,7 @@ export default function QuestionACSubpage({
         } catch (e) {
           academics = null;
         }
-        console.log(academics);
+        //console.log(academics);
         callPutAcademics(getAcademics(ACResponse.response[chunk.name]));
         store.dispatch(updateQuestionResponsesAction(userResponses));
         if (isAdding) {

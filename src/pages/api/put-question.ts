@@ -67,7 +67,7 @@ export const putQuestion = async (
       }
       client.close();
     } catch (e) {
-      console.log("ERROR: " + e);
+      //console.log("ERROR: " + e);
       err(e);
     }
   });

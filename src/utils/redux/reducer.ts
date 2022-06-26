@@ -6,7 +6,7 @@ export const reducer: Reducer<any, any> = (
   state: DefaultRootState | undefined,
   action: Action<any> | undefined
 ) => {
-  console.log(action);
+  //console.log(action);
   if (action.type === actions.CLEAR_STATE) {
     return {};
   }

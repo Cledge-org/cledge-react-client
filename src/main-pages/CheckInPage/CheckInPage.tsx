@@ -17,6 +17,7 @@ import {
 import { store } from "../../utils/redux/store";
 import styles from "./check-in-page.module.scss";
 import { callPutQuestionResponses } from "src/utils/apiCalls";
+import classNames from "classnames";
 
 const CheckIn: NextApplicationPage<{
   checkInData: Question[];
@@ -33,7 +34,7 @@ const CheckIn: NextApplicationPage<{
   const [isEditing, setIsEditing] = useState(false);
   const [newUserResponses, setNewUserResponses] = useState(userResponses);
   const hiddenFileInput = React.useRef(null);
-  console.log(checkInData);
+  //console.log(checkInData);
   const transcriptUpload = () => {
     hiddenFileInput.current.click();
   };
@@ -105,10 +106,10 @@ const CheckIn: NextApplicationPage<{
       store.dispatch(updateTagsAndCheckInsAction(userTags, checkInList));
       store.dispatch(updateQuestionResponsesAction(newUserResponses));
       values.forEach((value) => {
-        console.log(value.status);
+        //console.log(value.status);
       });
     });
-    router.push({ pathname: "/dashboard" });
+    router.push({ pathname: "/chatbot" });
   };
   const filterDuplicates = (toFilter: any[]) => {
     return toFilter.filter((element, index, self) => {
@@ -135,7 +136,7 @@ const CheckIn: NextApplicationPage<{
         setNewTags(filterDuplicates(newTags.concat(newQTags)));
       }
     };
-    console.log(question);
+    //console.log(question);
     if (question?.type === "TextInput") {
       return (
         <TextInputQuestion
@@ -258,7 +259,7 @@ const CheckIn: NextApplicationPage<{
         {checkInPages[page]}
       </div>
       <div
-        className="auth-bottom-nav align-self-center"
+        className={classNames(styles.authBottomNav, "align-self-center")}
         style={{ position: "fixed", bottom: "16vh", width: "30%" }}
       >
         <div className="px-0">

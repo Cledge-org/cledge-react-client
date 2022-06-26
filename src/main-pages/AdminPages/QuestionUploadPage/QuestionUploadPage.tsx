@@ -84,7 +84,7 @@ const QuestionUploadPage: NextApplicationPage<{
             let jsonArr = await Promise.all(
               resArr.map(async (res) => await res.json())
             );
-            console.log(currQuestionList.chunks[i]._id);
+            //console.log(currQuestionList.chunks[i]._id);
             let value = await callPutQuestionChunk({
               questionChunkId:
                 currQuestionList.chunks[i]._id === null
@@ -96,7 +96,7 @@ const QuestionUploadPage: NextApplicationPage<{
               },
             });
             let unsuccessful = false;
-            console.log(i + " " + value.status);
+            //console.log(i + " " + value.status);
             if (value.status !== 200) {
               unsuccessful = true;
               alert(
@@ -119,7 +119,7 @@ const QuestionUploadPage: NextApplicationPage<{
         })
           .then(async (value) => {
             let unsuccessful = false;
-            console.log("LIST " + value.status);
+            //console.log("LIST " + value.status);
             if (value.status !== 200) {
               unsuccessful = true;
               alert(
@@ -167,9 +167,9 @@ const QuestionUploadPage: NextApplicationPage<{
                 });
                 return;
               }
-              console.log(
-                questionMetadata.find(({ name }) => name === value)._id
-              );
+              //console.log(
+              //   questionMetadata.find(({ name }) => name === value)._id
+              // );
               setCurrQuestionList(
                 questionMetadata.find(({ name }) => name === value)
               );
@@ -931,7 +931,7 @@ const QuestionUploadPage: NextApplicationPage<{
                     let jsonArr = await Promise.all(
                       resArr.map(async (res) => await res.json())
                     );
-                    console.log(currQuestionList.chunks[i]._id);
+                    //console.log(currQuestionList.chunks[i]._id);
                     let value = await callPutQuestionChunk({
                       questionChunkId:
                         currQuestionList.chunks[i]._id === null
@@ -939,7 +939,7 @@ const QuestionUploadPage: NextApplicationPage<{
                           : currQuestionList.chunks[i]._id,
                     });
                     let unsuccessful = false;
-                    console.log(i + " " + value.status);
+                    //console.log(i + " " + value.status);
                     if (value.status !== 200) {
                       unsuccessful = true;
                       alert(
@@ -959,7 +959,7 @@ const QuestionUploadPage: NextApplicationPage<{
                 })
                   .then(async (value) => {
                     let unsuccessful = false;
-                    console.log("LIST " + value.status);
+                    //console.log("LIST " + value.status);
                     if (value.status !== 200) {
                       unsuccessful = true;
                       alert(

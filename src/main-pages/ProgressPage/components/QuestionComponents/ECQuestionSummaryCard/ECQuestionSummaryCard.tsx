@@ -18,13 +18,13 @@ export default function ECQuestionSummaryCard({
   onClick,
 }: ECQuestionSummaryCardProps) {
   const [displayingQuestion, setDisplayingQuestion] = useState(false);
-  console.log(response);
+  //console.log(response);
   const titleQuestion = response.find(
     ({ questionId }) =>
       questionId ===
       chunkQuestions.find(({ question }) => question === "Title")?._id
   );
-  console.log(response);
+  //console.log(response);
   return (
     <div
       className={classNames(

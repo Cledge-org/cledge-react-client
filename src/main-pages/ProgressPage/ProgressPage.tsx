@@ -50,7 +50,7 @@ const Progress: NextApplicationPage<{
     ) {
       setCurrPage({ page: router.query.page, chunk: router.query.chunk });
     }
-    console.log(router.query);
+    //console.log(router.query);
   }, []);
   const isNotEmpty = (element: any) => {
     return (
@@ -90,7 +90,10 @@ const Progress: NextApplicationPage<{
     });
     return Math.round((finished / total) * 100);
   };
-  console.log(percentageData.lists);
+  //console.log(percentageData.lists);
+  const onboardingQuestionList = questionData.find(
+    ({ name }) => name === "Onboarding Questions"
+  );
   return (
     <PageErrorBoundary>
       <div
@@ -106,17 +109,20 @@ const Progress: NextApplicationPage<{
             percentComplete={undefined}
           />
           {questionData.map((list, index) => {
-            return (
-              <DropdownTab
-                isExtracurricular={list.name === "Extracurriculars"}
-                chunkList={list.chunks.map((chunk) => chunk.name)}
-                onClick={(chunk) =>
-                  setCurrPage({ page: list.name, chunk: chunk })
-                }
-                title={list.name}
-                percentComplete={percentageData.lists[index]}
-              />
-            );
+            if (list.name === "Onboarding Questions") {
+              return (
+                <DropdownTab
+                  // isExtracurricular={list.name === "Extracurriculars"}
+                  chunkList={list.chunks.map((chunk) => chunk.name)}
+                  onClick={(chunk) =>
+                    setCurrPage({ page: list.name, chunk: chunk })
+                  }
+                  title={list.name}
+                  percentComplete={percentageData.lists[index]}
+                />
+              );
+            }
+            return null;
           })}
         </div>
         <div

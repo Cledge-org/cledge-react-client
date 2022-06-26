@@ -38,7 +38,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
       });
       resolve.status(200).send("Success");
     } catch (e) {
-      console.log(e);
+      //console.log(e);
       resolve.status(500).send(e);
     }
   }

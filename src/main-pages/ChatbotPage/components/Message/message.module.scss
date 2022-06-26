@@ -1,0 +1,17 @@
+@use "src/common/styles" as *;
+
+.vote-btn {
+  &:hover {
+    cursor: pointer;
+    background-color: white;
+  }
+}
+.vote-btn-selected {
+  &:hover {
+    cursor: pointer;
+    background-color: white;
+    color: $cl-blue;
+  }
+  background-color: $cl-blue;
+  color: white;
+}

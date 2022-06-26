@@ -38,7 +38,7 @@ const ResetPasswordPage = () => {
                     method: "POST",
                     body: JSON.stringify({ email }),
                   }).then((res) => {
-                    console.log(res.status);
+                    //console.log(res.status);
                     router.back();
                   });
                 }}

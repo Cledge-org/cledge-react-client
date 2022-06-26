@@ -139,7 +139,7 @@ export default function QuestionSummaryCard({
   };
   useEffect(() => {
     console.warn(newTags);
-    console.log(oldTags);
+    //console.log(oldTags);
   }, [newTags, oldTags]);
   return (
     <div
@@ -192,7 +192,7 @@ export default function QuestionSummaryCard({
           },
         }}
         onRequestClose={() => {
-          console.log(originalAnswer);
+          //console.log(originalAnswer);
           setUserAnswer(originalAnswer);
           setNewTags([]);
           setOldTags([]);
@@ -231,7 +231,7 @@ export default function QuestionSummaryCard({
                     return questionId === userAnswer.questionId;
                   }
                 );
-                console.log(indexOfResponse);
+                //console.log(indexOfResponse);
                 if (indexOfResponse !== -1) {
                   generalQuestions[indexOfResponse] = userAnswer;
                 } else {
@@ -267,7 +267,7 @@ export default function QuestionSummaryCard({
                   )
                 ).then((reses) => {
                   reses.forEach((res) => {
-                    console.log(res.status);
+                    //console.log(res.status);
                   });
                   store.dispatch(updateTagsAction(userTags));
                   store.dispatch(
@@ -284,7 +284,7 @@ export default function QuestionSummaryCard({
                     return questionId === userAnswer.questionId;
                   }
                 );
-                console.log(indexOfResponse);
+                //console.log(indexOfResponse);
                 if (indexOfResponse !== -1) {
                   newUserResponses[indexOfResponse] = userAnswer;
                 } else {
@@ -353,7 +353,7 @@ export default function QuestionSummaryCard({
                   )
                 ).then((reses) => {
                   reses.forEach((res) => {
-                    console.log(res.status);
+                    //console.log(res.status);
                   });
                   store.dispatch(updateTagsAction(userTags));
                   store.dispatch(

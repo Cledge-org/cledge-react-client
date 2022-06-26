@@ -38,7 +38,7 @@ const RichTextEditor = ({
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
-  console.log(initialValue);
+  //console.log(initialValue);
   return (
     <div
       className="px-4"
@@ -232,12 +232,12 @@ const FontSizeDropdown = () => {
 };
 const toggleMark = (editor: CustomEditor, format, customVal?: any) => {
   const isActive = isMarkActive(editor, format);
-  console.log(isActive);
+  //console.log(isActive);
   if (isActive) {
     Editor.removeMark(editor, format);
   } else {
-    console.log("adding mark");
-    console.log(Editor.string(editor, editor.selection));
+    //console.log("adding mark");
+    //console.log(Editor.string(editor, editor.selection));
     Editor.addMark(editor, format, customVal ?? true);
   }
 };

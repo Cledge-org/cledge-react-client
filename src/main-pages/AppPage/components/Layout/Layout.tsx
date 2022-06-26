@@ -5,6 +5,11 @@ import { initialStateAction } from "../../../../utils/redux/actionFunctions";
 import { store } from "../../../../utils/redux/store";
 import Header from "../../../../common/components/Header/Header";
 import LoadingScreen from "../../../../common/components/Loading/Loading";
+import {
+  callGetAccount,
+  callGetAllPathwayProgress,
+  callGetQuestionResponses,
+} from "src/utils/apiCalls";
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -14,30 +19,22 @@ export default function Layout({ children }) {
   const asyncUseEffect = async () => {
     // setLoading(true);
     console.error(window.origin);
-    console.log(session?.data?.user?.uid);
+    //console.log(session?.data?.user?.uid);
     if (session.data?.user?.uid && !store.getState()) {
       const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
         await Promise.all([
-          fetch(`/api/get-account`, {
-            method: "POST",
-            body: JSON.stringify({ userId: session.data.user.uid }),
-          }),
-          fetch(`/api/get-all-pathway-progress`, {
-            method: "POST",
-            body: JSON.stringify({ userId: session.data.user.uid }),
-          }),
-          fetch(`/api/get-question-responses`, {
-            method: "POST",
-            body: JSON.stringify({ userId: session.data.user.uid }),
-          }),
+          callGetAccount(session.data.user.uid),
+          callGetAllPathwayProgress(session.data.user.uid),
+          callGetQuestionResponses(session.data.user.uid),
         ]);
+      console.log(session.data.user.uid);
       const [accountInfoJSON, pathwaysProgressJSON, questionResponsesJSON] =
         await Promise.all([
           accountInfoRes.json(),
           pathwaysProgressRes.json(),
           questionResponsesRes.json(),
         ]);
-      console.log(pathwaysProgressJSON);
+      //console.log(pathwaysProgressJSON);
       await store.dispatch(
         initialStateAction({
           accountInfo: accountInfoJSON,
@@ -47,12 +44,12 @@ export default function Layout({ children }) {
       );
     }
     if (session.status !== "loading") {
-      console.log(session);
+      //console.log(session);
       setLoading(false);
     }
   };
   useEffect(() => {
-    console.log(session);
+    //console.log(session);
     asyncUseEffect();
   }, [session]);
   useEffect(() => {

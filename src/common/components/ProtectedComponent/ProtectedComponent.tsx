@@ -11,9 +11,9 @@ export default function ProtectedComponent({
   const session = useSession();
   const router = useRouter();
   useEffect(() => {
-    console.log(session.data);
+    //console.log(session.data);
     if (session.status === "unauthenticated") {
-      console.log("not authenticated. redirecting");
+      //console.log("not authenticated. redirecting");
       router.push("/auth/login");
     }
   }, [session, router]);

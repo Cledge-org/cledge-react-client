@@ -13,6 +13,7 @@ import {
   getIdTokenResult,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { createUser } from "src/pages/api/create-user";
 // import { getAuth as getAdminAuth } from "firebase-admin/auth";
 // import {
 //   getApp,
@@ -55,18 +56,14 @@ class AuthFunctions {
     }
   }
   static async createUser(email: string, password: string, initUserObj) {
+    console.error(email + " " + password);
     await createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((res) => {
         const user = res.user;
-        fetch("/api/create-user", {
-          method: "POST",
-          body: JSON.stringify({
-            ...initUserObj,
-            userId: user.uid,
-            email: email,
-          }),
-        }).then(async (res) => {
-          console.log(res.status);
+        createUser({
+          ...initUserObj,
+          firebaseId: user.uid,
+          email: email,
         });
       })
       .catch((err) => {
@@ -107,7 +104,7 @@ class AuthFunctions {
   //   // Lookup the user associated with the specified uid
   //   await firebaseAdminAuth.getUser(uid).then((userRecord) => {
   //     // Claims can be accessed on the user record
-  //     console.log(userRecord.customClaims["admin"]);
+  //     //console.log(userRecord.customClaims["admin"]);
   //   });
   //   return true;
   // }

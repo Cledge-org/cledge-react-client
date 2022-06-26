@@ -452,7 +452,7 @@ const WelcomePage = () => {
       <Footer
         onFeatureClick={(featureIndex) => {
           setCurrFeature(featureIndex);
-          console.log(slideShowRef.current.offsetTop);
+          //console.log(slideShowRef.current.offsetTop);
           document.body.scrollTo({
             top: slideShowRef.current.offsetTop,
             behavior: "smooth",

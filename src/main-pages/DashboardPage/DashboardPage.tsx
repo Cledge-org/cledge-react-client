@@ -26,8 +26,8 @@ const DashboardPage: NextApplicationPage<{
   const [currTab, setCurrTab] = useState("all modules");
   const [isInUserView, setIsInUserView] = useState(false);
   const [percentage, setPercentage] = useState(0);
-  console.log(accountInfo);
-  console.log(pathwaysProgress);
+  //console.log(accountInfo);
+  //console.log(pathwaysProgress);
   const parseId = (objectId) => {
     const objectIdStr = objectId.toString();
     if (!objectIdStr.includes('"')) {
@@ -98,7 +98,7 @@ const DashboardPage: NextApplicationPage<{
     });
     return pathwaysProgress
       .filter(({ finished, pathwayId }) => {
-        console.log(finished);
+        //console.log(finished);
         return (
           !finished && allPathways.find(({ _id }) => parseId(_id) === pathwayId)
         );
@@ -162,7 +162,7 @@ const DashboardPage: NextApplicationPage<{
             ({ finished }) => finished
           );
         });
-        console.log(realPathway.coverImage);
+        //console.log(realPathway.coverImage);
         return {
           name,
           pathwayId,

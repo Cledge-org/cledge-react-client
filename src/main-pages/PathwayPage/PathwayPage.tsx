@@ -115,7 +115,7 @@ const Pathways: NextApplicationPage<{
       | PathwayVideoProgress
       | PathwayTextProgress
   ) => {
-    console.log(newSubContentProgress);
+    //console.log(newSubContentProgress);
     let currContentProgress = moduleProgress[currModuleId].find(
       ({ name }) => name === currContent.name
     );
@@ -233,7 +233,7 @@ const Pathways: NextApplicationPage<{
                 undefined
               }
               onUpdate={(answer) => {
-                console.log("Whot is op");
+                //console.log("Whot is op");
                 updateSubContentProgress({
                   ...currSubContentProgress,
                   questionAnswer: answer,

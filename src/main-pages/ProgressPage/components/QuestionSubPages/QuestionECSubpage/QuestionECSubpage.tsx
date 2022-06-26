@@ -132,7 +132,7 @@ export default function QuestionECSubpage({
         } catch (e) {
           activities = null;
         }
-        console.log(activities);
+        //console.log(activities);
         callPutActivities(getActivities(ECResponse.response[chunk.name]));
         store.dispatch(updateQuestionResponsesAction(userResponses));
         setIsAdding(false);

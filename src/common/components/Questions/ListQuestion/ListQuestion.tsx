@@ -138,12 +138,12 @@ const ListQuestion = ({
   };
   const renderQuestions = () => {
     let renderedQuestions = [];
-    console.log(questionsResponses);
+    //console.log(questionsResponses);
     questionsResponses?.forEach((response, index) => {
       renderedQuestions.push(
         <div>
           {questions.map((question) => {
-            console.log(response[question._id]);
+            //console.log(response[question._id]);
             return getQuestionType(question, response[question._id], index);
           })}
         </div>
