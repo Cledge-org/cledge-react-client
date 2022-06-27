@@ -40,3 +40,6 @@ yarn.lock
 
 # chrome driver
 /college-search-tool/college_pictures/driver
+
+# college picture data
+/college-search-tool/college_pictures/college_picture_urls.json
