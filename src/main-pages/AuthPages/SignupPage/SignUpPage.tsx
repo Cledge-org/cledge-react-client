@@ -59,7 +59,7 @@ const SignUpPage = () => {
       setErrorMessages([...errorMessages]);
     }
   }, [formData]);
-  const checkCondition = (condition, strErr) => {
+  const checkCondition = (condition: boolean, strErr: string) => {
     if (condition) {
       if (!errorMessages.includes(strErr)) {
         errorMessages.push(strErr);
@@ -116,12 +116,20 @@ const SignUpPage = () => {
       email: formData.email,
       tags: [],
       checkIns: ["Onboarding Questions"],
-    });
-    signIn("credentials", {
-      password: formData.password1,
-      email: formData.email,
-      callbackUrl: `${window.location.origin}/chatbot`,
-    });
+    })
+      .then((res) => {
+        console.log(res);
+        signIn("credentials", {
+          password: formData.password1,
+          email: formData.email,
+          callbackUrl: `${window.location.origin}/chatbot`,
+        });
+      })
+      .catch((err) => {
+        console.log("HI");
+        console.error(err);
+        checkCondition(true, err);
+      });
   };
   if (!hasAccess) {
     return (
@@ -298,7 +306,7 @@ const SignUpPage = () => {
             <div className="px-0">
               <button
                 type="button"
-                className="btn btn-primary cl-btn-blue"
+                className="cl-btn-blue"
                 onClick={handleSubmit}
               >
                 Sign Up

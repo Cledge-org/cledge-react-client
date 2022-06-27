@@ -37,7 +37,6 @@ export const putPathwayModule = (
   if (pathwayModuleId && !(pathwayModuleId instanceof ObjectId)) {
     pathwayModuleId = new ObjectId(pathwayModuleId);
   }
-  //console.error(pathwayModuleId);
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);

@@ -148,9 +148,9 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 }
                 router.push({ pathname: "/dashboard" });
               })
-              .catch((err) => console.error("AYO" + err));
+              .catch((err) => console.error(err));
           })
-          .catch((err) => console.error("AYO2" + err));
+          .catch((err) => console.error(err));
       }}
     >
       <div className="mt-4 d-flex flex-column w-100">
@@ -592,9 +592,9 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                         }
                         router.push({ pathname: "/dashboard" });
                       })
-                      .catch((err) => console.error("AYO" + err));
+                      .catch((err) => console.error(err));
                   })
-                  .catch((err) => console.error("AYO2" + err));
+                  .catch((err) => console.error(err));
               }}
             >
               Yes

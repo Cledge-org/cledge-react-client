@@ -29,13 +29,11 @@ export function getActivities(userId: string): Promise<Activities> {
         .collection("extracurriculars")
         .find()
         .toArray();
-      console.error(all);
       const extracurriculars: Activities = (await metricsDb
         .collection("extracurriculars")
         .findOne({
           firebaseId: userId,
         })) as Activities;
-      console.error(extracurriculars);
       if (!extracurriculars) {
         res(null);
       } else {

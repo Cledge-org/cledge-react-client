@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 import FAQDropdown from "src/main-pages/ChatbotPage/components/LeftPanel/components/FAQDropdown/FAQDropdown";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import styles from "./left-panel.module.scss";
 function LeftPannel({
   isFullScreen,
@@ -9,6 +10,7 @@ function LeftPannel({
   isFullScreen?: boolean;
   onReturn?: Function;
 }) {
+  const size = useWindowSize();
   return (
     <div
       style={{
@@ -128,10 +130,15 @@ function LeftPannel({
           }
         />
       </div>
-
       <div
-        className="position-absolute w-90 left-0 bottom-0 py-5 bg-cl-white"
-        style={{ borderTop: "2px solid #E0DFE8", backgroundColor: "#FBFCFF" }}
+        className={`position-absolute w-90 left-0 bottom-0 py-${
+          isFullScreen ? "3" : "5"
+        } bg-cl-white`}
+        style={{
+          borderTop: "2px solid #E0DFE8",
+          backgroundColor: "#FBFCFF",
+          // height: isFullScreen ? "40%" : "30%",
+        }}
       >
         <div className="d-flex flex-column px-4">
           <strong className="py-2" style={{ fontSize: "1.7em" }}>
@@ -151,23 +158,23 @@ function LeftPannel({
           >
             Ask a real counselor
           </button>
+          {isFullScreen ? (
+            <button
+              className="cl-btn-blue center-child mt-2 shadow align-self-center mb-3"
+              style={{
+                width: "15vmax",
+                borderRadius: "2.5vmax",
+              }}
+              disabled={false}
+              onClick={() => {
+                onReturn();
+              }}
+            >
+              Go to Chatbot
+            </button>
+          ) : null}
         </div>
       </div>
-      {isFullScreen ? (
-        <button
-          className="cl-btn-blue center-child shadow align-self-center mb-3"
-          style={{
-            width: "15vmax",
-            borderRadius: "2.5vmax",
-          }}
-          disabled={false}
-          onClick={() => {
-            onReturn();
-          }}
-        >
-          Go to Chatbot
-        </button>
-      ) : null}
     </div>
   );
 }

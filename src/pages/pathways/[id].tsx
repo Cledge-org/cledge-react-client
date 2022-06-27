@@ -10,8 +10,6 @@ import PathwayPage from "../../main-pages/PathwayPage/PathwayPage";
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = await getSession(ctx);
-    console.error(ctx.query.id);
-
     return {
       props: {
         pathwayInfo: JSON.parse(

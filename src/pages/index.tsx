@@ -8,7 +8,7 @@ const Home: NextPage = () => {
   const { data: session, status } = useSession();
   //console.log(session);
   if (status === "authenticated") {
-    window.location.href = "/dashboard";
+    window.location.href = "/chatbot";
     return <LoadingScreen />;
   }
   return <Welcome></Welcome>;

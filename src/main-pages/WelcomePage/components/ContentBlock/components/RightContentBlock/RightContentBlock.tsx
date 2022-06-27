@@ -1,5 +1,6 @@
 import { Row, Col } from "antd";
 import { Fade } from "react-awesome-reveal";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import { Button } from "../../../Button/Button";
 import { SvgIcon } from "../../../SvgIcon/SvgIcon";
 import { ContentBlockProps } from "../../types";
@@ -26,9 +27,18 @@ const RightBlock = ({
       behavior: "smooth",
     });
   };
+  const windowSize = useWindowSize();
   return (
     <RightBlockContainer style={{ maxWidth: "none" }}>
-      <Row justify="space-between" align="middle" id={id}>
+      <Row
+        justify="space-around"
+        align="middle"
+        id={id}
+        style={{
+          paddingLeft: `${(windowSize.width - 1920) / 2}px`,
+          paddingRight: `${(windowSize.width - 1920) / 2}px`,
+        }}
+      >
         <Col lg={11} md={11} sm={11} xs={24}>
           <ContentWrapper id={id} style={{ margin: "0" }}>
             <h6>{title}</h6>

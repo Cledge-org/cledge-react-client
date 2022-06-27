@@ -199,8 +199,15 @@ const CheckIn: NextApplicationPage<{
         <span style={{ color: "white", fontWeight: "bold", fontSize: "2em" }}>
           Welcome to Cledge!
         </span>
-        <span style={{ color: "white", fontSize: "1.8em" }}>
-          Before we get started, tell us a little more about yourself
+        <span
+          style={{ color: "white", fontSize: "1.8em", textAlign: "center" }}
+        >
+          Before we get started, tell us a little more about yourself.
+          <br />
+          <strong>
+            This information will help us better personalize the chatbot for
+            you.
+          </strong>
         </span>
         <button
           onClick={() => {
@@ -292,9 +299,19 @@ const CheckIn: NextApplicationPage<{
         </div>
       </div>
       <div
-        className="align-self-center"
+        className="align-self-center d-flex flex-column"
         style={{ position: "fixed", bottom: "10vh", width: "80%" }}
       >
+        <div className="align-self-center">
+          {page === checkInPages.length - 1 && (
+            <div
+              className="py-2"
+              style={{ fontSize: "1.3em", fontWeight: "bold" }}
+            >
+              By submitting you are agreeing to the statement above
+            </div>
+          )}
+        </div>
         <ProgressBar now={progress} />
       </div>
     </div>

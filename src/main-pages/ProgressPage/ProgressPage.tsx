@@ -164,7 +164,28 @@ const Progress: NextApplicationPage<{
                 `}
                   id="upcoming"
                 >
-                  {questionData
+                  <CardCheckIn
+                    snippet={
+                      <ul className="p-0 ps-3">
+                        {onboardingQuestionList.chunks.map(({ name }) => (
+                          <li>{name}</li>
+                        ))}
+                      </ul>
+                    }
+                    title={onboardingQuestionList.name}
+                    onCardClick={() => {
+                      setCurrPage({
+                        page: onboardingQuestionList.name,
+                        chunk: onboardingQuestionList.chunks[0].name,
+                      });
+                    }}
+                    textGradient={"light"}
+                    percentComplete={
+                      percentageData.lists.filter((value) => value < 100)[0]
+                    }
+                    isFinished={false}
+                  />
+                  {/* {questionData
                     .filter(({ chunks }, index) => {
                       return percentageData.lists[index] < 100;
                     })
@@ -189,7 +210,7 @@ const Progress: NextApplicationPage<{
                         }
                         isFinished={false}
                       />
-                    ))}
+                    ))} */}
                 </div>
                 <div
                   className={`default-tab-pane flex-row justify-content-start align-items-center

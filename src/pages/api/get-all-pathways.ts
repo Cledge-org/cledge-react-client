@@ -50,9 +50,6 @@ export function getSpecificPathway(
     try {
       let modules = await Promise.all(
         pathway.modules.map((moduleId) => {
-          if (pathway.name === "New Test for Faster Loading") {
-            console.error(moduleId);
-          }
           return getSpecificModule(
             moduleId instanceof ObjectId ? moduleId : new ObjectId(moduleId),
             pathwaysDb

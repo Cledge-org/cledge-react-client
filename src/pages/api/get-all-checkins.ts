@@ -31,7 +31,6 @@ export function getAllCheckins(
         .collection("question-lists")
         .find({ isCheckin: true })
         .toArray()) as QuestionList_Db[];
-      console.error(allCheckins);
       let indexOfUnclean = allCheckins.findIndex(({ chunks }) => !chunks);
       while (indexOfUnclean !== -1) {
         allCheckins.splice(indexOfUnclean, 1);

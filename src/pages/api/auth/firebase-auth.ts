@@ -32,7 +32,6 @@ const firebaseCreds = {
 //     return undefined;
 //   }
 // };
-// console.error(firebaseCreds);
 const firebaseApp = initializeApp(firebaseCreds);
 const firebaseAuth = getAuth(firebaseApp);
 // const firebaseAdminAuth = getAdminAuth(
@@ -56,19 +55,18 @@ class AuthFunctions {
     }
   }
   static async createUser(email: string, password: string, initUserObj) {
-    console.error(email + " " + password);
-    await createUserWithEmailAndPassword(firebaseAuth, email, password)
-      .then((res) => {
-        const user = res.user;
-        createUser({
-          ...initUserObj,
-          firebaseId: user.uid,
-          email: email,
-        });
-      })
-      .catch((err) => {
-        console.error(err);
+    return await createUserWithEmailAndPassword(
+      firebaseAuth,
+      email,
+      password
+    ).then((res) => {
+      const user = res.user;
+      createUser({
+        ...initUserObj,
+        firebaseId: user.uid,
+        email: email,
       });
+    });
   }
 
   // static async signInGoogle() {

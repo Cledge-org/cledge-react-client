@@ -58,7 +58,7 @@ const Chatbot = ({
   const scrollRef = useRef(null);
   const [showingFirstScreen, setShowingFirstScreen] = useState(true);
   const size = useWindowSize();
-  const isMobile = size.width < 800;
+  const isMobile = size.width < 900 || size.height < 740;
   const router = useRouter();
 
   useEffect(() => {
@@ -208,8 +208,8 @@ const Chatbot = ({
               placeholder="Type something here"
               className="py-1 px-2"
               style={{
-                height: size.height < 700 ? "5vh" : "4vh",
-                width: size.width < 800 ? "55vw" : "35vw",
+                height: size.height < 700 ? "5vmax" : "2.2vmax",
+                width: size.width < 800 || size.height < 740 ? "55vw" : "35vw",
                 minHeight: "12px",
                 outline: "none",
                 border: "2px solid #656565",
@@ -224,7 +224,7 @@ const Chatbot = ({
                 height: "4vh",
                 minHeight: "36px",
                 borderRadius: "20px",
-                width: size.width < 800 ? "20vw" : "12vw",
+                width: size.width < 800 || size.height < 740 ? "20vw" : "12vw",
               }}
             />
           </form>

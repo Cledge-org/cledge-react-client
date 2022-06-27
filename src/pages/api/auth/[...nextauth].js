@@ -63,14 +63,12 @@ export default NextAuth({
     },
     jwt: async ({ token, user }) => {
       if (user) {
-        console.error(user.uid);
         token.uid = user.uid;
       }
       return Promise.resolve(token);
     },
     session: async ({ session, token, user }) => {
       // Send properties to the client, like an access_token from a provider.
-      console.error(user);
       // session.user = user
       session.user.uid = token.uid;
       session.accessToken = token.accessToken;

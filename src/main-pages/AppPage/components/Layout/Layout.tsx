@@ -18,7 +18,6 @@ export default function Layout({ children }) {
   const [header, setHeader] = useState(<Header key_prop="initial" />);
   const asyncUseEffect = async () => {
     // setLoading(true);
-    console.error(window.origin);
     //console.log(session?.data?.user?.uid);
     if (session.data?.user?.uid && !store.getState()) {
       const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
