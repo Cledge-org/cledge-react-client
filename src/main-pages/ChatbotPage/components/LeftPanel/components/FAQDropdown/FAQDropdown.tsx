@@ -6,11 +6,13 @@ import styles from "./faq-dropdown.module.scss";
 const FAQDropdown = ({
   title,
   content,
+  staticOpen,
 }: {
-  title: string;
+  staticOpen?: boolean;
+  title: string | React.ReactElement;
   content: string | React.ReactElement;
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(staticOpen);
   return (
     <div
       className="dropdown-container mt-2"
@@ -31,19 +33,23 @@ const FAQDropdown = ({
           justifyContent: "space-between",
         }}
         onClick={() => {
-          setIsExpanded(!isExpanded);
+          if (!staticOpen) {
+            setIsExpanded(!isExpanded);
+          }
         }}
       >
         <div className={styles.text}>{title}</div>
-        <div
-          className={classNames(
-            "center-child",
-            isExpanded ? styles.iconOpen : styles.iconClose
-          )}
-          style={{ width: "12px", height: "12px", marginRight: "5px" }}
-        >
-          <FontAwesomeIcon icon={faChevronDown} />
-        </div>
+        {!staticOpen && (
+          <div
+            className={classNames(
+              "center-child",
+              isExpanded ? styles.iconOpen : styles.iconClose
+            )}
+            style={{ width: "12px", height: "12px", marginRight: "5px" }}
+          >
+            <FontAwesomeIcon icon={faChevronDown} />
+          </div>
+        )}
       </button>
       <div
         className={`dropdown-menu-${

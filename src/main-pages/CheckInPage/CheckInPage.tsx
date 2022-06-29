@@ -18,6 +18,7 @@ import { store } from "../../utils/redux/store";
 import styles from "./check-in-page.module.scss";
 import { callPutQuestionResponses } from "src/utils/apiCalls";
 import classNames from "classnames";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 
 const CheckIn: NextApplicationPage<{
   checkInData: Question[];
@@ -34,6 +35,7 @@ const CheckIn: NextApplicationPage<{
   const [isEditing, setIsEditing] = useState(false);
   const [newUserResponses, setNewUserResponses] = useState(userResponses);
   const hiddenFileInput = React.useRef(null);
+  const size = useWindowSize();
   //console.log(checkInData);
   const transcriptUpload = () => {
     hiddenFileInput.current.click();
@@ -202,12 +204,8 @@ const CheckIn: NextApplicationPage<{
         <span
           style={{ color: "white", fontSize: "1.8em", textAlign: "center" }}
         >
-          Before we get started, tell us a little more about yourself.
-          <br />
-          <strong>
-            This information will help us better personalize the chatbot for
-            you.
-          </strong>
+          Before we get started, tell us a little more about yourself. This
+          information will help our AI better assist you.
         </span>
         <button
           onClick={() => {
@@ -225,12 +223,15 @@ const CheckIn: NextApplicationPage<{
     return (
       <div className="container-fluid d-flex flex-column justify-content-center align-items-center vh-100">
         <div
-          style={{ width: "60%" }}
-          className="vh-50 d-flex flex-row justify-content-between align-items-center"
+          style={{ width: size.width < 800 ? "80%" : "60%" }}
+          className="vh-50 d-flex flex-row justify-content-between align-items-center flex-wrap"
         >
           <div
             className="cl-dark-text d-flex flex-column"
-            style={{ fontSize: "1em", width: "40%" }}
+            style={{
+              fontSize: "1em",
+              width: size.width < 800 ? "100%" : "40%",
+            }}
           >
             <span className="fw-bold mb-3" style={{ fontSize: "2.4em" }}>
               Start the checkIn
@@ -253,7 +254,7 @@ const CheckIn: NextApplicationPage<{
             </button>
           </div>
           <img
-            style={{ width: "60%" }}
+            style={{ width: size.width < 800 ? "100%" : "60%" }}
             src="../images/questionLandingGraphic.png"
           />
         </div>
@@ -262,12 +263,19 @@ const CheckIn: NextApplicationPage<{
   }
   return (
     <div className="checkIn-container container-fluid d-flex flex-column overflow-auto">
-      <div className="row col-md-5 d-md-flex mx-auto mt-5 pt-5 flex-column justify-content-center text-center checkIn-question">
+      <div
+        style={{ width: size.width < 800 ? "100%" : "60%" }}
+        className="row col-md-5 d-md-flex mx-auto mt-5 pt-5 flex-column justify-content-center text-center checkIn-question"
+      >
         {checkInPages[page]}
       </div>
       <div
         className={classNames(styles.authBottomNav, "align-self-center")}
-        style={{ position: "fixed", bottom: "16vh", width: "30%" }}
+        style={{
+          position: "fixed",
+          bottom: "16vh",
+          width: size.width < 800 ? "60%" : "30%",
+        }}
       >
         <div className="px-0">
           {page > 0 && (

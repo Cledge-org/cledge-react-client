@@ -86,9 +86,12 @@ const Progress: NextApplicationPage<{
     let finished = 0;
     let total = lists.length * 100;
     lists.forEach((item, index) => {
-      finished += calculatePercentComplete(item.chunks);
+      if (item.name === "Onboarding Questions") {
+        finished += calculatePercentComplete(item.chunks);
+      }
     });
-    return Math.round((finished / total) * 100);
+    //!DONT FORGET TO REVERT THIS TO 100
+    return Math.round((finished / 1) * 1);
   };
   //console.log(percentageData.lists);
   const onboardingQuestionList = questionData.find(
@@ -139,7 +142,7 @@ const Progress: NextApplicationPage<{
               <QuestionSubPageHeader
                 title="Profile Completion"
                 percentage={percentageData.allLists}
-                subText="This is just a placeholder"
+                subText="Use this page to keep your profile up to date. The more information you give us, the better we can help you!"
               />
               <ul className="nav ms-5" role="tablist">
                 <TabButton
@@ -164,53 +167,34 @@ const Progress: NextApplicationPage<{
                 `}
                   id="upcoming"
                 >
-                  <CardCheckIn
-                    snippet={
-                      <ul className="p-0 ps-3">
-                        {onboardingQuestionList.chunks.map(({ name }) => (
-                          <li>{name}</li>
-                        ))}
-                      </ul>
-                    }
-                    title={onboardingQuestionList.name}
-                    onCardClick={() => {
-                      setCurrPage({
-                        page: onboardingQuestionList.name,
-                        chunk: onboardingQuestionList.chunks[0].name,
-                      });
-                    }}
-                    textGradient={"light"}
-                    percentComplete={
-                      percentageData.lists.filter((value) => value < 100)[0]
-                    }
-                    isFinished={false}
-                  />
-                  {/* {questionData
+                  {questionData
                     .filter(({ chunks }, index) => {
                       return percentageData.lists[index] < 100;
                     })
-                    .map(({ name, chunks }, index) => (
-                      <CardCheckIn
-                        snippet={
-                          <ul className="p-0 ps-3">
-                            {chunks.map(({ name }) => (
-                              <li>{name}</li>
-                            ))}
-                          </ul>
-                        }
-                        title={name}
-                        onCardClick={() => {
-                          setCurrPage({ page: name, chunk: chunks[0].name });
-                        }}
-                        textGradient={"light"}
-                        percentComplete={
-                          percentageData.lists.filter((value) => value < 100)[
-                            index
-                          ]
-                        }
-                        isFinished={false}
-                      />
-                    ))} */}
+                    .map(({ name, chunks }, index) =>
+                      name === "Onboarding Questions" ? (
+                        <CardCheckIn
+                          snippet={
+                            <ul className="p-0 ps-3">
+                              {chunks.map(({ name }) => (
+                                <li>{name}</li>
+                              ))}
+                            </ul>
+                          }
+                          title={name}
+                          onCardClick={() => {
+                            setCurrPage({ page: name, chunk: chunks[0].name });
+                          }}
+                          textGradient={"light"}
+                          percentComplete={
+                            percentageData.lists.filter((value) => value < 100)[
+                              index
+                            ]
+                          }
+                          isFinished={false}
+                        />
+                      ) : null
+                    )}
                 </div>
                 <div
                   className={`default-tab-pane flex-row justify-content-start align-items-center
@@ -226,24 +210,26 @@ const Progress: NextApplicationPage<{
                     .filter(({ chunks }, index) => {
                       return percentageData.lists[index] === 100;
                     })
-                    .map(({ name, chunks }) => (
-                      <CardCheckIn
-                        snippet={
-                          <ul className="p-0 ps-3">
-                            {chunks.map(({ name }) => (
-                              <li>{name}</li>
-                            ))}
-                          </ul>
-                        }
-                        title={name}
-                        onCardClick={() => {
-                          setCurrPage({ page: name, chunk: chunks[0].name });
-                        }}
-                        textGradient={"light"}
-                        percentComplete={100}
-                        isFinished={true}
-                      />
-                    ))}
+                    .map(({ name, chunks }) =>
+                      name === "Onboarding Questions" ? (
+                        <CardCheckIn
+                          snippet={
+                            <ul className="p-0 ps-3">
+                              {chunks.map(({ name }) => (
+                                <li>{name}</li>
+                              ))}
+                            </ul>
+                          }
+                          title={name}
+                          onCardClick={() => {
+                            setCurrPage({ page: name, chunk: chunks[0].name });
+                          }}
+                          textGradient={"light"}
+                          percentComplete={100}
+                          isFinished={true}
+                        />
+                      ) : null
+                    )}
                 </div>
               </div>
             </div>

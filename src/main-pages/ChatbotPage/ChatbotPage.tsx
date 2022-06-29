@@ -1,4 +1,8 @@
-import { faChevronDown, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowUp,
+  faChevronDown,
+  faQuestion,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { minHeight } from "@mui/system";
 import React, { ReactElement, useEffect, useRef, useState } from "react";
@@ -12,6 +16,7 @@ import Message from "src/main-pages/ChatbotPage/components/Message/Message";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import { callGetChatbotResponse } from "src/utils/apiCalls";
 import { useRouter } from "next/router";
+import classNames from "classnames";
 
 const Chatbot = ({
   accountInfo,
@@ -33,8 +38,8 @@ const Chatbot = ({
       message: (
         <>
           <strong>
-            Hello there! I’m XYZ, your AI college advisor. Before we get started
-            here are a few things to help you get the most out of my
+            Hello there! I’m Cledge, your AI college advisor. Before we get
+            started here are a few things to help you get the most out of my
             capabilities.
           </strong>
           <ol type="1">
@@ -117,25 +122,6 @@ const Chatbot = ({
   }
   return (
     <PageErrorBoundary>
-      {isMobile ? (
-        <button
-          className="position-absolute cl-btn-blue center-child shadow"
-          style={{
-            width: "5vmax",
-            height: "5vmax",
-            borderRadius: "2.5vmax",
-            right: "5%",
-            top: "20%",
-            zIndex: 1000,
-          }}
-          disabled={false}
-          onClick={() => {
-            setShowingFirstScreen(true);
-          }}
-        >
-          <FontAwesomeIcon icon={faQuestion} style={{ fontSize: "1.4em" }} />
-        </button>
-      ) : null}
       <div
         style={{
           height: "93vh",
@@ -191,42 +177,77 @@ const Chatbot = ({
           <form
             onSubmit={handleMessageSubmit}
             id="messageInputContainer"
-            className="position-sticky bottom-0 py-3 d-flex flex-row align-items-center justify-content-center"
+            className="bottom-0 py-3 d-flex flex-row align-items-center justify-content-center"
             style={{
               flex: 0.1,
-              // position: "fixed",
+              position: "sticky",
               bottom: 0,
               width: "100%",
               backgroundColor: "white",
             }} // https://github.com/adrianhajdin/chat_application/blob/main/src/components/ChatFeed.jsx for chat feed potentially
           >
-            <input
-              onChange={(e) => {
-                setCurrMessageText(e.target.value);
-              }}
-              value={currMessageText}
-              placeholder="Type something here"
-              className="py-1 px-2"
+            {isMobile ? (
+              <button
+                className="cl-btn-blue center-child shadow me-3"
+                style={{
+                  width: "5vmax",
+                  height: "5vmax",
+                  borderRadius: "2.5vmax",
+                  right: "5%",
+                  top: "20%",
+                  zIndex: 1000,
+                }}
+                disabled={false}
+                onClick={() => {
+                  setShowingFirstScreen(true);
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faQuestion}
+                  style={{ fontSize: "1.4em" }}
+                />
+              </button>
+            ) : null}
+            <div
               style={{
-                height: size.height < 700 ? "5vmax" : "2.2vmax",
-                width: size.width < 800 || size.height < 740 ? "55vw" : "35vw",
-                minHeight: "12px",
-                outline: "none",
-                border: "2px solid #656565",
-                borderRadius: "15px",
+                border: isMobile ? "2px solid lightgray" : "none",
+                borderRadius: isMobile ? "20px" : 0,
               }}
-            />
-            <input
-              value="Send"
-              type="submit"
-              className="cl-btn-blue ms-3 py-2 px-2 center-child"
-              style={{
-                height: "4vh",
-                minHeight: "36px",
-                borderRadius: "20px",
-                width: size.width < 800 || size.height < 740 ? "20vw" : "12vw",
-              }}
-            />
+              className="d-flex flex-row align-items-center justify-content-center"
+            >
+              <input
+                onChange={(e) => {
+                  setCurrMessageText(e.target.value);
+                }}
+                value={currMessageText}
+                placeholder="Type something here"
+                className={classNames("py-1 px-2", isMobile ? "ms-1" : "")}
+                style={{
+                  height: size.height < 700 ? "5vmax" : "2.2vmax",
+                  width:
+                    size.width < 800 || size.height < 740 ? "55vw" : "35vw",
+                  minHeight: "30px",
+                  outline: "none",
+                  border: isMobile ? "none" : "2px solid #656565",
+                  borderRadius: "15px",
+                }}
+              />
+              <button
+                className={`cl-btn-${
+                  isMobile ? "gray" : "blue"
+                } ms-3 py-2 px-2 center-child ${isMobile ? "cl-blue" : ""}`}
+                style={{
+                  height: "4vh",
+                  minHeight: "36px",
+                  borderRadius: "20px",
+                  width:
+                    size.width < 800 || size.height < 740 ? "10vw" : "12vw",
+                }}
+                type="submit"
+              >
+                {isMobile ? <FontAwesomeIcon icon={faArrowUp} /> : "Send"}
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -235,10 +256,7 @@ const Chatbot = ({
 };
 
 Chatbot.requireAuth = true;
-// export default connect((state) => ({
-//   accountInfo: state.accountInfo,
-// }))(Chatbot);
-//export default Chatbot;
+
 export default connect((state) => {
   return {
     accountInfo: state.accountInfo,
