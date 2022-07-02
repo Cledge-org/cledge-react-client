@@ -7,7 +7,6 @@ import Header from "../../../../common/components/Header/Header";
 import LoadingScreen from "../../../../common/components/Loading/Loading";
 
 export default function Layout({ children }) {
-  console.error("I EXIST");
   const router = useRouter();
   const session = useSession();
   const [loading, setLoading] = useState(true);

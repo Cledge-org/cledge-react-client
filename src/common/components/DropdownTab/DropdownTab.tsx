@@ -120,7 +120,7 @@ export default function DropdownTab({
                     : {}
                 }
                 icon={
-                  icons[index]
+                  icons && icons[index]
                     ? isFinishedModule || isFinishedContent[index]
                       ? "check"
                       : icons[index]
