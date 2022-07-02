@@ -6,7 +6,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
-        blogInfo: JSON.parse(JSON.stringify(await getAllPosts()))
+        blogInfo: JSON.parse(JSON.stringify(await getAllPosts())),
       },
     };
   } catch (err) {
@@ -20,4 +20,4 @@ const Blogs = ({ blogInfo }) => {
   return <BlogPage blogInfo={blogInfo} />;
 };
 
-export default Blogs
+export default Blogs;
