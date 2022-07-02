@@ -83,7 +83,8 @@ export default function Header({ key_prop }: { key_prop: string }) {
           </a>
         </Link>
         <button
-          className="navbar-toggler"
+          style={{ border: "2px solid lightgray" }}
+          className="navbar-toggler navbar navbar-light"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNavAltMarkup"

@@ -25,6 +25,7 @@ import {
 import { ErrorBoundary } from "react-error-boundary";
 import PageError from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 // account page
 
 const AccountPage: NextApplicationPage<{
@@ -48,6 +49,7 @@ const AccountPage: NextApplicationPage<{
   });
   const [iteratedFirst, setIteratedFirst] = useState(false);
   const session = useSession();
+  const size = useWindowSize();
   const updateUserData = async () => {
     await Promise.all([
       callUpdateUser({ ...currUserData, _id: undefined }),
@@ -78,8 +80,11 @@ const AccountPage: NextApplicationPage<{
   return (
     <PageErrorBoundary>
       <div className="container-fluid h-100 center-child">
-        <div style={{ width: "40%" }}>
-          <span className="cl-dark-text fw-bold" style={{ fontSize: "1.7em" }}>
+        <div style={{ width: size.width < 800 ? "95%" : "40%" }}>
+          <span
+            className="cl-dark-text fw-bold align-self-start"
+            style={{ fontSize: "1.7em" }}
+          >
             Personal Info
           </span>
           <div className="py-3" />
@@ -193,8 +198,8 @@ const AccountPage: NextApplicationPage<{
             },
             content: {
               top: "30%",
-              left: "35%",
-              width: "30%",
+              left: size.width < 800 ? "5%" : "35%",
+              width: size.width < 800 ? "90%" : "30%",
               height: "fit-content",
               borderRadius: "20px",
               borderColor: "white",

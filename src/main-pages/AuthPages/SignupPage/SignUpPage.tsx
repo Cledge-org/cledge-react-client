@@ -5,7 +5,11 @@ import { getProviders, signIn } from "next-auth/react";
 import styles from "./signup-page.module.scss";
 import classNames from "classnames";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
-import { callCreateUser } from "src/utils/apiCalls";
+import {
+  alertSlackNewUser,
+  callCreateUser,
+  getNumUsers,
+} from "src/utils/apiCalls";
 
 const SignUpPage = () => {
   const incorrectPassStr =
@@ -117,8 +121,8 @@ const SignUpPage = () => {
       tags: [],
       checkIns: ["Onboarding Questions"],
     })
-      .then((res) => {
-        console.log(res);
+      .then(async (res) => {
+        alertSlackNewUser(parseInt(await getNumUsers()) - 36);
         signIn("credentials", {
           password: formData.password1,
           email: formData.email,

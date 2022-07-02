@@ -184,6 +184,20 @@ export const alertSlackError = (error: string) => {
     { method: "POST", body: JSON.stringify({ text: error }) }
   );
 };
+export const alertSlackNewUser = (numUsers: number) => {
+  fetch(
+    "https://hooks.slack.com/services/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",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        text: "A new user has appeared!\nCurrent number of users: " + numUsers,
+      }),
+    }
+  );
+};
+export const getNumUsers = async () => {
+  return await (await fetch("/api/get-num-accounts")).text();
+};
 export const callCreateUser = async (
   email: string,
   password: string,

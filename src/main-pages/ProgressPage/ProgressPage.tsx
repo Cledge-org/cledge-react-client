@@ -17,6 +17,7 @@ import QuestionACSubpage from "./components/QuestionSubPages/QuestionACSubpage/Q
 import QuestionSummarySubpage from "./components/QuestionSubPages/QuestionSummarySubpage/QuestionSummarySubpage";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import DropdownTab from "src/common/components/DropdownTab/DropdownTab";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 
 const Progress: NextApplicationPage<{
   questionData: QuestionList[];
@@ -31,6 +32,7 @@ const Progress: NextApplicationPage<{
     allLists: 0,
     lists: [],
   });
+  const size = useWindowSize();
   const [currUserTags, setCurrUserTags] = useState(userTags);
   const onPercentageUpdate = () => {
     setPercentageData({
@@ -97,6 +99,13 @@ const Progress: NextApplicationPage<{
   const onboardingQuestionList = questionData.find(
     ({ name }) => name === "Onboarding Questions"
   );
+  if (size.width < 800) {
+    return (
+      <div style={{ height: "100vh" }} className="center-child">
+        Update your progress on the desktop app
+      </div>
+    );
+  }
   return (
     <PageErrorBoundary>
       <div

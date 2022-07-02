@@ -26,7 +26,6 @@ export default function Layout({ children }) {
           callGetAllPathwayProgress(session.data.user.uid),
           callGetQuestionResponses(session.data.user.uid),
         ]);
-      console.log(session.data.user.uid);
       const [accountInfoJSON, pathwaysProgressJSON, questionResponsesJSON] =
         await Promise.all([
           accountInfoRes.json(),

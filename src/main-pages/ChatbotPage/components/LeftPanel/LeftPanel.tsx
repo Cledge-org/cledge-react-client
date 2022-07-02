@@ -122,7 +122,7 @@ function LeftPannel({
         width: isFullScreen ? "100%" : "30%",
         display: "flex",
         backgroundColor: "#FBFCFF",
-        height: "93.5vh",
+        height: isFullScreen ? "80vh" : "93.5vh",
         borderRight: isFullScreen ? "none" : "2px solid lightgray",
       }}
       className="flex-column position-relative"
@@ -149,6 +149,35 @@ function LeftPannel({
             <strong style={{ fontSize: "1.7em" }}>Frequent Q&A</strong>
             {faqContent}
           </>
+        )}
+        {isFullScreen && (
+          <FAQDropdown
+            title="Ask a real counselor"
+            content={
+              <>
+                <strong className="py-2" style={{ fontSize: "1.7em" }}>
+                  Ask a real counselor
+                </strong>
+                <div style={{ fontSize: "1.3em" }}>
+                  Is the answer generated not helpful or problematic? Fill out
+                  this form and a real college counselor will answer your
+                  question within 48 hours.
+                </div>
+                <button
+                  style={{ fontSize: "1.3em" }}
+                  className="cl-btn-blue mt-2 mb-1"
+                  onClick={() => {
+                    window.open(
+                      "https://forms.gle/S3fzyaVm1ViX5rJn6",
+                      "_blank"
+                    );
+                  }}
+                >
+                  Ask a real counselor
+                </button>
+              </>
+            }
+          />
         )}
       </div>
       <div
