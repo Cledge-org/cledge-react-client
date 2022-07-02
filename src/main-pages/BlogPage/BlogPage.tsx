@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/Link";
+import Link from "next/link";
 import BlogText from "../../../src/common/components/Blog/CardBlog";
 import Item from "antd/lib/list/Item";
 
