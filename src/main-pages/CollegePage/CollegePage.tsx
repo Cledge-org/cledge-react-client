@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "antd/dist/antd.css";
 import { Layout, Menu, Breadcrumb, Divider, Row, Col, Input } from "antd";
-import Slider from "../components/question_components/slider";
 import Sider from "./components/Sider";
-import CollegeCard from "../components/college_components/CollegeCard";
+import CollegeCard from "./components/CollegeCard";
 import ECDropDown from "../components/question_components/ec_dropdown_question";
 import styled from "styled-components";
-import { useRouter } from "next/router";
 
 const axios = require("axios").default;
 const { SubMenu } = Menu;
