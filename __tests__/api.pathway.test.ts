@@ -22,15 +22,13 @@ const testPersonalizedContent: PersonalizedContent = {
   priority: 0,
   tags: testPersonalizedContentTag,
   name: "Test Name",
-  type: "Test Type",
-  url: "Test Url",
+  primaryType: "text",
 };
 
 const testPresetContent: PresetContent = {
   priority: 0,
   name: "Test Name",
-  type: "Test Type",
-  url: "Test Url",
+  primaryType: "text",
 };
 
 const testPathwayModuleName = "Test Name";
@@ -59,8 +57,7 @@ const testPathway: Pathway = {
   name: testPathwayName,
   modules: testPathwayModules,
   tags: testPathwayTag,
-  part: "",
-  order: 0,
+  coverImage: "Test Image",
 };
 
 const testPathway_Db: Pathway_Db = {
@@ -68,14 +65,13 @@ const testPathway_Db: Pathway_Db = {
   name: testPathwayName,
   tags: testPathwayTag,
   modules: [pathwayModule1ObjectId],
-  part: "",
-  order: 0,
+  coverImage: "Test Image",
 };
 
 const testContentProgress: ContentProgress = {
   finished: false,
   name: testPathwayName,
-  videoTime: 0,
+  subContentProgress: [],
 };
 
 const testContentProgresses = [testContentProgress];
@@ -121,15 +117,13 @@ const testPersonalizedContent2: PersonalizedContent = {
   priority: 0,
   tags: testPersonalizedContentTag2,
   name: "Test Name 2",
-  type: "Test Type 2",
-  url: "Test Url 2",
+  primaryType: "text",
 };
 
 const testPresetContent2: PresetContent = {
   priority: 0,
   name: "Test Name 2",
-  type: "Test Type 2",
-  url: "Test Url 2",
+  primaryType: "text",
 };
 
 const testPathwayModuleName2 = "Test Name 2";
@@ -157,8 +151,7 @@ const testPathway2: Pathway = {
   name: testPathwayName2,
   modules: testPathwayModules2,
   tags: testPathwayTag2,
-  part: "",
-  order: 0,
+  coverImage: "Test Image 2",
 };
 
 const testPathway_Db2: Pathway_Db = {
@@ -166,14 +159,13 @@ const testPathway_Db2: Pathway_Db = {
   name: testPathwayName2,
   tags: testPathwayTag2,
   modules: [pathwayModule1ObjectId],
-  part: "",
-  order: 0,
+  coverImage: "Test Image 2",
 };
 
 const testContentProgress2: ContentProgress = {
   finished: false,
   name: testPathwayName2,
-  videoTime: 0,
+  subContentProgress: [],
 };
 
 const testContentProgresses2 = [testContentProgress2];
@@ -400,15 +392,13 @@ test("should verify many pathways", (done) => {
       priority: 0,
       tags: testPersonalizedContentTag,
       name: "Test Name " + i,
-      type: "Test Type " + i,
-      url: "Test Url " + i,
+      primaryType: "text",
     };
 
     const testPresetContent: PresetContent = {
       priority: 0,
       name: "Test Name " + i,
-      type: "Test Type " + i,
-      url: "Test Url " + i,
+      primaryType: "text",
     };
 
     const testPathwayModuleName = "Test Name " + i;
@@ -436,8 +426,7 @@ test("should verify many pathways", (done) => {
       name: testPathwayName,
       modules: testPathwayModules,
       tags: testPathwayTag,
-      part: "",
-      order: 0,
+      coverImage: "Test Image " + i,
     };
 
     const testPathway_Db: Pathway_Db = {
@@ -445,14 +434,13 @@ test("should verify many pathways", (done) => {
       name: testPathwayName,
       tags: testPathwayTag,
       modules: [moduleId],
-      part: "",
-      order: 0,
+      coverImage: "Test Image " + i,
     };
 
     const testContentProgress: ContentProgress = {
       finished: false,
       name: testPathwayName,
-      videoTime: 0,
+      subContentProgress: [],
     };
 
     const testContentProgresses = [testContentProgress];

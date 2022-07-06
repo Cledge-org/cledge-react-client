@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build:server": "tsc --project tsconfig.json",
+    "build:next": "next build",
+    "start": "node dist/index.js",
     "lint": "next lint",
     "test": "npx jest"
   },
