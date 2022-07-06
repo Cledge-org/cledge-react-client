@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "antd/dist/antd.css";
-import { Layout, Menu, Breadcrumb, Divider, Row, Col, Input } from "antd";
+import { Layout, Row, Col, Input } from "antd";
 import Sider from "./components/Sider";
 import CollegeCard from "./components/CollegeCard";
 import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 import styled from "styled-components";
 
 const axios = require("axios").default;
-const { SubMenu } = Menu;
 const { Search } = Input;
 
 const CardsWrapper = styled.div`
@@ -43,7 +42,7 @@ const College = () => {
     function getData() {
         let data = axios({
             method: "post",
-            url: "/api/college-search-tool",
+            url: "/college-search-tool",
             data: requestData,
         })
             .then(function (response) {
