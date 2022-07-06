@@ -44,7 +44,14 @@ const College = () => {
         let data = axios({
             method: "post",
             url: "api/college-search-tool",
-            data: requestData,
+            contentType: "application/json",
+            data: JSON.stringify({
+                searchText: null,
+                top: 10,
+                skip: 0,
+                filters: {},
+                searchFields: ["INSTNM"],
+            }),
         })
             .then(function (response) {
                 return response.data;
@@ -125,7 +132,7 @@ const College = () => {
                                         outState={data["out-state_tuition"]}
                                         abbreviation={"uw"}
                                         data={data}
-                                        key={data.id}
+                             
                                     />
                                 );
                             })}

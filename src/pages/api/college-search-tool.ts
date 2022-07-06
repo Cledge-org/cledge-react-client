@@ -22,6 +22,7 @@ const searchClient = new SearchClient(
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     console.log(req.body);
     const reqBodyJson = JSON.parse(req.body);
+    console.log(reqBodyJson);
     try {
         if (reqBodyJson["mode"] && reqBodyJson["mode"] === "metric") {
             const collegeMetricResult = await getCollegeMetrics(reqBodyJson["userTier"]);
