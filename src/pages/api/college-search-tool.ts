@@ -333,6 +333,10 @@ const formatOutput = (college) => {
             "earnings_percentile.25": college["PCT25_EARN_WNE_P6"],
             "earnings_percentile.75": college["PCT75_EARN_WNE_P6"],
             "earnings_percentile.90": college["PCT90_EARN_WNE_P6"]
+        },
+        "college_fit_metric": {
+            "target": college["TARGET_TIER"],
+            "safety": college["SAFETY_TIER"]
         }
     };
     return output;
