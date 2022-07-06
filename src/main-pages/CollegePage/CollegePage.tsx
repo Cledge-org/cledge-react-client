@@ -3,7 +3,7 @@ import "antd/dist/antd.css";
 import { Layout, Menu, Breadcrumb, Divider, Row, Col, Input } from "antd";
 import Sider from "./components/Sider";
 import CollegeCard from "./components/CollegeCard";
-import ECDropDown from "../components/question_components/ec_dropdown_question";
+import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 import styled from "styled-components";
 
 const axios = require("axios").default;
@@ -96,7 +96,7 @@ const College = () => {
                         <div
                             className="dropdown w-20 input d-flex flex-row align-items-center justify-content"
                             style={{ width: "200px" }}>
-                            <ECDropDown
+                            <DropDownQuestion
                                 isForCST
                                 placeholder="Sort by..."
                                 valuesList={[
@@ -125,6 +125,7 @@ const College = () => {
                                         outState={data["out-state_tuition"]}
                                         abbreviation={"uw"}
                                         data={data}
+                                        key={data.id}
                                     />
                                 );
                             })}
