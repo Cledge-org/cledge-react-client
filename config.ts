@@ -1,8 +1,3 @@
-process.env.NEXTAUTH_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://cledge-dev-site.azurewebsites.net"
-    : "http://localhost:3000";
-
 export const actions = {
   NEW_QUESTION_RESPONSE: "newQuestionResponse",
   UDPATE_QUESTION_RESPONSE: "updateQuestionResponse",

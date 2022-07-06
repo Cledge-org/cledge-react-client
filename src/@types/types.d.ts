@@ -1,3 +1,5 @@
+// import { ObjectId } from "mongodb";
+
 export declare global {
   interface Window {
     YT: any;
@@ -85,16 +87,12 @@ export declare global {
     _id?: ObjectId;
     name: string;
     isCheckin?: boolean;
-    part?: string;
-    order?: number;
     chunks: QuestionChunk[];
   }
   interface QuestionList_Db extends WithId<Document> {
     _id?: ObjectId;
     name: string;
     isCheckin?: boolean;
-    part?: string;
-    order?: number;
     chunks: string[]; // Document IDs of chunks
   }
   interface QuestionChunk extends WithId<Document> {
@@ -144,23 +142,38 @@ export declare global {
   interface ContentProgress {
     finished: boolean;
     name: string;
+    subContentProgress: (
+      | PathwayQuestionProgress
+      | PathwayVideoProgress
+      | PathwayTextProgress
+    )[];
+  }
+  interface SubContentProgress {
+    id: string;
+    finished: boolean;
+  }
+  interface PathwayQuestionProgress extends SubContentProgress {
+    questionAnswer: any;
+  }
+  interface PathwayVideoProgress extends SubContentProgress {
     videoTime: number;
+  }
+  interface PathwayTextProgress extends SubContentProgress {
+    textProgress: number;
   }
   interface Pathway {
     _id?: ObjectId;
     name: string;
+    coverImage: string | ArrayBuffer;
     modules: PathwayModule[];
-    part: string;
-    order: number;
     tags: string[];
   }
   interface Pathway_Db extends WithId<Document> {
     _id?: ObjectId;
     tags: string[];
     modules: ObjectId[]; // Module document IDs
-    part: string;
-    order: number;
     name: string;
+    coverImage: string | ArrayBuffer;
   }
   interface PathwayModule {
     _id?: ObjectId;
@@ -178,19 +191,35 @@ export declare global {
   interface PresetContent {
     priority: number;
     name: string;
-    type: string;
-    url: string;
-    content?: string;
+    primaryType: "text" | "video" | "image" | "question";
+    content?: any[];
   }
-  interface PersonalizedContent extends WithId<Document> {
+  interface PathwaySubContent {
+    type: "text" | "video" | "image" | "question";
+    id: string;
+  }
+  interface PathwayTextContent extends PathwaySubContent {
+    text: string;
+  }
+  interface PathwayVideo extends PathwaySubContent {
+    url: string;
+    title: string;
+    description: string;
+    videoSource: string;
+  }
+  interface PathwayQuestion extends PathwaySubContent {
+    question: string;
+    questionType: string;
+    data?: any[];
+    helpText: string;
+  }
+  interface PathwayImage extends PathwaySubContent {
+    image: string;
+  }
+  interface PersonalizedContent extends PresetContent, WithId<Document> {
     _id?: ObjectId;
     moduleId: ObjectId;
-    priority: number;
     tags: string[];
-    name: string;
-    type: string;
-    url: string;
-    content?: string;
   }
 
   // Student Metrics
@@ -264,5 +293,25 @@ export declare global {
     name: string;
     message: string;
     email: string;
+  }
+  interface PathwayPart_Db {
+    _id?: ObjectId;
+    order: number;
+    name: string;
+    dynamicRoutes: DynamicPartRouteID[];
+  }
+  interface PathwayPart {
+    _id?: ObjectId;
+    order: number;
+    name: string;
+    dynamicRoutes: DynamicPartRoute[];
+  }
+  interface DynamicPartRoute {
+    type: string;
+    route: any;
+  }
+  interface DynamicPartRouteID {
+    type: string;
+    routeId: ObjectId;
   }
 }

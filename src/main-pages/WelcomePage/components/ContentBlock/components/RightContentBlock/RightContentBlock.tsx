@@ -27,10 +27,10 @@ const RightBlock = ({
     });
   };
   return (
-    <RightBlockContainer>
+    <RightBlockContainer style={{ maxWidth: "none" }}>
       <Row justify="space-between" align="middle" id={id}>
         <Col lg={11} md={11} sm={11} xs={24}>
-          <ContentWrapper id={id} className="container-margin">
+          <ContentWrapper id={id} style={{ margin: "0" }}>
             <h6>{title}</h6>
             <Content>{content}</Content>
             <ButtonWrapper>

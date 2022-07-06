@@ -63,6 +63,7 @@ module.exports = {
     GOOGLE_SECRET: process.env.GOOGLE_SECRET,
   },
   webpack: (config, { dev }) => {
+    config.resolve.fallback = { fs: false };
     const oneOf = config.module.rules.find(
       (rule) => typeof rule.oneOf === "object"
     );

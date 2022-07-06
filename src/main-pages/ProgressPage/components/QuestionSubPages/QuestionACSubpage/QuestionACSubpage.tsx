@@ -10,7 +10,7 @@ import {
 } from "../../../../../utils/student-metrics/metricsCalculations";
 import ACEditor from "../../QuestionComponents/ECEditor/ECEditor";
 import ACQuestionSummaryCard from "../../QuestionComponents/ECQuestionSummaryCard/ECQuestionSummaryCard";
-import QuestionSubPageHeader from "../../QuestionComponents/SubpageHeader/SubpageHeader";
+import QuestionSubPageHeader from "../../../../../common/components/SubpageHeader/SubpageHeader";
 import QuestionSummaryCard from "../../QuestionComponents/QuestionSummaryCard/QuestionSummaryCard";
 import {
   callPutAcademics,

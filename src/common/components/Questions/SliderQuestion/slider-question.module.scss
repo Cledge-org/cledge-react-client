@@ -2,35 +2,21 @@
 
 .questionnaire-slider::-webkit-slider-thumb {
   background: $cl-blue;
+  display: none;
 }
 .questionnaire-slider::-moz-range-thumb {
   background: $cl-blue;
+  display: none;
 }
 .questionnaire-slider::-ms-thumb {
   background: $cl-blue;
+  display: none;
 }
 
 .questionnaire-slider {
-  background: $cl-mid-gray;
   position: relative;
+  width: 100%;
   top: -4px;
   left: 4px;
-
-  background: -moz-linear-gradient(left, $cl-mid-gray 0%, $cl-mid-gray 100%);
-  background: -webkit-gradient(
-    linear,
-    left top,
-    right top,
-    color-stop(0%, $cl-mid-gray),
-    color-stop(100%, $cl-mid-gray)
-  );
-  background: -webkit-linear-gradient(left, $cl-mid-gray 0%, $cl-mid-gray 100%);
-  background: -o-linear-gradient(left, $cl-mid-gray 0%, $cl-mid-gray 100%);
-  background: -ms-linear-gradient(left, $cl-mid-gray 0%, $cl-mid-gray 100%);
-  background: linear-gradient(left, $cl-mid-gray 0%, $cl-mid-gray 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=$cl-mid-gray, endColorstr=$cl-mid-gray,GradientType=1 );
-
-  -webkit-border-radius: 40px;
-  -moz-border-radius: 40px;
-  border-radius: 40px;
+  border: none;
 }

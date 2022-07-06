@@ -1,3 +1,4 @@
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faCheckCircle } from "@fortawesome/free-regular-svg-icons";
 import {
   faChevronDown,
@@ -6,6 +7,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
+import { AiOutlineYoutube } from "react-icons/ai";
+import { FaCheckCircle, FaBookOpen } from "react-icons/fa";
+import { BsPencilSquare } from "react-icons/bs";
+import { RiFileTextFill } from "react-icons/ri";
 import styles from "./dropdown-tab.module.scss";
 
 export default function DropdownTab({
@@ -15,6 +20,7 @@ export default function DropdownTab({
   isAll,
   onClick,
   isExtracurricular,
+  icons,
   isPathway,
   currSelectedPath,
   isFinishedModule,
@@ -30,8 +36,22 @@ export default function DropdownTab({
   isFinishedContent?: boolean[];
   isFinishedModule?: boolean;
   currSelectedPath?: string;
+  icons?: IconProp[];
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const ShownIcon = ({ className, style, icon }) => {
+    return icon === "video" ? (
+      <AiOutlineYoutube className={className} style={style} />
+    ) : icon === "check" ? (
+      <FaCheckCircle className={className} style={style} />
+    ) : icon === "question" ? (
+      <BsPencilSquare className={className} style={style} />
+    ) : icon === "text" ? (
+      <FaBookOpen className={className} style={style} />
+    ) : (
+      <RiFileTextFill className={className} style={style} />
+    );
+  };
   return (
     <div className="dropdown-container">
       <button
@@ -83,11 +103,8 @@ export default function DropdownTab({
             }
             key={index.toString()}
           >
-            <div
-              className="center-child icon"
-              style={{ width: `36px`, height: `36px` }}
-            >
-              <FontAwesomeIcon
+            <div className="center-child icon">
+              <ShownIcon
                 className={`${
                   isPathway
                     ? isFinishedModule || isFinishedContent[index]
@@ -103,13 +120,11 @@ export default function DropdownTab({
                     : {}
                 }
                 icon={
-                  isPathway
+                  icons && icons[index]
                     ? isFinishedModule || isFinishedContent[index]
-                      ? faCheckCircle
-                      : chunkTitle.type.toLowerCase() === "article"
-                      ? faFileAlt
-                      : faVideo
-                    : faFileAlt
+                      ? "check"
+                      : icons[index]
+                    : "normal"
                 }
               />
             </div>

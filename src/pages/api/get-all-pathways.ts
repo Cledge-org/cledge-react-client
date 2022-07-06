@@ -63,8 +63,7 @@ export function getSpecificPathway(
       res({
         name: pathway.name,
         _id: pathway._id,
-        order: pathway.order,
-        part: pathway.part,
+        coverImage: pathway.coverImage,
         modules,
         tags: pathway.tags,
       });
@@ -75,7 +74,7 @@ export function getSpecificPathway(
 }
 
 // Gets specific module given its id and database
-function getSpecificModule(
+export function getSpecificModule(
   moduleId: ObjectId,
   pathwaysDb: Db
 ): Promise<PathwayModule | null> {

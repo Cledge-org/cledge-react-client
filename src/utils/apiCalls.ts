@@ -23,7 +23,9 @@ export const callUpdateUser = async (userInfo: AccountInfo) => {
     }),
   });
 };
-export const callPutPathwayProgress = async (contentProgress) => {
+export const callPutPathwayProgress = async (
+  contentProgress: Record<string, ContentProgress[]>
+) => {
   const session = getSession();
   return await fetch(`/api/put-pathway-progress`, {
     method: "POST",
@@ -38,7 +40,7 @@ export const callPutPathway = async ({
   pathwayId,
 }: {
   pathway?: Pathway;
-  pathwayId?: ObjectId;
+  pathwayId?: ObjectId | string;
 }) => {
   return await fetch("/api/put-pathway", {
     method: "POST",
@@ -53,7 +55,7 @@ export const callPutQuestion = async ({
   questionId,
 }: {
   question?: Question;
-  questionId?: ObjectId;
+  questionId?: ObjectId | string;
 }) => {
   return await fetch("/api/put-question", {
     method: "POST",
@@ -68,7 +70,7 @@ export const callPutResource = async ({
   resource,
   tag,
 }: {
-  resourceId?: ObjectId;
+  resourceId?: ObjectId | string;
   resource?: CardArticle | CardVideo | CardResource | undefined;
   tag?: string | undefined;
 }) => {
@@ -106,7 +108,7 @@ export const callPutPathwayModule = async ({
   pathwayModuleId,
 }: {
   pathwayModule?: PathwayModule_Db;
-  pathwayModuleId?: ObjectId;
+  pathwayModuleId?: ObjectId | string;
 }) => {
   return await fetch("/api/put-pathway-module", {
     method: "POST",
@@ -121,7 +123,7 @@ export const callPutPathwayModulePersonalizedContent = async ({
   contentId,
 }: {
   content?: PersonalizedContent;
-  contentId?: ObjectId;
+  contentId?: ObjectId | string;
 }) => {
   return await fetch("/api/put-pathway-module-personalized-content", {
     method: "POST",
@@ -136,7 +138,7 @@ export const callPutQuestionChunk = async ({
   questionChunkId,
 }: {
   questionChunk?: QuestionChunk;
-  questionChunkId?: ObjectId;
+  questionChunkId?: ObjectId | string;
 }) => {
   return await fetch("/api/put-question-chunk", {
     method: "POST",
@@ -151,7 +153,7 @@ export const callPutQuestionList = async ({
   questionListId,
 }: {
   questionList?: QuestionList_Db;
-  questionListId?: ObjectId;
+  questionListId?: ObjectId | string;
 }) => {
   return await fetch("/api/put-question-list", {
     method: "POST",
@@ -161,9 +163,48 @@ export const callPutQuestionList = async ({
     }),
   });
 };
+export const callPutPathwayPart = async ({
+  part,
+  partId,
+}: {
+  part?: PathwayPart_Db;
+  partId?: ObjectId | string;
+}) => {
+  return await fetch(`/api/put-pathway-part`, {
+    method: "POST",
+    body: JSON.stringify({
+      part,
+      partId,
+    }),
+  });
+};
 export const alertSlackError = (error: string) => {
   fetch(
     "https://hooks.slack.com/services/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",
     { method: "POST", body: JSON.stringify({ text: error }) }
   );
+};
+export const callCreateUser = async (
+  email: string,
+  password: string,
+  initialObj
+) => {
+  return await fetch(`/api/auth/signup`, {
+    method: "POST",
+    body: JSON.stringify({
+      email,
+      password,
+      initialObj,
+    }),
+  });
+};
+export const getPathwayProgressToDownload = async (firebaseId: string) => {
+  return (await (
+    await fetch(`/api/get-all-pathway-progress`, {
+      method: "POST",
+      body: JSON.stringify({
+        userId: firebaseId,
+      }),
+    })
+  ).json()) as PathwayProgress[];
 };

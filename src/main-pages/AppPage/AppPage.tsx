@@ -1,6 +1,7 @@
 import { SessionProvider as AuthProvider, useSession } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { GetServerSidePropsContext, NextPage } from "next";
+import { getAnalytics, logEvent } from "firebase/analytics";
 import Head from "next/head";
 import Layout from "./components/Layout/Layout";
 import { store } from "../../utils/redux/store";
@@ -9,10 +10,12 @@ import ProtectedComponent from "../../common/components/ProtectedComponent/Prote
 import { useEffect, useState } from "react";
 import { Router, useRouter } from "next/router";
 import LoadingScreen from "../../common/components/Loading/Loading";
+import { getFirebaseClientApp } from "src/utils/firebase/getFirebaseApp";
 
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
   requireAuth?: boolean;
 };
+
 function MyApp({
   Component,
   pageProps,
@@ -23,7 +26,11 @@ function MyApp({
   console.log(pageProps.session);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
   useEffect(() => {
+    // Log page visit to analytics
+    logEvent(getAnalytics(getFirebaseClientApp()), router.pathname);
+
     const endLoading = () => {
       setLoading(false);
     };

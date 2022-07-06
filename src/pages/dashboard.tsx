@@ -3,13 +3,18 @@ import { GetServerSidePropsContext } from "next";
 import { getAllPathways } from "./api/get-all-pathways";
 import { getAllCheckins } from "./api/get-all-checkins";
 import DashboardPage from "../main-pages/DashboardPage/DashboardPage";
+import { getDashboardParts } from "src/pages/api/get-dashboard-parts";
+import { getSession } from "next-auth/react";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     return {
       props: {
-        allCheckins: JSON.parse(JSON.stringify(await getAllCheckins())),
-        allPathways: JSON.parse(JSON.stringify(await getAllPathways())),
+        dashboardParts: JSON.parse(
+          JSON.stringify(
+            await getDashboardParts((await getSession(ctx)).user.uid)
+          )
+        ),
       },
     };
   } catch (err) {
@@ -19,12 +24,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 };
 
-const Dashboard = ({
-  allCheckins,
-  allPathways,
-  accountInfo,
-  pathwaysProgress,
-}) => {
-  return <DashboardPage allPathways={allPathways} allCheckins={allCheckins} />;
+const Dashboard = ({ dashboardParts }) => {
+  return <DashboardPage dashboardParts={dashboardParts} />;
 };
 export default Dashboard;
