@@ -27,11 +27,10 @@ const College = () => {
     const [filter, setFilter] = useState({});
     console.log(filter);
     const [requestData, setRequest] = useState({
-        searchText: null,
+        searchText: "*",
         top: 10,
         skip: 0,
-        filters: {
-        },
+        filters: {},
         searchFields: ["INSTNM"],
     });
     console.log(requestData);
@@ -44,9 +43,12 @@ const College = () => {
         let data = axios({
             method: "post",
             url: "api/college-search-tool",
-            contentType: "application/json",
+            headers: {
+                "Content-Type": "application/json;charset=UTF-8",
+                "Access-Control-Allow-Origin": "*",
+            },
             data: JSON.stringify({
-                searchText: null,
+                searchText: "*",
                 top: 10,
                 skip: 0,
                 filters: {},
@@ -132,7 +134,6 @@ const College = () => {
                                         outState={data["out-state_tuition"]}
                                         abbreviation={"uw"}
                                         data={data}
-                             
                                     />
                                 );
                             })}
