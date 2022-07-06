@@ -28,9 +28,10 @@ const College = () => {
     console.log(filter);
     const [requestData, setRequest] = useState({
         searchText: null,
-        top: 20,
+        top: 10,
         skip: 0,
-        filters: {},
+        filters: {
+        },
         searchFields: ["INSTNM"],
     });
     console.log(requestData);
@@ -42,7 +43,7 @@ const College = () => {
     function getData() {
         let data = axios({
             method: "post",
-            url: "/college-search-tool",
+            url: "api/college-search-tool",
             data: requestData,
         })
             .then(function (response) {
