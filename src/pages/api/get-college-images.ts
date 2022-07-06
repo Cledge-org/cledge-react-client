@@ -11,7 +11,7 @@ export const config = {
 // request JSON structure: [<INSTID 1>, <INSTID 2>, ...]
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     try {
-        const {collegeList} = req.body;
+        const {collegeList} = JSON.parse(req.body);
         const images = await getCollegeImages(collegeList);
         resolve.status(200).send(images);
     } catch (e) {
