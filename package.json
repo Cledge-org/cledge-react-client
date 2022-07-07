@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build:server": "tsc --project tsconfig.json",
+    "build:next": "next build",
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run build:next && npm run build:server",
     "start": "next start",
     "lint": "next lint",
     "test": "npx jest"
