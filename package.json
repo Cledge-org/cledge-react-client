@@ -3,17 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build:server": "tsc --project tsconfig.json",
-    "build:next": "next build",
     "dev": "next dev",
-    "build": "npm run build:next && npm run build:server",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "npx jest"
   },
   "dependencies": {
-    "@azure/logger": "^1.0.3",
-    "@azure/search-documents": "^11.2.1",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
