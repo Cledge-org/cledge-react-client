@@ -9,9 +9,14 @@ function InfoContainer(props) {
       padding: 24px;
       margin-top: 2rem;
       margin-bottom: 1rem;
+      border: 1px solid #e0dfe8;
 
-      & > div > h5 {
-          margin-bottom: 0.9rem;
+      & > div {
+          margin: 1rem 0;
+      }
+
+      & > div > h2 {
+          margin: 0.5rem 0;
       }
 
       & h1 {

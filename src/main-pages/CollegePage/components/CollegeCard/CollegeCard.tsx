@@ -44,7 +44,7 @@ function CollegeCard(props: CardProps) {
                             <Tab label="Academics" />
                             <Tab label="Housing" />
                             <Tab label="Student" />
-                            <Tab label="Insights" />
+                            {/* <Tab label="Insights" /> */}
                         </Tabs>
                     </div>
                 ) : (
