@@ -14,11 +14,13 @@ interface CardProps {
     sub3data: string | number;
     sub4: string;
     sub4data: string | number;
+    elNum: number;
+    isOverview?: boolean;
 }
 
-function OverviewCard(props: CardProps) {
+function OverviewCard(props) {
     const cols = [];
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 1; i <= props.elNum; i++) {
         cols.push(
         <Col span={12}>
             <h2>{props["sub" + i ]}</h2>
@@ -30,7 +32,7 @@ function OverviewCard(props: CardProps) {
     return (
         <InfoContainer isOverview={true}>
             <h1>{props.title}</h1>
-            <Divider></Divider>
+            {props.isOverview ? <Divider></Divider> : <></>}
             <Row gutter={[16, 16]}>
                 {cols}
             </Row>

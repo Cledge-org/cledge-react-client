@@ -10,6 +10,7 @@ import { width } from "@mui/system";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import OverviewCard from "src/main-pages/CollegePage/components/OverviewCard";
+import DataRow from "./components/DataRow/DataRow";
 
 const CollegeDetailPage = () => {
   const [value, setValue] = React.useState(0);
@@ -101,10 +102,14 @@ const CollegeDetailPage = () => {
             </Col>
             <Col span={16}>
               <OverviewCard
+                isOverview={true}
+                elNum={4}
                 title="Admissions"
                 sub1="Acceptance rate"
                 sub1data={
-                  data["acceptance_rate"]["acceptance_rate_total"] * 100 + "%"
+                  Math.round(
+                    data["acceptance_rate"]["acceptance_rate_total"] * 100
+                  ) + "%"
                 }
                 sub2="Total number of applicants/year"
                 sub2data={data["applicants_per_year"]}
@@ -114,6 +119,8 @@ const CollegeDetailPage = () => {
                 sub4data={data["matriculation_rate"]}
               />
               <OverviewCard
+                isOverview={true}
+                elNum={4}
                 title="Academics"
                 sub1="Honors program"
                 sub1data="No Data"
@@ -125,6 +132,8 @@ const CollegeDetailPage = () => {
                 sub4data="No Data"
               />
               <OverviewCard
+                isOverview={true}
+                elNum={4}
                 title="Finance"
                 sub1="Average resident cost of living"
                 sub1data={
@@ -140,6 +149,8 @@ const CollegeDetailPage = () => {
                 sub4data={"$ " + data["out-state_tuition"]}
               />
               <OverviewCard
+                isOverview={true}
+                elNum={4}
                 title="Students"
                 sub1="Student faculty ratio"
                 sub1data={data["student_faculty_ratio"] + " : 1"}
@@ -156,68 +167,12 @@ const CollegeDetailPage = () => {
                 }
               />
             </Col>
-
-            {/* <InfoContainer>
-              <h1>General Information</h1>
-              <Row gutter={[16, 16]}>
-                <Col span={8}>
-                  <h2>Phone Number</h2>
-                  <h3>206-543-2100</h3>
-                </Col>
-                <Col span={8}>
-                  <h2>Address</h2>
-                  <h3>{data["standard_address"]}</h3>
-                </Col>
-                <Col span={8}>
-                  <h2>Homepage</h2>
-                  <h3>
-                    <a
-                      href={`https://${data["institution_url"]}`}
-                      target="_blank"
-                      rel="noreferrer">
-                      {data["institution_url"]}
-                    </a>
-                  </h3>
-                </Col>
-              </Row>
-              <Divider />
-              <Row gutter={[16, 16]}>
-                <Col span={8}>
-                  <h2>Setting</h2>
-                  <h3>Urban</h3>
-                </Col>
-                <Col span={8}>
-                  <h2>Region</h2>
-                  <h3>North West</h3>
-                </Col>
-                <Col span={8}>
-                  <h2>Religious Affiliation</h2>
-                  <h3>None</h3>
-                </Col>
-              </Row>
-              <Divider />
-              <Row gutter={[16, 16]}>
-                <Col span={8}>
-                  <h2>In-State Tuition (2021)</h2>
-                  <h3>{"$ " + data["in-state_tuition"]}</h3>
-                </Col>
-                <Col span={8}>
-                  <h2>Out-of-State Tuition (2021)</h2>
-                  <h3>{"$ " + data["out-state_tuition"]}</h3>
-                </Col>
-              </Row>
-            </InfoContainer> */}
           </Row>
         ) : value == 1 ? (
           <Row gutter={[16, 16]}>
             <Col span={15}>
               <InfoContainer>
-                <h1>Application Information</h1>
-                <div className="inline">
-                  <p className="cl-dark-text">Application deadline</p>
-                  <h3 className="cl-dark-text">November 15</h3>
-                </div>
-                <Divider />
+                <h1>Admission Requirements</h1>
                 <div className="inline">
                   <p className="cl-dark-text">Application fee</p>
                   <h3 className="cl-dark-text">$80</h3>
@@ -229,18 +184,23 @@ const CollegeDetailPage = () => {
                 </div>
                 <Divider />
                 <div className="inline">
-                  <p className="cl-dark-text">Recommendation letters</p>
+                  <p className="cl-dark-text">Highschool GPA</p>
                   <h3 className="cl-dark-text">Not used</h3>
                 </div>
                 <Divider />
                 <div className="inline">
-                  <p className="cl-dark-text">SAT/ACT testing policy</p>
+                  <p className="cl-dark-text">Highschool rank</p>
                   <h3 className="cl-dark-text">Required</h3>
                 </div>
                 <Divider />
                 <div className="inline">
-                  <p className="cl-dark-text">Application deadline</p>
+                  <p className="cl-dark-text">Highschool record</p>
                   <h3 className="cl-dark-text">November 15</h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p>SAT/ACT</p>
+                  <h3>November 15</h3>
                 </div>
                 <Divider />
                 <div className="inline">
@@ -250,105 +210,428 @@ const CollegeDetailPage = () => {
                   <h3 className="cl-dark-text">95+</h3>
                 </div>
               </InfoContainer>
+              <InfoContainer>
+                <h1>SAT Score Data (Admitted Students)</h1>
+                <DataRow
+                  colNum={3}
+                  sub1="Section"
+                  sub2="25th percentile"
+                  sub3="75th percentile"
+                />
+                <DataRow
+                  colNum={3}
+                  sub1="Overall average"
+                  sub2="2"
+                  sub3="3"
+                  type="content"
+                />
+                <Divider />
+                <DataRow
+                  colNum={3}
+                  sub1="Reading"
+                  sub2="2"
+                  sub3="3"
+                  type="content"
+                />
+                <Divider />
+                <DataRow
+                  colNum={3}
+                  sub1="Math"
+                  sub2="2"
+                  sub3="3"
+                  type="content"
+                />
+                <Divider />
+                <DataRow
+                  colNum={3}
+                  sub1="Writing"
+                  sub2="2"
+                  sub3="3"
+                  type="content"
+                />
+              </InfoContainer>
+              <InfoContainer>
+                <h1>ACT Score Data (Admitted Students)</h1>
+                <DataRow
+                  colNum={3}
+                  sub1="Section"
+                  sub2="25th percentile"
+                  sub3="75th percentile"
+                />
+                <DataRow
+                  colNum={3}
+                  sub1="Overall average"
+                  sub2="2"
+                  sub3="3"
+                  type="content"
+                />
+              </InfoContainer>
             </Col>
             <Col span={9}>
               <InfoContainer>
-                <h1>Application Conditions</h1>
-                <div className="inline">
-                  <p className="cl-dark-text">Highschool GPA</p>
-                  <h3 className="cl-dark-text">Required</h3>
+                <h1>Admission Rate</h1>
+                <div>
+                  <h2>Overall acceptance rate</h2>
+                  <h3>1</h3>
                 </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Highschool Rank</p>
-                  <h3 className="cl-dark-text">Not Required</h3>
+                <div>
+                  <h2>Female acceptance rate</h2>
+                  <h3>1</h3>
                 </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Highschool Record</p>
-                  <h3 className="cl-dark-text">Recommended</h3>
+                <div>
+                  <h2>Male acceptance rate</h2>
+                  <h3>1</h3>
                 </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">SAT</p>
-                  <h3 className="cl-dark-text">Recommended</h3>
+              </InfoContainer>
+              <InfoContainer>
+                <h1>Commit Rate</h1>
+                <div>
+                  <h2>Female commit rate</h2>
+                  <h3>1</h3>
                 </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">ACT</p>
-                  <h3 className="cl-dark-text">Recommended</h3>
+                <div>
+                  <h2>Male commit rate</h2>
+                  <h3>1</h3>
+                </div>
+              </InfoContainer>
+              <InfoContainer>
+                <h1>Enrollment Rate</h1>
+                <div>
+                  <h2>Female enrollment rate</h2>
+                  <h3>1</h3>
+                </div>
+                <div>
+                  <h2>Male enrollment rate</h2>
+                  <h3>1</h3>
                 </div>
               </InfoContainer>
             </Col>
           </Row>
         ) : value == 2 ? (
-          <Row gutter={[16, 16]}>
-            <Col span={15}>
+          <Row gutter={[16, 16]} justify="space-evenly">
+            <Col span={12}>
               <InfoContainer>
-                <h1>Faculty & Class</h1>
-                <Row>
-                  <div>
-                    <h2>Student to Faculty Ratio</h2>
-                    <h3>20:1</h3>
-                  </div>
-                  <div style={{ marginLeft: 50 }}>
-                    <h2>Calendar System</h2>
-                    <h3>Quarter</h3>
-                  </div>
-                </Row>
+                <h1>Academic Statistics</h1>
+                <div className="inline">
+                  <p className="cl-dark-text">4-year graduation rate</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
                 <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">6-year graduation rate</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
               </InfoContainer>
             </Col>
-            <Col span={9}>
-              <InfoContainer></InfoContainer>
+            <Col span={12}>
+              <InfoContainer>
+                <h1>Academic Offerings</h1>
+                <div className="inline">
+                  <p className="cl-dark-text">Study abroad</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">Land grant institution</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+              </InfoContainer>
             </Col>
           </Row>
         ) : value == 3 ? (
           <Row gutter={[16, 16]}>
+            <Col span={24}>
+              <InfoContainer>
+                <h1>Total Costs</h1>
+                <Row>
+                  <Col span={8}>
+                    <h2>In-State Tuition</h2>
+                    <h3>1</h3>
+                  </Col>
+                  <Col span={8}>
+                    <h2>Out-Of-State Tuition</h2>
+                    <h3>1</h3>
+                  </Col>
+                  <Col span={8}>
+                    <h2>Average Room and Board Cost</h2>
+                    <h3></h3>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8}>
+                    <h2>Total In-State Tuition</h2>
+                    <h3></h3>
+                  </Col>
+                  <Col span={8}>
+                    <h2>Total Out-Of-State Tuition</h2>
+                    <h3></h3>
+                  </Col>
+                  <Col span={8}>
+                    <h2></h2>
+                    <h3></h3>
+                  </Col>
+                </Row>
+              </InfoContainer>
+            </Col>
             <Col span={15}>
-              <InfoContainer></InfoContainer>
+              <InfoContainer>
+                <h1>Financial Aid Statistics</h1>
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+              </InfoContainer>
+              <InfoContainer>
+                <h1>Average Grant/Scolarship and Net Price</h1>
+                <DataRow
+                  colNum={4}
+                  sub1="Income Level"
+                  sub2="Median Debt"
+                  sub3="Average Grange"
+                  sub4="Net Price"
+                />
+                <DataRow
+                  colNum={4}
+                  sub1="Overall average"
+                  sub2="2"
+                  sub3="3"
+                  sub4="4"
+                  type="content"
+                />
+                <Divider />
+                <DataRow
+                  colNum={4}
+                  sub1="Overall average"
+                  sub2="2"
+                  sub3="3"
+                  sub4="4"
+                  type="content"
+                />
+                <Divider />
+                <DataRow
+                  colNum={4}
+                  sub1="Overall average"
+                  sub2="2"
+                  sub3="3"
+                  sub4="4"
+                  type="content"
+                />
+                <Divider />
+                <DataRow
+                  colNum={4}
+                  sub1="Overall average"
+                  sub2="2"
+                  sub3="3"
+                  sub4="4"
+                  type="content"
+                />
+                <Divider />
+                <DataRow
+                  colNum={4}
+                  sub1="Overall average"
+                  sub2="2"
+                  sub3="3"
+                  sub4="4"
+                  type="content"
+                />
+                <Divider />
+                <DataRow
+                  colNum={4}
+                  sub1="Overall average"
+                  sub2="2"
+                  sub3="3"
+                  sub4="4"
+                  type="content"
+                />
+                <Divider />
+                <DataRow
+                  colNum={4}
+                  sub1="Overall average"
+                  sub2="2"
+                  sub3="3"
+                  sub4="4"
+                  type="content"
+                />
+              </InfoContainer>
             </Col>
             <Col span={9}>
-              <InfoContainer></InfoContainer>
+              <InfoContainer>
+                <h1>Student Body Statistics</h1>
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+              </InfoContainer>
+              <InfoContainer>
+                <h1>Average Salary</h1>
+                <h2>10 years after graduation</h2>
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+                <br />
+                <h2>6 years after graduation</h2>
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+              </InfoContainer>
             </Col>
           </Row>
         ) : value == 4 ? (
-          <InfoContainer>
-            <h1>Student Ethnicity Ratio</h1>
-            <Row>
-              <div style={{ display: "flex", flexWrap: "wrap" }}>
-                <div>
-                  <h2>White</h2>
-                  <h3>0.3703</h3>
+          <Row gutter={[16, 16]}>
+            <Col span={15}>
+              <OverviewCard
+                isOverview={true}
+                elNum={10}
+                title="Student Body Statistics"
+                sub1="Total Undergraduate Enrollment"
+                sub1data={data["student_faculty_ratio"] + " : 1"}
+                sub2="Enrolled First-Year Students"
+                sub2data={data["4_year_graduation_rate"] * 100 + "%"}
+                sub3="Percent In-State"
+                sub3data={
+                  Math.round(data["retention_rate_4_years"] * 100) + "%"
+                }
+                sub4="Retention Rate"
+                sub4data={
+                  data["enrollment"]["total_undergrad"] +
+                  data["enrollment"]["total_grad"]
+                }
+                sub5="Percent Out-Of State"
+                sub5data={1}
+                sub6="4-Year Graduation Rate"
+                sub6data={1}
+                sub7="Percent First-Gen Students"
+                sub7data={1}
+                sub8="6-Year Graduation Rate"
+                sub8data={1}
+                sub9="Student Faculty Ratio"
+                sub9data="1"
+                sub10="Admission Policy"
+                sub10data="1"
+              />
+              <InfoContainer>
+                <h1>Faculty Statistics</h1>
+                <div className="inline">
+                  <p className="cl-dark-text">Total Instructional Staff</p>
+                  <h3 className="cl-dark-text">95+</h3>
                 </div>
-                <div style={{ marginLeft: 50 }}>
-                  <h2>Black</h2>
-                  <h3>0.0301</h3>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">Total Male Staff</p>
+                  <h3 className="cl-dark-text">95+</h3>
                 </div>
-                <div style={{ marginLeft: 50 }}>
-                  <h2>Hispanic</h2>
-                  <h3>0.0892</h3>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">Total Female Staff</p>
+                  <h3 className="cl-dark-text">Total Research Staff</h3>
                 </div>
-                <div style={{ marginLeft: 50 }}>
-                  <h2>Asian</h2>
-                  <h3>0.2575</h3>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">ROTC</p>
+                  <h3 className="cl-dark-text">95+</h3>
                 </div>
-                <div style={{ marginLeft: 50 }}>
-                  <h2>American Indian/Alaska Native</h2>
-                  <h3>0.0041</h3>
+              </InfoContainer>
+            </Col>
+            <Col span={9}>
+              <InfoContainer>
+                <h1>Atheletics</h1>
+                <div className="inline">
+                  <p className="cl-dark-text">NCAA Member</p>
+                  <h3 className="cl-dark-text">95+</h3>
                 </div>
-                <div style={{ marginLeft: 50 }}>
-                  <h2>Native Hawaiian/Pacific Islander</h2>
-                  <h3>0.0045</h3>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">NCAA for Football</p>
+                  <h3 className="cl-dark-text">95+</h3>
                 </div>
-                <div>
-                  <h2>2 or More Races</h2>
-                  <h3> 0.0762</h3>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">NCAA for Basketball</p>
+                  <h3 className="cl-dark-text">95+</h3>
                 </div>
-              </div>
-            </Row>
-            <Divider />
-          </InfoContainer>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">NCAA for Track</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">NCAA for Baseball</p>
+                  <h3 className="cl-dark-text">95+</h3>
+                </div>
+                <Divider />
+              </InfoContainer>
+            </Col>
+          </Row>
         ) : value == 5 ? (
           <></>
         ) : (
@@ -369,8 +652,14 @@ const Wrapper = styled.div`
 `;
 
 const CollegeInfoWrapper = styled.div`
-  margin: auto;
-  max-width: 1000px;
+    margin: auto;
+    max-width: 1000px;
+
+    & .inline {
+        p {
+            display: inline-block;
+            margin: 0;
+        }
 
   & .inline {
     p {
@@ -382,9 +671,4 @@ const CollegeInfoWrapper = styled.div`
       margin-left: auto;
       display: block;
     }
-  }
-
-  .ant-divider {
-    margin: 0.5rem 0;
-  }
 `;
