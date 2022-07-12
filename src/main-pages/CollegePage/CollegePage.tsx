@@ -20,6 +20,10 @@ const CardsWrapper = styled.div`
     & > div {
         margin: 20px;
     }
+
+    & .MuiButtonBase-root {
+        height: 100%;
+    }
 `;
 
 const College = () => {
