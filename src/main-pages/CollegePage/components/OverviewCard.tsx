@@ -1,5 +1,5 @@
 import React from "react";
-import InfoContainer from "src/main-pages/CollegePage/components/InfoContainer";
+import InfoContainer from "./InfoContainer/InfoContainer";
 import { Row, Col, Divider } from "antd";
 import "antd/dist/antd.css";
 import { RiTruckLine } from "react-icons/ri";
