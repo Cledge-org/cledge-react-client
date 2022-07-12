@@ -371,7 +371,7 @@ const Sider = (props: SiderProps) => {
             }}
           />
         </SubMenu>
-        <SubMenu key={"sub17"} title={"Freshman satisfaction (%)"}>
+        {/* <SubMenu key={"sub17"} title={"Freshman satisfaction (%)"}>
           <MinMaxFilter
             key={"sub17"}
             title={"Freshman satisfaction (%)"}
@@ -379,7 +379,7 @@ const Sider = (props: SiderProps) => {
               onChangeMinMaxFilter(min, max, "Freshman satisfaction (%)");
             }}
           />
-        </SubMenu>
+        </SubMenu> */}
         <SubMenu key={"sub18"} title={"Students receiving aid (%)"}>
           <MinMaxFilter
             key={"sub18"}
