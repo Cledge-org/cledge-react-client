@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "antd/dist/antd.css";
 import { Layout, Row, Col, Input } from "antd";
-import Sider from "./components/Sider";
-import CollegeCard from "./components/CollegeCard";
+import SideBar from "./components/SideBar";
+import CollegeCard from "./components/CollegeCard/CollegeCard";
 import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 import styled from "styled-components";
 
@@ -29,7 +29,6 @@ const CardsWrapper = styled.div`
 const College = () => {
     const [collegeData, setData] = useState(null);
     const [filter, setFilter] = useState({});
-    console.log(filter);
     const [requestData, setRequest] = useState({
         searchText: "*",
         top: 10,
@@ -37,7 +36,6 @@ const College = () => {
         filters: {},
         searchFields: ["INSTNM"],
     });
-    console.log(requestData);
 
     function handleSearch(keyWord) {
         setRequest({ ...requestData, searchText: keyWord });
@@ -55,7 +53,7 @@ const College = () => {
                 searchText: "*",
                 top: 10,
                 skip: 0,
-                filters: {},
+                filters: filter,
                 searchFields: ["INSTNM"],
             }),
         })
@@ -75,7 +73,6 @@ const College = () => {
     useEffect(() => {
         async function fetchData() {
             let data = await getData();
-            console.log(data);
             setData(data);
         }
         fetchData();
@@ -85,7 +82,7 @@ const College = () => {
         <Layout>
             <Row>
                 <Col xs={24} sm={24} md={6} lg={6} xl={5} xxl={4}>
-                    <Sider callBack={setFilter} />
+                    <SideBar setFilter={setFilter} />
                 </Col>
                 <Col
                     xs={24}
@@ -132,7 +129,7 @@ const College = () => {
                                     <CollegeCard
                                         title={data.title}
                                         location={data.location}
-                                        img="uw.png"
+                                        img="uw.jpg"
                                         schoolType={data["college_type"]}
                                         inState={data["in-state_tuition"]}
                                         outState={data["out-state_tuition"]}
