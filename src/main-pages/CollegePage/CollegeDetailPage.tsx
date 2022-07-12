@@ -171,57 +171,6 @@ const CollegeDetailPage = () => {
                                 }
                             />
                         </Col>
-
-                        {/* <InfoContainer>
-              <h1>General Information</h1>
-              <Row gutter={[16, 16]}>
-                <Col span={8}>
-                  <h2>Phone Number</h2>
-                  <h3>206-543-2100</h3>
-                </Col>
-                <Col span={8}>
-                  <h2>Address</h2>
-                  <h3>{data["standard_address"]}</h3>
-                </Col>
-                <Col span={8}>
-                  <h2>Homepage</h2>
-                  <h3>
-                    <a
-                      href={`https://${data["institution_url"]}`}
-                      target="_blank"
-                      rel="noreferrer">
-                      {data["institution_url"]}
-                    </a>
-                  </h3>
-                </Col>
-              </Row>
-              <Divider />
-              <Row gutter={[16, 16]}>
-                <Col span={8}>
-                  <h2>Setting</h2>
-                  <h3>Urban</h3>
-                </Col>
-                <Col span={8}>
-                  <h2>Region</h2>
-                  <h3>North West</h3>
-                </Col>
-                <Col span={8}>
-                  <h2>Religious Affiliation</h2>
-                  <h3>None</h3>
-                </Col>
-              </Row>
-              <Divider />
-              <Row gutter={[16, 16]}>
-                <Col span={8}>
-                  <h2>In-State Tuition (2021)</h2>
-                  <h3>{"$ " + data["in-state_tuition"]}</h3>
-                </Col>
-                <Col span={8}>
-                  <h2>Out-of-State Tuition (2021)</h2>
-                  <h3>{"$ " + data["out-state_tuition"]}</h3>
-                </Col>
-              </Row>
-            </InfoContainer> */}
                     </Row>
                 ) : value == 1 ? (
                     <Row gutter={[16, 16]}>
