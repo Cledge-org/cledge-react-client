@@ -19,11 +19,11 @@ function InfoContainer(props) {
           margin: 0.5rem 0;
       }
 
-      & h1 {
-          font-size: ${props.isOverview ? "18px" : "24px"};
+      & > h1 {
+          font-size: 20px;
           font-weight: bold;
           color: #070452;
-          margin-bottom: 1rem;
+          margin-bottom: 2rem;
       }
 
       & h2 {
@@ -32,7 +32,7 @@ function InfoContainer(props) {
       }
 
       & h3 {
-          font-size: 1rem;
+          font-size: 17px;
           font-weight: 800;
           color: #070452;
       }

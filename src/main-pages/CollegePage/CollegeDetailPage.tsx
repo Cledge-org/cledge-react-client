@@ -11,6 +11,8 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import OverviewCard from "src/main-pages/CollegePage/components/OverviewCard";
 import DataRow from "./components/DataRow/DataRow";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const CollegeDetailPage = () => {
     const [value, setValue] = React.useState(0);
@@ -30,6 +32,30 @@ const CollegeDetailPage = () => {
         top: 100px;
         left: 50px;
     `;
+
+    function getPercentage(data) {
+        if (data) {
+            return Math.round(data * 100) + "%";
+        } else return "No Data";
+    }
+
+    function getAmount(data) {
+        if (data) {
+            return "$ " + data.toLocaleString("en-US");
+        } else return "No Data";
+    }
+
+    function getYesNo(data, word) {
+        if (data) {
+            if (data == word) {
+                return <CheckCircleIcon style={{ color: "#2651ED" }} />;
+            } else {
+                return <CancelIcon style={{ color: "#ef3f2b" }} />;
+            }
+        } else {
+            return "No Data";
+        }
+    }
 
     return (
         <Wrapper>
@@ -57,45 +83,27 @@ const CollegeDetailPage = () => {
                             <InfoContainer>
                                 <div>
                                     <h2>Phone Number</h2>
-                                    <h5>{data["contact_phone_num"]}</h5>
+                                    <h3>{data["contact_phone_num"]}</h3>
                                 </div>
                                 <div>
                                     <h2>Address</h2>
-                                    <h5>{data["standard_address"]}</h5>
+                                    <h3>{data["standard_address"]}</h3>
                                 </div>
                                 <div>
                                     <h2>Homepage</h2>
-                                    <h5>
+                                    <h3>
                                         <a
                                             href={`https://${data["institution_url"]}`}
                                             target="_blank"
-                                            rel="noreferrer">
+                                            rel="noreferrer"
+                                            className="cl-blue">
                                             {data["institution_url"]}
                                         </a>
-                                    </h5>
+                                    </h3>
                                 </div>
-                                <div>
-                                    <h2>Region</h2>
-                                    <h5>{data["location"]}</h5>
-                                </div>
-                                <div>
-                                    <h2>Setting</h2>
-                                    <h5>Urban</h5>
-                                </div>
-                            </InfoContainer>
-                            <InfoContainer>
                                 <div>
                                     <h2>Institutional Category</h2>
-                                    <h5>{data["instituional_category"]}</h5>
-                                </div>
-                                <div>
-                                    <h2>Land Grant Institution</h2>
-                                    <h5>
-                                        {data["land_grant_institution?"] ===
-                                        "Land Grant Institution"
-                                            ? "Yes"
-                                            : "No"}
-                                    </h5>
+                                    <h3>{data["instituional_category"]}</h3>
                                 </div>
                             </InfoContainer>
                         </Col>
@@ -114,23 +122,33 @@ const CollegeDetailPage = () => {
                                 }
                                 sub2="Total number of applicants/year"
                                 sub2data={data["applicants_per_year"]}
-                                sub3="Application deadline"
-                                sub3data="No Data"
+                                sub3="Application Fee"
+                                sub3data={"$" + data["application_fee"]}
                                 sub4="Matriculation rate"
-                                sub4data={data["matriculation_rate"]}
+                                sub4data={
+                                    data["matriculation_rate"]
+                                        ? Math.round(
+                                              data["matriculation_rate"] * 100
+                                          ) + "%"
+                                        : null
+                                }
                             />
                             <OverviewCard
                                 isOverview={true}
                                 elNum={4}
                                 title="Academics"
-                                sub1="Honors program"
-                                sub1data="No Data"
+                                sub1="4 year graduation rate"
+                                sub1data={
+                                    Math.round(
+                                        data["4_year_graduation_rate"] * 100
+                                    ) + "%"
+                                }
                                 sub2="Calendar system"
                                 sub2data={data["calendar_system"]}
                                 sub3="Average GPA"
-                                sub3data="No Data"
-                                sub4="Most popular major"
-                                sub4data="No Data"
+                                sub3data={data["applicants_per_year"]}
+                                sub4="Most popular Area of Study"
+                                sub4data={data["applicants_per_year"]}
                             />
                             <OverviewCard
                                 isOverview={true}
@@ -141,19 +159,29 @@ const CollegeDetailPage = () => {
                                     "$ " +
                                     data[
                                         "estimate_cost_in_state_living_off_campus"
-                                    ]
+                                    ].toLocaleString("en-US")
                                 }
                                 sub2="In state tuition"
-                                sub2data={"$ " + data["in-state_tuition"]}
+                                sub2data={
+                                    "$ " +
+                                    data[
+                                        "estimate_tuition_in_state"
+                                    ].toLocaleString("en-US")
+                                }
                                 sub3="Average non-resident total cost"
                                 sub3data={
                                     "$ " +
                                     data[
                                         "estimate_cost_out_state_living_off_campus"
-                                    ]
+                                    ].toLocaleString("en-US")
                                 }
                                 sub4="Out of state tuition"
-                                sub4data={"$ " + data["out-state_tuition"]}
+                                sub4data={
+                                    "$ " +
+                                    data["out-state_tuition"].toLocaleString(
+                                        "en-US"
+                                    )
+                                }
                             />
                             <OverviewCard
                                 isOverview={true}
@@ -174,10 +202,10 @@ const CollegeDetailPage = () => {
                                     ) + "%"
                                 }
                                 sub4="Total enrollment"
-                                sub4data={
+                                sub4data={(
                                     data["enrollment"]["total_undergrad"] +
                                     data["enrollment"]["total_grad"]
-                                }
+                                ).toLocaleString("en-US")}
                             />
                         </Col>
                     </Row>
@@ -190,28 +218,35 @@ const CollegeDetailPage = () => {
                                     <p className="cl-dark-text">
                                         Application fee
                                     </p>
-                                    <h3 className="cl-dark-text">$80</h3>
-                                </div>
-                                <Divider />
-                                <div className="inline">
-                                    <p className="cl-dark-text">
-                                        Accepts common app
-                                    </p>
-                                    <h3 className="cl-dark-text">Yes</h3>
+                                    <h3 className="cl-dark-text">
+                                        {"$" + data["application_fee"]}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
                                     <p className="cl-dark-text">
                                         Highschool GPA
                                     </p>
-                                    <h3 className="cl-dark-text">Not used</h3>
+                                    <h3 className="cl-dark-text">
+                                        {
+                                            data["admission_factors"][
+                                                "high_school_gpa"
+                                            ]
+                                        }
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
                                     <p className="cl-dark-text">
                                         Highschool rank
                                     </p>
-                                    <h3 className="cl-dark-text">Required</h3>
+                                    <h3 className="cl-dark-text">
+                                        {
+                                            data["admission_factors"][
+                                                "high_school_rank"
+                                            ]
+                                        }
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
@@ -219,21 +254,34 @@ const CollegeDetailPage = () => {
                                         Highschool record
                                     </p>
                                     <h3 className="cl-dark-text">
-                                        November 15
+                                        {
+                                            data["admission_factors"][
+                                                "high_school_record"
+                                            ]
+                                        }
                                     </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
                                     <p>SAT/ACT</p>
-                                    <h3>November 15</h3>
+                                    <h3>
+                                        {
+                                            data["admission_factors"][
+                                                "standardized_test_scores"
+                                            ]
+                                        }
+                                    </h3>
                                 </div>
-                                <Divider />
+                                {/* TODO No TOFEL DATA Found */}
+                                {/* <Divider />
                                 <div className="inline">
                                     <p className="cl-dark-text">
                                         TOEFL policy (International appllicants)
                                     </p>
-                                    <h3 className="cl-dark-text">95+</h3>
-                                </div>
+                                    <h3 className="cl-dark-text">
+                                        {data["applicants_per_year"]}
+                                    </h3>
+                                </div> */}
                             </InfoContainer>
                             <InfoContainer>
                                 <h1>SAT Score Data (Admitted Students)</h1>
@@ -246,32 +294,56 @@ const CollegeDetailPage = () => {
                                 <DataRow
                                     colNum={3}
                                     sub1="Overall average"
-                                    sub2="2"
-                                    sub3="3"
+                                    sub2={
+                                        data["sat/act_score"][
+                                            "sat_critical_reading_25"
+                                        ] +
+                                        data["sat/act_score"]["sat_math_25"] +
+                                        data["sat/act_score"]["sat_writing_25"]
+                                    }
+                                    sub3={
+                                        data["sat/act_score"][
+                                            "sat_critical_reading_75"
+                                        ] +
+                                        data["sat/act_score"]["sat_math_75"] +
+                                        data["sat/act_score"]["sat_writing_75"]
+                                    }
                                     type="content"
                                 />
                                 <Divider />
                                 <DataRow
                                     colNum={3}
                                     sub1="Reading"
-                                    sub2="2"
-                                    sub3="3"
+                                    sub2={
+                                        data["sat/act_score"][
+                                            "sat_critical_reading_25"
+                                        ]
+                                    }
+                                    sub3={
+                                        data["sat/act_score"][
+                                            "sat_critical_reading_75"
+                                        ]
+                                    }
                                     type="content"
                                 />
                                 <Divider />
                                 <DataRow
                                     colNum={3}
                                     sub1="Math"
-                                    sub2="2"
-                                    sub3="3"
+                                    sub2={data["sat/act_score"]["sat_math_25"]}
+                                    sub3={data["sat/act_score"]["sat_math_75"]}
                                     type="content"
                                 />
                                 <Divider />
                                 <DataRow
                                     colNum={3}
                                     sub1="Writing"
-                                    sub2="2"
-                                    sub3="3"
+                                    sub2={
+                                        data["sat/act_score"]["sat_writing_25"]
+                                    }
+                                    sub3={
+                                        data["sat/act_score"]["sat_writing_75"]
+                                    }
                                     type="content"
                                 />
                             </InfoContainer>
@@ -286,8 +358,16 @@ const CollegeDetailPage = () => {
                                 <DataRow
                                     colNum={3}
                                     sub1="Overall average"
-                                    sub2="2"
-                                    sub3="3"
+                                    sub2={
+                                        data["sat/act_score"][
+                                            "act_cumulative_25"
+                                        ]
+                                    }
+                                    sub3={
+                                        data["sat/act_score"][
+                                            "act_cumulative_75"
+                                        ]
+                                    }
                                     type="content"
                                 />
                             </InfoContainer>
@@ -297,39 +377,70 @@ const CollegeDetailPage = () => {
                                 <h1>Admission Rate</h1>
                                 <div>
                                     <h2>Overall acceptance rate</h2>
-                                    <h3>1</h3>
+                                    <h3>
+                                        {Math.round(
+                                            data["acceptance_rate"][
+                                                "acceptance_rate_total"
+                                            ] * 100
+                                        ) + "%"}
+                                    </h3>
                                 </div>
                                 <div>
                                     <h2>Female acceptance rate</h2>
-                                    <h3>1</h3>
+                                    <h3>
+                                        {Math.round(
+                                            data["acceptance_rate"][
+                                                "acceptance_rate_women"
+                                            ] * 100
+                                        ) + "%"}
+                                    </h3>
                                 </div>
                                 <div>
                                     <h2>Male acceptance rate</h2>
-                                    <h3>1</h3>
+                                    <h3>
+                                        {Math.round(
+                                            data["acceptance_rate"][
+                                                "acceptance_rate_men"
+                                            ] * 100
+                                        ) + "%"}
+                                    </h3>
                                 </div>
                             </InfoContainer>
                             <InfoContainer>
                                 <h1>Commit Rate</h1>
                                 <div>
                                     <h2>Female commit rate</h2>
-                                    <h3>1</h3>
+                                    <h3>
+                                        {Math.round(
+                                            data["acceptance_rate"][
+                                                "acceptance_rate_women"
+                                            ] * 100
+                                        ) + "%"}
+                                    </h3>
                                 </div>
                                 <div>
                                     <h2>Male commit rate</h2>
-                                    <h3>1</h3>
+                                    <h3>
+                                        {Math.round(
+                                            data["acceptance_rate"][
+                                                "acceptance_rate_men"
+                                            ] * 100
+                                        ) + "%"}
+                                    </h3>
                                 </div>
                             </InfoContainer>
+                            {/* TODO No enrollment rate data
                             <InfoContainer>
                                 <h1>Enrollment Rate</h1>
                                 <div>
                                     <h2>Female enrollment rate</h2>
-                                    <h3>1</h3>
+                                    <h3>{data["applicants_per_year"]}</h3>
                                 </div>
                                 <div>
                                     <h2>Male enrollment rate</h2>
-                                    <h3>1</h3>
+                                    <h3>{data["applicants_per_year"]}</h3>
                                 </div>
-                            </InfoContainer>
+                            </InfoContainer> */}
                         </Col>
                     </Row>
                 ) : value == 2 ? (
@@ -341,35 +452,65 @@ const CollegeDetailPage = () => {
                                     <p className="cl-dark-text">
                                         4-year graduation rate
                                     </p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <h3 className="cl-dark-text">
+                                        {data["4_year_graduation_rate"] * 100 +
+                                            "%"}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
                                     <p className="cl-dark-text">
                                         6-year graduation rate
                                     </p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <h3 className="cl-dark-text">
+                                        {data["6_year_graduation_rate"] * 100 +
+                                            "%"}
+                                    </h3>
                                 </div>
                             </InfoContainer>
                         </Col>
                         <Col span={12}>
                             <InfoContainer>
                                 <h1>Academic Offerings</h1>
-                                <div className="inline">
+                                {/* TODO No Data Found
+                                 <div className="inline">
                                     <p className="cl-dark-text">Study abroad</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <h3 className="cl-dark-text">
+                                        
+                                    </h3>
                                 </div>
-                                <Divider />
+                                <Divider /> */}
                                 <div className="inline">
                                     <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <h3 className="cl-dark-text">
+                                        {data["offer_rotc"] == "Yes" ? (
+                                            <CheckCircleIcon
+                                                style={{ color: "#2651ED" }}
+                                            />
+                                        ) : (
+                                            <CancelIcon
+                                                style={{ color: "#ef3f2b" }}
+                                            />
+                                        )}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
                                     <p className="cl-dark-text">
                                         Land grant institution
                                     </p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <h3 className="cl-dark-text">
+                                        {data["land_grant_institution?"] ===
+                                        "Land Grant Institution" ? (
+                                            <CheckCircleIcon
+                                                style={{ color: "#2651ED" }}
+                                            />
+                                        ) : (
+                                            <CancelIcon
+                                                style={{ color: "#ef3f2b" }}
+                                            />
+                                        )}
+                                    </h3>
                                 </div>
                             </InfoContainer>
                         </Col>
@@ -382,195 +523,350 @@ const CollegeDetailPage = () => {
                                 <Row>
                                     <Col span={8}>
                                         <h2>In-State Tuition</h2>
-                                        <h3>1</h3>
+                                        <h3>
+                                            {"$ " +
+                                                data[
+                                                    "in-state_tuition"
+                                                ].toLocaleString("en-US")}
+                                        </h3>
                                     </Col>
                                     <Col span={8}>
                                         <h2>Out-Of-State Tuition</h2>
-                                        <h3>1</h3>
+                                        <h3>
+                                            {"$ " +
+                                                data[
+                                                    "out-state_tuition"
+                                                ].toLocaleString("en-US")}
+                                        </h3>
                                     </Col>
                                     <Col span={8}>
                                         <h2>Average Room and Board Cost</h2>
-                                        <h3></h3>
+                                        <h3>
+                                            {data["avg_cost_room_and_board"]
+                                                ? "$ " +
+                                                  data[
+                                                      "avg_cost_room_and_board"
+                                                  ].toLocaleString("en-US")
+                                                : "No Data"}
+                                        </h3>
                                     </Col>
                                 </Row>
-                                <Row>
+                                {/* TODO No Data
+                                 <Row>
                                     <Col span={8}>
                                         <h2>Total In-State Tuition</h2>
-                                        <h3></h3>
+                                        <h3>
+                                            {"$ " +
+                                                data[
+                                                    "in-state_tuition"
+                                                ].toLocaleString("en-US")}
+                                        </h3>
                                     </Col>
                                     <Col span={8}>
                                         <h2>Total Out-Of-State Tuition</h2>
-                                        <h3></h3>
+                                        <h3>
+                                            {"$ " +
+                                                data[
+                                                    "in-state_tuition"
+                                                ].toLocaleString("en-US")}
+                                        </h3>
                                     </Col>
                                     <Col span={8}>
                                         <h2></h2>
                                         <h3></h3>
                                     </Col>
-                                </Row>
+                                </Row> */}
                             </InfoContainer>
                         </Col>
                         <Col span={15}>
                             <InfoContainer>
                                 <h1>Financial Aid Statistics</h1>
                                 <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <p className="cl-dark-text">Pell Grant</p>
+                                    <h3 className="cl-dark-text">
+                                        {getPercentage(
+                                            data[
+                                                "percent_full_time_first_time_finance"
+                                            ]["pell_grants"]
+                                        )}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <p className="cl-dark-text">
+                                        Federal Student Loan
+                                    </p>
+                                    <h3 className="cl-dark-text">
+                                        {getPercentage(
+                                            data[
+                                                "percent_full_time_first_time_finance"
+                                            ]["federal_loan"]
+                                        )}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <p className="cl-dark-text">
+                                        Federal Grant Aid
+                                    </p>
+                                    <h3 className="cl-dark-text">
+                                        {getPercentage(
+                                            data[
+                                                "percent_full_time_first_time_finance"
+                                            ]["other_federal_grant_aid"]
+                                        )}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <p className="cl-dark-text">
+                                        Any Financial Aid
+                                    </p>
+                                    <h3 className="cl-dark-text">
+                                        {getPercentage(
+                                            data[
+                                                "percent_full_time_first_time_finance"
+                                            ]["any_aid"]
+                                        )}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <p className="cl-dark-text">Other</p>
+                                    <h3 className="cl-dark-text">
+                                        {getPercentage(
+                                            data[
+                                                "percent_full_time_first_time_finance"
+                                            ]["other_loan"]
+                                        )}
+                                    </h3>
                                 </div>
                             </InfoContainer>
                             <InfoContainer>
-                                <h1>Average Grant/Scolarship and Net Price</h1>
+                                {/* TODO Net Price Not Found */}
+                                <h1>Average Grant/Scholarship and Net Price</h1>
                                 <DataRow
                                     colNum={4}
                                     sub1="Income Level"
                                     sub2="Median Debt"
-                                    sub3="Average Grange"
+                                    sub3="Average Grant"
                                     sub4="Net Price"
                                 />
                                 <DataRow
                                     colNum={4}
-                                    sub1="Overall average"
-                                    sub2="2"
-                                    sub3="3"
-                                    sub4="4"
+                                    sub1="$0–30,000"
+                                    sub2={getAmount(
+                                        data["median_debt"]["0_30"]
+                                    )}
+                                    sub3={getAmount(
+                                        data["avg_grant_scholarship_19_20"][
+                                            "0_30"
+                                        ]
+                                    )}
+                                    sub4={getAmount(
+                                        data["family_income_public"]["0_30"]
+                                    )}
                                     type="content"
                                 />
                                 <Divider />
                                 <DataRow
                                     colNum={4}
-                                    sub1="Overall average"
-                                    sub2="2"
-                                    sub3="3"
-                                    sub4="4"
+                                    sub1="$30,000–48,000"
+                                    sub2={getAmount(
+                                        data["median_debt"]["30_75"]
+                                    )}
+                                    sub3={getAmount(
+                                        data["avg_grant_scholarship_19_20"][
+                                            "30_48"
+                                        ]
+                                    )}
+                                    sub4={getAmount(
+                                        data["family_income_public"]["30_48"]
+                                    )}
                                     type="content"
                                 />
                                 <Divider />
                                 <DataRow
                                     colNum={4}
-                                    sub1="Overall average"
-                                    sub2="2"
-                                    sub3="3"
-                                    sub4="4"
+                                    sub1="$48,001–75,000"
+                                    sub2={getAmount(
+                                        data["median_debt"]["30_75"]
+                                    )}
+                                    sub3={getAmount(
+                                        data["avg_grant_scholarship_19_20"][
+                                            "48_75"
+                                        ]
+                                    )}
+                                    sub4={getAmount(
+                                        data["family_income_public"]["48_75"]
+                                    )}
                                     type="content"
                                 />
                                 <Divider />
                                 <DataRow
                                     colNum={4}
-                                    sub1="Overall average"
-                                    sub2="2"
-                                    sub3="3"
-                                    sub4="4"
+                                    sub1="$75,001–110,000"
+                                    sub2={getAmount(data["median_debt"]["75+"])}
+                                    sub3={getAmount(
+                                        data["avg_grant_scholarship_19_20"][
+                                            "75_110"
+                                        ]
+                                    )}
+                                    sub4={getAmount(
+                                        data["family_income_public"]["75_110"]
+                                    )}
                                     type="content"
                                 />
                                 <Divider />
                                 <DataRow
                                     colNum={4}
-                                    sub1="Overall average"
-                                    sub2="2"
-                                    sub3="3"
-                                    sub4="4"
-                                    type="content"
-                                />
-                                <Divider />
-                                <DataRow
-                                    colNum={4}
-                                    sub1="Overall average"
-                                    sub2="2"
-                                    sub3="3"
-                                    sub4="4"
-                                    type="content"
-                                />
-                                <Divider />
-                                <DataRow
-                                    colNum={4}
-                                    sub1="Overall average"
-                                    sub2="2"
-                                    sub3="3"
-                                    sub4="4"
+                                    sub1="+$110,000"
+                                    sub2={getAmount(data["median_debt"]["75+"])}
+                                    sub3={getAmount(
+                                        data["avg_grant_scholarship_19_20"][
+                                            "gt110"
+                                        ]
+                                    )}
+                                    sub4={getAmount(
+                                        data["family_income_public"]["110+"]
+                                    )}
                                     type="content"
                                 />
                             </InfoContainer>
                         </Col>
                         <Col span={9}>
-                            <InfoContainer>
+                            <InfoContainer style={"display: flex, gap: 1rem"}>
                                 <h1>Student Body Statistics</h1>
-                                <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                <div>
+                                    <h2>State Grants Awarded amount</h2>
+                                    <h3>
+                                        {getAmount(
+                                            data["grant"]["state_grant"]
+                                        )}
+                                    </h3>
                                 </div>
-                                <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                <div>
+                                    <h2>Net grant aid awarded amount</h2>
+                                    <h3>
+                                        {getAmount(
+                                            data["grant"]["net_grant_aided"]
+                                        )}
+                                    </h3>
                                 </div>
-                                <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                <div>
+                                    <h2>Total Grants awarded amount</h2>
+                                    <h3>
+                                        {getAmount(
+                                            data["grant"]["total_grant"]
+                                        )}
+                                    </h3>
                                 </div>
-                                <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                <div>
+                                    <h2>Local grants awarded amount</h2>
+                                    <h3>
+                                        {getAmount(
+                                            data["grant"]["local_grant"]
+                                        )}
+                                    </h3>
                                 </div>
-                                <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                <div>
+                                    <h2>Pell grant administered amount</h2>
+                                    <h3>
+                                        {getAmount(
+                                            data["grant"]["pell_administered"]
+                                        )}
+                                    </h3>
                                 </div>
-                                <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                <div>
+                                    <h2>Other federal grant amount</h2>
+                                    <h3>
+                                        {getAmount(
+                                            data["grant"]["other_federal"]
+                                        )}
+                                    </h3>
                                 </div>
                             </InfoContainer>
                             <InfoContainer>
                                 <h1>Average Salary</h1>
-                                <h2>10 years after graduation</h2>
+                                <h2>6 years after graduation</h2>
                                 <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <p className="cl-dark-text">
+                                        25th percentile
+                                    </p>
+                                    <h3 className="cl-dark-text">
+                                        {getAmount(
+                                            data[
+                                                "6_yrs_after_entry.working_not_enrolled"
+                                            ]["earnings_percentile.25"]
+                                        )}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <p className="cl-dark-text">
+                                        75th percentile
+                                    </p>
+                                    <h3 className="cl-dark-text">
+                                        {getAmount(
+                                            data[
+                                                "6_yrs_after_entry.working_not_enrolled"
+                                            ]["earnings_percentile.75"]
+                                        )}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <p className="cl-dark-text">
+                                        90th percentile
+                                    </p>
+                                    <h3 className="cl-dark-text">
+                                        {getAmount(
+                                            data[
+                                                "6_yrs_after_entry.working_not_enrolled"
+                                            ]["earnings_percentile.90"]
+                                        )}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <br />
-                                <h2>6 years after graduation</h2>
+                                <h2>10 years after graduation</h2>
                                 <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <p className="cl-dark-text">
+                                        25th percentile
+                                    </p>
+                                    <h3 className="cl-dark-text">
+                                        {getAmount(
+                                            data[
+                                                "10_yrs_after_entry.working_not_enrolled"
+                                            ]["earnings_percentile.25"]
+                                        )}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <p className="cl-dark-text">
+                                        75th percentile
+                                    </p>
+                                    <h3 className="cl-dark-text">
+                                        {getAmount(
+                                            data[
+                                                "10_yrs_after_entry.working_not_enrolled"
+                                            ]["earnings_percentile.75"]
+                                        )}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <p className="cl-dark-text">
+                                        90th percentile
+                                    </p>
+                                    <h3 className="cl-dark-text">
+                                        {getAmount(
+                                            data[
+                                                "10_yrs_after_entry.working_not_enrolled"
+                                            ]["earnings_percentile.90"]
+                                        )}
+                                    </h3>
                                 </div>
                                 <Divider />
                             </InfoContainer>
@@ -588,22 +884,20 @@ const CollegeDetailPage = () => {
                                     data["student_faculty_ratio"] + " : 1"
                                 }
                                 sub2="Enrolled First-Year Students"
-                                sub2data={
-                                    data["4_year_graduation_rate"] * 100 + "%"
-                                }
-                                sub3="Percent In-State"
-                                sub3data={
-                                    Math.round(
-                                        data["retention_rate_4_years"] * 100
-                                    ) + "%"
-                                }
+                                sub2data={getPercentage("a")}
+                                sub3="Undergradate Students In-State"
+                                sub3data={getPercentage(
+                                    data["percent_undergrad_in_state"]
+                                )}
                                 sub4="Retention Rate"
                                 sub4data={
                                     data["enrollment"]["total_undergrad"] +
                                     data["enrollment"]["total_grad"]
                                 }
-                                sub5="Percent Out-Of State"
-                                sub5data={1}
+                                sub5="Undergradate Students Out-State"
+                                sub5data={getPercentage(
+                                    data["percent_undergrad_outh_state"]
+                                )}
                                 sub6="4-Year Graduation Rate"
                                 sub6data={1}
                                 sub7="Percent First-Gen Students"
@@ -621,14 +915,22 @@ const CollegeDetailPage = () => {
                                     <p className="cl-dark-text">
                                         Total Instructional Staff
                                     </p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <h3 className="cl-dark-text">
+                                        {data[
+                                            "in-state_tuition"
+                                        ].toLocaleString("en-US")}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
                                     <p className="cl-dark-text">
                                         Total Male Staff
                                     </p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <h3 className="cl-dark-text">
+                                        {data[
+                                            "in-state_tuition"
+                                        ].toLocaleString("en-US")}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
@@ -636,13 +938,21 @@ const CollegeDetailPage = () => {
                                         Total Female Staff
                                     </p>
                                     <h3 className="cl-dark-text">
-                                        Total Research Staff
+                                        {data[
+                                            "in-state_tuition"
+                                        ].toLocaleString("en-US")}
                                     </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
-                                    <p className="cl-dark-text">ROTC</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <p className="cl-dark-text">
+                                        Total Research Staff
+                                    </p>
+                                    <h3 className="cl-dark-text">
+                                        {data[
+                                            "in-state_tuition"
+                                        ].toLocaleString("en-US")}
+                                    </h3>
                                 </div>
                             </InfoContainer>
                         </Col>
@@ -651,35 +961,55 @@ const CollegeDetailPage = () => {
                                 <h1>Atheletics</h1>
                                 <div className="inline">
                                     <p className="cl-dark-text">NCAA Member</p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <h3 className="cl-dark-text">
+                                        {data[
+                                            "in-state_tuition"
+                                        ].toLocaleString("en-US")}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
                                     <p className="cl-dark-text">
                                         NCAA for Football
                                     </p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <h3 className="cl-dark-text">
+                                        {data[
+                                            "in-state_tuition"
+                                        ].toLocaleString("en-US")}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
                                     <p className="cl-dark-text">
                                         NCAA for Basketball
                                     </p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <h3 className="cl-dark-text">
+                                        {data[
+                                            "in-state_tuition"
+                                        ].toLocaleString("en-US")}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
                                     <p className="cl-dark-text">
                                         NCAA for Track
                                     </p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <h3 className="cl-dark-text">
+                                        {data[
+                                            "in-state_tuition"
+                                        ].toLocaleString("en-US")}
+                                    </h3>
                                 </div>
                                 <Divider />
                                 <div className="inline">
                                     <p className="cl-dark-text">
                                         NCAA for Baseball
                                     </p>
-                                    <h3 className="cl-dark-text">95+</h3>
+                                    <h3 className="cl-dark-text">
+                                        {data[
+                                            "in-state_tuition"
+                                        ].toLocaleString("en-US")}
+                                    </h3>
                                 </div>
                                 <Divider />
                             </InfoContainer>
