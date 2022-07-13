@@ -33,6 +33,9 @@ const College = () => {
   const [filter, setFilter] = useState({});
   const [searchText, setSearchText] = useState("*");
   const [isLoading, setIsLoading] = useState(true);
+  const [currSort, setCurrSort] = useState("");
+  const [currNumericalSortOrder, setCurrNumericalSortOrder] =
+    useState("Least-Greatest");
   const [requestData, setRequest] = useState({
     searchText: "*",
     top: 10,
@@ -85,16 +88,91 @@ const College = () => {
       if (requestData.skip - prevRequest.skip > 0) {
         console.log(requestData);
         setData((currData) => {
+          if (currSort) {
+            return sortBy(
+              currSort,
+              currNumericalSortOrder,
+              currData.concat(data)
+            );
+          }
           return currData.concat(data);
         });
       } else {
-        console.log(data);
-        setData(data);
+        if (currSort) {
+          setData(sortBy(currSort, currNumericalSortOrder, data));
+        } else {
+          console.log(data);
+          setData(data);
+        }
         setIsLoading(false);
       }
     }
     fetchData();
   }, [requestData]);
+
+  useEffect(() => {
+    if (currSort) {
+      sortBy(currSort, currNumericalSortOrder);
+    }
+  }, [currSort, currNumericalSortOrder]);
+
+  const sortBy = (sortType: string, numericalSortOrder: string, data?) => {
+    const parseInstSize = (inst_size: string) => {
+      const indexOfNum = inst_size.includes("Under")
+        ? 1
+        : inst_size.includes("above")
+        ? 0
+        : 2;
+      if (inst_size.includes(",")) {
+        const num = inst_size.split(" ")[indexOfNum];
+        return parseInt(
+          num.substring(0, num.indexOf(",")) +
+            num.substring(num.indexOf(",") + 1)
+        );
+      }
+      return parseInt(inst_size.split(" ")[indexOfNum]);
+    };
+    const copiedData = [...(data ? data : collegeData)];
+    const isLeastGreatest = numericalSortOrder === "Least-Greatest";
+    if (sortType === "A-Z") {
+      copiedData.sort((a, b) =>
+        isLeastGreatest
+          ? a.title.localeCompare(b.title)
+          : b.title.localeCompare(a.title)
+      );
+    } else if (sortType === "Size") {
+      copiedData.sort((a, b) =>
+        isLeastGreatest
+          ? parseInstSize(b.inst_size) - parseInstSize(a.inst_size)
+          : parseInstSize(a.inst_size) - parseInstSize(b.inst_size)
+      );
+    } else if (sortType === "Tuition") {
+      copiedData.sort((a, b) =>
+        isLeastGreatest
+          ? a.tuition_and_fee - b.tuition_and_fee
+          : b.tuition_and_fee - a.tuition_and_fee
+      );
+    } else if (sortType === "Student-Faculty Ratio") {
+      copiedData.sort((a, b) =>
+        isLeastGreatest
+          ? a.student_faculty_ratio - b.student_faculty_ratio
+          : b.student_faculty_ratio - a.student_faculty_ratio
+      );
+    } else if (sortType === "Acceptance Rate") {
+      copiedData.sort((a, b) =>
+        isLeastGreatest
+          ? a.acceptance_rate.acceptance_rate_total -
+            b.acceptance_rate.acceptance_rate_total
+          : b.acceptance_rate.acceptance_rate_total -
+            a.acceptance_rate.acceptance_rate_total
+      );
+    }
+    console.log(copiedData);
+    if (data) {
+      return copiedData;
+    }
+    setData(copiedData);
+  };
 
   return (
     <Layout>
@@ -147,22 +225,31 @@ const College = () => {
               />
             </div>
             <div
-              className="dropdown w-20 input d-flex flex-row align-items-center justify-content"
-              style={{ width: "200px" }}
+              className="dropdown w-20 input d-flex flex-row align-items-center justify-content-space-between"
+              style={{ width: "420px" }}
             >
               <DropDownQuestion
                 isForCST
                 placeholder="Sort by..."
+                onChange={(value) => {
+                  setCurrSort(value);
+                }}
                 valuesList={[
                   "A-Z",
-                  "QS Ranking",
                   "Size",
                   "Tuition",
                   "Student-Faculty Ratio",
                   "Acceptence Rate",
-                  "US News Ranking",
-                  "My Match",
                 ]}
+              />
+              <div style={{ width: "20px" }} />
+              <DropDownQuestion
+                isForCST
+                defaultValue={"Least-Greatest"}
+                onChange={(value) => {
+                  setCurrNumericalSortOrder(value);
+                }}
+                valuesList={["Least-Greatest", "Greatest-Least"]}
               />
             </div>
           </Row>

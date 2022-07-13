@@ -82,6 +82,10 @@ function CollegeCard(props: CardProps) {
                   URL
                 );
               }}
+              className={
+                "d-flex flex-column justify-content-start align-items-start"
+              }
+              style={{ minHeight: "320px", height: "auto" }}
             >
               <InnerCard {...props} />
             </CardActionArea>
