@@ -2,7 +2,6 @@ import React from 'react'
 import styled from "styled-components";
 
 function InfoContainer(props) {
-  console.log(props.isOverview);
   const StyledDiv = styled.div`
       box-shadow: 0px 0px 22px 9px rgba(0, 0, 0, 0.03);
       border-radius: 12px;
