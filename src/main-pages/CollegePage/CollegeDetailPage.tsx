@@ -72,6 +72,7 @@ const CollegeDetailPage = () => {
         return "No data";
     }
 
+    // TODO white data missing
     const ethnicityData = [
         data["student_ethnicity_ratio"]["asian"] +
             data["student_ethnicity_ratio"][
@@ -93,7 +94,7 @@ const CollegeDetailPage = () => {
             "Hispanic",
             "Native American",
             "Other",
-            "White",
+            "White"
         ],
         datasets: [
             {
@@ -199,23 +200,17 @@ const CollegeDetailPage = () => {
                                 title="Admissions"
                                 sub1="Acceptance rate"
                                 sub1data={
-                                    Math.round(
-                                        data["acceptance_rate"][
+                                    getPercentage(data["acceptance_rate"][
                                             "acceptance_rate_total"
-                                        ] * 100
-                                    ) + "%"
+                                        ])
                                 }
                                 sub2="Total number of applicants/year"
                                 sub2data={data["applicants_per_year"]}
                                 sub3="Application Fee"
                                 sub3data={"$" + data["application_fee"]}
                                 sub4="Matriculation rate"
-                                sub4data={
-                                    data["matriculation_rate"]
-                                        ? Math.round(
-                                              data["matriculation_rate"] * 100
-                                          ) + "%"
-                                        : null
+                                sub4data={ getPercentage("matriculation_rate")
+                                
                                 }
                             />
                             <OverviewCard
@@ -223,11 +218,9 @@ const CollegeDetailPage = () => {
                                 elNum={4}
                                 title="Academics"
                                 sub1="4 year graduation rate"
-                                sub1data={
-                                    Math.round(
-                                        data["4_year_graduation_rate"] * 100
-                                    ) + "%"
-                                }
+                                sub1data={getPercentage(
+                                    data["4_year_graduation_rate"]
+                                )}
                                 sub2="Calendar system"
                                 sub2data={data["calendar_system"]}
                                 sub3="Average GPA"
@@ -264,23 +257,23 @@ const CollegeDetailPage = () => {
                                 title="Students"
                                 sub1="Student faculty ratio"
                                 sub1data={
-                                    data["student_faculty_ratio"] + " : 1"
+                                    data["student_faculty_ratio"]
+                                        ? data["student_faculty_ratio"] + " : 1"
+                                        : "No Data"
                                 }
                                 sub2="4 year graduation rate"
-                                sub2data={
-                                    data["4_year_graduation_rate"] * 100 + "%"
-                                }
+                                sub2data={getPercentage(
+                                    data["4_year_graduation_rate"]
+                                )}
                                 sub3="Retention rate"
-                                sub3data={
-                                    Math.round(
-                                        data["retention_rate_4_years"] * 100
-                                    ) + "%"
-                                }
+                                sub3data={getPercentage(
+                                    data["retention_rate_4_years"]
+                                )}
                                 sub4="Total enrollment"
-                                sub4data={(
+                                sub4data={getNumber(
                                     data["enrollment"]["total_undergrad"] +
-                                    data["enrollment"]["total_grad"]
-                                ).toLocaleString("en-US")}
+                                        data["enrollment"]["total_grad"]
+                                )}
                             />
                         </Col>
                     </Row>
@@ -453,31 +446,31 @@ const CollegeDetailPage = () => {
                                 <div>
                                     <h2>Overall acceptance rate</h2>
                                     <h3>
-                                        {Math.round(
+                                        {getPercentage(
                                             data["acceptance_rate"][
                                                 "acceptance_rate_total"
-                                            ] * 100
-                                        ) + "%"}
+                                            ]
+                                        )}
                                     </h3>
                                 </div>
                                 <div>
                                     <h2>Female acceptance rate</h2>
                                     <h3>
-                                        {Math.round(
+                                        {getPercentage(
                                             data["acceptance_rate"][
                                                 "acceptance_rate_women"
-                                            ] * 100
-                                        ) + "%"}
+                                            ]
+                                        )}
                                     </h3>
                                 </div>
                                 <div>
                                     <h2>Male acceptance rate</h2>
                                     <h3>
-                                        {Math.round(
+                                        {getPercentage(
                                             data["acceptance_rate"][
                                                 "acceptance_rate_men"
-                                            ] * 100
-                                        ) + "%"}
+                                            ]
+                                        )}
                                     </h3>
                                 </div>
                             </InfoContainer>
@@ -486,21 +479,21 @@ const CollegeDetailPage = () => {
                                 <div>
                                     <h2>Female commit rate</h2>
                                     <h3>
-                                        {Math.round(
+                                        {getPercentage(
                                             data["acceptance_rate"][
                                                 "acceptance_rate_women"
-                                            ] * 100
-                                        ) + "%"}
+                                            ]
+                                        )}
                                     </h3>
                                 </div>
                                 <div>
                                     <h2>Male commit rate</h2>
                                     <h3>
-                                        {Math.round(
+                                        {getPercentage(
                                             data["acceptance_rate"][
                                                 "acceptance_rate_men"
-                                            ] * 100
-                                        ) + "%"}
+                                            ]
+                                        )}
                                     </h3>
                                 </div>
                             </InfoContainer>
@@ -528,8 +521,9 @@ const CollegeDetailPage = () => {
                                         4-year graduation rate
                                     </p>
                                     <h3 className="cl-dark-text">
-                                        {data["4_year_graduation_rate"] * 100 +
-                                            "%"}
+                                        {getPercentage(
+                                            data["4_year_graduation_rate"]
+                                        )}
                                     </h3>
                                 </div>
                                 <Divider />
@@ -538,8 +532,7 @@ const CollegeDetailPage = () => {
                                         6-year graduation rate
                                     </p>
                                     <h3 className="cl-dark-text">
-                                        {data["6_year_graduation_rate"] * 100 +
-                                            "%"}
+                                        {getPercentage(data["6_year_graduation_rate"])}
                                     </h3>
                                 </div>
                             </InfoContainer>
