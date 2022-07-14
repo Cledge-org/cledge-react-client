@@ -23,7 +23,7 @@ function InfoContainer(props) {
           font-size: 20px;
           font-weight: bold;
           color: #070452;
-          margin-bottom: 2rem;
+          margin-bottom: 1rem;
       }
 
       & h2 {
