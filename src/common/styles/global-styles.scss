@@ -138,6 +138,10 @@ a {
     border-color: rgba($color: $cl-white, $alpha: 0.9);
   }
 }
+.inline {
+  display: flex;
+  justify-content: space-between;
+}
 
 .cl-btn-gray-selected {
   @extend .cl-btn-gray;

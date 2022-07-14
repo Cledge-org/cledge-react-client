@@ -23,6 +23,7 @@ interface DropDownQuestionProps {
   containerStyles?: React.CSSProperties;
   buttonStyles?: React.CSSProperties;
   isForDashboard?: boolean;
+  isForCST?: boolean;
 }
 const defaultProps: DropDownQuestionProps = {
   isConcatenable: false,
@@ -55,6 +56,7 @@ export default function DropDownQuestion({
   isForWaitlist,
   questionTitle,
   isForDashboard,
+  isForCST,
   onChange,
   containerStyles,
   buttonStyles,
@@ -81,7 +83,7 @@ export default function DropDownQuestion({
         return value;
       }
       let prevChosenArr = prevChosen instanceof Array ? prevChosen.slice() : [];
-      //console.log(prevChosenArr);
+      console.log(prevChosenArr);
       if (prevChosenArr.includes(" " + value)) {
         prevChosenArr.splice(prevChosen.indexOf(" " + value));
         onChange(prevChosenArr.map((element) => element.substring(1)));
@@ -119,7 +121,9 @@ export default function DropDownQuestion({
   return (
     <div
       className={
-        !forCalendar && !isForWaitlist
+        isForCST
+          ? "w-100 d-flex flex-column justify-content-evenly"
+          : !forCalendar && !isForWaitlist
           ? "w-100 d-flex flex-column justify-content-evenly pt-5"
           : "w-100 d-flex flex-column justify-content-evenly"
       }
@@ -140,7 +144,7 @@ export default function DropDownQuestion({
       <div ref={wrapperRef} style={{ position: "relative" }}>
         <button
           className={`${styles.dropdownQuestionBtn + " px-3 py-3"} ${
-            isForWaitlist ? "bg-white" : ""
+            isForWaitlist || isForCST ? "bg-white" : ""
           } ${
             isForDashboard ? "py-0 " + styles.bottomBorderPathwayFilter : ""
           }`}
@@ -191,9 +195,12 @@ export default function DropDownQuestion({
             "shadow-sm"
           )}
           style={
-            !forCalendar && !isForWaitlist
+            !forCalendar && !isForWaitlist && !isForCST
               ? { display: isOpen ? "flex" : "none" }
-              : { width: "100%", display: isOpen ? "flex" : "none" }
+              : {
+                  width: "100%",
+                  display: isOpen ? "flex" : "none",
+                }
           }
         >
           {valuesList.map((name) => (

@@ -17,8 +17,6 @@ export default function Layout({ children }) {
   const [loading, setLoading] = useState(true);
   const [header, setHeader] = useState(<Header key_prop="initial" />);
   const asyncUseEffect = async () => {
-    // setLoading(true);
-    //console.log(session?.data?.user?.uid);
     if (session.data?.user?.uid && !store.getState()) {
       const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
         await Promise.all([
@@ -32,7 +30,6 @@ export default function Layout({ children }) {
           pathwaysProgressRes.json(),
           questionResponsesRes.json(),
         ]);
-      //console.log(pathwaysProgressJSON);
       await store.dispatch(
         initialStateAction({
           accountInfo: accountInfoJSON,
@@ -42,7 +39,6 @@ export default function Layout({ children }) {
       );
     }
     if (session.status !== "loading") {
-      //console.log(session);
       setLoading(false);
     }
   };

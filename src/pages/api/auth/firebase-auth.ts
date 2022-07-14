@@ -1,4 +1,3 @@
-import { initializeApp } from "firebase/app";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -14,17 +13,13 @@ import {
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { createUser } from "src/pages/api/create-user";
+import { getFirebaseClientApp } from "src/utils/firebase/getFirebaseApp";
 // import { getAuth as getAdminAuth } from "firebase-admin/auth";
 // import {
 //   getApp,
 //   initializeApp as initializeAdminApp,
 // } from "firebase-admin/app";
 
-const firebaseCreds = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-};
 // const getAdminApp = (appName?: string) => {
 //   try {
 //     return getApp(appName);
@@ -32,8 +27,9 @@ const firebaseCreds = {
 //     return undefined;
 //   }
 // };
-const firebaseApp = initializeApp(firebaseCreds);
-const firebaseAuth = getAuth(firebaseApp);
+// console.error(firebaseCreds);
+
+const firebaseAuth = getAuth(getFirebaseClientApp());
 // const firebaseAdminAuth = getAdminAuth(
 //   getAdminApp(firebaseApp.name) ?? initializeAdminApp(firebaseCreds)
 // );
@@ -55,18 +51,20 @@ class AuthFunctions {
     }
   }
   static async createUser(email: string, password: string, initUserObj) {
-    return await createUserWithEmailAndPassword(
-      firebaseAuth,
-      email,
-      password
-    ).then((res) => {
-      const user = res.user;
-      createUser({
-        ...initUserObj,
-        firebaseId: user.uid,
-        email: email,
+    await createUserWithEmailAndPassword(firebaseAuth, email, password)
+      .then((res) => {
+        const user = res.user;
+        createUser({
+          ...initUserObj,
+          userId: user.uid,
+          email: email,
+        }).catch((err) => {
+          console.error(err);
+        });
+      })
+      .catch((err) => {
+        console.error(err);
       });
-    });
   }
 
   // static async signInGoogle() {
@@ -102,7 +100,7 @@ class AuthFunctions {
   //   // Lookup the user associated with the specified uid
   //   await firebaseAdminAuth.getUser(uid).then((userRecord) => {
   //     // Claims can be accessed on the user record
-  //     //console.log(userRecord.customClaims["admin"]);
+  //     console.log(userRecord.customClaims["admin"]);
   //   });
   //   return true;
   // }
