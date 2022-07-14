@@ -120,6 +120,10 @@ const CollegeDetailPage = () => {
                                     <h3>{data["instituional_category"]}</h3>
                                 </div>
                             </InfoContainer>
+                            {data["mission_statement"] ? <InfoContainer>
+                                <h3>Mission Statement</h3>
+                                <h2>{data["mission_statement"]}</h2>
+                            </InfoContainer> : <></>}
                         </Col>
                         <Col span={16}>
                             <OverviewCard
