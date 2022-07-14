@@ -79,13 +79,13 @@ function CollegeCard(props: CardProps) {
               onClick={() => {
                 console.log(props.data);
                 router.push(
-                  {
-                    pathname: URL,
-                    query: {
-                      data: JSON.stringify(props.data),
+                    {
+                        pathname: URL,
+                        query: {
+                            data: 1,
+                        },
                     },
-                  },
-                  URL
+                    URL
                 );
               }}
               className={
