@@ -2,7 +2,7 @@ import React from "react";
 import "antd/dist/antd.css";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import CollegeCard from "./components/CollegeCard/CollegeCard";
+import CollegeDetailHero from "./components/CollegeDetailHero/CollegeDetailHero";
 import InfoContainer from "./components/InfoContainer/InfoContainer";
 import { Row, Col, Divider } from "antd";
 import Script from "next/script";
@@ -71,15 +71,10 @@ const CollegeDetailPage = () => {
                     <ArrowBackIosNewIcon fontSize="inherit" />
                 </IconButton>
             </BackButton>
-            <Script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></Script>
-            <CollegeCard
+            <CollegeDetailHero
                 title={data.title}
                 location={data.location}
-                img="uw.png"
                 schoolType={data["college_type"]}
-                inState={data["in-state_tuition"]}
-                outState={data["out-state_tuition"]}
-                isDetail
                 tabCallBack={handleChange}
                 tabValue={value}
             />
