@@ -3,6 +3,7 @@ import "antd/dist/antd.css";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import CollegeDetailHero from "./components/CollegeDetailHero/CollegeDetailHero";
+import CollegeCard from "./components/CollegeCard/CollegeCard";
 import InfoContainer from "./components/InfoContainer/InfoContainer";
 import { Row, Col, Divider } from "antd";
 import Script from "next/script";
@@ -15,23 +16,28 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 const CollegeDetailPage = () => {
-    const [value, setValue] = React.useState(0);
-    const router = useRouter();
-    const raw = router.query.data;
-    const data = JSON.parse(raw.toString());
-    console.log(data);
+  const [value, setValue] = React.useState(0);
+  const router = useRouter();
+  const raw = router.query.data;
+  const data = JSON.parse(raw.toString());
+  console.log(data);
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
-    };
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
 
-    const BackButton = styled.div`
-        border-radius: 50%;
-        box-shadow: 0px 0px 22px 9px rgba(0, 0, 0, 0.06);
-        position: absolute;
-        top: 100px;
-        left: 50px;
-    `;
+  const BackButton = styled.div`
+    border-radius: 50%;
+    box-shadow: 0px 0px 22px 9px rgba(0, 0, 0, 0.06);
+    position: sticky;
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    top: 100px;
+    left: 50px;
+    z-index: 100;
+    background: white;
+  `;
 
     function getPercentage(data) {
         if (data) {
@@ -71,10 +77,16 @@ const CollegeDetailPage = () => {
                     <ArrowBackIosNewIcon fontSize="inherit" />
                 </IconButton>
             </BackButton>
-            <CollegeDetailHero
+            <CollegeCard
                 title={data.title}
                 location={data.location}
+                img={
+                    data["img_link"] ? data["img_link"] : data["img_wiki_link"]
+                }
                 schoolType={data["college_type"]}
+                inState={data["in-state_tuition"]}
+                outState={data["out-state_tuition"]}
+                isDetail
                 tabCallBack={handleChange}
                 tabValue={value}
             />
@@ -1050,10 +1062,10 @@ const CollegeDetailPage = () => {
 export default CollegeDetailPage;
 
 const Wrapper = styled.div`
-    & > * {
-        margin: auto;
-        display: block;
-    }
+  & > * {
+    margin: auto;
+    display: block;
+  }
 `;
 
 const CollegeInfoWrapper = styled.div`
@@ -1066,14 +1078,14 @@ const CollegeInfoWrapper = styled.div`
             margin: 0;
         }
 
-        h3 {
-            float: right;
-            margin-left: auto;
-            display: block;
-        }
+  & .inline {
+    p {
+      display: inline-block;
     }
 
-    .ant-divider {
-        margin: 0.5rem 0;
+    h3 {
+      float: right;
+      margin-left: auto;
+      display: block;
     }
 `;

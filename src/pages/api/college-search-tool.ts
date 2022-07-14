@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { SearchClient, AzureKeyCredential } from "@azure/search-documents";
 import dicts from "../../../college-search-tool/assets/cst_result_parse.json";
 import { ObjectSchema } from "yup";
+import { MongoClient } from "mongodb";
 
 // References:
 // https://docs.microsoft.com/en-us/javascript/api/overview/azure/search-documents-readme?view=azure-node-latest
@@ -29,12 +30,15 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
       resolve.status(200).send(collegeMetricResult);
     } else {
       const { searchText, top, skip, filters, searchFields } = req.body;
+
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       const collegeSearchResult = await getCollegeInfo(
         searchText,
         top,
         skip,
         filters,
-        searchFields
+        searchFields,
+        client
       );
       resolve.status(200).send(collegeSearchResult);
     }
@@ -83,7 +87,8 @@ export const getCollegeInfo = (
   top,
   skip,
   filters,
-  searchFields
+  searchFields,
+  client: MongoClient
 ): Promise<Object> => {
   return new Promise(async (res, err) => {
     try {
@@ -97,7 +102,7 @@ export const getCollegeInfo = (
       });
       let output = [];
       for await (const result of searchResults.results) {
-        output.push(formatOutput(result["document"]));
+        output.push(await formatOutput(result["document"], client));
       }
       res(output);
     } catch (e) {
@@ -136,8 +141,16 @@ const createFilterExpression = (filters) => {
   return filterExpressions.join(" and ");
 };
 
-const formatOutput = (college) => {
+const formatOutput = async (college, client: MongoClient) => {
+  const image_db = client.db("images");
+  const imageRes = await image_db
+    .collection("college_images")
+    .findOne({ INSTID: college["UNITID"] });
   const output = {
+    img_title: imageRes["img_title"],
+    img_wiki_link: imageRes["img_wiki_link"],
+    img_link: imageRes["img_link"],
+    img_description: imageRes["img_description"],
     title: college["INSTNM"],
     region: college["REGION"],
     institution_url: college["INSTURL"],
