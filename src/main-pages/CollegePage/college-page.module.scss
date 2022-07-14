@@ -1,0 +1,14 @@
+@use "src/common/styles" as *;
+
+.searchInput {
+  border: none;
+  border-radius: 0;
+  width: 90%;
+  &:hover,
+  &:active:hover,
+  &:focus {
+    outline: none;
+    border-radius: 0;
+    border: none;
+  }
+}
