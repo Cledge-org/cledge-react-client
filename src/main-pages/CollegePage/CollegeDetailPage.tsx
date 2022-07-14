@@ -41,36 +41,36 @@ const CollegeDetailPage = () => {
         background: white;
     `;
 
-  function getPercentage(data) {
-    if (data) {
-      return Math.round(data * 100) + "%";
-    } else return "No Data";
-  }
-
-  function getAmount(data) {
-    if (data) {
-      return "$ " + data.toLocaleString("en-US");
-    } else return "No Data";
-  }
-
-  function getYesNo(data, word) {
-    if (data) {
-      if (data == word) {
-        return <CheckCircleIcon style={{ color: "#2651ED" }} />;
-      } else {
-        return <CancelIcon style={{ color: "#ef3f2b" }} />;
-      }
-    } else {
-      return "No Data";
+    function getPercentage(data) {
+        if (data) {
+            return Math.round(data * 100) + "%";
+        } else return "No Data";
     }
-  }
 
-  function getNumber(data) {
-    if (data) {
-      return data.toLocaleString("en-US");
+    function getAmount(data) {
+        if (data) {
+            return "$ " + data.toLocaleString("en-US");
+        } else return "No Data";
     }
-    return "No data";
-  }
+
+    function getYesNo(data, word) {
+        if (data) {
+            if (data == word) {
+                return <CheckCircleIcon style={{ color: "#2651ED" }} />;
+            } else {
+                return <CancelIcon style={{ color: "#ef3f2b" }} />;
+            }
+        } else {
+            return "No Data";
+        }
+    }
+
+    function getNumber(data) {
+        if (data) {
+            return data.toLocaleString("en-US");
+        }
+        return "No data";
+    }
 
     const ethnicityData = [
         data["student_ethnicity_ratio"]["asian"] +
@@ -357,120 +357,154 @@ const CollegeDetailPage = () => {
                                         {data["applicants_per_year"]}
                                     </h3>
                                 </div> */}
-              </InfoContainer>
-              <InfoContainer>
-                <h1>SAT Score Data (Admitted Students)</h1>
-                <DataRow
-                  colNum={3}
-                  sub1="Section"
-                  sub2="25th percentile"
-                  sub3="75th percentile"
-                />
-                <DataRow
-                  colNum={3}
-                  sub1="Overall average"
-                  sub2={
-                    data["sat/act_score"]["sat_critical_reading_25"] +
-                    data["sat/act_score"]["sat_math_25"] +
-                    data["sat/act_score"]["sat_writing_25"]
-                  }
-                  sub3={
-                    data["sat/act_score"]["sat_critical_reading_75"] +
-                    data["sat/act_score"]["sat_math_75"] +
-                    data["sat/act_score"]["sat_writing_75"]
-                  }
-                  type="content"
-                />
-                <Divider />
-                <DataRow
-                  colNum={3}
-                  sub1="Reading"
-                  sub2={data["sat/act_score"]["sat_critical_reading_25"]}
-                  sub3={data["sat/act_score"]["sat_critical_reading_75"]}
-                  type="content"
-                />
-                <Divider />
-                <DataRow
-                  colNum={3}
-                  sub1="Math"
-                  sub2={data["sat/act_score"]["sat_math_25"]}
-                  sub3={data["sat/act_score"]["sat_math_75"]}
-                  type="content"
-                />
-                <Divider />
-                <DataRow
-                  colNum={3}
-                  sub1="Writing"
-                  sub2={data["sat/act_score"]["sat_writing_25"]}
-                  sub3={data["sat/act_score"]["sat_writing_75"]}
-                  type="content"
-                />
-              </InfoContainer>
-              <InfoContainer>
-                <h1>ACT Score Data (Admitted Students)</h1>
-                <DataRow
-                  colNum={3}
-                  sub1="Section"
-                  sub2="25th percentile"
-                  sub3="75th percentile"
-                />
-                <DataRow
-                  colNum={3}
-                  sub1="Overall average"
-                  sub2={data["sat/act_score"]["act_cumulative_25"]}
-                  sub3={data["sat/act_score"]["act_cumulative_75"]}
-                  type="content"
-                />
-              </InfoContainer>
-            </Col>
-            <Col span={9}>
-              <InfoContainer>
-                <h1>Admission Rate</h1>
-                <div>
-                  <h2>Overall acceptance rate</h2>
-                  <h3>
-                    {Math.round(
-                      data["acceptance_rate"]["acceptance_rate_total"] * 100
-                    ) + "%"}
-                  </h3>
-                </div>
-                <div>
-                  <h2>Female acceptance rate</h2>
-                  <h3>
-                    {Math.round(
-                      data["acceptance_rate"]["acceptance_rate_women"] * 100
-                    ) + "%"}
-                  </h3>
-                </div>
-                <div>
-                  <h2>Male acceptance rate</h2>
-                  <h3>
-                    {Math.round(
-                      data["acceptance_rate"]["acceptance_rate_men"] * 100
-                    ) + "%"}
-                  </h3>
-                </div>
-              </InfoContainer>
-              <InfoContainer>
-                <h1>Commit Rate</h1>
-                <div>
-                  <h2>Female commit rate</h2>
-                  <h3>
-                    {Math.round(
-                      data["acceptance_rate"]["acceptance_rate_women"] * 100
-                    ) + "%"}
-                  </h3>
-                </div>
-                <div>
-                  <h2>Male commit rate</h2>
-                  <h3>
-                    {Math.round(
-                      data["acceptance_rate"]["acceptance_rate_men"] * 100
-                    ) + "%"}
-                  </h3>
-                </div>
-              </InfoContainer>
-              {/* TODO No enrollment rate data
+                            </InfoContainer>
+                            <InfoContainer>
+                                <h1>SAT Score Data (Admitted Students)</h1>
+                                <DataRow
+                                    colNum={3}
+                                    sub1="Section"
+                                    sub2="25th percentile"
+                                    sub3="75th percentile"
+                                />
+                                <DataRow
+                                    colNum={3}
+                                    sub1="Overall average"
+                                    sub2={
+                                        data["sat/act_score"][
+                                            "sat_critical_reading_25"
+                                        ] +
+                                        data["sat/act_score"]["sat_math_25"] +
+                                        data["sat/act_score"]["sat_writing_25"]
+                                    }
+                                    sub3={
+                                        data["sat/act_score"][
+                                            "sat_critical_reading_75"
+                                        ] +
+                                        data["sat/act_score"]["sat_math_75"] +
+                                        data["sat/act_score"]["sat_writing_75"]
+                                    }
+                                    type="content"
+                                />
+                                <Divider />
+                                <DataRow
+                                    colNum={3}
+                                    sub1="Reading"
+                                    sub2={
+                                        data["sat/act_score"][
+                                            "sat_critical_reading_25"
+                                        ]
+                                    }
+                                    sub3={
+                                        data["sat/act_score"][
+                                            "sat_critical_reading_75"
+                                        ]
+                                    }
+                                    type="content"
+                                />
+                                <Divider />
+                                <DataRow
+                                    colNum={3}
+                                    sub1="Math"
+                                    sub2={data["sat/act_score"]["sat_math_25"]}
+                                    sub3={data["sat/act_score"]["sat_math_75"]}
+                                    type="content"
+                                />
+                                <Divider />
+                                <DataRow
+                                    colNum={3}
+                                    sub1="Writing"
+                                    sub2={
+                                        data["sat/act_score"]["sat_writing_25"]
+                                    }
+                                    sub3={
+                                        data["sat/act_score"]["sat_writing_75"]
+                                    }
+                                    type="content"
+                                />
+                            </InfoContainer>
+                            <InfoContainer>
+                                <h1>ACT Score Data (Admitted Students)</h1>
+                                <DataRow
+                                    colNum={3}
+                                    sub1="Section"
+                                    sub2="25th percentile"
+                                    sub3="75th percentile"
+                                />
+                                <DataRow
+                                    colNum={3}
+                                    sub1="Overall average"
+                                    sub2={
+                                        data["sat/act_score"][
+                                            "act_cumulative_25"
+                                        ]
+                                    }
+                                    sub3={
+                                        data["sat/act_score"][
+                                            "act_cumulative_75"
+                                        ]
+                                    }
+                                    type="content"
+                                />
+                            </InfoContainer>
+                        </Col>
+                        <Col span={9}>
+                            <InfoContainer>
+                                <h1>Admission Rate</h1>
+                                <div>
+                                    <h2>Overall acceptance rate</h2>
+                                    <h3>
+                                        {Math.round(
+                                            data["acceptance_rate"][
+                                                "acceptance_rate_total"
+                                            ] * 100
+                                        ) + "%"}
+                                    </h3>
+                                </div>
+                                <div>
+                                    <h2>Female acceptance rate</h2>
+                                    <h3>
+                                        {Math.round(
+                                            data["acceptance_rate"][
+                                                "acceptance_rate_women"
+                                            ] * 100
+                                        ) + "%"}
+                                    </h3>
+                                </div>
+                                <div>
+                                    <h2>Male acceptance rate</h2>
+                                    <h3>
+                                        {Math.round(
+                                            data["acceptance_rate"][
+                                                "acceptance_rate_men"
+                                            ] * 100
+                                        ) + "%"}
+                                    </h3>
+                                </div>
+                            </InfoContainer>
+                            <InfoContainer>
+                                <h1>Commit Rate</h1>
+                                <div>
+                                    <h2>Female commit rate</h2>
+                                    <h3>
+                                        {Math.round(
+                                            data["acceptance_rate"][
+                                                "acceptance_rate_women"
+                                            ] * 100
+                                        ) + "%"}
+                                    </h3>
+                                </div>
+                                <div>
+                                    <h2>Male commit rate</h2>
+                                    <h3>
+                                        {Math.round(
+                                            data["acceptance_rate"][
+                                                "acceptance_rate_men"
+                                            ] * 100
+                                        ) + "%"}
+                                    </h3>
+                                </div>
+                            </InfoContainer>
+                            {/* TODO No enrollment rate data
                             <InfoContainer>
                                 <h1>Enrollment Rate</h1>
                                 <div>
@@ -482,32 +516,38 @@ const CollegeDetailPage = () => {
                                     <h3>{data["applicants_per_year"]}</h3>
                                 </div>
                             </InfoContainer> */}
-            </Col>
-          </Row>
-        ) : value == 2 ? (
-          <Row gutter={[16, 16]} justify="space-evenly">
-            <Col span={12}>
-              <InfoContainer>
-                <h1>Academic Statistics</h1>
-                <div className="inline">
-                  <p className="cl-dark-text">4-year graduation rate</p>
-                  <h3 className="cl-dark-text">
-                    {data["4_year_graduation_rate"] * 100 + "%"}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">6-year graduation rate</p>
-                  <h3 className="cl-dark-text">
-                    {data["6_year_graduation_rate"] * 100 + "%"}
-                  </h3>
-                </div>
-              </InfoContainer>
-            </Col>
-            <Col span={12}>
-              <InfoContainer>
-                <h1>Academic Offerings</h1>
-                {/* TODO No Data Found
+                        </Col>
+                    </Row>
+                ) : value == 2 ? (
+                    <Row gutter={[16, 16]} justify="space-evenly">
+                        <Col span={12}>
+                            <InfoContainer>
+                                <h1>Academic Statistics</h1>
+                                <div className="inline">
+                                    <p className="cl-dark-text">
+                                        4-year graduation rate
+                                    </p>
+                                    <h3 className="cl-dark-text">
+                                        {data["4_year_graduation_rate"] * 100 +
+                                            "%"}
+                                    </h3>
+                                </div>
+                                <Divider />
+                                <div className="inline">
+                                    <p className="cl-dark-text">
+                                        6-year graduation rate
+                                    </p>
+                                    <h3 className="cl-dark-text">
+                                        {data["6_year_graduation_rate"] * 100 +
+                                            "%"}
+                                    </h3>
+                                </div>
+                            </InfoContainer>
+                        </Col>
+                        <Col span={12}>
+                            <InfoContainer>
+                                <h1>Academic Offerings</h1>
+                                {/* TODO No Data Found
                                  <div className="inline">
                                     <p className="cl-dark-text">Study abroad</p>
                                     <h3 className="cl-dark-text">
@@ -515,58 +555,76 @@ const CollegeDetailPage = () => {
                                     </h3>
                                 </div>
                                 <Divider /> */}
-                <div className="inline">
-                  <p className="cl-dark-text">ROTC</p>
-                  <h3 className="cl-dark-text">
-                    {data["offer_rotc"] == "Yes" ? (
-                      <CheckCircleIcon style={{ color: "#2651ED" }} />
-                    ) : (
-                      <CancelIcon style={{ color: "#ef3f2b" }} />
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Land grant institution</p>
-                  <h3 className="cl-dark-text">
-                    {data["land_grant_institution?"] ===
-                    "Land Grant Institution" ? (
-                      <CheckCircleIcon style={{ color: "#2651ED" }} />
-                    ) : (
-                      <CancelIcon style={{ color: "#ef3f2b" }} />
-                    )}
-                  </h3>
-                </div>
-              </InfoContainer>
-            </Col>
-          </Row>
-        ) : value == 3 ? (
-          <Row gutter={[16, 16]}>
-            <Col span={24}>
-              <InfoContainer>
-                <h1>Total Costs</h1>
-                <Row>
-                  <Col span={8}>
-                    <h2>In-State Tuition</h2>
-                    <h3>{getAmount(data["in-state_tuition"])}</h3>
-                  </Col>
-                  <Col span={8}>
-                    <h2>Out-Of-State Tuition</h2>
-                    <h3>{getAmount(data["out-state_tuition"])}</h3>
-                  </Col>
-                  <Col span={8}>
-                    <h2>Average Room and Board Cost</h2>
-                    <h3>
-                      {data["avg_cost_room_and_board"]
-                        ? "$ " +
-                          data["avg_cost_room_and_board"].toLocaleString(
-                            "en-US"
-                          )
-                        : "No Data"}
-                    </h3>
-                  </Col>
-                </Row>
-                {/* TODO No Data
+                                <div className="inline">
+                                    <p className="cl-dark-text">ROTC</p>
+                                    <h3 className="cl-dark-text">
+                                        {data["offer_rotc"] == "Yes" ? (
+                                            <CheckCircleIcon
+                                                style={{ color: "#2651ED" }}
+                                            />
+                                        ) : (
+                                            <CancelIcon
+                                                style={{ color: "#ef3f2b" }}
+                                            />
+                                        )}
+                                    </h3>
+                                </div>
+                                <Divider />
+                                <div className="inline">
+                                    <p className="cl-dark-text">
+                                        Land grant institution
+                                    </p>
+                                    <h3 className="cl-dark-text">
+                                        {data["land_grant_institution?"] ===
+                                        "Land Grant Institution" ? (
+                                            <CheckCircleIcon
+                                                style={{ color: "#2651ED" }}
+                                            />
+                                        ) : (
+                                            <CancelIcon
+                                                style={{ color: "#ef3f2b" }}
+                                            />
+                                        )}
+                                    </h3>
+                                </div>
+                            </InfoContainer>
+                        </Col>
+                    </Row>
+                ) : value == 3 ? (
+                    <Row gutter={[16, 16]}>
+                        <Col span={24}>
+                            <InfoContainer>
+                                <h1>Total Costs</h1>
+                                <Row>
+                                    <Col span={8}>
+                                        <h2>In-State Tuition</h2>
+                                        <h3>
+                                            {getAmount(
+                                                data["in-state_tuition"]
+                                            )}
+                                        </h3>
+                                    </Col>
+                                    <Col span={8}>
+                                        <h2>Out-Of-State Tuition</h2>
+                                        <h3>
+                                            {getAmount(
+                                                data["out-state_tuition"]
+                                            )}
+                                        </h3>
+                                    </Col>
+                                    <Col span={8}>
+                                        <h2>Average Room and Board Cost</h2>
+                                        <h3>
+                                            {data["avg_cost_room_and_board"]
+                                                ? "$ " +
+                                                  data[
+                                                      "avg_cost_room_and_board"
+                                                  ].toLocaleString("en-US")
+                                                : "No Data"}
+                                        </h3>
+                                    </Col>
+                                </Row>
+                                {/* TODO No Data
                                  <Row>
                                     <Col span={8}>
                                         <h2>Total In-State Tuition</h2>
@@ -1006,7 +1064,7 @@ const CollegeDetailPage = () => {
                                             plugins: {
                                                 legend: {
                                                     position: "bottom",
-                                                }
+                                                },
                                             },
                                         }}
                                     />
@@ -1103,17 +1161,12 @@ const CollegeInfoWrapper = styled.div`
     & .inline {
         p {
             display: inline-block;
-            margin: 0;
         }
 
-  & .inline {
-    p {
-      display: inline-block;
-    }
-
-    h3 {
-      float: right;
-      margin-left: auto;
-      display: block;
+        h3 {
+            float: right;
+            margin-left: auto;
+            display: block;
+        }
     }
 `;
