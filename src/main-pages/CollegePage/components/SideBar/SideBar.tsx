@@ -4,7 +4,7 @@ import styled from "styled-components";
 import InputAdornment from "@mui/material/InputAdornment";
 import CheckBoxFilter from "src/main-pages/CollegePage/components/CheckBoxFilter/CheckBoxFilter";
 import MinMaxFilter from "src/main-pages/CollegePage/components/MinMaxFilter/MinMaxFilter";
-import dicts from "../../../../college-search-tool/assets/cst_result_parse.json";
+import dicts from "../../../../../college-search-tool/assets/cst_result_parse.json";
 
 const { SubMenu } = Menu;
 const SiderWrapper = styled.div`

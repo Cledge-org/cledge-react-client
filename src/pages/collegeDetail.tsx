@@ -1,6 +1,6 @@
-import CollegeDetailPage from "../main-pages/CollegePage/CollegeDetailPage";
+import CollegeDetailPage from "../main-pages/CollegeDetailPage/CollegeDetailPage";
 
 const CollegeDetail = () => {
-    return <CollegeDetailPage />;
+  return <CollegeDetailPage />;
 };
 export default CollegeDetail;
