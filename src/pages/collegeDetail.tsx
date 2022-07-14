@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+import React from "react";
 import CollegeDetailPage from "../main-pages/CollegePage/CollegeDetailPage";
 
 export async function getServerSideProps(context) {
@@ -7,6 +9,14 @@ export async function getServerSideProps(context) {
 }
 
 const CollegeDetail = (props) => {
+      const router = useRouter();
+      React.useEffect(() => {
+          if (router.isReady) {
+              // Code using query
+              console.log(router.query);
+          }
+      }, [router.isReady]);
+
     return <CollegeDetailPage data={props} />;
 };
 export default CollegeDetail;
