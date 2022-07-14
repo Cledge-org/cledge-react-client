@@ -57,6 +57,13 @@ const CollegeDetailPage = () => {
         }
     }
 
+    function getNumber(data) {
+        if (data) {
+            return data.toLocaleString("en-US");
+        }
+        return "No data";
+    }
+
     return (
         <Wrapper>
             <BackButton onClick={() => router.push(`/college/`)}>
@@ -155,33 +162,23 @@ const CollegeDetailPage = () => {
                                 elNum={4}
                                 title="Finance"
                                 sub1="Average resident cost of living"
-                                sub1data={
-                                    "$ " +
+                                sub1data={getAmount(
                                     data[
                                         "estimate_cost_in_state_living_off_campus"
-                                    ].toLocaleString("en-US")
-                                }
+                                    ]
+                                )}
                                 sub2="In state tuition"
-                                sub2data={
-                                    "$ " +
-                                    data[
-                                        "estimate_tuition_in_state"
-                                    ].toLocaleString("en-US")
-                                }
+                                sub2data={getAmount(
+                                    data["estimate_tuition_in_state"]
+                                )}
                                 sub3="Average non-resident total cost"
-                                sub3data={
-                                    "$ " +
+                                sub3data={getAmount(
                                     data[
                                         "estimate_cost_out_state_living_off_campus"
-                                    ].toLocaleString("en-US")
-                                }
+                                    ]
+                                )}
                                 sub4="Out of state tuition"
-                                sub4data={
-                                    "$ " +
-                                    data["out-state_tuition"].toLocaleString(
-                                        "en-US"
-                                    )
-                                }
+                                sub4data={getAmount(data["out-state_tuition"])}
                             />
                             <OverviewCard
                                 isOverview={true}
@@ -524,19 +521,17 @@ const CollegeDetailPage = () => {
                                     <Col span={8}>
                                         <h2>In-State Tuition</h2>
                                         <h3>
-                                            {"$ " +
-                                                data[
-                                                    "in-state_tuition"
-                                                ].toLocaleString("en-US")}
+                                            {getAmount(
+                                                data["in-state_tuition"]
+                                            )}
                                         </h3>
                                     </Col>
                                     <Col span={8}>
                                         <h2>Out-Of-State Tuition</h2>
                                         <h3>
-                                            {"$ " +
-                                                data[
-                                                    "out-state_tuition"
-                                                ].toLocaleString("en-US")}
+                                            {getAmount(
+                                                data["out-state_tuition"]
+                                            )}
                                         </h3>
                                     </Col>
                                     <Col span={8}>
@@ -880,34 +875,59 @@ const CollegeDetailPage = () => {
                                 elNum={10}
                                 title="Student Body Statistics"
                                 sub1="Total Undergraduate Enrollment"
-                                sub1data={
-                                    data["student_faculty_ratio"] + " : 1"
-                                }
+                                sub1data={getNumber(
+                                    data["enrollment"]["total_undergrad"]
+                                )}
                                 sub2="Enrolled First-Year Students"
-                                sub2data={getPercentage("a")}
+                                sub2data={getNumber(
+                                    data["enrollment"]["first_year_students"]
+                                )}
                                 sub3="Undergradate Students In-State"
                                 sub3data={getPercentage(
                                     data["percent_undergrad_in_state"]
                                 )}
                                 sub4="Retention Rate"
-                                sub4data={
-                                    data["enrollment"]["total_undergrad"] +
-                                    data["enrollment"]["total_grad"]
-                                }
+                                sub4data={getPercentage(
+                                    data["retention_rate_4_years"]
+                                )}
                                 sub5="Undergradate Students Out-State"
                                 sub5data={getPercentage(
-                                    data["percent_undergrad_outh_state"]
+                                    data["percent_undergrad_out_state"]
                                 )}
                                 sub6="4-Year Graduation Rate"
-                                sub6data={1}
+                                sub6data={getPercentage(
+                                    data["4_year_graduation_rate"]
+                                )}
                                 sub7="Percent First-Gen Students"
-                                sub7data={1}
+                                sub7data={getPercentage(
+                                    data["percent_first_gen"]
+                                )}
                                 sub8="6-Year Graduation Rate"
-                                sub8data={1}
+                                sub8data={getPercentage(
+                                    data["6_year_graduation_rate"]
+                                )}
                                 sub9="Student Faculty Ratio"
-                                sub9data="1"
+                                sub9data={
+                                    data["student_faculty_ratio"] + " : 1"
+                                }
                                 sub10="Admission Policy"
-                                sub10data="1"
+                                sub10data={
+                                    data["admission policy"]
+                                        ? data["admission policy"][
+                                              "coeducational"
+                                          ]
+                                            ? "Co-Ed"
+                                            : data["admission policy"][
+                                                  "men_only"
+                                              ]
+                                            ? "Men Only"
+                                            : data["admission policy"][
+                                                  "women_only"
+                                              ]
+                                            ? "Women Only"
+                                            : "Co-Ed"
+                                        : "No Data"
+                                }
                             />
                             <InfoContainer>
                                 <h1>Faculty Statistics</h1>
@@ -916,9 +936,9 @@ const CollegeDetailPage = () => {
                                         Total Instructional Staff
                                     </p>
                                     <h3 className="cl-dark-text">
-                                        {data[
-                                            "in-state_tuition"
-                                        ].toLocaleString("en-US")}
+                                        {getNumber(
+                                            data["instructional_staff"]["total"]
+                                        )}
                                     </h3>
                                 </div>
                                 <Divider />
@@ -927,9 +947,9 @@ const CollegeDetailPage = () => {
                                         Total Male Staff
                                     </p>
                                     <h3 className="cl-dark-text">
-                                        {data[
-                                            "in-state_tuition"
-                                        ].toLocaleString("en-US")}
+                                        {getNumber(
+                                            data["instructional_staff"]["men"]
+                                        )}
                                     </h3>
                                 </div>
                                 <Divider />
@@ -938,9 +958,9 @@ const CollegeDetailPage = () => {
                                         Total Female Staff
                                     </p>
                                     <h3 className="cl-dark-text">
-                                        {data[
-                                            "in-state_tuition"
-                                        ].toLocaleString("en-US")}
+                                        {getNumber(
+                                            data["instructional_staff"]["women"]
+                                        )}
                                     </h3>
                                 </div>
                                 <Divider />
@@ -949,9 +969,9 @@ const CollegeDetailPage = () => {
                                         Total Research Staff
                                     </p>
                                     <h3 className="cl-dark-text">
-                                        {data[
-                                            "in-state_tuition"
-                                        ].toLocaleString("en-US")}
+                                        {getNumber(
+                                            data["research_staff_count"]
+                                        )}
                                     </h3>
                                 </div>
                             </InfoContainer>
@@ -962,9 +982,10 @@ const CollegeDetailPage = () => {
                                 <div className="inline">
                                     <p className="cl-dark-text">NCAA Member</p>
                                     <h3 className="cl-dark-text">
-                                        {data[
-                                            "in-state_tuition"
-                                        ].toLocaleString("en-US")}
+                                        {getYesNo(
+                                            data["ncaa"]["member_ncaa"],
+                                            "Yes"
+                                        )}
                                     </h3>
                                 </div>
                                 <Divider />
@@ -973,9 +994,10 @@ const CollegeDetailPage = () => {
                                         NCAA for Football
                                     </p>
                                     <h3 className="cl-dark-text">
-                                        {data[
-                                            "in-state_tuition"
-                                        ].toLocaleString("en-US")}
+                                        {getYesNo(
+                                            data["ncaa"]["ncaa_football"],
+                                            "Yes"
+                                        )}
                                     </h3>
                                 </div>
                                 <Divider />
@@ -984,9 +1006,10 @@ const CollegeDetailPage = () => {
                                         NCAA for Basketball
                                     </p>
                                     <h3 className="cl-dark-text">
-                                        {data[
-                                            "in-state_tuition"
-                                        ].toLocaleString("en-US")}
+                                        {getYesNo(
+                                            data["ncaa"]["ncaa_basketball"],
+                                            "Yes"
+                                        )}
                                     </h3>
                                 </div>
                                 <Divider />
@@ -995,9 +1018,12 @@ const CollegeDetailPage = () => {
                                         NCAA for Track
                                     </p>
                                     <h3 className="cl-dark-text">
-                                        {data[
-                                            "in-state_tuition"
-                                        ].toLocaleString("en-US")}
+                                        {getYesNo(
+                                            data["ncaa"][
+                                                "ncaa_cross_country_track"
+                                            ],
+                                            "Yes"
+                                        )}
                                     </h3>
                                 </div>
                                 <Divider />
@@ -1006,9 +1032,10 @@ const CollegeDetailPage = () => {
                                         NCAA for Baseball
                                     </p>
                                     <h3 className="cl-dark-text">
-                                        {data[
-                                            "in-state_tuition"
-                                        ].toLocaleString("en-US")}
+                                        {getYesNo(
+                                            data["ncaa"]["ncaa_baseball"],
+                                            "Yes"
+                                        )}
                                     </h3>
                                 </div>
                                 <Divider />
