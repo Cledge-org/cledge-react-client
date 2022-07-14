@@ -14,30 +14,32 @@ import OverviewCard from "src/main-pages/CollegePage/components/OverviewCard";
 import DataRow from "./components/DataRow/DataRow";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { Doughnut } from "react-chartjs-2";
+import "chart.js/auto";
 
 const CollegeDetailPage = () => {
-  const [value, setValue] = React.useState(0);
-  const router = useRouter();
-  const raw = router.query.data;
-  const data = JSON.parse(raw.toString());
-  console.log(data);
+    const [value, setValue] = React.useState(0);
+    const router = useRouter();
+    const raw = router.query.data;
+    const data = JSON.parse(raw.toString());
+    console.log(data);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+    };
 
-  const BackButton = styled.div`
-    border-radius: 50%;
-    box-shadow: 0px 0px 22px 9px rgba(0, 0, 0, 0.06);
-    position: sticky;
-    width: 50px;
-    height: 50px;
-    margin: 0;
-    top: 100px;
-    left: 50px;
-    z-index: 100;
-    background: white;
-  `;
+    const BackButton = styled.div`
+        border-radius: 50%;
+        box-shadow: 0px 0px 22px 9px rgba(0, 0, 0, 0.06);
+        position: sticky;
+        width: 50px;
+        height: 50px;
+        margin: 0;
+        top: 100px;
+        left: 50px;
+        z-index: 100;
+        background: white;
+    `;
 
     function getPercentage(data) {
         if (data) {
@@ -69,6 +71,67 @@ const CollegeDetailPage = () => {
         }
         return "No data";
     }
+
+    const ethnicityData = [
+        data["student_ethnicity_ratio"]["asian"] +
+            data["student_ethnicity_ratio"][
+                "native_hawaiian_or_pacific_islander"
+            ],
+        data["student_ethnicity_ratio"]["black_african_american"],
+        data["student_ethnicity_ratio"]["hispanic_or_latino"],
+        data["student_ethnicity_ratio"]["american_indian_or_alaska_native"],
+        data["student_ethnicity_ratio"]["unknown"] +
+            data["student_ethnicity_ratio"]["non_resident_aliens"] +
+            data["student_ethnicity_ratio"]["two_or_more_races"],
+        data["student_ethnicity_ratio"]["white"],
+    ];
+
+    const chartData = {
+        labels: [
+            "Asian and Pacific Islander",
+            "Black",
+            "Hispanic",
+            "Native American",
+            "Other",
+            "White",
+        ],
+        datasets: [
+            {
+                label: "# of Votes",
+                data: ethnicityData,
+                backgroundColor: [
+                    "rgba(255, 99, 132, 1)",
+                    "rgba(255, 159, 64, 1)",
+                    "rgba(255, 206, 86, 1)",
+                    "rgba(75, 192, 192, 1)",
+                    "rgba(153, 102, 255, 1)",
+                    "rgba(54, 162, 235, 1)",
+                ],
+                borderColor: "white",
+                borderWidth: 1,
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            let label = context.label;
+                            let value = context.formattedValue;
+
+                            if (!label) label = "Unknown";
+
+                            let sum = 0;
+                            let dataArr = context.chart.data.datasets[0].data;
+                            dataArr.map((data) => {
+                                sum += Number(data);
+                            });
+
+                            let percentage =
+                                ((value * 100) / sum).toFixed(2) + "%";
+                            return label + ": " + percentage;
+                        },
+                    },
+                },
+            },
+        ],
+    };
 
     return (
         <Wrapper>
@@ -120,10 +183,14 @@ const CollegeDetailPage = () => {
                                     <h3>{data["instituional_category"]}</h3>
                                 </div>
                             </InfoContainer>
-                            {data["mission_statement"] ? <InfoContainer>
-                                <h3>Mission Statement</h3>
-                                <h2>{data["mission_statement"]}</h2>
-                            </InfoContainer> : <></>}
+                            {data["mission_statement"] ? (
+                                <InfoContainer>
+                                    <h3>Mission Statement</h3>
+                                    <h2>{data["mission_statement"]}</h2>
+                                </InfoContainer>
+                            ) : (
+                                <></>
+                            )}
                         </Col>
                         <Col span={16}>
                             <OverviewCard
@@ -989,6 +1056,21 @@ const CollegeDetailPage = () => {
                         </Col>
                         <Col span={9}>
                             <InfoContainer>
+                                <h1>Student Composition</h1>
+                                <div className="chart">
+                                    <Doughnut
+                                        data={chartData}
+                                        options={{
+                                            plugins: {
+                                                legend: {
+                                                    position: "bottom",
+                                                }
+                                            },
+                                        }}
+                                    />
+                                </div>
+                            </InfoContainer>
+                            <InfoContainer>
                                 <h1>Atheletics</h1>
                                 <div className="inline">
                                     <p className="cl-dark-text">NCAA Member</p>
@@ -1066,10 +1148,10 @@ const CollegeDetailPage = () => {
 export default CollegeDetailPage;
 
 const Wrapper = styled.div`
-  & > * {
-    margin: auto;
-    display: block;
-  }
+    & > * {
+        margin: auto;
+        display: block;
+    }
 `;
 
 const CollegeInfoWrapper = styled.div`
