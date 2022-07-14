@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "antd/dist/antd.css";
 import { Layout, Row, Col, Input } from "antd";
-import SideBar from "./components/SideBar";
+import SideBar from "./components/SideBar/SideBar";
 import CollegeCard from "./components/CollegeCard/CollegeCard";
 import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import styles from "./college-page.module.scss";
+import classNames from "classnames";
 
 const axios = require("axios").default;
 const { Search } = Input;
@@ -50,11 +52,14 @@ const College = () => {
     filters: {},
     searchFields: ["INSTNM"],
   });
+
   function handleSearch(e) {
+    e.preventDefault();
+    e.stopPropagation();
     setPrevRequest(requestData);
     setRequest({
       ...requestData,
-      searchText: e.target.value ? e.target.value : "*",
+      searchText: searchText ? searchText : "*",
     });
   }
 
@@ -191,39 +196,44 @@ const College = () => {
             overflowY: "scroll",
             height: "calc(100vh - 59px)",
           }}
+          className="d-flex flex-column align-items-center"
         >
-          <Row className="searchWrapper justify-content-evenly align-items-end">
-            <div className="searchBox" style={{ width: "30%" }}>
-              <Input
-                placeholder="Search College"
+          <Row
+            className="searchWrapper justify-content-between align-items-end"
+            style={{ width: "85%" }}
+          >
+            <form
+              id="search-form"
+              onSubmit={handleSearch}
+              className="searchBox d-flex flex-row align-items-center"
+              style={{
+                width: "30%",
+                borderRadius: "10px",
+                backgroundColor: "white",
+                overflow: "hidden",
+              }}
+            >
+              <input
+                className={classNames(styles.searchInput, "py-3 px-3")}
                 onChange={(e) => {
                   setSearchText(e.target.value);
                 }}
-                onPressEnter={handleSearch}
-                className="py-2"
-                style={{ borderRadius: "10px", fontSize: "20px" }}
-                suffix={
-                  <button
-                    onClick={() => {
-                      setPrevRequest(requestData);
-                      setRequest({
-                        ...requestData,
-                        searchText: searchText ? searchText : "*",
-                      });
-                    }}
-                    className="w-100 h-100"
-                    style={{
-                      backgroundColor: "white",
-                      outline: "none",
-                      border: "none",
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faSearch} />
-                  </button>
-                }
-                // style={{ width: auto }}
+                placeholder="Search College"
               />
-            </div>
+              <button
+                form="search-form"
+                type="submit"
+                style={{
+                  height: "100%",
+                  width: "10%",
+                  backgroundColor: "white",
+                  outline: "none",
+                  border: "none",
+                }}
+              >
+                <FontAwesomeIcon icon={faSearch} />
+              </button>
+            </form>
             <div
               className="dropdown w-20 input d-flex flex-row align-items-center justify-content-space-between"
               style={{ width: "420px" }}
@@ -253,9 +263,12 @@ const College = () => {
               />
             </div>
           </Row>
-          <CardsWrapper>
+          <CardsWrapper
+            className="d-flex flex-rown align-items-center flex-wrap"
+            style={{ width: "100%", maxWidth: "100%" }}
+          >
             {isLoading
-              ? new Array(10).fill(0).map(() => {
+              ? new Array(12).fill(0).map(() => {
                   return (
                     <CollegeCard
                       isLoading
@@ -290,8 +303,10 @@ const College = () => {
                     />
                   );
                 })}
+          </CardsWrapper>
+          <div className="w-100 center-child pb-3">
             <button
-              className="cl-btn-blue"
+              className="cl-btn-blue align-self-center"
               onClick={() => {
                 setPrevRequest(requestData);
                 setRequest({
@@ -303,7 +318,7 @@ const College = () => {
             >
               Load More
             </button>
-          </CardsWrapper>
+          </div>
         </Col>
       </Row>
     </Layout>
