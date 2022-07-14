@@ -120,11 +120,11 @@ export default function Header({ key_prop }: { key_prop: string }) {
                   <span className={`${colors}`}>Metrics</span>
                 </a>
               </Link> */}
-              <Link href="/college">
+              {/* <Link href="/college">
                 <a className="nav-link" style={{ fontWeight: 600 }}>
                   <span className={`${colors}`}>College Search Tool</span>
                 </a>
-              </Link>
+              </Link> */}
               <Link href="/progress">
                 <a className="nav-link" style={{ fontWeight: 600 }}>
                   <span className={`${colors}`}>Progress</span>
