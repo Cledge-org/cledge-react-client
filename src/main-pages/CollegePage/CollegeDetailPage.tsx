@@ -209,8 +209,7 @@ const CollegeDetailPage = () => {
                                 sub3="Application Fee"
                                 sub3data={"$" + data["application_fee"]}
                                 sub4="Matriculation rate"
-                                sub4data={ getPercentage("matriculation_rate")
-                                
+                                sub4data={ getPercentage(data["matriculation_rate"])
                                 }
                             />
                             <OverviewCard
