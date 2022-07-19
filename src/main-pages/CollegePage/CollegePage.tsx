@@ -200,7 +200,7 @@ const College = () => {
         >
           <Row
             className="searchWrapper justify-content-between align-items-end"
-            style={{ width: "85%" }}
+            style={{ width: "91%" }}
           >
             <form
               id="search-form"

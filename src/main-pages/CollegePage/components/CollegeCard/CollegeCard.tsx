@@ -34,7 +34,7 @@ function CollegeCard(props: CardProps) {
           sx={
             props.isDetail
               ? { maxWidth: 1000, maxHeight: 400 }
-              : { width: 420, height: 320 }
+              : { width: 700, height: 400 }
           }
         >
           <div
@@ -59,7 +59,7 @@ function CollegeCard(props: CardProps) {
                   maxHeight: 400,
                   minHeight: "fit-content",
                 }
-              : { width: 420, minHeight: 320, height: "auto" }
+              : { width: 700, minHeight: 400, height: "auto" }
           }
         >
           {props.isDetail ? (
@@ -91,7 +91,7 @@ function CollegeCard(props: CardProps) {
               className={
                 "d-flex flex-column justify-content-start align-items-start"
               }
-              style={{ minHeight: "320px", height: "auto" }}
+              style={{ minHeight: "400px", height: "auto" }}
             >
               <InnerCard {...props} />
             </CardActionArea>
@@ -119,7 +119,7 @@ function InnerCard({
     <>
       {!img ? (
         <div
-          style={{ backgroundColor: "lightgray", height: "200px" }}
+          style={{ backgroundColor: "lightgray", height: "250px" }}
           className="center-child w-100"
         >
           No Image for this college
@@ -128,7 +128,7 @@ function InnerCard({
         <img
           src={img}
           style={{
-            height: imageHasLoaded ? "200px" : "0",
+            height: imageHasLoaded ? "250px" : "0",
             width: "100%",
             objectFit: "cover",
           }}
@@ -141,10 +141,12 @@ function InnerCard({
       {!imageHasLoaded && img && (
         <div
           className={classNames(styles.gradient, "w-100")}
-          style={{ height: "200px" }}
+          style={{ height: "250px" }}
         />
       )}
-      <CardContent style={{ minHeight: "fit-content" }}>
+      <CardContent
+        style={{ minHeight: "fit-content", width: "100%", height: "150px" }}
+      >
         <h1
           className="cl-blue"
           style={{
@@ -155,15 +157,19 @@ function InnerCard({
         >
           {title}
         </h1>
-
-        <h6 className="text-secondary">
-          {schoolType == "Public"
-            ? "Public School | "
-            : schoolType == "Private for-profit" || "Private non-profit"
-            ? "Private School | "
-            : ""}
-          <span style={{ marginLeft: 5 }}>{location}</span>
-        </h6>
+        <div
+          className="w-100 d-flex justify-content-end align-items-end"
+          style={{ height: "90px" }}
+        >
+          <h6 className="text-secondary" style={{ fontSize: "1.4em" }}>
+            {schoolType == "Public"
+              ? "Public School | "
+              : schoolType == "Private for-profit" || "Private non-profit"
+              ? "Private School | "
+              : ""}
+            <span style={{ marginLeft: 5 }}>{location}</span>
+          </h6>
+        </div>
       </CardContent>
     </>
   );
