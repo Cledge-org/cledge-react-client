@@ -8,6 +8,7 @@ import InfoContainer from "../CollegePage/components/InfoContainer/InfoContainer
 import { Row, Col, Divider } from "antd";
 import Script from "next/script";
 import { width } from "@mui/system";
+import { Tabs, Tab } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import OverviewCard from "src/main-pages/CollegeDetailPage/components/OverviewCard/OverviewCard";
@@ -16,8 +17,13 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Doughnut } from "react-chartjs-2";
 import "chart.js/auto";
+import { connect } from "react-redux";
 
-const CollegeDetailPage = () => {
+const CollegeDetailPage = ({
+  questionResponses,
+}: {
+  questionResponses: UserResponse[];
+}) => {
   const [value, setValue] = React.useState(0);
   const router = useRouter();
   const raw = router.query.data;
@@ -27,7 +33,14 @@ const CollegeDetailPage = () => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
+  const userResponse = questionResponses.find(
+    ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
+  )?.response;
+  const userTier = userResponse.includes("Level 1")
+    ? 1
+    : userResponse.includes("Level 2")
+    ? 2
+    : 3;
   const BackButton = styled.div`
     border-radius: 50%;
     box-shadow: 0px 0px 22px 9px rgba(0, 0, 0, 0.06);
@@ -132,22 +145,62 @@ const CollegeDetailPage = () => {
 
   return (
     <Wrapper>
-      <BackButton onClick={() => router.push(`/college/`)}>
-        <IconButton aria-label="delete" size="large">
+      <div
+        className="position-absolute"
+        style={{ left: "8%", top: "10%" }}
+        onClick={() => router.push(`/college/`)}
+      >
+        <IconButton
+          style={{ backgroundColor: "white" }}
+          aria-label="delete"
+          size="large"
+        >
           <ArrowBackIosNewIcon fontSize="inherit" />
         </IconButton>
-      </BackButton>
-      <CollegeCard
-        title={data.title}
-        location={data.location}
-        img={data["img_link"] ? data["img_link"] : data["img_wiki_link"]}
-        schoolType={data["college_type"]}
-        inState={data["in-state_tuition"]}
-        outState={data["out-state_tuition"]}
-        isDetail
-        tabCallBack={handleChange}
-        tabValue={value}
-      />
+      </div>
+      <div
+        className="w-100 d-flex flex-column align-items-center justify-content-end"
+        style={{ backgroundColor: "#FBFCFF", height: "20vh" }}
+      >
+        <div className="d-flex flex-column">
+          <h1
+            className="cl-blue"
+            style={{
+              fontSize: "1.5rem",
+              fontWeight: 700,
+              marginBottom: 5,
+            }}
+          >
+            {data.title}
+          </h1>
+          <div>
+            <div>
+              {userTier >= data["college_fit_metric"].safety
+                ? "Safety School"
+                : userTier < data["college_fit_metric"].target
+                ? "Reach School"
+                : "Fit School"}
+            </div>
+            <h6 className="text-secondary" style={{ fontSize: "1.4em" }}>
+              {data["college_type"] == "Public"
+                ? "Public School | "
+                : data["college_type"] == "Private for-profit" ||
+                  "Private non-profit"
+                ? "Private School | "
+                : ""}
+              <span style={{ marginLeft: 5 }}>{data.location}</span>
+            </h6>
+          </div>
+          <Tabs value={value} onChange={handleChange}>
+            <Tab label="Overview" />
+            <Tab label="Admission" />
+            <Tab label="Academics" />
+            <Tab label="Housing" />
+            <Tab label="Student" />
+            {/* <Tab label="Insights" /> */}
+          </Tabs>
+        </div>
+      </div>
       <CollegeInfoWrapper>
         {value == 0 ? (
           <Row gutter={[16, 16]}>
@@ -896,7 +949,11 @@ const CollegeDetailPage = () => {
   );
 };
 
-export default CollegeDetailPage;
+export default connect((state) => {
+  return {
+    questionResponses: state.questionResponses,
+  };
+})(CollegeDetailPage);
 
 const Wrapper = styled.div`
   & > * {

@@ -1,3 +1,5 @@
+@use "src/common/styles" as *;
+
 .gradient {
   animation-duration: 1.8s;
   animation-fill-mode: forwards;
@@ -9,6 +11,7 @@
   background-size: 1000px 640px;
   position: relative;
 }
+
 @keyframes placeHolderShimmer {
   0% {
     background-position: -468px 0;
@@ -16,4 +19,15 @@
   100% {
     background-position: 468px 0;
   }
+}
+
+.college-fit-container {
+  padding: 5px;
+  border-radius: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  font-size: 1.3em;
+  color: white;
+  font-weight: bold;
+  background: -webkit-linear-gradient(left, #3b68df, #8d32d4);
 }

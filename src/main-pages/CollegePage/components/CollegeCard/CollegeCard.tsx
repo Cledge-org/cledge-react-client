@@ -17,10 +17,10 @@ interface CardProps {
   inState: string;
   isLoading?: boolean;
   outState: string;
-  isDetail?: boolean;
   tabCallBack?: (e, newValue) => void;
   tabValue?: number;
   data?: object;
+  schoolFit: string;
 }
 
 function CollegeCard(props: CardProps) {
@@ -28,15 +28,9 @@ function CollegeCard(props: CardProps) {
   const URL = `/collegeDetail/`;
 
   return (
-    <CardWrapper>
+    <CardWrapper style={{ marginBottom: "25px" }}>
       {(props.isLoading && (
-        <Card
-          sx={
-            props.isDetail
-              ? { maxWidth: 1000, maxHeight: 400 }
-              : { width: 700, height: 400 }
-          }
-        >
+        <Card sx={{ width: 700, height: 400 }}>
           <div
             className={classNames(styles.gradient, "w-100")}
             style={{ height: "60%" }}
@@ -52,50 +46,32 @@ function CollegeCard(props: CardProps) {
         </Card>
       )) || (
         <Card
-          sx={
-            props.isDetail
-              ? {
-                  maxWidth: 1000,
-                  maxHeight: 400,
-                  minHeight: "fit-content",
-                }
-              : { width: 700, minHeight: 400, height: "auto" }
-          }
+          sx={{
+            width: 700,
+            minHeight: 400,
+            height: "fit-content",
+          }}
         >
-          {props.isDetail ? (
-            <div style={{ minHeight: "fit-content" }}>
-              <InnerCard {...props} />
-              <Tabs value={props.tabValue} onChange={props.tabCallBack}>
-                <Tab label="Overview" />
-                <Tab label="Admission" />
-                <Tab label="Academics" />
-                <Tab label="Housing" />
-                <Tab label="Student" />
-                {/* <Tab label="Insights" /> */}
-              </Tabs>
-            </div>
-          ) : (
-            <CardActionArea
-              onClick={() => {
-                console.log(props.data);
-                router.push(
-                  {
-                    pathname: URL,
-                    query: {
-                      data: JSON.stringify(props.data),
-                    },
+          <CardActionArea
+            onClick={() => {
+              console.log(props.data);
+              router.push(
+                {
+                  pathname: URL,
+                  query: {
+                    data: JSON.stringify(props.data),
                   },
-                  URL
-                );
-              }}
-              className={
-                "d-flex flex-column justify-content-start align-items-start"
-              }
-              style={{ minHeight: "400px", height: "auto" }}
-            >
-              <InnerCard {...props} />
-            </CardActionArea>
-          )}
+                },
+                URL
+              );
+            }}
+            className={
+              "d-flex flex-column justify-content-start align-items-start"
+            }
+            style={{ minHeight: "400px", height: "auto" }}
+          >
+            <InnerCard {...props} />
+          </CardActionArea>
         </Card>
       )}
     </CardWrapper>
@@ -112,7 +88,7 @@ function InnerCard({
   schoolType,
   inState,
   outState,
-  isDetail,
+  schoolFit,
 }: CardProps) {
   const [imageHasLoaded, setImageHasLoaded] = useState(false);
   return (
@@ -144,23 +120,22 @@ function InnerCard({
           style={{ height: "250px" }}
         />
       )}
-      <CardContent
-        style={{ minHeight: "fit-content", width: "100%", height: "150px" }}
-      >
+      <CardContent style={{ minHeight: "fit-content", width: "100%" }}>
         <h1
           className="cl-blue"
           style={{
             fontSize: "1.5rem",
             fontWeight: 700,
-            marginBottom: isDetail ? 10 : 5,
+            marginBottom: 5,
           }}
         >
           {title}
         </h1>
         <div
-          className="w-100 d-flex justify-content-end align-items-end"
+          className="w-100 d-flex justify-content-between align-items-end"
           style={{ height: "90px" }}
         >
+          <div className={styles.collegeFitContainer}>{schoolFit}</div>
           <h6 className="text-secondary" style={{ fontSize: "1.4em" }}>
             {schoolType == "Public"
               ? "Public School | "

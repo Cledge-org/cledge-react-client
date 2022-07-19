@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import styles from "./college-page.module.scss";
 import classNames from "classnames";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { connect } from "react-redux";
 
 const axios = require("axios").default;
 const { Search } = Input;
@@ -30,7 +32,11 @@ const CardsWrapper = styled.div`
   }
 `;
 
-const College = () => {
+const College = ({
+  questionResponses,
+}: {
+  questionResponses: UserResponse[];
+}) => {
   const [collegeData, setData] = useState(null);
   const [filter, setFilter] = useState({});
   const [searchText, setSearchText] = useState("*");
@@ -38,12 +44,20 @@ const College = () => {
   const [currSort, setCurrSort] = useState("");
   const [currNumericalSortOrder, setCurrNumericalSortOrder] =
     useState("Least-Greatest");
+  const userResponse = questionResponses.find(
+    ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
+  )?.response;
   const [requestData, setRequest] = useState({
     searchText: "*",
     top: 10,
     skip: 0,
     filters: {},
     searchFields: ["INSTNM"],
+    userTier: userResponse.includes("Level 1")
+      ? 1
+      : userResponse.includes("Level 2")
+      ? 2
+      : 3,
   });
   const [prevRequest, setPrevRequest] = useState({
     searchText: "*",
@@ -51,6 +65,11 @@ const College = () => {
     skip: 0,
     filters: {},
     searchFields: ["INSTNM"],
+    userTier: userResponse.includes("Level 1")
+      ? 1
+      : userResponse.includes("Level 2")
+      ? 2
+      : 3,
   });
 
   function handleSearch(e) {
@@ -192,137 +211,174 @@ const College = () => {
           lg={18}
           xl={19}
           xxl={20}
+          id="college-scroll"
           style={{
             overflowY: "scroll",
             height: "calc(100vh - 59px)",
           }}
           className="d-flex flex-column align-items-center"
         >
-          <Row
-            className="searchWrapper justify-content-between align-items-end"
-            style={{ width: "91%" }}
+          <InfiniteScroll
+            scrollableTarget="college-scroll"
+            className="w-100 h-100 d-flex flex-column align-items-center"
+            style={{ maxHeight: "100%" }}
+            next={() => {
+              setPrevRequest(requestData);
+              setRequest({
+                ...requestData,
+                top: collegeData.length + requestData.top,
+                skip: collegeData.length,
+              });
+            }}
+            hasMore={true}
+            loader={
+              <div className="w-100 d-flex flex-row align-items-center justify-content-evenly flex-wrap">
+                {new Array(
+                  collegeData ? collegeData.length + requestData.top : 0
+                )
+                  .fill(0)
+                  .map(() => {
+                    return (
+                      <CollegeCard
+                        isLoading
+                        schoolFit=""
+                        title={""}
+                        location={""}
+                        img={""}
+                        schoolType={""}
+                        inState={""}
+                        outState={""}
+                        abbreviation={""}
+                        data={{}}
+                      />
+                    );
+                  })}
+              </div>
+            }
+            dataLength={collegeData ? collegeData.length : 0}
           >
-            <form
-              id="search-form"
-              onSubmit={handleSearch}
-              className="searchBox d-flex flex-row align-items-center"
-              style={{
-                width: "30%",
-                borderRadius: "10px",
-                backgroundColor: "white",
-                overflow: "hidden",
-              }}
+            <Row
+              className="searchWrapper justify-content-between align-items-end"
+              style={{ width: "92.5%", marginBottom: "20px" }}
             >
-              <input
-                className={classNames(styles.searchInput, "py-3 px-3")}
-                onChange={(e) => {
-                  setSearchText(e.target.value);
-                }}
-                placeholder="Search College"
-              />
-              <button
-                form="search-form"
-                type="submit"
+              <form
+                id="search-form"
+                onSubmit={handleSearch}
+                className="searchBox d-flex flex-row align-items-center"
                 style={{
-                  height: "100%",
-                  width: "10%",
+                  width: "30%",
+                  borderRadius: "10px",
                   backgroundColor: "white",
-                  outline: "none",
-                  border: "none",
+                  overflow: "hidden",
                 }}
               >
-                <FontAwesomeIcon icon={faSearch} />
-              </button>
-            </form>
-            <div
-              className="dropdown w-20 input d-flex flex-row align-items-center justify-content-space-between"
-              style={{ width: "420px" }}
-            >
-              <DropDownQuestion
-                isForCST
-                placeholder="Sort by..."
-                onChange={(value) => {
-                  setCurrSort(value);
-                }}
-                valuesList={[
-                  "A-Z",
-                  "Size",
-                  "Tuition",
-                  "Student-Faculty Ratio",
-                  "Acceptence Rate",
-                ]}
-              />
-              <div style={{ width: "20px" }} />
-              <DropDownQuestion
-                isForCST
-                defaultValue={"Least-Greatest"}
-                onChange={(value) => {
-                  setCurrNumericalSortOrder(value);
-                }}
-                valuesList={["Least-Greatest", "Greatest-Least"]}
-              />
+                <input
+                  className={classNames(styles.searchInput, "py-3 px-3")}
+                  onChange={(e) => {
+                    setSearchText(e.target.value);
+                  }}
+                  placeholder="Search College"
+                />
+                <button
+                  form="search-form"
+                  type="submit"
+                  style={{
+                    height: "100%",
+                    width: "10%",
+                    backgroundColor: "white",
+                    outline: "none",
+                    border: "none",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faSearch} />
+                </button>
+              </form>
+              <div
+                className="dropdown w-20 input d-flex flex-row align-items-center justify-content-space-between"
+                style={{ width: "420px" }}
+              >
+                <DropDownQuestion
+                  isForCST
+                  placeholder="Sort by..."
+                  onChange={(value) => {
+                    setCurrSort(value);
+                  }}
+                  valuesList={[
+                    "A-Z",
+                    "Size",
+                    "Tuition",
+                    "Student-Faculty Ratio",
+                    "Acceptence Rate",
+                  ]}
+                />
+                <div style={{ width: "20px" }} />
+                <DropDownQuestion
+                  isForCST
+                  defaultValue={"Least-Greatest"}
+                  onChange={(value) => {
+                    setCurrNumericalSortOrder(value);
+                  }}
+                  valuesList={["Least-Greatest", "Greatest-Least"]}
+                />
+              </div>
+            </Row>
+            <div className="d-flex flex-row align-items-center justify-content-evenly flex-wrap w-100">
+              {isLoading
+                ? new Array(12).fill(0).map(() => {
+                    return (
+                      <CollegeCard
+                        isLoading
+                        title={""}
+                        location={""}
+                        img={""}
+                        schoolType={""}
+                        inState={""}
+                        outState={""}
+                        abbreviation={""}
+                        data={{}}
+                        schoolFit=""
+                      />
+                    );
+                  })
+                : collegeData &&
+                  collegeData.map((data) => {
+                    return (
+                      <CollegeCard
+                        key={data.title + data.location}
+                        title={data.title}
+                        location={data.location}
+                        schoolFit={
+                          requestData.userTier >=
+                          data["college_fit_metric"].safety
+                            ? "Safety School"
+                            : requestData.userTier <
+                              data["college_fit_metric"].target
+                            ? "Reach School"
+                            : "Fit School"
+                        }
+                        img={
+                          data["img_link"]
+                            ? data["img_link"]
+                            : data["img_wiki_link"]
+                        }
+                        schoolType={data["college_type"]}
+                        inState={data["in-state_tuition"]}
+                        outState={data["out-state_tuition"]}
+                        abbreviation={"uw"}
+                        data={data}
+                      />
+                    );
+                  })}
             </div>
-          </Row>
-          <CardsWrapper
-            className="d-flex flex-rown align-items-center flex-wrap"
-            style={{ width: "100%", maxWidth: "100%" }}
-          >
-            {isLoading
-              ? new Array(12).fill(0).map(() => {
-                  return (
-                    <CollegeCard
-                      isLoading
-                      title={""}
-                      location={""}
-                      img={""}
-                      schoolType={""}
-                      inState={""}
-                      outState={""}
-                      abbreviation={""}
-                      data={{}}
-                    />
-                  );
-                })
-              : collegeData &&
-                collegeData.map((data) => {
-                  return (
-                    <CollegeCard
-                      key={data.title + data.location}
-                      title={data.title}
-                      location={data.location}
-                      img={
-                        data["img_link"]
-                          ? data["img_link"]
-                          : data["img_wiki_link"]
-                      }
-                      schoolType={data["college_type"]}
-                      inState={data["in-state_tuition"]}
-                      outState={data["out-state_tuition"]}
-                      abbreviation={"uw"}
-                      data={data}
-                    />
-                  );
-                })}
-          </CardsWrapper>
-          <div className="w-100 center-child pb-3">
-            <button
-              className="cl-btn-blue align-self-center"
-              onClick={() => {
-                setPrevRequest(requestData);
-                setRequest({
-                  ...requestData,
-                  top: collegeData.length + requestData.top,
-                  skip: collegeData.length,
-                });
-              }}
-            >
-              Load More
-            </button>
-          </div>
+          </InfiniteScroll>
         </Col>
       </Row>
     </Layout>
   );
 };
 
-export default College;
+export default connect((state) => {
+  return {
+    questionResponses: state.questionResponses,
+  };
+})(College);
