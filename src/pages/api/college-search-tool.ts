@@ -101,6 +101,9 @@ export const getCollegeInfo = (
       });
       let output = [];
       for await (const result of searchResults.results) {
+        Object.keys(result["document"]).map(key => {
+          result["document"][key] = truncateNumericalResult(result["document"][key]);
+        });
         output.push(formatOutput(result["document"]));
       }
       res(output);
@@ -143,6 +146,7 @@ const createFilterExpression = (filters) => {
 const formatOutput = (college) => {
   const output = {
     title: college["INSTNM"],
+    college_abbrev: college["IALIAS"],
     institution_url: college["INSTURL"],
     net_price_url: college["NPCURL"],
     location: college["CITY"] + ", " + college["STABBR"],
@@ -179,7 +183,7 @@ const formatOutput = (college) => {
       sat_writing_75: college["SATWR75"],
       sat_critical_reading_50: college["SATVRMID"],
       sat_math_50: college["SATMTMID"],
-      sat_writing_reading_50: college["SATWRMID"],
+      sat_writing_50: college["SATWRMID"],
       act_cumulative_25: college["ACTCM25"],
       act_cumulative_50: college["ACTCMMID"],
       act_cumulative_75: college["ACTCM75"],
@@ -393,3 +397,11 @@ const getCollegeLabel = (userTier, targetTier, safetyTier) => {
     return 1;
   }
 };
+
+const truncateNumericalResult = (collegeField) => {
+  return typeof collegeField === "number" ? Math.round((collegeField + Number.EPSILON) * 100) / 100 : collegeField;
+}
+
+const reportZeroAsNoData = (collegeField) => {
+  return collegeField === 0 ? null : collegeField;
+}
