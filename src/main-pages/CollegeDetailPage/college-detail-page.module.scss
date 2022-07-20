@@ -1,0 +1,19 @@
+@use "src/common/styles" as *;
+
+.college-fit-container {
+  padding: 5px;
+  border-radius: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  font-size: 1.3em;
+  color: white;
+  font-weight: bold;
+  background: -webkit-linear-gradient(left, #3b68df, #8d32d4);
+}
+.link-wrapping {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}

@@ -323,52 +323,55 @@ const College = ({
               </div>
             </Row>
             <div className="d-flex flex-row align-items-center justify-content-evenly flex-wrap w-100">
-              {isLoading
-                ? new Array(12).fill(0).map(() => {
-                    return (
-                      <CollegeCard
-                        isLoading
-                        title={""}
-                        location={""}
-                        img={""}
-                        schoolType={""}
-                        inState={""}
-                        outState={""}
-                        abbreviation={""}
-                        data={{}}
-                        schoolFit=""
-                      />
-                    );
-                  })
-                : collegeData &&
-                  collegeData.map((data) => {
-                    return (
-                      <CollegeCard
-                        key={data.title + data.location}
-                        title={data.title}
-                        location={data.location}
-                        schoolFit={
-                          requestData.userTier >=
-                          data["college_fit_metric"].safety
-                            ? "Safety School"
-                            : requestData.userTier <
-                              data["college_fit_metric"].target
-                            ? "Reach School"
-                            : "Fit School"
-                        }
-                        img={
-                          data["img_link"]
-                            ? data["img_link"]
-                            : data["img_wiki_link"]
-                        }
-                        schoolType={data["college_type"]}
-                        inState={data["in-state_tuition"]}
-                        outState={data["out-state_tuition"]}
-                        abbreviation={"uw"}
-                        data={data}
-                      />
-                    );
-                  })}
+              {isLoading ? (
+                new Array(12).fill(0).map(() => {
+                  return (
+                    <CollegeCard
+                      isLoading
+                      title={""}
+                      location={""}
+                      img={""}
+                      schoolType={""}
+                      inState={""}
+                      outState={""}
+                      abbreviation={""}
+                      data={{}}
+                      schoolFit=""
+                    />
+                  );
+                })
+              ) : collegeData && collegeData.length > 0 ? (
+                collegeData.map((data) => {
+                  return (
+                    <CollegeCard
+                      key={data.title + data.location}
+                      title={data.title}
+                      location={data.location}
+                      schoolFit={
+                        requestData.userTier >=
+                        data["college_fit_metric"].safety
+                          ? "Safety School"
+                          : requestData.userTier <
+                            data["college_fit_metric"].target
+                          ? "Reach School"
+                          : "Fit School"
+                      }
+                      img={
+                        data["img_link"]
+                          ? data["img_link"]
+                          : data["img_wiki_link"]
+                      }
+                      schoolType={data["college_type"]}
+                      inState={data["in-state_tuition"]}
+                      outState={data["out-state_tuition"]}
+                      abbreviation={"uw"}
+                      data={data}
+                    />
+                  );
+                })
+              ) : (
+                <div className="w-100" />
+              )}
             </div>
           </InfiniteScroll>
         </Col>

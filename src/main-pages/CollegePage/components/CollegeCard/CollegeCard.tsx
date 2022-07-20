@@ -36,13 +36,27 @@ function CollegeCard(props: CardProps) {
             style={{ height: "60%" }}
           />
           <div
-            className={classNames(styles.gradient, "mt-3 ms-2")}
-            style={{ height: "12%", width: "70%" }}
-          />
-          <div
-            className={classNames(styles.gradient, "mt-3 ms-2")}
-            style={{ height: "8%", width: "60%" }}
-          />
+            className="d-flex flex-column w-100 justify-content-between"
+            style={{ height: "40%" }}
+          >
+            <div
+              className={classNames(styles.gradient, "mt-3 ms-2")}
+              style={{ height: "24%", width: "70%" }}
+            />
+            <div
+              className="d-flex flex-row w-100 justify-content-between align-items-center mb-4"
+              style={{ height: "20%" }}
+            >
+              <div
+                className={classNames(styles.gradient, "mt-3 ms-2")}
+                style={{ height: "100%", width: "20%" }}
+              />
+              <div
+                className={classNames(styles.gradient, "mt-3 me-2")}
+                style={{ height: "80%", width: "30%" }}
+              />
+            </div>
+          </div>
         </Card>
       )) || (
         <Card

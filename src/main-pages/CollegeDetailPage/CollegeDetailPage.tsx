@@ -18,6 +18,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { Doughnut } from "react-chartjs-2";
 import "chart.js/auto";
 import { connect } from "react-redux";
+import styles from "./college-detail-page.module.scss";
+import classNames from "classnames";
 
 const CollegeDetailPage = ({
   questionResponses,
@@ -160,43 +162,48 @@ const CollegeDetailPage = ({
       </div>
       <div
         className="w-100 d-flex flex-column align-items-center justify-content-end"
-        style={{ backgroundColor: "#FBFCFF", height: "20vh" }}
+        style={{ backgroundColor: "#FBFCFF", height: "25vh" }}
       >
-        <div className="d-flex flex-column">
-          <h1
-            className="cl-blue"
-            style={{
-              fontSize: "1.5rem",
-              fontWeight: 700,
-              marginBottom: 5,
-            }}
-          >
-            {data.title}
-          </h1>
-          <div>
-            <div>
-              {userTier >= data["college_fit_metric"].safety
-                ? "Safety School"
-                : userTier < data["college_fit_metric"].target
-                ? "Reach School"
-                : "Fit School"}
+        <div className="h-100 d-flex flex-column justify-content-between">
+          <div className="mt-5">
+            <h1
+              className="cl-dark-text mb-3"
+              style={{
+                fontSize: "1.9rem",
+                fontWeight: 700,
+                marginBottom: 5,
+              }}
+            >
+              {data.title}
+            </h1>
+            <div className="w-50 d-flex flex-row align-items-center">
+              <div className={styles.collegeFitContainer}>
+                {userTier >= data["college_fit_metric"].safety
+                  ? "Safety School"
+                  : userTier < data["college_fit_metric"].target
+                  ? "Reach School"
+                  : "Fit School"}
+              </div>
+              <h6
+                className="text-secondary ms-3"
+                style={{ fontSize: "1.2em", marginBottom: 0 }}
+              >
+                {data["college_type"] == "Public"
+                  ? "Public School | "
+                  : data["college_type"] == "Private for-profit" ||
+                    "Private non-profit"
+                  ? "Private School | "
+                  : ""}
+                <span style={{ marginLeft: 5 }}>{data.location}</span>
+              </h6>
             </div>
-            <h6 className="text-secondary" style={{ fontSize: "1.4em" }}>
-              {data["college_type"] == "Public"
-                ? "Public School | "
-                : data["college_type"] == "Private for-profit" ||
-                  "Private non-profit"
-                ? "Private School | "
-                : ""}
-              <span style={{ marginLeft: 5 }}>{data.location}</span>
-            </h6>
           </div>
           <Tabs value={value} onChange={handleChange}>
-            <Tab label="Overview" />
-            <Tab label="Admission" />
-            <Tab label="Academics" />
-            <Tab label="Housing" />
-            <Tab label="Student" />
+            <Tab className="me-5" label="Overview" />
+            <Tab className="mx-5" label="Admission" />
+            <Tab className="mx-5" label="Academics" />
+            <Tab className="mx-5" label="Housing" />
+            <Tab className="ms-5" label="Student" />
             {/* <Tab label="Insights" /> */}
           </Tabs>
         </div>
@@ -205,6 +212,23 @@ const CollegeDetailPage = ({
         {value == 0 ? (
           <Row gutter={[16, 16]}>
             <Col span={8}>
+              <div
+                style={{
+                  boxShadow: "0px 0px 22px 9px rgba(0, 0, 0, 0.03)",
+                  borderRadius: "12px",
+                  marginTop: "2rem",
+                  marginBottom: "1rem",
+                  overflow: "hidden",
+                  border: "1px solid #e0dfe8",
+                }}
+              >
+                <img
+                  style={{ width: "100%" }}
+                  src={
+                    data["img_link"] ? data["img_link"] : data["img_wiki_link"]
+                  }
+                />
+              </div>
               <InfoContainer>
                 <div>
                   <h2>Phone Number</h2>
@@ -221,7 +245,7 @@ const CollegeDetailPage = ({
                       href={`https://${data["institution_url"]}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="cl-blue"
+                      className={classNames("cl-blue", styles.linkWrapping)}
                     >
                       {data["institution_url"]}
                     </a>
@@ -235,7 +259,9 @@ const CollegeDetailPage = ({
               {data["mission_statement"] ? (
                 <InfoContainer>
                   <h3>Mission Statement</h3>
-                  <h2>{data["mission_statement"]}</h2>
+                  <h2 className={styles.linkWrapping}>
+                    {data["mission_statement"]}
+                  </h2>
                 </InfoContainer>
               ) : (
                 <></>
