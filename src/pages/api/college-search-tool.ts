@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { SearchClient, AzureKeyCredential } from "@azure/search-documents";
 import dicts from "../../../college-search-tool/assets/cst_result_parse.json";
+import datatypes from "../../../college-search-tool/assets/datatypes.json";
 import { ObjectSchema } from "yup";
 
 // References:
@@ -103,6 +104,9 @@ export const getCollegeInfo = (
       for await (const result of searchResults.results) {
         Object.keys(result["document"]).map(key => {
           result["document"][key] = truncateNumericalResult(result["document"][key]);
+          if (datatypes[key] === "float") {
+            result["document"][key] = reportZeroAsNoData(result["document"][key]);
+          }
         });
         output.push(formatOutput(result["document"]));
       }
