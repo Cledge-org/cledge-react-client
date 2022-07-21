@@ -208,3 +208,9 @@ export const getPathwayProgressToDownload = async (firebaseId: string) => {
     })
   ).json()) as PathwayProgress[];
 };
+export const callPutBlog = async (articleId: string, article) => {
+  return await fetch(`/api/put-blog`, {
+    method: "POST",
+    body: JSON.stringify({ articleId, article }),
+  });
+};
