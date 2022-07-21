@@ -490,7 +490,7 @@ const CollegeDetailPage = ({
                   <h2>Female commit rate</h2>
                   <h3>
                     {Math.round(
-                      data["acceptance_rate"]["acceptance_rate_women"] * 100
+                      data["acceptance_rate"]["commit_rate_women"] * 100
                     ) + "%"}
                   </h3>
                 </div>
@@ -498,7 +498,7 @@ const CollegeDetailPage = ({
                   <h2>Male commit rate</h2>
                   <h3>
                     {Math.round(
-                      data["acceptance_rate"]["acceptance_rate_men"] * 100
+                      data["acceptance_rate"]["commit_rate_men"] * 100
                     ) + "%"}
                   </h3>
                 </div>
