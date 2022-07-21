@@ -1,30 +1,24 @@
-import React from "react";
-import { GetServerSidePropsContext } from "next";
-import { getAllPathways } from "./api/get-all-pathways";
-import { getAllCheckins } from "./api/get-all-checkins";
-import DashboardPage from "../main-pages/DashboardPage/DashboardPage";
-import { getDashboardParts } from "src/pages/api/get-dashboard-parts";
-import { getSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
+import { NextApplicationPage } from "src/main-pages/AppPage/AppPage";
+import DashboardPage from "src/main-pages/DashboardPage/DashboardPage";
 
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  try {
-    return {
-      props: {
-        dashboardParts: JSON.parse(
-          JSON.stringify(
-            await getDashboardParts((await getSession(ctx)).user.uid)
-          )
-        ),
-      },
-    };
-  } catch (err) {
-    console.log(err);
-    ctx.res.end();
-    return { props: {} as never };
-  }
-};
-
-const Dashboard = ({ dashboardParts }) => {
-  return <DashboardPage dashboardParts={dashboardParts} />;
+const Dashboard = () => {
+  const {data :session} = useSession()
+  const [dashboardParts, setDashboardParts] = useState()
+ useEffect(()=>{
+getDashboardData()
+ },[])
+ async function getDashboardData() {
+const response = await fetch(`http://localhost:3000/api/get-dashboard-parts?userID=${session.user.uid}`)
+const responseJson = await response.json()
+setDashboardParts(responseJson)
+}
+if (dashboardParts){
+  return <DashboardPage dashboardParts={dashboardParts}/>
+}
+else{
+  return <div>loading</div>
+}
 };
 export default Dashboard;
