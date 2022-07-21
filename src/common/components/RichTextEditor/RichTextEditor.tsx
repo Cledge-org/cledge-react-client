@@ -36,7 +36,7 @@ const RichTextEditor = ({
 }: {
   onChange: Function;
   initialValue: Descendant[];
-  className: string;
+  className?: string;
 }) => {
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
