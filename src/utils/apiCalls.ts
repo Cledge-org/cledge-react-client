@@ -284,3 +284,9 @@ export const callGetAllPathwayProgress = async (userId: string) => {
     body: JSON.stringify({ userId }),
   });
 };
+export const callPutBlog = async (articleId: string, article) => {
+  return await fetch(`/api/put-blog`, {
+    method: "POST",
+    body: JSON.stringify({ articleId, article }),
+  });
+};

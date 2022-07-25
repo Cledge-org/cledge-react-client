@@ -17,6 +17,7 @@ import { Icon } from "src/common/components/RichTextEditor/components/Icon/Icon"
 import DropDownQuestion from "src/common/components/Questions/DropdownQuestion/DropdownQuestion";
 import { CustomEditor } from "src/@types/slate";
 import { CompactPicker } from "react-color";
+import classNames from "classnames";
 
 const HOTKEYS = {
   "mod+b": "bold",
@@ -30,18 +31,19 @@ const TEXT_ALIGN_TYPES = ["left", "center", "right", "justify"];
 
 const RichTextEditor = ({
   onChange,
+  className,
   initialValue,
 }: {
   onChange: Function;
   initialValue: Descendant[];
+  className?: string;
 }) => {
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
-  //console.log(initialValue);
   return (
     <div
-      className="px-4"
+      className={classNames("px-4", className)}
       style={{ width: "fit-content", border: "2px solid lightgray" }}
     >
       <Slate

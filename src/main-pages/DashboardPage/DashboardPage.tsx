@@ -26,8 +26,6 @@ const DashboardPage: NextApplicationPage<{
   const [currTab, setCurrTab] = useState("all modules");
   const [isInUserView, setIsInUserView] = useState(false);
   const [percentage, setPercentage] = useState(0);
-  //console.log(accountInfo);
-  //console.log(pathwaysProgress);
   const parseId = (objectId) => {
     const objectIdStr = objectId.toString();
     if (!objectIdStr.includes('"')) {
@@ -311,7 +309,6 @@ const DashboardPage: NextApplicationPage<{
           </button>
         </div>
       </div>
-      
     );
   }
   return (
@@ -389,9 +386,9 @@ const DashboardPage: NextApplicationPage<{
                   value={percentage}
                 />
               </div>
-              <button style={{ height: "6vh" }} className="cl-btn-blue">
+              {/* <button style={{ height: "6vh" }} className="cl-btn-blue">
                 Update Checkin Questions
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
@@ -427,13 +424,13 @@ const DashboardPage: NextApplicationPage<{
             currTab={currTab}
           />
           <div style={{ flex: 1 }} />
-          <DropDownQuestion
+          {/* <DropDownQuestion
             isForDashboard
             isForWaitlist
             onChange={(value) => {}}
             defaultValue={"11th Grade"}
             valuesList={["11th Grade", "12th Grade"]}
-          />
+          /> */}
           <div className="me-4" />
         </div>
         <div className="container-fluid align-self-center mx-0 px-5 pb-5 mx-5 justify-content-evenly">

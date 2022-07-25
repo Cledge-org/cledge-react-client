@@ -9,12 +9,11 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication, grab user id from token validation (probably)
-  const { article } = JSON.parse(req.body);
-  console.log(111);
+  const { article, articleId } = JSON.parse(req.body);
 
-  if (article) {
+  if (article || articleId) {
     try {
-      const result = await putBlogArticle(article);
+      const result = await putBlogArticle(articleId, article);
       resolve.status(200).send(result);
     } catch (e) {
       resolve.status(500).send(e);
@@ -28,13 +27,25 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // create article, otherwise will attempt to update given ID. If no article
 // provided, will attempt to delete
 export const putBlogArticle = async (
-  article: ObjectId | undefined
+  articleId: ObjectId | undefined,
+  article: any
 ): Promise<void> => {
-  console.log(222);
   return new Promise(async (res, err) => {
     const client = await MongoClient.connect(process.env.MONGO_URL);
     try {
-      await client.db("resources").collection("articles").insertOne(article);
+      if (articleId && !article) {
+        await client
+          .db("resources")
+          .collection("articles")
+          .deleteOne({ _id: articleId });
+      } else if (articleId && article) {
+        await client
+          .db("resources")
+          .collection("articles")
+          .updateOne({ _id: articleId }, { $set: article }, { upsert: true });
+      } else {
+        await client.db("resources").collection("articles").insertOne(article);
+      }
       res();
       client.close();
     } catch (e) {

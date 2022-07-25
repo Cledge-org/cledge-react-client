@@ -1,62 +1,172 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { NextApplicationPage } from "../../AppPage/AppPage";
 import UploadPage from "../components/UploadPage/UploadPage";
 import DropDownQuestion from "../../../common/components/Questions/DropdownQuestion/DropdownQuestion";
-import MdEditor from "react-markdown-editor-lite";
-import markIt from 'markdown-it';
-import 'react-markdown-editor-lite/lib/index.css'
+import { useRouter } from "next/router";
+import Modal from "react-modal";
+import { callPutBlog } from "src/utils/apiCalls";
+import RichTextEditor from "src/common/components/RichTextEditor/RichTextEditor";
 
 // logged in landing page
-const BlogUploadPage: NextApplicationPage<{}> = ({}) => {
+const BlogUploadPage: NextApplicationPage<{ blogInfo }> = ({ blogInfo }) => {
   const [resourceType, setResourceType] = useState("article");
   const [resourceData, setResourceData] = useState({
+    _id: "",
     _slug: "",
     title: "",
     author: "",
     date: "",
     description: "",
-    content: "",
+    content: [],
     image: "",
     topics: [],
   });
-  const md = new markIt();
+  const [modalOpen, setModalOpen] = useState(false);
+  const router = useRouter();
   const uploadImage = (e) => {
     const files = e.target.files;
     const file = files[0];
     getbase64(file);
-  }
+  };
   const onLoad = (fileString) => {
     resourceData.image = fileString;
-  }
+  };
   const getbase64 = (file) => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
       onLoad(reader.result);
-    }
+    };
+  };
+  function handleEditorChange(textJSON) {
+    setResourceData({
+      ...resourceData,
+      content: textJSON,
+    });
   }
-  function handleEditorChange({ html, text }) {
-      console.log('handleEditorChange', html, text);
-      setResourceData({
-        ...resourceData,
-        content: html,
-      })
-  }
+  const editor = useMemo(() => {
+    return (
+      <RichTextEditor
+        className="w-100"
+        key={resourceData._id}
+        initialValue={
+          resourceData.content && resourceData.content.length > 0
+            ? resourceData.content
+            : [
+                {
+                  type: "paragraph",
+                  children: [
+                    {
+                      text: "This is a placeholder",
+                      bold: true,
+                      "font-size": "28px",
+                      "font-color": "#070452",
+                    },
+                  ],
+                },
+                {
+                  type: "paragraph",
+                  children: [
+                    {
+                      text: "This is a placeholder",
+                      bold: true,
+                      "font-size": "22px",
+                      "font-color": "#070452",
+                    },
+                  ],
+                },
+                {
+                  type: "paragraph",
+                  children: [
+                    {
+                      text: "This is a placeholder",
+                      bold: true,
+                      "font-size": "18px",
+                      "font-color": "#070452",
+                    },
+                  ],
+                },
+                {
+                  type: "paragraph",
+                  children: [
+                    {
+                      text: "This is a placeholder",
+                      "font-size": "14px",
+                      "font-color": "#070452",
+                    },
+                  ],
+                },
+              ]
+        }
+        onChange={handleEditorChange}
+      />
+    );
+  }, [resourceData._id]);
+  console.log(resourceData.content);
   return (
     <UploadPage
       onUpload={() => {
         let resourceSendData = {};
         resourceSendData[resourceType.toLowerCase()] = resourceData;
-        console.log(resourceSendData);
-        fetch(`/api/put-blog`, {
-          method: "POST",
-          body: JSON.stringify(resourceSendData),
-        }).then((res) => {
-          console.log(res.status);
-        });
+        callPutBlog(resourceData._id, { ...resourceData, _id: undefined })
+          .then((res) => {
+            console.log(res.status);
+            alert("Upload Successful!");
+            router.push({ pathname: "/dashboard" });
+          })
+          .catch(() => {
+            alert(
+              "Upload Unsuccessful! (should probably talk to Yousef or Bryan)"
+            );
+            router.push({ pathname: "/dashboard" });
+          });
       }}
     >
       <div className="mt-4 d-flex flex-column w-100">
+        <div className="form-group">
+          <label
+            style={{ fontSize: "1.2em" }}
+            className="text-muted"
+            htmlFor="course-name"
+          >
+            CURRENT PATHWAY:
+          </label>
+          <DropDownQuestion
+            isForWaitlist
+            onChange={(value) => {
+              if (value === "NEW BLOG") {
+                setResourceData({
+                  _id: "",
+                  _slug: "",
+                  title: "",
+                  author: "",
+                  date: "",
+                  description: "",
+                  content: [],
+                  image: "",
+                  topics: [],
+                });
+                return;
+              }
+              setResourceData(blogInfo.find((blog) => blog.title === value));
+            }}
+            defaultValue={"NEW BLOG"}
+            valuesList={blogInfo.map((blog) => blog.title).concat(["NEW BLOG"])}
+          />
+          <div className="mb-2" />
+        </div>
+        {resourceData._id && (
+          <div className="form-group">
+            <button
+              className="cl-btn-red w-100"
+              onClick={() => {
+                setModalOpen(true);
+              }}
+            >
+              DELETE THIS BLOG
+            </button>
+          </div>
+        )}
         <div className="form-group">
           <label
             style={{ fontSize: "0.9em" }}
@@ -71,7 +181,7 @@ const BlogUploadPage: NextApplicationPage<{}> = ({}) => {
               setResourceData({
                 ...resourceData,
                 title: e.target.value,
-                _slug: e.target.value.replace(/\s+/g, '-').toLowerCase()
+                _slug: e.target.value.replace(/\s+/g, "-").toLowerCase(),
               })
             }
             type="text"
@@ -156,27 +266,27 @@ const BlogUploadPage: NextApplicationPage<{}> = ({}) => {
           >
             Topic:
           </label>
-        <DropDownQuestion
-          isForWaitlist
-          onChange={(value) => {
-            setResourceData({
-              ...resourceData,
-              topics: [value],
-            });
-          }}
-          defaultValue=""
-          valuesList={[
-            "Extracurriculars",
-            "Essay",
-            "Application",
-            "Standardized Tests",
-            "Academics",
-            "Grades",
-            "Scholarships",
-          ]}
-        />
+          <DropDownQuestion
+            isForWaitlist
+            onChange={(value) => {
+              setResourceData({
+                ...resourceData,
+                topics: value,
+              });
+            }}
+            isConcatenable
+            defaultValue={resourceData.topics || ""}
+            valuesList={[
+              "Extracurriculars",
+              "Essay",
+              "Application",
+              "Standardized Tests",
+              "Academics",
+              "Grades",
+              "Scholarships",
+            ]}
+          />
         </div>
-
         <div className="form-group">
           <label
             style={{ fontSize: "0.9em" }}
@@ -185,25 +295,77 @@ const BlogUploadPage: NextApplicationPage<{}> = ({}) => {
           >
             Image:
           </label>
-            <form>
-              <input type="file" onChange={uploadImage} />
-            </form>
+          <form>
+            <input type="file" onChange={uploadImage} />
+            <img src={resourceData.image} style={{ width: "50%" }} />
+          </form>
         </div>
-        
-        <div className='form-group'>
-            <label
-                style={{ fontSize: "0.9em" }}
-                className="text-muted"
-                htmlFor="content"
-            >
-              Content:
-            </label>
-            <MdEditor 
-              style={{ height: '500px' }} 
-              renderHTML={text => md.render(text)} 
-              onChange={handleEditorChange} />
+        <div className="form-group">
+          <label
+            style={{ fontSize: "0.9em" }}
+            className="text-muted"
+            htmlFor="content"
+          >
+            Content:
+          </label>
+          {editor}
         </div>
       </div>
+      <Modal
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            background: "rgba(50, 50, 50, 0.5)",
+          },
+          content: {
+            top: "30%",
+            left: "35%",
+            width: "30%",
+            height: "fit-content",
+            borderRadius: "20px",
+            borderColor: "white",
+            zIndex: 100,
+          },
+        }}
+        onRequestClose={() => {
+          setModalOpen(false);
+        }}
+        isOpen={modalOpen}
+      >
+        <div className="center-child flex-column">
+          Are you sure you want to delete this Blog?
+          <div className="w-100 center-child mt-3">
+            <button
+              className="cl-btn-blue me-2"
+              onClick={() => {
+                console.log(resourceData._id);
+                callPutBlog(resourceData._id, undefined)
+                  .then((res) => {
+                    console.log(res.status);
+                    alert("Deletion Successful!");
+                    router.push({ pathname: "/dashboard" });
+                  })
+                  .catch(() => {
+                    alert(
+                      "Deletion Unsuccessful! (should probably talk to Yousef or Bryan)"
+                    );
+                    router.push({ pathname: "/dashboard" });
+                  });
+              }}
+            >
+              Yes
+            </button>
+            <button
+              onClick={() => {
+                setModalOpen(false);
+              }}
+              className="cl-btn-clear ms-2"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </Modal>
     </UploadPage>
   );
 };
