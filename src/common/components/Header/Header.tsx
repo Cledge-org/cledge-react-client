@@ -100,11 +100,11 @@ export default function Header({ key_prop }: { key_prop: string }) {
         >
           {status === "authenticated" ? (
             <div className="navbar-nav">
-              <Link href="/dashboard">
+              {/* <Link href="/dashboard">
                 <a className="nav-link" style={{ fontWeight: 600 }}>
                   <span className={`${colors}`}>My Learning</span>
                 </a>
-              </Link>
+              </Link> */}
               <Link href="/chatbot">
                 <a className="nav-link" style={{ fontWeight: 600 }}>
                   <span className={`${colors}`}>Chatbot</span>
