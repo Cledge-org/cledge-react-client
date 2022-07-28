@@ -17,6 +17,7 @@ import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageError
 import { callGetChatbotResponse } from "src/utils/apiCalls";
 import { useRouter } from "next/router";
 import classNames from "classnames";
+import { FaQuestion } from "react-icons/fa";
 
 const Chatbot = ({
   accountInfo,
@@ -66,9 +67,6 @@ const Chatbot = ({
   const isMobile = size.width < 900 || size.height < 740;
   const router = useRouter();
 
-  useEffect(() => {
-    //console.log(messagesList);
-  }, [messagesList]);
   const handleMessageSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -125,21 +123,31 @@ const Chatbot = ({
       <div
         style={{
           height: "93vh",
+          backgroundColor: "#FAFAFC",
         }}
-        className="w-100 d-flex flex-row position-relative"
+        className="w-100 d-flex flex-row align-items-center justify-content-center"
       >
-        {isMobile ? null : <LeftPannel />}
         <div
-          className="d-flex flex-column container-fluid"
-          style={{ minHeight: "100%", width: isMobile ? "100%" : "70%" }}
+          className={classNames(
+            styles.messageScroll,
+            "d-flex flex-column position-relative container-fluid"
+          )}
+          style={{
+            backgroundColor: "white",
+            height: "95%",
+            width: isMobile ? "100%" : "70%",
+            border: "1px solid #E0DFE8",
+            borderRadius: "8px",
+            overflow: "auto",
+          }}
         >
           <div
             id="scrollableDiv"
-            className={styles.messageScroll}
+            className={classNames("pt-3")}
             style={{
-              height: "100%",
+              height: "fit-content",
               width: "100%",
-              overflowY: "auto",
+              flex: 1,
               display: "flex",
               flexDirection: "column-reverse",
             }}
@@ -182,6 +190,7 @@ const Chatbot = ({
               flex: 0.1,
               position: "sticky",
               bottom: 0,
+              left: 0,
               width: "100%",
               backgroundColor: "white",
             }} // https://github.com/adrianhajdin/chat_application/blob/main/src/components/ChatFeed.jsx for chat feed potentially
@@ -220,16 +229,16 @@ const Chatbot = ({
                   setCurrMessageText(e.target.value);
                 }}
                 value={currMessageText}
-                placeholder="Type something here"
-                className={classNames("py-1 px-2", isMobile ? "ms-1" : "")}
+                placeholder="Ask anything here"
+                className={classNames("py-1 px-3", isMobile ? "ms-1" : "")}
                 style={{
                   height: size.height < 700 ? "5vmax" : "2.2vmax",
                   width:
                     size.width < 800 || size.height < 740 ? "55vw" : "35vw",
                   minHeight: "30px",
                   outline: "none",
-                  border: isMobile ? "none" : "2px solid #656565",
-                  borderRadius: "15px",
+                  border: isMobile ? "none" : "1px solid #B2B0C4",
+                  borderRadius: "26px",
                 }}
               />
               <button
@@ -250,6 +259,21 @@ const Chatbot = ({
             </div>
           </form>
         </div>
+        <button
+          style={{
+            outline: "none",
+            border: "none",
+            backgroundColor: "#DEDEFF",
+            width: "54px",
+            height: "54px",
+            position: "absolute",
+            right: "3%",
+            borderRadius: "8px",
+            bottom: "5%",
+          }}
+        >
+          <FaQuestion className="cl-dark-text" size={20} />
+        </button>
       </div>
     </PageErrorBoundary>
   );

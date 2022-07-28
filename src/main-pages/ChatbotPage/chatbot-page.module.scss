@@ -25,10 +25,10 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba($color: $cl-mid-gray, $alpha: 0.8);
+    background: rgba($color: $cl-mid-gray, $alpha: 0.6);
     border-radius: 10px;
     &:hover {
-      background: rgba($color: $cl-mid-gray, $alpha: 0.6);
+      background: rgba($color: $cl-mid-gray, $alpha: 0.4);
     }
   }
 }
