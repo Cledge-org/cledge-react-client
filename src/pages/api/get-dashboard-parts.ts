@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getDashboardParts } from "src/BackendFunctions/PartsAndPathways";
+import { getDashboardParts } from "src/ClientSideFunctions/PartsAndPathways";
 
 export const config = {
   api: {
