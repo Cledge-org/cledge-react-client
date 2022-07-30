@@ -30,7 +30,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
       );
       resolve.status(200).send(collegeMetricResult);
     } else {
-      const { searchText, top, skip, filters, searchFields } = JSON.parse(
+      const { searchText, top, skip, filters } = JSON.parse(
         req.body
       );
       const collegeSearchResult = await getCollegeInfo(
@@ -38,7 +38,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         top,
         skip,
         filters,
-        searchFields
+        ["INSTNM", "IALIAS"]
       );
       resolve.status(200).send(collegeSearchResult);
     }
@@ -104,9 +104,10 @@ export const getCollegeInfo = (
       for await (const result of searchResults.results) {
         Object.keys(result["document"]).map(key => {
           result["document"][key] = truncateNumericalResult(result["document"][key]);
-          if (datatypes[key] === "float") {
-            result["document"][key] = reportZeroAsNoData(result["document"][key]);
-          }
+          // solve zero-data issue; comment out if frontend has solved
+          // if (datatypes[key] === "float") {
+          //   result["document"][key] = reportZeroAsNoData(result["document"][key]);
+          // }
         });
         output.push(formatOutput(result["document"]));
       }
@@ -183,11 +184,11 @@ const formatOutput = (college) => {
       sat_critical_reading_75: college["SATVR75"],
       sat_math_25: college["SATMT25"],
       sat_math_75: college["SATMT75"],
-      sat_writing_25: college["SATWR25"],
-      sat_writing_75: college["SATWR75"],
+      sat_writing_25: null, // college["SATWR25"]; need to find valid data
+      sat_writing_75: null, // college["SATWR75"]
       sat_critical_reading_50: college["SATVRMID"],
       sat_math_50: college["SATMTMID"],
-      sat_writing_50: college["SATWRMID"],
+      sat_writing_50: null, // college["SATWRMID"]
       act_cumulative_25: college["ACTCM25"],
       act_cumulative_50: college["ACTCMMID"],
       act_cumulative_75: college["ACTCM75"],
