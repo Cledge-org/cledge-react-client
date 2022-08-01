@@ -18,6 +18,23 @@ import { callGetChatbotResponse } from "src/utils/apiCalls";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import { FaQuestion } from "react-icons/fa";
+import {
+  getChatbotMessagesFormatted,
+  introductionWorkflow,
+} from "src/main-pages/ChatbotPage/utils";
+import ChatOption from "src/main-pages/ChatbotPage/components/ChatOption/ChatOption";
+
+interface MessageProps {
+  message: string | ReactElement;
+  isOnLeft: boolean;
+  isAnswer?: boolean;
+  question?: string;
+}
+
+interface CoupledOptions {
+  areOptions: boolean;
+  options: { [option: string]: string };
+}
 
 const Chatbot = ({
   accountInfo,
@@ -26,43 +43,14 @@ const Chatbot = ({
   accountInfo: AccountInfo;
   questionResponses: UserResponse[];
 }) => {
+  const doWorkflow = true;
   const [messagesList, setMessagesList] = useState<
-    {
-      message: string | ReactElement;
-      isOnLeft: boolean;
-      isAnswer?: boolean;
-      question?: string;
-    }[]
-  >([
-    {
-      isOnLeft: true,
-      message: (
-        <>
-          <strong>
-            Hello there! I’m Cledge, your AI college advisor. Before we get
-            started here are a few things to help you get the most out of my
-            capabilities.
-          </strong>
-          <ol type="1">
-            <li>Try to ask only one question at a time.</li>
-            <li>
-              If you have issues getting a new answer, view the Best Practices
-              on the left side of your screen.
-            </li>
-            <li>
-              If issues continue and you are still not satisfied with your
-              answer, click the “Ask a real counselor” button on the left side
-              of your screen and you will receive an updated answer in your
-              email within 48 hours.
-            </li>
-          </ol>
-        </>
-      ),
-    },
-  ]);
+    (MessageProps | CoupledOptions)[]
+  >([]);
+  const [currOptions, setCurrOptions] = useState({});
   const [currMessageText, setCurrMessageText] = useState("");
+  const [pickedOptions, setPickedOptions] = useState([]);
   const scrollRef = useRef(null);
-  const [showingFirstScreen, setShowingFirstScreen] = useState(true);
   const size = useWindowSize();
   const isMobile = size.width < 900 || size.height < 740;
   const router = useRouter();
@@ -102,21 +90,25 @@ const Chatbot = ({
     setMessagesList(copyOfMessages2);
     scrollRef.current.scrollIntoView({ behavior: "smooth" });
   };
+  const addMessages = (newMessages) => {
+    setMessagesList((messageList) => messageList.concat(newMessages));
+  };
+  useEffect(() => {
+    if (doWorkflow) {
+      addMessages(
+        getChatbotMessagesFormatted(introductionWorkflow.e1.chatbotMessages)
+      );
+      setCurrOptions(introductionWorkflow.e1.possibleChoices);
+    }
+  }, []);
+  useEffect(() => {
+    console.log(messagesList);
+  }, [messagesList]);
   if (accountInfo.checkIns.length > 0) {
     router.push({
       pathname: "/check-ins/[checkIn]",
       query: { checkIn: accountInfo.checkIns },
     });
-  }
-  if (isMobile && showingFirstScreen) {
-    return (
-      <LeftPannel
-        onReturn={() => {
-          setShowingFirstScreen(false);
-        }}
-        isFullScreen
-      />
-    );
   }
   return (
     <PageErrorBoundary>
@@ -167,17 +159,78 @@ const Chatbot = ({
                 </p>
               } // https://www.npmjs.com/package/react-infinite-scroll-component for infinite scroll
             >
-              {messagesList.map(
-                ({ message, isOnLeft, isAnswer, question }, index) => (
+              {messagesList.map((object, index) => {
+                if ((object as CoupledOptions).areOptions) {
+                  const { options } = object as CoupledOptions;
+                  return (
+                    <div
+                      className={`d-flex flex-row w-100 my-3 justify-content-end align-items-end`}
+                    >
+                      <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
+                        {Object.keys(options).map((option) => (
+                          <ChatOption
+                            isChosen={pickedOptions.includes(option)}
+                            onClick={() => {}}
+                            option={option}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
+                const { message, isOnLeft, isAnswer, question } =
+                  object as MessageProps;
+                console.log(message);
+                return (
                   <Message
                     key={index}
+                    dontShowPicture={
+                      isOnLeft &&
+                      index < messagesList.length - 1 &&
+                      (messagesList[index + 1] as MessageProps).isOnLeft
+                    }
                     question={question}
                     message={message}
                     userName={accountInfo.name}
                     isOnLeft={isOnLeft}
                     isAnswer={isAnswer}
                   />
-                )
+                );
+              })}
+              {currOptions && (
+                <div
+                  className={`d-flex flex-row w-100 my-3 justify-content-end align-items-end`}
+                >
+                  <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
+                    {Object.keys(currOptions).map((option) => (
+                      <ChatOption
+                        onClick={(option: string) => {
+                          setPickedOptions((currPicked) =>
+                            currPicked.concat(option)
+                          );
+                          addMessages(
+                            [
+                              {
+                                areOptions: true,
+                                options: currOptions,
+                              },
+                            ].concat(
+                              getChatbotMessagesFormatted(
+                                introductionWorkflow[currOptions[option]]
+                                  .chatbotMessages
+                              ) as any
+                            )
+                          );
+                          setCurrOptions(
+                            introductionWorkflow[currOptions[option]]
+                              .possibleChoices
+                          );
+                        }}
+                        option={option}
+                      />
+                    ))}
+                  </div>
+                </div>
               )}
               <div ref={scrollRef} />
             </InfiniteScroll>
@@ -195,28 +248,6 @@ const Chatbot = ({
               backgroundColor: "white",
             }} // https://github.com/adrianhajdin/chat_application/blob/main/src/components/ChatFeed.jsx for chat feed potentially
           >
-            {isMobile ? (
-              <button
-                className="cl-btn-blue center-child shadow me-3"
-                style={{
-                  width: "5vmax",
-                  height: "5vmax",
-                  borderRadius: "2.5vmax",
-                  right: "5%",
-                  top: "20%",
-                  zIndex: 1000,
-                }}
-                disabled={false}
-                onClick={() => {
-                  setShowingFirstScreen(true);
-                }}
-              >
-                <FontAwesomeIcon
-                  icon={faQuestion}
-                  style={{ fontSize: "1.4em" }}
-                />
-              </button>
-            ) : null}
             <div
               style={{
                 border: isMobile ? "2px solid lightgray" : "none",

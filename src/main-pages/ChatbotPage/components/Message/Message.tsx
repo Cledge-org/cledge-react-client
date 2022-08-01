@@ -1,4 +1,9 @@
-import { faArrowDown, faArrowUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowDown,
+  faArrowUp,
+  faThumbsDown,
+  faThumbsUp,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import { string } from "prop-types";
@@ -13,12 +18,14 @@ const Message = ({
   question,
   isAnswer,
   userName,
+  dontShowPicture,
 }: {
   isOnLeft?: boolean;
   message: string | JSX.Element;
   isAnswer?: boolean;
   question?: string;
   userName: string;
+  dontShowPicture?: boolean;
 }) => {
   const size = useWindowSize();
   const isMobile = size.width < 800;
@@ -27,43 +34,55 @@ const Message = ({
     <div
       className={`d-flex flex-row w-100 ${
         !isOnLeft ? "justify-content-end" : ""
-      } my-3`}
+      } my-3 align-items-end`}
     >
-      {isOnLeft ? (
+      {isOnLeft && !dontShowPicture ? (
         <img
           src="/images/chatbot_picture.svg"
           className="me-2"
           style={{ width: size.width < 800 ? "4vmax" : "2.5vmax" }}
         />
-      ) : null}
+      ) : (
+        dontShowPicture && (
+          <div
+            className="me-2"
+            style={{ width: size.width < 800 ? "4vmax" : "2.5vmax" }}
+          />
+        )
+      )}
       <div
         style={{
-          border: "1px solid gray",
-          borderRadius: "10px",
+          border: "1px solid #C1C0CE",
+          borderRadius: "20px",
+          backgroundColor: isOnLeft ? "#F2F1FA" : "white",
+          borderBottomLeftRadius: isOnLeft ? 0 : "20px",
+          borderBottomRightRadius: isOnLeft ? "20px" : 0,
           minWidth: "15vw",
-          // width: "fit-content",
           overflowWrap: "break-word",
-          // https://css-tricks.com/almanac/properties/o/overflow-wrap/
           maxWidth: size.width < 800 ? "60vw" : "45vw",
         }}
-        className="p-2 position-relative"
+        className="p-3 position-relative cl-dark-text"
       >
         {message}
         {isAnswer && (
           <div
-            className="position-absolute d-flex flex-row bg-light-gray"
+            className="position-absolute d-flex flex-row justify-content-between"
             style={{
               width: isMobile ? "10vw" : "3vw",
               right: "5px",
               bottom: "-10px",
               borderRadius: "5px",
+              background: "transparent",
             }}
           >
             <div
               style={{
-                borderRight: "1px solid #E0DFE8",
-                borderTopLeftRadius: "5px",
-                borderBottomLeftRadius: "5px",
+                borderTopLeftRadius: "15px",
+                borderBottomLeftRadius: "15px",
+                border: "2px solid #506BED",
+                color: vote === "upvote" ? "white" : "#506BED",
+                backgroundColor: vote === "upvote" ? "#506BED" : "white",
+                width: "48%",
               }}
               onClick={() => {
                 if (vote === "upvote") {
@@ -74,17 +93,20 @@ const Message = ({
                 }
               }}
               className={classNames(
-                "w-50 center-child py-1",
+                "center-child py-1",
                 vote === "upvote" ? styles.voteBtnSelected : styles.voteBtn
               )}
             >
-              <FontAwesomeIcon icon={faArrowUp} />
+              <FontAwesomeIcon icon={faThumbsUp} />
             </div>
             <div
               style={{
-                borderLeft: "1px solid #E0DFE8",
-                borderTopRightRadius: "5px",
-                borderBottomRightRadius: "5px",
+                borderTopRightRadius: "15px",
+                borderBottomRightRadius: "15px",
+                border: "2px solid #506BED",
+                color: vote === "downvote" ? "white" : "#506BED",
+                backgroundColor: vote === "downvote" ? "#506BED" : "white",
+                width: "48%",
               }}
               onClick={() => {
                 if (vote === "downvote") {
@@ -95,11 +117,11 @@ const Message = ({
                 }
               }}
               className={classNames(
-                "w-50 center-child py-1",
+                "center-child py-1",
                 vote === "downvote" ? styles.voteBtnSelected : styles.voteBtn
               )}
             >
-              <FontAwesomeIcon icon={faArrowDown} />
+              <FontAwesomeIcon icon={faThumbsDown} />
             </div>
           </div>
         )}
