@@ -15,6 +15,7 @@ export declare global {
     email: string;
     tags: string[];
     checkIns: string[];
+    introducedToChatbot: boolean;
   }
 
   //Account Page Types -->

@@ -48,7 +48,6 @@ const AccountPage: NextApplicationPage<{
     isConcatenable: false,
   });
   const [iteratedFirst, setIteratedFirst] = useState(false);
-  const session = useSession();
   const size = useWindowSize();
   const updateUserData = async () => {
     await Promise.all([

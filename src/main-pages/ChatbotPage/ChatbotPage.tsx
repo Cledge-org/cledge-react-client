@@ -14,7 +14,7 @@ import LeftPannel from "src/main-pages/ChatbotPage/components/LeftPanel/LeftPane
 import styles from "./chatbot-page.module.scss";
 import Message from "src/main-pages/ChatbotPage/components/Message/Message";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
-import { callGetChatbotResponse } from "src/utils/apiCalls";
+import { callGetChatbotResponse, callUpdateUser } from "src/utils/apiCalls";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import { FaQuestion } from "react-icons/fa";
@@ -23,6 +23,8 @@ import {
   introductionWorkflow,
 } from "src/main-pages/ChatbotPage/utils";
 import ChatOption from "src/main-pages/ChatbotPage/components/ChatOption/ChatOption";
+import { updateAccountAction } from "src/utils/redux/actionFunctions";
+import { store } from "src/utils/redux/store";
 
 interface MessageProps {
   message: string | ReactElement;
@@ -43,10 +45,14 @@ const Chatbot = ({
   accountInfo: AccountInfo;
   questionResponses: UserResponse[];
 }) => {
-  const doWorkflow = true;
+  console.log(accountInfo.introducedToChatbot);
+  const [doWorkflow, setDoWorkflow] = useState(
+    !accountInfo.introducedToChatbot
+  );
   const [messagesList, setMessagesList] = useState<
     (MessageProps | CoupledOptions)[]
   >([]);
+  const [sendPostOnNextQuestion, setSendPostOnNextQuestion] = useState(true);
   const [currOptions, setCurrOptions] = useState({});
   const [currMessageText, setCurrMessageText] = useState("");
   const [pickedOptions, setPickedOptions] = useState([]);
@@ -54,7 +60,6 @@ const Chatbot = ({
   const size = useWindowSize();
   const isMobile = size.width < 900 || size.height < 740;
   const router = useRouter();
-
   const handleMessageSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -87,11 +92,38 @@ const Chatbot = ({
       isAnswer: true,
       question: messageOriginal,
     });
+    if (sendPostOnNextQuestion) {
+      copyOfMessages2.push({
+        message:
+          "If you do not like the answer, feel free to give it a thumb down 👎 and we will have a real counselor to reply back to you.",
+        isOnLeft: true,
+      });
+    }
     setMessagesList(copyOfMessages2);
+    setSendPostOnNextQuestion(false);
     scrollRef.current.scrollIntoView({ behavior: "smooth" });
   };
   const addMessages = (newMessages) => {
     setMessagesList((messageList) => messageList.concat(newMessages));
+  };
+  const endWorkflow = () => {
+    setDoWorkflow(false);
+    callUpdateUser({ ...accountInfo, introducedToChatbot: true });
+    store.dispatch(
+      updateAccountAction({
+        ...accountInfo,
+        introducedToChatbot: true,
+      })
+    );
+  };
+  const onDownVote = (message: string, answer: string) => {
+    addMessages(["I'm sorry you didn't like the answer. Can you tell me why?"]);
+    setCurrOptions({
+      "Hard to read": "Hard to read",
+      "Not enough information": "Not enough information",
+      "Not relavant to me": "Not relavant to me",
+      "Information is not accurate": "Information is not accurate",
+    });
   };
   useEffect(() => {
     if (doWorkflow) {
@@ -101,9 +133,7 @@ const Chatbot = ({
       setCurrOptions(introductionWorkflow.e1.possibleChoices);
     }
   }, []);
-  useEffect(() => {
-    console.log(messagesList);
-  }, [messagesList]);
+
   if (accountInfo.checkIns.length > 0) {
     router.push({
       pathname: "/check-ins/[checkIn]",
@@ -164,6 +194,7 @@ const Chatbot = ({
                   const { options } = object as CoupledOptions;
                   return (
                     <div
+                      key={index}
                       className={`d-flex flex-row w-100 my-3 justify-content-end align-items-end`}
                     >
                       <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
@@ -180,7 +211,6 @@ const Chatbot = ({
                 }
                 const { message, isOnLeft, isAnswer, question } =
                   object as MessageProps;
-                console.log(message);
                 return (
                   <Message
                     key={index}
@@ -208,23 +238,43 @@ const Chatbot = ({
                           setPickedOptions((currPicked) =>
                             currPicked.concat(option)
                           );
-                          addMessages(
-                            [
-                              {
-                                areOptions: true,
-                                options: currOptions,
-                              },
-                            ].concat(
+                          addMessages([
+                            {
+                              areOptions: true,
+                              options: currOptions,
+                            },
+                            {
+                              message: (
+                                <div className={styles.chatbotLoading}>...</div>
+                              ),
+                              isOnLeft: true,
+                            },
+                          ]);
+                          setCurrOptions([]);
+                          setTimeout(() => {
+                            setMessagesList((messageList) =>
+                              messageList.slice(0, messageList.length - 1)
+                            );
+                            addMessages(
                               getChatbotMessagesFormatted(
                                 introductionWorkflow[currOptions[option]]
                                   .chatbotMessages
-                              ) as any
-                            )
-                          );
-                          setCurrOptions(
-                            introductionWorkflow[currOptions[option]]
-                              .possibleChoices
-                          );
+                              )
+                            );
+                            setCurrOptions(
+                              introductionWorkflow[currOptions[option]]
+                                .possibleChoices
+                            );
+                            if (
+                              introductionWorkflow[currOptions[option]]
+                                .chatbotMessages[
+                                introductionWorkflow[currOptions[option]]
+                                  .chatbotMessages.length - 1
+                              ] === "Okay! Now bring in any questions you have!"
+                            ) {
+                              endWorkflow();
+                            }
+                          }, 1000);
                         }}
                         option={option}
                       />
@@ -259,6 +309,7 @@ const Chatbot = ({
                 onChange={(e) => {
                   setCurrMessageText(e.target.value);
                 }}
+                disabled={doWorkflow}
                 value={currMessageText}
                 placeholder="Ask anything here"
                 className={classNames("py-1 px-3", isMobile ? "ms-1" : "")}

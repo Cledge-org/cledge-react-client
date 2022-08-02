@@ -83,6 +83,7 @@ const Message = ({
                 color: vote === "upvote" ? "white" : "#506BED",
                 backgroundColor: vote === "upvote" ? "#506BED" : "white",
                 width: "48%",
+                fontSize: "12px",
               }}
               onClick={() => {
                 if (vote === "upvote") {
@@ -107,6 +108,7 @@ const Message = ({
                 color: vote === "downvote" ? "white" : "#506BED",
                 backgroundColor: vote === "downvote" ? "#506BED" : "white",
                 width: "48%",
+                fontSize: "12px",
               }}
               onClick={() => {
                 if (vote === "downvote") {
@@ -121,7 +123,10 @@ const Message = ({
                 vote === "downvote" ? styles.voteBtnSelected : styles.voteBtn
               )}
             >
-              <FontAwesomeIcon icon={faThumbsDown} />
+              <FontAwesomeIcon
+                style={{ transform: "scale(-1, 1)" }}
+                icon={faThumbsDown}
+              />
             </div>
           </div>
         )}

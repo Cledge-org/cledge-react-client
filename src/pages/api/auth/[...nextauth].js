@@ -43,6 +43,7 @@ export default NextAuth({
             birthday: new Date(),
             grade: -1,
             email: profile.email,
+            introducedToChatbot: false,
             tags: [],
             checkIns: ["Onboarding Questions"],
           }).then(async (res) => {
