@@ -68,7 +68,6 @@ function CollegeCard(props: CardProps) {
         >
           <CardActionArea
             onClick={() => {
-              console.log(props.data);
               router.push(
                 {
                   pathname: URL,

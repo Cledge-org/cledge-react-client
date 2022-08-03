@@ -19,6 +19,7 @@ const Message = ({
   isAnswer,
   userName,
   dontShowPicture,
+  onDownVote,
 }: {
   isOnLeft?: boolean;
   message: string | JSX.Element;
@@ -26,6 +27,7 @@ const Message = ({
   question?: string;
   userName: string;
   dontShowPicture?: boolean;
+  onDownVote?: (message: string, answer: string) => void;
 }) => {
   const size = useWindowSize();
   const isMobile = size.width < 800;
@@ -116,6 +118,7 @@ const Message = ({
                 } else {
                   callChatbotVote(question, message as string, false, userName);
                   setVote("downvote");
+                  onDownVote && onDownVote(question, message as string);
                 }
               }}
               className={classNames(

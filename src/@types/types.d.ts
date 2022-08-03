@@ -1,5 +1,7 @@
 // import { ObjectId } from "mongodb";
 
+import { ObjectId } from "mongodb";
+
 export declare global {
   interface Window {
     YT: any;
@@ -314,5 +316,14 @@ export declare global {
   interface DynamicPartRouteID {
     type: string;
     routeId: ObjectId;
+  }
+  interface ChatbotCounselorQuestionData extends WithId<Document> {
+    _id?: ObjectId;
+    email: string;
+    name: string;
+    resolved: boolean;
+    question: string;
+    answer: string;
+    problem: string;
   }
 }

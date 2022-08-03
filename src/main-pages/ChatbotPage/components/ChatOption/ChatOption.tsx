@@ -20,6 +20,7 @@ const ChatOption = ({
         borderRadius: "24px",
         color: "#506BED",
         overflowWrap: "break-word",
+        marginBottom: "5px",
         maxWidth: size.width < 800 ? "60vw" : "40vw",
       }}
       onClick={() => {

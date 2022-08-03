@@ -30,7 +30,6 @@ const CollegeDetailPage = ({
   const router = useRouter();
   const raw = router.query.data;
   const data = JSON.parse(raw.toString());
-  console.log(data);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);

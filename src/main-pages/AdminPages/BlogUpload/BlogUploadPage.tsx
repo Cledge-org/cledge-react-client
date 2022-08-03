@@ -109,7 +109,6 @@ const BlogUploadPage: NextApplicationPage<{ blogInfo }> = ({ blogInfo }) => {
         resourceSendData[resourceType.toLowerCase()] = resourceData;
         callPutBlog(resourceData._id, { ...resourceData, _id: undefined })
           .then((res) => {
-            console.log(res.status);
             alert("Upload Successful!");
             router.push({ pathname: "/dashboard" });
           })
@@ -337,10 +336,8 @@ const BlogUploadPage: NextApplicationPage<{ blogInfo }> = ({ blogInfo }) => {
             <button
               className="cl-btn-blue me-2"
               onClick={() => {
-                console.log(resourceData._id);
                 callPutBlog(resourceData._id, undefined)
                   .then((res) => {
-                    console.log(res.status);
                     alert("Deletion Successful!");
                     router.push({ pathname: "/dashboard" });
                   })

@@ -83,6 +83,21 @@ export const callPutResource = async ({
     }),
   });
 };
+export const callPutChatbotCounselorQuestion = async ({
+  chatbotDataId,
+  chatbotData,
+}: {
+  chatbotDataId?: ObjectId | string;
+  chatbotData: ChatbotCounselorQuestionData;
+}) => {
+  return await fetch("/api/put-chatbot-counselor-question", {
+    method: "POST",
+    body: JSON.stringify({
+      chatbotDataId,
+      chatbotData,
+    }),
+  });
+};
 export const callPutActivities = async (activities: Activities) => {
   const session = getSession();
   return await fetch(`/api/put-activities`, {
@@ -191,6 +206,19 @@ export const alertSlackNewUser = (numUsers: number) => {
       method: "POST",
       body: JSON.stringify({
         text: "A new user has appeared!\nCurrent number of users: " + numUsers,
+      }),
+    }
+  );
+};
+export const alertSlackChatbotQuestion = (
+  chatbotData: ChatbotCounselorQuestionData
+) => {
+  fetch(
+    "https://hooks.slack.com/services/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",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        text: `<@U01QZ80JC00> ${chatbotData.name} just asked the chatbot a question and received an answer they didn't like :/ go to: https://cledge.org/admin/chatbot-counselor-questions to check it out`,
       }),
     }
   );

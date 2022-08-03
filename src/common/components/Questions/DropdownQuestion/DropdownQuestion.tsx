@@ -83,7 +83,6 @@ export default function DropDownQuestion({
         return value;
       }
       let prevChosenArr = prevChosen instanceof Array ? prevChosen.slice() : [];
-      console.log(prevChosenArr);
       if (prevChosenArr.includes(" " + value)) {
         prevChosenArr.splice(prevChosen.indexOf(" " + value));
         onChange(prevChosenArr.map((element) => element.substring(1)));

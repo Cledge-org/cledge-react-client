@@ -130,7 +130,6 @@ const SignUpPage = () => {
         });
       })
       .catch((err) => {
-        console.log("HI");
         console.error(err);
         checkCondition(true, err);
       });

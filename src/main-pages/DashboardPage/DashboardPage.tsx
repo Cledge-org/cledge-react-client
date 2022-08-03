@@ -252,7 +252,10 @@ const DashboardPage: NextApplicationPage<{
         >
           Switch to User View
         </button>
-        <div className="container-fluid p-5 d-flex flex-row justify-content-between">
+        <div
+          className="container-fluid p-5 d-flex flex-column justify-content-evenly align-items-center"
+          style={{ height: "90vh" }}
+        >
           <button
             onClick={() => {
               router.push({
@@ -306,6 +309,15 @@ const DashboardPage: NextApplicationPage<{
             }}
           >
             Blog
+          </button>
+          <button
+            onClick={() => {
+              router.push({
+                pathname: "/admin/chatbot-counselor-questions",
+              });
+            }}
+          >
+            Chatbot Counselor Questions
           </button>
         </div>
       </div>

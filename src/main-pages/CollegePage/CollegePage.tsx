@@ -110,7 +110,6 @@ const College = ({
     async function fetchData() {
       let data = await getData();
       if (requestData.skip - prevRequest.skip > 0) {
-        console.log(requestData);
         setData((currData) => {
           if (currSort) {
             return sortBy(
@@ -125,7 +124,6 @@ const College = ({
         if (currSort) {
           setData(sortBy(currSort, currNumericalSortOrder, data));
         } else {
-          console.log(data);
           setData(data);
         }
         setIsLoading(false);
@@ -191,7 +189,6 @@ const College = ({
             a.acceptance_rate.acceptance_rate_total
       );
     }
-    console.log(copiedData);
     if (data) {
       return copiedData;
     }

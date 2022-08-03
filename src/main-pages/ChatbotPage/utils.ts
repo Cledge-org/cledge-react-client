@@ -1,3 +1,5 @@
+import { callPutChatbotCounselorQuestion } from "src/utils/apiCalls";
+
 export const introductionWorkflow = {
   e1: {
     chatbotMessages: [
@@ -30,6 +32,54 @@ export const introductionWorkflow = {
   },
   e3op2: {
     chatbotMessages: ["Okay! Now bring in any questions you have!"],
+  },
+};
+export const downvoteWorkflow = {
+  e1: {
+    chatbotMessages: [
+      "I'm sorry you didn't like the answer. Can you tell me why?",
+    ],
+    possibleChoices: {
+      "Hard to read": "e2",
+      "Not enough information": "e2",
+      "Not relavant to me": "e2",
+      "Information is not accurate": "e2",
+    },
+  },
+  e2: {
+    chatbotMessages: [
+      "Thank you. We’ll use your feedback to improve your chatbot experience.",
+      "Would you like a human counselor to give you a better answer?",
+    ],
+    possibleChoices: {
+      "Yes, I would love a better response from a human counselor": "e3op1",
+      "No it's fine": "e3op2",
+    },
+  },
+  e3op1: {
+    backgroundAction: (
+      accountInfo: AccountInfo,
+      question: string,
+      answer: string,
+      problem: string
+    ) => {
+      callPutChatbotCounselorQuestion({
+        chatbotData: {
+          email: accountInfo.email,
+          name: accountInfo.name,
+          resolved: false,
+          question,
+          answer,
+          problem,
+        },
+      });
+    },
+    chatbotMessages: [
+      "Got it! Our counselor will get back to you within 48 hours. Expect an email from: ayan@cledge.org",
+    ],
+  },
+  e3op2: {
+    chatbotMessages: [],
   },
 };
 export const getChatbotMessagesFormatted = (chatbotMessages: string[]) => {
