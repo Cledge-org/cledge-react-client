@@ -11,7 +11,7 @@ import CardCheckIn from "../../common/components/Cards/CardCheckIn/CardCheckIn";
 import TabButton from "../../common/components/TabButton/TabButton";
 
 import { NextApplicationPage } from "../AppPage/AppPage";
-import QuestionSubPageHeader from "./components/QuestionComponents/SubpageHeader/SubpageHeader";
+import QuestionSubPageHeader from "../../common/components/SubpageHeader/SubpageHeader";
 import QuestionECSubpage from "./components/QuestionSubPages/QuestionECSubpage/QuestionECSubpage";
 import QuestionACSubpage from "./components/QuestionSubPages/QuestionACSubpage/QuestionACSubpage";
 import QuestionSummarySubpage from "./components/QuestionSubPages/QuestionSummarySubpage/QuestionSummarySubpage";
@@ -70,9 +70,10 @@ const Progress: NextApplicationPage<{
           ({ questionId }) => questionId
         );
         if (
-          userQuestionIds.includes(question._id) &&
+          userQuestionIds.includes(question._id.toString()) &&
           isNotEmpty(
-            questionResponses[userQuestionIds.indexOf(question._id)].response
+            questionResponses[userQuestionIds.indexOf(question._id.toString())]
+              .response
           )
         ) {
           finished++;

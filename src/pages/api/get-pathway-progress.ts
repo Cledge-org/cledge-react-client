@@ -141,7 +141,7 @@ async function getSpecificModuleProgress(
               moduleContentProgress.push({
                 name: content.name,
                 finished: false,
-                videoTime: 0,
+                subContentProgress: [],
               });
             }
           });
@@ -152,7 +152,7 @@ async function getSpecificModuleProgress(
               moduleContentProgress.push({
                 name: content.name,
                 finished: false,
-                videoTime: 0,
+                subContentProgress: [],
               });
             }
           });

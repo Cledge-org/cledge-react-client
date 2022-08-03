@@ -20,7 +20,8 @@
       "types": [
         "./src/@types/auth.d.ts",
         "./src/@types/types.d.ts",
-        "./src/@types/redux.d.ts"
+        "./src/@types/redux.d.ts",
+        "./src/@types/slate.d.ts"
       ]
     }
     // "sourceMap": true // used to debug the program
@@ -30,6 +31,7 @@
     "src/@types/types.d.ts",
     "src/@types/auth.d.ts",
     "src/@types/redux.d.ts",
+    "./src/@types/slate.d.ts",
     "src",
     "**/*.ts",
     "**/*.tsx",

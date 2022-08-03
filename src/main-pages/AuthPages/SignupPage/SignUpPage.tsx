@@ -2,12 +2,10 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getProviders, signIn } from "next-auth/react";
-import type { Provider } from "next-auth/providers";
-import GoogleProvider from "next-auth/providers/google";
-import AuthFunctions from "../../../pages/api/auth/firebase-auth";
 import styles from "./signup-page.module.scss";
 import classNames from "classnames";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
+import { callCreateUser } from "src/utils/apiCalls";
 
 const SignUpPage = () => {
   const incorrectPassStr =
@@ -107,7 +105,7 @@ const SignUpPage = () => {
     ) {
       return;
     }
-    await AuthFunctions.createUser(formData.email, formData.password1, {
+    await callCreateUser(formData.email, formData.password1, {
       name: formData.firstName + " " + formData.lastName,
       address: "",
       birthday: new Date(),

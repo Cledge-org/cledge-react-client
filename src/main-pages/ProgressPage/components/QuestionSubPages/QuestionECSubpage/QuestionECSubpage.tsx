@@ -13,7 +13,7 @@ import {
 } from "../../../../../utils/student-metrics/metricsCalculations";
 import ECEditor from "../../QuestionComponents/ECEditor/ECEditor";
 import ECQuestionSummaryCard from "../../QuestionComponents/ECQuestionSummaryCard/ECQuestionSummaryCard";
-import QuestionSubPageHeader from "../../QuestionComponents/SubpageHeader/SubpageHeader";
+import QuestionSubPageHeader from "../../../../../common/components/SubpageHeader/SubpageHeader";
 
 interface QuestionECSubpageProps {
   userResponses: UserResponse[];
