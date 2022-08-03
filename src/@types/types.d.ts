@@ -1,3 +1,5 @@
+import { TimePickerLocale } from "antd/lib/time-picker";
+
 export declare global {
   interface Window {
     YT: any;
@@ -216,10 +218,13 @@ export declare global {
     _id?: ObjectId;
     classes: Class[];
     overallClassTier: number;
+    classTip: string;
     gpa: number;
     gpaTier: number;
+    gpaTip: string;
     satScore: number;
     actScore: number;
+    testTip: string;
     overallTier: number;
   }
 
@@ -228,6 +233,7 @@ export declare global {
     name: string;
     tier: number;
   }
+  //End of Student Metrics
 
   interface ContainerProps {
     border?: boolean;

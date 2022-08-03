@@ -1,3 +1,4 @@
+import { getTimeProps } from "antd/lib/date-picker/generatePicker";
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
@@ -9,9 +10,15 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId, academics } = JSON.parse(req.body);
+  const { userId, academics, applicantType } = JSON.parse(req.body);
   try {
     const session = getSession({ req });
+    if(academics)
+    {
+      academics.gpaTip = getGPATip(academics.gpaTier);
+      academics.classTip = getClassTip(academics.overallClassTier, academics.gpaTier);
+      academics.testTip = getTestTip(academics.satScore, academics.actScore, applicantType);
+    }
     const result = await putAcademics(
       userId,
       academics,
@@ -72,3 +79,84 @@ export const putAcademics = (
     }
   });
 };
+
+// Gets a user's GPA tip based on their GPA tier.
+function getGPATip(gpaTier: number): string {
+  try {
+    const bar1 = 7;
+    const bar2 = 10;
+    let gpaTip = "";
+    if(gpaTier < bar1)
+    {
+      gpaTip = "Low GPA";
+    }
+    else if(gpaTier < bar2)
+    {
+      gpaTip = "Medium GPA";
+    }
+    else
+    {
+      gpaTip = "You're doing great! High GPA"
+    }
+    return gpaTip;
+  } 
+  catch (e) {
+    console.log(e);
+  }
+}
+
+function getClassTip(overallClassTier: number, gpaTier: number): string {
+  try {
+    const gpaBar = 10;
+    const classBar = 8;
+    let classTip = "";
+    if(gpaTier < gpaBar)
+    {
+      classTip = "We recommend you focus on GPA first";
+    }
+    else if(overallClassTier < classBar)
+    {
+      classTip = "If you have the time, we recommend looking to increase course load."
+    }
+    else
+    {
+      classTip = "Your GPA and coursework are excellent! If you have additional time, we recommend focusing on extracurriculars."
+    }
+    return classTip;
+  }
+  catch (e) {
+    console.log(e);
+  }
+}
+
+function getTestTip(satScore: number, actScore: number, applicantType: number): string {
+  try {
+    let SATBar = 1520;
+    let ACTBar = 34;
+    let testTip = "";
+    if(applicantType == 0)
+    {
+      SATBar = 1200;
+      ACTBar = 25;
+    }
+    else if(applicantType == 1)
+    {
+      SATBar = 1350;
+      ACTBar = 30;
+    }
+
+    if(satScore < SATBar && actScore < ACTBar)
+    {
+      testTip = "Your standardized test scores could be improved."
+    }
+    else
+    {
+      testTip = "Your standardized test scores are great! We recommend focusing on other areas now."
+    }
+    return testTip;
+  }
+  catch(e)
+  {
+    console.log(e);
+  }
+}
