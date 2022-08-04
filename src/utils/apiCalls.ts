@@ -269,7 +269,7 @@ export const callGetChatbotResponse = async (
       }),
     }
   )
-    .then((response) => response.text())
+    .then(async (response) => await response.json())
     .catch((error) => {
       console.error(error);
       return "Sorry, the chatbot seems to be experiencing difficulties right now!";
@@ -279,7 +279,8 @@ export const callChatbotVote = (
   question: string,
   answer: string,
   vote: boolean,
-  username: string
+  username: string,
+  messageId: string,
 ) => {
   fetch(`https://cledge-chatbot-service.azurewebsites.net/v1/vote_api`, {
     method: "POST",
@@ -291,6 +292,7 @@ export const callChatbotVote = (
       answer,
       username,
       vote,
+      responseId: messageId,
     }),
   });
 };

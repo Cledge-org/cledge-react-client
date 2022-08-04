@@ -33,6 +33,7 @@ import { store } from "src/utils/redux/store";
 
 interface MessageProps {
   message: string | ReactElement;
+  messageId?: string;
   isOnLeft: boolean;
   isAnswer?: boolean;
   question?: string;
@@ -80,7 +81,7 @@ const Chatbot = ({
     });
     setMessagesList(copyOfMessages);
     scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    const response = await callGetChatbotResponse(
+    const {response, responseId} = await callGetChatbotResponse(
       currMessageText,
       accountInfo.name,
       questionResponses.filter(({ questionId }) => {
@@ -94,6 +95,7 @@ const Chatbot = ({
     const copyOfMessages2 = copyOfMessages.slice(0, -1);
     copyOfMessages2.push({
       message: response,
+      messageId: responseId,
       isOnLeft: true,
       isAnswer: true,
       onDownVote: onDownVote,
@@ -271,20 +273,21 @@ const Chatbot = ({
                       className={`d-flex flex-row w-100 my-3 justify-content-end align-items-end`}
                     >
                       <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
-                        {Object.keys(options).map((option) => (
+                        {Object.keys(options).map((option, idx) => (
                           <ChatOption
                             isChosen={pickedOptions[pickedIndex].includes(
                               option
                             )}
                             onClick={() => {}}
                             option={option}
+                            key={idx}
                           />
                         ))}
                       </div>
                     </div>
                   );
                 }
-                const { message, isOnLeft, isAnswer, question, onDownVote } =
+                const { message, messageId, isOnLeft, isAnswer, question, onDownVote } =
                   object as MessageProps;
                 return (
                   <Message
@@ -296,6 +299,7 @@ const Chatbot = ({
                     }
                     question={question}
                     message={message}
+                    messageId={messageId}
                     userName={accountInfo.name}
                     isOnLeft={isOnLeft}
                     isAnswer={isAnswer}
@@ -308,8 +312,8 @@ const Chatbot = ({
                   className={`d-flex flex-row w-100 my-3 justify-content-end align-items-end`}
                 >
                   <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
-                    {Object.keys(currOptions).map((option) => (
-                      <ChatOption onClick={onOptionClick} option={option} />
+                    {Object.keys(currOptions).map((option, idx) => (
+                      <ChatOption onClick={onOptionClick} option={option} key={idx} />
                     ))}
                   </div>
                 </div>

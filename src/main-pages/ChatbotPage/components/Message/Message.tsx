@@ -15,6 +15,7 @@ import styles from "./message.module.scss";
 const Message = ({
   isOnLeft,
   message,
+  messageId,
   question,
   isAnswer,
   userName,
@@ -23,6 +24,7 @@ const Message = ({
 }: {
   isOnLeft?: boolean;
   message: string | JSX.Element;
+  messageId: string;
   isAnswer?: boolean;
   question?: string;
   userName: string;
@@ -92,7 +94,7 @@ const Message = ({
                   setVote("none");
                 } else {
                   setVote("upvote");
-                  callChatbotVote(question, message as string, true, userName);
+                  callChatbotVote(question, message as string, true, userName, messageId);
                 }
               }}
               className={classNames(
@@ -116,7 +118,7 @@ const Message = ({
                 if (vote === "downvote") {
                   setVote("none");
                 } else {
-                  callChatbotVote(question, message as string, false, userName);
+                  callChatbotVote(question, message as string, false, userName, messageId);
                   setVote("downvote");
                   onDownVote && onDownVote(question, message as string);
                 }
