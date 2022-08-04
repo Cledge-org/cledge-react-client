@@ -22,6 +22,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
       await updateUser(userId, userInfo);
       resolve.status(200).send("Success");
     } catch (e) {
+      console.log(e);
       resolve.status(500).send(e);
     }
   }
@@ -37,6 +38,9 @@ export const updateUser = async (
     const client = await MongoClient.connect(process.env.MONGO_URL);
     try {
       // Remove undefined and null fields in user as to not delete them
+      if (user._id) {
+        delete user._id;
+      }
       for (const propName in user) {
         if (user[propName] === null || user[propName] === undefined)
           delete user[propName];

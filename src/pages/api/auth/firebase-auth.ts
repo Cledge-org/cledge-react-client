@@ -56,7 +56,7 @@ class AuthFunctions {
         const user = res.user;
         createUser({
           ...initUserObj,
-          userId: user.uid,
+          firebaseId: user.uid,
           email: email,
         }).catch((err) => {
           console.error(err);
