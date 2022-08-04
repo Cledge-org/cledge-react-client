@@ -1,5 +1,5 @@
 import React from 'react'
-import CollegeListPage from 'src/main-pages/CollegeListPage'
+import CollegeListPage from 'src/main-pages/CollegeList/CollegeListPage'
 
 function CollegeList() {
   return (

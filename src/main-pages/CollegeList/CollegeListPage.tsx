@@ -1,11 +1,16 @@
 import { connect } from 'react-redux';
 import React from 'react'
 import { NextApplicationPage } from 'src/main-pages/AppPage/AppPage'
-
+import styles from './styles.module.scss'
+import TierCard from 'src/main-pages/CollegeList/components/TierCard';
 const CollegeListPage: NextApplicationPage<{ accountInfo: AccountInfo }> = ({ accountInfo }) => {
     return (
-        <div>
-            <h1 style={{fontSize:24}}>My favorites</h1>
+        <div style={{marginLeft:"80px"}}>
+            <div>
+                <p className={styles.myFavHeader}>My favorites</p>
+            </div>
+            <TierCard name='Target Schools'/>
+            
         </div>
     )
 }
