@@ -3,9 +3,11 @@ import { useState } from "react";
 import MCQQuestion from "src/common/components/Questions/MCQQuestion/MCQQuestion";
 import TextInputQuestion from "src/common/components/Questions/TextInputQuestion/TextInputQuestion";
 import { callPutUWWaitlist } from "src/utils/apiCalls";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 
 const UWInterestFormPage = () => {
   const router = useRouter();
+  const isMobile = useWindowSize().width < 800;
   const [formState, setFormState] = useState({
     firstName: "",
     lastName: "",
@@ -34,62 +36,77 @@ const UWInterestFormPage = () => {
   console.log(formState);
   return (
     <div className="d-flex flex-column align-items-center w-100 pb-5">
-      <div style={{ fontSize: "24px" }} className="cl-dark-text fw-bold">
+      <div
+        style={{ fontSize: "24px", textAlign: "center" }}
+        className="cl-dark-text fw-bold"
+      >
         UW CS Package Interest Form
       </div>
-      <div style={{ fontSize: "16px" }}>
+      <div style={{ fontSize: "16px", textAlign: "center" }}>
         Fill out this form to be the first to know when this product releases
         and get an early access discount!
       </div>
-      <div className="d-flex flex-row align-items-center justify-content-around w-100">
-        <TextInputQuestion
-          question={{
-            question: "First Name*",
-            type: "TextInput",
-            helpText: "John",
-          }}
-          userAnswer={""}
-          onChange={(newFirstName) => {
-            updateState("firstName", newFirstName);
-          }}
-        />
-        <TextInputQuestion
-          question={{
-            question: "Last Name*",
-            type: "TextInput",
-            helpText: "Doe",
-          }}
-          userAnswer={""}
-          onChange={(newLastName) => {
-            updateState("lastName", newLastName);
-          }}
-        />
+      <div className="d-flex flex-row flex-wrap align-items-center justify-content-around w-100">
+        <div className={isMobile ? "w-100" : "w-50"}>
+          <TextInputQuestion
+            question={{
+              question: "First Name*",
+              type: "TextInput",
+              helpText: "John",
+            }}
+            userAnswer={""}
+            onChange={(newFirstName) => {
+              updateState("firstName", newFirstName);
+            }}
+          />
+        </div>
+        <div className={isMobile ? "w-100" : "w-50"}>
+          <TextInputQuestion
+            question={{
+              question: "Last Name*",
+              type: "TextInput",
+              helpText: "Doe",
+            }}
+            userAnswer={""}
+            onChange={(newLastName) => {
+              updateState("lastName", newLastName);
+            }}
+          />
+        </div>
       </div>
-      <div className="d-flex flex-row align-items-center justify-content-around w-100">
-        <TextInputQuestion
-          question={{
-            question: "Email*",
-            type: "TextInput",
-            helpText: "example@domain.com",
-          }}
-          userAnswer={""}
-          onChange={(email) => {
-            updateState("email", email);
-          }}
-        />
-        <TextInputQuestion
-          question={{
-            question: "Zip Code*",
-            type: "TextInput",
-            helpText: "12345",
-          }}
-          userAnswer={""}
-          onChange={(zipCode) => {
-            updateState("zipCode", zipCode);
-          }}
-        />
+      <div className="d-flex flex-row flex-wrap align-items-center justify-content-around w-100">
+        <div className={isMobile ? "w-100" : "w-50"}>
+          <TextInputQuestion
+            question={{
+              question: "Email*",
+              type: "TextInput",
+              helpText: "example@domain.com",
+            }}
+            userAnswer={""}
+            onChange={(email) => {
+              updateState("email", email);
+            }}
+          />
+        </div>
+        <div className={isMobile ? "w-100" : "w-50"}>
+          <TextInputQuestion
+            question={{
+              question: "Zip Code*",
+              type: "TextInput",
+              helpText: "12345",
+            }}
+            userAnswer={""}
+            onChange={(zipCode) => {
+              updateState("zipCode", zipCode);
+            }}
+          />
+        </div>
       </div>
-      <div className="d-flex flex-row align-items-center w-50">
+      <div
+        className={`d-flex flex-row align-items-center w-${
+          isMobile ? 100 : 50
+        }`}
+      >
         <TextInputQuestion
           question={{
             question: "Phone #",
@@ -102,7 +119,7 @@ const UWInterestFormPage = () => {
           }}
         />
       </div>
-      <div className="d-flex flex-column w-50">
+      <div className={`d-flex flex-column w-${isMobile ? 100 : 50}`}>
         <MCQQuestion
           question={{
             question: "I am a... *",
@@ -134,7 +151,10 @@ const UWInterestFormPage = () => {
           tags={[]}
         />
       </div>
-      <button onClick={() => onSubmit()} className="cl-btn-blue mt-3">
+      <button
+        className={`cl-btn-blue mt-3 ${isMobile ? "p-3" : ""}`}
+        onClick={() => onSubmit()}
+      >
         Submit
       </button>
     </div>

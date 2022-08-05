@@ -9,6 +9,7 @@ interface TextInputQuestionProps {
   userAnswer: string;
   onChange: Function;
   isTextArea?: boolean;
+  className?: string;
   isGrade?: boolean;
   isDark?: boolean;
 }
@@ -20,15 +21,19 @@ export default function TextInputQuestion({
   isPathwayQuestion,
   onChange,
   isDark,
+  className,
 }: TextInputQuestionProps) {
   const session = useSession();
   const [currValue, setCurrValue] = useState(userAnswer);
   if (isTextArea) {
     return (
       <div
-        className={`container-fluid h-100 d-flex flex-column align-items-${
-          isPathwayQuestion ? "start" : "center"
-        } justify-content-evenly w-100 cl-dark-text fw-bold`}
+        className={classNames(
+          `container-fluid h-100 d-flex flex-column align-items-${
+            isPathwayQuestion ? "start" : "center"
+          } justify-content-evenly w-100 cl-dark-text fw-bold`,
+          className
+        )}
       >
         <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
           {question.question}
@@ -64,7 +69,12 @@ export default function TextInputQuestion({
   }
   if (isDark) {
     return (
-      <div className="w-100 d-flex flex-column justify-content-evenly pt-5">
+      <div
+        className={classNames(
+          "w-100 d-flex flex-column justify-content-evenly pt-5",
+          className
+        )}
+      >
         <div
           className="fw-bold cl-dark-text pb-3"
           style={{ fontSize: "1.4em" }}
@@ -86,9 +96,12 @@ export default function TextInputQuestion({
   }
   return (
     <div
-      className={`container-fluid h-100 d-flex flex-column align-items-${
-        isPathwayQuestion ? "start" : "center"
-      } justify-content-evenly w-100 cl-dark-text fw-bold`}
+      className={classNames(
+        `container-fluid h-100 d-flex flex-column align-items-${
+          isPathwayQuestion ? "start" : "center"
+        } justify-content-evenly w-100 cl-dark-text fw-bold`,
+        className
+      )}
     >
       <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
         {question.question}
