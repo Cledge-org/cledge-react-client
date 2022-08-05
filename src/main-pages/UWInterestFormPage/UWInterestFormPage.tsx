@@ -17,6 +17,7 @@ const UWInterestFormPage = () => {
     userType: "",
     grade: "",
   });
+  const [showSubmitScreen, setShowSubmitScreen] = useState(false);
   const onSubmit = () => {
     const keys = Object.keys(formState);
     for (let i = 0; i < keys.length; i++) {
@@ -29,11 +30,22 @@ const UWInterestFormPage = () => {
       ...formState,
       ref: router.query.ref,
     });
+    setShowSubmitScreen(true);
   };
   const updateState = (parameter: string, value: any) => {
     setFormState((oldState) => ({ ...oldState, [parameter]: value }));
   };
-  console.log(formState);
+  if (showSubmitScreen) {
+    return (
+      <div
+        className="w-100 center-child cl-dark-text d-flex flex-column fw-bold"
+        style={{ fontSize: "24px", height: "90vh" }}
+      >
+        Thanks for your submission!{" "}
+        <div>We will notify you when this product is released</div>
+      </div>
+    );
+  }
   return (
     <div className="d-flex flex-column align-items-center w-100 pb-5">
       <div

@@ -63,6 +63,10 @@ const Chatbot = ({
   const [currOptions, setCurrOptions] = useState({});
   const [currMessageText, setCurrMessageText] = useState("");
   const [pickedOptions, setPickedOptions] = useState<any[][]>([]);
+  const [currProblematicMessage, setCurrProblematicMessage] = useState<{
+    question: string;
+    answer: string;
+  }>({ question: "", answer: "" });
   const scrollRef = useRef(null);
   const size = useWindowSize();
   const isMobile = size.width < 900 || size.height < 740;
@@ -80,8 +84,7 @@ const Chatbot = ({
       isOnLeft: true,
     });
     setMessagesList(copyOfMessages);
-    scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    const {response, responseId} = await callGetChatbotResponse(
+    const { response, responseId } = await callGetChatbotResponse(
       currMessageText,
       accountInfo.name,
       questionResponses.filter(({ questionId }) => {
@@ -110,7 +113,6 @@ const Chatbot = ({
     }
     setMessagesList(copyOfMessages2);
     setSendPostOnNextQuestion(false);
-    scrollRef.current.scrollIntoView({ behavior: "smooth" });
   };
   const addMessages = (newMessages) => {
     setMessagesList((messageList) => messageList.concat(newMessages));
@@ -132,6 +134,7 @@ const Chatbot = ({
     addMessages(
       getChatbotMessagesFormatted(downvoteWorkflow.e1.chatbotMessages)
     );
+    setCurrProblematicMessage({ question: message, answer });
     setCurrOptions(downvoteWorkflow.e1.possibleChoices);
   };
 
@@ -139,14 +142,10 @@ const Chatbot = ({
     const workflow =
       currWorkflow === "downvote" ? downvoteWorkflow : introductionWorkflow;
     if (workflow[currOptions[option]].backgroundAction) {
-      const answerMsg: MessageProps = messagesList
-        .slice()
-        .reverse()
-        .find(({ isAnswer }: MessageProps) => isAnswer) as MessageProps;
       workflow[currOptions[option]].backgroundAction(
         accountInfo,
-        answerMsg.question,
-        answerMsg.message,
+        currProblematicMessage.question,
+        currProblematicMessage.answer,
         pickedOptions[pickedOptions.length - 1][
           pickedOptions[pickedOptions.length - 1].length - 1
         ]
@@ -155,8 +154,8 @@ const Chatbot = ({
         email: accountInfo.email,
         name: accountInfo.name,
         resolved: false,
-        question: answerMsg.question,
-        answer: answerMsg.message as string,
+        question: currProblematicMessage.question,
+        answer: currProblematicMessage.answer,
         problem:
           pickedOptions[pickedOptions.length - 1][
             pickedOptions[pickedOptions.length - 1].length - 1
@@ -198,7 +197,9 @@ const Chatbot = ({
       }
     }, 1000);
   };
-
+  useEffect(() => {
+    scrollRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [messagesList, currOptions]);
   useEffect(() => {
     if (currWorkflow === "intro") {
       setPickedOptions((pickedOptions) => [...pickedOptions, []]);
@@ -287,8 +288,14 @@ const Chatbot = ({
                     </div>
                   );
                 }
-                const { message, messageId, isOnLeft, isAnswer, question, onDownVote } =
-                  object as MessageProps;
+                const {
+                  message,
+                  messageId,
+                  isOnLeft,
+                  isAnswer,
+                  question,
+                  onDownVote,
+                } = object as MessageProps;
                 return (
                   <Message
                     key={index}
@@ -313,7 +320,11 @@ const Chatbot = ({
                 >
                   <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
                     {Object.keys(currOptions).map((option, idx) => (
-                      <ChatOption onClick={onOptionClick} option={option} key={idx} />
+                      <ChatOption
+                        onClick={onOptionClick}
+                        option={option}
+                        key={idx}
+                      />
                     ))}
                   </div>
                 </div>

@@ -42,6 +42,7 @@ export const downvoteWorkflow = {
     possibleChoices: {
       "Hard to read": "e2",
       "Not enough information": "e2",
+      "Incorrectly classified question": "e2",
       "Not relavant to me": "e2",
       "Information is not accurate": "e2",
     },
