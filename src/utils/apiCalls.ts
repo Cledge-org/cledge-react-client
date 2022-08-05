@@ -280,7 +280,7 @@ export const callChatbotVote = (
   answer: string,
   vote: boolean,
   username: string,
-  messageId: string,
+  messageId: string
 ) => {
   fetch(`https://cledge-chatbot-service.azurewebsites.net/v2/vote_api`, {
     method: "POST",
@@ -318,5 +318,11 @@ export const callPutBlog = async (articleId: string, article) => {
   return await fetch(`/api/put-blog`, {
     method: "POST",
     body: JSON.stringify({ articleId, article }),
+  });
+};
+export const callPutUWWaitlist = async (waitlistData: any) => {
+  return await fetch(`/api/add-to-uw-waitlist`, {
+    method: "POST",
+    body: JSON.stringify({ data: waitlistData }),
   });
 };
