@@ -29,7 +29,7 @@ const BlogUploadPage: NextApplicationPage<{ blogInfo }> = ({ blogInfo }) => {
     getbase64(file);
   };
   const onLoad = (fileString) => {
-    resourceData.image = fileString;
+    setResourceData({ ...resourceData, image: fileString });
   };
   const getbase64 = (file) => {
     let reader = new FileReader();
@@ -101,8 +101,7 @@ const BlogUploadPage: NextApplicationPage<{ blogInfo }> = ({ blogInfo }) => {
         onChange={handleEditorChange}
       />
     );
-  }, [resourceData._id]);
-  console.log(resourceData.content);
+  }, [resourceData]);
   return (
     <UploadPage
       onUpload={() => {
@@ -295,10 +294,10 @@ const BlogUploadPage: NextApplicationPage<{ blogInfo }> = ({ blogInfo }) => {
           >
             Image:
           </label>
-          <form>
+          <div>
             <input type="file" onChange={uploadImage} />
             <img src={resourceData.image} style={{ width: "50%" }} />
-          </form>
+          </div>
         </div>
         <div className="form-group">
           <label
