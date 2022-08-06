@@ -8,7 +8,7 @@ export const config = {
   };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-    const { user_id, college_id, user_tier } = JSON.parse(req.body);
+    const { user_id, college_id, user_tier } = (req.body);
     if (user_id) {
         try {
             // remove current college from the college list

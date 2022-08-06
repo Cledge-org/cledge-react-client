@@ -1,5 +1,7 @@
 // import { ObjectId } from "mongodb";
 
+import { ObjectId, ObjectID } from "mongodb";
+
 export declare global {
   interface Window {
     YT: any;
@@ -314,4 +316,30 @@ export declare global {
     type: string;
     routeId: ObjectId;
   }
+}
+
+interface collegeListIndivudialInfo{
+college_id: string;
+fit_type: -1, 0, 1, 2, 3;
+img_url: string;
+img_title?: string;
+college_name: string;
+location: string
+in_state_tuition: number
+out_state_tuition: number
+college_type:"Public" | "Private"
+}
+
+interface collegeInfo{
+_id: ObjectId | string;
+college_id: string;
+img_url: string;
+img_title: string;
+college_name: string;
+target_tier: number;
+safety_tier: number;
+location: string;
+in_state_tuition: number;
+out_state_tuition: number;
+college_type: "Public" | "Private"
 }
