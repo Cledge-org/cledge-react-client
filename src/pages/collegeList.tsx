@@ -17,7 +17,7 @@ function CollegeList() {
     setData(responseJson["college_list"])
   }
   return (
-    <CollegeListPage collegeList={data}/>
+    <CollegeListPage collegeList={data} setCollegeList={(newData)=>{setData(newData)}}/>
   )
 }
 // export async function getServerSiderProps(ctx:GetServerSidePropsContext){
