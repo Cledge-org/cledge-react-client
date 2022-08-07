@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { collegeListIndivudialInfo } from "src/@types/types";
 
 export const config = {
   api: {
@@ -12,7 +13,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   if (user_id) {
     try {
       const collegeList = await getCollegeIdList(user_id);
-      const collegeListInfo = await getCollegeListInfo(collegeList);
+      const collegeListInfo: collegeListIndivudialInfo[] = await getCollegeListInfo(collegeList);
       resolve
         .status(200)
         .send({ status: "Success", college_list: collegeListInfo });
@@ -48,7 +49,7 @@ export const getCollegeIdList = (user_id: String): Promise<Object> => {
 
 // Pass in a list of college id and fit types
 // Return a list of college list info by ids (replace safety tier and target tier into existing fit types)
-export const getCollegeListInfo = async (collegeList): Promise<Object> => {
+export const getCollegeListInfo = async (collegeList): Promise<collegeListIndivudialInfo[]> => {
   return new Promise(async (res, err) => {
     try {
       if (collegeList.length === 0) {
