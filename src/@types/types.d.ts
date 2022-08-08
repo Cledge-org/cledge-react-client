@@ -11,6 +11,7 @@ export declare global {
     name: string;
     address: string;
     grade: number;
+    isOnMailingList: boolean;
     birthday: Date;
     email: string;
     tags: string[];

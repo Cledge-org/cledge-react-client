@@ -14,6 +14,7 @@ import DropDownQuestion from "../../common/components/Questions/DropdownQuestion
 import PartDropDown from "./components/PartDropdown/PartDropdown";
 import DashboardTabButton from "./components/DashboardTabButton/DashboardTabButton";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
+import { useLocation } from "src/utils/hooks/useLocation";
 
 // logged in landing page
 const DashboardPage: NextApplicationPage<{
@@ -26,6 +27,7 @@ const DashboardPage: NextApplicationPage<{
   const [currTab, setCurrTab] = useState("all modules");
   const [isInUserView, setIsInUserView] = useState(false);
   const [percentage, setPercentage] = useState(0);
+  const windowLocation = useLocation();
   const parseId = (objectId) => {
     const objectIdStr = objectId.toString();
     if (!objectIdStr.includes('"')) {

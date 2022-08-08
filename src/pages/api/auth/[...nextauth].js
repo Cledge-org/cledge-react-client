@@ -1,10 +1,6 @@
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AuthFunctions from "./firebase-auth";
-import { FirebaseAdapter } from "@next-auth/firebase-adapter";
-import { getAccountInfo } from "../get-account";
-import { createUser } from "../create-user";
 
 export default NextAuth({
   pages: {
@@ -27,34 +23,6 @@ export default NextAuth({
           credentials.email,
           credentials.password
         );
-      },
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
-      profile(profile) {
-        try {
-          getAccountInfo(profile.sub);
-        } catch (err) {
-          createUser({
-            firebaseId: profile.sub,
-            name: profile.name,
-            address: "",
-            birthday: new Date(),
-            grade: -1,
-            email: profile.email,
-            introducedToChatbot: false,
-            tags: [],
-            checkIns: ["Onboarding Questions"],
-          }).then(async (res) => {
-            //console.log(res.status);
-          });
-        }
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-        };
       },
     }),
   ],

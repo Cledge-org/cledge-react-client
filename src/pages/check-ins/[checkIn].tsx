@@ -16,13 +16,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         )
       )
     );
-    let checkInData = checkIn.chunks[0].questions;
-    for (let i = 1; i < checkIn.chunks.length; i++) {
-      checkInData = checkInData.concat(checkIn.chunks[i].questions);
-    }
     return {
       props: {
-        checkInData,
+        checkInData: checkIn,
       },
     };
   } catch (err) {

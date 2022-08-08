@@ -39,10 +39,12 @@ const UWInterestFormPage = () => {
     return (
       <div
         className="w-100 center-child cl-dark-text d-flex flex-column fw-bold"
-        style={{ fontSize: "24px", height: "90vh" }}
+        style={{ fontSize: "24px", height: "90vh", textAlign: "center" }}
       >
         Thanks for your submission!{" "}
-        <div>We will notify you when this product is released</div>
+        <div style={{ textAlign: "center" }}>
+          We will notify you when this product is released
+        </div>
       </div>
     );
   }
