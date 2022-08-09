@@ -19,6 +19,8 @@ import styles from "./check-in-page.module.scss";
 import { callPutQuestionResponses } from "src/utils/apiCalls";
 import classNames from "classnames";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const CheckIn: NextApplicationPage<{
   checkInData: QuestionList;
@@ -239,46 +241,87 @@ const CheckIn: NextApplicationPage<{
     );
   }
   return (
-    <div className="checkIn-container container-fluid d-flex flex-column overflow-auto">
-      <div>
+    <div className="w-100 d-flex flex-column">
+      <div
+        className="d-flex flex-row w-100 px-3 py-2 position-fixed"
+        style={{ borderBottom: "2px solid #E0DFE8", backgroundColor: "white" }}
+      >
         <div
           className={`navbar-brand mx-4`}
           style={{ fontSize: "1.5em", fontWeight: 600 }}
         >
           <span className={`cl-blue`}>cledge.</span>
         </div>
-        <div className="d-flex flex-row align-items-center">
+        <div
+          className="d-flex flex-row align-items-center justify-content-center"
+          style={{ flex: 1 }}
+        >
           {checkInData.chunks.map(({ name }, index) => (
-            <div>
-              <div>{index + 1}</div>
+            <div
+              style={{ color: page === index ? "#506BED" : "#808099" }}
+              className="d-flex flex-row align-items-center ms-3"
+            >
+              <div
+                style={{
+                  width: "35px",
+                  height: "35px",
+                  borderRadius: "17.5px",
+                  backgroundColor: page === index ? "#506BED" : "#808099",
+                  color: "white",
+                }}
+                className="center-child me-3"
+              >
+                {index + 1}
+              </div>
               <div>{name}</div>
-              <div />
+              {!(index + 1 === checkInData.chunks.length) && (
+                <div
+                  className="ms-3"
+                  style={{
+                    backgroundColor: page === index ? "#506BED" : "#808099",
+                    height: "1px",
+                    width: "180px",
+                  }}
+                />
+              )}
             </div>
           ))}
         </div>
       </div>
+      <button
+        style={{
+          backgroundColor: "transparent",
+          outline: "none",
+          border: "none",
+        }}
+        className="position-absolute center-child top-0 left-0 mt-5 pt-5 ms-5"
+        onClick={goBack}
+      >
+        <FontAwesomeIcon icon={faArrowLeft} className="me-3" />
+        Back
+      </button>
       <div
         style={{ width: size.width < 800 ? "100%" : "60%" }}
-        className="row col-md-5 d-md-flex mx-auto mt-5 pt-5 flex-column justify-content-center text-center checkIn-question"
+        className="align-self-center row col-md-5 d-md-flex mx-auto mt-5 pt-5 flex-column justify-content-center text-center checkIn-question"
       >
         {checkInPages[page]}
       </div>
       <div
-        className={classNames(styles.authBottomNav, "align-self-center")}
+        className={classNames(
+          styles.authBottomNav,
+          "align-self-center my-3 pt-4"
+        )}
         style={{
-          position: "fixed",
           bottom: "16vh",
-          width: size.width < 800 ? "60%" : "30%",
+          width: size.width < 800 ? "80%" : "50%",
+          borderTop: "1px solid #C1C0CE",
         }}
       >
         <div className="px-0">
-          {page > 0 && (
-            <button type="button" className="btn cl-btn-gray" onClick={goBack}>
-              Back
-            </button>
-          )}
+          <button type="button" className="btn cl-btn-clear">
+            Skip
+          </button>
         </div>
-
         <div className="px-0">
           {page < checkInPages.length - 1 && (
             <button
@@ -299,22 +342,6 @@ const CheckIn: NextApplicationPage<{
             </button>
           )}
         </div>
-      </div>
-      <div
-        className="align-self-center d-flex flex-column"
-        style={{ position: "fixed", bottom: "10vh", width: "80%" }}
-      >
-        <div className="align-self-center">
-          {page === checkInPages.length - 1 && (
-            <div
-              className="py-2"
-              style={{ fontSize: "1.3em", fontWeight: "bold" }}
-            >
-              By submitting you are agreeing to the statement above
-            </div>
-          )}
-        </div>
-        <ProgressBar now={progress} />
       </div>
     </div>
   );

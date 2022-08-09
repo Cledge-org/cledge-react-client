@@ -36,6 +36,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         tags,
         checkIns: ["Onboarding Questions"],
         introducedToChatbot: false,
+        isOnMailingList: false,
       });
       resolve.status(200).send("Success");
     } catch (e) {
