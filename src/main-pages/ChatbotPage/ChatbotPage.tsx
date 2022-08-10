@@ -30,6 +30,7 @@ import {
 import ChatOption from "src/main-pages/ChatbotPage/components/ChatOption/ChatOption";
 import { updateAccountAction } from "src/utils/redux/actionFunctions";
 import { store } from "src/utils/redux/store";
+import { NextApplicationPage } from "src/main-pages/AppPage/AppPage";
 
 interface MessageProps {
   message: string | ReactElement;
@@ -46,13 +47,10 @@ interface CoupledOptions {
   options: { [option: string]: string };
 }
 
-const Chatbot = ({
-  accountInfo,
-  questionResponses,
-}: {
+const Chatbot: NextApplicationPage<{
   accountInfo: AccountInfo;
   questionResponses: UserResponse[];
-}) => {
+}> = ({ accountInfo, questionResponses }) => {
   const [currWorkflow, setCurrWorkflow] = useState(
     !accountInfo.introducedToChatbot ? "intro" : "none"
   );

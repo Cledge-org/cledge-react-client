@@ -1,36 +1,41 @@
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import styles from "./check-box.module.scss";
-import palette from "../../styles/palette.module.scss";
-interface CheckBoxProps {
+import palette from "../../../styles/palette.module.scss";
+interface MCQDotProps {
   selected: boolean;
   isThick?: boolean;
   setSelected: Function;
 }
 
-export default function CheckBox({
+export default function MCQDot({
   selected,
   setSelected,
   isThick,
-}: CheckBoxProps) {
+}: MCQDotProps) {
   console.log(palette);
   return (
     <button
       onClick={() => {
         setSelected(!selected);
       }}
-      className={styles.checkboxContainer}
+      style={{ outline: "none", border: "none" }}
     >
       <div
         style={{
           borderStyle: "solid",
+          height: "30px",
+          width: "30px",
+          borderRadius: "15px",
           borderWidth: isThick ? "3px" : "1px",
           borderColor: isThick ? palette.clMidGray : palette.clLightGray,
         }}
-        className={selected ? styles.checkboxTrue : styles.checkbox}
       >
-        {selected ? <FontAwesomeIcon icon={faCheck} color="#ffffff" /> : null}
+        {selected && (
+          <div
+            style={{
+              backgroundColor: palette.clBlue,
+            }}
+          />
+        )}
       </div>
     </button>
   );

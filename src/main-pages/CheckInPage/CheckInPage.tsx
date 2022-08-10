@@ -288,18 +288,20 @@ const CheckIn: NextApplicationPage<{
           ))}
         </div>
       </div>
-      <button
-        style={{
-          backgroundColor: "transparent",
-          outline: "none",
-          border: "none",
-        }}
-        className="position-absolute center-child top-0 left-0 mt-5 pt-5 ms-5"
-        onClick={goBack}
-      >
-        <FontAwesomeIcon icon={faArrowLeft} className="me-3" />
-        Back
-      </button>
+      {page > 0 && (
+        <button
+          style={{
+            backgroundColor: "transparent",
+            outline: "none",
+            border: "none",
+          }}
+          className="position-fixed center-child top-0 left-0 mt-5 pt-5 ms-5"
+          onClick={goBack}
+        >
+          <FontAwesomeIcon icon={faArrowLeft} className="me-3" />
+          Back
+        </button>
+      )}
       <div
         style={{ width: size.width < 800 ? "100%" : "60%" }}
         className="align-self-center row col-md-5 d-md-flex mx-auto mt-5 pt-5 flex-column justify-content-center text-center checkIn-question"

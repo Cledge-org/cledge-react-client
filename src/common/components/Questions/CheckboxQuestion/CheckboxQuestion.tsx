@@ -9,6 +9,7 @@ interface CheckBoxQuestionProps {
   userAnswers: string[];
   onChange: Function;
   tags: string[];
+  isCentered?: boolean;
   inEC?: boolean;
 }
 
@@ -18,6 +19,7 @@ export default function CheckBoxQuestion({
   onChange,
   isPathwayQuestion,
   inEC,
+  isCentered,
   tags,
 }: CheckBoxQuestionProps) {
   const [selected, setSelected] = useState(
@@ -60,7 +62,7 @@ export default function CheckBoxQuestion({
         inEC
           ? "align-items-start w-100"
           : `container-fluid ${
-              isPathwayQuestion ? "align-items-start" : "align-items-center"
+              !isCentered ? "align-items-start" : "align-items-center"
             }`
       } justify-content-evenly w-100 cl-dark-text fw-bold`}
     >
@@ -92,41 +94,24 @@ export default function CheckBoxQuestion({
                 "py-2 my-2",
                 { ["ps-4 px-4"]: !isPathwayQuestion }
               )}
-              style={
-                inEC
-                  ? { width: "100%" }
-                  : isPathwayQuestion
-                  ? {
-                      justifyContent: "start",
-                      backgroundColor: "white",
-                      width: "100%",
-                    }
-                  : {}
-              }
+              style={{
+                justifyContent: "start",
+                width: "100%",
+              }}
             >
-              {isPathwayQuestion && (
-                <CheckBox
-                  selected={selected.includes(
-                    isPathwayQuestion ? singleData : op
-                  )}
-                  setSelected={() => {
-                    if (isPathwayQuestion) {
-                      changeSelected(singleData);
-                      return;
-                    }
-                    changeSelected(op);
-                  }}
-                />
-              )}
+              <CheckBox
+                selected={selected.includes(
+                  isPathwayQuestion ? singleData : op
+                )}
+                setSelected={() => {
+                  if (isPathwayQuestion) {
+                    changeSelected(singleData);
+                    return;
+                  }
+                  changeSelected(op);
+                }}
+              />
               {isPathwayQuestion ? singleData : op}
-              {!isPathwayQuestion && (
-                <CheckBox
-                  selected={selected.includes(op)}
-                  setSelected={() => {
-                    changeSelected(op);
-                  }}
-                />
-              )}
             </button>
           );
         })}

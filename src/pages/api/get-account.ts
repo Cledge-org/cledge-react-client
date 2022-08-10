@@ -28,6 +28,7 @@ export const getAccountInfo = async (
   overrideClient?: MongoClient
 ): Promise<AccountInfo> => {
   return new Promise(async (res, err) => {
+    console.error(userId);
     try {
       const client =
         overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));

@@ -12,6 +12,7 @@ interface TextInputQuestionProps {
   className?: string;
   isGrade?: boolean;
   isDark?: boolean;
+  isCentered?: boolean;
 }
 export default function TextInputQuestion({
   question,
@@ -22,6 +23,7 @@ export default function TextInputQuestion({
   onChange,
   isDark,
   className,
+  isCentered,
 }: TextInputQuestionProps) {
   const session = useSession();
   const [currValue, setCurrValue] = useState(userAnswer);
@@ -30,7 +32,7 @@ export default function TextInputQuestion({
       <div
         className={classNames(
           `container-fluid h-100 d-flex flex-column align-items-${
-            isPathwayQuestion ? "start" : "center"
+            isCentered ? "start" : "center"
           } justify-content-evenly w-100 cl-dark-text fw-bold`,
           className
         )}
@@ -40,7 +42,7 @@ export default function TextInputQuestion({
         </span>
         <div
           className={`d-flex flex-column justify-content-evenly align-items-${
-            isPathwayQuestion ? "start" : "center"
+            isCentered ? "start" : "center"
           } h-75 w-100`}
         >
           <textarea
@@ -98,7 +100,7 @@ export default function TextInputQuestion({
     <div
       className={classNames(
         `container-fluid h-100 d-flex flex-column align-items-${
-          isPathwayQuestion ? "start" : "center"
+          !isCentered ? "start" : "center"
         } justify-content-evenly w-100 cl-dark-text fw-bold`,
         className
       )}
@@ -108,7 +110,7 @@ export default function TextInputQuestion({
       </span>
       <div
         className={`d-flex flex-column justify-content-evenly align-items-${
-          isPathwayQuestion ? "start" : "center"
+          !isCentered ? "start" : "center"
         } h-75 w-100`}
       >
         <input
@@ -127,11 +129,13 @@ export default function TextInputQuestion({
             setCurrValue(e.target.value);
             onChange(e.target.value);
           }}
-          className={`form-control w-${isPathwayQuestion ? "100" : "75"}`}
+          className={`form-control w-${
+            isPathwayQuestion ? "100" : "75"
+          } cl-dark-text fw-bold`}
+          style={{ borderRadius: "10px" }}
           placeholder={question.helpText ?? "Your response..."}
         />
       </div>
-      {/* <button className="general-submit-btn mt-2">SUBMIT</button> */}
     </div>
   );
 }
