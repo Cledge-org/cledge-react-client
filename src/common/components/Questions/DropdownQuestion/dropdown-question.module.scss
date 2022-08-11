@@ -1,8 +1,7 @@
 @use "src/common/styles" as *;
 
 .dropdown-question-btn {
-  @extend .cl-mid-gray;
-
+  @extend .cl-dark-text;
   .icon-close {
     animation-name: rotateReverse;
     animation-duration: 600ms;
@@ -14,10 +13,10 @@
     animation-name: rotate;
     animation-duration: 600ms;
   }
-
+  font-weight: bold;
   border: 1px solid $cl-light-gray;
-  background-color: $cl-light-gray;
-  border-radius: 15px;
+  background-color: $cl-white;
+  border-radius: 10px;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -34,8 +33,7 @@
   &:hover,
   &:active:hover {
     box-shadow: none;
-    border: 1px solid $cl-light-gray;
-    background-color: $cl-light-gray;
+    border: 1px solid $cl-blue;
     @extend .cl-mid-gray;
   }
 }

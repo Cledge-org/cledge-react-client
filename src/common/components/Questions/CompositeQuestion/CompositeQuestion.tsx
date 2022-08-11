@@ -5,6 +5,7 @@ import TextInputQuestion from "../TextInputQuestion/TextInputQuestion";
 import TimeFrameQuestion from "../TimeframeQuestion/TimeframeQuestion";
 import DropdownQuestion from "../DropdownQuestion/DropdownQuestion";
 import { useState } from "react";
+import classNames from "classnames";
 const CompositeQuestion = ({
   userTags,
   title,
@@ -75,7 +76,7 @@ const CompositeQuestion = ({
       );
     }
 
-    if (question.type === "ECDropDown") {
+    if (question.type === "DropDownQuestion") {
       return (
         <DropdownQuestion
           isConcatenable={question.isConcatenable}
@@ -122,20 +123,24 @@ const CompositeQuestion = ({
   };
   const renderQuestions = () => {
     let renderedQuestions = [];
-    questionsResponses?.forEach((response, index) => {
-      renderedQuestions.push(
-        <div>
-          {questions.map((question) => {
-            return getQuestionType(question, response[question._id], index);
-          })}
-        </div>
-      );
-    });
+    renderedQuestions = renderedQuestions.concat(
+      <div>
+        {questions.map((question, index) => {
+          return getQuestionType(question, responses[question._id], index);
+        })}
+      </div>
+    );
     return renderedQuestions;
   };
   return (
-    <div>
-      {title}
+    <div
+      className={classNames(
+        `container-fluid h-100 d-flex flex-column align-items-start justify-content-evenly w-100 cl-dark-text fw-bold`
+      )}
+    >
+      <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
+        {title}
+      </span>
       {renderQuestions()}
     </div>
   );

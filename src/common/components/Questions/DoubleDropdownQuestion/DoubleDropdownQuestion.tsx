@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TextInputQuestion from "src/common/components/Questions/TextInputQuestion/TextInputQuestion";
+import DropDownQuestion from "src/common/components/Questions/DropdownQuestion/DropdownQuestion";
 
 const DoubleTextInputQuestion = ({
   userResponses,
@@ -16,17 +16,19 @@ const DoubleTextInputQuestion = ({
       <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
         {question.question}
       </span>
-      <TextInputQuestion
-        question={question.data[0]}
-        userAnswer={responses[0]}
+      <DropDownQuestion
+        questionTitle={question.data[0].question}
+        valuesList={question.data[0].data}
+        defaultValue={responses[0]}
         onChange={(val1) => {
           onChange([val1, responses[1]]);
           setResponses([val1, responses[1]]);
         }}
       />
-      <TextInputQuestion
-        question={question.data[1]}
-        userAnswer={responses[1]}
+      <DropDownQuestion
+        questionTitle={question.data[1].question}
+        valuesList={question.data[1].data}
+        defaultValue={responses[1]}
         onChange={(val2) => {
           onChange([responses[0], val2]);
           setResponses([responses[0], val2]);

@@ -21,6 +21,7 @@ import classNames from "classnames";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import CompositeQuestion from "src/common/components/Questions/CompositeQuestion/CompositeQuestion";
 
 const CheckIn: NextApplicationPage<{
   checkInData: QuestionList;
@@ -180,6 +181,16 @@ const CheckIn: NextApplicationPage<{
                 userAnswers={[]}
                 onChange={updateFunc}
                 tags={userTags}
+              />
+            );
+          }
+          if (question?.type === "CompositeQuestion") {
+            return (
+              <CompositeQuestion
+                responses={[]}
+                onChange={updateFunc}
+                title={question.question}
+                questions={question.data}
               />
             );
           }
