@@ -12,17 +12,24 @@ interface Props {
     type: "Public" | "Private"
     college_id: string;
     index: number
+    RemoveCollegeFromListFunction: Function
+
 }
-function CollegeListCard({ name, location, type, college_id, index }: Props) {
+function CollegeListCard({ name, location, type, college_id, index, RemoveCollegeFromListFunction }: Props) {
+
+    const handleRemove = () => {
+
+    }
     return (
         <Draggable key={college_id} draggableId={college_id} index={index}>
             {(provided) => {
 
                 return <div className={styles.cardContainer} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                    <div>
+                    <div className={styles.titleContainer}>
                         <p className={styles.collegeName}>{name}</p>
-                        {/* <Image src={CrossIcon}/> */}
+                        <Image src={CrossIcon} onClick={() => { RemoveCollegeFromListFunction(college_id) }} />
                     </div>
+
                     <div>
                         <div>
                             <span>{location}</span>
@@ -30,7 +37,7 @@ function CollegeListCard({ name, location, type, college_id, index }: Props) {
                         <div>
                             <span>{type}</span>
                         </div>
-                        <Link href={'/dashboard'} color='#0B1142' className='seeDetailsLink'>See details</Link>
+                        <a href='/dashboard'><u color='#0B1142'>See details</u></a>
                     </div>
                 </div>
             }}

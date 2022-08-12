@@ -3,76 +3,106 @@ import React, { useEffect, useState } from 'react'
 import { NextApplicationPage } from 'src/main-pages/AppPage/AppPage'
 import styles from './styles.module.scss'
 import TierCard from 'src/main-pages/CollegeList/components/TierCard';
-import { collegeListIndivudialInfo } from 'src/@types/types';
+import { collegeListElementRaw, collegeListIndivudialInfo } from 'src/@types/types';
 import { DragDropContext } from "react-beautiful-dnd";
+import { Button } from '@mui/material';
+import { useSession } from 'next-auth/react';
+
 const CollegeListPage: NextApplicationPage<{ accountInfo: AccountInfo, collegeList: collegeListIndivudialInfo[], setCollegeList }> = ({ accountInfo, collegeList, setCollegeList }) => {
     const [targetSchools, setTargetSchools] = useState<collegeListIndivudialInfo[]>([])
     const [fitSchools, setFitSchools] = useState<collegeListIndivudialInfo[]>([])
     const [reachSchools, setReachSchools] = useState<collegeListIndivudialInfo[]>([])
     const [reloadCounter, setReloadCounter] = useState<number>(0)
+    const { data: session } = useSession();
+    const handleSubmit = async () => {
+        const response = await fetch(`/api/replace-college-list`, {
+            method: "PUT",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({ user_id: session.user.uid, college_list: collegeList })
+        })
+        const responseJson = await response.json()
+        alert(responseJson.message)
+    }
+
+    const handleRemoveCollege = (college_id:string)=>{
+        const temporaryList = collegeList.filter((college)=>college.college_id != college_id)
+        setCollegeList(temporaryList)
+        setReloadCounter(reloadCounter+1);
+        
+    }
+
     const handleOnDragEnd = (result) => {
-        console.log(result)
-        if(result.destination.droppableId!=result.source.droppableId){
-            if(result.destination.droppableId == "Target Schools"){
+        if (result.destination.droppableId != result.source.droppableId) {
+            if (result.destination.droppableId == "Target Schools") {
                 console.log("it should execute now")
                 const temporaryList = collegeList
-                temporaryList.map((college)=>{
-                    if(college.college_id==result.draggableId){
-                        college.fit_type= 0
+                temporaryList.map((college) => {
+                    if (college.college_id == result.draggableId) {
+                        college.fit_type = 0
                         setCollegeList(temporaryList)
-                        console.log(temporaryList)
-                        console.log(collegeList)
                     }
                 })
             }
-            if(result.destination.droppableId == "Fit Schools"){
+            if (result.destination.droppableId == "Fit Schools") {
                 console.log("it should execute now")
                 const temporaryList = collegeList
-                temporaryList.map((college)=>{
-                    if(college.college_id==result.draggableId){
-                        college.fit_type= 1
+                temporaryList.map((college) => {
+                    if (college.college_id == result.draggableId) {
+                        college.fit_type = 1
                         setCollegeList(temporaryList)
-                        console.log(temporaryList)
-                        console.log(collegeList)
                     }
                 })
             }
-            if(result.destination.droppableId == "Reach Schools"){
+            if (result.destination.droppableId == "Reach Schools") {
                 console.log("it should execute now")
                 const temporaryList = collegeList
-                temporaryList.map((college)=>{
-                    if(college.college_id==result.draggableId){
-                        college.fit_type= 2
+                temporaryList.map((college) => {
+                    if (college.college_id == result.draggableId) {
+                        college.fit_type = 2
                         setCollegeList(temporaryList)
-                        console.log(temporaryList)
-                        console.log(collegeList)
                     }
                 })
             }
-            setReloadCounter(reloadCounter+1)
+            setReloadCounter(reloadCounter + 1)
         }
+    }
+
+    const getUpdatableListFormat = (list: collegeListIndivudialInfo[]) => {
+        var college_list: collegeListElementRaw[] = []
+        list.map((college, index) => {
+            college_list.push({ college_id: college.college_id, fit_type: college.fit_type })
+        })
+        return college_list
     }
     useEffect(() => {
         if (collegeList?.length > 0) {
+            console.log(getUpdatableListFormat(collegeList))
             setTargetSchools(collegeList.filter((colleges) => colleges.fit_type == 0))
             setFitSchools(collegeList.filter((colleges) => colleges.fit_type == 1))
             setReachSchools(collegeList.filter((colleges) => colleges.fit_type == 2))
+        }else{
+            setTargetSchools([])
+            setFitSchools([])
+            setReachSchools([])
         }
-    }, [collegeList,reloadCounter])
+    }, [collegeList, reloadCounter])
     return (
         <div style={{ marginLeft: "80px", marginRight: "80px" }}>
+            <DragDropContext onDragEnd={handleOnDragEnd}>
             <div>
                 <p className={styles.myFavHeader}>My favorites</p>
             </div>
 
-            <DragDropContext onDragEnd= {handleOnDragEnd}>
                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                    <TierCard name='Target Schools' collegeList={targetSchools} />
-                    <TierCard name='Fit Schools' collegeList={fitSchools} />
-                    <TierCard name='Reach Schools' collegeList={reachSchools} />
+                    <TierCard name='Target Schools' collegeList={targetSchools} RemoveCollegeFromListFunction={handleRemoveCollege}/>
+                    <TierCard name='Fit Schools' collegeList={fitSchools} RemoveCollegeFromListFunction={handleRemoveCollege} />
+                    <TierCard name='Reach Schools' collegeList={reachSchools} RemoveCollegeFromListFunction={handleRemoveCollege} />
                 </div>
-            </DragDropContext>
+            <Button variant='outlined' onClick={handleSubmit}>Save changes</Button>
 
+            </DragDropContext>
         </div>
     )
 }

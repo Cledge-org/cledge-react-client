@@ -7,19 +7,29 @@ import { Droppable } from "react-beautiful-dnd"
 interface props {
   name: string
   collegeList: collegeListIndivudialInfo[]
+  RemoveCollegeFromListFunction: Function
 }
-const TierCard = ({ name, collegeList }: props) => {
+const TierCard = ({ name, collegeList, RemoveCollegeFromListFunction }: props) => {
   return (
+
     <Droppable droppableId={name}>
       {(provided) => {
+        return (
+          <div className={styles.mainTierContainer}>
+              <p className={styles.tierHeader}>{`${name} (${collegeList.length})`}</p>
+            <div {...provided.droppableProps} ref={provided.innerRef} className={styles.innerDroppableDiv}>
 
-        return <div className={styles.mainTierContainer} {...provided.droppableProps} ref={provided.innerRef}>
-          <p className={styles.tierHeader}>{`${name} (${collegeList.length})`}</p>
-          {collegeList.map((college,index) => {
-            return <CollegeListCard name={college.college_name} location={college.location} type={college.college_type} college_id={college.college_id} index={index} />
-          })}
-          {provided.placeholder}
-        </div>
+
+              <div>
+                {
+                  collegeList.map((college, index) => {
+                    return <CollegeListCard name={college.college_name} location={college.location} type={college.college_type} college_id={college.college_id} index={index} RemoveCollegeFromListFunction={RemoveCollegeFromListFunction} />
+                  })
+                }
+                {provided.placeholder}
+              </div>
+            </div>
+          </div>)
       }}
     </Droppable>
   )
