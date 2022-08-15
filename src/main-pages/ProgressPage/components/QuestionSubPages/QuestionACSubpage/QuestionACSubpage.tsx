@@ -102,6 +102,9 @@ export default function QuestionACSubpage({
         )?.response
       ),
       overallTier: overallTier,
+      classTip: "",
+      gpaTip: "",
+      testTip: "",
     };
   };
   if (!isShowing) {
