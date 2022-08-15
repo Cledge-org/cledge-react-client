@@ -35,7 +35,8 @@ export const getCollegeIdList = (user_id: String): Promise<Object> => {
       const userDb = client.db("users");
       const userCollegeList = await userDb
         .collection("college-list")
-        .findOne({ firebaseId: user_id });
+        .findOne({ firebaseId: user_id })
+        ;
       if (userCollegeList) {
         res(userCollegeList["college_list"]);
       } else {

@@ -16,10 +16,6 @@ interface Props {
 
 }
 function CollegeListCard({ name, location, type, college_id, index, RemoveCollegeFromListFunction }: Props) {
-
-    const handleRemove = () => {
-
-    }
     return (
         <Draggable key={college_id} draggableId={college_id} index={index}>
             {(provided) => {

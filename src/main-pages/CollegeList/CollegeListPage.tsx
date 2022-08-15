@@ -34,10 +34,19 @@ const CollegeListPage: NextApplicationPage<{ accountInfo: AccountInfo, collegeLi
     }
 
     const handleOnDragEnd = (result) => {
+        console.log(result)
+        const temporaryList = collegeList;
+        if (result.destination.droppableId == result.source.droppableId) {
+            const temporaryElement = temporaryList[result.source.index]
+            temporaryList.splice(result.source.index,1)
+            temporaryList.splice(result.destination.index,0, temporaryElement)
+            setCollegeList(temporaryList)
+            setReloadCounter(reloadCounter+1)
+            
+        }
         if (result.destination.droppableId != result.source.droppableId) {
             if (result.destination.droppableId == "Target Schools") {
                 console.log("it should execute now")
-                const temporaryList = collegeList
                 temporaryList.map((college) => {
                     if (college.college_id == result.draggableId) {
                         college.fit_type = 0
@@ -47,7 +56,6 @@ const CollegeListPage: NextApplicationPage<{ accountInfo: AccountInfo, collegeLi
             }
             if (result.destination.droppableId == "Fit Schools") {
                 console.log("it should execute now")
-                const temporaryList = collegeList
                 temporaryList.map((college) => {
                     if (college.college_id == result.draggableId) {
                         college.fit_type = 1
@@ -57,7 +65,6 @@ const CollegeListPage: NextApplicationPage<{ accountInfo: AccountInfo, collegeLi
             }
             if (result.destination.droppableId == "Reach Schools") {
                 console.log("it should execute now")
-                const temporaryList = collegeList
                 temporaryList.map((college) => {
                     if (college.college_id == result.draggableId) {
                         college.fit_type = 2
@@ -69,16 +76,15 @@ const CollegeListPage: NextApplicationPage<{ accountInfo: AccountInfo, collegeLi
         }
     }
 
-    const getUpdatableListFormat = (list: collegeListIndivudialInfo[]) => {
-        var college_list: collegeListElementRaw[] = []
-        list.map((college, index) => {
-            college_list.push({ college_id: college.college_id, fit_type: college.fit_type })
-        })
-        return college_list
-    }
+    // const getUpdatableListFormat = (list: collegeListIndivudialInfo[]) => {
+    //     var college_list: collegeListElementRaw[] = []
+    //     list.map((college, index) => {
+    //         college_list.push({ college_id: college.college_id, fit_type: college.fit_type, index: index })
+    //     })
+    //     return college_list
+    // }
     useEffect(() => {
         if (collegeList?.length > 0) {
-            console.log(getUpdatableListFormat(collegeList))
             setTargetSchools(collegeList.filter((colleges) => colleges.fit_type == 0))
             setFitSchools(collegeList.filter((colleges) => colleges.fit_type == 1))
             setReachSchools(collegeList.filter((colleges) => colleges.fit_type == 2))

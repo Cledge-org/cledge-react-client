@@ -1,8 +1,14 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { collegeListElementRaw } from "src/@types/types";
 
+interface props{
+  user_id: string,
+  college_list: collegeListElementRaw[],
+  index: number
+}
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { user_id, college_list } = req.body;
+  const { user_id, college_list, index } : props = req.body;
   try {
     const client = await MongoClient.connect(process.env.MONGO_URL);
     const userDb = client.db("users");

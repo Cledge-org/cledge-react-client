@@ -347,6 +347,7 @@ interface collegeInfo {
 interface collegeListElementRaw {
   college_id: string;
   fit_type: -1 | 0 | 1 | 2 | 3;
+  index:number
 }
 
 interface updateCollegeList{
