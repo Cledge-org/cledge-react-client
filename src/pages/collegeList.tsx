@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material'
 import { GetServerSidePropsContext } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
@@ -31,8 +32,17 @@ function CollegeList({ serverSideData }) {
   //   setData(responseJson["college_list"])
   // }
 
+  const theme = createTheme({
+    palette:{
+      primary:{
+        main: "#506BED",
+      }
+    }
+  })
   return (
+    <ThemeProvider theme={theme}>
     <CollegeListPage collegeList={data} setCollegeList={(newData) => { setData(newData) }} />
+    </ThemeProvider>
   )
 }
 // export async function getServerSiderProps(ctx:GetServerSidePropsContext){

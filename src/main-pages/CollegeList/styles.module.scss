@@ -1,14 +1,19 @@
 @use "src/common/styles" as *;
 
 .myFavHeader {
-  width: 215px;
-  height: 36px;
-  margin-top: 20px;
+
   font-family: "Montserrat";
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
-  line-height: 29px;
-
   color: #0b1142;
+}
+
+.myFavDiv{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  align-items: flex-start;
 }

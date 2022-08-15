@@ -91,8 +91,9 @@ const CollegeListPage: NextApplicationPage<{ accountInfo: AccountInfo, collegeLi
     return (
         <div style={{ marginLeft: "80px", marginRight: "80px" }}>
             <DragDropContext onDragEnd={handleOnDragEnd}>
-            <div>
+            <div className={styles.myFavDiv}>
                 <p className={styles.myFavHeader}>My favorites</p>
+                <Button variant='contained' style={{textTransform: "none"}} onClick={handleSubmit}>Save Changes</Button>
             </div>
 
                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
@@ -100,7 +101,6 @@ const CollegeListPage: NextApplicationPage<{ accountInfo: AccountInfo, collegeLi
                     <TierCard name='Fit Schools' collegeList={fitSchools} RemoveCollegeFromListFunction={handleRemoveCollege} />
                     <TierCard name='Reach Schools' collegeList={reachSchools} RemoveCollegeFromListFunction={handleRemoveCollege} />
                 </div>
-            <Button variant='outlined' onClick={handleSubmit}>Save changes</Button>
 
             </DragDropContext>
         </div>
