@@ -1,7 +1,7 @@
 import { useState } from "react";
 import DropDownQuestion from "src/common/components/Questions/DropdownQuestion/DropdownQuestion";
 
-const DoubleTextInputQuestion = ({
+const DoubleDropdownQuestion = ({
   userResponses,
   question,
   onChange,
@@ -10,25 +10,29 @@ const DoubleTextInputQuestion = ({
   question: Question;
   onChange: (newResponses: string[]) => void;
 }) => {
-  const [responses, setResponses] = useState(userResponses);
+  console.log(userResponses);
+  const [responses, setResponses] = useState(userResponses || ["", ""]);
   return (
-    <div className="d-flex flex-row align-items-center w-100">
+    <div className="d-flex flex-row align-items-center justify-content-between w-100">
       <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
         {question.question}
       </span>
       <DropDownQuestion
         questionTitle={question.data[0].question}
+        smallTitle
         valuesList={question.data[0].data}
-        defaultValue={responses[0]}
+        defaultValue={responses && responses[0]}
         onChange={(val1) => {
           onChange([val1, responses[1]]);
           setResponses([val1, responses[1]]);
         }}
       />
+      <div style={{ width: "5%" }} />
       <DropDownQuestion
         questionTitle={question.data[1].question}
+        smallTitle
         valuesList={question.data[1].data}
-        defaultValue={responses[1]}
+        defaultValue={responses && responses[1]}
         onChange={(val2) => {
           onChange([responses[0], val2]);
           setResponses([responses[0], val2]);
@@ -37,4 +41,4 @@ const DoubleTextInputQuestion = ({
     </div>
   );
 };
-export default DoubleTextInputQuestion;
+export default DoubleDropdownQuestion;

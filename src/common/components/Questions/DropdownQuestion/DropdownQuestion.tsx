@@ -23,6 +23,8 @@ interface DropDownQuestionProps {
   containerStyles?: React.CSSProperties;
   buttonStyles?: React.CSSProperties;
   isForDashboard?: boolean;
+  isCentered?: boolean;
+  smallTitle?: boolean;
   isForCST?: boolean;
 }
 const defaultProps: DropDownQuestionProps = {
@@ -58,7 +60,9 @@ export default function DropDownQuestion({
   isForDashboard,
   isForCST,
   onChange,
+  isCentered,
   containerStyles,
+  smallTitle,
   buttonStyles,
 }: DropDownQuestionProps) {
   const [chosen, setChosen] = useState(
@@ -119,13 +123,13 @@ export default function DropDownQuestion({
   }, [rankings]);
   return (
     <div
-      className={
+      className={`${
         isForCST
-          ? "w-100 d-flex flex-column justify-content-evenly"
+          ? "w-100 d-flex flex-column"
           : !forCalendar && !isForWaitlist
-          ? "w-100 d-flex flex-column justify-content-evenly pt-5"
-          : "w-100 d-flex flex-column justify-content-evenly"
-      }
+          ? "w-100 d-flex flex-column pt-5"
+          : "w-100 d-flex flex-column"
+      } ${isCentered ? "justify-content-center" : ""}`}
       style={
         isForDashboard
           ? { flex: "0.2", ...containerStyles }
@@ -134,8 +138,13 @@ export default function DropDownQuestion({
     >
       {!forCalendar && !isForWaitlist ? (
         <div
-          className="fw-bold cl-dark-text pb-3"
-          style={{ fontSize: "1.4em" }}
+          className={`fw-bold ${
+            smallTitle ? "cl-light-gray pb-1" : "cl-dark-text pb-3"
+          }`}
+          style={{
+            fontSize: smallTitle ? "1em" : "1.4em",
+            width: "fit-content",
+          }}
         >
           {questionTitle}
         </div>

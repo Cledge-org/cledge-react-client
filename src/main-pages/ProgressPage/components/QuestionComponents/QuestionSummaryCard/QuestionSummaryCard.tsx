@@ -17,6 +17,7 @@ import { store } from "../../../../../utils/redux/store";
 import styles from "./question-summary-card.module.scss";
 import classNames from "classnames";
 import { callPutQuestionResponses } from "src/utils/apiCalls";
+import CompositeQuestion from "src/common/components/Questions/CompositeQuestion/CompositeQuestion";
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface QuestionSummaryCardProps {
@@ -126,6 +127,26 @@ export default function QuestionSummaryCard({
         />
       );
     }
+    if (question?.type === "CompositeQuestion") {
+      return (
+        <CompositeQuestion
+          responses={userAnswer?.response}
+          onChange={(answer, index) => {
+            setUserAnswer((userAnswer) => {
+              if (userAnswer.response) {
+                userAnswer.response[index] = answer;
+              } else {
+                userAnswer.response = [];
+                userAnswer.response[index] = answer;
+              }
+              return { ...userAnswer };
+            });
+          }}
+          title={question.question}
+          questions={question.data}
+        />
+      );
+    }
     return (
       <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
         <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
@@ -137,10 +158,6 @@ export default function QuestionSummaryCard({
       </div>
     );
   };
-  useEffect(() => {
-    console.warn(newTags);
-    //console.log(oldTags);
-  }, [newTags, oldTags]);
   return (
     <div
       className={classNames(

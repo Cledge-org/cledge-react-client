@@ -6,6 +6,8 @@ import TimeFrameQuestion from "../TimeframeQuestion/TimeframeQuestion";
 import DropdownQuestion from "../DropdownQuestion/DropdownQuestion";
 import { useState } from "react";
 import classNames from "classnames";
+import DoubleDropdownQuestion from "src/common/components/Questions/DoubleDropdownQuestion/DoubleDropdownQuestion";
+import DoubleTextInputQuestion from "src/common/components/Questions/DoubleTextInputQuestion/DoubleTextInputQuestion";
 const CompositeQuestion = ({
   userTags,
   title,
@@ -31,6 +33,7 @@ const CompositeQuestion = ({
       return (
         <TextInputQuestion
           question={question}
+          smallTitle
           isDark={question.type === "ECTextInput"}
           userAnswer={response}
           onChange={(answer) => {
@@ -110,6 +113,46 @@ const CompositeQuestion = ({
         />
       );
     }
+    if (question.type === "DoubleDropdownQuestion") {
+      return (
+        <DoubleDropdownQuestion
+          userResponses={response}
+          question={question}
+          onChange={(value) => {
+            onChange(value, index, question._id);
+          }}
+        />
+      );
+    }
+    if (question.type === "DoubleTextInputQuestion") {
+      <DoubleTextInputQuestion
+        userResponses={response}
+        question={question}
+        onChange={(value) => {
+          onChange(value, index, question._id);
+        }}
+      />;
+    }
+    if (question.type === "ECTimeFrame") {
+      return (
+        <TimeFrameQuestion
+          defaultProgress={response.progress}
+          defaultStart={
+            response.start instanceof Date
+              ? response.start
+              : new Date(response.start)
+          }
+          defaultEnd={
+            response.finished instanceof Date
+              ? response.finished
+              : new Date(response.finished)
+          }
+          onChange={(value) => {
+            onChange(value, index, question._id);
+          }}
+        />
+      );
+    }
     return (
       <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
         <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
@@ -124,9 +167,10 @@ const CompositeQuestion = ({
   const renderQuestions = () => {
     let renderedQuestions = [];
     renderedQuestions = renderedQuestions.concat(
-      <div>
+      <div className="w-100">
         {questions.map((question, index) => {
-          return getQuestionType(question, responses[question._id], index);
+          console.log(responses);
+          return getQuestionType(question, responses[index], index);
         })}
       </div>
     );
@@ -135,7 +179,7 @@ const CompositeQuestion = ({
   return (
     <div
       className={classNames(
-        `container-fluid h-100 d-flex flex-column align-items-start justify-content-evenly w-100 cl-dark-text fw-bold`
+        `h-100 d-flex flex-column align-items-start justify-content-evenly w-100 cl-dark-text fw-bold`
       )}
     >
       <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>

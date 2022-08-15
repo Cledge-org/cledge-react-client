@@ -13,6 +13,7 @@ interface TextInputQuestionProps {
   isGrade?: boolean;
   isDark?: boolean;
   isCentered?: boolean;
+  smallTitle?: boolean;
 }
 export default function TextInputQuestion({
   question,
@@ -24,6 +25,7 @@ export default function TextInputQuestion({
   isDark,
   className,
   isCentered,
+  smallTitle,
 }: TextInputQuestionProps) {
   const session = useSession();
   const [currValue, setCurrValue] = useState(userAnswer);
@@ -37,7 +39,10 @@ export default function TextInputQuestion({
           className
         )}
       >
-        <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
+        <span
+          className={`pt-4 pb-2 ${smallTitle ? "cl-light-gray pb-1" : "pb-3"}`}
+          style={{ fontSize: smallTitle ? "1em" : "1.4em" }}
+        >
           {question.question}
         </span>
         <div
@@ -99,13 +104,16 @@ export default function TextInputQuestion({
   return (
     <div
       className={classNames(
-        `container-fluid h-100 d-flex flex-column align-items-${
+        `h-100 d-flex flex-column align-items-${
           !isCentered ? "start" : "center"
         } justify-content-evenly w-100 cl-dark-text fw-bold`,
         className
       )}
     >
-      <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
+      <span
+        className={`pt-4 ${smallTitle ? "cl-light-gray pb-1" : "pb-3"}`}
+        style={{ fontSize: smallTitle ? "1em" : "1.4em" }}
+      >
         {question.question}
       </span>
       <div

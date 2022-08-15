@@ -14,7 +14,6 @@ export default function CheckBox({
   setSelected,
   isThick,
 }: CheckBoxProps) {
-  console.log(palette);
   return (
     <button
       onClick={() => {

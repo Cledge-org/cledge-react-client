@@ -2,6 +2,7 @@ import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CheckBox from "src/common/components/CheckBox/CheckBox";
 import DropDownQuestion from "src/common/components/Questions/DropdownQuestion/DropdownQuestion";
+import UploadTextInput from "src/main-pages/AdminPages/components/UploadTextInput/UploadTextInput";
 import SubQuestionForm from "src/main-pages/AdminPages/QuestionUploadPage/components/QuestionForm/components/SubQuestionForm/SubQuestionForm";
 
 const QuestionForm = ({
@@ -105,7 +106,93 @@ const QuestionForm = ({
           </label>
           <div className="d-flex flex-row w-100 flex-wrap">
             {currQuestion.data.map((dataValue, dataIndex) =>
-              currQuestion.type === "DropDownQuestion" ? (
+              currQuestion.type === "DoubleDropdownQuestion" ||
+              currQuestion.type === "DoubleTextInputQuestion" ? (
+                <div className="d-flex flex-column">
+                  <UploadTextInput
+                    title={"Question"}
+                    onChange={(e) => {
+                      let currQuestionListCopy = currQuestionList;
+                      currQuestionListCopy.chunks[chunkIndex].questions[
+                        questionIndex
+                      ].data[dataIndex].question = e.target.value;
+                      setCurrQuestionList({
+                        ...currQuestionListCopy,
+                      });
+                    }}
+                    value={dataValue.question}
+                  />
+                  <div className="d-flex flex-row w-100 flex-wrap">
+                    <label style={{ fontSize: "0.9em" }} className="text-muted">
+                      Data:
+                    </label>
+                    {dataValue.data.map((subValue, subIndex) => {
+                      return (
+                        <div className="form-group">
+                          <input
+                            value={subValue}
+                            onChange={(e) => {
+                              let currQuestionListCopy = currQuestionList;
+                              currQuestionListCopy.chunks[chunkIndex].questions[
+                                questionIndex
+                              ].data[dataIndex].data[subIndex] = e.target.value;
+                              setCurrQuestionList({
+                                ...currQuestionListCopy,
+                              });
+                            }}
+                            type="text"
+                            className="px-3 form-control me-2 mt-2"
+                            style={{ width: "10vw" }}
+                            placeholder="Enter Value"
+                          />
+                        </div>
+                      );
+                    })}
+                    <button
+                      style={{ width: "24px", height: "24px" }}
+                      className="align-self-center align-items-center justify-content-center"
+                      onClick={() => {
+                        let currQuestionListCopy = currQuestionList;
+                        console.log(
+                          currQuestionListCopy.chunks[chunkIndex].questions[
+                            questionIndex
+                          ].data[dataIndex].data
+                        );
+                        if (dataValue.type === "DropDownQuestion") {
+                          currQuestionListCopy.chunks[chunkIndex].questions[
+                            questionIndex
+                          ].data[dataIndex].data.push("");
+                        } else {
+                          currQuestionListCopy.chunks[chunkIndex].questions[
+                            questionIndex
+                          ].data[dataIndex].data.push({
+                            op: "",
+                            tag: "",
+                          });
+                        }
+                        setCurrQuestionList({
+                          ...currQuestionListCopy,
+                        });
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faPlus} />
+                    </button>
+                  </div>
+                  <UploadTextInput
+                    title={"HelpText"}
+                    onChange={(e) => {
+                      let currQuestionListCopy = currQuestionList;
+                      currQuestionListCopy.chunks[chunkIndex].questions[
+                        questionIndex
+                      ].data[dataIndex].helpText = e.target.value;
+                      setCurrQuestionList({
+                        ...currQuestionListCopy,
+                      });
+                    }}
+                    value={dataValue.helpText}
+                  />
+                </div>
+              ) : currQuestion.type === "DropDownQuestion" ? (
                 <div className="form-group">
                   <input
                     value={dataValue}

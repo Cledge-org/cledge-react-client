@@ -188,7 +188,27 @@ const CheckIn: NextApplicationPage<{
             return (
               <CompositeQuestion
                 responses={[]}
-                onChange={updateFunc}
+                onChange={(value, index, questionId) => {
+                  let currRes = newUserResponses.find(
+                    (questionResponse) =>
+                      questionResponse.questionId === question?._id
+                  );
+                  if (currRes) {
+                    newUserResponses[
+                      newUserResponses.findIndex(
+                        (questionResponse) =>
+                          questionResponse.questionId === question?._id
+                      )
+                    ]["response"][index] = value;
+                  } else {
+                    let newResArr = [];
+                    newResArr[index] = value;
+                    newUserResponses.push({
+                      questionId: question?._id,
+                      response: newResArr,
+                    });
+                  }
+                }}
                 title={question.question}
                 questions={question.data}
               />
@@ -255,7 +275,11 @@ const CheckIn: NextApplicationPage<{
     <div className="w-100 d-flex flex-column">
       <div
         className="d-flex flex-row w-100 px-3 py-2 position-fixed"
-        style={{ borderBottom: "2px solid #E0DFE8", backgroundColor: "white" }}
+        style={{
+          borderBottom: "2px solid #E0DFE8",
+          backgroundColor: "white",
+          zIndex: 1000,
+        }}
       >
         <div
           className={`navbar-brand mx-4`}

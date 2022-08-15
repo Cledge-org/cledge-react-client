@@ -61,9 +61,7 @@ export default function CheckBoxQuestion({
       className={`h-100 d-flex flex-column ${
         inEC
           ? "align-items-start w-100"
-          : `container-fluid ${
-              !isCentered ? "align-items-start" : "align-items-center"
-            }`
+          : `${!isCentered ? "align-items-start" : "align-items-center"}`
       } justify-content-evenly w-100 cl-dark-text fw-bold`}
     >
       <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
