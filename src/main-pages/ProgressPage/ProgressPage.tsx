@@ -121,7 +121,11 @@ const Progress: NextApplicationPage<{
             percentComplete={undefined}
           />
           {questionData.map((list, index) => {
-            if (list.name === "Onboarding Questions") {
+            if (
+              list.name === "Onboarding Questions" ||
+              list.name === "Extracurriculars" ||
+              list.name === "Academics"
+            ) {
               return (
                 <DropdownTab
                   // isExtracurricular={list.name === "Extracurriculars"}

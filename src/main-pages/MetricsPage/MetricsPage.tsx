@@ -21,6 +21,7 @@ import SubTitle from "./components/SubTitle/SubTitle";
 import TierIndicatorAndTips from "./components/TierIndicatorAndTips/TierIndicatorAndTips";
 import TierRange from "./components/TierRange/TierRange";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
+import TipsCard from "src/main-pages/MetricsPage/components/TipsCard/TipsCard";
 
 const Metrics: NextApplicationPage<{
   activities: Activities;
@@ -162,6 +163,8 @@ const Metrics: NextApplicationPage<{
                     <TierIndicatorAndTips
                       tier={activities?.overallTier}
                       isOverall
+                      tip={""}
+                      tipTitle={""}
                     />
                   </div>
                 </div>
@@ -169,9 +172,10 @@ const Metrics: NextApplicationPage<{
                 {activities?.activities?.map((activity) => {
                   return (
                     <ActivityDropdown
-                      title={"TBD"}
+                      title={""}
                       content={activity.description}
                       tier={activity.tier}
+                      tip={""}
                     />
                   );
                 })}
@@ -196,6 +200,9 @@ const Metrics: NextApplicationPage<{
                   <SubTitle title="Overall Academics Tier" isDivider />
                   <div className="d-flex flex-column">
                     <TierIndicatorAndTips
+                      noTip
+                      tip=""
+                      tipTitle=""
                       tier={academics?.overallTier}
                       isOverall
                     />
@@ -205,16 +212,19 @@ const Metrics: NextApplicationPage<{
                 <ActivityDropdown
                   title={"GPA"}
                   content={""}
+                  tip={academics.gpaTip}
                   tier={academics.gpaTier}
                 />
                 <ActivityDropdown
                   title={"Coursework"}
                   content={""}
+                  tip={academics.classTip}
                   tier={academics.overallClassTier}
                 />
                 <ActivityDropdown
                   title={"SAT/ACT"}
                   content={""}
+                  tip={academics.testTip}
                   customContent={
                     <>
                       <div
@@ -269,13 +279,11 @@ const Metrics: NextApplicationPage<{
                         }}
                         className="d-flex flex-column align-items-center justify-content-start"
                       >
-                        {/* <TipsCard
-                        isOverall={false}
-                        title={
-                          "You definitely know what you are doing! To increase your tier, try our tips and update your profile to help us reaccess your tier."
-                        }
-                        tips={[]}
-                      /> */}
+                        <TipsCard
+                          isOverall={false}
+                          title={""}
+                          tips={[academics.testTip]}
+                        />
                       </div>
                     </>
                   }

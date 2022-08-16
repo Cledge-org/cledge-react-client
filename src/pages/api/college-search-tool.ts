@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { SearchClient, AzureKeyCredential } from "@azure/search-documents";
 import dicts from "../../../college-search-tool/assets/cst_result_parse.json";
+import datatypes from "../../../college-search-tool/assets/datatypes.json";
 import { ObjectSchema } from "yup";
 import { MongoClient } from "mongodb";
 
@@ -30,7 +31,6 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
       resolve.status(200).send(collegeMetricResult);
     } else {
       const { searchText, top, skip, filters, searchFields } = req.body;
-
       const client = await MongoClient.connect(process.env.MONGO_URL);
       const collegeSearchResult = await getCollegeInfo(
         searchText,
@@ -102,6 +102,15 @@ export const getCollegeInfo = (
       });
       let output = [];
       for await (const result of searchResults.results) {
+        Object.keys(result["document"]).map((key) => {
+          result["document"][key] = truncateNumericalResult(
+            result["document"][key]
+          );
+          // solve zero-data issue; comment out if frontend has solved
+          // if (datatypes[key] === "float") {
+          //   result["document"][key] = reportZeroAsNoData(result["document"][key]);
+          // }
+        });
         output.push(await formatOutput(result["document"], client));
       }
       res(output);
@@ -153,6 +162,7 @@ const formatOutput = async (college, client: MongoClient) => {
     img_description: imageRes["img_description"],
     title: college["INSTNM"],
     region: college["REGION"],
+    college_abbrev: college["IALIAS"],
     institution_url: college["INSTURL"],
     net_price_url: college["NPCURL"],
     location: college["CITY"] + ", " + college["STABBR"],
@@ -185,11 +195,11 @@ const formatOutput = async (college, client: MongoClient) => {
       sat_critical_reading_75: college["SATVR75"],
       sat_math_25: college["SATMT25"],
       sat_math_75: college["SATMT75"],
-      sat_writing_25: college["SATWR25"],
-      sat_writing_75: college["SATWR75"],
+      sat_writing_25: null, // college["SATWR25"]; need to find valid data
+      sat_writing_75: null, // college["SATWR75"]
       sat_critical_reading_50: college["SATVRMID"],
       sat_math_50: college["SATMTMID"],
-      sat_writing_reading_50: college["SATWRMID"],
+      sat_writing_50: null, // college["SATWRMID"]
       act_cumulative_25: college["ACTCM25"],
       act_cumulative_50: college["ACTCMMID"],
       act_cumulative_75: college["ACTCM75"],
@@ -406,4 +416,14 @@ const getCollegeLabel = (userTier, targetTier, safetyTier) => {
   } else {
     return 1;
   }
+};
+
+const truncateNumericalResult = (collegeField) => {
+  return typeof collegeField === "number"
+    ? Math.round((collegeField + Number.EPSILON) * 100) / 100
+    : collegeField;
+};
+
+const reportZeroAsNoData = (collegeField) => {
+  return collegeField === 0 ? null : collegeField;
 };
