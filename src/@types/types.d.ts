@@ -1,6 +1,7 @@
 // import { ObjectId } from "mongodb";
 
 import { ObjectId, ObjectID } from "mongodb";
+import { Key } from "react";
 
 export declare global {
   interface Window {
@@ -108,7 +109,7 @@ export declare global {
     questions: ObjectId[]; // Document IDs of question data
   }
   interface Question extends WithId<Document> {
-    _id?: ObjectId;
+    _id?: string;
     question: string;
     type: string;
     helpVid?: string;
@@ -136,7 +137,7 @@ export declare global {
     moduleProgress: ModuleProgress[];
   }
   interface ModuleProgress {
-    moduleId: ObjectId;
+    moduleId: string;
     finished: boolean;
     name: string;
     contentProgress: ContentProgress[]; // Map between content ID and whether that content is finished
@@ -178,7 +179,7 @@ export declare global {
     coverImage: string | ArrayBuffer;
   }
   interface PathwayModule {
-    _id?: ObjectId;
+    _id?: string;
     name: string;
     presetContent: PresetContent[];
     personalizedContent: PersonalizedContent[];
