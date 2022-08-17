@@ -40,10 +40,13 @@ export function getAcademics(userId: string): Promise<Academics> {
           _id: academics._id,
           classes: academics.classes,
           overallClassTier: academics.overallClassTier,
+          classTip: academics.classTip,
           gpa: academics.gpa,
           gpaTier: academics.gpaTier,
+          gpaTip: academics.gpaTip,
           satScore: academics.satScore,
           actScore: academics.actScore,
+          testTip: academics.testTip,
           overallTier: academics.overallTier,
         });
       }
