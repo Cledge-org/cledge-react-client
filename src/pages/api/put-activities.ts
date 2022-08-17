@@ -9,14 +9,16 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId, activities } = JSON.parse(req.body);
+  const { userId, activities }: { userId: string; activities: Activities } =
+    JSON.parse(req.body);
   try {
     const session = getSession({ req });
-    if(activities)
-    {
-      for(var i = 0; i < activities.length; i++)
-      {
-        activities[i].tip = getActivityTip(activities[i].tier, activities[i].category);
+    if (activities) {
+      for (let i = 0; i < activities.activities.length; i++) {
+        activities.activities[i].tip = getActivityTip(
+          activities.activities[i].tier,
+          activities.activities[i].category
+        );
       }
     }
     const result = await putActivities(
@@ -83,47 +85,37 @@ function getActivityTip(tier: number, category: number): string {
     const bar2 = 6;
     const bar3 = 9;
     let activityTip = "";
-    if(category == 1)
-    {
-      if(tier <= bar1)
-      {
-        activityTip = "We believe you have a lot of room to grow in this activity. Link to Tier 1-3 stem document"
+    if (category == 1) {
+      if (tier <= bar1) {
+        activityTip =
+          "We believe you have a lot of room to grow in this activity. Link to Tier 1-3 stem document";
+      } else if (tier <= bar2) {
+        activityTip =
+          "We believe you have some room to grow in this activity. Link to Tier 4-6 stem document";
+      } else if (tier <= bar3) {
+        activityTip =
+          "We believe you have some room to grow in this activity. Link to Tier 7-9 stem document";
+      } else {
+        activityTip =
+          "Great job! We believe you are doing great at this activity. Link to Tier 10-12 stem document";
       }
-      else if(tier <= bar2)
-      {
-        activityTip = "We believe you have some room to grow in this activity. Link to Tier 4-6 stem document"
-      }
-      else if(tier <= bar3)
-      {
-        activityTip = "We believe you have some room to grow in this activity. Link to Tier 7-9 stem document"
-      }
-      else
-      {
-        activityTip = "Great job! We believe you are doing great at this activity. Link to Tier 10-12 stem document"
-      }
-    }
-    else
-    {
-      if(tier <= bar1)
-      {
-        activityTip = "We believe you have a lot of room to grow in this activity. Link to Tier 1-3 general document"
-      }
-      else if(tier <= bar2)
-      {
-        activityTip = "We believe you have some room to grow in this activity. Link to Tier 4-6 general document"
-      }
-      else if(tier <= bar3)
-      {
-        activityTip = "We believe you have some room to grow in this activity. Link to Tier 7-9 general document"
-      }
-      else
-      {
-        activityTip = "Great job! We believe you are doing great at this activity. Link to Tier 10-12 general document"
+    } else {
+      if (tier <= bar1) {
+        activityTip =
+          "We believe you have a lot of room to grow in this activity. Link to Tier 1-3 general document";
+      } else if (tier <= bar2) {
+        activityTip =
+          "We believe you have some room to grow in this activity. Link to Tier 4-6 general document";
+      } else if (tier <= bar3) {
+        activityTip =
+          "We believe you have some room to grow in this activity. Link to Tier 7-9 general document";
+      } else {
+        activityTip =
+          "Great job! We believe you are doing great at this activity. Link to Tier 10-12 general document";
       }
     }
     return activityTip;
-  } 
-  catch (e) {
+  } catch (e) {
     console.log(e);
   }
 }

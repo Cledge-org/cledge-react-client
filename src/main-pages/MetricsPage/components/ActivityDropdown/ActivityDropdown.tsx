@@ -11,8 +11,12 @@ const ActivityDropdown = ({
   content,
   customContent,
   tip,
+  updateChunk,
+  updatePage,
 }: {
   title: string;
+  updatePage: string;
+  updateChunk: string;
   tier: number;
   content: string;
   customContent?: ReactElement;
@@ -58,7 +62,13 @@ const ActivityDropdown = ({
         </div>
         <div className="d-flex flex-row align-items-start justify-content-between w-100">
           {customContent ?? (
-            <TierIndicatorAndTips tip={tip} tipTitle={""} tier={tier} />
+            <TierIndicatorAndTips
+              tip={tip}
+              tipTitle={""}
+              tier={tier}
+              updatePage={updatePage}
+              updateChunk={updateChunk}
+            />
           )}
         </div>
       </div>

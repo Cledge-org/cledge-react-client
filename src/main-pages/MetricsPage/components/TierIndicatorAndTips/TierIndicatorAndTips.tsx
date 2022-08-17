@@ -6,12 +6,16 @@ const TierIndicatorAndTips = ({
   tier,
   tip,
   tipTitle,
+  updateChunk,
+  updatePage,
   noTip,
 }: {
   tier: number;
   isOverall?: boolean;
   tip: string;
   tipTitle: string;
+  updatePage: string;
+  updateChunk: string;
   noTip?: boolean;
 }) => {
   return (
@@ -22,7 +26,13 @@ const TierIndicatorAndTips = ({
           style={{ minHeight: "30vh", width: isOverall ? "100%" : "50%" }}
           className="d-flex flex-column align-items-center justify-content-start"
         >
-          <TipsCard isOverall={isOverall} title={tipTitle} tips={[tip]} />
+          <TipsCard
+            updateChunk={updateChunk}
+            updatePage={updatePage}
+            isOverall={isOverall}
+            title={tipTitle}
+            tips={[tip]}
+          />
         </div>
       )}
     </>

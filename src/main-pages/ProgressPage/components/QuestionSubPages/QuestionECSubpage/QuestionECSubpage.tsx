@@ -46,7 +46,7 @@ export default function QuestionECSubpage({
   );
   const session = useSession();
   const getActivities = (chunkResponses): Activities => {
-    let activities = chunkResponses.map((responses) => {
+    let activities = chunkResponses.map((responses, index) => {
       const hoursPerWeek = parseInt(
         responses.find(
           ({ questionId }) => questionId === "623dfe875e2b2cf43e1b86d8"
@@ -58,7 +58,10 @@ export default function QuestionECSubpage({
         ).response
       );
       let initialObj = {
-        activityID: "???",
+        activityID: index,
+        actTitle: responses.find(
+          ({ questionId }) => questionId === "623e07e15e2b2cf43e1b86de"
+        ).response,
         actType: responses.find(
           ({ questionId }) => questionId === "61c6b6f2d3054b6dd0f1fc4d"
         ).response,
@@ -105,7 +108,7 @@ export default function QuestionECSubpage({
         setIsEditing(false);
       }}
       onSave={async (newAnswers) => {
-        const ECResponse = userResponses?.find(({ questionId }) => {
+        let ECResponse = userResponses?.find(({ questionId }) => {
           return questionId === "Extracurriculars";
         });
         if (ECResponse === undefined) {
@@ -114,6 +117,9 @@ export default function QuestionECSubpage({
             response: {
               [chunk.name]: [],
             },
+          });
+          ECResponse = userResponses?.find(({ questionId }) => {
+            return questionId === "Extracurriculars";
           });
         }
         if (ECResponse?.response[chunk.name] === undefined) {

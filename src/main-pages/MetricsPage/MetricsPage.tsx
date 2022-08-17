@@ -158,24 +158,39 @@ const Metrics: NextApplicationPage<{
                   style={{ borderBottom: "1px solid #BBBBC0" }}
                   className="pb-5"
                 >
-                  <SubTitle title="Overall Tier" isDivider />
+                  <SubTitle
+                    updatePage="Extracurriculars"
+                    updateChunk="All Activities"
+                    title="Overall Tier"
+                    isDivider
+                  />
                   <div className="d-flex flex-column">
                     <TierIndicatorAndTips
                       tier={activities?.overallTier}
                       isOverall
+                      updateChunk={"All Activities"}
+                      updatePage={"Extracurriculars"}
                       tip={""}
+                      noTip
                       tipTitle={""}
                     />
                   </div>
                 </div>
-                <SubTitle title="Individual Activities" />
+                <SubTitle
+                  updatePage="Extracurriculars"
+                  updateChunk="All Activities"
+                  title="Individual Activities"
+                />
                 {activities?.activities?.map((activity) => {
+                  console.log(activity.tip);
                   return (
                     <ActivityDropdown
-                      title={""}
+                      updateChunk={"All Activities"}
+                      updatePage={"Extracurriculars"}
+                      title={activity.actTitle}
                       content={activity.description}
                       tier={activity.tier}
-                      tip={""}
+                      tip={activity.tip}
                     />
                   );
                 })}
@@ -197,33 +212,50 @@ const Metrics: NextApplicationPage<{
                   style={{ borderBottom: "1px solid #BBBBC0" }}
                   className="pb-5"
                 >
-                  <SubTitle title="Overall Academics Tier" isDivider />
+                  <SubTitle
+                    updatePage="Academics"
+                    updateChunk="All Academics"
+                    title="Overall Academics Tier"
+                    isDivider
+                  />
                   <div className="d-flex flex-column">
                     <TierIndicatorAndTips
                       noTip
                       tip=""
+                      updateChunk={"All Academics"}
+                      updatePage={"Academics"}
                       tipTitle=""
                       tier={academics?.overallTier}
                       isOverall
                     />
                   </div>
                 </div>
-                <SubTitle title="Details" />
+                <SubTitle
+                  updatePage="Academics"
+                  updateChunk="All Academics"
+                  title="Details"
+                />
                 <ActivityDropdown
                   title={"GPA"}
                   content={""}
+                  updateChunk={"All Academics"}
+                  updatePage={"Academics"}
                   tip={academics.gpaTip}
                   tier={academics.gpaTier}
                 />
                 <ActivityDropdown
                   title={"Coursework"}
                   content={""}
+                  updateChunk={"All Academics"}
+                  updatePage={"Academics"}
                   tip={academics.classTip}
                   tier={academics.overallClassTier}
                 />
                 <ActivityDropdown
                   title={"SAT/ACT"}
                   content={""}
+                  updateChunk={"All Academics"}
+                  updatePage={"Academics"}
                   tip={academics.testTip}
                   customContent={
                     <>
@@ -283,6 +315,8 @@ const Metrics: NextApplicationPage<{
                           isOverall={false}
                           title={""}
                           tips={[academics.testTip]}
+                          updatePage={"Academics"}
+                          updateChunk={"All Academics"}
                         />
                       </div>
                     </>

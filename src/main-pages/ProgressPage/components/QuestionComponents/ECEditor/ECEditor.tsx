@@ -61,7 +61,6 @@ export default function ECEditor({
               <MCQQuestion
                 tags={[]}
                 question={questionData}
-                inEC
                 userAnswer={
                   isEditing &&
                   userResponse &&
@@ -95,7 +94,6 @@ export default function ECEditor({
             return (
               <CheckBoxQuestion
                 tags={[]}
-                inEC
                 question={questionData}
                 userAnswers={
                   isEditing &&
@@ -166,7 +164,6 @@ export default function ECEditor({
           if (type === "ECTextInput") {
             return (
               <TextInputQuestion
-                isDark
                 question={questionData}
                 userAnswer={
                   isEditing &&

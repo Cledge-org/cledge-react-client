@@ -235,6 +235,7 @@ export declare global {
 
   interface Activity {
     activityID: number;
+    actTitle: string;
     actType: string;
     hoursYear: number;
     yearsSpent: number;

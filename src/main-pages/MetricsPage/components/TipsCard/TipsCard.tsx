@@ -4,10 +4,14 @@ const TipsCard = ({
   title,
   tips,
   isOverall,
+  updatePage,
+  updateChunk,
 }: {
   title: string;
   tips: string[];
   isOverall?: boolean;
+  updatePage: string;
+  updateChunk: string;
 }) => {
   const router = useRouter();
   return (
@@ -61,7 +65,7 @@ const TipsCard = ({
             onClick={() => {
               router.push({
                 pathname: "/progress",
-                query: { page: "Extracurriculars", chunk: "All Activities" },
+                query: { page: updatePage, chunk: updateChunk },
               });
             }}
             className="cl-btn-clear"
