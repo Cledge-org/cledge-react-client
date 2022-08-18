@@ -276,6 +276,7 @@ export declare global {
   interface ButtonProps {
     color?: string;
     fixedWidth?: boolean;
+    className?: string;
     name?: string;
     children: React.ReactNode;
     onClick?: () => void;

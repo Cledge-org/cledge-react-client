@@ -15,6 +15,8 @@ import { Button } from "./components/Button/Button";
 import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
+import UWCSLandingPage from "src/main-pages/WelcomePage/components/UWCSLandingPage/UWCSLandingPage";
+import { useLocation } from "src/utils/hooks/useLocation";
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
 const MiddleBlock = dynamic(
@@ -276,7 +278,11 @@ const WelcomePage = () => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
   const [width, height] = useWindowSize();
+  const windowOrigin = useLocation();
 
+  if (windowOrigin.includes("uw")) {
+    return <UWCSLandingPage />;
+  }
   return (
     <PageErrorBoundary>
       <Container>
