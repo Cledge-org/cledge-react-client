@@ -34,10 +34,14 @@ const RightBlock = ({
         justify="space-around"
         align="middle"
         id={id}
-        style={{
-          paddingLeft: `${(windowSize.width - 1920) / 2}px`,
-          paddingRight: `${(windowSize.width - 1920) / 2}px`,
-        }}
+        style={
+          id === "intro"
+            ? {
+                paddingLeft: `${(windowSize.width - 1920) / 2}px`,
+                paddingRight: `${(windowSize.width - 1920) / 2}px`,
+              }
+            : {}
+        }
       >
         <Col lg={11} md={11} sm={11} xs={24}>
           <ContentWrapper id={id} style={{ margin: "0" }}>

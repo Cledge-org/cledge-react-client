@@ -13,6 +13,8 @@ import DropDownQuestion from "src/common/components/Questions/DropdownQuestion/D
 import YoutubeEmbed from "src/common/components/YoutubeEmbed/YoutubeEmbed";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import UWPackageFeature from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWPackageFeature/UWPackageFeature";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 const Contact = dynamic(() => import("../ContactForm/ContactForm"));
 const MiddleBlock = dynamic(() => import("../MiddleBlock/MiddleBlock"));
@@ -68,36 +70,6 @@ const Intro = styled(FullWidthContainer)`
   }
 `;
 
-const Metric = styled(FullWidthContainer)`
-  margin-top: 100px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  padding: 30px 150px;
-
-  @media only screen and (max-width: 767px) {
-    padding: 30px 18px;
-  }
-
-  & > div {
-    padding: 20px;
-    max-width: 400px;
-
-    @media only screen and (max-width: 767px) {
-      width: 100%;
-    }
-  }
-
-  div h2,
-  div p {
-    color: white;
-  }
-
-  p {
-    font-size: 14px;
-  }
-`;
-
 const Partner = styled(FullWidthContainer)`
   background: #f9faff;
   margin-top: 4rem;
@@ -145,7 +117,7 @@ export const SubscribeWrapper = styled("div")`
   }
 `;
 export const BlobBlock = styled("div")`
-  background: center / cover url("images/gradient-blob.svg") no-repeat;
+  background: #dce1fb;
 
   button {
     padding: 1rem;
@@ -167,20 +139,7 @@ export const BlobBlock = styled("div")`
   }
 
   .BlobContainer {
-    padding: 5rem 18px;
-
-    button {
-      width: 100%;
-    }
-
-    p {
-      margin-top: 1rem;
-    }
-
-    & img {
-      width: 100%;
-      margin: 3rem 0;
-    }
+    padding: 36px;
   }
 
   @media only screen and (min-width: 767px) {
@@ -198,22 +157,10 @@ export const BlobBlock = styled("div")`
 
     .BlobContainer {
       width: 80vw;
-      height: 50vh;
+      height: 52vh;
       border: 1px solid transparent;
       border-radius: 15px;
-      background-color: rgba(255, 255, 255, 0.3);
-
-      button {
-        width: 20vw;
-      }
-
-      & img {
-        width: 100%;
-      }
-
-      div:last-child {
-        position: absolute;
-      }
+      background-color: white;
     }
 
     & > div > div {
@@ -328,19 +275,25 @@ const UWCSLandingPage = () => {
         </Intro>
         <ContentBlock
           type="left"
-          title={MissionContent.title}
-          content={MissionContent.text}
+          title={
+            "Diverse profiles of accepted students and analysis of profiles"
+          }
+          content={
+            "View comprehensive profiles of students who were accepted directly into Computer Science at UW Seattle. Understand what characteristics UW is looking for in students as well as extracurricular ideas, supplemental essays, and an analysis on why each profile was successful"
+          }
           icon="uw_landing_1.svg"
           id="mission"
         />
         <ContentBlock
           type="right"
-          title={MissionContent.title}
-          content={MissionContent.text}
+          title={"An insider look at how your application is scored"}
+          content={
+            "We have insider access on the scoring system used to admit students to UW CS. We will walk you through what your application is scored on to give you the advantage on your application."
+          }
           icon="uw_landing_2.svg"
           id="mission2"
         />
-        <Partner>
+        <Partner className="py-3 pb-5">
           <div className="d-flex flex-column py-3 align-items-center">
             <div style={{ fontSize: "48px", fontWeight: 700 }}>
               Plus, you get:
@@ -348,16 +301,19 @@ const UWCSLandingPage = () => {
           </div>
           <div className="d-flex flex-row align-items-center justify-content-center">
             <UWPackageFeature
+              className="me-2"
               title="AI Advisor"
               description="Get instant answers from our AI college advisor chat. Not satisfied? Upload it to ask a real counselor."
               imageSrc="uw_package_1.svg"
             />
             <UWPackageFeature
+              className="mx-2"
               title="College Search"
               description="Use our college search tool to get information on acceptance rate ratios between male/female applicants, average salary after graduation and more."
               imageSrc="uw_package_2.svg"
             />
             <UWPackageFeature
+              className="ms-2"
               title="Metrics"
               description="See how you are doing in academics and extracurriculars. Get
                 recommendations on how to improve."
@@ -367,31 +323,79 @@ const UWCSLandingPage = () => {
         </Partner>
         <BlobBlock>
           <Fade direction="right" className="center-child w-100">
-            <div className="BlobContainer">
-              <div style={{ color: "white" }}>
-                <strong style={{ fontSize: "2em" }}>
-                  Ready to take the next step towards your dreams?
-                </strong>
-                <p style={{ color: "white" }}>
-                  Join our Insider Program to get first access to the 24/7
-                  college chat service
-                </p>
-              </div>
-              <img src="images/insider-blob.svg" />
-              <div style={{ bottom: "-2vh", left: "5vw" }}>
-                <Button
-                  key="subscribe-btn"
-                  color="#F7BC76"
-                  fixedWidth={false}
-                  onClick={() => {
-                    window.open(
-                      "https://forms.gle/M1GxLK45Yi3Esfn5A",
-                      "_blank"
-                    );
+            <div className="BlobContainer d-flex flex-row justify-content-between align-items-center">
+              <div className="d-flex flex-column justify-content-between w-50 h-100">
+                <div className="cl-dark-text fw-bold">
+                  <div style={{ fontSize: "36px" }}>UW CS package @ cledge</div>
+                  <div style={{ fontSize: "64px" }}>$100</div>
+                  <div style={{ fontSize: "24px" }}>for everything</div>
+                </div>
+                <button
+                  className="cl-btn-blue"
+                  style={{
+                    width: "25%",
+                    borderRadius: "8px",
+                    fontSize: "18px",
                   }}
                 >
-                  Join Insider Program for Free ➜
-                </Button>
+                  Buy Now
+                </button>
+              </div>
+              <div
+                className="mx-3"
+                style={{
+                  height: "100%",
+                  border: "1px solid #D9D9D9",
+                }}
+              />
+              <div className="d-flex flex-column justify-content-evenly w-50 h-100">
+                <div
+                  className="cl-dark-text"
+                  style={{ fontWeight: 700, fontSize: "24px" }}
+                >
+                  What you get with the package
+                </div>
+                {[
+                  "Analysis of 5+ successful applications & why they worked",
+                  "Insider look at how UW CS scores your application",
+                  "How to approach the UW supplemental essays",
+                  "Should you apply to Computer Engineering or CS?",
+                  "The Cledge AI Advisor & College Search Tool",
+                ].map((option) => (
+                  <div className="d-flex flex-row">
+                    <div
+                      className="me-2 center-child"
+                      style={{
+                        background:
+                          "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
+                        color: "white",
+                        width: "25px",
+                        height: "25px",
+                        borderRadius: "12.5px",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCheck} />
+                    </div>
+                    <div
+                      className="cl-dark-text"
+                      style={{ fontSize: "18px", fontWeight: 500 }}
+                    >
+                      {option}
+                    </div>
+                  </div>
+                ))}
+                <div
+                  className="fw-bold p-3"
+                  style={{
+                    background: "rgba(80, 107, 237, 0.2)",
+                    border: "1px solid #E0DFE8",
+                    borderRadius: "10px",
+                    fontSize: "20px",
+                  }}
+                >
+                  Plus a chance to have a 30 min consultation with a college
+                  counselor
+                </div>
               </div>
             </div>
           </Fade>

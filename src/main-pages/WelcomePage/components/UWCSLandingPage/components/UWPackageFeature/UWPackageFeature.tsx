@@ -1,14 +1,19 @@
+import classNames from "classnames";
+
 const UWPackageFeature = ({
   title,
   description,
   imageSrc,
+  className,
 }: {
   title: string;
   description: string;
   imageSrc: string;
+  className?: string;
 }) => {
   return (
     <div
+      className={classNames("d-flex flex-column p-4", className)}
       style={{
         height: "50vh",
         width: "25%",
