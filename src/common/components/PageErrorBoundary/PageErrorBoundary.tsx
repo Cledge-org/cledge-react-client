@@ -1,7 +1,9 @@
+import { getAnalytics, logEvent } from "firebase/analytics";
 import { useRouter } from "next/router";
 import { ComponentType, ReactElement } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { alertSlackError } from "src/utils/apiCalls";
+import { getFirebaseClientApp } from "src/utils/firebase/getFirebaseApp";
 
 const PageErrorBoundary = ({
   children,
@@ -26,6 +28,7 @@ const PageErrorBoundary = ({
       )}
       onError={(error) => {
         if (process.env.NEXTAUTH_URL !== "http://localhost:3000") {
+          logEvent(getAnalytics(getFirebaseClientApp()), 'error', {'error_name': error.name as string});
           alertSlackError(
             `${process.env.NEXTAUTH_URL + router.pathname}\n${
               error.name as string
