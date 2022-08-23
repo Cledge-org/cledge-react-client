@@ -227,10 +227,13 @@ const UWCSLandingPage = () => {
         <Intro className="container-margin">
           <Fade className="w-100 justify-content-start" direction="right">
             <div
-              style={{ color: "white" }}
-              className="d-flex flex-column justify-content-around w-50 h-100 px-5"
+              style={{
+                color: "white",
+                width: width < 1850 ? (width < 1350 ? "100%" : "70%") : "50%",
+              }}
+              className="d-flex flex-column justify-content-around h-100 px-5"
             >
-              <div>
+              <div className="w-100">
                 <div
                   className="center-child px-3 fw-bold"
                   style={{
@@ -309,7 +312,7 @@ const UWCSLandingPage = () => {
               Plus, you get:
             </div>
           </div>
-          <div className="d-flex flex-row align-items-center justify-content-center">
+          <div className="d-flex flex-row flex-wrap align-items-center justify-content-center">
             <UWPackageFeature
               className="me-2"
               title="AI Advisor"
@@ -333,7 +336,7 @@ const UWCSLandingPage = () => {
         </Partner>
         <BlobBlock>
           <Fade direction="right" className="center-child w-100">
-            <div className="BlobContainer d-flex flex-row justify-content-between align-items-center">
+            <div className="BlobContainer d-flex flex-row justify-content-between align-items-center flex-wrap">
               <div className="d-flex flex-column justify-content-between w-50 h-100">
                 <div className="cl-dark-text fw-bold">
                   <div style={{ fontSize: "36px" }}>UW CS package @ cledge</div>

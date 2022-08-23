@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 
 const UWPackageFeature = ({
   title,
@@ -11,12 +12,17 @@ const UWPackageFeature = ({
   imageSrc: string;
   className?: string;
 }) => {
+  const { width, height } = useWindowSize();
   return (
     <div
-      className={classNames("d-flex flex-column p-4", className)}
+      className={classNames(
+        "d-flex flex-column p-4",
+        width > 800 && className,
+        { "mt-3": width < 800 }
+      )}
       style={{
-        height: "50vh",
-        width: "25%",
+        height: width < 800 ? "70vh" : "50vh",
+        width: width < 800 ? "90%" : "25%",
         background: "#506BED",
         borderRadius: "8px",
         color: "white",
