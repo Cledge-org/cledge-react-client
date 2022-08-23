@@ -17,7 +17,8 @@ body {
   font-weight: 500;
   height: 100%;
   width: 100vw;
-  overflow-x: hidden;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }
 div,
 button {

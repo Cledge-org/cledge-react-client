@@ -68,6 +68,7 @@ const UWInterestFormPage = () => {
               type: "TextInput",
               helpText: "John",
             }}
+            isCentered
             userAnswer={""}
             onChange={(newFirstName) => {
               updateState("firstName", newFirstName);
@@ -81,6 +82,7 @@ const UWInterestFormPage = () => {
               type: "TextInput",
               helpText: "Doe",
             }}
+            isCentered
             userAnswer={""}
             onChange={(newLastName) => {
               updateState("lastName", newLastName);
@@ -96,6 +98,7 @@ const UWInterestFormPage = () => {
               type: "TextInput",
               helpText: "example@domain.com",
             }}
+            isCentered
             userAnswer={""}
             onChange={(email) => {
               updateState("email", email);
@@ -109,6 +112,7 @@ const UWInterestFormPage = () => {
               type: "TextInput",
               helpText: "12345",
             }}
+            isCentered
             userAnswer={""}
             onChange={(zipCode) => {
               updateState("zipCode", zipCode);
@@ -127,6 +131,7 @@ const UWInterestFormPage = () => {
             type: "TextInput",
             helpText: "123-456-7890",
           }}
+          isCentered
           userAnswer={""}
           onChange={(phoneNum) => {
             updateState("phoneNum", phoneNum);
@@ -140,6 +145,7 @@ const UWInterestFormPage = () => {
             type: "MCQ",
             data: [{ op: "Parent" }, { op: "Student" }],
           }}
+          isCentered
           userAnswer={""}
           onChange={(userType) => {
             updateState("userType", userType);
@@ -158,6 +164,7 @@ const UWInterestFormPage = () => {
               { op: "12th Grade" },
             ],
           }}
+          isCentered
           userAnswer={""}
           onChange={(grade) => {
             updateState("grade", grade);

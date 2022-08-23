@@ -23,14 +23,14 @@ export default function Header({ key_prop }: { key_prop: string }) {
   }
 
   useEffect(() => {
-    //console.log(scrollState);
+    console.log(scrollState);
     typeof document !== undefined
       ? require("bootstrap/dist/js/bootstrap")
       : null;
     document.removeEventListener("scroll", listener);
     setListener(
       document.body.addEventListener("scroll", (e) => {
-        //console.log(e);
+        console.log(e);
         var scrolled = document.body.scrollTop;
         if (scrolled > 0) {
           if (scrollState !== "scrolling") {

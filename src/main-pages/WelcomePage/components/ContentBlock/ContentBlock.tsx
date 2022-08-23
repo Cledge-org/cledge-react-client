@@ -23,7 +23,7 @@ const ContentBlock = (props: ContentBlockProps) => {
   }
 };
 
-const ContentBlockContent = (props: ContentBlockProps) => {
+export const ContentBlockContent = (props: ContentBlockProps) => {
   if (props.type === "left") return <LeftContentBlock {...props} />;
   if (props.type === "right") return <RightContentBlock {...props} />;
   return null;

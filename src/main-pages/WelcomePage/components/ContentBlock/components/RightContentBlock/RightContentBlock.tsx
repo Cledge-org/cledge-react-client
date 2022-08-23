@@ -31,7 +31,7 @@ const RightBlock = ({
   return (
     <RightBlockContainer style={{ maxWidth: "none" }}>
       <Row
-        justify="space-around"
+        justify={id === "intro" ? "space-around" : "space-between"}
         align="middle"
         id={id}
         style={
@@ -44,7 +44,11 @@ const RightBlock = ({
         }
       >
         <Col lg={11} md={11} sm={11} xs={24}>
-          <ContentWrapper id={id} style={{ margin: "0" }}>
+          <ContentWrapper
+            id={id}
+            className={id === "intro" ? "" : "container-margin"}
+            style={id === "intro" ? { margin: "0" } : {}}
+          >
             <h6>{title}</h6>
             <Content>{content}</Content>
             <ButtonWrapper>

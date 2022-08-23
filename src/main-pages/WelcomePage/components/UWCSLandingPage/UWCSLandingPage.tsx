@@ -15,6 +15,8 @@ import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageError
 import UWPackageFeature from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWPackageFeature/UWPackageFeature";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { ContentBlockContent } from "src/main-pages/WelcomePage/components/ContentBlock/ContentBlock";
+import { useRouter } from "next/router";
 
 const Contact = dynamic(() => import("../ContactForm/ContactForm"));
 const MiddleBlock = dynamic(() => import("../MiddleBlock/MiddleBlock"));
@@ -217,61 +219,67 @@ const UWCSLandingPage = () => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
   const [width, height] = useWindowSize();
+  const router = useRouter();
 
   return (
     <PageErrorBoundary>
       <Container>
         <Intro className="container-margin">
-          <div
-            style={{ color: "white" }}
-            className="d-flex flex-column justify-content-around w-50 h-100 px-5"
-          >
-            <div>
-              <div
-                className="center-child px-3 fw-bold"
-                style={{
-                  width: "fit-content",
-                  background:
-                    "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
-                  borderRadius: "13px",
-                }}
-              >
-                New
-              </div>
-              <div
-                style={{
-                  fontWeight: "bold",
-                  fontSize: "52px",
-                }}
-              >
-                Cledge is now available for University of Washington CS
-                Admissions
-              </div>
-            </div>
-            <div>
-              <div style={{ fontSize: "20px" }}>
-                Utilize the power of Cledge to gain an edge on your UW CS
-                application. Get insider access to how UW CS scores your
-                application, view successful applicant profiles, and then get
-                help writing the UW supplemental essay. Still need help? You
-                will get one 30 minute consultation with a college advisor and
-                access to Cledge AI tools.
-              </div>
-              <div style={{ width: "200px" }}>
-                <Button
-                  key="buy-now-btn"
-                  color="#F7BC76"
-                  fixedWidth={false}
-                  className="px-5"
-                  onClick={() => {
-                    //   window.open("https://forms.gle/M1GxLK45Yi3Esfn5A", "_blank");
+          <Fade className="w-100 justify-content-start" direction="right">
+            <div
+              style={{ color: "white" }}
+              className="d-flex flex-column justify-content-around w-50 h-100 px-5"
+            >
+              <div>
+                <div
+                  className="center-child px-3 fw-bold"
+                  style={{
+                    width: "fit-content",
+                    background:
+                      "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
+                    borderRadius: "13px",
                   }}
                 >
-                  Buy Now
-                </Button>
+                  New
+                </div>
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "52px",
+                  }}
+                >
+                  Cledge is now available for University of Washington CS
+                  Admissions
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: "20px" }}>
+                  Utilize the power of Cledge to gain an edge on your UW CS
+                  application. Get insider access to how UW CS scores your
+                  application, view successful applicant profiles, and then get
+                  help writing the UW supplemental essay. Still need help? You
+                  will get one 30 minute consultation with a college advisor and
+                  access to Cledge AI tools.
+                </div>
+                <div style={{ width: "200px" }}>
+                  <Button
+                    key="buy-now-btn"
+                    color="#F7BC76"
+                    fixedWidth={false}
+                    className="px-5"
+                    onClick={() => {
+                      window.open(
+                        `/uw-interest-form?ref=${router.query.ref}`,
+                        "_self"
+                      );
+                    }}
+                  >
+                    Join the Waitlist
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
+          </Fade>
         </Intro>
         <ContentBlock
           type="left"
@@ -284,15 +292,17 @@ const UWCSLandingPage = () => {
           icon="uw_landing_1.svg"
           id="mission"
         />
-        <ContentBlock
-          type="right"
-          title={"An insider look at how your application is scored"}
-          content={
-            "We have insider access on the scoring system used to admit students to UW CS. We will walk you through what your application is scored on to give you the advantage on your application."
-          }
-          icon="uw_landing_2.svg"
-          id="mission2"
-        />
+        <Fade direction="right">
+          <ContentBlockContent
+            type="right"
+            title={"An insider look at how your application is scored"}
+            content={
+              "We have insider access on the scoring system used to admit students to UW CS. We will walk you through what your application is scored on to give you the advantage on your application."
+            }
+            icon="uw_landing_2.svg"
+            id="mission2"
+          />
+        </Fade>
         <Partner className="py-3 pb-5">
           <div className="d-flex flex-column py-3 align-items-center">
             <div style={{ fontSize: "48px", fontWeight: 700 }}>
@@ -327,7 +337,7 @@ const UWCSLandingPage = () => {
               <div className="d-flex flex-column justify-content-between w-50 h-100">
                 <div className="cl-dark-text fw-bold">
                   <div style={{ fontSize: "36px" }}>UW CS package @ cledge</div>
-                  <div style={{ fontSize: "64px" }}>$100</div>
+                  <div style={{ fontSize: "64px" }}>TBA</div>
                   <div style={{ fontSize: "24px" }}>for everything</div>
                 </div>
                 <button
@@ -338,7 +348,7 @@ const UWCSLandingPage = () => {
                     fontSize: "18px",
                   }}
                 >
-                  Buy Now
+                  Join the Waitlist
                 </button>
               </div>
               <div

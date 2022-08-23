@@ -80,6 +80,7 @@ export default function QuestionSummaryCard({
       return (
         <TextInputQuestion
           question={question}
+          isCentered
           userAnswer={userAnswer?.response}
           onChange={(answer) => {
             setUserAnswer({ ...userAnswer, response: answer });
@@ -104,6 +105,7 @@ export default function QuestionSummaryCard({
         <MCQQuestion
           tags={userTags}
           question={question}
+          isCentered
           userAnswer={userAnswer?.response}
           onChange={(answer, newQTags, oldQTags) => {
             setUserAnswer({ ...userAnswer, response: answer });
@@ -118,6 +120,7 @@ export default function QuestionSummaryCard({
         <CheckBoxQuestion
           tags={userTags}
           question={question}
+          isCentered
           userAnswers={userAnswer?.response}
           onChange={(answer, newQTags, oldQTags) => {
             setUserAnswer({ ...userAnswer, response: answer });

@@ -125,7 +125,9 @@ const SignUpPage = () => {
         checkCondition(true, err);
       });
   };
-  if (!hasAccess && !windowLocation.includes("uw")) {
+  //!IMPORTANT UNCOMMENT THIS ON RELEASE
+  //if (!hasAccess && !windowLocation.includes("uw")) {
+  if (!hasAccess) {
     return (
       <div className="container">
         <form
