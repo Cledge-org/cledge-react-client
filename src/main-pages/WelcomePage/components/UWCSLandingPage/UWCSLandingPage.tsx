@@ -336,7 +336,7 @@ const UWCSLandingPage = () => {
         </Partner>
         <BlobBlock>
           <Fade direction="right" className="center-child w-100">
-            <div className="BlobContainer d-flex flex-row justify-content-between align-items-center flex-wrap">
+            <div className="BlobContainer d-flex flex-row justify-content-between align-items-center">
               <div className="d-flex flex-column justify-content-between w-50 h-100">
                 <div className="cl-dark-text fw-bold">
                   <div style={{ fontSize: "36px" }}>UW CS package @ cledge</div>
