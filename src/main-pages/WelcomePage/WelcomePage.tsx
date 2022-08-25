@@ -15,7 +15,9 @@ import { Button } from "./components/Button/Button";
 import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
-import NewBlogsCarousel from "src/main-pages/WelcomePage/components/NewBlogsCarousel";
+import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
+import { NextPage } from "next";
+import { NextApplicationPage } from "src/main-pages/AppPage/AppPage";
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
 const MiddleBlock = dynamic(
@@ -465,4 +467,15 @@ const WelcomePage = () => {
   );
 };
 
-export default WelcomePage;
+
+
+export async function getServerSideProps(context) {
+  return {
+    props:{
+      data:{
+        message:"hi"
+      }
+    }
+  }
+}
+  export default WelcomePage;
