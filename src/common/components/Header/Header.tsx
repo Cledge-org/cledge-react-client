@@ -2,13 +2,14 @@ import classNames from "classnames";
 import { useSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "./header.module.scss";
 
 export default function Header({ key_prop }: { key_prop: string }) {
   const { data: session, status } = useSession();
   const router = useRouter();
 
+  const [isExpanded, setIsExpanded] = useState(false);
   const [listener, setListener] = useState(null);
   const [scrollState, setScrollState] = useState("top");
   const [colors, setColors] = useState(
@@ -21,48 +22,47 @@ export default function Header({ key_prop }: { key_prop: string }) {
   } else {
     navclass = styles.navRegular + " shadow-sm";
   }
-
+  const onScroll = useCallback(() => {
+    let scrolled = document.body.scrollTop;
+    console.log(scrolled);
+    if (scrolled > 0) {
+      if (scrollState !== "scrolling") {
+        setScrollState("scrolling");
+        setColors("cl-blue");
+      }
+    } else {
+      console.log(isExpanded);
+      if (scrollState !== "top") {
+        setScrollState("top");
+        if (router.pathname === "/" && !isExpanded) {
+          setColors("cl-white");
+        }
+      }
+    }
+  }, [scrollState, isExpanded]);
   useEffect(() => {
-    console.log(scrollState);
     typeof document !== undefined
       ? require("bootstrap/dist/js/bootstrap")
       : null;
     document.removeEventListener("scroll", listener);
-    setListener(
-      document.body.addEventListener("scroll", (e) => {
-        console.log(e);
-        var scrolled = document.body.scrollTop;
-        if (scrolled > 0) {
-          if (scrollState !== "scrolling") {
-            setScrollState("scrolling");
-            setColors("cl-blue");
-          }
-        } else {
-          if (scrollState !== "top") {
-            setScrollState("top");
-            if (router.pathname === "/") {
-              setColors("cl-white");
-            }
-          }
-        }
-      })
-    );
+    document.body.addEventListener("scroll", onScroll);
+    setListener(onScroll);
     return () => {
       document.removeEventListener("scroll", listener);
     };
-  }, [scrollState]);
+  }, [scrollState, onScroll, isExpanded]);
   return (
     <nav
       key={key_prop}
       className={classNames(
         `w-100 navbar cl-blue navbar-expand-md px-3`,
-        scrollState !== "scrolling" && router.pathname === "/"
+        scrollState !== "scrolling" && router.pathname === "/" && !isExpanded
           ? `position-fixed top-0 start-0 ${styles.navTransparent}`
           : "sticky-top",
         {
           [styles.navRegularNoShadow + " shadow-none"]:
             scrollState !== "scrolling" && router.pathname !== "/",
-          [navclass]: scrollState === "scrolling",
+          [navclass]: scrollState === "scrolling" || isExpanded,
         }
       )}
       style={{
@@ -86,6 +86,14 @@ export default function Header({ key_prop }: { key_prop: string }) {
           style={{ border: "2px solid lightgray" }}
           className="navbar-toggler navbar navbar-light"
           type="button"
+          onClick={() => {
+            if (!isExpanded) {
+              setColors("cl-blue");
+            } else if (router.pathname === "/" && scrollState === "top") {
+              setColors("cl-white");
+            }
+            setIsExpanded((isExpanded) => !isExpanded);
+          }}
           data-bs-toggle="collapse"
           data-bs-target="#navbarNavAltMarkup"
           aria-controls="navbarNavAltMarkup"

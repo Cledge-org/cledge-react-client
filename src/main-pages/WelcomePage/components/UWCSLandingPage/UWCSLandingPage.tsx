@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { ContentBlockContent } from "src/main-pages/WelcomePage/components/ContentBlock/ContentBlock";
 import { useRouter } from "next/router";
+import classNames from "classnames";
 
 const Contact = dynamic(() => import("../ContactForm/ContactForm"));
 const MiddleBlock = dynamic(() => import("../MiddleBlock/MiddleBlock"));
@@ -142,8 +143,18 @@ export const BlobBlock = styled("div")`
 
   .BlobContainer {
     padding: 36px;
+    width: 80vw;
+    height: 52vh;
+    border: 1px solid transparent;
+    border-radius: 15px;
+    background-color: white;
   }
-
+  @media only screen and (max-width: 800px) {
+    .BlobContainer {
+      height: auto;
+      width: 90vw;
+    }
+  }
   @media only screen and (min-width: 767px) {
     min-height: 75vh;
     position: relative;
@@ -155,14 +166,6 @@ export const BlobBlock = styled("div")`
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .BlobContainer {
-      width: 80vw;
-      height: 52vh;
-      border: 1px solid transparent;
-      border-radius: 15px;
-      background-color: white;
     }
 
     & > div > div {
@@ -225,13 +228,16 @@ const UWCSLandingPage = () => {
     <PageErrorBoundary>
       <Container>
         <Intro className="container-margin">
-          <Fade className="w-100 justify-content-start" direction="right">
+          <Fade className="w-100 justify-content-start h-100" direction="right">
             <div
               style={{
                 color: "white",
                 width: width < 1850 ? (width < 1350 ? "100%" : "70%") : "50%",
               }}
-              className="d-flex flex-column justify-content-around h-100 px-5"
+              className={classNames(
+                "d-flex flex-column justify-content-around h-100 px-5",
+                { "align-items-center": width < 800 }
+              )}
             >
               <div className="w-100">
                 <div
@@ -248,28 +254,25 @@ const UWCSLandingPage = () => {
                 <div
                   style={{
                     fontWeight: "bold",
-                    fontSize: "52px",
+                    fontSize: width < 800 ? "36px" : "52px",
                   }}
                 >
                   Cledge is now available for University of Washington CS
                   Admissions
                 </div>
               </div>
-              <div>
+              <div className={classNames({ "w-100": width < 800 })}>
                 <div style={{ fontSize: "20px" }}>
-                  Utilize the power of Cledge to gain an edge on your UW CS
-                  application. Get insider access to how UW CS scores your
-                  application, view successful applicant profiles, and then get
-                  help writing the UW supplemental essay. Still need help? You
-                  will get one 30 minute consultation with a college advisor and
-                  access to Cledge AI tools.
+                  {width < 800
+                    ? "Releasing September"
+                    : "Utilize the power of Cledge to gain an edge on your UW CS application. Get insider access to how UW CS scores your application, view successful applicant profiles, and then get help writing the UW supplemental essay. Still need help? You will get one 30 minute consultation with a college advisor and access to Cledge AI tools."}
                 </div>
-                <div style={{ width: "200px" }}>
+                <div style={{ width: width < 800 ? "100%" : "300px" }}>
                   <Button
                     key="buy-now-btn"
                     color="#F7BC76"
                     fixedWidth={false}
-                    className="px-5"
+                    className={classNames("px-5", { "w-100": width < 800 })}
                     onClick={() => {
                       window.open(
                         `/uw-interest-form?ref=${router.query.ref}`,
@@ -312,41 +315,74 @@ const UWCSLandingPage = () => {
               Plus, you get:
             </div>
           </div>
-          <div className="d-flex flex-row flex-wrap align-items-center justify-content-center">
-            <UWPackageFeature
-              className="me-2"
-              title="AI Advisor"
-              description="Get instant answers from our AI college advisor chat. Not satisfied? Upload it to ask a real counselor."
-              imageSrc="uw_package_1.svg"
-            />
-            <UWPackageFeature
-              className="mx-2"
-              title="College Search"
-              description="Use our college search tool to get information on acceptance rate ratios between male/female applicants, average salary after graduation and more."
-              imageSrc="uw_package_2.svg"
-            />
-            <UWPackageFeature
-              className="ms-2"
-              title="Metrics"
-              description="See how you are doing in academics and extracurriculars. Get
+          <div
+            className={classNames({ "px-2": width < 800 })}
+            style={{
+              overflowX: "auto",
+              overflowY: "hidden",
+              width: "100%",
+            }}
+          >
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ width: "fit-content" }}
+            >
+              <UWPackageFeature
+                className="me-2"
+                title="AI Advisor"
+                description="Get instant answers from our AI college advisor chat. Not satisfied? Upload it to ask a real counselor."
+                imageSrc="uw_package_1.svg"
+              />
+              <UWPackageFeature
+                className="mx-2"
+                title="College Search"
+                description="Use our college search tool to get information on acceptance rate ratios between male/female applicants, average salary after graduation and more."
+                imageSrc="uw_package_2.svg"
+              />
+              <UWPackageFeature
+                className="ms-2"
+                title="Metrics"
+                description="See how you are doing in academics and extracurriculars. Get
                 recommendations on how to improve."
-              imageSrc="uw_package_3.svg"
-            />
+                imageSrc="uw_package_3.svg"
+              />
+            </div>
           </div>
         </Partner>
         <BlobBlock>
           <Fade direction="right" className="center-child w-100">
-            <div className="BlobContainer d-flex flex-row justify-content-between align-items-center">
-              <div className="d-flex flex-column justify-content-between w-50 h-100">
+            <div
+              className={classNames(
+                "BlobContainer d-flex flex-row justify-content-between align-items-center flex-wrap",
+                { "my-3": width < 800 }
+              )}
+            >
+              <div
+                className="d-flex flex-column justify-content-between h-100"
+                style={{ width: width < 800 ? "100%" : "48%" }}
+              >
                 <div className="cl-dark-text fw-bold">
-                  <div style={{ fontSize: "36px" }}>UW CS package @ cledge</div>
-                  <div style={{ fontSize: "64px" }}>TBA</div>
-                  <div style={{ fontSize: "24px" }}>for everything</div>
+                  <div style={{ fontSize: width < 800 ? "28px" : "36px" }}>
+                    UW CS package @ cledge
+                  </div>
+                  <div style={{ fontSize: "64px" }}>$99</div>
+                  <div
+                    className="cl-mid-gray mb-2"
+                    style={{ fontSize: "24px" }}
+                  >
+                    for everything
+                  </div>
                 </div>
                 <button
                   className="cl-btn-blue"
+                  onClick={() => {
+                    window.open(
+                      `/uw-interest-form?ref=${router.query.ref}`,
+                      "_self"
+                    );
+                  }}
                   style={{
-                    width: "25%",
+                    width: width < 800 ? "100%" : "25%",
                     borderRadius: "8px",
                     fontSize: "18px",
                   }}
@@ -355,15 +391,22 @@ const UWCSLandingPage = () => {
                 </button>
               </div>
               <div
-                className="mx-3"
+                className={classNames({
+                  "mx-3": width > 800,
+                  "my-3": width < 800,
+                })}
                 style={{
-                  height: "100%",
+                  height: width < 800 ? "0" : "100%",
+                  width: width < 800 ? "100%" : "0",
                   border: "1px solid #D9D9D9",
                 }}
               />
-              <div className="d-flex flex-column justify-content-evenly w-50 h-100">
+              <div
+                className="d-flex flex-column justify-content-evenly h-100"
+                style={{ width: width < 800 ? "100%" : "48%" }}
+              >
                 <div
-                  className="cl-dark-text"
+                  className="cl-dark-text mb-2"
                   style={{ fontWeight: 700, fontSize: "24px" }}
                 >
                   What you get with the package
@@ -383,6 +426,7 @@ const UWCSLandingPage = () => {
                           "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
                         color: "white",
                         width: "25px",
+                        minWidth: "25px",
                         height: "25px",
                         borderRadius: "12.5px",
                       }}
@@ -398,7 +442,7 @@ const UWCSLandingPage = () => {
                   </div>
                 ))}
                 <div
-                  className="fw-bold p-3"
+                  className="fw-bold p-3 mt-2"
                   style={{
                     background: "rgba(80, 107, 237, 0.2)",
                     border: "1px solid #E0DFE8",

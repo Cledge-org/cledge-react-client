@@ -15,13 +15,9 @@ const UWPackageFeature = ({
   const { width, height } = useWindowSize();
   return (
     <div
-      className={classNames(
-        "d-flex flex-column p-4",
-        width > 800 && className,
-        { "mt-3": width < 800 }
-      )}
+      className={classNames("d-flex flex-column p-4", className)}
       style={{
-        height: width < 800 ? "70vh" : "50vh",
+        height: width < 800 ? "60vh" : "50vh",
         width: width < 800 ? "90%" : "25%",
         background: "#506BED",
         borderRadius: "8px",
