@@ -30,7 +30,7 @@ const FullWidthContainer = styled("div")`
 `;
 
 const Intro = styled(FullWidthContainer)`
-  background: center / cover url("images/uw-landing-bg.svg") no-repeat;
+  background: url("images/uw-landing-bg.svg") no-repeat;
   height: 90vh;
   position: relative;
   display: flex;
@@ -227,7 +227,13 @@ const UWCSLandingPage = () => {
   return (
     <PageErrorBoundary>
       <Container>
-        <Intro className="container-margin">
+        <Intro
+          className="container-margin"
+          style={{
+            backgroundSize: "cover",
+            backgroundPosition: width < 800 ? "top left" : "center",
+          }}
+        >
           <Fade className="w-100 justify-content-start h-100" direction="right">
             <div
               style={{
@@ -300,7 +306,7 @@ const UWCSLandingPage = () => {
         />
         <Fade direction="right">
           <ContentBlockContent
-            type="right"
+            type={width < 800 ? "left" : "right"}
             title={"An insider look at how your application is scored"}
             content={
               "We have insider access on the scoring system used to admit students to UW CS. We will walk you through what your application is scored on to give you the advantage on your application."
@@ -365,7 +371,7 @@ const UWCSLandingPage = () => {
                   <div style={{ fontSize: width < 800 ? "28px" : "36px" }}>
                     UW CS package @ cledge
                   </div>
-                  <div style={{ fontSize: "64px" }}>$99</div>
+                  <div style={{ fontSize: "64px" }}>TBA</div>
                   <div
                     className="cl-mid-gray mb-2"
                     style={{ fontSize: "24px" }}

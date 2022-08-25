@@ -18,7 +18,7 @@ const UWPackageFeature = ({
       className={classNames("d-flex flex-column p-4", className)}
       style={{
         height: width < 800 ? "60vh" : "50vh",
-        width: width < 800 ? "90%" : "25%",
+        width: width < 800 ? "85vw" : "25%",
         background: "#506BED",
         borderRadius: "8px",
         color: "white",
