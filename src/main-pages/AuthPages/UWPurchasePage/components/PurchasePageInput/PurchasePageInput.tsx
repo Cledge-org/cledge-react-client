@@ -2,18 +2,27 @@ const PurchasePageInput = ({
   heading,
   placeholder,
   onChange,
+  isShort,
 }: {
+  isShort?: boolean;
   heading: string;
   placeholder: string;
   onChange: (value: string) => void;
 }) => {
   return (
-    <div>
-      <label className="cl-light-gray" style={{}}>
+    <div
+      style={{ width: isShort ? "48%" : "100%" }}
+      className="d-flex flex-column pt-2"
+    >
+      <label className="cl-mid-gray pb-1" style={{}}>
         {heading}
       </label>
       <input
-        style={{ fontWeight: 600, borderRadius: "5px" }}
+        style={{
+          fontWeight: 600,
+          borderRadius: "5px",
+          border: "1px solid #808099",
+        }}
         className="cl-dark-text p-2"
         onChange={(e) => {
           onChange(e.target.value);
