@@ -15,6 +15,7 @@ import { Button } from "./components/Button/Button";
 import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
+import NewBlogsCarousel from "src/main-pages/WelcomePage/components/NewBlogsCarousel";
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
 const MiddleBlock = dynamic(
@@ -409,6 +410,7 @@ const WelcomePage = () => {
           icon="landing_3.svg"
           id="product"
         />
+        <NewBlogsCarousel/>
         <Partner>
           <MiddleBlock
             id="partner"
