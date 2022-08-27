@@ -242,6 +242,8 @@ export declare global {
     description: string;
     points: number;
     tier: number;
+    category: number;
+    tip: string;
   }
 
   interface Academics extends WithId<Document> {
