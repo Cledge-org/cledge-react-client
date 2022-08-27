@@ -1,7 +1,6 @@
 import { TimePickerLocale } from "antd/lib/time-picker";
-// import { ObjectId } from "mongodb";
 
-import { ObjectId, ObjectID } from "mongodb";
+import { ObjectId } from "mongodb";
 import { Key } from "react";
 
 export declare global {
@@ -110,7 +109,7 @@ export declare global {
     questions: ObjectId[]; // Document IDs of question data
   }
   interface Question extends WithId<Document> {
-    _id?: string;
+    _id?: ObjectId;
     question: string;
     type: string;
     helpVid?: string;
@@ -180,7 +179,7 @@ export declare global {
     coverImage: string | ArrayBuffer;
   }
   interface PathwayModule {
-    _id?: string;
+    _id?: ObjectId;
     name: string;
     presetContent: PresetContent[];
     personalizedContent: PersonalizedContent[];
@@ -353,10 +352,10 @@ interface collegeInfo {
 interface collegeListElementRaw {
   college_id: string;
   fit_type: -1 | 0 | 1 | 2 | 3;
-  index:number
+  index: number;
 }
 
-interface updateCollegeList{
-  user_id:string;
-  college_list: collegeListElementRaw[]
+interface updateCollegeList {
+  user_id: string;
+  college_list: collegeListElementRaw[];
 }

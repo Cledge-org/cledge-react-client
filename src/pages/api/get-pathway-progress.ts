@@ -126,7 +126,7 @@ async function getSpecificModuleProgress(
       ]);
       if (module) {
         let moduleContentProgress: ContentProgress[] =
-          progressByModule[module._id];
+          progressByModule[module._id.toString()];
         if (!moduleContentProgress) {
           moduleContentProgress = [];
         }
@@ -158,7 +158,7 @@ async function getSpecificModuleProgress(
           });
         }
         res({
-          moduleId,
+          moduleId: moduleId.toString(),
           finished: moduleContentProgress.reduce(
             (prev, cur) => prev && cur.finished,
             true
@@ -168,7 +168,7 @@ async function getSpecificModuleProgress(
         });
       } else {
         res({
-          moduleId,
+          moduleId: moduleId.toString(),
           finished: false,
           contentProgress: [],
           name: "NULL MODULE",
