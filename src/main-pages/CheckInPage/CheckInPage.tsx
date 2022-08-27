@@ -124,16 +124,16 @@ const CheckIn: NextApplicationPage<{
           const updateFunc = (value, newQTags, oldTags) => {
             newUserResponses.find(
               (questionResponse) =>
-                questionResponse.questionId === question?._id
+                questionResponse.questionId === question?._id.toString()
             )
               ? (newUserResponses[
                   newUserResponses.findIndex(
                     (questionResponse) =>
-                      questionResponse.questionId === question?._id
+                      questionResponse.questionId === question?._id.toString()
                   )
                 ]["response"] = value)
               : newUserResponses.push({
-                  questionId: question?._id,
+                  questionId: question?._id.toString(),
                   response: value,
                 });
             if (newQTags) {
@@ -144,7 +144,7 @@ const CheckIn: NextApplicationPage<{
           if (question?.type === "TextInput") {
             return (
               <TextInputQuestion
-                key={question?._id}
+                key={question?._id.toString()}
                 question={question}
                 userAnswer={""}
                 onChange={updateFunc}
@@ -155,7 +155,7 @@ const CheckIn: NextApplicationPage<{
             return (
               <RankingQuestion
                 question={question}
-                key={question?._id}
+                key={question?._id.toString()}
                 userAnswers={[]}
                 onChange={updateFunc}
                 tags={userTags}
@@ -166,7 +166,7 @@ const CheckIn: NextApplicationPage<{
             return (
               <MCQQuestion
                 question={question}
-                key={question?._id}
+                key={question?._id.toString()}
                 userAnswer={""}
                 onChange={updateFunc}
                 tags={userTags}
@@ -176,7 +176,7 @@ const CheckIn: NextApplicationPage<{
           if (question?.type === "CheckBox") {
             return (
               <CheckBoxQuestion
-                key={question?._id}
+                key={question?._id.toString()}
                 question={question}
                 userAnswers={[]}
                 onChange={updateFunc}
@@ -191,20 +191,20 @@ const CheckIn: NextApplicationPage<{
                 onChange={(value, index, questionId) => {
                   let currRes = newUserResponses.find(
                     (questionResponse) =>
-                      questionResponse.questionId === question?._id
+                      questionResponse.questionId === question?._id.toString()
                   );
                   if (currRes) {
                     newUserResponses[
                       newUserResponses.findIndex(
                         (questionResponse) =>
-                          questionResponse.questionId === question?._id
+                          questionResponse.questionId === question?._id.toString()
                       )
                     ]["response"][index] = value;
                   } else {
                     let newResArr = [];
                     newResArr[index] = value;
                     newUserResponses.push({
-                      questionId: question?._id,
+                      questionId: question?._id.toString(),
                       response: newResArr,
                     });
                   }

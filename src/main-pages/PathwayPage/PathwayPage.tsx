@@ -95,7 +95,8 @@ const Pathways: NextApplicationPage<{
     });
   }, [moduleProgress]);
   const updateContentProgress = (newContentProgress: ContentProgress) => {
-    let allModuleContentProgress = moduleProgress[currModuleId] ?? [];
+    let allModuleContentProgress =
+      moduleProgress[currModuleId.toString()] ?? [];
     const contentIndex = allModuleContentProgress.findIndex(
       ({ name }) => name === newContentProgress.name
     );
@@ -106,7 +107,7 @@ const Pathways: NextApplicationPage<{
     }
     setModuleProgress({
       ...moduleProgress,
-      [currModuleId]: allModuleContentProgress,
+      [currModuleId.toString()]: allModuleContentProgress,
     });
   };
   const updateSubContentProgress = (
@@ -115,8 +116,7 @@ const Pathways: NextApplicationPage<{
       | PathwayVideoProgress
       | PathwayTextProgress
   ) => {
-    //console.log(newSubContentProgress);
-    let currContentProgress = moduleProgress[currModuleId].find(
+    let currContentProgress = moduleProgress[currModuleId.toString()].find(
       ({ name }) => name === currContent.name
     );
     const subContentIndex = currContentProgress.subContentProgress.findIndex(
@@ -142,7 +142,7 @@ const Pathways: NextApplicationPage<{
     let questionNumber = 0;
     return currContent.content.map((content) => {
       const { type } = content;
-      const currSubContentProgress = moduleProgress[currModuleId]
+      const currSubContentProgress = moduleProgress[currModuleId.toString()]
         .find(({ name }) => name === currContent.name)
         .subContentProgress.find(({ id }) => id === content.id) || {
         id: content.id,
@@ -324,7 +324,7 @@ function checkPathwayDiscrepancies(pathwayInfo: Pathway) {
     }
     pathwayProgress.moduleProgress.forEach((progressModule, index) => {
       const matchingModule = pathwayInfo.modules.find(
-        ({ _id }) => progressModule.moduleId === _id
+        ({ _id }) => progressModule.moduleId === _id.toString()
       );
       if (matchingModule && matchingModule.name !== progressModule.name) {
         pathwayProgress.moduleProgress[index].name = matchingModule.name;
