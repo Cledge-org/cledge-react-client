@@ -37,7 +37,7 @@ const CompositeQuestion = ({
           isDark={question.type === "ECTextInput"}
           userAnswer={response}
           onChange={(answer) => {
-            onChange(answer, index, question._id);
+            onChange(answer, index, question._id.toString());
           }}
         />
       );
@@ -49,7 +49,7 @@ const CompositeQuestion = ({
           tags={userTags}
           userAnswers={response}
           onChange={(answer) => {
-            onChange(answer, index, question._id);
+            onChange(answer, index, question._id.toString());
           }}
         />
       );
@@ -61,7 +61,7 @@ const CompositeQuestion = ({
           question={question}
           userAnswer={response}
           onChange={(answer, newQTags, oldQTags) => {
-            onChange(answer, index, question._id);
+            onChange(answer, index, question._id.toString());
           }}
         />
       );
@@ -73,7 +73,7 @@ const CompositeQuestion = ({
           question={question}
           userAnswers={response}
           onChange={(answer, newQTags, oldQTags) => {
-            onChange(answer, index, question._id);
+            onChange(answer, index, question._id.toString());
           }}
         />
       );
@@ -85,9 +85,9 @@ const CompositeQuestion = ({
           isConcatenable={question.isConcatenable}
           valuesList={question.data}
           onChange={(value) => {
-            onChange(value, index, question._id);
+            onChange(value, index, question._id.toString());
           }}
-          key={question._id}
+          key={question._id.toString()}
           questionTitle={question.question}
           defaultValue={response}
         />
