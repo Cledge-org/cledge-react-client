@@ -4,9 +4,13 @@ import Carousel from '@itseasy21/react-elastic-carousel'
 import BlogCarouselItem from 'src/main-pages/WelcomePage/components/blogsCarousel/components/BlogCaroselItem'
 import styles from './styles.module.scss'
 import styled from 'styled-components'
-import { Button, createTheme,ThemeProvider } from '@mui/material'
-
+import { Button, createTheme,Fab,ThemeProvider } from '@mui/material'
+import ArrowIcon from './Arrow.png'
+import Image from 'next/image'
 const CarouselDiv = styled.div`
+background-color: #f9faff;
+margin-bottom: 50px;
+width: 100%;
 display: flex;
 flex-direction: row;
 overflow-x: scroll;
@@ -19,12 +23,28 @@ overflow-x: scroll;
 `
 
 const Arrow = styled.div`
-align-self: flex-start;
-width: 100px;
-height: 100px;
-background-color: aqua;
+right: 23px;
+position: absolute;
+display: flex;
+align-self: center;
+justify-self: flex-end;
 `
 
+const MainContainer = styled.div`
+.mainContainer {
+    padding: 50px;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    background: #f9faff;
+    h1 {
+        font-style: normal;
+        font-weight: 800;
+        font-size: 36px;
+        line-height: 43px;
+        color: #070452;
+    }
+}
+`
 function NewBlogsCarousel({ recentBlogs }) {
   const theme = createTheme({
     palette: {
@@ -60,19 +80,28 @@ function NewBlogsCarousel({ recentBlogs }) {
 
            </Carousel>
       </div> */}
-      <CarouselDiv>
+      <div style={{display:"flex", flexDirection:"row"}}>
+
+      <CarouselDiv id='carouselDiv'>
 
         {
           recentBlogsData.map((e) =>
-            <BlogCarouselItem article={e} />
+          <BlogCarouselItem article={e} />
           )}
-      
+     <Arrow>
+      <Fab color='inherit' onClick={()=>{
+        document.getElementById('carouselDiv').scrollBy({left:300,behavior:"smooth"})
+      }} size="large">
+<Image src={ArrowIcon}/>
+      </Fab>
+      </Arrow> 
       </CarouselDiv>
+    
+          </div>
 
       <Button variant="contained" color='primary'>
         View more blogs
       </Button>
-
     </div>
           </ThemeProvider>
   )

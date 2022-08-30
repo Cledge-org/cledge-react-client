@@ -10,7 +10,6 @@ flex-direction: column;
 align-items: flex-start;
 padding: 20px;
 margin-right:32px;
-margin-bottom: 50px;
 gap: 10px;
 min-width: 380px;
 min-height: 183px;
