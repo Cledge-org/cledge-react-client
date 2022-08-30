@@ -14,8 +14,10 @@ export default function Result() {
 
     return(
         <div>
-            <h1>Payment Result</h1>
-            <pre>{data ? JSON.stringify(data, null, 2) : 'Waiting...'}</pre>
+            <h1>Thank you for your order!</h1>
+            <h1>Hopefully, you enjoy our product!</h1>
+            <br></br>
+            <h1>Frontend can make it look pretty.</h1>
         </div>
     )
 }
