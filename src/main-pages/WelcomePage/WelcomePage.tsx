@@ -275,7 +275,7 @@ function useWindowSize() {
   return size;
 }
 
-const WelcomePage = () => {
+const WelcomePage = ({data}) => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
   const [width, height] = useWindowSize();
@@ -412,7 +412,7 @@ const WelcomePage = () => {
           icon="landing_3.svg"
           id="product"
         />
-        <NewBlogsCarousel/>
+        <NewBlogsCarousel recentBlogs={data.recentBlogs}/>
         <Partner>
           <MiddleBlock
             id="partner"
@@ -467,15 +467,4 @@ const WelcomePage = () => {
   );
 };
 
-
-
-export async function getServerSideProps(context) {
-  return {
-    props:{
-      data:{
-        message:"hi"
-      }
-    }
-  }
-}
   export default WelcomePage;
