@@ -1,8 +1,52 @@
 import classNames from "classnames";
+import { useEffect, useState } from "react";
 import PurchasePageInput from "src/main-pages/AuthPages/UWPurchasePage/components/PurchasePageInput/PurchasePageInput";
+import { callCreatePaymentIntent } from "src/utils/apiCalls";
+import Stripe from "stripe";
 import styles from "./uw-purchase-page.module.scss";
+import { loadStripe } from "@stripe/stripe-js";
+import LoadingScreen from "src/common/components/Loading/Loading";
+import {
+  Elements,
+  PaymentElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
+import { CircularProgress } from "@mui/material";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+);
 
 const UWPurchasePage = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [clientSecret, setClientSecret] = useState(null);
+  const stripe = useStripe();
+  const elements = useElements();
+  const asyncUseEffect = async () => {
+    const { clientSecret } = await (
+      await callCreatePaymentIntent("uw-package")
+    ).json();
+    setClientSecret(clientSecret);
+    setIsLoading(false);
+  };
+  useEffect(() => {
+    asyncUseEffect();
+  }, []);
+  const handleSubmit = async () => {
+    if (!stripe || !elements) {
+      return;
+    }
+    const result = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: "https://example.com/order/123/complete",
+      },
+    });
+    if (result.error) {
+      console.log(result.error.message);
+    }
+  };
   return (
     <div
       className="d-flex flex-row justify-content-evenly w-100 py-4"
@@ -39,44 +83,25 @@ const UWPurchasePage = () => {
             onChange={(value: string) => {}}
           />
         </div>
-        <div className={classNames(styles.blobContainer, "mt-4")}>
-          <div className="cl-dark-text fw-bold" style={{ fontSize: "28px" }}>
+        <div
+          id="payment-container"
+          className={classNames(styles.blobContainer, "mt-4")}
+        >
+          <div
+            className="cl-dark-text fw-bold pb-2"
+            style={{ fontSize: "28px" }}
+          >
             Payment method
           </div>
-          <div className="d-flex flex-row align-items-center justify-content-between">
-            <PurchasePageInput
-              isShort
-              heading={"First Name*"}
-              placeholder={""}
-              onChange={(value: string) => {}}
-            />
-            <PurchasePageInput
-              isShort
-              heading={"Last Name*"}
-              placeholder={""}
-              onChange={(value: string) => {}}
-            />
-          </div>
-          <PurchasePageInput
-            heading={"Credit/debit card number*"}
-            placeholder={""}
-            onChange={(value: string) => {}}
-          />
-          <div className="d-flex flex-row align-items-center justify-content-between">
-            <PurchasePageInput
-              isShort
-              heading={"Expiration month and year*"}
-              placeholder={""}
-              onChange={(value: string) => {}}
-            />
-            <PurchasePageInput
-              isShort
-              heading={"CVC*"}
-              placeholder={""}
-              onChange={(value: string) => {}}
-            />
-          </div>
-          <div>Images HERE</div>
+          {isLoading ? (
+            <div className="center-child w-100 h-100">
+              <CircularProgress className="cl-blue" />
+            </div>
+          ) : (
+            <Elements stripe={stripePromise} options={{ clientSecret }}>
+              <PaymentElement />
+            </Elements>
+          )}
         </div>
         <div className={classNames(styles.blobContainer, "mt-4")}>
           <div className="cl-dark-text fw-bold" style={{ fontSize: "28px" }}>

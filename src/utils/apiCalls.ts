@@ -326,3 +326,9 @@ export const callPutUWWaitlist = async (waitlistData: any) => {
     body: JSON.stringify({ data: waitlistData }),
   });
 };
+export const callCreatePaymentIntent = async (product_id: string) => {
+  return await fetch(`/api/stripe/create-payment-intent`, {
+    body: JSON.stringify({ product_id }),
+    method: "POST",
+  });
+};
