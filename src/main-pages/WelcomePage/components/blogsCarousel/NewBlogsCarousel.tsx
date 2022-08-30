@@ -30,56 +30,23 @@ align-self: center;
 justify-self: flex-end;
 `
 
-const MainContainer = styled.div`
-.mainContainer {
-    padding: 50px;
-    margin-top: 100px;
-    margin-bottom: 100px;
-    background: #f9faff;
-    h1 {
-        font-style: normal;
-        font-weight: 800;
-        font-size: 36px;
-        line-height: 43px;
-        color: #070452;
-    }
-}
-`
 function NewBlogsCarousel({ recentBlogs }) {
   const theme = createTheme({
     palette: {
       primary: { 
         main: "#506BED" 
+      },
+      secondary:{
+        main:"#FAFAFA"
       }
     }
   })
   const recentBlogsData = recentBlogs.articles[0]
-
-  const breakPoints = [
-    { width: 1, itemsToShow: 1 },
-    { width: 550, itemsToShow: 3, itemsToScroll: 2 },
-    { width: 768, itemsToShow: 4 },
-    { width: 1200, itemsToShow: 3 }
-  ];
   return (
     <ThemeProvider theme={theme}>
 
     <div className={styles.mainContainer}>
       <h1>Get started with our free expert-written blogs</h1>
-      {/* <div style={{ display: "flex", flexDirection: "row" }}>
-      <Carousel breakPoints={breakPoints} isRTL={false} enableAutoPlay={true} showArrows={false} enableMouseSwipe={true} enableTilt={true} enableSwipe={true}>
-      {
-           recentBlogsData.map((e) =>
-           <BlogCarouselItem image={e.image} title={e.title} />
-           )}
-           <BlogCarouselItem image={"test bro"} title={"you need to go to college!!"} />
-           <BlogCarouselItem image={"test bro"} title={"you need to go to college!!"} />
-           <BlogCarouselItem image={"test bro"} title={"you need to go to college!!"} />
-           <BlogCarouselItem image={"test bro"} title={"you need to go to college!!"} />
-           <BlogCarouselItem image={"test bro"} title={"you need to go to college!!"} />
-
-           </Carousel>
-      </div> */}
       <div style={{display:"flex", flexDirection:"row"}}>
 
       <CarouselDiv id='carouselDiv'>
@@ -89,7 +56,7 @@ function NewBlogsCarousel({ recentBlogs }) {
           <BlogCarouselItem article={e} />
           )}
      <Arrow>
-      <Fab color='inherit' onClick={()=>{
+      <Fab color='secondary' onClick={()=>{
         document.getElementById('carouselDiv').scrollBy({left:300,behavior:"smooth"})
       }} size="large">
 <Image src={ArrowIcon}/>
@@ -99,7 +66,7 @@ function NewBlogsCarousel({ recentBlogs }) {
     
           </div>
 
-      <Button variant="contained" color='primary'>
+      <Button variant="contained" color='primary' style={{textTransform:"none"}}>
         View more blogs
       </Button>
     </div>
