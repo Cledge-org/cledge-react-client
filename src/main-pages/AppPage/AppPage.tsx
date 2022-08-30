@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { Router, useRouter } from "next/router";
 import LoadingScreen from "../../common/components/Loading/Loading";
 import { getFirebaseClientApp } from "src/utils/firebase/getFirebaseApp";
+import { initializeTagManager } from "src/utils/analytics/gtm";
 
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
   requireAuth?: boolean;
@@ -30,6 +31,7 @@ function MyApp({
   useEffect(() => {
     // Log page visit to analytics
     logEvent(getAnalytics(getFirebaseClientApp()), router.pathname);
+    initializeTagManager();
 
     const endLoading = () => {
       setLoading(false);
