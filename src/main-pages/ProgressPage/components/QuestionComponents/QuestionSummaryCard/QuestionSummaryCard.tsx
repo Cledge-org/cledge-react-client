@@ -44,12 +44,12 @@ export default function QuestionSummaryCard({
     Dispatch<SetStateAction<UserResponse>>
   ] = useState(
     userAnswers?.find((response) => {
-      return response.questionId === question._id.toString();
+      return response.questionId === question._id;
     })
       ? userAnswers.find((response) => {
-          return response.questionId === question._id.toString();
+          return response.questionId === question._id;
         })
-      : { questionId: question._id.toString(), response: null }
+      : { questionId: question._id, response: null }
   );
   const [originalAnswer, setOriginalAnswer]: [
     UserResponse,
@@ -58,10 +58,10 @@ export default function QuestionSummaryCard({
     JSON.parse(
       JSON.stringify(
         userAnswers?.find((response) => {
-          return response.questionId === question._id.toString();
+          return response.questionId === question._id;
         })
           ? userAnswers.find((response) => {
-              return response.questionId === question._id.toString();
+              return response.questionId === question._id;
             })
           : { questionId: question._id, response: null }
       )
@@ -296,7 +296,7 @@ export default function QuestionSummaryCard({
                   : (userTags = userTags.concat(newTags));
                 setNewTags([]);
                 setOldTags([]);
-                if (question._id.toString() === "61de0b617c405886579656ec") {
+                if (question._id === "61de0b617c405886579656ec") {
                   fetch(`/api/update-user`, {
                     method: "POST",
                     body: JSON.stringify({

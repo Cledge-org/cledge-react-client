@@ -119,17 +119,16 @@ const CheckIn: NextApplicationPage<{
   const checkInPages = checkInData.map((question) => {
     const updateFunc = (value, newQTags, oldTags) => {
       newUserResponses.find(
-        (questionResponse) =>
-          questionResponse.questionId === question?._id.toString()
+        (questionResponse) => questionResponse.questionId === question?._id
       )
         ? (newUserResponses[
             newUserResponses.findIndex(
               (questionResponse) =>
-                questionResponse.questionId === question?._id.toString()
+                questionResponse.questionId === question?._id
             )
           ]["response"] = value)
         : newUserResponses.push({
-            questionId: question?._id.toString(),
+            questionId: question?._id,
             response: value,
           });
       if (newQTags) {
@@ -140,7 +139,7 @@ const CheckIn: NextApplicationPage<{
     if (question?.type === "TextInput") {
       return (
         <TextInputQuestion
-          key={question?._id.toString()}
+          key={question?._id}
           question={question}
           userAnswer={""}
           onChange={updateFunc}
@@ -151,7 +150,7 @@ const CheckIn: NextApplicationPage<{
       return (
         <RankingQuestion
           question={question}
-          key={question?._id.toString()}
+          key={question?._id}
           userAnswers={[]}
           onChange={updateFunc}
           tags={userTags}
@@ -162,7 +161,7 @@ const CheckIn: NextApplicationPage<{
       return (
         <MCQQuestion
           question={question}
-          key={question?._id.toString()}
+          key={question?._id}
           userAnswer={""}
           onChange={updateFunc}
           tags={userTags}
@@ -172,7 +171,7 @@ const CheckIn: NextApplicationPage<{
     if (question?.type === "CheckBox") {
       return (
         <CheckBoxQuestion
-          key={question?._id.toString()}
+          key={question?._id}
           question={question}
           userAnswers={[]}
           onChange={updateFunc}
