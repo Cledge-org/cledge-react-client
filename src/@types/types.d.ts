@@ -1,4 +1,7 @@
-// import { ObjectId } from "mongodb";
+import { TimePickerLocale } from "antd/lib/time-picker";
+
+import { ObjectId } from "mongodb";
+import { Key } from "react";
 
 export declare global {
   interface Window {
@@ -134,7 +137,7 @@ export declare global {
     moduleProgress: ModuleProgress[];
   }
   interface ModuleProgress {
-    moduleId: ObjectId;
+    moduleId: string;
     finished: boolean;
     name: string;
     contentProgress: ContentProgress[]; // Map between content ID and whether that content is finished
@@ -239,16 +242,21 @@ export declare global {
     description: string;
     points: number;
     tier: number;
+    category: number;
+    tip: string;
   }
 
   interface Academics extends WithId<Document> {
     _id?: ObjectId;
     classes: Class[];
     overallClassTier: number;
+    classTip: string;
     gpa: number;
     gpaTier: number;
+    gpaTip: string;
     satScore: number;
     actScore: number;
+    testTip: string;
     overallTier: number;
   }
 
@@ -257,6 +265,7 @@ export declare global {
     name: string;
     tier: number;
   }
+  //End of Student Metrics
 
   interface ContainerProps {
     border?: boolean;
@@ -314,4 +323,41 @@ export declare global {
     type: string;
     routeId: ObjectId;
   }
+}
+
+interface collegeListIndivudialInfo {
+  college_id: string;
+  fit_type: -1 | 0 | 1 | 2 | 3;
+  img_url: string;
+  img_title?: string;
+  college_name: string;
+  location: string;
+  in_state_tuition: number;
+  out_state_tuition: number;
+  college_type: "Public" | "Private";
+}
+
+interface collegeInfo {
+  _id: ObjectId | string;
+  college_id: string;
+  img_url: string;
+  img_title: string;
+  college_name: string;
+  target_tier: number;
+  safety_tier: number;
+  location: string;
+  in_state_tuition: number;
+  out_state_tuition: number;
+  college_type: "Public" | "Private";
+}
+
+interface collegeListElementRaw {
+  college_id: string;
+  fit_type: -1 | 0 | 1 | 2 | 3;
+  index: number;
+}
+
+interface updateCollegeList {
+  user_id: string;
+  college_list: collegeListElementRaw[];
 }

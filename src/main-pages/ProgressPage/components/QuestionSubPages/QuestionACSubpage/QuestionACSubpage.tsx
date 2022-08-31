@@ -102,6 +102,9 @@ export default function QuestionACSubpage({
         )?.response
       ),
       overallTier: overallTier,
+      classTip: "",
+      gpaTip: "",
+      testTip: "",
     };
   };
   if (!isShowing) {
@@ -191,7 +194,7 @@ export default function QuestionACSubpage({
                   <ACQuestionSummaryCard
                     response={response}
                     chunkQuestions={chunk.questions.filter(
-                      ({ _id }) => _id === "627950c272f6d134f0b63665"
+                      ({ _id }) => _id.toString() === "627950c272f6d134f0b63665"
                     )}
                     onClick={() => {
                       setCurrACIndex(index);
@@ -202,7 +205,7 @@ export default function QuestionACSubpage({
               })
           : []}
         {chunk.questions.map((question) =>
-          question._id === "627950c272f6d134f0b63665" ? null : (
+          question._id.toString() === "627950c272f6d134f0b63665" ? null : (
             <QuestionSummaryCard
               userTags={[]}
               isAC
