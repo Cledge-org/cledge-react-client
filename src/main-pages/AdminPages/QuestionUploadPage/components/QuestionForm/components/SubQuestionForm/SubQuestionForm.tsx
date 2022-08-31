@@ -124,10 +124,6 @@ const SubQuestionForm = ({
                   isConcatenable: false,
                 },
               ];
-              console.log(
-                currQuestionListCopy.chunks[chunkIndex].questions[questionIndex]
-                  .data[dataIndex].data
-              );
             }
             setCurrQuestionList({
               ...currQuestionListCopy,
@@ -202,11 +198,6 @@ const SubQuestionForm = ({
                     className="align-self-center align-items-center justify-content-center"
                     onClick={() => {
                       let currQuestionListCopy = currQuestionList;
-                      console.log(
-                        currQuestionListCopy.chunks[chunkIndex].questions[
-                          questionIndex
-                        ].data[dataIndex].data[index].data
-                      );
                       if (value.type === "DropDownQuestion") {
                         currQuestionListCopy.chunks[chunkIndex].questions[
                           questionIndex

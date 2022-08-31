@@ -1,6 +1,7 @@
 import CollegePage from "../main-pages/CollegePage/CollegePage";
 
 const College = () => {
-    return <CollegePage />;
+  return <CollegePage />;
 };
+College.requireAuth = true;
 export default College;

@@ -3,9 +3,11 @@ const PurchasePageInput = ({
   placeholder,
   onChange,
   isShort,
+  isPassword,
 }: {
   isShort?: boolean;
   heading: string;
+  isPassword?: boolean;
   placeholder: string;
   onChange: (value: string) => void;
 }) => {
@@ -18,6 +20,7 @@ const PurchasePageInput = ({
         {heading}
       </label>
       <input
+        type={isPassword ? "password" : "text"}
         style={{
           fontWeight: 600,
           borderRadius: "5px",

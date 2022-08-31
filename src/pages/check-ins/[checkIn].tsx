@@ -31,4 +31,5 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const CheckIn = ({ checkInData }) => {
   return <CheckInPage checkInData={checkInData} />;
 };
+CheckIn.requireAuth = true;
 export default CheckIn;

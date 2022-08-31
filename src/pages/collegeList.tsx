@@ -1,24 +1,30 @@
-import { createTheme, ThemeProvider } from '@mui/material'
-import { GetServerSidePropsContext } from 'next'
-import { getSession, useSession } from 'next-auth/react'
-import React, { useEffect, useState } from 'react'
-import { collegeListIndivudialInfo } from 'src/@types/types'
-import CollegeListPage from 'src/main-pages/CollegeList/CollegeListPage'
+import { createTheme, ThemeProvider } from "@mui/material";
+import { GetServerSidePropsContext } from "next";
+import { getSession, useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
+import { collegeListIndivudialInfo } from "src/@types/types";
+import CollegeListPage from "src/main-pages/CollegeList/CollegeListPage";
 
-// comment and uncomment to toggle between server and client side rendering 
+// comment and uncomment to toggle between server and client side rendering
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const session = getSession(ctx)
-  const response = await fetch(`http://${ctx.req.headers.host}/api/get-college-list?userId=${(await session).user.uid}`)
-  const responseJson = await response.json() as collegeListIndivudialInfo[]
+  const session = getSession(ctx);
+  const response = await fetch(
+    `http://${ctx.req.headers.host}/api/get-college-list?userId=${
+      (
+        await session
+      ).user.uid
+    }`
+  );
+  const responseJson = (await response.json()) as collegeListIndivudialInfo[];
   return {
     props: {
-      serverSideData: responseJson["college_list"]
-    }
-  }
+      serverSideData: responseJson["college_list"],
+    },
+  };
 }
 
 function CollegeList({ serverSideData }) {
-  const [data, setData] = useState<collegeListIndivudialInfo[]>(serverSideData)
+  const [data, setData] = useState<collegeListIndivudialInfo[]>(serverSideData);
 
   // Uncomment this to enable client side rendering
   // const {data:session} = useSession()
@@ -33,19 +39,25 @@ function CollegeList({ serverSideData }) {
   // }
 
   const theme = createTheme({
-    palette:{
-      primary:{
+    palette: {
+      primary: {
         main: "#506BED",
-      }
-    }
-  })
+      },
+    },
+  });
   return (
     <ThemeProvider theme={theme}>
-    <CollegeListPage collegeList={data} setCollegeList={(newData) => { setData(newData) }} />
+      <CollegeListPage
+        collegeList={data}
+        setCollegeList={(newData) => {
+          setData(newData);
+        }}
+      />
     </ThemeProvider>
-  )
+  );
 }
 // export async function getServerSiderProps(ctx:GetServerSidePropsContext){
 
 // }
-export default CollegeList
+CollegeList.requireAuth = true;
+export default CollegeList;

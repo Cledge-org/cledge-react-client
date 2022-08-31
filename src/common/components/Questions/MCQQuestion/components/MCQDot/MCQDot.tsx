@@ -11,7 +11,6 @@ export default function MCQDot({
   setSelected,
   isThick,
 }: MCQDotProps) {
-  console.log(palette);
   return (
     <button
       onClick={() => {

@@ -10,7 +10,6 @@ const DoubleDropdownQuestion = ({
   question: Question;
   onChange: (newResponses: string[]) => void;
 }) => {
-  console.log(userResponses);
   const [responses, setResponses] = useState(userResponses || ["", ""]);
   return (
     <div className="d-flex flex-row align-items-center justify-content-between w-100">

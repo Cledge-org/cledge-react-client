@@ -21,4 +21,5 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const Progress = ({ questionData }) => {
   return <ProgressPage questionData={questionData} />;
 };
+Progress.requireAuth = true;
 export default Progress;

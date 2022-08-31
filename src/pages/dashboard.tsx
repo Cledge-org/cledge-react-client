@@ -25,4 +25,5 @@ const Dashboard = () => {
     return <LoadingScreen />;
   }
 };
+Dashboard.requireAuth = true;
 export default Dashboard;

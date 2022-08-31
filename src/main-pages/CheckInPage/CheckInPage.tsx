@@ -197,7 +197,8 @@ const CheckIn: NextApplicationPage<{
                     newUserResponses[
                       newUserResponses.findIndex(
                         (questionResponse) =>
-                          questionResponse.questionId === question?._id.toString()
+                          questionResponse.questionId ===
+                          question?._id.toString()
                       )
                     ]["response"][index] = value;
                   } else {

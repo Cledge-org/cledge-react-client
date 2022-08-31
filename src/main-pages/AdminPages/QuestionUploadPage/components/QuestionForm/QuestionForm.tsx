@@ -153,11 +153,6 @@ const QuestionForm = ({
                       className="align-self-center align-items-center justify-content-center"
                       onClick={() => {
                         let currQuestionListCopy = currQuestionList;
-                        console.log(
-                          currQuestionListCopy.chunks[chunkIndex].questions[
-                            questionIndex
-                          ].data[dataIndex].data
-                        );
                         if (dataValue.type === "DropDownQuestion") {
                           currQuestionListCopy.chunks[chunkIndex].questions[
                             questionIndex

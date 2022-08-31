@@ -23,7 +23,6 @@ function MyApp({
   Component: NextApplicationPage;
   pageProps: any;
 }) {
-  //console.log(pageProps.session);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 

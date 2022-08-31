@@ -24,7 +24,6 @@ export default function Header({ key_prop }: { key_prop: string }) {
   }
   const onScroll = useCallback(() => {
     let scrolled = document.body.scrollTop;
-    console.log(scrolled);
     if (scrolled > 0) {
       if (scrollState !== "scrolling") {
         setScrollState("scrolling");

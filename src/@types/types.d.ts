@@ -20,6 +20,7 @@ export declare global {
     tags: string[];
     checkIns: string[];
     introducedToChatbot: boolean;
+    hasUWAccess: boolean;
   }
 
   //Account Page Types -->

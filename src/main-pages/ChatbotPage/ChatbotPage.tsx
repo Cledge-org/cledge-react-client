@@ -409,8 +409,6 @@ const Chatbot: NextApplicationPage<{
   );
 };
 
-Chatbot.requireAuth = true;
-
 export default connect((state) => {
   return {
     accountInfo: state.accountInfo,

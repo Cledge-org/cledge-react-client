@@ -33,4 +33,5 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const Metrics = ({ activities, academics }) => {
   return <MetricsPage activities={activities} academics={academics} />;
 };
+Metrics.requireAuth = true;
 export default Metrics;

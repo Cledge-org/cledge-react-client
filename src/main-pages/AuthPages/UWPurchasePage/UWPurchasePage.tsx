@@ -1,7 +1,13 @@
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PurchasePageInput from "src/main-pages/AuthPages/UWPurchasePage/components/PurchasePageInput/PurchasePageInput";
-import { callCreatePaymentIntent } from "src/utils/apiCalls";
+import {
+  alertSlackNewUser,
+  callCreatePaymentIntent,
+  callCreateUser,
+  callUpdateUser,
+  getNumUsers,
+} from "src/utils/apiCalls";
 import Stripe from "stripe";
 import styles from "./uw-purchase-page.module.scss";
 import { loadStripe } from "@stripe/stripe-js";
@@ -13,40 +19,118 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { CircularProgress } from "@mui/material";
+import { signIn, useSession } from "next-auth/react";
+import CheckBox from "src/common/components/CheckBox/CheckBox";
+import { store } from "src/utils/redux/store";
+import { connect } from "react-redux";
+import { updateAccountAction } from "src/utils/redux/actionFunctions";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-);
-
-const UWPurchasePage = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [clientSecret, setClientSecret] = useState(null);
+const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
+  const [issues, setIssues] = useState([]);
+  const [signUpDetails, setSignUpDetails] = useState({
+    email: "",
+    password: "",
+    confirmedPassword: "",
+    isOnMailingList: true,
+  });
   const stripe = useStripe();
   const elements = useElements();
-  const asyncUseEffect = async () => {
-    const { clientSecret } = await (
-      await callCreatePaymentIntent("uw-package")
-    ).json();
-    setClientSecret(clientSecret);
-    setIsLoading(false);
-  };
-  useEffect(() => {
-    asyncUseEffect();
-  }, []);
-  const handleSubmit = async () => {
-    if (!stripe || !elements) {
-      return;
-    }
-    const result = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: "https://example.com/order/123/complete",
-      },
+  const session = useSession();
+
+  const onChangeSignUp = (
+    parameter: "email" | "password" | "confirmedPassword" | "isOnMailingList",
+    newValue: string | boolean
+  ) => {
+    setSignUpDetails({
+      ...signUpDetails,
+      [parameter]: newValue,
     });
-    if (result.error) {
-      console.log(result.error.message);
+  };
+
+  const handleSubmit = async () => {
+    if (session.status === "authenticated") {
+      await stripe
+        .confirmPayment({
+          elements,
+          confirmParams: {
+            return_url: window.location.origin + "/dashboard",
+          },
+        })
+        .then(() => {
+          callUpdateUser({ ...accountInfo, hasUWAccess: true });
+          store.dispatch(
+            updateAccountAction({ ...accountInfo, hasUWAccess: true })
+          );
+        })
+        .catch((error) => {
+          setIssues((issues) => [...issues, error.message]);
+        });
+    } else {
+      if (
+        !signUpDetails.email ||
+        !signUpDetails.password ||
+        !signUpDetails.confirmedPassword
+      ) {
+        setIssues((issues) => [
+          ...issues,
+          "Please make sure to fill out all fields",
+        ]);
+        return;
+      }
+      if (signUpDetails.password !== signUpDetails.confirmedPassword) {
+        setIssues((issues) => [
+          ...issues,
+          "Your confirmed password isn't the same as your password",
+        ]);
+        return;
+      }
+      await callCreateUser(signUpDetails.email, signUpDetails.password, {
+        name: "",
+        address: "",
+        birthday: new Date(),
+        isOnMailingList: signUpDetails.isOnMailingList,
+        grade: -1,
+        email: signUpDetails.email,
+        tags: [],
+        introducedToChatbot: false,
+        hasUWAccess: false,
+        checkIns: ["Onboarding Questions"],
+      })
+        .then(async (res) => {
+          const result = await stripe.confirmPayment({
+            elements,
+            redirect: "if_required",
+            confirmParams: {
+              return_url: "",
+            },
+          });
+          if (result.error) {
+            alertSlackNewUser(parseInt(await getNumUsers()) - 36);
+            setIssues((issues) => [...issues, result.error.message]);
+            signIn("credentials", {
+              password: signUpDetails.password,
+              email: signUpDetails.email,
+              redirect: false,
+            });
+            return;
+          }
+          signIn("credentials", {
+            password: signUpDetails.password,
+            email: signUpDetails.email,
+            callbackUrl: `${window.location.origin}/dashboard`,
+          }).then(() => {
+            callUpdateUser({ ...accountInfo, hasUWAccess: true });
+            store.dispatch(
+              updateAccountAction({ ...accountInfo, hasUWAccess: true })
+            );
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     }
   };
+
   return (
     <div
       className="d-flex flex-row justify-content-evenly w-100 py-4"
@@ -60,29 +144,61 @@ const UWPurchasePage = () => {
         className="d-flex flex-column align-items-center"
         style={{ width: "40%" }}
       >
-        <div className={styles.blobContainer}>
-          <div className="cl-dark-text fw-bold" style={{ fontSize: "28px" }}>
-            Create an account
-          </div>
-          <div className="cl-dark-text fw-bold" style={{ fontSize: "14px" }}>
-            You’ll use this account to log in and access Cledge’s UW CS package
-          </div>
-          <PurchasePageInput
-            heading={"Email*"}
-            placeholder={""}
-            onChange={(value: string) => {}}
-          />
-          <PurchasePageInput
-            heading={"Password*"}
-            placeholder={""}
-            onChange={(value: string) => {}}
-          />
-          <PurchasePageInput
-            heading={"Confirm password*"}
-            placeholder={""}
-            onChange={(value: string) => {}}
-          />
+        <div className="cl-red d-flex flex-column" style={{ width: "80%" }}>
+          {issues.map((issue) => (
+            <div>{issue}</div>
+          ))}
         </div>
+        {session.status === "unauthenticated" && (
+          <div
+            className={classNames(styles.blobContainer, {
+              ["mt-3"]: issues.length > 0,
+            })}
+          >
+            <div className="cl-dark-text fw-bold" style={{ fontSize: "28px" }}>
+              Create an account
+            </div>
+            <div className="cl-dark-text fw-bold" style={{ fontSize: "14px" }}>
+              You’ll use this account to log in and access Cledge’s UW CS
+              package
+            </div>
+            <PurchasePageInput
+              heading={"Email*"}
+              placeholder={"you@example.com"}
+              onChange={(value: string) => {
+                onChangeSignUp("email", value);
+              }}
+            />
+            <PurchasePageInput
+              heading={"Password*"}
+              placeholder={"********"}
+              isPassword
+              onChange={(value: string) => {
+                onChangeSignUp("password", value);
+              }}
+            />
+            <PurchasePageInput
+              heading={"Confirm password*"}
+              placeholder={"********"}
+              isPassword
+              onChange={(value: string) => {
+                onChangeSignUp("confirmedPassword", value);
+              }}
+            />
+            <div className="d-flex flex-row mt-3">
+              <CheckBox
+                selected={!signUpDetails.isOnMailingList}
+                setSelected={(value) => {
+                  onChangeSignUp("isOnMailingList", !value);
+                }}
+              />
+              <div className="ms-2">
+                I don’t want to receive emails about Cledge and feature updates,
+                free webinar notifications and promotions from Cledge.
+              </div>
+            </div>
+          </div>
+        )}
         <div
           id="payment-container"
           className={classNames(styles.blobContainer, "mt-4")}
@@ -93,64 +209,7 @@ const UWPurchasePage = () => {
           >
             Payment method
           </div>
-          {isLoading ? (
-            <div className="center-child w-100 h-100">
-              <CircularProgress className="cl-blue" />
-            </div>
-          ) : (
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <PaymentElement />
-            </Elements>
-          )}
-        </div>
-        <div className={classNames(styles.blobContainer, "mt-4")}>
-          <div className="cl-dark-text fw-bold" style={{ fontSize: "28px" }}>
-            Billing address
-          </div>
-          <div className="d-flex flex-row align-items-center justify-content-between">
-            <PurchasePageInput
-              isShort
-              heading={"First Name*"}
-              placeholder={""}
-              onChange={(value: string) => {}}
-            />
-            <PurchasePageInput
-              isShort
-              heading={"Last Name*"}
-              placeholder={""}
-              onChange={(value: string) => {}}
-            />
-          </div>
-          <PurchasePageInput
-            heading={"Address line 1*"}
-            placeholder={""}
-            onChange={(value: string) => {}}
-          />
-          <PurchasePageInput
-            heading={"Address line 2"}
-            placeholder={""}
-            onChange={(value: string) => {}}
-          />
-          <PurchasePageInput
-            heading={"City"}
-            placeholder={""}
-            onChange={(value: string) => {}}
-          />
-          <PurchasePageInput
-            heading={"State"}
-            placeholder={""}
-            onChange={(value: string) => {}}
-          />
-          <PurchasePageInput
-            heading={"Country"}
-            placeholder={""}
-            onChange={(value: string) => {}}
-          />
-          <PurchasePageInput
-            heading={"Zip Code"}
-            placeholder={""}
-            onChange={(value: string) => {}}
-          />
+          <PaymentElement />
         </div>
       </div>
       <div
@@ -168,11 +227,18 @@ const UWPurchasePage = () => {
           Purchase Summary
         </div>
         <div className={styles.blobContainer}>
-          <div className="d-flex flex-row align-items-center justify-content-between fw-bold cl-dark-text">
+          <div
+            className="d-flex flex-row align-items-center justify-content-between fw-bold cl-dark-text py-3"
+            style={{ fontSize: "24px" }}
+          >
             <div>University of Washington Computer Science Package</div>
-            <div>$100</div>
+            <div className="ms-3">$100</div>
           </div>
           <button
+            onClick={() => {
+              setIssues([]);
+              handleSubmit();
+            }}
             className="cl-btn-blue w-100"
             style={{ borderRadius: "58x", fontSize: "18px" }}
           >
@@ -183,4 +249,8 @@ const UWPurchasePage = () => {
     </div>
   );
 };
-export default UWPurchasePage;
+export default connect((state) => {
+  return {
+    accountInfo: state?.accountInfo,
+  };
+})(UWPurchasePage);
