@@ -26,6 +26,9 @@ position: absolute;
 display: flex;
 align-self: center;
 justify-self: flex-end;
+@media screen and (max-width: 700px) {
+  display: none;
+}
 `
 
 function NewBlogsCarousel({ recentBlogs }) {

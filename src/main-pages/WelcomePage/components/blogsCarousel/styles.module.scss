@@ -12,7 +12,11 @@
         color: #070452;
     }
 }
-
+@media only screen and (max-width: 600px) {
+    .mainContainer {
+      padding-left: 20px;
+    }
+  }
 .BlogCaroselItemMainDiv {
     background-color: #ffffff;
     

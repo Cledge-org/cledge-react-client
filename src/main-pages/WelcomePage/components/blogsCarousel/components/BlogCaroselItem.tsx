@@ -13,6 +13,9 @@ min-width: 380px;
 min-height: 183px;
 max-width: 385px;
 background: #FFFFFF;
+@media screen and (max-width:450px) {
+  min-width: 340px;
+}
 /* Card boarder */
 
 border: 1px solid #DEDEFF;
