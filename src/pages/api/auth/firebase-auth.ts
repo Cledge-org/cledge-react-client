@@ -10,6 +10,7 @@ import {
   signInWithPopup,
   sendPasswordResetEmail,
   getIdTokenResult,
+  UserCredential,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { createUser } from "src/pages/api/create-user";
@@ -51,8 +52,10 @@ class AuthFunctions {
     }
   }
   static async createUser(email: string, password: string, initUserObj) {
+    let returnedUser: UserCredential = null;
     await createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((res) => {
+        returnedUser = res;
         const user = res.user;
         createUser({
           ...initUserObj,
@@ -65,6 +68,7 @@ class AuthFunctions {
       .catch((err) => {
         console.error(err);
       });
+    return returnedUser;
   }
 
   // static async signInGoogle() {

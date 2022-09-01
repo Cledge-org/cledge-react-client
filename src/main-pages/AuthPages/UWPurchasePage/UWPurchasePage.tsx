@@ -24,6 +24,7 @@ import CheckBox from "src/common/components/CheckBox/CheckBox";
 import { store } from "src/utils/redux/store";
 import { connect } from "react-redux";
 import { updateAccountAction } from "src/utils/redux/actionFunctions";
+import { useRouter } from "next/router";
 
 const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   const [issues, setIssues] = useState([]);
@@ -36,6 +37,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   const stripe = useStripe();
   const elements = useElements();
   const session = useSession();
+  const router = useRouter();
 
   const onChangeSignUp = (
     parameter: "email" | "password" | "confirmedPassword" | "isOnMailingList",
@@ -49,22 +51,25 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
 
   const handleSubmit = async () => {
     if (session.status === "authenticated") {
-      await stripe
-        .confirmPayment({
-          elements,
-          confirmParams: {
-            return_url: window.location.origin + "/dashboard",
-          },
-        })
-        .then(() => {
-          callUpdateUser({ ...accountInfo, hasUWAccess: true });
-          store.dispatch(
-            updateAccountAction({ ...accountInfo, hasUWAccess: true })
-          );
-        })
-        .catch((error) => {
-          setIssues((issues) => [...issues, error.message]);
-        });
+      const result = await stripe.confirmPayment({
+        elements,
+        redirect: "if_required",
+        confirmParams: {
+          return_url: "",
+        },
+      });
+      if (result.error) {
+        setIssues((issues) => [...issues, result.error.message]);
+      } else {
+        callUpdateUser({ ...accountInfo, hasUWAccess: true });
+        store.dispatch(
+          updateAccountAction({
+            ...accountInfo,
+            hasUWAccess: true,
+          })
+        );
+        router.push("/dashboard");
+      }
     } else {
       if (
         !signUpDetails.email ||
@@ -93,10 +98,12 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
         email: signUpDetails.email,
         tags: [],
         introducedToChatbot: false,
-        hasUWAccess: false,
+        hasUWAccess: true,
         checkIns: ["Onboarding Questions"],
       })
         .then(async (res) => {
+          alertSlackNewUser(parseInt(await getNumUsers()) - 36);
+          const user = await res.json();
           const result = await stripe.confirmPayment({
             elements,
             redirect: "if_required",
@@ -105,8 +112,11 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             },
           });
           if (result.error) {
-            alertSlackNewUser(parseInt(await getNumUsers()) - 36);
             setIssues((issues) => [...issues, result.error.message]);
+            await callUpdateUser(
+              { ...accountInfo, hasUWAccess: false },
+              user.user.uid
+            );
             signIn("credentials", {
               password: signUpDetails.password,
               email: signUpDetails.email,
@@ -117,12 +127,9 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
           signIn("credentials", {
             password: signUpDetails.password,
             email: signUpDetails.email,
-            callbackUrl: `${window.location.origin}/dashboard`,
-          }).then(() => {
-            callUpdateUser({ ...accountInfo, hasUWAccess: true });
-            store.dispatch(
-              updateAccountAction({ ...accountInfo, hasUWAccess: true })
-            );
+            redirect: false,
+          }).then(async () => {
+            router.push("/dashboard");
           });
         })
         .catch((err) => {

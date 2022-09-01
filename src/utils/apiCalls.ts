@@ -13,13 +13,16 @@ export const callPutQuestionResponses = async (
     }),
   });
 };
-export const callUpdateUser = async (userInfo: AccountInfo) => {
+export const callUpdateUser = async (
+  userInfo: AccountInfo,
+  userId?: string
+) => {
   const session = getSession();
   return await fetch(`/api/update-user`, {
     method: "POST",
     body: JSON.stringify({
       userInfo: userInfo,
-      userId: (await session).user.uid,
+      userId: userId || (await session).user.uid,
     }),
   });
 };

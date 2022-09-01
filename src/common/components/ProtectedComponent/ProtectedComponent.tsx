@@ -24,8 +24,7 @@ const ProtectedComponent = ({
   if (session.status === "loading") {
     return <LoadingScreen />;
   }
-  console.log(accountInfo);
-  if (location.includes("uw") && !accountInfo.hasUWAccess) {
+  if (accountInfo && location.includes("uw") && !accountInfo.hasUWAccess) {
     return (
       <div className="vw-100 vh-100 center-child">
         Please go to:
@@ -47,6 +46,6 @@ const ProtectedComponent = ({
 
 export default connect((state) => {
   return {
-    accountInfo: state.accountInfo,
+    accountInfo: state?.accountInfo,
   };
 })(ProtectedComponent);
