@@ -1,8 +1,6 @@
 import React from 'react'
-import styles from './styles.module.scss'
 import styled from 'styled-components'
-import Image from 'next/image'
-import { Button } from '@mui/material'
+
 
 const MainContainer = styled.div`
 display: flex;

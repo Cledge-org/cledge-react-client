@@ -1,6 +1,4 @@
-import { breakpoints } from '@mui/system'
 import React from 'react'
-import Carousel from '@itseasy21/react-elastic-carousel'
 import BlogCarouselItem from 'src/main-pages/WelcomePage/components/blogsCarousel/components/BlogCaroselItem'
 import styles from './styles.module.scss'
 import styled from 'styled-components'

@@ -1,5 +1,5 @@
 
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+import { GetServerSidePropsContext } from 'next'
 import React from 'react'
 import WelcomePage from 'src/main-pages/WelcomePage/WelcomePage'
 
