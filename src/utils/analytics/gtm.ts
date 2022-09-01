@@ -16,7 +16,7 @@ export const initializeTagManager = () => {
     TagManager.initialize(tagManagerArgs);
 }
 
-export const GTMPageView = (url: string) => {
+/*export const GTMPageView = (url: string) => {
     interface PageEventProps {
         event: string;
         page: string;
@@ -30,4 +30,4 @@ export const GTMPageView = (url: string) => {
     //@ts-ignore
     window && window.dataLayer && window.dataLayer.push(pageEvent);
     return pageEvent;
-}
+}*/
