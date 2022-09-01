@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { Router, useRouter } from "next/router";
 import LoadingScreen from "../../common/components/Loading/Loading";
 import { getFirebaseClientApp } from "src/utils/firebase/getFirebaseApp";
-import { initializeTagManager, GTMPageView } from "src/utils/analytics/gtm";
+import { initializeTagManager } from "src/utils/analytics/gtm";
 import { analytics } from "src/utils/analytics/analytics";
 
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
@@ -35,13 +35,13 @@ function MyApp({
     initializeTagManager();
     //analytics(window, document, 'script', 'dataLayer', 'GTM-W2QHN43');
 
-    const handleRouteChange = (url: string) => GTMPageView(url);
+    //const handleRouteChange = (url: string) => GTMPageView(url);
 
     const endLoading = () => {
       setLoading(false);
     };
     const endLoadingShowNewHeader = () => {
-      handleRouteChange
+      //handleRouteChange
       setLoading(false);
     };
     const startLoading = () => {
