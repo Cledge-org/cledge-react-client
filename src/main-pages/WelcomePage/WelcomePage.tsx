@@ -153,7 +153,7 @@ export const SubscribeWrapper = styled("div")`
   }
 `;
 export const BlobBlock = styled("div")`
-  background: center / cover url("images/gradient-blob.svg") no-repeat;
+  background-color: white;
 
   button {
     padding: 1rem;
@@ -175,20 +175,13 @@ export const BlobBlock = styled("div")`
   }
 
   .BlobContainer {
-    padding: 5rem 18px;
-
-    button {
-      width: 100%;
-    }
-
-    p {
-      margin-top: 1rem;
-    }
-
-    & img {
-      width: 100%;
-      margin: 3rem 0;
-    }
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 80vw;
+    height: 50vh;
+    border: 1px solid transparent;
+    background: center / cover url("images/gradient-blob.svg") no-repeat;
   }
 
   @media only screen and (min-width: 767px) {
@@ -202,26 +195,6 @@ export const BlobBlock = styled("div")`
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .BlobContainer {
-      width: 80vw;
-      height: 50vh;
-      border: 1px solid transparent;
-      border-radius: 15px;
-      background-color: rgba(255, 255, 255, 0.3);
-
-      button {
-        width: 20vw;
-      }
-
-      & img {
-        width: 100%;
-      }
-
-      div:last-child {
-        position: absolute;
-      }
     }
 
     & > div > div {
@@ -426,21 +399,37 @@ const WelcomePage = () => {
         <BlobBlock>
           <Fade direction="right" className="center-child w-100">
             <div className="BlobContainer">
-              <div style={{ color: "white" }}>
-                <strong style={{ fontSize: "2em" }}>
-                  Ready to take the next step towards your dreams?
-                </strong>
-                <p style={{ color: "white" }}>
-                  Join our Insider Program to get first access to the 24/7
-                  college chat service
-                </p>
+              <div
+                className="d-flex flex-column justify-content-end ps-5 w-50 h-75"
+                style={{ color: "white" }}
+              >
+                <div
+                  className="center-child px-3 fw-bold"
+                  style={{
+                    width: "fit-content",
+                    background:
+                      "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
+                    borderRadius: "13px",
+                  }}
+                >
+                  New
+                </div>
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: width < 800 ? "36px" : "52px",
+                  }}
+                >
+                  Cledge is now available for University of Washington CS
+                  Admissions
+                </div>
               </div>
-              <img src="images/insider-blob.svg" />
-              <div style={{ bottom: "-2vh", left: "5vw" }}>
+              <div className="d-flex flex-row-reverse align-items-end h-75 pe-5 w-50">
                 <Button
                   key="subscribe-btn"
                   color="#F7BC76"
                   fixedWidth={false}
+                  className={"w-25"}
                   onClick={() => {
                     window.open(
                       "https://forms.gle/M1GxLK45Yi3Esfn5A",
@@ -448,7 +437,7 @@ const WelcomePage = () => {
                     );
                   }}
                 >
-                  Join Insider Program for Free ➜
+                  Learn More
                 </Button>
               </div>
             </div>

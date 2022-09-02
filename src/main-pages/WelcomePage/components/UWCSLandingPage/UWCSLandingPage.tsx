@@ -223,7 +223,113 @@ const UWCSLandingPage = () => {
   const [currFeature, setCurrFeature] = useState(0);
   const [width, height] = useWindowSize();
   const router = useRouter();
-
+  const packageAd = (
+    <BlobBlock>
+      <Fade direction="right" className="center-child w-100">
+        <div
+          className={classNames(
+            "BlobContainer d-flex flex-row justify-content-between align-items-center flex-wrap",
+            { "my-3": width < 800 }
+          )}
+        >
+          <div
+            className="d-flex flex-column justify-content-between h-100"
+            style={{ width: width < 800 ? "100%" : "48%" }}
+          >
+            <div className="cl-dark-text fw-bold">
+              <div style={{ fontSize: width < 800 ? "28px" : "36px" }}>
+                UW CS package @ cledge
+              </div>
+              <div style={{ fontSize: "64px" }}>TBA</div>
+              <div className="cl-mid-gray mb-2" style={{ fontSize: "24px" }}>
+                for everything
+              </div>
+            </div>
+            <button
+              className="cl-btn-blue"
+              onClick={() => {
+                window.open(
+                  `/uw-interest-form?ref=${router.query.ref}`,
+                  "_self"
+                );
+              }}
+              style={{
+                width: width < 800 ? "100%" : "25%",
+                borderRadius: "8px",
+                fontSize: "18px",
+              }}
+            >
+              Join the Waitlist
+            </button>
+          </div>
+          <div
+            className={classNames({
+              "mx-3": width > 800,
+              "my-3": width < 800,
+            })}
+            style={{
+              height: width < 800 ? "0" : "100%",
+              width: width < 800 ? "100%" : "0",
+              border: "1px solid #D9D9D9",
+            }}
+          />
+          <div
+            className="d-flex flex-column justify-content-evenly h-100"
+            style={{ width: width < 800 ? "100%" : "48%" }}
+          >
+            <div
+              className="cl-dark-text mb-2"
+              style={{ fontWeight: 700, fontSize: "24px" }}
+            >
+              What you get with the package
+            </div>
+            {[
+              "Analysis of 5+ successful applications & why they worked",
+              "Insider look at how UW CS scores your application",
+              "How to approach the UW supplemental essays",
+              "Should you apply to Computer Engineering or CS?",
+              "The Cledge AI Advisor & College Search Tool",
+            ].map((option) => (
+              <div className="d-flex flex-row">
+                <div
+                  className="me-2 center-child"
+                  style={{
+                    background:
+                      "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
+                    color: "white",
+                    width: "25px",
+                    minWidth: "25px",
+                    height: "25px",
+                    borderRadius: "12.5px",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faCheck} />
+                </div>
+                <div
+                  className="cl-dark-text"
+                  style={{ fontSize: "18px", fontWeight: 500 }}
+                >
+                  {option}
+                </div>
+              </div>
+            ))}
+            <div
+              className="fw-bold p-3 mt-2"
+              style={{
+                background: "rgba(80, 107, 237, 0.2)",
+                border: "1px solid #E0DFE8",
+                borderRadius: "10px",
+                fontSize: "20px",
+              }}
+            >
+              Plus a chance to have a 30 min consultation with a college
+              counselor
+            </div>
+          </div>
+        </div>
+      </Fade>
+    </BlobBlock>
+  );
   return (
     <PageErrorBoundary>
       <Container>
@@ -260,11 +366,19 @@ const UWCSLandingPage = () => {
                 <div
                   style={{
                     fontWeight: "bold",
+                    color: "#F7BC76",
+                    fontSize: width < 800 ? "32px" : "48px",
+                  }}
+                >
+                  Cledge prepares you for
+                </div>
+                <div
+                  style={{
+                    fontWeight: "bold",
                     fontSize: width < 800 ? "36px" : "52px",
                   }}
                 >
-                  Cledge is now available for University of Washington CS
-                  Admissions
+                  University of Washington Computer Science Admissions
                 </div>
               </div>
               <div className={classNames({ "w-100": width < 800 })}>
@@ -273,6 +387,11 @@ const UWCSLandingPage = () => {
                     ? "Releasing September"
                     : "Utilize the power of Cledge to gain an edge on your UW CS application. Get insider access to how UW CS scores your application, view successful applicant profiles, and then get help writing the UW supplemental essay. Still need help? You will get one 30 minute consultation with a college advisor and access to Cledge AI tools."}
                 </div>
+                {width < 800 && (
+                  <div style={{ width: "100%" }}>
+                    <input type="text" placeholder="Enter your email" />
+                  </div>
+                )}
                 <div style={{ width: width < 800 ? "100%" : "300px" }}>
                   <Button
                     key="buy-now-btn"
@@ -293,6 +412,7 @@ const UWCSLandingPage = () => {
             </div>
           </Fade>
         </Intro>
+        {width < 800 && packageAd}
         <ContentBlock
           type="left"
           title={
@@ -355,114 +475,7 @@ const UWCSLandingPage = () => {
             </div>
           </div>
         </Partner>
-        <BlobBlock>
-          <Fade direction="right" className="center-child w-100">
-            <div
-              className={classNames(
-                "BlobContainer d-flex flex-row justify-content-between align-items-center flex-wrap",
-                { "my-3": width < 800 }
-              )}
-            >
-              <div
-                className="d-flex flex-column justify-content-between h-100"
-                style={{ width: width < 800 ? "100%" : "48%" }}
-              >
-                <div className="cl-dark-text fw-bold">
-                  <div style={{ fontSize: width < 800 ? "28px" : "36px" }}>
-                    UW CS package @ cledge
-                  </div>
-                  <div style={{ fontSize: "64px" }}>TBA</div>
-                  <div
-                    className="cl-mid-gray mb-2"
-                    style={{ fontSize: "24px" }}
-                  >
-                    for everything
-                  </div>
-                </div>
-                <button
-                  className="cl-btn-blue"
-                  onClick={() => {
-                    window.open(
-                      `/uw-interest-form?ref=${router.query.ref}`,
-                      "_self"
-                    );
-                  }}
-                  style={{
-                    width: width < 800 ? "100%" : "25%",
-                    borderRadius: "8px",
-                    fontSize: "18px",
-                  }}
-                >
-                  Join the Waitlist
-                </button>
-              </div>
-              <div
-                className={classNames({
-                  "mx-3": width > 800,
-                  "my-3": width < 800,
-                })}
-                style={{
-                  height: width < 800 ? "0" : "100%",
-                  width: width < 800 ? "100%" : "0",
-                  border: "1px solid #D9D9D9",
-                }}
-              />
-              <div
-                className="d-flex flex-column justify-content-evenly h-100"
-                style={{ width: width < 800 ? "100%" : "48%" }}
-              >
-                <div
-                  className="cl-dark-text mb-2"
-                  style={{ fontWeight: 700, fontSize: "24px" }}
-                >
-                  What you get with the package
-                </div>
-                {[
-                  "Analysis of 5+ successful applications & why they worked",
-                  "Insider look at how UW CS scores your application",
-                  "How to approach the UW supplemental essays",
-                  "Should you apply to Computer Engineering or CS?",
-                  "The Cledge AI Advisor & College Search Tool",
-                ].map((option) => (
-                  <div className="d-flex flex-row">
-                    <div
-                      className="me-2 center-child"
-                      style={{
-                        background:
-                          "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
-                        color: "white",
-                        width: "25px",
-                        minWidth: "25px",
-                        height: "25px",
-                        borderRadius: "12.5px",
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faCheck} />
-                    </div>
-                    <div
-                      className="cl-dark-text"
-                      style={{ fontSize: "18px", fontWeight: 500 }}
-                    >
-                      {option}
-                    </div>
-                  </div>
-                ))}
-                <div
-                  className="fw-bold p-3 mt-2"
-                  style={{
-                    background: "rgba(80, 107, 237, 0.2)",
-                    border: "1px solid #E0DFE8",
-                    borderRadius: "10px",
-                    fontSize: "20px",
-                  }}
-                >
-                  Plus a chance to have a 30 min consultation with a college
-                  counselor
-                </div>
-              </div>
-            </div>
-          </Fade>
-        </BlobBlock>
+        {width > 800 && packageAd}
       </Container>
       <Footer
         onFeatureClick={(featureIndex) => {

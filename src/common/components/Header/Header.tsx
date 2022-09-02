@@ -22,6 +22,25 @@ export default function Header({ key_prop }: { key_prop: string }) {
   } else {
     navclass = styles.navRegular + " shadow-sm";
   }
+  const linkData = [
+    { link: "/dashboard", icon: "dashboard.svg", title: "Dashboard" },
+    {
+      link: "/",
+      icon: "my-learning.svg",
+      title: "My Learning",
+    },
+    { link: "/chatbot", icon: "chatbot.svg", title: "AI Chat" },
+    {
+      link: "/metrics",
+      icon: "metrics.svg",
+      title: "Metrics",
+    },
+    {
+      link: "/progress",
+      icon: "application-profile.svg",
+      title: "Application Profile",
+    },
+  ];
   const onScroll = useCallback(() => {
     let scrolled = document.body.scrollTop;
     if (scrolled > 0) {
@@ -102,59 +121,38 @@ export default function Header({ key_prop }: { key_prop: string }) {
           <div className="navbar-toggler-icon"></div>
         </button>
         <div
-          className="fs-7 collapse navbar-collapse justify-content-end"
+          className={classNames("d-flex flex-row align-items-center")}
+          style={{ width: "fit-content" }}
           id="navbarNavAltMarkup"
         >
           {status === "authenticated" ? (
             <div className="navbar-nav">
-              {/* <Link href="/dashboard">
-                <a className="nav-link" style={{ fontWeight: 600 }}>
-                  <span className={`${colors}`}>My Learning</span>
-                </a>
-              </Link> */}
-              <Link href="/chatbot">
-                <a className="nav-link" style={{ fontWeight: 600 }}>
-                  <span className={`${colors}`}>Chatbot</span>
-                </a>
-              </Link>
-              {/* <Link href="/resources">
-                <a className="nav-link" style={{ fontWeight: 600 }}>
-                  <span className={`${colors}`}>Resources</span>
-                </a>
-              </Link> */}
-              <Link href="/metrics">
-                <a className="nav-link" style={{ fontWeight: 600 }}>
-                  <span className={`${colors}`}>Metrics</span>
-                </a>
-              </Link>
-              {/* <Link href="/college">
-                <a className="nav-link" style={{ fontWeight: 600 }}>
-                  <span className={`${colors}`}>College Search Tool</span>
-                </a>
-              </Link> */}
-              <Link href="/progress">
-                <a className="nav-link" style={{ fontWeight: 600 }}>
-                  <span className={`${colors}`}>Progress</span>
-                </a>
-              </Link>
-              <Link href="/account">
-                <a className="nav-link" style={{ fontWeight: 600 }}>
-                  <span className={`${colors}`}>My Account</span>
-                </a>
-              </Link>
-              <Link href="/api/auth/signout">
-                <a className="nav-link" style={{ fontWeight: 600 }} href="">
-                  <span className={`${colors}`}>Log Out</span>
-                </a>
-              </Link>
+              {linkData.map(({ title, link, icon }) => (
+                <Link href={link}>
+                  <a
+                    className="nav-link d-flex flex-row align-items-center"
+                    style={{
+                      fontWeight: 500,
+                      color: router.pathname === link ? "#506BED" : "#808099",
+                    }}
+                  >
+                    <img
+                      style={{
+                        filter:
+                          router.pathname === link
+                            ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
+                            : "",
+                      }}
+                      src={`images/header/${icon}`}
+                    />
+                    <div className="px-1" />
+                    <span>{title}</span>
+                  </a>
+                </Link>
+              ))}
             </div>
           ) : (
             <div className="navbar-nav">
-              {/* <Link href="/resources">
-                <a className="nav-link" style={{ fontWeight: 600 }}>
-                  <span className={`${colors}`}>Resources</span>
-                </a>
-              </Link> */}
               <Link href="/auth/signup">
                 <a className="nav-link" style={{ fontWeight: 600 }} href="">
                   <span className={`${colors}`}>Sign Up</span>
@@ -168,6 +166,22 @@ export default function Header({ key_prop }: { key_prop: string }) {
             </div>
           )}
         </div>
+        {status === "authenticated" && (
+          <a
+            href="/account"
+            style={{
+              background: "rgba(247, 188, 118, 0.5)",
+              paddingLeft: "15px",
+              paddingRight: "15px",
+              paddingTop: "12px",
+              paddingBottom: "12px",
+              borderRadius: "10px",
+              color: "black",
+            }}
+          >
+            AS
+          </a>
+        )}
       </div>
     </nav>
   );
