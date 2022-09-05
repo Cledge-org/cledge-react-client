@@ -33,15 +33,15 @@ function CollegeList({ serverSideData }) {
   // }
 
   const theme = createTheme({
-    palette:{
-      primary:{
+    palette: {
+      primary: {
         main: "#506BED",
       }
     }
   })
   return (
     <ThemeProvider theme={theme}>
-    <CollegeListPage collegeList={data} setCollegeList={(newData) => { setData(newData) }} />
+      <CollegeListPage collegeList={data} setCollegeList={(newData) => { setData(newData) }} />
     </ThemeProvider>
   )
 }
