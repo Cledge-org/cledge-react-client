@@ -1,4 +1,4 @@
-import { Db, MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export const config = {
