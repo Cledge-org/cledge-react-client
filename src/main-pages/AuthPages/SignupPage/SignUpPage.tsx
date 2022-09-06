@@ -125,8 +125,6 @@ const SignUpPage = () => {
         checkCondition(true, err);
       });
   };
-  //!IMPORTANT UNCOMMENT THIS ON RELEASE
-  //if (!hasAccess && !windowLocation.includes("uw")) {
   if (!hasAccess) {
     return (
       <div className="container">
@@ -157,7 +155,7 @@ const SignUpPage = () => {
             className="cl-btn-blue mt-4"
             onClick={(e) => {
               e.preventDefault();
-              if (accessCode === "596382") {
+              if (accessCode === process.env.SIGNUP_PASS) {
                 setHasAccess(true);
               } else {
                 setIsIncorrectAccessCode(true);
