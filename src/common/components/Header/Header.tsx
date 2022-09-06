@@ -167,7 +167,7 @@ export default function Header({ key_prop }: { key_prop: string }) {
                   <span>Log In</span>
                 </a>
               </Link>
-              <a
+              <Link
                 href={
                   location.includes("uw") ? "/auth/uw-purchase" : "/auth/signup"
                 }
@@ -182,12 +182,12 @@ export default function Header({ key_prop }: { key_prop: string }) {
                 >
                   <span>Sign Up</span>
                 </div>
-              </a>
+              </Link>
             </div>
           )}
         </div>
         {status === "authenticated" && (
-          <a
+          <Link
             href="/account"
             style={{
               background: "rgba(247, 188, 118, 0.5)",
@@ -200,7 +200,7 @@ export default function Header({ key_prop }: { key_prop: string }) {
             }}
           >
             AS
-          </a>
+          </Link>
         )}
       </div>
     </nav>

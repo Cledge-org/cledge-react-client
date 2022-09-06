@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import LoadingScreen from "../Loading/Loading";
 import { useLocation } from "src/utils/hooks/useLocation";
 import { connect } from "react-redux";
+import Link from "next/link";
 
 const ProtectedComponent = ({
   children,
@@ -28,12 +29,12 @@ const ProtectedComponent = ({
     return (
       <div className="vw-100 vh-100 center-child">
         Please go to:
-        <a
+        <Link
           className="mx-1 cl-blue"
           href="https://uw.cledge.org/auth/uw-purchase"
         >
           https://uw.cledge.org/auth/uw-purchase
-        </a>
+        </Link>
         to complete your purchase of the UW package
       </div>
     );
