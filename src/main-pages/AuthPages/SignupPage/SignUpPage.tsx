@@ -117,7 +117,7 @@ const SignUpPage = () => {
         signIn("credentials", {
           password: formData.password1,
           email: formData.email,
-          callbackUrl: `${window.location.origin}/chatbot`,
+          callbackUrl: `${window.location.origin}/dashboard`,
         });
       })
       .catch((err) => {
@@ -155,7 +155,7 @@ const SignUpPage = () => {
             className="cl-btn-blue mt-4"
             onClick={(e) => {
               e.preventDefault();
-              if (accessCode === process.env.SIGNUP_PASS) {
+              if (accessCode === "596382") {
                 setHasAccess(true);
               } else {
                 setIsIncorrectAccessCode(true);

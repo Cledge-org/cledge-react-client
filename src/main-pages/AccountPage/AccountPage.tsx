@@ -62,10 +62,10 @@ const AccountPage: NextApplicationPage<{
         } else {
           store.dispatch(updateQuestionResponsesAction(questionResponses));
         }
-        //console.log(res.status);
       });
     });
   };
+
   useEffect(() => {
     if (!iteratedFirst) {
       setIteratedFirst(true);
@@ -73,13 +73,14 @@ const AccountPage: NextApplicationPage<{
       setModalOpen(true);
     }
   }, [currQuestion]);
-  useEffect(() => {
-    //console.log(currUserData);
-  }, [currUserData]);
+
   return (
     <PageErrorBoundary>
-      <div className="container-fluid h-100 center-child">
-        <div style={{ width: size.width < 800 ? "95%" : "40%" }}>
+      <div className="container-fluid h-100 center-child d-flex flex-column align-items-center">
+        <div
+          className="d-flex flex-column pt-5"
+          style={{ width: size.width < 800 ? "95%" : "40%" }}
+        >
           <span
             className="cl-dark-text fw-bold align-self-start"
             style={{ fontSize: "1.7em" }}
@@ -188,6 +189,11 @@ const AccountPage: NextApplicationPage<{
               }}
             />
           </div>
+          <a href="/auth/signout" className="align-self-center">
+            <button className="cl-btn-red fw-bold" style={{ fontSize: "16px" }}>
+              Log Out
+            </button>
+          </a>
         </div>
         <Modal
           ariaHideApp={false}
@@ -212,6 +218,7 @@ const AccountPage: NextApplicationPage<{
           <TextInputQuestion
             question={currQuestion}
             userAnswer={currQuestion.userAnswer}
+            isCentered
             onChange={(value) => {
               let newUserData = currUserData;
               newUserData[currQuestion.question.toLowerCase()] =

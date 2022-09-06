@@ -167,22 +167,22 @@ export default function Header({ key_prop }: { key_prop: string }) {
                   <span>Log In</span>
                 </a>
               </Link>
-              <Link
+              <a
                 href={
                   location.includes("uw") ? "/auth/uw-purchase" : "/auth/signup"
                 }
               >
-                <a
+                <div
                   className={classNames("nav-link px-3", styles.signUpBtn)}
                   style={{
                     fontWeight: 600,
                     borderRadius: "4px",
+                    color: "black",
                   }}
-                  href=""
                 >
                   <span>Sign Up</span>
-                </a>
-              </Link>
+                </div>
+              </a>
             </div>
           )}
         </div>

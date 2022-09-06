@@ -27,7 +27,6 @@ const MyLearningPage: NextApplicationPage<{
   const [currTab, setCurrTab] = useState("all modules");
   const [isInUserView, setIsInUserView] = useState(false);
   const [percentage, setPercentage] = useState(0);
-  const windowLocation = useLocation();
   const parseId = (objectId) => {
     const objectIdStr = objectId.toString();
     if (!objectIdStr.includes('"')) {
@@ -223,20 +222,7 @@ const MyLearningPage: NextApplicationPage<{
       })
       .filter((part) => part);
   }, [currTab, dashboardParts, accountInfo, pathwaysProgress]);
-  // const asyncUseEffect = async () => {
-  //   console.time("DASHBOARD");
-  //   let json = await (
-  //     await fetch(`/api/get-dashboard`, {
-  //       method: "POST",
-  //       body: JSON.stringify({ userId: session.data.user.uid }),
-  //     })
-  //   ).json();
-  //   console.timeEnd("DASHBOARD");
-  // };
-  useEffect(() => {
-    //resetProgress();
-    // asyncUseEffect();
-  }, []);
+
   //UNCOMMENT THIS ONCE TESTING IS FINISHED
   if (accountInfo.checkIns.length > 0) {
     router.push({
@@ -461,7 +447,7 @@ const MyLearningPage: NextApplicationPage<{
                   ? "finished"
                   : currTab === "current tasks"
                   ? "current"
-                  : ""}
+                  : ""}{" "}
                 tasks.
               </div>
             )}

@@ -141,7 +141,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
     }
   };
   if (session.status === "authenticated" && accountInfo.hasUWAccess) {
-    router.push("/");
+    router.replace("/");
   }
   if (!hasAccess && session.status === "unauthenticated") {
     return (
@@ -173,7 +173,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             className="cl-btn-blue mt-4"
             onClick={(e) => {
               e.preventDefault();
-              if (accessCode === process.env.SIGNUP_PASS) {
+              if (accessCode === "596382") {
                 setHasAccess(true);
               } else {
                 setIsIncorrectAccessCode(true);

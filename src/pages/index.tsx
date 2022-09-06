@@ -9,7 +9,7 @@ const Home: NextPage = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   if (status === "authenticated") {
-    router.replace("/chatbot");
+    router.replace("/dashboard");
     return <LoadingScreen />;
   }
   return <Welcome></Welcome>;
