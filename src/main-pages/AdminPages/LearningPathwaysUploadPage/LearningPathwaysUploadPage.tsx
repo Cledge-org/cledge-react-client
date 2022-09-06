@@ -146,7 +146,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 if (!unsuccessful) {
                   alert("Upload Successful!");
                 }
-                router.push({ pathname: "/dashboard" });
+                router.push({ pathname: "/my-learning" });
               })
               .catch((err) => console.error(err));
           })
@@ -590,7 +590,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                         if (!unsuccessful) {
                           alert("Upload Successful!");
                         }
-                        router.push({ pathname: "/dashboard" });
+                        router.push({ pathname: "/my-learning" });
                       })
                       .catch((err) => console.error(err));
                   })

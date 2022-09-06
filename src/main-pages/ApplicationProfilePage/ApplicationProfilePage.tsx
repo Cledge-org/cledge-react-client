@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown, faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
-import { AppProps } from "next/dist/shared/lib/router/router";
-import { GetServerSidePropsContext } from "next";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import CardCheckIn from "../../common/components/Cards/CardCheckIn/CardCheckIn";
@@ -19,7 +14,7 @@ import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageError
 import DropdownTab from "src/common/components/DropdownTab/DropdownTab";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 
-const Progress: NextApplicationPage<{
+const ApplicationProfilePage: NextApplicationPage<{
   questionData: QuestionList[];
   userTags: string[];
   questionResponses: UserResponse[];
@@ -128,7 +123,10 @@ const Progress: NextApplicationPage<{
             ) {
               return (
                 <DropdownTab
-                  // isExtracurricular={list.name === "Extracurriculars"}
+                  isECAC={
+                    list.name === "Extracurriculars" ||
+                    list.name === "Academics"
+                  }
                   chunkList={list.chunks.map((chunk) => chunk.name)}
                   onClick={(chunk) =>
                     setCurrPage({ page: list.name, chunk: chunk })
@@ -309,10 +307,10 @@ const Progress: NextApplicationPage<{
   );
 };
 
-Progress.requireAuth = true;
+ApplicationProfilePage.requireAuth = true;
 export default connect((state) => {
   return {
     userTags: state.accountInfo.tags,
     questionResponses: state.questionResponses,
   };
-})(Progress);
+})(ApplicationProfilePage);

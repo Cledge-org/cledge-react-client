@@ -64,7 +64,7 @@ const TipsCard = ({
           <button
             onClick={() => {
               router.push({
-                pathname: "/progress",
+                pathname: "/ApplicationProfilePage",
                 query: { page: updatePage, chunk: updateChunk },
               });
             }}

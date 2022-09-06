@@ -106,7 +106,7 @@ function PartDropDown({
                   style={{ height: "6vh" }}
                   onClick={() => {
                     router.push({
-                      pathname: "/progress",
+                      pathname: "/ApplicationProfilePage",
                       query: { page: name, chunk: chunks[0].name },
                     });
                   }}

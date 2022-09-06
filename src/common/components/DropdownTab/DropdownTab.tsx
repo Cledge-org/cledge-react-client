@@ -19,7 +19,7 @@ export default function DropdownTab({
   percentComplete,
   isAll,
   onClick,
-  isExtracurricular,
+  isECAC,
   icons,
   isPathway,
   currSelectedPath,
@@ -31,7 +31,7 @@ export default function DropdownTab({
   isAll?: boolean;
   percentComplete: number;
   onClick: Function;
-  isExtracurricular?: boolean;
+  isECAC?: boolean;
   isPathway?: boolean;
   isFinishedContent?: boolean[];
   isFinishedModule?: boolean;
@@ -66,7 +66,7 @@ export default function DropdownTab({
       >
         <div className="text">
           {title}
-          {isAll || isPathway ? null : (
+          {isAll || isPathway || isECAC ? null : (
             <span className="percentage">{percentComplete}%</span>
           )}
         </div>

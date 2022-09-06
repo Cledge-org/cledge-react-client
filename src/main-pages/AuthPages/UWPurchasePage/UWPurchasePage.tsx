@@ -68,7 +68,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             hasUWAccess: true,
           })
         );
-        router.push("/dashboard");
+        router.push("/my-learning");
       }
     } else {
       if (
@@ -129,7 +129,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             email: signUpDetails.email,
             redirect: false,
           }).then(async () => {
-            router.push("/dashboard");
+            router.push("/my-learning");
           });
         })
         .catch((err) => {

@@ -46,7 +46,7 @@ const PathwayPartsUploadPage: NextApplicationPage<{
           if (!unsuccessful) {
             alert("Upload Successful!");
           }
-          router.push({ pathname: "/dashboard" });
+          router.push({ pathname: "/my-learning" });
         });
       }}
     >
@@ -284,7 +284,7 @@ const PathwayPartsUploadPage: NextApplicationPage<{
                     if (!unsuccessful) {
                       alert("Upload Successful!");
                     }
-                    router.push({ pathname: "/dashboard" });
+                    router.push({ pathname: "/my-learning" });
                   });
                 }}
               >

@@ -3,15 +3,18 @@ import { useSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
+import { useLocation } from "src/utils/hooks/useLocation";
 import styles from "./header.module.scss";
 
 export default function Header({ key_prop }: { key_prop: string }) {
   const { data: session, status } = useSession();
   const router = useRouter();
-
+  const location = useLocation();
   const [isExpanded, setIsExpanded] = useState(false);
   const [listener, setListener] = useState(null);
-  const [scrollState, setScrollState] = useState("top");
+  const [scrollState, setScrollState] = useState(
+    location.includes("uw") ? "scrolling" : "top"
+  );
   const [colors, setColors] = useState(
     router.pathname === "/" ? "cl-white" : "cl-blue"
   );
@@ -25,7 +28,7 @@ export default function Header({ key_prop }: { key_prop: string }) {
   const linkData = [
     { link: "/dashboard", icon: "dashboard.svg", title: "Dashboard" },
     {
-      link: "/",
+      link: "/my-learning",
       icon: "my-learning.svg",
       title: "My Learning",
     },
@@ -36,24 +39,26 @@ export default function Header({ key_prop }: { key_prop: string }) {
       title: "Metrics",
     },
     {
-      link: "/progress",
+      link: "/application-profile",
       icon: "application-profile.svg",
       title: "Application Profile",
     },
   ];
   const onScroll = useCallback(() => {
-    let scrolled = document.body.scrollTop;
-    if (scrolled > 0) {
-      if (scrollState !== "scrolling") {
-        setScrollState("scrolling");
-        setColors("cl-blue");
-      }
-    } else {
-      console.log(isExpanded);
-      if (scrollState !== "top") {
-        setScrollState("top");
-        if (router.pathname === "/" && !isExpanded) {
-          setColors("cl-white");
+    if (!location.includes("uw")) {
+      let scrolled = document.body.scrollTop;
+      if (scrolled > 0) {
+        if (scrollState !== "scrolling") {
+          setScrollState("scrolling");
+          setColors("cl-blue");
+        }
+      } else {
+        console.log(isExpanded);
+        if (scrollState !== "top") {
+          setScrollState("top");
+          if (router.pathname === "/" && !isExpanded) {
+            setColors("cl-white");
+          }
         }
       }
     }
@@ -153,14 +158,29 @@ export default function Header({ key_prop }: { key_prop: string }) {
             </div>
           ) : (
             <div className="navbar-nav">
-              <Link href="/auth/signup">
-                <a className="nav-link" style={{ fontWeight: 600 }} href="">
-                  <span className={`${colors}`}>Sign Up</span>
+              <Link href="/api/auth/signin">
+                <a
+                  className="nav-link px-3"
+                  style={{ fontWeight: 600, color: "black" }}
+                  href=""
+                >
+                  <span>Log In</span>
                 </a>
               </Link>
-              <Link href="/api/auth/signin">
-                <a className="nav-link" style={{ fontWeight: 600 }} href="">
-                  <span className={`${colors}`}>Log In</span>
+              <Link
+                href={
+                  location.includes("uw") ? "/auth/uw-purchase" : "/auth/signup"
+                }
+              >
+                <a
+                  className={classNames("nav-link px-3", styles.signUpBtn)}
+                  style={{
+                    fontWeight: 600,
+                    borderRadius: "4px",
+                  }}
+                  href=""
+                >
+                  <span>Sign Up</span>
                 </a>
               </Link>
             </div>

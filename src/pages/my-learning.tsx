@@ -2,9 +2,9 @@ import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import LoadingScreen from "src/common/components/Loading/Loading";
 import { NextApplicationPage } from "src/main-pages/AppPage/AppPage";
-import DashboardPage from "src/main-pages/DashboardPage/DashboardPage";
+import MyLearningPage from "src/main-pages/MyLearningPage/MyLearningPage";
 
-const Dashboard = () => {
+const MyLearning = () => {
   const { data: session } = useSession();
   const [dashboardParts, setDashboardParts] = useState();
   useEffect(() => {
@@ -20,10 +20,10 @@ const Dashboard = () => {
     setDashboardParts(responseJson);
   }
   if (dashboardParts) {
-    return <DashboardPage />;
+    return <MyLearningPage dashboardParts={dashboardParts} />;
   } else {
     return <LoadingScreen />;
   }
 };
-Dashboard.requireAuth = true;
-export default Dashboard;
+MyLearning.requireAuth = true;
+export default MyLearning;

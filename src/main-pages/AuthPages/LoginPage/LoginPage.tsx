@@ -76,7 +76,7 @@ const LoginPage = () => {
             className="btn btn-light cl-btn shadow-sm my-3 w-100 fw-bold"
             onClick={() =>
               signIn("google", {
-                callbackUrl: `${window.location.origin}/dashboard`,
+                callbackUrl: `${window.location.origin}/my-learning`,
               })
             }
           >

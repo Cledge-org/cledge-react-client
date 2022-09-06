@@ -1,7 +1,7 @@
 import React from "react";
 import { GetServerSidePropsContext } from "next";
 import { getQuestionProgress } from "./api/get-question-progress";
-import ProgressPage from "../main-pages/ProgressPage/ProgressPage";
+import ApplicationProfilePage from "../main-pages/ApplicationProfilePage/ApplicationProfilePage";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -19,7 +19,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 };
 const Progress = ({ questionData }) => {
-  return <ProgressPage questionData={questionData} />;
+  return <ApplicationProfilePage questionData={questionData} />;
 };
 Progress.requireAuth = true;
 export default Progress;

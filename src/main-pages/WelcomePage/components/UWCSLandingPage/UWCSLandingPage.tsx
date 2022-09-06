@@ -238,11 +238,27 @@ const UWCSLandingPage = () => {
           >
             <div className="cl-dark-text fw-bold">
               <div style={{ fontSize: width < 800 ? "28px" : "36px" }}>
-                UW CS package @ cledge
+                UW CS Application Prep Package
               </div>
-              <div style={{ fontSize: "64px" }}>TBA</div>
               <div className="cl-mid-gray mb-2" style={{ fontSize: "24px" }}>
-                for everything
+                Early bird price
+              </div>
+              <div
+                className="d-flex flex-row align-items-center"
+                style={{ fontSize: "64px" }}
+              >
+                $99
+                <div
+                  className="fw-bold center-child ms-3 px-3 py-2"
+                  style={{
+                    fontSize: width < 800 ? "22px" : "32px",
+                    background:
+                      "linear-gradient(92.92deg, rgba(80, 107, 237, 0.2) -8.48%, #F7BC76 95.28%)",
+                    borderRadius: "4px",
+                  }}
+                >
+                  1 YEAR
+                </div>
               </div>
             </div>
             <button
@@ -254,7 +270,7 @@ const UWCSLandingPage = () => {
                 );
               }}
               style={{
-                width: width < 800 ? "100%" : "25%",
+                width: width < 800 ? "100%" : "35%",
                 borderRadius: "8px",
                 fontSize: "18px",
               }}
@@ -347,13 +363,15 @@ const UWCSLandingPage = () => {
                 width: width < 1850 ? (width < 1350 ? "100%" : "70%") : "50%",
               }}
               className={classNames(
-                "d-flex flex-column justify-content-around h-100 px-5",
+                `d-flex flex-column justify-content-around h-100 ${
+                  width < 800 ? "px-3" : "px-5"
+                }`,
                 { "align-items-center": width < 800 }
               )}
             >
               <div className="w-100">
                 <div
-                  className="center-child px-3 fw-bold"
+                  className="center-child px-3 fw-bold mt-5"
                   style={{
                     width: "fit-content",
                     background:
@@ -367,15 +385,15 @@ const UWCSLandingPage = () => {
                   style={{
                     fontWeight: "bold",
                     color: "#F7BC76",
-                    fontSize: width < 800 ? "32px" : "48px",
+                    fontSize: width < 800 ? "24px" : "40px",
                   }}
                 >
-                  Cledge prepares you for
+                  Cledge improves your chances for
                 </div>
                 <div
                   style={{
                     fontWeight: "bold",
-                    fontSize: width < 800 ? "36px" : "52px",
+                    fontSize: width < 800 ? "30px" : "52px",
                   }}
                 >
                   University of Washington Computer Science Admissions
@@ -476,6 +494,35 @@ const UWCSLandingPage = () => {
           </div>
         </Partner>
         {width > 800 && packageAd}
+        {width > 800 && (
+          <div
+            className="d-flex align-items-center justify-content-center w-100 py-5"
+            style={{
+              background:
+                "linear-gradient(92.92deg, #3B68DF -8.48%, #8D32D5 95.28%)",
+            }}
+          >
+            <Fade direction="right">
+              <div className="d-flex flex-column align-items-center py-5">
+                <div
+                  className="fw-bold"
+                  style={{ fontSize: "28px", color: "white" }}
+                >
+                  Want to learn more about what Cledge does?
+                </div>
+                <Button
+                  key=""
+                  color="#F7BC76"
+                  fixedWidth={true}
+                  className={classNames("px-3 w-50")}
+                  onClick={() => {}}
+                >
+                  Learn More
+                </Button>
+              </div>
+            </Fade>
+          </div>
+        )}
       </Container>
       <Footer
         onFeatureClick={(featureIndex) => {

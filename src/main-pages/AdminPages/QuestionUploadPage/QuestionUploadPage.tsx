@@ -129,7 +129,7 @@ const QuestionUploadPage: NextApplicationPage<{
             }
             if (!unsuccessful) {
               alert("Upload Successful!");
-              router.push({ pathname: "/dashboard" });
+              router.push({ pathname: "/my-learning" });
             }
           })
           .catch((err) => console.error(err));
@@ -401,7 +401,7 @@ const QuestionUploadPage: NextApplicationPage<{
                       alert("Upload Successful!");
                     }
                     router.push({
-                      pathname: "/dashboard",
+                      pathname: "/my-learning",
                     });
                   })
                   .catch((err) => console.error(err));

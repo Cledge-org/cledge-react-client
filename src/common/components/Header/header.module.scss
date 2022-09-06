@@ -14,3 +14,13 @@
   color: white;
   background-color: transparent;
 }
+
+.signUpBtn {
+  transition: 300ms;
+  background-color: #f7bc76;
+  color: black;
+  &:hover {
+    color: white;
+    background-color: rgb(255, 130, 92);
+  }
+}

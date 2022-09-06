@@ -110,13 +110,13 @@ const BlogUploadPage: NextApplicationPage<{ blogInfo }> = ({ blogInfo }) => {
         callPutBlog(resourceData._id, { ...resourceData, _id: undefined })
           .then((res) => {
             alert("Upload Successful!");
-            router.push({ pathname: "/dashboard" });
+            router.push({ pathname: "/my-learning" });
           })
           .catch(() => {
             alert(
               "Upload Unsuccessful! (should probably talk to Yousef or Bryan)"
             );
-            router.push({ pathname: "/dashboard" });
+            router.push({ pathname: "/my-learning" });
           });
       }}
     >
@@ -339,13 +339,13 @@ const BlogUploadPage: NextApplicationPage<{ blogInfo }> = ({ blogInfo }) => {
                 callPutBlog(resourceData._id, undefined)
                   .then((res) => {
                     alert("Deletion Successful!");
-                    router.push({ pathname: "/dashboard" });
+                    router.push({ pathname: "/my-learning" });
                   })
                   .catch(() => {
                     alert(
                       "Deletion Unsuccessful! (should probably talk to Yousef or Bryan)"
                     );
-                    router.push({ pathname: "/dashboard" });
+                    router.push({ pathname: "/my-learning" });
                   });
               }}
             >
