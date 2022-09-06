@@ -25,8 +25,8 @@ const Dashboard = () => {
         fetch(`/api/get-dashboard-parts?userID=${session.user.uid}`),
       ]);
     const [ecMetricsJSON, acMetricsJSON, pathwaysJSON] = await Promise.all([
-      ecMetricsResponse.json(),
-      acMetricsResponse.json(),
+      ecMetricsResponse.status === 200 && ecMetricsResponse.json(),
+      acMetricsResponse.status === 200 && acMetricsResponse.json(),
       pathwaysResponse.json(),
     ]);
     setDashboardData({ ecMetricsJSON, acMetricsJSON, pathwaysJSON });

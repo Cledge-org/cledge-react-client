@@ -12,7 +12,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   if (userId) {
     try {
       const academics = await getAcademics(userId);
-      resolve.status(200).send(academics);
+      resolve.status(academics ? 200 : 404).send(academics);
     } catch (e) {
       resolve.status(500).send(e);
     }
@@ -25,14 +25,11 @@ export function getAcademics(userId: string): Promise<Academics> {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
       const metricsDb = client.db("metrics");
-      const all = await metricsDb.collection("academics").find().toArray();
-      //console.log(all);
       const academics: Academics = (await metricsDb
         .collection("academics")
         .findOne({
           firebaseId: userId,
         })) as Academics;
-      //console.log(academics);
       if (!academics) {
         res(null);
       } else {
@@ -52,7 +49,6 @@ export function getAcademics(userId: string): Promise<Academics> {
       }
       client.close();
     } catch (e) {
-      //console.log(e);
       err(e);
     }
   });

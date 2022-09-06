@@ -26,6 +26,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import PageError from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
+import Link from "next/link";
 // account page
 
 const AccountPage: NextApplicationPage<{
@@ -189,11 +190,11 @@ const AccountPage: NextApplicationPage<{
               }}
             />
           </div>
-          <a href="/auth/signout" className="align-self-center">
+          <Link href="/auth/signout" className="align-self-center">
             <button className="cl-btn-red fw-bold" style={{ fontSize: "16px" }}>
               Log Out
             </button>
-          </a>
+          </Link>
         </div>
         <Modal
           ariaHideApp={false}

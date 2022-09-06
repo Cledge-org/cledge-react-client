@@ -48,9 +48,9 @@ function CollegeListCard({
               <div>
                 <span>{type}</span>
               </div>
-              <a href="/my-learning">
+              <Link href="/my-learning">
                 <u color="#0B1142">See details</u>
-              </a>
+              </Link>
             </div>
           </div>
         );

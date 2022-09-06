@@ -12,7 +12,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   if (userId) {
     try {
       const activities = await getActivities(userId);
-      resolve.status(200).send(activities);
+      resolve.status(activities ? 200 : 404).send(activities);
     } catch (e) {
       resolve.status(500).send(e);
     }
@@ -25,10 +25,6 @@ export function getActivities(userId: string): Promise<Activities> {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
       const metricsDb = client.db("metrics");
-      const all = await metricsDb
-        .collection("extracurriculars")
-        .find()
-        .toArray();
       const extracurriculars: Activities = (await metricsDb
         .collection("extracurriculars")
         .findOne({

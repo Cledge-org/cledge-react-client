@@ -36,6 +36,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   });
   const [accessCode, setAccessCode] = useState("");
   const [hasAccess, setHasAccess] = useState(false);
+  const [processingSignUpPayment, setProcessingSignUpPayment] = useState(false);
   const [isIncorrectAccessCode, setIsIncorrectAccessCode] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
@@ -63,6 +64,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
       });
       if (result.error) {
         setIssues((issues) => [...issues, result.error.message]);
+        setProcessingSignUpPayment(false);
       } else {
         callUpdateUser({ ...accountInfo, hasUWAccess: true });
         store.dispatch(
@@ -83,6 +85,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
           ...issues,
           "Please make sure to fill out all fields",
         ]);
+        setProcessingSignUpPayment(false);
         return;
       }
       if (signUpDetails.password !== signUpDetails.confirmedPassword) {
@@ -90,6 +93,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
           ...issues,
           "Your confirmed password isn't the same as your password",
         ]);
+        setProcessingSignUpPayment(false);
         return;
       }
       await callCreateUser(signUpDetails.email, signUpDetails.password, {
@@ -125,6 +129,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
               email: signUpDetails.email,
               redirect: false,
             });
+            setProcessingSignUpPayment(false);
             return;
           }
           signIn("credentials", {
@@ -140,7 +145,11 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
         });
     }
   };
-  if (session.status === "authenticated" && accountInfo.hasUWAccess) {
+  if (
+    session.status === "authenticated" &&
+    accountInfo &&
+    accountInfo.hasUWAccess
+  ) {
     router.replace("/");
   }
   if (!hasAccess && session.status === "unauthenticated") {
@@ -290,13 +299,19 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
           </div>
           <button
             onClick={() => {
+              setProcessingSignUpPayment(true);
               setIssues([]);
               handleSubmit();
             }}
-            className="cl-btn-blue w-100"
+            disabled={processingSignUpPayment}
+            className="cl-btn-blue w-100 center-child"
             style={{ borderRadius: "58x", fontSize: "18px" }}
           >
-            Pay now
+            {processingSignUpPayment ? (
+              <CircularProgress style={{ color: "white" }} />
+            ) : (
+              "Pay now"
+            )}
           </button>
         </div>
       </div>

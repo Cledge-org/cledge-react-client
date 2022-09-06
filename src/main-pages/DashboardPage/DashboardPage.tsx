@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
@@ -19,7 +20,10 @@ const DashboardPage = ({
   const [percentage, setPercentage] = useState(0);
   const router = useRouter();
   const avgTier = useMemo(
-    () => (ecMetrics.overallTier + acMetrics.overallTier) / 2,
+    () =>
+      (((ecMetrics && ecMetrics.overallTier) || 0) +
+        ((acMetrics && acMetrics.overallTier) || 0)) /
+      2,
     [ecMetrics, acMetrics]
   );
   const parseId = (objectId) => {
@@ -96,7 +100,7 @@ const DashboardPage = ({
             >
               <div className="d-flex flex-row w-100 justify-content-between">
                 <div className="cl-dark-text fw-bold">
-                  <a href="/my-learning">
+                  <Link href="/my-learning">
                     <img
                       src="/images/header/my-learning.svg"
                       style={{
@@ -106,7 +110,7 @@ const DashboardPage = ({
                         backgroundColor: "#DCE1FB",
                       }}
                     />
-                  </a>
+                  </Link>
                   <div>My Learning</div>
                 </div>
                 <div>
@@ -139,14 +143,14 @@ const DashboardPage = ({
               <div className="cl-dark-text fw-bold">
                 <div className="pb-4">5 successful profiles</div>
                 {dashboardParts.map(({ name }) => (
-                  <a href="/my-learning">
+                  <Link href="/my-learning">
                     <div
                       className="py-4"
                       style={{ borderTop: "1px solid #E0DFE8" }}
                     >
                       {name}
                     </div>
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -177,7 +181,7 @@ const DashboardPage = ({
                 style={{ backgroundColor: "#A5A6F6", position: "relative" }}
               >
                 Try it! Cledge's most popular feature
-                <a href="/chatbot">
+                <Link href="/chatbot">
                   <img
                     src="/images/header/chatbot.svg"
                     style={{
@@ -190,7 +194,7 @@ const DashboardPage = ({
                       backgroundColor: "#DCE1FB",
                     }}
                   />
-                </a>
+                </Link>
               </div>
               <div
                 className="px-3 pt-5 d-flex flex-column justify-content-end"
@@ -218,7 +222,7 @@ const DashboardPage = ({
                 border: "1px solid #E0DFE8",
               }}
             >
-              <a href="/metrics">
+              <Link href="/metrics">
                 <img
                   src="/images/header/metrics.svg"
                   style={{
@@ -228,7 +232,7 @@ const DashboardPage = ({
                     backgroundColor: "#DCE1FB",
                   }}
                 />
-              </a>
+              </Link>
               <div
                 className="cl-dark-text fw-bold mt-3"
                 style={{ fontSize: "24px" }}
