@@ -18,6 +18,8 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { ContentBlockContent } from "src/main-pages/WelcomePage/components/ContentBlock/ContentBlock";
 import { useRouter } from "next/router";
 import classNames from "classnames";
+import { callPutUWWaitlist } from "src/utils/apiCalls";
+import { CircularProgress } from "@mui/material";
 
 const Contact = dynamic(() => import("../ContactForm/ContactForm"));
 const MiddleBlock = dynamic(() => import("../MiddleBlock/MiddleBlock"));
@@ -222,6 +224,8 @@ const UWCSLandingPage = () => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
   const [width, height] = useWindowSize();
+  const [email, setEmail] = useState("");
+  const [submittedEmail, setSubmittedEmail] = useState(false);
   const router = useRouter();
   const packageAd = (
     <BlobBlock>
@@ -407,7 +411,15 @@ const UWCSLandingPage = () => {
                 </div>
                 {width < 800 && (
                   <div style={{ width: "100%" }}>
-                    <input type="text" placeholder="Enter your email" />
+                    <input
+                      value={email}
+                      style={{ color: "black" }}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                      }}
+                      type="text"
+                      placeholder="Enter your email"
+                    />
                   </div>
                 )}
                 <div style={{ width: width < 800 ? "100%" : "300px" }}>
@@ -417,13 +429,28 @@ const UWCSLandingPage = () => {
                     fixedWidth={false}
                     className={classNames("px-5", { "w-100": width < 800 })}
                     onClick={() => {
-                      window.open(
-                        `/uw-interest-form?ref=${router.query.ref}`,
-                        "_self"
-                      );
+                      if (width < 800) {
+                        setSubmittedEmail(true);
+                        callPutUWWaitlist({
+                          email,
+                          ref: router.query.ref,
+                        }).then(() => {
+                          setSubmittedEmail(false);
+                          setEmail("");
+                        });
+                      } else {
+                        window.open(
+                          `/uw-interest-form?ref=${router.query.ref}`,
+                          "_self"
+                        );
+                      }
                     }}
                   >
-                    Join the Waitlist
+                    {submittedEmail ? (
+                      <CircularProgress style={{ color: "white" }} />
+                    ) : (
+                      "Join the Waitlist"
+                    )}
                   </Button>
                 </div>
               </div>
@@ -515,7 +542,9 @@ const UWCSLandingPage = () => {
                   color="#F7BC76"
                   fixedWidth={true}
                   className={classNames("px-3 w-50")}
-                  onClick={() => {}}
+                  onClick={() => {
+                    window.open("https://cledge.org", "_blank");
+                  }}
                 >
                   Learn More
                 </Button>

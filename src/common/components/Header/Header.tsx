@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Router, useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "src/utils/hooks/useLocation";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import styles from "./header.module.scss";
 
 export default function Header({ key_prop }: { key_prop: string }) {
@@ -12,6 +13,7 @@ export default function Header({ key_prop }: { key_prop: string }) {
   const location = useLocation();
   const [isExpanded, setIsExpanded] = useState(false);
   const [listener, setListener] = useState(null);
+  const { width, height } = useWindowSize();
   const [scrollState, setScrollState] = useState(
     location.includes("uw") ? "scrolling" : "top"
   );
@@ -105,28 +107,33 @@ export default function Header({ key_prop }: { key_prop: string }) {
             <span className={`${colors}`}>cledge.</span>
           </a>
         </Link>
-        <button
-          style={{ border: "2px solid lightgray" }}
-          className="navbar-toggler navbar navbar-light"
-          type="button"
-          onClick={() => {
-            if (!isExpanded) {
-              setColors("cl-blue");
-            } else if (router.pathname === "/" && scrollState === "top") {
-              setColors("cl-white");
-            }
-            setIsExpanded((isExpanded) => !isExpanded);
-          }}
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavAltMarkup"
-          aria-controls="navbarNavAltMarkup"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <div className="navbar-toggler-icon"></div>
-        </button>
+        {width < 800 && (
+          <button
+            style={{ border: "2px solid lightgray" }}
+            className="navbar-toggler navbar navbar-light"
+            type="button"
+            onClick={() => {
+              if (!isExpanded) {
+                setColors("cl-blue");
+              } else if (router.pathname === "/" && scrollState === "top") {
+                setColors("cl-white");
+              }
+              setIsExpanded((isExpanded) => !isExpanded);
+            }}
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <div className="navbar-toggler-icon"></div>
+          </button>
+        )}
         <div
-          className={classNames("d-flex flex-row align-items-center")}
+          className={classNames({
+            ["d-flex flex-row align-items-center"]: width >= 800,
+            ["collapse navbar-collapse"]: width < 800,
+          })}
           style={{ width: "fit-content" }}
           id="navbarNavAltMarkup"
         >
@@ -187,19 +194,20 @@ export default function Header({ key_prop }: { key_prop: string }) {
           )}
         </div>
         {status === "authenticated" && (
-          <Link
-            href="/account"
-            style={{
-              background: "rgba(247, 188, 118, 0.5)",
-              paddingLeft: "15px",
-              paddingRight: "15px",
-              paddingTop: "12px",
-              paddingBottom: "12px",
-              borderRadius: "10px",
-              color: "black",
-            }}
-          >
-            AS
+          <Link href="/account">
+            <a
+              style={{
+                background: "rgba(247, 188, 118, 0.5)",
+                paddingLeft: "15px",
+                paddingRight: "15px",
+                paddingTop: "12px",
+                paddingBottom: "12px",
+                borderRadius: "10px",
+                color: "black",
+              }}
+            >
+              AS
+            </a>
           </Link>
         )}
       </div>

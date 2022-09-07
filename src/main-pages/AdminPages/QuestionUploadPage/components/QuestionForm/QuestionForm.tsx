@@ -81,6 +81,39 @@ const QuestionForm = ({
               currQuestionListCopy.chunks[chunkIndex].questions[
                 questionIndex
               ].type = value;
+              if (
+                value === "DoubleDropdownQuestion" ||
+                value === "DoubleTextInputQuestion"
+              ) {
+                currQuestionListCopy.chunks[chunkIndex].questions[
+                  questionIndex
+                ].data = [
+                  {
+                    _id: 0,
+                    question: "",
+                    type:
+                      value === "DoubleDropdownQuestion"
+                        ? "DropDownQuestion"
+                        : "TextInputQuestion",
+                    helpVid: "",
+                    helpText: "",
+                    data: [""],
+                    isConcatenable: false,
+                  },
+                  {
+                    _id: 1,
+                    question: "",
+                    type:
+                      value === "DoubleDropdownQuestion"
+                        ? "DropDownQuestion"
+                        : "TextInputQuestion",
+                    helpVid: "",
+                    helpText: "",
+                    data: [""],
+                    isConcatenable: false,
+                  },
+                ];
+              }
               setCurrQuestionList({ ...currQuestionListCopy });
             }}
             defaultValue={currQuestion.type}
@@ -265,40 +298,43 @@ const QuestionForm = ({
                 </div>
               )
             )}
-            <button
-              style={{ width: "24px", height: "24px" }}
-              className="align-self-center align-items-center justify-content-center"
-              onClick={() => {
-                let currQuestionListCopy = currQuestionList;
-                if (currQuestion.type === "DropDownQuestion") {
-                  currQuestionListCopy.chunks[chunkIndex].questions[
-                    questionIndex
-                  ].data.push("");
-                } else if (
-                  currQuestion.type === "ListQuestion" ||
-                  currQuestion.type === "CompositeQuestion"
-                ) {
-                  currQuestionListCopy.chunks[chunkIndex].questions[
-                    questionIndex
-                  ].data.push({
-                    _id: null,
-                    question: "",
-                    type: "",
-                    helpVid: "",
-                    helpText: "",
-                    data: [],
-                    isConcatenable: false,
-                  });
-                } else {
-                  currQuestionListCopy.chunks[chunkIndex].questions[
-                    questionIndex
-                  ].data.push({ op: "", tag: "" });
-                }
-                setCurrQuestionList({ ...currQuestionListCopy });
-              }}
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </button>
+            {currQuestion.type !== "DoubleDropdownQuestion" &&
+              currQuestion.type !== "DoubleTextInputQuestion" && (
+                <button
+                  style={{ width: "24px", height: "24px" }}
+                  className="align-self-center align-items-center justify-content-center"
+                  onClick={() => {
+                    let currQuestionListCopy = currQuestionList;
+                    if (currQuestion.type === "DropDownQuestion") {
+                      currQuestionListCopy.chunks[chunkIndex].questions[
+                        questionIndex
+                      ].data.push("");
+                    } else if (
+                      currQuestion.type === "ListQuestion" ||
+                      currQuestion.type === "CompositeQuestion"
+                    ) {
+                      currQuestionListCopy.chunks[chunkIndex].questions[
+                        questionIndex
+                      ].data.push({
+                        _id: null,
+                        question: "",
+                        type: "",
+                        helpVid: "",
+                        helpText: "",
+                        data: [],
+                        isConcatenable: false,
+                      });
+                    } else {
+                      currQuestionListCopy.chunks[chunkIndex].questions[
+                        questionIndex
+                      ].data.push({ op: "", tag: "" });
+                    }
+                    setCurrQuestionList({ ...currQuestionListCopy });
+                  }}
+                >
+                  <FontAwesomeIcon icon={faPlus} />
+                </button>
+              )}
           </div>
         </div>
         <div className="form-group">

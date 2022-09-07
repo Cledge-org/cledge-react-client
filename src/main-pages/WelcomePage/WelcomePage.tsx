@@ -398,10 +398,14 @@ const WelcomePage = () => {
         </Partner>
         <BlobBlock>
           <Fade direction="right" className="center-child w-100">
-            <div className="BlobContainer">
+            <div className="BlobContainer flex-wrap">
               <div
-                className="d-flex flex-column justify-content-end ps-5 w-50 h-75"
-                style={{ color: "white" }}
+                className="d-flex flex-column justify-content-end ps-5"
+                style={{
+                  color: "white",
+                  width: width < 800 ? "100%" : "50%",
+                  height: width < 800 ? "50%" : "75%",
+                }}
               >
                 <div
                   className="center-child px-3 fw-bold"
@@ -417,24 +421,27 @@ const WelcomePage = () => {
                 <div
                   style={{
                     fontWeight: "bold",
-                    fontSize: width < 800 ? "36px" : "52px",
+                    fontSize: width < 800 ? "18px" : "52px",
                   }}
                 >
                   Cledge is now available for University of Washington CS
                   Admissions
                 </div>
               </div>
-              <div className="d-flex flex-row-reverse align-items-end h-75 pe-5 w-50">
+              <div
+                className="d-flex flex-row-reverse align-items-end pe-5"
+                style={{
+                  width: width < 800 ? "100%" : "50%",
+                  height: width < 800 ? "50%" : "75%",
+                }}
+              >
                 <Button
                   key="subscribe-btn"
                   color="#F7BC76"
                   fixedWidth={false}
-                  className={"w-25"}
+                  className={width < 800 ? "w-75 mb-3" : "w-25"}
                   onClick={() => {
-                    window.open(
-                      "https://forms.gle/M1GxLK45Yi3Esfn5A",
-                      "_blank"
-                    );
+                    window.open("https://uw.cledge.org", "_blank");
                   }}
                 >
                   Learn More

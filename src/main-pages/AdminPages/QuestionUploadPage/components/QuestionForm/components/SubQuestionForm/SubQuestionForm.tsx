@@ -66,7 +66,7 @@ const SubQuestionForm = ({
           Question ID: Inner
         </label>
         <input
-          value={dataValue._id.toString()}
+          value={dataValue._id?.toString()}
           type="text"
           onChange={(e) => {
             let currQuestionListCopy = currQuestionList;

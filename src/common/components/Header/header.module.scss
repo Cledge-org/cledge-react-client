@@ -18,6 +18,7 @@
 .signUpBtn {
   transition: 300ms;
   background-color: #f7bc76;
+  width: fit-content;
   color: black;
   &:hover {
     color: white;
