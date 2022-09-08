@@ -22,9 +22,7 @@ export default function ECQuestionSummaryCard({
   const titleQuestion = response.find(
     ({ questionId }) =>
       questionId ===
-      chunkQuestions
-        .find(({ question }) => question === "Title")
-        ?._id.toString()
+      chunkQuestions.find(({ question }) => question === "Title")?._id
   );
   console.log(response);
   return (
@@ -59,7 +57,7 @@ export default function ECQuestionSummaryCard({
       >
         {chunkQuestions.map(({ question, type, _id, data }) => {
           const questionFound = response.find(
-            ({ questionId }) => _id.toString() === questionId
+            ({ questionId }) => _id === questionId
           );
           return question !== "Title" ? (
             <>
