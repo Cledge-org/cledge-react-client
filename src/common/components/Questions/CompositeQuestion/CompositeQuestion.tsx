@@ -8,9 +8,11 @@ import { useState } from "react";
 import classNames from "classnames";
 import DoubleDropdownQuestion from "src/common/components/Questions/DoubleDropdownQuestion/DoubleDropdownQuestion";
 import DoubleTextInputQuestion from "src/common/components/Questions/DoubleTextInputQuestion/DoubleTextInputQuestion";
+import { Tooltip } from "src/common/components/Tooltip/Tooltip";
 const CompositeQuestion = ({
   userTags,
   title,
+  question,
   questions,
   responses,
   onChange,
@@ -18,6 +20,7 @@ const CompositeQuestion = ({
   questions: Question[];
   responses: any[];
   title: string;
+  question: Question;
   userTags?: string[];
   onChange: Function;
 }) => {
@@ -181,9 +184,22 @@ const CompositeQuestion = ({
         `h-100 d-flex flex-column align-items-start justify-content-evenly w-100 cl-dark-text fw-bold`
       )}
     >
-      <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-        {title}
-      </span>
+      <div
+        style={{ width: "90%" }}
+        className={classNames(
+          "d-flex flex-row pt-4 pb-2 align-items-center justify-content-between"
+        )}
+      >
+        <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
+          {question.question}
+        </span>
+        {(question as Question).popUpText && (
+          <Tooltip
+            tipId={(question as Question)._id.toString()}
+            text={(question as Question).popUpText}
+          />
+        )}
+      </div>
       {renderQuestions()}
     </div>
   );

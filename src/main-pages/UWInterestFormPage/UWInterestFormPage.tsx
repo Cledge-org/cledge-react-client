@@ -66,7 +66,7 @@ const UWInterestFormPage = () => {
             question={{
               question: "First Name*",
               type: "TextInput",
-              helpText: "John",
+              placeholder: "John",
             }}
             isCentered
             userAnswer={""}
@@ -80,7 +80,7 @@ const UWInterestFormPage = () => {
             question={{
               question: "Last Name*",
               type: "TextInput",
-              helpText: "Doe",
+              placeholder: "Doe",
             }}
             isCentered
             userAnswer={""}
@@ -96,7 +96,7 @@ const UWInterestFormPage = () => {
             question={{
               question: "Email*",
               type: "TextInput",
-              helpText: "example@domain.com",
+              placeholder: "example@domain.com",
             }}
             isCentered
             userAnswer={""}
@@ -110,7 +110,7 @@ const UWInterestFormPage = () => {
             question={{
               question: "Zip Code*",
               type: "TextInput",
-              helpText: "12345",
+              placeholder: "12345",
             }}
             isCentered
             userAnswer={""}
@@ -129,7 +129,7 @@ const UWInterestFormPage = () => {
           question={{
             question: "Phone #",
             type: "TextInput",
-            helpText: "123-456-7890",
+            placeholder: "123-456-7890",
           }}
           isCentered
           userAnswer={""}

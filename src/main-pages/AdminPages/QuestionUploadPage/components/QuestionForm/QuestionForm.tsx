@@ -95,22 +95,22 @@ const QuestionForm = ({
                       value === "DoubleDropdownQuestion"
                         ? "DropDownQuestion"
                         : "TextInputQuestion",
-                    helpVid: "",
-                    helpText: "",
+                    placeholder: "",
                     data: [""],
                     isConcatenable: false,
+                    isRequired: false,
                   },
                   {
-                    _id: 1,
+                    _id: 0,
                     question: "",
                     type:
                       value === "DoubleDropdownQuestion"
                         ? "DropDownQuestion"
                         : "TextInputQuestion",
-                    helpVid: "",
-                    helpText: "",
+                    placeholder: "",
                     data: [""],
                     isConcatenable: false,
+                    isRequired: false,
                   },
                 ];
               }
@@ -133,6 +133,18 @@ const QuestionForm = ({
             ]}
           />
         </div>
+        <UploadTextInput
+          title={"Pop Up Text (Optional)"}
+          onChange={(e) => {
+            let currQuestionListCopy = currQuestionList;
+            currQuestionListCopy.chunks[chunkIndex].questions[
+              questionIndex
+            ].popUpText = e.target.value;
+            setCurrQuestionList({ ...currQuestionListCopy });
+          }}
+          placeholder="Enter Pop Text"
+          value={currQuestion.popUpText}
+        />
         <div className="form-group">
           <label style={{ fontSize: "0.9em" }} className="text-muted">
             Data:
@@ -207,17 +219,17 @@ const QuestionForm = ({
                     </button>
                   </div>
                   <UploadTextInput
-                    title={"HelpText"}
+                    title={"Placeholder"}
                     onChange={(e) => {
                       let currQuestionListCopy = currQuestionList;
                       currQuestionListCopy.chunks[chunkIndex].questions[
                         questionIndex
-                      ].data[dataIndex].helpText = e.target.value;
+                      ].data[dataIndex].placeholder = e.target.value;
                       setCurrQuestionList({
                         ...currQuestionListCopy,
                       });
                     }}
-                    value={dataValue.helpText}
+                    value={dataValue.placeholder}
                   />
                 </div>
               ) : currQuestion.type === "DropDownQuestion" ? (
@@ -319,10 +331,10 @@ const QuestionForm = ({
                         _id: null,
                         question: "",
                         type: "",
-                        helpVid: "",
-                        helpText: "",
+                        placeholder: "",
                         data: [],
                         isConcatenable: false,
+                        isRequired: false,
                       });
                     } else {
                       currQuestionListCopy.chunks[chunkIndex].questions[
@@ -337,44 +349,18 @@ const QuestionForm = ({
               )}
           </div>
         </div>
-        <div className="form-group">
-          <label style={{ fontSize: "0.9em" }} className="text-muted">
-            HelpVid (Optional):
-          </label>
-          <input
-            value={currQuestion.helpVid}
-            onChange={(e) => {
-              let currQuestionListCopy = currQuestionList;
-              currQuestionListCopy.chunks[chunkIndex].questions[
-                questionIndex
-              ].helpVid = e.target.value;
-              setCurrQuestionList({ ...currQuestionListCopy });
-            }}
-            type="text"
-            className="px-3 form-control"
-            id="description"
-            placeholder="Enter Description"
-          />
-        </div>
-        <div className="form-group">
-          <label style={{ fontSize: "0.9em" }} className="text-muted">
-            HelpText (Optional):
-          </label>
-          <input
-            value={currQuestion.helpText}
-            onChange={(e) => {
-              let currQuestionListCopy = currQuestionList;
-              currQuestionListCopy.chunks[chunkIndex].questions[
-                questionIndex
-              ].helpText = e.target.value;
-              setCurrQuestionList({ ...currQuestionListCopy });
-            }}
-            type="text"
-            className="px-3 form-control"
-            id="description"
-            placeholder="Enter Description"
-          />
-        </div>
+        <UploadTextInput
+          title={"Placeholder (Optional)"}
+          onChange={(e) => {
+            let currQuestionListCopy = currQuestionList;
+            currQuestionListCopy.chunks[chunkIndex].questions[
+              questionIndex
+            ].placeholder = e.target.value;
+            setCurrQuestionList({ ...currQuestionListCopy });
+          }}
+          placeholder="Enter Placeholder"
+          value={currQuestion.placeholder}
+        />
         <div className="form-group">
           <label style={{ fontSize: "0.9em" }} className="text-muted">
             Is Concatenable (Optional):
@@ -390,6 +376,21 @@ const QuestionForm = ({
             }}
           />
         </div>
+        <div className="form-group">
+          <label style={{ fontSize: "0.9em" }} className="text-muted">
+            Is Required (Optional):
+          </label>
+          <CheckBox
+            selected={currQuestion.isRequired}
+            setSelected={(selectState) => {
+              let currQuestionListCopy = currQuestionList;
+              currQuestionListCopy.chunks[chunkIndex].questions[
+                questionIndex
+              ].isRequired = selectState;
+              setCurrQuestionList({ ...currQuestionListCopy });
+            }}
+          />
+        </div>
       </div>
       <button
         onClick={() => {
@@ -401,9 +402,9 @@ const QuestionForm = ({
               _id: null,
               question: "",
               type: "",
-              helpVid: "",
-              helpText: "",
+              placeholder: "",
               data: [],
+              isRequired: false,
               isConcatenable: false,
             }
           );

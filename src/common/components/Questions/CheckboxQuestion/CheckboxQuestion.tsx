@@ -1,5 +1,7 @@
 import classNames from "classnames";
 import React, { useEffect, useState } from "react";
+import ReactTooltip from "react-tooltip";
+import { Tooltip } from "src/common/components/Tooltip/Tooltip";
 
 import CheckBox from "../../CheckBox/CheckBox";
 import styles from "./checkbox-question.module.scss";
@@ -64,9 +66,24 @@ export default function CheckBoxQuestion({
           : `${!isCentered ? "align-items-start" : "align-items-center"}`
       } justify-content-evenly w-100 cl-dark-text fw-bold`}
     >
-      <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-        {question.question}
-      </span>
+      <div
+        style={{ width: "90%" }}
+        className={classNames("d-flex flex-row pt-4 pb-2 align-items-center", {
+          ["justify-content-center"]:
+            isCentered && !(question as Question).popUpText,
+          ["justify-content-between"]: (question as Question).popUpText,
+        })}
+      >
+        <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
+          {question.question}
+        </span>
+        {(question as Question).popUpText && (
+          <Tooltip
+            tipId={(question as Question)._id.toString()}
+            text={(question as Question).popUpText}
+          />
+        )}
+      </div>
       <div
         className={`d-flex flex-column justify-content-evenly ${
           inEC ? "align-items-start" : "align-items-center"

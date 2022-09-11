@@ -64,7 +64,7 @@ export default function DropdownTab({
         }}
         style={isFinishedModule ? { borderTopColor: "#2651ed" } : {}}
       >
-        <div className="text">
+        <div className="text" style={{ textAlign: "left" }}>
           {title}
           {isAll || isPathway || isECAC ? null : (
             <span className="percentage">{percentComplete}%</span>

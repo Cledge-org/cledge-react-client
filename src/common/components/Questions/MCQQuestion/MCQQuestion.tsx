@@ -2,6 +2,8 @@ import React, { useState } from "react";
 
 import styles from "./mcq-question.module.scss";
 import palette from "src/common/styles/palette.module.scss";
+import classNames from "classnames";
+import { Tooltip } from "src/common/components/Tooltip/Tooltip";
 interface MCQQuestionProps {
   isPathwayQuestion?: boolean;
   question: Question | PathwayQuestion;
@@ -30,9 +32,24 @@ export default function MCQQuestion({
           : `${!isCentered ? "align-items-start" : "align-items-center"}`
       } justify-content-evenly cl-dark-text fw-bold`}
     >
-      <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-        {question.question}
-      </span>
+      <div
+        style={{ width: "90%" }}
+        className={classNames("d-flex flex-row pt-4 pb-2 align-items-center", {
+          ["justify-content-center"]:
+            isCentered && !(question as Question).popUpText,
+          ["justify-content-between"]: (question as Question).popUpText,
+        })}
+      >
+        <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
+          {question.question}
+        </span>
+        {(question as Question).popUpText && (
+          <Tooltip
+            tipId={(question as Question)._id.toString()}
+            text={(question as Question).popUpText}
+          />
+        )}
+      </div>
       <div
         className={`d-flex flex-column justify-content-evenly align-items-${
           !isCentered ? "start" : "center"

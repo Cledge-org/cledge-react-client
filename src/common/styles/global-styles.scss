@@ -113,6 +113,9 @@ a {
 .bg-light-gray {
   background-color: $cl-light-gray;
 }
+.bg-extra-light-gray {
+  background-color: $cl-extra-light-gray;
+}
 .cl-btn-gray {
   @extend .cl-btn;
   color: $cl-dark-text;
@@ -344,7 +347,7 @@ a {
     animation-name: rotate;
     animation-duration: 600ms;
   }
-  background-color: $cl-light-gray;
+  background-color: $cl-extra-light-gray;
   border: none;
   border-top: 2px solid rgba($color: $cl-secondary-text, $alpha: 0.7);
   display: flex;
@@ -363,7 +366,7 @@ a {
   }
 }
 .dropdown-menu-closed {
-  background-color: $cl-light-gray;
+  background-color: $cl-extra-light-gray;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -372,7 +375,7 @@ a {
   animation-duration: 600ms;
 }
 .dropdown-menu-closed-no-animation {
-  background-color: $cl-light-gray;
+  background-color: $cl-extra-light-gray;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -399,7 +402,7 @@ a {
   }
 }
 .dropdown-menu-expanded {
-  background-color: $cl-light-gray;
+  background-color: $cl-extra-light-gray;
   display: flex;
   flex-direction: column;
   animation-name: expand;
@@ -416,7 +419,7 @@ a {
   display: flex;
   align-items: center;
   height: fit-content;
-  background-color: $cl-light-gray;
+  background-color: $cl-extra-light-gray;
   .text {
     // @extend .ps-4;
     padding-left: 3em;

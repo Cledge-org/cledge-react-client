@@ -18,6 +18,8 @@ import styles from "./question-summary-card.module.scss";
 import classNames from "classnames";
 import { callPutQuestionResponses } from "src/utils/apiCalls";
 import CompositeQuestion from "src/common/components/Questions/CompositeQuestion/CompositeQuestion";
+import DoubleTextInputQuestion from "src/common/components/Questions/DoubleTextInputQuestion/DoubleTextInputQuestion";
+import DoubleDropdownQuestion from "src/common/components/Questions/DoubleDropdownQuestion/DoubleDropdownQuestion";
 Modal.defaultStyles.overlay.backgroundColor = "rgba(177, 176, 176, 0.6)";
 
 interface QuestionSummaryCardProps {
@@ -133,6 +135,7 @@ export default function QuestionSummaryCard({
     if (question?.type === "CompositeQuestion") {
       return (
         <CompositeQuestion
+          question={question}
           responses={userAnswer?.response}
           onChange={(answer, index) => {
             setUserAnswer((userAnswer) => {
@@ -147,6 +150,34 @@ export default function QuestionSummaryCard({
           }}
           title={question.question}
           questions={question.data}
+        />
+      );
+    }
+    if (question?.type === "DoubleTextInputQuestion") {
+      return (
+        <DoubleTextInputQuestion
+          userResponses={userAnswer?.response}
+          question={question}
+          onChange={(value) => {
+            setUserAnswer((userAnswer) => {
+              userAnswer.response = value;
+              return { ...userAnswer };
+            });
+          }}
+        />
+      );
+    }
+    if (question?.type === "DoubleTextInputQuestion") {
+      return (
+        <DoubleDropdownQuestion
+          userResponses={userAnswer?.response}
+          question={question}
+          onChange={(value) => {
+            setUserAnswer((userAnswer) => {
+              userAnswer.response = value;
+              return { ...userAnswer };
+            });
+          }}
         />
       );
     }

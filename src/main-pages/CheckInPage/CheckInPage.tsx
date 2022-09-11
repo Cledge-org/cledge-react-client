@@ -22,6 +22,8 @@ import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import CompositeQuestion from "src/common/components/Questions/CompositeQuestion/CompositeQuestion";
+import DoubleTextInputQuestion from "src/common/components/Questions/DoubleTextInputQuestion/DoubleTextInputQuestion";
+import DoubleDropdownQuestion from "src/common/components/Questions/DoubleDropdownQuestion/DoubleDropdownQuestion";
 
 const CheckIn: NextApplicationPage<{
   checkInData: QuestionList;
@@ -121,7 +123,11 @@ const CheckIn: NextApplicationPage<{
     return (
       <div>
         {questions.map((question) => {
-          const updateFunc = (value, newQTags, oldTags) => {
+          const updateFunc = (
+            value,
+            newQTags = undefined,
+            oldTags = undefined
+          ) => {
             newUserResponses.find(
               (questionResponse) =>
                 questionResponse.questionId === question?._id.toString()
@@ -187,6 +193,7 @@ const CheckIn: NextApplicationPage<{
           if (question?.type === "CompositeQuestion") {
             return (
               <CompositeQuestion
+                question={question}
                 responses={[]}
                 onChange={(value, index, questionId) => {
                   let currRes = newUserResponses.find(
@@ -212,6 +219,28 @@ const CheckIn: NextApplicationPage<{
                 }}
                 title={question.question}
                 questions={question.data}
+              />
+            );
+          }
+          if (question?.type === "DoubleTextInputQuestion") {
+            return (
+              <DoubleTextInputQuestion
+                userResponses={[]}
+                question={question}
+                onChange={(value) => {
+                  updateFunc(value);
+                }}
+              />
+            );
+          }
+          if (question?.type === "DoubleTextInputQuestion") {
+            return (
+              <DoubleDropdownQuestion
+                userResponses={[]}
+                question={question}
+                onChange={(value) => {
+                  updateFunc(value);
+                }}
               />
             );
           }

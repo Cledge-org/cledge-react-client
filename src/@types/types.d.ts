@@ -115,10 +115,11 @@ export declare global {
     _id?: ObjectId;
     question: string;
     type: string;
-    helpVid?: string;
-    helpText?: string;
+    placeholder?: string;
     data?: any[];
+    popUpText?: string;
     isConcatenable?: boolean;
+    isRequired?: boolean;
   }
 
   //Learning Pathways Types -->
@@ -217,7 +218,7 @@ export declare global {
     question: string;
     questionType: string;
     data?: any[];
-    helpText: string;
+    placeholder: string;
   }
   interface PathwayImage extends PathwaySubContent {
     image: string;

@@ -42,7 +42,7 @@ const QuestionUploadPage: NextApplicationPage<{
             question: "",
             type: "",
             helpVid: "",
-            helpText: "",
+            placeholder: "",
             data: [],
             isConcatenable: false,
           },
@@ -50,21 +50,6 @@ const QuestionUploadPage: NextApplicationPage<{
       },
     ],
   });
-  const fillUndefinedFields = (question: Question) => {
-    if (question.isConcatenable === undefined) {
-      question.isConcatenable = false;
-    }
-    if (question.data === undefined) {
-      question.data = [];
-    }
-    if (question.helpText === undefined) {
-      question.helpText = "";
-    }
-    if (question.helpVid === undefined) {
-      question.helpVid = "";
-    }
-    return question;
-  };
   return (
     <UploadPage
       onUpload={async () => {
@@ -157,10 +142,10 @@ const QuestionUploadPage: NextApplicationPage<{
                           _id: null,
                           question: "",
                           type: "",
-                          helpVid: "",
-                          helpText: "",
+                          placeholder: "",
                           data: [],
                           isConcatenable: false,
+                          isRequired: false,
                         },
                       ],
                     },
@@ -274,10 +259,10 @@ const QuestionUploadPage: NextApplicationPage<{
                   _id: null,
                   question: "",
                   type: "",
-                  helpVid: "",
-                  helpText: "",
+                  placeholder: "",
                   data: [],
                   isConcatenable: false,
+                  isRequired: false,
                 });
                 setCurrQuestionList({ ...currQuestionListCopy });
               }}
@@ -306,10 +291,10 @@ const QuestionUploadPage: NextApplicationPage<{
                   _id: null,
                   question: "",
                   type: "",
-                  helpVid: "",
-                  helpText: "",
+                  placeholder: "",
                   data: [],
                   isConcatenable: false,
+                  isRequired: false,
                 },
               ],
             });

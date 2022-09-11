@@ -2,12 +2,19 @@ import classNames from "classnames";
 import { useSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { connect } from "react-redux";
 import { useLocation } from "src/utils/hooks/useLocation";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import styles from "./header.module.scss";
 
-export default function Header({ key_prop }: { key_prop: string }) {
+const Header = ({
+  key_prop,
+  accountInfo,
+}: {
+  key_prop: string;
+  accountInfo: AccountInfo;
+}) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const location = useLocation();
@@ -17,6 +24,15 @@ export default function Header({ key_prop }: { key_prop: string }) {
   const [scrollState, setScrollState] = useState(
     location.includes("uw") ? "scrolling" : "top"
   );
+  const userInitials = useMemo(() => {
+    return accountInfo?.name
+      .split(" ")
+      .reduce(
+        (prev, curr) =>
+          prev ? prev + curr.substring(0, 1) : curr.substring(0, 1),
+        ""
+      );
+  }, [accountInfo]);
   const [colors, setColors] = useState(
     router.pathname === "/" ? "cl-white" : "cl-blue"
   );
@@ -206,11 +222,16 @@ export default function Header({ key_prop }: { key_prop: string }) {
                 color: "black",
               }}
             >
-              AS
+              {userInitials}
             </a>
           </Link>
         )}
       </div>
     </nav>
   );
-}
+};
+export default connect((state) => {
+  return {
+    accountInfo: state?.accountInfo,
+  };
+})(Header);

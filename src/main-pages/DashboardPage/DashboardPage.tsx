@@ -19,13 +19,7 @@ const DashboardPage = ({
 }) => {
   const [percentage, setPercentage] = useState(0);
   const router = useRouter();
-  const avgTier = useMemo(
-    () =>
-      (((ecMetrics && ecMetrics.overallTier) || 0) +
-        ((acMetrics && acMetrics.overallTier) || 0)) /
-      2,
-    [ecMetrics, acMetrics]
-  );
+  const avgTier = useMemo(() => 11, [ecMetrics, acMetrics]);
   const parseId = (objectId) => {
     const objectIdStr = objectId.toString();
     if (!objectIdStr.includes('"')) {
@@ -261,7 +255,7 @@ const DashboardPage = ({
                   >
                     <div
                       style={{
-                        marginLeft: `${(avgTier / 12) * 100}%`,
+                        marginLeft: `calc(${(avgTier / 12) * 100}% - 1px)`,
                         border: "2px solid #F7BC76",
                         height: "100%",
                         width: 0,
@@ -272,13 +266,16 @@ const DashboardPage = ({
                   <div
                     className="d-flex flex-column mt-1"
                     style={{
-                      marginLeft: `${
+                      marginLeft: `calc(${
                         avgTier === 0
-                          ? (avgTier / 12) * 100
+                          ? 0
                           : avgTier === 12
-                          ? (avgTier / 12) * 100 - 19.5
-                          : (avgTier / 12) * 100 - 9.3
-                      }%`,
+                          ? 100
+                          : (avgTier / 12) * 100
+                      }% - ${
+                        avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
+                      }px)`,
+                      zIndex: 100,
                       width: "fit-content",
                     }}
                   >

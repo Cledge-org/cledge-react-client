@@ -38,7 +38,10 @@ const Metrics: NextApplicationPage<{
         className="container-fluid d-flex flex-row px-0"
         style={{ minHeight: "100vh" }}
       >
-        <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
+        <div
+          className="d-flex flex-column bg-extra-light-gray"
+          style={{ flex: 1 }}
+        >
           <DropdownTab
             isAll
             chunkList={[]}
@@ -202,7 +205,7 @@ const Metrics: NextApplicationPage<{
               style={{ flex: 1 }}
             >
               <QuestionSubPageHeader
-                title="Acamdemics Metrics"
+                title="Academics Metrics"
                 percentage={undefined}
                 isMetrics
                 subText=""

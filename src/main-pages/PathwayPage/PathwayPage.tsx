@@ -243,7 +243,7 @@ const Pathways: NextApplicationPage<{
                     answer !== "",
                 });
               }}
-              helpText={content.helpText}
+              placeholder={content.placeholder}
               data={content.data}
               id={content.id}
             />
@@ -258,7 +258,10 @@ const Pathways: NextApplicationPage<{
         className="container-fluid d-flex flex-row px-0"
         style={{ minHeight: "94vh", height: "fit-content" }}
       >
-        <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
+        <div
+          className="d-flex flex-column bg-extra-light-gray"
+          style={{ flex: 1 }}
+        >
           {pathwayInfo.modules.map(
             (
               { name, presetContent, personalizedContent, _id },

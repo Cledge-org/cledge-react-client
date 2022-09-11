@@ -16,6 +16,7 @@ export default function Layout({ children }) {
   const session = useSession();
   const [loading, setLoading] = useState(true);
   const [header, setHeader] = useState(<Header key_prop="initial" />);
+
   const asyncUseEffect = async () => {
     if (session.data?.user?.uid && !store.getState()) {
       const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
@@ -42,10 +43,11 @@ export default function Layout({ children }) {
       setLoading(false);
     }
   };
+
   useEffect(() => {
-    //console.log(session);
     asyncUseEffect();
   }, [session]);
+
   useEffect(() => {
     let numTimes = 1;
     const endLoading = () => {
@@ -68,6 +70,7 @@ export default function Layout({ children }) {
       Router.events.off("routeChangeError", endLoading);
     };
   }, []);
+
   return (
     <div>
       {router.pathname === "/check-ins/[checkIn]" ? null : header}

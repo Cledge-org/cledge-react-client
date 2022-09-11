@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 
 import styles from "./text-input-question.module.scss";
 import classNames from "classnames";
+import { Tooltip } from "src/common/components/Tooltip/Tooltip";
 interface TextInputQuestionProps {
   isPathwayQuestion?: boolean;
   question: Question | PathwayQuestion;
@@ -67,7 +68,7 @@ export default function TextInputQuestion({
             }}
             rows={8}
             className={`form-control w-${isPathwayQuestion ? "100" : "75"}`}
-            placeholder={question.helpText}
+            placeholder={question.placeholder}
           />
         </div>
         {/* <button className="general-submit-btn mt-2">SUBMIT</button> */}
@@ -92,7 +93,7 @@ export default function TextInputQuestion({
           value={currValue}
           type="text"
           className={classNames("form-control", styles.ecTextInput)}
-          placeholder={question.helpText}
+          placeholder={question.placeholder}
           onChange={(e) => {
             setCurrValue(e.target.value);
             onChange(e.target.value);
@@ -110,12 +111,36 @@ export default function TextInputQuestion({
         className
       )}
     >
-      <span
-        className={`pt-4 ${smallTitle ? "cl-light-gray pb-1" : "pb-3"}`}
-        style={{ fontSize: smallTitle ? "1em" : "1.4em" }}
-      >
-        {question.question}
-      </span>
+      {smallTitle ? (
+        <span
+          className={`pt-4 "cl-light-gray pb-1"`}
+          style={{ fontSize: "1em" }}
+        >
+          {question.question}
+        </span>
+      ) : (
+        <div
+          style={{ width: "90%" }}
+          className={classNames(
+            "d-flex flex-row pt-4 pb-2 align-items-center",
+            {
+              ["justify-content-center"]:
+                isCentered && !(question as Question).popUpText,
+              ["justify-content-between"]: (question as Question).popUpText,
+            }
+          )}
+        >
+          <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
+            {question.question}
+          </span>
+          {(question as Question).popUpText && (
+            <Tooltip
+              tipId={(question as Question)._id.toString()}
+              text={(question as Question).popUpText}
+            />
+          )}
+        </div>
+      )}
       <div
         className={`d-flex flex-column justify-content-evenly align-items-${
           !isCentered ? "start" : "center"
@@ -138,10 +163,10 @@ export default function TextInputQuestion({
             onChange(e.target.value);
           }}
           className={`form-control w-${
-            isPathwayQuestion ? "100" : "75"
+            isPathwayQuestion || smallTitle ? "100" : "75"
           } cl-dark-text fw-bold`}
           style={{ borderRadius: "10px" }}
-          placeholder={question.helpText ?? "Your response..."}
+          placeholder={question.placeholder ?? "Your response..."}
         />
       </div>
     </div>

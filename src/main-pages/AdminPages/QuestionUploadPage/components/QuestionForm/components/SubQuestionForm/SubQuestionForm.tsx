@@ -106,10 +106,10 @@ const SubQuestionForm = ({
                     value === "DoubleDropdownQuestion"
                       ? "DropDownQuestion"
                       : "TextInputQuestion",
-                  helpVid: "",
-                  helpText: "",
+                  placeholder: "",
                   data: [""],
                   isConcatenable: false,
+                  isRequired: false,
                 },
                 {
                   _id: 1,
@@ -118,10 +118,10 @@ const SubQuestionForm = ({
                     value === "DoubleDropdownQuestion"
                       ? "DropDownQuestion"
                       : "TextInputQuestion",
-                  helpVid: "",
-                  helpText: "",
+                  placeholder: "",
                   data: [""],
                   isConcatenable: false,
+                  isRequired: false,
                 },
               ];
             }
@@ -219,17 +219,17 @@ const SubQuestionForm = ({
                   </button>
                 </div>
                 <UploadTextInput
-                  title={"HelpText"}
+                  title={"Placeholder"}
                   onChange={(e) => {
                     let currQuestionListCopy = currQuestionList;
                     currQuestionListCopy.chunks[chunkIndex].questions[
                       questionIndex
-                    ].data[dataIndex].data[index].helpText = e.target.value;
+                    ].data[dataIndex].data[index].placeholder = e.target.value;
                     setCurrQuestionList({
                       ...currQuestionListCopy,
                     });
                   }}
-                  value={value.helpText}
+                  value={value.placeholder}
                 />
               </div>
             ) : dataValue.type === "DropDownQuestion" ? (
@@ -332,32 +332,18 @@ const SubQuestionForm = ({
         </div>
       </div>
       <UploadTextInput
-        title={"HelpVid (Optional)"}
+        title={"Placeholder (Optional)"}
         onChange={(e) => {
           let currQuestionListCopy = currQuestionList;
           currQuestionListCopy.chunks[chunkIndex].questions[questionIndex].data[
             dataIndex
-          ].helpVid = e.target.value;
+          ].placeholder = e.target.value;
           setCurrQuestionList({
             ...currQuestionListCopy,
           });
         }}
-        value={dataValue.helpVid}
-        placeholder="Enter Description"
-      />
-      <UploadTextInput
-        title={"HelpText (Optional)"}
-        onChange={(e) => {
-          let currQuestionListCopy = currQuestionList;
-          currQuestionListCopy.chunks[chunkIndex].questions[questionIndex].data[
-            dataIndex
-          ].helpText = e.target.value;
-          setCurrQuestionList({
-            ...currQuestionListCopy,
-          });
-        }}
-        value={dataValue.helpText}
-        placeholder="Enter Description"
+        value={dataValue.placeholder}
+        placeholder="Enter Placeholder"
       />
       <div className="form-group">
         <label style={{ fontSize: "0.9em" }} className="text-muted">
@@ -370,6 +356,23 @@ const SubQuestionForm = ({
             currQuestionListCopy.chunks[chunkIndex].questions[
               questionIndex
             ].data[dataIndex].isConcatenable = selectState;
+            setCurrQuestionList({
+              ...currQuestionListCopy,
+            });
+          }}
+        />
+      </div>
+      <div className="form-group">
+        <label style={{ fontSize: "0.9em" }} className="text-muted">
+          Is Required (Optional):
+        </label>
+        <CheckBox
+          selected={dataValue.isRequired}
+          setSelected={(selectState) => {
+            let currQuestionListCopy = currQuestionList;
+            currQuestionListCopy.chunks[chunkIndex].questions[
+              questionIndex
+            ].data[dataIndex].isRequired = selectState;
             setCurrQuestionList({
               ...currQuestionListCopy,
             });

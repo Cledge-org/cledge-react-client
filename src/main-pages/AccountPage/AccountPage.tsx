@@ -43,10 +43,10 @@ const AccountPage: NextApplicationPage<{
     _id: null,
     question: "",
     type: "",
-    helpVid: "",
-    helpText: "",
+    placeholder: "",
     data: [],
     isConcatenable: false,
+    isRequired: false,
   });
   const [iteratedFirst, setIteratedFirst] = useState(false);
   const size = useWindowSize();
