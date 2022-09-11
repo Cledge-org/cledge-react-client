@@ -1,3 +1,4 @@
+import { height } from "@mui/system";
 import { useEffect } from "react";
 
 interface BlogText {
@@ -20,6 +21,7 @@ export default function BlogText({
     <>
       <div
         className={"d-flex flex-row"}
+        style={{ height: "vh" }}
       >
         <div
           style={{ minHeight: "10vh", maxHeight: "30vh"}}
@@ -41,9 +43,9 @@ export default function BlogText({
             {description}
           </div>
         </div>
-        <div className='mb-5 float-right col-md-4 container-fluid d-flex align-items-center justify-content-center'>
-          <div className='w-100 h-75'>
-            <img className="img-fluid" src={imageURL} alt="alt"></img>
+        <div className=' col-md-3 container-fluid d-flex align-items-center justify-content-center'>
+          <div>
+            <img className="img-fluid rounded" src={imageURL} alt=""></img>
           </div>
         </div>
       </div>
