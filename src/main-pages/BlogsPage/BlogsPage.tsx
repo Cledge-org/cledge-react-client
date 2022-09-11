@@ -4,7 +4,6 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import BlogText from "../../common/components/Blog/CardBlog";
 import Item from "antd/lib/list/Item";
-import { Button } from "react-bootstrap";
 
 const BlogsPage = ({ blogInfo }) => {
   //console.log(blogInfo.articles);
@@ -12,24 +11,10 @@ const BlogsPage = ({ blogInfo }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [topicFilter, setTopicFilter] = useState("");
   // grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 md:p-0
-
-  function FilterItem(props) {
-    return (
-      <Button
-        className="btn btn-light rounded-pill mb-3 mx-2"
-        onClick={() => {
-          setTopicFilter(props.filter);
-        }}
-      >
-        {props.display}
-      </Button>
-    )
-  }
-  
   return (
     <>
-      <div className="d-flex justify-content-center">
-        <div style={{ width: "50%" }}>
+      <div className="container-fluid d-flex px-0">
+        <div>
           <div className="ms-5 p-5 me-5">
             <h1 className="ms-5">Blogs</h1>
             <div className="card-body row">
@@ -66,10 +51,10 @@ const BlogsPage = ({ blogInfo }) => {
                         />
                       </a>
                     </Link>
-                    <div className="mx-1 mb-4" >
+                    <div className="mx-1">
                       {blog.topics.map(function (topic) {
                         return (
-                          <div className="btn btn-light rounded-pill mx-2">
+                          <div className="btn btn-light rounded-pill mb-4 mx-2">
                             {topic}
                           </div>
                         );
@@ -80,35 +65,91 @@ const BlogsPage = ({ blogInfo }) => {
             </div>
           </div>
         </div>
-        <div className="col-md-4 border-start">
-          
-          <div className="mx-4 mt-5">
-            <div className="d-flex mt-4 mb-4">
-              <div className="d-flex align-items-center">
-                <div className="p-1 cl-mid-gray" style={{ width: "30px" }}>
-                  <FontAwesomeIcon icon={faSearch} />
-                </div>
-                <input
-                  style={{width: "30em", height: "4vh"}}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                  }}
-                  className="py-1 search-input"
-                  type="text"
-                  placeholder={"Search"}
-                />
+        <div className="col-md-4 border-start h-12">
+          <div className="d-flex flex-row justify-content-center mt-4">
+            <div className="d-flex justify-content-start align-items-center search-container">
+              <div className="p-1 cl-mid-gray" style={{ width: "30px" }}>
+                <FontAwesomeIcon icon={faSearch} />
               </div>
+              <input
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                }}
+                className="py-1 search-input"
+                type="text"
+                placeholder="Search"
+              />
             </div>
-            <p className="row text-muted mx-2">Topics</p>
-            <div className="w-75">
-              <FilterItem display="All" filter="" />
-              <FilterItem display="Extracurriculars" filter="Extracurriculars" />
-              <FilterItem display="Essay" filter="Essay" />
-              <FilterItem display="Application" filter="Application" />
-              <FilterItem display="Standardized Tests" filter="Application" />
-              <FilterItem display="Academics" filter="Academics" />
-              <FilterItem display="Grades" filter="Grades" />
-              <FilterItem display="Scholarships" filter="Scholarships" />
+          </div>
+          <div className="container mt-4 ms-4">
+            <div className="row">
+              <p className="text-muted mx-2">Topics</p>
+              <div className="pb-2">
+                <button
+                  className="btn btn-light rounded-pill mb-2 mx-2"
+                  onClick={() => {
+                    setTopicFilter("");
+                  }}
+                >
+                  All
+                </button>
+                <button
+                  className="btn btn-light rounded-pill mb-2 mx-2"
+                  onClick={() => {
+                    setTopicFilter("Extracurriculars");
+                  }}
+                >
+                  Extracurriculars
+                </button>
+                <button
+                  className="btn btn-light rounded-pill mb-2 mx-2"
+                  onClick={() => {
+                    setTopicFilter("Essay");
+                  }}
+                >
+                  Essay
+                </button>
+                <button
+                  className="btn btn-light rounded-pill mb-2 mx-2"
+                  onClick={() => {
+                    setTopicFilter("Application");
+                  }}
+                >
+                  Application
+                </button>
+                <button
+                  className="btn btn-light rounded-pill mb-2 mx-2"
+                  onClick={() => {
+                    setTopicFilter("Standardized Tests");
+                  }}
+                >
+                  Standardized Tests
+                </button>
+                <button
+                  className="btn btn-light rounded-pill mb-2 mx-2"
+                  onClick={() => {
+                    setTopicFilter("Academics");
+                  }}
+                >
+                  Academics
+                </button>
+                <button
+                  className="btn btn-light rounded-pill mb-2 mx-2"
+                  onClick={() => {
+                    setTopicFilter("Grades");
+                  }}
+                >
+                  Grades
+                </button>
+                <button
+                  className="btn btn-light rounded-pill mb-2 mx-2"
+                  onClick={() => {
+                    setTopicFilter("Scholarships");
+                  }}
+                >
+                  Scholarships
+                </button>
+              </div>
             </div>
           </div>
         </div>
