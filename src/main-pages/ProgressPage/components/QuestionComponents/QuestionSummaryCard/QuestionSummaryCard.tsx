@@ -245,7 +245,7 @@ export default function QuestionSummaryCard({
                 setOldTags([]);
                 Promise.all(
                   [
-                    fetch(`/api/put-question-responses`, {
+                    fetch(`/api/admin/question/put-question-responses`, {
                       method: "POST",
                       body: JSON.stringify({
                         responses: newUserResponses,
@@ -331,7 +331,7 @@ export default function QuestionSummaryCard({
                 }
                 Promise.all(
                   [
-                    fetch(`/api/put-question-responses`, {
+                    fetch(`/api/admin/question/put-question-responses`, {
                       method: "POST",
                       body: JSON.stringify({
                         responses: newUserResponses,

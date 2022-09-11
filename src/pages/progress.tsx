@@ -1,6 +1,6 @@
 import React from "react";
 import { GetServerSidePropsContext } from "next";
-import { getQuestionProgress } from "./api/get-question-progress";
+import { getQuestionProgress } from "./api/questions/get-question-progress";
 import ProgressPage from "../main-pages/ProgressPage/ProgressPage";
 //profile progress/ question summary page
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {

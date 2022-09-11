@@ -136,7 +136,7 @@ export default function QuestionACSubpage({
         let academics = null;
         try {
           academics = await (
-            await fetch(`/api/get-academics`, {
+            await fetch(`/api/metrics/get-academics`, {
               method: "POST",
               body: JSON.stringify({ userId: session.data.user.uid }),
             })

@@ -6,7 +6,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     let firstCheckIn = ctx.query.checkIn.indexOf(",");
     let checkIn = await (
-      await fetch(`/api/get-question-list`, {
+      await fetch(`/api/questions/get-question-list`, {
         method: "POST",
         body: JSON.stringify({
           //THIS WORKS

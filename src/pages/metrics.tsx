@@ -1,8 +1,8 @@
 import React from "react";
 import { GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
-import { getAcademics } from "./api/get-academics";
-import { getActivities } from "./api/get-activities";
+import { getAcademics } from "./api/metrics/get-academics";
+import { getActivities } from "./api/metrics/get-activities";
 import MetricsPage from "../main-pages/MetricsPage/MetricsPage";
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {

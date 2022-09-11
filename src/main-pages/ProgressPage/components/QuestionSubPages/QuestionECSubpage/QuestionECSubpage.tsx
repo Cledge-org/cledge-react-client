@@ -124,7 +124,7 @@ export default function QuestionECSubpage({
         let activities = null;
         try {
           activities = await (
-            await fetch(`/api/get-activities`, {
+            await fetch(`/api/metrics/get-activities`, {
               method: "POST",
               body: JSON.stringify({ userId: session.data.user.uid }),
             })

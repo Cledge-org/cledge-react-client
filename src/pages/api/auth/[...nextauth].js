@@ -3,8 +3,8 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AuthFunctions from "./firebase-auth";
 import { FirebaseAdapter } from "@next-auth/firebase-adapter";
-import { getAccountInfo } from "../get-account";
-import { createUser } from "../create-user";
+import { getAccountInfo } from "../user/get-account";
+import { createUser } from "../user/create-user";
 
 export default NextAuth({
   pages: {

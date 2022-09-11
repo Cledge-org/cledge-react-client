@@ -15,15 +15,15 @@ export default function Layout({ children }) {
     if (session.data?.user?.uid && !store.getState()) {
       const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
         await Promise.all([
-          fetch(`/api/get-account`, {
+          fetch(`/api/user/get-account`, {
             method: "POST",
             body: JSON.stringify({ userId: session.data.user.uid }),
           }),
-          fetch(`/api/get-all-pathway-progress`, {
+          fetch(`/api/learning-pathway/get-all-pathway-progress`, {
             method: "POST",
             body: JSON.stringify({ userId: session.data.user.uid }),
           }),
-          fetch(`/api/get-question-responses`, {
+          fetch(`/api/questions/get-question-responses`, {
             method: "POST",
             body: JSON.stringify({ userId: session.data.user.uid }),
           }),

@@ -2,12 +2,12 @@ import { getAllPathwayProgress } from "../src/pages/api/get-all-pathway-progress
 import { getAllPathways } from "../src/pages/api/get-all-pathways";
 import { getPathwayProgress } from "../src/pages/api/get-pathway-progress";
 import { getPathway } from "../src/pages/api/get-pathway";
-import { putPathwayModulePersonalizedContent } from "../src/pages/api/put-pathway-module-personalized-content";
+import { putPathwayModulePersonalizedContent } from "../src/pages/api/admin/learning-pathway/put-pathway-module-personalized-content";
 import { putPathwayModule } from "../src/pages/api/put-pathway-module";
 import { putPathwayProgress } from "../src/pages/api/put-pathway-progress";
 import { putPathway } from "../src/pages/api/put-pathway";
 import { MongoClient, ObjectId } from "mongodb";
-import { createUser } from "../src/pages/api/create-user";
+import { createUser } from "../src/pages/api/user/create-user";
 import { updateUser } from "../src/pages/api/update-user";
 import {
   getPathwayTags,

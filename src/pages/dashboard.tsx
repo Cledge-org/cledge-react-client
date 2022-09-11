@@ -13,7 +13,7 @@ const Dashboard = () => {
     }
   }, [session])
   async function getDashboardData() {
-    const response = await fetch(`/api/get-dashboard-parts?userID=${session.user.uid}`)
+    const response = await fetch(`/api/user/get-dashboard-parts?userID=${session.user.uid}`)
     const responseJson = await response.json()
     setDashboardParts(responseJson)
   }
