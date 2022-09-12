@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import BlogText from "../../common/components/Blog/CardBlog";
-import Item from "antd/lib/list/Item";
 import { Button } from "react-bootstrap";
 
 const BlogsPage = ({ blogInfo }) => {
@@ -109,6 +108,41 @@ const BlogsPage = ({ blogInfo }) => {
               <FilterItem display="Academics" filter="Academics" />
               <FilterItem display="Grades" filter="Grades" />
               <FilterItem display="Scholarships" filter="Scholarships" />
+            </div>
+            <div className="alert alert-primary w-75 mt-3" style={{ maxWidth: "450px" }} role="alert">
+              <div className="pb-2">
+                <h6 className="alert-link">Be the first to know when we release</h6>
+              </div>
+              <p>Cledge uses AI and data to help you plan your path ahead and give you an edge on your application. We're releasing soon!</p>
+              <div className="d-flex justify-content-center">             
+                <Button
+                  className="w-75"
+                  key="subscribe-btn"
+                  onClick={() => {
+                    window.open(
+                      "https://forms.gle/M1GxLK45Yi3Esfn5A",
+                      "_blank"
+                    );
+                  }}
+                >
+                  Join Our Insider Program
+                </Button>
+              </div>
+            </div>
+            <div className="alert alert-primary w-75" style={{ maxWidth: "450px" }} role="alert">
+              <div className="pb-2">
+                <h6 className="alert-link">Other free resources</h6>
+              </div>
+              
+              <div>
+                <a href="#" className="alert-link">Monthly access to free live webinars ➜</a>
+              </div>
+              <div>
+                <a href="#" className="alert-link">Join WhatsApp communinity ➜</a>
+              </div>
+              <div>
+                <a href="#" className="alert-link">Join Discord community ➜</a>
+              </div>
             </div>
           </div>
         </div>
