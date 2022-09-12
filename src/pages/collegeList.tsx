@@ -9,7 +9,7 @@ import CollegeListPage from "src/main-pages/CollegeList/CollegeListPage";
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = getSession(ctx);
   const response = await fetch(
-    `http://${ctx.req.headers.host}/api/get-college-list?userId=${
+    `http://${ctx.req.headers.host}/api/cst/get-college-list?userId=${
       (
         await session
       ).user.uid
@@ -33,7 +33,7 @@ function CollegeList({ serverSideData }) {
   // },[])
 
   // const getCollegeListData = async()=>{
-  //   const response = await fetch(`/api/get-college-list?userId=${session.user.uid}`)
+  //   const response = await fetch(`/api/cst/get-college-list?userId=${session.user.uid}`)
   //   const responseJson = await response.json()
   //   setData(responseJson["college_list"])
   // }

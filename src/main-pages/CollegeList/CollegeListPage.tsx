@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { NextApplicationPage } from "src/main-pages/AppPage/AppPage";
-import styles from "./styles.module.scss";
+import styles from "./college-list-page.module.scss";
 import TierCard from "src/main-pages/CollegeList/components/TierCard";
 import {
   collegeListElementRaw,
@@ -26,7 +26,7 @@ const CollegeListPage: NextApplicationPage<{
   const [reloadCounter, setReloadCounter] = useState<number>(0);
   const { data: session } = useSession();
   const handleSubmit = async () => {
-    const response = await fetch(`/api/replace-college-list`, {
+    const response = await fetch(`/api/cst/replace-college-list`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",

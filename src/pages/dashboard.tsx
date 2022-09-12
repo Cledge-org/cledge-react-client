@@ -14,15 +14,15 @@ const Dashboard = () => {
   async function getDashboardData() {
     const [ecMetricsResponse, acMetricsResponse, pathwaysResponse] =
       await Promise.all([
-        fetch(`/api/get-activities`, {
+        fetch(`/api/metrics/get-activities`, {
           method: "POST",
           body: JSON.stringify({ userId: session.user.uid }),
         }),
-        fetch(`/api/get-academics`, {
+        fetch(`/api/metrics/get-academics`, {
           method: "POST",
           body: JSON.stringify({ userId: session.user.uid }),
         }),
-        fetch(`/api/get-dashboard-parts?userID=${session.user.uid}`),
+        fetch(`/api/user/get-dashboard-parts?userID=${session.user.uid}`),
       ]);
     const [ecMetricsJSON, acMetricsJSON, pathwaysJSON] = await Promise.all([
       ecMetricsResponse.status === 200 && ecMetricsResponse.json(),

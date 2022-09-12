@@ -488,3 +488,15 @@ a {
     background: rgba($color: #000000, $alpha: 0.1);
   }
 }
+span[contenteditable] {
+  display: inline-block;
+}
+span[contenteditable]:empty::before {
+  content: "Ask something";
+  color: $cl-mid-gray;
+  display: inline-block;
+}
+span[contenteditable]:empty:focus::before {
+  content: "Ask something";
+  color: $cl-mid-gray;
+}

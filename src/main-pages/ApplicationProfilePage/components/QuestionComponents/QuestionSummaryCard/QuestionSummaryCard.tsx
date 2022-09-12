@@ -16,7 +16,6 @@ import {
 import { store } from "../../../../../utils/redux/store";
 import styles from "./question-summary-card.module.scss";
 import classNames from "classnames";
-import { callPutQuestionResponses } from "src/utils/apiCalls";
 import CompositeQuestion from "src/common/components/Questions/CompositeQuestion/CompositeQuestion";
 import DoubleTextInputQuestion from "src/common/components/Questions/DoubleTextInputQuestion/DoubleTextInputQuestion";
 import DoubleDropdownQuestion from "src/common/components/Questions/DoubleDropdownQuestion/DoubleDropdownQuestion";
@@ -282,7 +281,6 @@ export default function QuestionSummaryCard({
                     return questionId === userAnswer.questionId;
                   }
                 );
-                //console.log(indexOfResponse);
                 if (indexOfResponse !== -1) {
                   generalQuestions[indexOfResponse] = userAnswer;
                 } else {
@@ -296,7 +294,7 @@ export default function QuestionSummaryCard({
                 setOldTags([]);
                 Promise.all(
                   [
-                    fetch(`/api/put-question-responses`, {
+                    fetch(`/api/user/put-question-responses`, {
                       method: "POST",
                       body: JSON.stringify({
                         responses: newUserResponses,
@@ -306,7 +304,7 @@ export default function QuestionSummaryCard({
                   ].concat(
                     question.type === "MCQ" || question.type === "CheckBox"
                       ? [
-                          fetch(`/api/update-user`, {
+                          fetch(`/api/user/update-user`, {
                             method: "POST",
                             body: JSON.stringify({
                               userInfo: { tags: userTags },
@@ -316,10 +314,7 @@ export default function QuestionSummaryCard({
                         ]
                       : []
                   )
-                ).then((reses) => {
-                  reses.forEach((res) => {
-                    //console.log(res.status);
-                  });
+                ).then(() => {
                   store.dispatch(updateTagsAction(userTags));
                   store.dispatch(
                     updateQuestionResponsesAction(newUserResponses)
@@ -335,7 +330,6 @@ export default function QuestionSummaryCard({
                     return questionId === userAnswer.questionId;
                   }
                 );
-                //console.log(indexOfResponse);
                 if (indexOfResponse !== -1) {
                   newUserResponses[indexOfResponse] = userAnswer;
                 } else {
@@ -348,7 +342,7 @@ export default function QuestionSummaryCard({
                 setNewTags([]);
                 setOldTags([]);
                 if (question._id.toString() === "61de0b617c405886579656ec") {
-                  fetch(`/api/update-user`, {
+                  fetch(`/api/user/update-user`, {
                     method: "POST",
                     body: JSON.stringify({
                       userInfo: {
@@ -382,7 +376,7 @@ export default function QuestionSummaryCard({
                 }
                 Promise.all(
                   [
-                    fetch(`/api/put-question-responses`, {
+                    fetch(`/api/questions/put-question-responses`, {
                       method: "POST",
                       body: JSON.stringify({
                         responses: newUserResponses,
@@ -392,7 +386,7 @@ export default function QuestionSummaryCard({
                   ].concat(
                     question.type === "MCQ" || question.type === "CheckBox"
                       ? [
-                          fetch(`/api/update-user`, {
+                          fetch(`/api/user/update-user`, {
                             method: "POST",
                             body: JSON.stringify({
                               userInfo: { tags: userTags },
@@ -402,10 +396,7 @@ export default function QuestionSummaryCard({
                         ]
                       : []
                   )
-                ).then((reses) => {
-                  reses.forEach((res) => {
-                    //console.log(res.status);
-                  });
+                ).then(() => {
                   store.dispatch(updateTagsAction(userTags));
                   store.dispatch(
                     updateQuestionResponsesAction(newUserResponses)

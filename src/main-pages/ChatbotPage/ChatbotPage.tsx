@@ -72,11 +72,16 @@ const Chatbot: NextApplicationPage<{
   const handleMessageSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!currMessageText) {
+      return;
+    }
     const copyOfMessages = messagesList.slice();
     const messageOriginal = currMessageText;
     copyOfMessages.push({ message: currMessageText, isOnLeft: false });
     setMessagesList(copyOfMessages);
     setCurrMessageText("");
+    console.log(document.getElementById("#chatbot-input"));
+    document.getElementById("chatbot-input").innerHTML = "";
     copyOfMessages.push({
       message: <div className={styles.chatbotLoading}>...</div>,
       isOnLeft: true,
@@ -350,16 +355,18 @@ const Chatbot: NextApplicationPage<{
               }}
               className="d-flex flex-row align-items-center justify-content-center"
             >
-              <input
-                onChange={(e) => {
-                  setCurrMessageText(e.target.value);
+              <span
+                contentEditable={currWorkflow === "none"}
+                role="textbox"
+                id="chatbot-input"
+                onInput={(e) => {
+                  setCurrMessageText(e.currentTarget.textContent);
                 }}
-                disabled={currWorkflow !== "none"}
-                value={currMessageText}
                 placeholder="Ask anything here"
-                className={classNames("py-1 px-3", isMobile ? "ms-1" : "")}
+                className={classNames("py-2 px-3", isMobile ? "ms-1" : "")}
                 style={{
-                  height: size.height < 700 ? "5vmax" : "2.2vmax",
+                  resize: "vertical",
+                  height: "max-content",
                   width:
                     size.width < 800 || size.height < 740 ? "55vw" : "35vw",
                   minHeight: "30px",

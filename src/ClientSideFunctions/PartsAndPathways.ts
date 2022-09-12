@@ -1,5 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
-import { getPathway } from "src/pages/api/user/get-pathway";
+import { getPathway } from "src/pages/api/learning-pathway/get-pathway";
 import { getQuestionListById } from "src/pages/api/questions/get-question-list";
 
 export function getDashboardParts(userId: string): Promise<PathwayPart[]> {

@@ -1,6 +1,4 @@
 import { GetServerSidePropsContext } from "next";
-import { getAllQuestionLists } from "../api/questions/get-all-questions";
-import QuestionUploadPage from "../../main-pages/AdminPages/QuestionUploadPage/QuestionUploadPage";
 import { getSession } from "next-auth/react";
 import { getAllUserInfo } from "src/pages/api/admin/get-all-students";
 import StudentProgressDownloadPage from "src/main-pages/AdminPages/StudentProgressDownloadPage/StudentProgressDownloadPage";

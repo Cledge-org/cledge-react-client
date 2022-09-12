@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from "next";
 import ChatbotCounselorQuestionsPage from "src/main-pages/AdminPages/ChatbotCounselorQuestionsPage/ChatbotCounselorQuestiontsPage";
-import { getChatbotCounselorQuestions } from "src/pages/api/get-chatbot-counselor-questions";
+import { getChatbotCounselorQuestions } from "src/pages/api/admin/get-chatbot-counselor-questions";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {

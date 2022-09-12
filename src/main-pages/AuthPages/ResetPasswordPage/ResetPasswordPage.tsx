@@ -34,7 +34,7 @@ const ResetPasswordPage = () => {
             <div className="col px-0">
               <button
                 onClick={() => {
-                  fetch(`/api/reset-password`, {
+                  fetch(`/api/user/reset-password`, {
                     method: "POST",
                     body: JSON.stringify({ email }),
                   }).then((res) => {

@@ -14,14 +14,6 @@ import { callPutPathwayProgress } from "src/utils/apiCalls";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import classNames from "classnames";
 import PathwayQuestion from "src/main-pages/PathwayPage/components/PathwayQuestion/PathwayQuestion";
-import { Editable, Slate, withReact } from "slate-react";
-import { createEditor } from "slate";
-import {
-  faBook,
-  faImage,
-  faMoneyCheck,
-  faVideo,
-} from "@fortawesome/free-solid-svg-icons";
 import RichText from "src/common/components/RichText/RichText";
 import SubPageHeader from "src/common/components/SubpageHeader/SubpageHeader";
 const Pathways: NextApplicationPage<{
@@ -95,7 +87,8 @@ const Pathways: NextApplicationPage<{
     });
   }, [moduleProgress]);
   const updateContentProgress = (newContentProgress: ContentProgress) => {
-    let allModuleContentProgress = moduleProgress[currModuleId] ?? [];
+    let allModuleContentProgress =
+      moduleProgress[currModuleId.toString()] ?? [];
     const contentIndex = allModuleContentProgress.findIndex(
       ({ name }) => name === newContentProgress.name
     );
@@ -106,7 +99,7 @@ const Pathways: NextApplicationPage<{
     }
     setModuleProgress({
       ...moduleProgress,
-      [currModuleId]: allModuleContentProgress,
+      [currModuleId.toString()]: allModuleContentProgress,
     });
   };
   const updateSubContentProgress = (
@@ -141,7 +134,7 @@ const Pathways: NextApplicationPage<{
     let questionNumber = 0;
     return currContent.content.map((content) => {
       const { type } = content;
-      const currSubContentProgress = moduleProgress[currModuleId]
+      const currSubContentProgress = moduleProgress[currModuleId.toString()]
         .find(({ name }) => name === currContent.name)
         .subContentProgress.find(({ id }) => id === content.id) || {
         id: content.id,
@@ -262,18 +255,26 @@ const Pathways: NextApplicationPage<{
           style={{ flex: 1 }}
         >
           {pathwayInfo.modules.map(
-            (
-              { name, presetContent, personalizedContent, _id },
-              moduleIndex
-            ) => {
+            ({ name, presetContent, personalizedContent, _id }) => {
               const moduleSortedContent = getSortedContent(
                 presetContent,
                 personalizedContent
               );
               return (
                 <DropdownTab
-                  isFinishedModule={false}
-                  isFinishedContent={[false]}
+                  isFinishedModule={
+                    pathwaysProgress
+                      .find(({ name }) => pathwayInfo.name === name)
+                      .moduleProgress.find(
+                        (moduleProgress) => moduleProgress.name === name
+                      ).finished
+                  }
+                  isFinishedContent={pathwaysProgress
+                    .find(({ name }) => pathwayInfo.name === name)
+                    .moduleProgress.find(
+                      (moduleProgress) => moduleProgress.name === name
+                    )
+                    .contentProgress.map(({ finished }) => finished)}
                   icons={moduleSortedContent.map(
                     ({ primaryType }) => primaryType
                   )}
@@ -326,7 +327,7 @@ function checkPathwayDiscrepancies(pathwayInfo: Pathway) {
     }
     pathwayProgress.moduleProgress.forEach((progressModule, index) => {
       const matchingModule = pathwayInfo.modules.find(
-        ({ _id }) => progressModule.moduleId === _id
+        ({ _id }) => progressModule.moduleId === _id.toString()
       );
       if (matchingModule && matchingModule.name !== progressModule.name) {
         pathwayProgress.moduleProgress[index].name = matchingModule.name;

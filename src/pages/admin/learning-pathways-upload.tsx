@@ -7,9 +7,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return {
       props: {
         allPathways: JSON.parse(JSON.stringify(await getAllPathways())),
-        // allModules: await (
-        //   await fetch(`/api/get-all-modules`)
-        // ).json(),
       },
     };
   } catch (err) {

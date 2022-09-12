@@ -76,7 +76,7 @@ const CheckIn: NextApplicationPage<{
       ({ questionId }) => questionId === "61de0b617c405886579656ec"
     )?.response;
     await Promise.all([
-      fetch(`/api/update-user`, {
+      fetch(`/api/user/update-user`, {
         method: "POST",
         body: JSON.stringify({
           userInfo: {
@@ -130,7 +130,7 @@ const CheckIn: NextApplicationPage<{
           ) => {
             newUserResponses.find(
               (questionResponse) =>
-                questionResponse.questionId === question?._id
+                questionResponse.questionId === question?._id.toString()
             )
               ? (newUserResponses[
                   newUserResponses.findIndex(

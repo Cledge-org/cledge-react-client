@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { SearchClient, AzureKeyCredential } from "@azure/search-documents";
-import dicts from "../../../college-search-tool/assets/cst_result_parse.json";
-import datatypes from "../../../college-search-tool/assets/datatypes.json";
-import { ObjectSchema } from "yup";
+import dicts from "../../../../college-search-tool/assets/cst_result_parse.json";
 import { MongoClient } from "mongodb";
 
 // References:

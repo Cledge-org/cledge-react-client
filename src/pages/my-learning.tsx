@@ -14,7 +14,7 @@ const MyLearning = () => {
   }, [session]);
   async function getDashboardData() {
     const response = await fetch(
-      `/api/get-dashboard-parts?userID=${session.user.uid}`
+      `/api/user/get-dashboard-parts?userID=${session.user.uid}`
     );
     const responseJson = await response.json();
     setDashboardParts(responseJson);

@@ -3,16 +3,11 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   setPersistence,
-  browserSessionPersistence,
   browserLocalPersistence,
-  onAuthStateChanged,
   GoogleAuthProvider,
-  signInWithPopup,
   sendPasswordResetEmail,
-  getIdTokenResult,
   UserCredential,
 } from "firebase/auth";
-import { useEffect, useState } from "react";
 import { createUser } from "src/pages/api/user/create-user";
 import { getFirebaseClientApp } from "src/utils/firebase/getFirebaseApp";
 // import { getAuth as getAdminAuth } from "firebase-admin/auth";
@@ -34,7 +29,7 @@ const firebaseAuth = getAuth(getFirebaseClientApp());
 // const firebaseAdminAuth = getAdminAuth(
 //   getAdminApp(firebaseApp.name) ?? initializeAdminApp(firebaseCreds)
 // );
-const provider = new GoogleAuthProvider();
+// const provider = new GoogleAuthProvider();
 class AuthFunctions {
   static async signInEmail(email: string, password: string) {
     try {

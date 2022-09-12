@@ -1,6 +1,6 @@
 import React from "react";
 import { GetServerSidePropsContext } from "next";
-import { getPathway } from "../api/user/get-pathway";
+import { getPathway } from "../api/learning-pathway/get-pathway";
 import { getSession } from "next-auth/react";
 import { ObjectId } from "mongodb";
 import PathwayPage from "../../main-pages/PathwayPage/PathwayPage";
