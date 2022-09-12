@@ -13,7 +13,7 @@ import {
   UserCredential,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { createUser } from "src/pages/api/create-user";
+import { createUser } from "src/pages/api/user/create-user";
 import { getFirebaseClientApp } from "src/utils/firebase/getFirebaseApp";
 // import { getAuth as getAdminAuth } from "firebase-admin/auth";
 // import {

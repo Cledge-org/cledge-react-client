@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from "next";
-import { getAllPathways } from "../api/get-all-pathways";
+import { getAllPathways } from "../api/learning-pathway/get-all-pathways";
 import LearningPathwaysUploadPage from "../../main-pages/AdminPages/LearningPathwaysUploadPage/LearningPathwaysUploadPage";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {

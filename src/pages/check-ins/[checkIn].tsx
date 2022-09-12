@@ -1,7 +1,7 @@
 import React from "react";
 import { GetServerSidePropsContext } from "next";
 import CheckInPage from "../../main-pages/CheckInPage/CheckInPage";
-import { getQuestionList } from "src/pages/api/get-question-list";
+import { getQuestionList } from "src/pages/api/questions/get-question-list";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {

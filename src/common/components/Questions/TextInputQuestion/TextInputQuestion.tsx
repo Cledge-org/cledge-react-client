@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import styles from "./text-input-question.module.scss";
 import classNames from "classnames";
 import { Tooltip } from "src/common/components/Tooltip/Tooltip";
+import { callUpdateUser } from "src/utils/apiCalls";
 interface TextInputQuestionProps {
   isPathwayQuestion?: boolean;
   question: Question | PathwayQuestion;
@@ -55,7 +56,7 @@ export default function TextInputQuestion({
             defaultValue={currValue}
             onChange={async (e) => {
               if (isGrade) {
-                await fetch(`/api/update-user`, {
+                await fetch(`/api/user/update-user`, {
                   method: "POST",
                   body: JSON.stringify({
                     userInfo: { grade: e.target.value },
@@ -151,7 +152,7 @@ export default function TextInputQuestion({
           type="text"
           onChange={async (e) => {
             if (isGrade) {
-              await fetch(`/api/update-user`, {
+              await fetch(`/api/user/update-user`, {
                 method: "POST",
                 body: JSON.stringify({
                   userInfo: { grade: e.target.value },

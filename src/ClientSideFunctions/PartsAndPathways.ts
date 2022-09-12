@@ -1,6 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
-import { getPathway } from "src/pages/api/get-pathway";
-import { getQuestionListById } from "src/pages/api/get-question-list";
+import { getPathway } from "src/pages/api/user/get-pathway";
+import { getQuestionListById } from "src/pages/api/questions/get-question-list";
 
 export function getDashboardParts(userId: string): Promise<PathwayPart[]> {
   return new Promise(async (res, err) => {

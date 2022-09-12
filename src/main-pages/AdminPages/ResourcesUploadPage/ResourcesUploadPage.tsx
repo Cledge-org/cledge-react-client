@@ -18,7 +18,6 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
       onUpload={() => {
         let resourceSendData = {};
         resourceSendData[resourceType.toLowerCase()] = resourceData;
-        //console.log(resourceSendData);
         fetch(`/api/resources/put-resource-${resourceType.toLowerCase()}`, {
           method: "POST",
           body: JSON.stringify(resourceSendData),

@@ -130,7 +130,7 @@ const CheckIn: NextApplicationPage<{
           ) => {
             newUserResponses.find(
               (questionResponse) =>
-                questionResponse.questionId === question?._id.toString()
+                questionResponse.questionId === question?._id
             )
               ? (newUserResponses[
                   newUserResponses.findIndex(

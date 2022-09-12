@@ -64,27 +64,24 @@ export default function ECEditor({
                 userAnswer={
                   isEditing &&
                   userResponse &&
-                  userResponse.find(
-                    ({ questionId }) => questionId === _id.toString()
-                  )
-                    ? userResponse.find(
-                        ({ questionId }) => questionId === _id.toString()
-                      ).response
+                  userResponse.find(({ questionId }) => questionId === _id)
+                    ? userResponse.find(({ questionId }) => questionId === _id)
+                        .response
                     : null
                 }
                 onChange={(value, newQTags, oldQTags) => {
                   let totallyNewResponse = newResponse.slice();
                   if (
                     totallyNewResponse.find(
-                      ({ questionId }) => questionId === _id.toString()
+                      ({ questionId }) => questionId === _id
                     )
                   ) {
                     totallyNewResponse.find(
-                      ({ questionId }) => questionId === _id.toString()
+                      ({ questionId }) => questionId === _id
                     ).response = value;
                   } else {
                     totallyNewResponse.push({
-                      questionId: _id.toString(),
+                      questionId: _id,
                       response: value,
                     });
                   }
@@ -101,27 +98,24 @@ export default function ECEditor({
                 userAnswers={
                   isEditing &&
                   userResponse &&
-                  userResponse.find(
-                    ({ questionId }) => questionId === _id.toString()
-                  )
-                    ? userResponse.find(
-                        ({ questionId }) => questionId === _id.toString()
-                      ).response
+                  userResponse.find(({ questionId }) => questionId === _id)
+                    ? userResponse.find(({ questionId }) => questionId === _id)
+                        .response
                     : null
                 }
                 onChange={(value, newQTags, oldQTags) => {
                   let totallyNewResponse = newResponse.slice();
                   if (
                     totallyNewResponse.find(
-                      ({ questionId }) => questionId === _id.toString()
+                      ({ questionId }) => questionId === _id
                     )
                   ) {
                     totallyNewResponse.find(
-                      ({ questionId }) => questionId === _id.toString()
+                      ({ questionId }) => questionId === _id
                     ).response = value;
                   } else {
                     totallyNewResponse.push({
-                      questionId: _id.toString(),
+                      questionId: _id,
                       response: value,
                     });
                   }
@@ -140,31 +134,28 @@ export default function ECEditor({
                   //console.log(value);
                   if (
                     totallyNewResponse.find(
-                      ({ questionId }) => questionId === _id.toString()
+                      ({ questionId }) => questionId === _id
                     )
                   ) {
                     totallyNewResponse.find(
-                      ({ questionId }) => questionId === _id.toString()
+                      ({ questionId }) => questionId === _id
                     ).response = value;
                   } else {
                     totallyNewResponse.push({
-                      questionId: _id.toString(),
+                      questionId: _id,
                       response: value,
                     });
                   }
                   setNewResponse(totallyNewResponse);
                 }}
-                key={_id.toString()}
+                key={_id}
                 questionTitle={question}
                 defaultValue={
                   isEditing &&
                   userResponse &&
-                  userResponse.find(
-                    ({ questionId }) => questionId === _id.toString()
-                  )
-                    ? userResponse.find(
-                        ({ questionId }) => questionId === _id.toString()
-                      ).response
+                  userResponse.find(({ questionId }) => questionId === _id)
+                    ? userResponse.find(({ questionId }) => questionId === _id)
+                        .response
                     : null
                 }
               />
@@ -177,27 +168,24 @@ export default function ECEditor({
                 userAnswer={
                   isEditing &&
                   userResponse &&
-                  userResponse.find(
-                    ({ questionId }) => questionId === _id.toString()
-                  )
-                    ? userResponse.find(
-                        ({ questionId }) => questionId === _id.toString()
-                      ).response
+                  userResponse.find(({ questionId }) => questionId === _id)
+                    ? userResponse.find(({ questionId }) => questionId === _id)
+                        .response
                     : ""
                 }
                 onChange={(value) => {
                   let totallyNewResponse = newResponse.slice();
                   if (
                     totallyNewResponse.find(
-                      ({ questionId }) => questionId === _id.toString()
+                      ({ questionId }) => questionId === _id
                     )
                   ) {
                     totallyNewResponse.find(
-                      ({ questionId }) => questionId === _id.toString()
+                      ({ questionId }) => questionId === _id
                     ).response = value;
                   } else {
                     totallyNewResponse.push({
-                      questionId: _id.toString(),
+                      questionId: _id,
                       response: value,
                     });
                   }
@@ -210,12 +198,9 @@ export default function ECEditor({
             let response =
               isEditing &&
               userResponse &&
-              userResponse.find(
-                ({ questionId }) => questionId === _id.toString()
-              )
-                ? userResponse.find(
-                    ({ questionId }) => questionId === _id.toString()
-                  ).response
+              userResponse.find(({ questionId }) => questionId === _id)
+                ? userResponse.find(({ questionId }) => questionId === _id)
+                    .response
                 : { progress: "", finished: new Date(), start: new Date() };
             return (
               <ECTimeFrame
@@ -234,15 +219,15 @@ export default function ECEditor({
                   let totallyNewResponse = newResponse.slice();
                   if (
                     totallyNewResponse.find(
-                      ({ questionId }) => questionId === _id.toString()
+                      ({ questionId }) => questionId === _id
                     )
                   ) {
                     totallyNewResponse.find(
-                      ({ questionId }) => questionId === _id.toString()
+                      ({ questionId }) => questionId === _id
                     ).response = value;
                   } else {
                     totallyNewResponse.push({
-                      questionId: _id.toString(),
+                      questionId: _id,
                       response: value,
                     });
                   }
@@ -253,7 +238,7 @@ export default function ECEditor({
           }
           if (type === "ListQuestion") {
             let response = userResponse.find(
-              ({ questionId }) => questionId === _id.toString()
+              ({ questionId }) => questionId === _id
             );
             return (
               <ListQuestion
@@ -261,7 +246,7 @@ export default function ECEditor({
                 onChange={(value, index, questionId) => {
                   let totallyNewResponse = newResponse.slice();
                   let foundResponse = totallyNewResponse.find(
-                    ({ questionId }) => questionId === _id.toString()
+                    ({ questionId }) => questionId === _id
                   );
                   if (foundResponse) {
                     if (!foundResponse.response) {
@@ -287,11 +272,11 @@ export default function ECEditor({
                 onNumResponseChange={(value) => {
                   let totallyNewResponse = newResponse.slice();
                   const foundResponse = totallyNewResponse.find(
-                    ({ questionId }) => questionId === _id.toString()
+                    ({ questionId }) => questionId === _id
                   );
                   if (!foundResponse) {
                     totallyNewResponse.push({
-                      questionId: _id.toString(),
+                      questionId: _id,
                       response: {
                         numResponse: value,
                         questionsResponses: [new Array(value).map(() => ({}))],

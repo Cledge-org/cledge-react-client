@@ -99,7 +99,7 @@ const ListQuestion = ({
           onChange={(value) => {
             onChange(value, index, question._id);
           }}
-          key={question._id.toString()}
+          key={question._id}
           questionTitle={question.question}
           defaultValue={response}
         />
@@ -138,15 +138,13 @@ const ListQuestion = ({
   };
   const renderQuestions = () => {
     let renderedQuestions = [];
+    console.log(questionsResponses);
     questionsResponses?.forEach((response, index) => {
       renderedQuestions.push(
         <div>
           {questions.map((question) => {
-            return getQuestionType(
-              question,
-              response[question._id.toString()],
-              index
-            );
+            console.log(response[question._id]);
+            return getQuestionType(question, response[question._id], index);
           })}
         </div>
       );

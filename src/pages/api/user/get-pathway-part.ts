@@ -1,7 +1,7 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getPathway } from "src/pages/api/get-pathway";
-import { getQuestionListById } from "src/pages/api/get-question-list";
+import { getPathway } from "src/pages/api/user/get-pathway";
+import { getQuestionListById } from "src/pages/api/questions/get-question-list";
 
 export const config = {
   api: {

@@ -5,7 +5,7 @@ export const callPutQuestionResponses = async (
   newUserResponses: UserResponse[]
 ) => {
   const session = getSession();
-  return await fetch(`/api/put-question-responses`, {
+  return await fetch(`/api/admin/question/put-question-responses`, {
     method: "POST",
     body: JSON.stringify({
       responses: newUserResponses,
@@ -18,7 +18,7 @@ export const callUpdateUser = async (
   userId?: string
 ) => {
   const session = getSession();
-  return await fetch(`/api/update-user`, {
+  return await fetch(`/api/user/update-user`, {
     method: "POST",
     body: JSON.stringify({
       userInfo: userInfo,
@@ -30,7 +30,7 @@ export const callPutPathwayProgress = async (
   contentProgress: Record<string, ContentProgress[]>
 ) => {
   const session = getSession();
-  return await fetch(`/api/put-pathway-progress`, {
+  return await fetch(`/api/admin/learning-pathway/put-pathway-progress`, {
     method: "POST",
     body: JSON.stringify({
       contentProgress,
@@ -45,7 +45,7 @@ export const callPutPathway = async ({
   pathway?: Pathway;
   pathwayId?: ObjectId | string;
 }) => {
-  return await fetch("/api/put-pathway", {
+  return await fetch("/api/admin/learning-pathway/put-pathway", {
     method: "POST",
     body: JSON.stringify({
       pathwayId,
@@ -60,7 +60,7 @@ export const callPutQuestion = async ({
   question?: Question;
   questionId?: ObjectId | string;
 }) => {
-  return await fetch("/api/put-question", {
+  return await fetch("/api/admin/question/put-question", {
     method: "POST",
     body: JSON.stringify({
       questionId,
@@ -103,7 +103,7 @@ export const callPutChatbotCounselorQuestion = async ({
 };
 export const callPutActivities = async (activities: Activities) => {
   const session = getSession();
-  return await fetch(`/api/put-activities`, {
+  return await fetch(`/api/metrics/put-activities`, {
     method: "POST",
     body: JSON.stringify({
       userId: activities ? (await session).user.uid : null,
@@ -113,7 +113,7 @@ export const callPutActivities = async (activities: Activities) => {
 };
 export const callPutAcademics = async (academics: Academics) => {
   const session = getSession();
-  return await fetch(`/api/put-academics`, {
+  return await fetch(`/api/metrics/put-academics`, {
     method: "POST",
     body: JSON.stringify({
       userId: academics ? (await session).user.uid : null,
@@ -128,7 +128,7 @@ export const callPutPathwayModule = async ({
   pathwayModule?: PathwayModule_Db;
   pathwayModuleId?: ObjectId | string;
 }) => {
-  return await fetch("/api/put-pathway-module", {
+  return await fetch("/api/admin/learning-pathway/put-pathway-module", {
     method: "POST",
     body: JSON.stringify({
       pathwayModuleId,
@@ -143,7 +143,7 @@ export const callPutPathwayModulePersonalizedContent = async ({
   content?: PersonalizedContent;
   contentId?: ObjectId | string;
 }) => {
-  return await fetch("/api/put-pathway-module-personalized-content", {
+  return await fetch("/api/admin/learning-pathway/put-pathway-module-personalized-content", {
     method: "POST",
     body: JSON.stringify({
       contentId,
@@ -158,7 +158,7 @@ export const callPutQuestionChunk = async ({
   questionChunk?: QuestionChunk;
   questionChunkId?: ObjectId | string;
 }) => {
-  return await fetch("/api/put-question-chunk", {
+  return await fetch("/api/admin/question/put-question-chunk", {
     method: "POST",
     body: JSON.stringify({
       questionChunkId,
@@ -173,7 +173,7 @@ export const callPutQuestionList = async ({
   questionList?: QuestionList_Db;
   questionListId?: ObjectId | string;
 }) => {
-  return await fetch("/api/put-question-list", {
+  return await fetch("/api/admin/question/put-question-list", {
     method: "POST",
     body: JSON.stringify({
       questionListId,
@@ -188,7 +188,7 @@ export const callPutPathwayPart = async ({
   part?: PathwayPart_Db;
   partId?: ObjectId | string;
 }) => {
-  return await fetch(`/api/put-pathway-part`, {
+  return await fetch(`/api/admin/learning-pathway/put-pathway-part`, {
     method: "POST",
     body: JSON.stringify({
       part,
@@ -245,7 +245,7 @@ export const callCreateUser = async (
 };
 export const getPathwayProgressToDownload = async (firebaseId: string) => {
   return (await (
-    await fetch(`/api/get-all-pathway-progress`, {
+    await fetch(`/api/learning-pathway/get-all-pathway-progress`, {
       method: "POST",
       body: JSON.stringify({
         userId: firebaseId,
@@ -318,7 +318,7 @@ export const callGetAllPathwayProgress = async (userId: string) => {
   });
 };
 export const callPutBlog = async (articleId: string, article) => {
-  return await fetch(`/api/put-blog`, {
+  return await fetch(`/api/blogs/put-blog`, {
     method: "POST",
     body: JSON.stringify({ articleId, article }),
   });
