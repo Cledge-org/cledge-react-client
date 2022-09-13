@@ -1,8 +1,6 @@
+import Head from 'next/head'
 import { GetServerSidePropsContext } from "next";
 import { getPost } from "../api/blogs/get-blog";
-import BlogLayout from "../../../src/common/components/Blog/BlogLayout";
-import ReactMarkdown from "react-markdown";
-import rw from "rehype-raw";
 import BlogPage from "src/main-pages/BlogPage/BlogPage";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -19,7 +17,20 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return { props: {} as never };
   }
 };
-const Blog = ({ blogData }) => {
-  return <BlogPage blogData={blogData} />;
+const Blog = ({ blogData }) => {``
+  return (
+    <>
+      <Head>
+        <title>{blogData.title}</title>
+        <meta name="description" content={blogData.description}/>
+        <meta property="og:description" content={blogData.description} />
+        <meta property="og:title" content={blogData.title} />
+        <meta property="author" content={blogData.author} />
+        <meta property="og:image" content={blogData.image} />
+        <meta property="keywords" content={blogData.keywords} />
+      </Head>
+      <BlogPage blogData={blogData} />
+    </>
+  );
 };
 export default Blog;
