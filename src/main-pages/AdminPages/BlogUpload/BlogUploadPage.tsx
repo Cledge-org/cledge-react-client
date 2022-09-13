@@ -20,6 +20,7 @@ const BlogUploadPage: NextApplicationPage<{ blogInfo }> = ({ blogInfo }) => {
     content: [],
     image: "",
     topics: [],
+    keywords: ""
   });
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
@@ -199,6 +200,7 @@ const BlogUploadPage: NextApplicationPage<{ blogInfo }> = ({ blogInfo }) => {
                             content: [],
                             image: "",
                             topics: [],
+                            keywords: ""
                           });
                           return;
                         }
@@ -323,16 +325,16 @@ const BlogUploadPage: NextApplicationPage<{ blogInfo }> = ({ blogInfo }) => {
                   <p>SEO Keywords</p>
                   <div className="form-group mb-2 w-75">
                     <input
-                      value={resourceData.description}
+                      value={resourceData.keywords}
                       onChange={(e) =>
                         setResourceData({
                           ...resourceData,
-                          description: e.target.value,
+                          keywords: e.target.value,
                         })
                       }
                       type="text"
                       className="px-3 form-control"
-                      id="description"
+                      id="keywords"
                       placeholder='Separate by ","'
                     />
                   </div>

@@ -138,7 +138,7 @@ const BlogsPage = ({ blogInfo }) => {
                 <a href="#" className="alert-link">Monthly access to free live webinars ➜</a>
               </div>
               <div>
-                <a href="#" className="alert-link">Join WhatsApp communinity ➜</a>
+                <a href="#" className="alert-link">Join WhatsApp community ➜</a>
               </div>
               <div>
                 <a href="#" className="alert-link">Join Discord community ➜</a>

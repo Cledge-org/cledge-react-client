@@ -40,7 +40,10 @@ export function getPost(
           author: post.author,
           date: post.date,
           description: post.description,
-          content: post.content
+          content: post.content,
+          topics: post.topics,
+          image: post.image,
+          keywords: post.keywords
         });
         client.close();
       } catch (e) {
