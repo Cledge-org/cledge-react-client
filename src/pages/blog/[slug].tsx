@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { GetServerSidePropsContext } from "next";
-import { getPost } from "../api/get-blog";
+import { getPost } from "../api/blogs/get-blog";
 import BlogPage from "src/main-pages/BlogPage/BlogPage";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
