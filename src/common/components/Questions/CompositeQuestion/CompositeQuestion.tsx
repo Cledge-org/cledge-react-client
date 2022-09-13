@@ -172,7 +172,11 @@ const CompositeQuestion = ({
     renderedQuestions = renderedQuestions.concat(
       <div className="w-100">
         {questions.map((question, index) => {
-          return getQuestionType(question, responses[index], index);
+          return getQuestionType(
+            question,
+            responses && responses[index],
+            index
+          );
         })}
       </div>
     );

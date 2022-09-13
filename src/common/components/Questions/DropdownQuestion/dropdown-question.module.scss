@@ -26,15 +26,14 @@
   &:focus,
   &:checked {
     box-shadow: none;
-    border: 1px solid $cl-light-gray;
-    background-color: $cl-light-gray;
-    @extend .cl-mid-gray;
+    border: 1px solid $cl-blue;
+    @extend .cl-blue;
   }
   &:hover,
   &:active:hover {
     box-shadow: none;
     border: 1px solid $cl-blue;
-    @extend .cl-mid-gray;
+    @extend .cl-blue;
   }
 }
 

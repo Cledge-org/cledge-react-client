@@ -19,7 +19,10 @@ const DashboardPage = ({
 }) => {
   const [percentage, setPercentage] = useState(0);
   const router = useRouter();
-  const avgTier = useMemo(() => 11, [ecMetrics, acMetrics]);
+  const avgTier = useMemo(
+    () => (ecMetrics?.overallTier || 0 + acMetrics?.overallClassTier || 0) / 2,
+    [ecMetrics, acMetrics]
+  );
   const parseId = (objectId) => {
     const objectIdStr = objectId.toString();
     if (!objectIdStr.includes('"')) {
@@ -95,15 +98,17 @@ const DashboardPage = ({
               <div className="d-flex flex-row w-100 justify-content-between">
                 <div className="cl-dark-text fw-bold">
                   <Link href="/my-learning">
-                    <img
-                      src="/images/header/my-learning.svg"
-                      style={{
-                        padding: "10px",
-                        width: "50px",
-                        borderRadius: "10px",
-                        backgroundColor: "#DCE1FB",
-                      }}
-                    />
+                    <a>
+                      <img
+                        src="/images/header/my-learning.svg"
+                        style={{
+                          padding: "10px",
+                          width: "50px",
+                          borderRadius: "10px",
+                          backgroundColor: "#DCE1FB",
+                        }}
+                      />
+                    </a>
                   </Link>
                   <div>My Learning</div>
                 </div>
@@ -138,12 +143,14 @@ const DashboardPage = ({
                 <div className="pb-4">5 successful profiles</div>
                 {dashboardParts.map(({ name }) => (
                   <Link href="/my-learning">
-                    <div
-                      className="py-4"
-                      style={{ borderTop: "1px solid #E0DFE8" }}
-                    >
-                      {name}
-                    </div>
+                    <a>
+                      <div
+                        className="py-4"
+                        style={{ borderTop: "1px solid #E0DFE8" }}
+                      >
+                        {name}
+                      </div>
+                    </a>
                   </Link>
                 ))}
               </div>
@@ -176,18 +183,20 @@ const DashboardPage = ({
               >
                 Try it! Cledge's most popular feature
                 <Link href="/chatbot">
-                  <img
-                    src="/images/header/chatbot.svg"
-                    style={{
-                      position: "absolute",
-                      bottom: "-40%",
-                      left: "2%",
-                      padding: "10px",
-                      width: "50px",
-                      borderRadius: "10px",
-                      backgroundColor: "#DCE1FB",
-                    }}
-                  />
+                  <a>
+                    <img
+                      src="/images/header/chatbot.svg"
+                      style={{
+                        position: "absolute",
+                        bottom: "-40%",
+                        left: "2%",
+                        padding: "10px",
+                        width: "50px",
+                        borderRadius: "10px",
+                        backgroundColor: "#DCE1FB",
+                      }}
+                    />
+                  </a>
                 </Link>
               </div>
               <div
@@ -217,15 +226,17 @@ const DashboardPage = ({
               }}
             >
               <Link href="/metrics">
-                <img
-                  src="/images/header/metrics.svg"
-                  style={{
-                    padding: "10px",
-                    width: "50px",
-                    borderRadius: "10px",
-                    backgroundColor: "#DCE1FB",
-                  }}
-                />
+                <a>
+                  <img
+                    src="/images/header/metrics.svg"
+                    style={{
+                      padding: "10px",
+                      width: "50px",
+                      borderRadius: "10px",
+                      backgroundColor: "#DCE1FB",
+                    }}
+                  />
+                </a>
               </Link>
               <div
                 className="cl-dark-text fw-bold mt-3"
@@ -236,7 +247,7 @@ const DashboardPage = ({
               <div className="cl-mid-gray" style={{ fontSize: "18px" }}>
                 View tips to improve the competitiveness of your profile
               </div>
-              <div className="w-100 mt-3">
+              <div className="w-100 mt-3 position-relative">
                 <div className="w-100 d-flex flex-row align-items-center justify-content-between">
                   <div>Less competitive</div>
                   <div>More competitive</div>
@@ -252,21 +263,11 @@ const DashboardPage = ({
                       borderRight: "2px solid #506BED",
                       position: "relative",
                     }}
-                  >
-                    <div
-                      style={{
-                        marginLeft: `calc(${(avgTier / 12) * 100}% - 1px)`,
-                        border: "2px solid #F7BC76",
-                        height: "100%",
-                        width: 0,
-                        borderRadius: "2px",
-                      }}
-                    />
-                  </div>
+                  />
                   <div
-                    className="d-flex flex-column mt-1"
+                    className="d-flex flex-column mt-1 position-absolute"
                     style={{
-                      marginLeft: `calc(${
+                      left: `calc(${
                         avgTier === 0
                           ? 0
                           : avgTier === 12
@@ -275,11 +276,22 @@ const DashboardPage = ({
                       }% - ${
                         avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
                       }px)`,
+                      top: "24px",
                       zIndex: 100,
+                      alignItems: "center",
                       width: "fit-content",
                     }}
                   >
                     <div
+                      style={{
+                        border: "2px solid #F7BC76",
+                        height: "36px",
+                        width: 0,
+                        borderRadius: "2px",
+                      }}
+                    />
+                    <div
+                      className="mt-1"
                       style={{
                         width: 0,
                         height: 0,

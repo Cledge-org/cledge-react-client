@@ -228,17 +228,10 @@ export default function QuestionSummaryCard({
       </span>
       <Modal
         ariaHideApp={false}
+        className={styles.modal}
         style={{
           overlay: {
             background: "rgba(50, 50, 50, 0.5)",
-          },
-          content: {
-            top: "30%",
-            left: "35%",
-            width: "30%",
-            height: "fit-content",
-            borderRadius: "20px",
-            borderColor: "white",
           },
         }}
         onRequestClose={() => {

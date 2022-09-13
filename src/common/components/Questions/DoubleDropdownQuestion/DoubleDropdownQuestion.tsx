@@ -16,24 +16,29 @@ const DoubleDropdownQuestion = ({
 }) => {
   const [responses, setResponses] = useState(userResponses || ["", ""]);
   return (
-    <div className="d-flex flex-row align-items-center justify-content-between w-100">
-      <div
-        className={classNames(
-          "d-flex flex-row pt-4 pb-2 align-items-center w-100",
-          {
-            ["justify-content-center"]: isCentered && !question.popUpText,
-            ["justify-content-between"]: question.popUpText,
-          }
-        )}
-      >
-        <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
-          {question.question}
-        </span>
-        {question.popUpText && (
-          <Tooltip tipId={question._id.toString()} text={question.popUpText} />
-        )}
-      </div>
-      <div className="d-flex flex-row align-items-center">
+    <div className="d-flex flex-column align-items-center w-100">
+      {question.question && (
+        <div
+          className={classNames(
+            "d-flex flex-row pt-4 pb-2 align-items-center w-100",
+            {
+              ["justify-content-center"]: isCentered && !question.popUpText,
+              ["justify-content-between"]: question.popUpText,
+            }
+          )}
+        >
+          <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
+            {question.question}
+          </span>
+          {question.popUpText && (
+            <Tooltip
+              tipId={question._id.toString()}
+              text={question.popUpText}
+            />
+          )}
+        </div>
+      )}
+      <div className="d-flex flex-row align-items-center w-100">
         <DropDownQuestion
           questionTitle={question.data[0].question}
           smallTitle

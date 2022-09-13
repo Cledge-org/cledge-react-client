@@ -126,7 +126,7 @@ export default function DropDownQuestion({
       className={`${
         isForCST
           ? "w-100 d-flex flex-column"
-          : !forCalendar && !isForWaitlist
+          : !forCalendar && !isForWaitlist && !smallTitle
           ? "w-100 d-flex flex-column pt-5"
           : "w-100 d-flex flex-column"
       } ${isCentered ? "justify-content-center" : ""}`}
@@ -203,7 +203,7 @@ export default function DropDownQuestion({
             "shadow-sm"
           )}
           style={
-            !forCalendar && !isForWaitlist && !isForCST
+            !forCalendar && !isForWaitlist && !isForCST && !smallTitle
               ? { display: isOpen ? "flex" : "none" }
               : {
                   width: "100%",

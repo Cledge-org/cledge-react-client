@@ -83,8 +83,8 @@ export default function MCQQuestion({
               <div
                 className="center-child me-2"
                 style={{
-                  width: "20px",
-                  height: "20px",
+                  minWidth: "20px",
+                  minHeight: "20px",
                   backgroundColor: "white",
                   border: `1px solid ${
                     (
