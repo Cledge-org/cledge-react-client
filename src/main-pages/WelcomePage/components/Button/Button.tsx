@@ -5,8 +5,14 @@ export const Button = ({
   fixedWidth,
   children,
   onClick,
+  className,
 }: ButtonProps) => (
-  <StyledButton color={color} fixedWidth={fixedWidth} onClick={onClick}>
+  <StyledButton
+    className={className}
+    color={color}
+    fixedWidth={fixedWidth}
+    onClick={onClick}
+  >
     {children}
   </StyledButton>
 );

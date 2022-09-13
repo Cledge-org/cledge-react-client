@@ -3,9 +3,13 @@ import React, { useState } from "react";
 const SubTitle = ({
   title,
   isDivider,
+  updatePage,
+  updateChunk,
 }: {
   title: string;
   isDivider?: boolean;
+  updatePage: string;
+  updateChunk: string;
 }) => {
   const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -73,8 +77,8 @@ const SubTitle = ({
             <button
               onClick={() => {
                 router.push({
-                  pathname: "/progress",
-                  query: { page: "Extracurriculars", chunk: "All Activities" },
+                  pathname: "/ApplicationProfilePage",
+                  query: { page: updatePage, chunk: updateChunk },
                 });
               }}
               className="cl-btn-clear"

@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from "next";
-import { getAllPosts } from "./api/get-all-blogs";
+import { getAllPosts } from "./api/blogs/get-all-blogs";
 import BlogPage from "../main-pages/BlogsPage/BlogsPage";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {

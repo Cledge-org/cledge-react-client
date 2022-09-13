@@ -8,15 +8,13 @@ import {
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
+import { NextApplicationPage } from "src/main-pages/AppPage/AppPage";
 
 // logged in landing page
-const UploadPage = ({
-  children,
-  onUpload,
-}: {
+const UploadPage: NextApplicationPage<{
   children: JSX.Element | JSX.Element[];
   onUpload: Function;
-}) => {
+}> = ({ children, onUpload }) => {
   const router = useRouter();
   const session = useSession();
   if (session.data?.user?.email === "test31@gmail.com") {

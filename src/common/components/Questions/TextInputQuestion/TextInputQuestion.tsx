@@ -3,14 +3,19 @@ import { useSession } from "next-auth/react";
 
 import styles from "./text-input-question.module.scss";
 import classNames from "classnames";
+import { Tooltip } from "src/common/components/Tooltip/Tooltip";
+import { callUpdateUser } from "src/utils/apiCalls";
 interface TextInputQuestionProps {
   isPathwayQuestion?: boolean;
   question: Question | PathwayQuestion;
   userAnswer: string;
   onChange: Function;
   isTextArea?: boolean;
+  className?: string;
   isGrade?: boolean;
   isDark?: boolean;
+  isCentered?: boolean;
+  smallTitle?: boolean;
 }
 export default function TextInputQuestion({
   question,
@@ -20,29 +25,38 @@ export default function TextInputQuestion({
   isPathwayQuestion,
   onChange,
   isDark,
+  className,
+  isCentered,
+  smallTitle,
 }: TextInputQuestionProps) {
   const session = useSession();
   const [currValue, setCurrValue] = useState(userAnswer);
   if (isTextArea) {
     return (
       <div
-        className={`container-fluid h-100 d-flex flex-column align-items-${
-          isPathwayQuestion ? "start" : "center"
-        } justify-content-evenly w-100 cl-dark-text fw-bold`}
+        className={classNames(
+          `container-fluid h-100 d-flex flex-column align-items-${
+            isCentered ? "start" : "center"
+          } justify-content-evenly w-100 cl-dark-text fw-bold`,
+          className
+        )}
       >
-        <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
+        <span
+          className={`pt-4 pb-2 ${smallTitle ? "cl-light-gray pb-1" : "pb-3"}`}
+          style={{ fontSize: smallTitle ? "1em" : "1.4em" }}
+        >
           {question.question}
         </span>
         <div
           className={`d-flex flex-column justify-content-evenly align-items-${
-            isPathwayQuestion ? "start" : "center"
+            isCentered ? "start" : "center"
           } h-75 w-100`}
         >
           <textarea
             defaultValue={currValue}
             onChange={async (e) => {
               if (isGrade) {
-                await fetch(`/api/update-user`, {
+                await fetch(`/api/user/update-user`, {
                   method: "POST",
                   body: JSON.stringify({
                     userInfo: { grade: e.target.value },
@@ -55,7 +69,7 @@ export default function TextInputQuestion({
             }}
             rows={8}
             className={`form-control w-${isPathwayQuestion ? "100" : "75"}`}
-            placeholder={question.helpText}
+            placeholder={question.placeholder}
           />
         </div>
         {/* <button className="general-submit-btn mt-2">SUBMIT</button> */}
@@ -64,7 +78,12 @@ export default function TextInputQuestion({
   }
   if (isDark) {
     return (
-      <div className="w-100 d-flex flex-column justify-content-evenly pt-5">
+      <div
+        className={classNames(
+          "w-100 d-flex flex-column justify-content-evenly pt-5",
+          className
+        )}
+      >
         <div
           className="fw-bold cl-dark-text pb-3"
           style={{ fontSize: "1.4em" }}
@@ -75,7 +94,7 @@ export default function TextInputQuestion({
           value={currValue}
           type="text"
           className={classNames("form-control", styles.ecTextInput)}
-          placeholder={question.helpText}
+          placeholder={question.placeholder}
           onChange={(e) => {
             setCurrValue(e.target.value);
             onChange(e.target.value);
@@ -86,16 +105,46 @@ export default function TextInputQuestion({
   }
   return (
     <div
-      className={`container-fluid h-100 d-flex flex-column align-items-${
-        isPathwayQuestion ? "start" : "center"
-      } justify-content-evenly w-100 cl-dark-text fw-bold`}
+      className={classNames(
+        `h-100 d-flex flex-column align-items-${
+          !isCentered ? "start" : "center"
+        } justify-content-evenly w-100 cl-dark-text fw-bold`,
+        className
+      )}
     >
-      <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-        {question.question}
-      </span>
+      {smallTitle ? (
+        <span
+          className={`pt-4 "cl-light-gray pb-1"`}
+          style={{ fontSize: "1em" }}
+        >
+          {question.question}
+        </span>
+      ) : (
+        <div
+          style={{ width: "90%" }}
+          className={classNames(
+            "d-flex flex-row pt-4 pb-2 align-items-center",
+            {
+              ["justify-content-center"]:
+                isCentered && !(question as Question).popUpText,
+              ["justify-content-between"]: (question as Question).popUpText,
+            }
+          )}
+        >
+          <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
+            {question.question}
+          </span>
+          {(question as Question).popUpText && (
+            <Tooltip
+              tipId={(question as Question)._id.toString()}
+              text={(question as Question).popUpText}
+            />
+          )}
+        </div>
+      )}
       <div
         className={`d-flex flex-column justify-content-evenly align-items-${
-          isPathwayQuestion ? "start" : "center"
+          !isCentered ? "start" : "center"
         } h-75 w-100`}
       >
         <input
@@ -103,7 +152,7 @@ export default function TextInputQuestion({
           type="text"
           onChange={async (e) => {
             if (isGrade) {
-              await fetch(`/api/update-user`, {
+              await fetch(`/api/user/update-user`, {
                 method: "POST",
                 body: JSON.stringify({
                   userInfo: { grade: e.target.value },
@@ -114,11 +163,13 @@ export default function TextInputQuestion({
             setCurrValue(e.target.value);
             onChange(e.target.value);
           }}
-          className={`form-control w-${isPathwayQuestion ? "100" : "75"}`}
-          placeholder={question.helpText ?? "Your response..."}
+          className={`form-control w-${
+            isPathwayQuestion || smallTitle ? "100" : "75"
+          } cl-dark-text fw-bold`}
+          style={{ borderRadius: "10px" }}
+          placeholder={question.placeholder ?? "Your response..."}
         />
       </div>
-      {/* <button className="general-submit-btn mt-2">SUBMIT</button> */}
     </div>
   );
 }

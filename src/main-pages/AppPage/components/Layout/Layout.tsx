@@ -5,28 +5,25 @@ import { initialStateAction } from "../../../../utils/redux/actionFunctions";
 import { store } from "../../../../utils/redux/store";
 import Header from "../../../../common/components/Header/Header";
 import LoadingScreen from "../../../../common/components/Loading/Loading";
+import {
+  callGetAccount,
+  callGetAllPathwayProgress,
+  callGetQuestionResponses,
+} from "src/utils/apiCalls";
 
 export default function Layout({ children }) {
   const router = useRouter();
   const session = useSession();
   const [loading, setLoading] = useState(true);
   const [header, setHeader] = useState(<Header key_prop="initial" />);
+
   const asyncUseEffect = async () => {
     if (session.data?.user?.uid && !store.getState()) {
       const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
         await Promise.all([
-          fetch(`/api/get-account`, {
-            method: "POST",
-            body: JSON.stringify({ userId: session.data.user.uid }),
-          }),
-          fetch(`/api/get-all-pathway-progress`, {
-            method: "POST",
-            body: JSON.stringify({ userId: session.data.user.uid }),
-          }),
-          fetch(`/api/get-question-responses`, {
-            method: "POST",
-            body: JSON.stringify({ userId: session.data.user.uid }),
-          }),
+          callGetAccount(session.data.user.uid),
+          callGetAllPathwayProgress(session.data.user.uid),
+          callGetQuestionResponses(session.data.user.uid),
         ]);
       const [accountInfoJSON, pathwaysProgressJSON, questionResponsesJSON] =
         await Promise.all([
@@ -46,10 +43,11 @@ export default function Layout({ children }) {
       setLoading(false);
     }
   };
+
   useEffect(() => {
-    console.log(session);
     asyncUseEffect();
   }, [session]);
+
   useEffect(() => {
     let numTimes = 1;
     const endLoading = () => {
@@ -72,6 +70,7 @@ export default function Layout({ children }) {
       Router.events.off("routeChangeError", endLoading);
     };
   }, []);
+
   return (
     <div>
       {router.pathname === "/check-ins/[checkIn]" ? null : header}

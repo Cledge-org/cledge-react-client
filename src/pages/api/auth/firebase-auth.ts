@@ -3,22 +3,18 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   setPersistence,
-  browserSessionPersistence,
   browserLocalPersistence,
-  onAuthStateChanged,
   GoogleAuthProvider,
-  signInWithPopup,
   sendPasswordResetEmail,
-  getIdTokenResult,
+  UserCredential,
 } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { createUser } from "src/pages/api/user/create-user";
 import { getFirebaseClientApp } from "src/utils/firebase/getFirebaseApp";
 // import { getAuth as getAdminAuth } from "firebase-admin/auth";
 // import {
 //   getApp,
 //   initializeApp as initializeAdminApp,
 // } from "firebase-admin/app";
-
 
 // const getAdminApp = (appName?: string) => {
 //   try {
@@ -33,7 +29,7 @@ const firebaseAuth = getAuth(getFirebaseClientApp());
 // const firebaseAdminAuth = getAdminAuth(
 //   getAdminApp(firebaseApp.name) ?? initializeAdminApp(firebaseCreds)
 // );
-const provider = new GoogleAuthProvider();
+// const provider = new GoogleAuthProvider();
 class AuthFunctions {
   static async signInEmail(email: string, password: string) {
     try {
@@ -51,23 +47,23 @@ class AuthFunctions {
     }
   }
   static async createUser(email: string, password: string, initUserObj) {
+    let returnedUser: UserCredential = null;
     await createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((res) => {
+        returnedUser = res;
         const user = res.user;
-        fetch("/api/create-user", {
-          method: "POST",
-          body: JSON.stringify({
-            ...initUserObj,
-            userId: user.uid,
-            email: email,
-          }),
-        }).then(async (res) => {
-          console.log(res.status);
+        createUser({
+          ...initUserObj,
+          firebaseId: user.uid,
+          email: email,
+        }).catch((err) => {
+          console.error(err);
         });
       })
       .catch((err) => {
         console.error(err);
       });
+    return returnedUser;
   }
 
   // static async signInGoogle() {

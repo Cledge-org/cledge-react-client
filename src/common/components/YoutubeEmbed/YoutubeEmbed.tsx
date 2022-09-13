@@ -21,7 +21,7 @@ export default function YoutubeEmbed({
   const [player, setPlayer] = useState(null);
   const [intervalId, setIntervalId] = useState(null);
   useEffect(() => {
-    console.log("UPDATING");
+    //console.log("UPDATING");
   }, [intervalId]);
   useEffect(() => {
     if (isPathway && intervalId === null) {

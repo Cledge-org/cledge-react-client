@@ -21,7 +21,7 @@ export default function RankingQuestion({
     userAnswers !== null ? userAnswers.slice() : question.data.map(() => "")
   );
   useEffect(() => {
-    console.log(selected);
+    //console.log(selected);
   }, [selected]);
   let changeRank = (value: string, index: number) => {
     let selectedCopy = selected.slice();

@@ -1,33 +1,25 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useSession } from "next-auth/react";
-import { GetServerSidePropsContext } from "next";
-import { NextApplicationPage } from "../AppPage/AppPage";
 import Link from "next/link";
-import router, { Router, useRouter } from "next/router";
-import { redirect } from "next/dist/server/api-utils";
-import { connect } from "react-redux";
+import { useRouter } from "next/router";
+import { useEffect, useMemo, useState } from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import CardTask from "../../common/components/Cards/CardTask/CardTask";
-import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
-import PartDropDown from "./components/PartDropdown/PartDropdown";
-import DashboardTabButton from "./components/DashboardTabButton/DashboardTabButton";
-import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
+import { connect } from "react-redux";
 
-// logged in landing page
-const DashboardPage: NextApplicationPage<{
-  dashboardParts: PathwayPart[];
+const DashboardPage = ({
+  accountInfo,
+  dashboardParts,
+  pathwaysProgress,
+  ecMetrics,
+  acMetrics,
+}: {
   accountInfo: AccountInfo;
+  dashboardParts: PathwayPart[];
   pathwaysProgress: PathwayProgress[];
-}> = ({ dashboardParts, accountInfo, pathwaysProgress }) => {
-  const router = useRouter();
-  const session = useSession();
-  const [currTab, setCurrTab] = useState("all modules");
-  const [isInUserView, setIsInUserView] = useState(false);
+  ecMetrics: Activities;
+  acMetrics: Academics;
+}) => {
   const [percentage, setPercentage] = useState(0);
-  console.log(accountInfo);
-  console.log(pathwaysProgress);
+  const router = useRouter();
+  const avgTier = useMemo(() => 11, [ecMetrics, acMetrics]);
   const parseId = (objectId) => {
     const objectIdStr = objectId.toString();
     if (!objectIdStr.includes('"')) {
@@ -65,404 +57,271 @@ const DashboardPage: NextApplicationPage<{
     });
     setPercentage(Math.round((finishedPathways / totalPathways) * 100));
   }, []);
-  const getCurrentTasks = (allPathways: Pathway[]) => {
-    let noProgress = [];
-    allPathways?.forEach((pathway) => {
-      if (
-        !pathwaysProgress.find(({ pathwayId }) => {
-          return pathwayId === parseId(pathway._id);
-        })
-      ) {
-        let subtasks = {};
-        pathway.modules.forEach(
-          ({ name, presetContent, personalizedContent }) => {
-            subtasks[name] = { finished: false, contentProgress: [] };
-            subtasks[name].contentProgress = presetContent
-              .map(() => {
-                return false;
-              })
-              .concat(
-                personalizedContent.map(() => {
-                  return false;
-                })
-              );
-          }
-        );
-        noProgress.push({
-          name: pathway.name,
-          pathwayId: pathway._id,
-          subtasks,
-          coverImage: pathway.coverImage,
-        });
-      }
-    });
-    return pathwaysProgress
-      .filter(({ finished, pathwayId }) => {
-        console.log(finished);
-        return (
-          !finished && allPathways.find(({ _id }) => parseId(_id) === pathwayId)
-        );
-      })
-      .map(({ moduleProgress, name, pathwayId }) => {
-        let realPathway = allPathways.find(
-          ({ _id }) => parseId(_id) === pathwayId
-        );
-        let subtasks = {};
-        moduleProgress.forEach(({ name, contentProgress }) => {
-          let moduleTitle = name;
-          subtasks[name] = {
-            finished: moduleProgress.find(({ name }) => name === moduleTitle)
-              .finished,
-            contentProgress: [],
-          };
-          subtasks[name].contentProgress = contentProgress.map(
-            ({ finished }) => finished
-          );
-        });
-        realPathway.modules.forEach(
-          ({ name, presetContent, personalizedContent }) => {
-            if (subtasks[name] === undefined) {
-              subtasks[name] = { finished: false, contentProgress: [] };
-              subtasks[name].contentProgress = presetContent
-                .map(() => {
-                  return false;
-                })
-                .concat(
-                  personalizedContent.map(() => {
-                    return false;
-                  })
-                );
-            }
-          }
-        );
-        return {
-          name,
-          pathwayId,
-          subtasks,
-          coverImage: realPathway.coverImage,
-        };
-      })
-      .concat(noProgress);
-  };
-  const getFinishedTasks = (allPathways: Pathway[]) => {
-    let pathwaysList = pathwaysProgress
-      .filter(({ finished, pathwayId }) => {
-        return (
-          finished && allPathways.find(({ _id }) => parseId(_id) === pathwayId)
-        );
-      })
-      .map(({ moduleProgress, name, pathwayId }) => {
-        let realPathway = allPathways.find(
-          ({ _id }) => parseId(_id) === pathwayId
-        );
-        let subtasks = {};
-        moduleProgress.forEach(({ name, contentProgress }) => {
-          subtasks[name] = { finished: true, contentProgress: [] };
-          subtasks[name].contentProgress = contentProgress.map(
-            ({ finished }) => finished
-          );
-        });
-        console.log(realPathway.coverImage);
-        return {
-          name,
-          pathwayId,
-          subtasks,
-          coverImage: realPathway.coverImage,
-        };
-      });
-    return pathwaysList;
-  };
-  const sortPathwaysCheckins = (
-    currentTasks,
-    finishedTasks,
-    checkIns,
-    originalArr
-  ) => {
-    return originalArr
-      .map(({ type, route }) => {
-        if (type === "pathway") {
-          return (
-            (currentTasks &&
-              currentTasks.find(({ pathwayId }) => pathwayId === route._id)) ||
-            (finishedTasks &&
-              finishedTasks.find(({ pathwayId }) => pathwayId === route._id))
-          );
-        }
-        return checkIns.find(({ _id }) => _id === route._id);
-      })
-      .filter((route) => route !== undefined);
-  };
-  const partComponents = useMemo(() => {
-    return dashboardParts
-      .map((part) => {
-        const allPathways = part.dynamicRoutes
-          .filter(({ type }) => type === "pathway")
-          .map(({ route }) => route);
-        const currTaskPathways = getCurrentTasks(allPathways);
-        const finishedPathways = getFinishedTasks(allPathways);
-        const sortedRoutes = sortPathwaysCheckins(
-          currTab !== "finished tasks" && currTaskPathways,
-          currTab !== "current tasks" && finishedPathways,
-          part.dynamicRoutes
-            .filter(({ type }) => type === "checkin")
-            .map(({ route }) => route),
-          part.dynamicRoutes
-        );
-        return (
-          sortedRoutes.length > 0 && (
-            <PartDropDown
-              progressRatio={
-                finishedPathways.length /
-                (currTaskPathways.length + finishedPathways.length)
-              }
-              pathwayCheckinList={sortedRoutes}
-              title={`${part.order}. ${part.name}`}
-            />
-          )
-        );
-      })
-      .filter((part) => part);
-  }, [currTab, dashboardParts, accountInfo, pathwaysProgress]);
-  // const asyncUseEffect = async () => {
-  //   console.time("DASHBOARD");
-  //   let json = await (
-  //     await fetch(`/api/get-dashboard`, {
-  //       method: "POST",
-  //       body: JSON.stringify({ userId: session.data.user.uid }),
-  //     })
-  //   ).json();
-  //   console.timeEnd("DASHBOARD");
-  // };
-  useEffect(() => {
-    //resetProgress();
-    // asyncUseEffect();
-  }, []);
-  //UNCOMMENT THIS ONCE TESTING IS FINISHED
   if (accountInfo.checkIns.length > 0) {
     router.push({
       pathname: "/check-ins/[checkIn]",
       query: { checkIn: accountInfo.checkIns },
     });
   }
-  if (session.data?.user?.email === "test31@gmail.com" && !isInUserView) {
-    return (
-      <div className="container-fluid p-5 align-items-center d-flex flex-column">
-        <button
-          onClick={() => {
-            setIsInUserView(true);
-          }}
-        >
-          Switch to User View
-        </button>
-        <div className="container-fluid p-5 d-flex flex-row justify-content-between">
-          <button
-            onClick={() => {
-              router.push({
-                pathname: "/admin/learning-pathways-upload",
-              });
-            }}
-          >
-            Learning Pathways
-          </button>
-          <button
-            onClick={() => {
-              router.push({
-                pathname: "/admin/pathways-part-upload",
-              });
-            }}
-          >
-            Pathway Parts
-          </button>
-          <button
-            onClick={() => {
-              router.push({
-                pathname: "/admin/student-progress-download",
-              });
-            }}
-          >
-            Download User Pathway Progress
-          </button>
-          <button
-            onClick={() => {
-              router.push({
-                pathname: "/admin/resources-upload",
-              });
-            }}
-          >
-            Resources
-          </button>
-          <button
-            onClick={() => {
-              router.push({
-                pathname: "/admin/question-upload",
-              });
-            }}
-          >
-            User Progress Questions
-          </button>
-          <button
-            onClick={() => {
-              router.push({
-                pathname: "/admin/blog-upload",
-              });
-            }}
-          >
-            Blog
-          </button>
-        </div>
-      </div>
-      
-    );
-  }
   return (
-    <PageErrorBoundary>
-      <div className="vh-100">
-        {/* {session.data?.user?.email === "test31@gmail.com" ? (
-        <button
-          onClick={() => {
-            setIsInUserView(false);
-          }}
-        >
-          Switch to Admin View
-        </button>
-      ) : null} */}
-
+    <div
+      className="d-flex align-items-center justify-content-center w-100 vh-100"
+      style={{ backgroundColor: "#F9FAFF" }}
+    >
+      <div className="d-flex flex-column w-75" style={{ height: "90%" }}>
+        <div className="cl-dark-text fw-bold mb-5" style={{ fontSize: "28px" }}>
+          Hi, {accountInfo.name}. Welcome to the dashboard
+        </div>
         <div
-          className="w-full md:w-auto"
-          style={{ backgroundColor: "lightgray" }}
+          className="d-flex flex-row align-items-center"
+          style={{ height: "75%" }}
         >
           <div
-            className="w-full md:w-auto py-5 d-flex flex-row justify-content-around"
-            style={{ backgroundColor: "#F2F2F7" }}
+            className="d-flex flex-column justify-content-between h-100"
+            style={{ width: "48%" }}
           >
-            <div className="px-5">
-              <button
-                onClick={() => {
-                  setIsInUserView(false);
-                }}
-              >
-                Switch to Admin View
-              </button>
-              <h1>
-                <strong style={{ color: "#2651ED", fontSize: "1em" }}>
-                  Personalized 12th grade videos for {accountInfo.name}
-                </strong>
-              </h1>
-              <h2>
-                <strong className="" style={{ fontSize: "1.3em" }}>
-                  Need more personalized videos?
-                </strong>
-              </h2>
-              <h3 className="" style={{ fontSize: "1.6em" }}>
-                The learning modules are tailored to you based on your current
-                checkin
-                <br></br>
-                progress. Complete the checkin questions to receive more
-                personalized content!
-              </h3>
+            <div className="cl-dark-text fw-bold" style={{ fontSize: "18px" }}>
+              The essential resources for UW CS applications
             </div>
             <div
-              className="d-flex flex-row align-items-center justify-content-between align-self-end"
-              style={{ height: "10vh", width: "20vw" }}
+              className="d-flex flex-column justify-content-between w-100 p-3"
+              style={{
+                height: "90%",
+                borderRadius: "10px",
+                backgroundColor: "white",
+                border: "1px solid #E0DFE8",
+              }}
             >
-              <div style={{ width: "4vw" }}>
-                <CircularProgressbarWithChildren
-                  strokeWidth={10}
-                  children={
-                    <div
-                      style={{ fontWeight: "bold", fontSize: "1.1em" }}
-                    >{`${percentage}%`}</div>
-                  }
-                  className="center-child"
-                  styles={{
-                    text: {
-                      fontWeight: "bold",
-                    },
-                    trail: {
-                      stroke: "#d6d6d6",
-                    },
-                    path: {
-                      transition: "stroke-dashoffset 0.5s ease 0s",
-                      stroke: "#2651ed",
-                    },
-                  }}
-                  value={percentage}
-                />
+              <div className="d-flex flex-row w-100 justify-content-between">
+                <div className="cl-dark-text fw-bold">
+                  <Link href="/my-learning">
+                    <img
+                      src="/images/header/my-learning.svg"
+                      style={{
+                        padding: "10px",
+                        width: "50px",
+                        borderRadius: "10px",
+                        backgroundColor: "#DCE1FB",
+                      }}
+                    />
+                  </Link>
+                  <div>My Learning</div>
+                </div>
+                <div>
+                  <div style={{ width: "4vw" }}>
+                    <CircularProgressbarWithChildren
+                      strokeWidth={10}
+                      children={
+                        <div
+                          style={{ fontWeight: "bold", fontSize: "1.1em" }}
+                        >{`${percentage}%`}</div>
+                      }
+                      className="center-child"
+                      styles={{
+                        text: {
+                          fontWeight: "bold",
+                        },
+                        trail: {
+                          stroke: "#d6d6d6",
+                        },
+                        path: {
+                          transition: "stroke-dashoffset 0.5s ease 0s",
+                          stroke: "#2651ed",
+                        },
+                      }}
+                      value={percentage}
+                    />
+                  </div>
+                </div>
               </div>
-              <button style={{ height: "6vh" }} className="cl-btn-blue">
-                Update Checkin Questions
-              </button>
+              <div className="cl-dark-text fw-bold">
+                <div className="pb-4">5 successful profiles</div>
+                {dashboardParts.map(({ name }) => (
+                  <Link href="/my-learning">
+                    <div
+                      className="py-4"
+                      style={{ borderTop: "1px solid #E0DFE8" }}
+                    >
+                      {name}
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-        <br />
-        <br />
-        <div
-          className="d-flex flex-row w-100 px-5 ms-5 mb-3"
-          style={{
-            borderBottom: "3px solid #656565",
-            maxWidth: "95vw",
-          }}
-        >
-          <div className="ms-2" />
-          <DashboardTabButton
-            onClick={() => {
-              setCurrTab("all modules");
-            }}
-            title="All Modules"
-            currTab={currTab}
+          <div
+            className="h-100 mx-3"
+            style={{ width: "2px", backgroundColor: "#E0DFE8" }}
           />
-          <DashboardTabButton
-            onClick={() => {
-              setCurrTab("current tasks");
-            }}
-            title="Current Tasks"
-            currTab={currTab}
-          />
-          <DashboardTabButton
-            onClick={() => {
-              setCurrTab("finished tasks");
-            }}
-            title="Finished Tasks"
-            currTab={currTab}
-          />
-          <div style={{ flex: 1 }} />
-          <DropDownQuestion
-            isForDashboard
-            isForWaitlist
-            onChange={(value) => {}}
-            defaultValue={"11th Grade"}
-            valuesList={["11th Grade", "12th Grade"]}
-          />
-          <div className="me-4" />
-        </div>
-        <div className="container-fluid align-self-center mx-0 px-5 pb-5 mx-5 justify-content-evenly">
-          <div className="row w-100 flex-wrap">
-            {partComponents.length > 0 ? (
-              partComponents
-            ) : (
+          <div
+            className="d-flex flex-column justify-content-between h-100"
+            style={{ width: "48%" }}
+          >
+            <div className="cl-dark-text fw-bold" style={{ fontSize: "18px" }}>
+              Cledge's powerful features to assist you
+            </div>
+            <div
+              className="w-100"
+              style={{
+                height: "42.5%",
+                borderRadius: "10px",
+                backgroundColor: "white",
+                border: "1px solid #E0DFE8",
+                overflow: "hidden",
+              }}
+            >
               <div
-                className="container-fluid center-child"
-                style={{ height: "40vh" }}
+                className="d-flex justify-content-end w-100 py-3 cl-dark-text fw-bold px-3"
+                style={{ backgroundColor: "#A5A6F6", position: "relative" }}
               >
-                You have no{" "}
-                {currTab === "finished tasks"
-                  ? "finished"
-                  : currTab === "current tasks"
-                  ? "current"
-                  : ""}
-                tasks.
+                Try it! Cledge's most popular feature
+                <Link href="/chatbot">
+                  <img
+                    src="/images/header/chatbot.svg"
+                    style={{
+                      position: "absolute",
+                      bottom: "-40%",
+                      left: "2%",
+                      padding: "10px",
+                      width: "50px",
+                      borderRadius: "10px",
+                      backgroundColor: "#DCE1FB",
+                    }}
+                  />
+                </Link>
               </div>
-            )}
+              <div
+                className="px-3 pt-5 d-flex flex-column justify-content-end"
+                style={{ height: "70%" }}
+              >
+                <div
+                  className="cl-dark-text fw-bold mb-3"
+                  style={{ fontSize: "24px" }}
+                >
+                  Chat with our AI counselor
+                </div>
+                <div className="cl-mid-gray" style={{ fontSize: "18px" }}>
+                  Anything you are not sure about?
+                  <br />
+                  Our AI counselor is here for you 24/7
+                </div>
+              </div>
+            </div>
+            <div
+              className="w-100 p-3"
+              style={{
+                height: "42.5%",
+                borderRadius: "10px",
+                backgroundColor: "white",
+                border: "1px solid #E0DFE8",
+              }}
+            >
+              <Link href="/metrics">
+                <img
+                  src="/images/header/metrics.svg"
+                  style={{
+                    padding: "10px",
+                    width: "50px",
+                    borderRadius: "10px",
+                    backgroundColor: "#DCE1FB",
+                  }}
+                />
+              </Link>
+              <div
+                className="cl-dark-text fw-bold mt-3"
+                style={{ fontSize: "24px" }}
+              >
+                Competitive Metrics
+              </div>
+              <div className="cl-mid-gray" style={{ fontSize: "18px" }}>
+                View tips to improve the competitiveness of your profile
+              </div>
+              <div className="w-100 mt-3">
+                <div className="w-100 d-flex flex-row align-items-center justify-content-between">
+                  <div>Less competitive</div>
+                  <div>More competitive</div>
+                </div>
+                <div>
+                  <div
+                    className="mt-1"
+                    style={{
+                      height: "36px",
+                      background:
+                        "linear-gradient(90deg, rgba(100, 47, 113, 0.1) 0%, rgba(248, 231, 76, 0.1) 100%)",
+                      borderLeft: "2px solid #506BED",
+                      borderRight: "2px solid #506BED",
+                      position: "relative",
+                    }}
+                  >
+                    <div
+                      style={{
+                        marginLeft: `calc(${(avgTier / 12) * 100}% - 1px)`,
+                        border: "2px solid #F7BC76",
+                        height: "100%",
+                        width: 0,
+                        borderRadius: "2px",
+                      }}
+                    />
+                  </div>
+                  <div
+                    className="d-flex flex-column mt-1"
+                    style={{
+                      marginLeft: `calc(${
+                        avgTier === 0
+                          ? 0
+                          : avgTier === 12
+                          ? 100
+                          : (avgTier / 12) * 100
+                      }% - ${
+                        avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
+                      }px)`,
+                      zIndex: 100,
+                      width: "fit-content",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 0,
+                        height: 0,
+                        borderLeft: `${
+                          avgTier === 0 ? 3 : 7
+                        }px solid transparent`,
+                        borderRight: `${
+                          avgTier === 12 ? 3 : 7
+                        }px solid transparent`,
+                        borderBottom: "7px solid #F7BC76",
+                        alignSelf:
+                          avgTier === 0
+                            ? "start"
+                            : avgTier === 12
+                            ? "end"
+                            : "center",
+                      }}
+                    />
+                    <div
+                      className="px-3 py-2 cl-dark-text fw-bold"
+                      style={{
+                        width: "fit-content",
+                        backgroundColor: "#F7BC76",
+                        border: "1px solid transparent",
+                        textAlign: "center",
+                      }}
+                    >
+                      You are here
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </PageErrorBoundary>
+    </div>
   );
 };
-
-DashboardPage.requireAuth = true;
-export default connect((state) => ({
-  accountInfo: state.accountInfo,
-  pathwaysProgress: state.pathwaysProgress,
-}))(DashboardPage);
+export default connect((state) => {
+  return {
+    pathwaysProgress: state.pathwaysProgress,
+    accountInfo: state.accountInfo,
+  };
+})(DashboardPage);

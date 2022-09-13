@@ -1,6 +1,8 @@
+import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 import FAQDropdown from "src/main-pages/ChatbotPage/components/LeftPanel/components/FAQDropdown/FAQDropdown";
-
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
+import styles from "./left-panel.module.scss";
 function LeftPannel({
   isFullScreen,
   onReturn,
@@ -8,98 +10,11 @@ function LeftPannel({
   isFullScreen?: boolean;
   onReturn?: Function;
 }) {
-  return (
-    <div
-      style={{
-        width: isFullScreen ? "100%" : "50%",
-        display: "flex",
-        minHeight: "max-content",
-        borderRight: isFullScreen ? "none" : "2px solid lightgray",
-      }}
-      className="flex-column px-3"
-    >
-      <strong className="cl-blue py-2" style={{ fontSize: "1.3em" }}>
-        Welcome To the World’s First 24/7 College Counseling Chat Service!
-      </strong>
-      Our team at Cledge has worked extremely hard the past several months and
-      collaborated with college counselors across the nation to bring you this
-      24/7 chat service to answer your questions. The purpose of this service is
-      to answer college- relation questions at low-cost and high speed. Below
-      are frequently asked questions and instructions on how to get the most out
-      of our service.
-      <strong className="py-2" style={{ fontSize: "1.1em" }}>
-        Is the answer generated not helpful or problematic? Fill out this form
-        and a real college counselor will answer your question within 48 hours.
-      </strong>
-      <button
-        className="cl-btn-blue mt-2 mb-1"
-        onClick={() => {
-          window.open("https://forms.gle/S3fzyaVm1ViX5rJn6", "_blank");
-        }}
-      >
-        Ask
-      </button>
+  const size = useWindowSize();
+  const faqContent = (
+    <>
       <FAQDropdown
-        title="Best Practices"
-        content={
-          <>
-            <strong>
-              Keep questions concise, grammatically correct, and well formatted.
-            </strong>
-            Our service will try and answer the question that is most prevalent
-            in the question you ask. The longer and more convoluted your
-            question, the more likely it is that the answer will be less
-            desirable. Below are examples of good and bad questions.
-            <br />
-            <strong>Good Questions:</strong>
-            <ul>
-              <li>
-                Does it look good on college applications if I skip Spanish 3
-                for an academic year and take it in another year in high school?
-              </li>
-              <li>
-                Will I get rejected because my GPA dropped in senior Is it
-                acceptable to have lower grades due to Covid?
-              </li>
-            </ul>
-            <strong>Bad Questions:</strong>
-            <ul>
-              <li>
-                How do I go about finding a list of colleges that will accept an
-                average/good student to an engineering or technology program
-                with lower costs? Is there a pre-published list or an app that I
-                can use? For example, let’s say I want to get a list of colleges
-                that may accept a student with about 3.6 GPA, 5 rigorous courses
-                (AP/DE) and 1140 SAT score to mechanical engineering. And would
-                cost about say $35K per year?
-                <ul>
-                  <li>
-                    Why it’s bad: There are multiple questions in this larger
-                    question. Break up questions into smaller pieces and ask
-                    them individually.
-                  </li>
-                </ul>
-              </li>
-              <li>
-                Do you think that AP statistics is important or necessary along
-                with multi- variable calculus with Bellevue College for someone
-                is going into computer science? In other words, should we take
-                both AP stats and multi-variable calculus for senior year or
-                would just multi-variable calculus (as running start through
-                Bellevue college) be fine?
-                <ul>
-                  <li>
-                    Why it’s bad: This is too wordy, and the actual question is
-                    rephrased twice. You will get better results if you just ask
-                    using the second sentence in the example above.
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </>
-        }
-      />
-      <FAQDropdown
+        staticOpen={isFullScreen}
         title="Are my questions being answered by a real human or a bot?"
         content={
           <>
@@ -113,6 +28,7 @@ function LeftPannel({
         }
       />
       <FAQDropdown
+        staticOpen={isFullScreen}
         title="How can I be sure that the answers I am getting are accurate?"
         content={
           <>
@@ -125,6 +41,7 @@ function LeftPannel({
         }
       />
       <FAQDropdown
+        staticOpen={isFullScreen}
         title="Are the answers personalized to my situation/profile?"
         content={
           <>
@@ -136,21 +53,175 @@ function LeftPannel({
           </>
         }
       />
-      {isFullScreen ? (
-        <button
-          className="cl-btn-blue center-child shadow align-self-center mb-3"
-          style={{
-            width: "15vmax",
-            borderRadius: "2.5vmax",
-          }}
-          disabled={false}
-          onClick={() => {
-            onReturn();
-          }}
-        >
-          Go to Chatbot
-        </button>
-      ) : null}
+    </>
+  );
+  const bestPracticeContent = (
+    <>
+      <FAQDropdown
+        staticOpen={isFullScreen}
+        title="Good Questions"
+        content={
+          <>
+            <ul>
+              <li>
+                Does it look good on college applications if I skip Spanish 3
+                for an academic year and take it in another year in high school?
+              </li>
+              <li>
+                Will I get rejected because my GPA dropped in senior Is it
+                acceptable to have lower grades due to Covid?
+              </li>
+            </ul>
+          </>
+        }
+      />
+      <FAQDropdown
+        staticOpen={isFullScreen}
+        title="Bad Questions"
+        content={
+          <ul>
+            <li>
+              How do I go about finding a list of colleges that will accept an
+              average/good student to an engineering or technology program with
+              lower costs? Is there a pre-published list or an app that I can
+              use? For example, let’s say I want to get a list of colleges that
+              may accept a student with about 3.6 GPA, 5 rigorous courses
+              (AP/DE) and 1140 SAT score to mechanical engineering. And would
+              cost about say $35K per year?
+              <ul>
+                <li>
+                  Why it’s bad: There are multiple questions in this larger
+                  question. Break up questions into smaller pieces and ask them
+                  individually.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Do you think that AP statistics is important or necessary along
+              with multi- variable calculus with Bellevue College for someone is
+              going into computer science? In other words, should we take both
+              AP stats and multi-variable calculus for senior year or would just
+              multi-variable calculus (as running start through Bellevue
+              college) be fine?
+              <ul>
+                <li>
+                  Why it’s bad: This is too wordy, and the actual question is
+                  rephrased twice. You will get better results if you just ask
+                  using the second sentence in the example above.
+                </li>
+              </ul>
+            </li>
+          </ul>
+        }
+      />
+    </>
+  );
+  return (
+    <div
+      style={{
+        width: isFullScreen ? "100%" : "30%",
+        display: "flex",
+        backgroundColor: "#FBFCFF",
+        height: isFullScreen ? "80vh" : "93.5vh",
+        borderRight: isFullScreen ? "none" : "2px solid lightgray",
+      }}
+      className="flex-column position-relative"
+    >
+      <div
+        className={classNames(
+          "d-flex flex-column px-4 pt-3",
+          styles.scrollableLeftPanel
+        )}
+        style={{ overflowY: "auto", height: isFullScreen ? "85%" : "66%" }}
+      >
+        {isFullScreen ? (
+          <FAQDropdown title="Best practice" content={bestPracticeContent} />
+        ) : (
+          <>
+            <strong style={{ fontSize: "1.7em" }}>Best practice</strong>
+            {bestPracticeContent}
+          </>
+        )}
+        {isFullScreen ? (
+          <FAQDropdown title="Frequent Q&A" content={faqContent} />
+        ) : (
+          <>
+            <strong style={{ fontSize: "1.7em" }}>Frequent Q&A</strong>
+            {faqContent}
+          </>
+        )}
+        {isFullScreen && (
+          <FAQDropdown
+            title="Ask a real counselor"
+            content={
+              <>
+                <strong className="py-2" style={{ fontSize: "1.7em" }}>
+                  Ask a real counselor
+                </strong>
+                <div style={{ fontSize: "1.3em" }}>
+                  Is the answer generated not helpful or problematic? Fill out
+                  this form and a real college counselor will answer your
+                  question within 48 hours.
+                </div>
+                <button
+                  style={{ fontSize: "1.3em" }}
+                  className="cl-btn-blue mt-2 mb-1"
+                  onClick={() => {
+                    window.open(
+                      "https://forms.gle/S3fzyaVm1ViX5rJn6",
+                      "_blank"
+                    );
+                  }}
+                >
+                  Ask a real counselor
+                </button>
+              </>
+            }
+          />
+        )}
+      </div>
+      <div
+        className={`w-90 py-${isFullScreen ? "3" : "5"} bg-cl-white`}
+        style={{
+          borderTop: "2px solid #E0DFE8",
+          backgroundColor: "#FBFCFF",
+          // height: isFullScreen ? "40%" : "30%",
+        }}
+      >
+        <div className={`d-flex flex-column px-${isFullScreen ? "2" : "4"}`}>
+          {isFullScreen ? (
+            <button
+              style={{ fontSize: "1.4em" }}
+              className="cl-btn-blue mt-2 mb-1"
+              onClick={() => {
+                onReturn();
+              }}
+            >
+              Go to chatbot
+            </button>
+          ) : (
+            <>
+              <strong className="py-2" style={{ fontSize: "1.7em" }}>
+                Ask a real counselor
+              </strong>
+              <div style={{ fontSize: "1.3em" }}>
+                Is the answer generated not helpful or problematic? Fill out
+                this form and a real college counselor will answer your question
+                within 48 hours.
+              </div>
+              <button
+                style={{ fontSize: "1.3em" }}
+                className="cl-btn-blue mt-2 mb-1"
+                onClick={() => {
+                  window.open("https://forms.gle/S3fzyaVm1ViX5rJn6", "_blank");
+                }}
+              >
+                Ask a real counselor
+              </button>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

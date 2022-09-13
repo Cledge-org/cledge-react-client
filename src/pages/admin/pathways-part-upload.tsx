@@ -1,9 +1,9 @@
 import { GetServerSidePropsContext } from "next";
-import { getAllPathways } from "../api/get-all-pathways";
+import { getAllPathways } from "../api/learning-pathway/get-all-pathways";
 import LearningPathwaysUploadPage from "../../main-pages/AdminPages/LearningPathwaysUploadPage/LearningPathwaysUploadPage";
 import PathwayPartsUploadPage from "src/main-pages/AdminPages/PathwayPartsUpload/PathwayPartsUpload";
-import { getAllParts } from "src/pages/api/get-all-pathway-parts";
-import { getAllCheckins } from "src/pages/api/get-all-checkins";
+import { getAllParts } from "src/pages/api/learning-pathway/get-all-pathway-parts";
+import { getAllCheckins } from "src/pages/api/admin/get-all-checkins";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const [allPathways, allCheckins, allParts] = await Promise.all([
@@ -23,7 +23,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     };
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     ctx.res.end();
     return { props: {} as never };
   }

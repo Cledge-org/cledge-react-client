@@ -220,7 +220,7 @@ const ContentUpload = ({
                                     question: "",
                                     questionType: "",
                                     data: [],
-                                    helpText: "",
+                                    placeholder: "",
                                   };
                             course.modules[index][contentType][
                               contentIndex
@@ -402,20 +402,20 @@ const ContentUpload = ({
                               </div>
                             </div>
                             <UploadTextInput
-                              title="helpText"
+                              title="placeholder"
                               onChange={(e) => {
                                 let course = currPathwayData;
                                 course.modules[index][contentType][
                                   contentIndex
-                                ].content[subContentIndex].helpText =
+                                ].content[subContentIndex].placeholder =
                                   e.target.value;
                                 setCurrPathwayData({
                                   ...currPathwayData,
                                   modules: course.modules,
                                 });
                               }}
-                              placeholder="Enter helpText"
-                              value={content.helpText}
+                              placeholder="Enter Placeholder"
+                              value={content.placeholder}
                             />
                           </>
                         ) : content.type === "image" ? (
@@ -436,7 +436,7 @@ const ContentUpload = ({
                                   let reader = new FileReader();
                                   reader.onload = (e) => {
                                     const imgURL = e.target.result;
-                                    console.log(imgURL);
+                                    //console.log(imgURL);
                                     let course = currPathwayData;
                                     course.modules[index][contentType][
                                       contentIndex

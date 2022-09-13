@@ -6,10 +6,11 @@
   font-size: 1em;
   text-align: start;
   width: 90%;
-  background-color: $cl-light-gray;
+  background-color: $cl-white;
   outline: none;
-  border-radius: 15px;
-  border: 1px solid transparent;
+  border-radius: 10px;
+  border: 1px solid $cl-mid-gray;
+  transition: 200ms;
   &:hover {
     background-color: rgba($color: $cl-mid-gray, $alpha: 0.2);
   }
@@ -23,8 +24,10 @@
 }
 .checkbox-mcq-variant-selected {
   @extend .checkbox-mcq-variant;
-  background-color: $cl-orange;
+  background-color: rgba($color: $cl-blue, $alpha: 0.2);
+  border-color: $cl-blue;
+  transition: 200ms;
   &:hover {
-    background-color: $cl-orange;
+    background-color: rgba($color: $cl-blue, $alpha: 0.1);
   }
 }

@@ -18,7 +18,7 @@ interface MiddleBlockProps {
 }
 
 const MiddleBlock = (props: MiddleBlockProps) => {
-  console.log("hello" + props.width);
+  //console.log("hello" + props.width);
   if (props.width >= 576) {
     return (
       <Fade>

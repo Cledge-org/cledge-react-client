@@ -9,5 +9,12 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { email, password, initialObj } = JSON.parse(req.body);
-  return await AuthFunctions.createUser(email, password, initialObj);
+  try {
+    resolve
+      .status(200)
+      .send(await AuthFunctions.createUser(email, password, initialObj));
+  } catch (e) {
+    console.error(e);
+    resolve.status(500);
+  }
 };

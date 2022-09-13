@@ -1,0 +1,66 @@
+@use "src/common/styles" as *;
+
+.faq-dropdown-btn {
+  padding-left: 1vw;
+  padding-right: 1vw;
+  font-size: 0.9em;
+  padding-top: 2.5vh;
+  padding-bottom: 2.5vh;
+  position: relative;
+  .text {
+    font-weight: bold;
+    font-size: 1.25em;
+    .percentage {
+      font-weight: normal;
+      color: $cl-secondary-text;
+      font-size: 0.85em;
+      margin-left: 1.5em;
+    }
+  }
+  .icon-close {
+    animation-name: rotateReverse;
+    animation-duration: 600ms;
+    animation-fill-mode: forwards;
+  }
+  @keyframes rotateReverse {
+    0% {
+      color: $cl-blue;
+      transform: rotate(180deg);
+    }
+    100% {
+      color: $cl-mid-gray;
+      transform: rotate(0deg);
+    }
+  }
+  @keyframes rotate {
+    0% {
+      color: $cl-mid-gray;
+      transform: rotate(0deg);
+    }
+    100% {
+      color: $cl-blue;
+      transform: rotate(180deg);
+    }
+  }
+  .icon-open {
+    animation-fill-mode: forwards;
+    animation-name: rotate;
+    animation-duration: 600ms;
+  }
+  border: none;
+  border-top: 2px solid rgba($color: $cl-secondary-text, $alpha: 0.7);
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: none;
+  &:active,
+  &:focus,
+  &:checked {
+    box-shadow: none;
+  }
+  &:hover,
+  &:active:hover {
+    box-shadow: none;
+  }
+}

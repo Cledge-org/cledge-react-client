@@ -108,7 +108,7 @@ export default function ECCalendarDropDown({
       : null;
   }, []);
   useEffect(() => {
-    console.log(chosen);
+    //console.log(chosen);
   }, [chosen]);
   return (
     <div className="dropdown-container">

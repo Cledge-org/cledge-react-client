@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from "next";
-import { getAllPathways } from "../api/get-all-pathways";
+import { getAllPathways } from "../api/learning-pathway/get-all-pathways";
 import LearningPathwaysUploadPage from "../../main-pages/AdminPages/LearningPathwaysUploadPage/LearningPathwaysUploadPage";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -7,13 +7,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return {
       props: {
         allPathways: JSON.parse(JSON.stringify(await getAllPathways())),
-        // allModules: await (
-        //   await fetch(`/api/get-all-modules`)
-        // ).json(),
       },
     };
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     ctx.res.end();
     return { props: {} as never };
   }

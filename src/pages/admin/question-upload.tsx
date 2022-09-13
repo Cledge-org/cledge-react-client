@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from "next";
-import { getAllQuestionLists } from "../api/get-all-questions";
+import { getAllQuestionLists } from "../api/questions/get-all-questions";
 import QuestionUploadPage from "../../main-pages/AdminPages/QuestionUploadPage/QuestionUploadPage";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -12,7 +12,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     };
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     ctx.res.end();
     return { props: {} as never };
   }

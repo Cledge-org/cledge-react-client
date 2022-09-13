@@ -25,6 +25,8 @@ import {
 import { ErrorBoundary } from "react-error-boundary";
 import PageError from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
+import Link from "next/link";
 // account page
 
 const AccountPage: NextApplicationPage<{
@@ -41,13 +43,13 @@ const AccountPage: NextApplicationPage<{
     _id: null,
     question: "",
     type: "",
-    helpVid: "",
-    helpText: "",
+    placeholder: "",
     data: [],
     isConcatenable: false,
+    isRequired: false,
   });
   const [iteratedFirst, setIteratedFirst] = useState(false);
-  const session = useSession();
+  const size = useWindowSize();
   const updateUserData = async () => {
     await Promise.all([
       callUpdateUser({ ...currUserData, _id: undefined }),
@@ -61,10 +63,10 @@ const AccountPage: NextApplicationPage<{
         } else {
           store.dispatch(updateQuestionResponsesAction(questionResponses));
         }
-        console.log(res.status);
       });
     });
   };
+
   useEffect(() => {
     if (!iteratedFirst) {
       setIteratedFirst(true);
@@ -72,14 +74,18 @@ const AccountPage: NextApplicationPage<{
       setModalOpen(true);
     }
   }, [currQuestion]);
-  useEffect(() => {
-    console.log(currUserData);
-  }, [currUserData]);
+
   return (
     <PageErrorBoundary>
-      <div className="container-fluid h-100 center-child">
-        <div style={{ width: "40%" }}>
-          <span className="cl-dark-text fw-bold" style={{ fontSize: "1.7em" }}>
+      <div className="container-fluid h-100 center-child d-flex flex-column align-items-center">
+        <div
+          className="d-flex flex-column pt-5"
+          style={{ width: size.width < 800 ? "95%" : "40%" }}
+        >
+          <span
+            className="cl-dark-text fw-bold align-self-start"
+            style={{ fontSize: "1.7em" }}
+          >
             Personal Info
           </span>
           <div className="py-3" />
@@ -143,9 +149,20 @@ const AccountPage: NextApplicationPage<{
                 });
               }}
             />
-            <InfoSection name="PASSWORD" value="******" onEdit={() => {}} />
+            <InfoSection
+              name="PASSWORD"
+              value="******"
+              onEdit={() => {
+                fetch(`/api/user/reset-password`, {
+                  method: "POST",
+                  body: JSON.stringify({ email: currUserData.email }),
+                }).then((res) => {
+                  //console.log(res.status);
+                });
+              }}
+            />
           </div>
-          <div className={classNames(styles.myaccountBlob, "px-4 py-4 mb-3")}>
+          {/* <div className={classNames(styles.myaccountBlob, "px-4 py-4 mb-3")}>
             <span className="title">Contact Info</span>
             <InfoSection
               name="Email"
@@ -158,7 +175,7 @@ const AccountPage: NextApplicationPage<{
                 });
               }}
             />
-          </div>
+          </div> */}
           <div className={classNames(styles.myaccountBlob, "px-4 py-4 mb-3")}>
             <span className="title">Academic Info</span>
             <InfoSection
@@ -173,6 +190,11 @@ const AccountPage: NextApplicationPage<{
               }}
             />
           </div>
+          <Link href="/auth/signout" className="align-self-center">
+            <button className="cl-btn-red fw-bold" style={{ fontSize: "16px" }}>
+              Log Out
+            </button>
+          </Link>
         </div>
         <Modal
           ariaHideApp={false}
@@ -182,8 +204,8 @@ const AccountPage: NextApplicationPage<{
             },
             content: {
               top: "30%",
-              left: "35%",
-              width: "30%",
+              left: size.width < 800 ? "5%" : "35%",
+              width: size.width < 800 ? "90%" : "30%",
               height: "fit-content",
               borderRadius: "20px",
               borderColor: "white",
@@ -197,6 +219,7 @@ const AccountPage: NextApplicationPage<{
           <TextInputQuestion
             question={currQuestion}
             userAnswer={currQuestion.userAnswer}
+            isCentered
             onChange={(value) => {
               let newUserData = currUserData;
               newUserData[currQuestion.question.toLowerCase()] =
