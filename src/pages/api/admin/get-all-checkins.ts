@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { getQuestionListByDocument } from "./get-question-list";
+import { getQuestionListByDocument } from "../questions/get-question-list";
 
 export const config = {
   api: {

@@ -36,7 +36,6 @@ export default function QuestionSummarySubpage({
       });
     }
   }, [isShowing, viaChunk, viaChunkRef]);
-  //console.log(chunks);
   if (!isShowing) {
     return null;
   }

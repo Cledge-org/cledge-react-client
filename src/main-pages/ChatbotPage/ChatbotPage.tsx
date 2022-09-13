@@ -59,6 +59,7 @@ const Chatbot: NextApplicationPage<{
   >([]);
   const [sendPostOnNextQuestion, setSendPostOnNextQuestion] = useState(true);
   const [currOptions, setCurrOptions] = useState({});
+  const [awaitingChatbotResponse, setAwaitingChatbotResponse] = useState(false)
   const [currMessageText, setCurrMessageText] = useState("");
   const [pickedOptions, setPickedOptions] = useState<any[][]>([]);
   const [currProblematicMessage, setCurrProblematicMessage] = useState<{
@@ -75,6 +76,7 @@ const Chatbot: NextApplicationPage<{
     if (!currMessageText) {
       return;
     }
+    setAwaitingChatbotResponse(true)
     const copyOfMessages = messagesList.slice();
     const messageOriginal = currMessageText;
     copyOfMessages.push({ message: currMessageText, isOnLeft: false });
@@ -114,6 +116,7 @@ const Chatbot: NextApplicationPage<{
         isOnLeft: true,
       });
     }
+    setAwaitingChatbotResponse(false)
     setMessagesList(copyOfMessages2);
     setSendPostOnNextQuestion(false);
   };
@@ -356,7 +359,7 @@ const Chatbot: NextApplicationPage<{
               className="d-flex flex-row align-items-center justify-content-center"
             >
               <span
-                contentEditable={currWorkflow === "none"}
+                contentEditable={currWorkflow === "none" && !awaitingChatbotResponse}
                 role="textbox"
                 id="chatbot-input"
                 onInput={(e) => {

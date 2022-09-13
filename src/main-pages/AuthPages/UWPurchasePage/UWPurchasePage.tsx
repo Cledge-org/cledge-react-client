@@ -1,19 +1,14 @@
 import classNames from "classnames";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import PurchasePageInput from "src/main-pages/AuthPages/UWPurchasePage/components/PurchasePageInput/PurchasePageInput";
 import {
   alertSlackNewUser,
-  callCreatePaymentIntent,
   callCreateUser,
   callUpdateUser,
   getNumUsers,
 } from "src/utils/apiCalls";
-import Stripe from "stripe";
 import styles from "./uw-purchase-page.module.scss";
-import { loadStripe } from "@stripe/stripe-js";
-import LoadingScreen from "src/common/components/Loading/Loading";
 import {
-  Elements,
   PaymentElement,
   useElements,
   useStripe,

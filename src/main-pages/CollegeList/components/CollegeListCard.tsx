@@ -1,10 +1,8 @@
-import { IconButton } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 import styles from "./componentStyles.module.scss";
-import CrossIcon from "../../../../public/images/CrossIcon.svg";
-import Image from "next/image";
 import { Draggable } from "react-beautiful-dnd";
+import { MdOutlineCancel } from "react-icons/md";
 interface Props {
   name: string;
   location: string;
@@ -33,8 +31,7 @@ function CollegeListCard({
           >
             <div className={styles.titleContainer}>
               <p className={styles.collegeName}>{name}</p>
-              <Image
-                src={CrossIcon}
+              <MdOutlineCancel
                 onClick={() => {
                   RemoveCollegeFromListFunction(college_id);
                 }}
