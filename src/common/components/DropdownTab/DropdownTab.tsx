@@ -38,7 +38,7 @@ export default function DropdownTab({
   currSelectedPath?: string;
   icons?: IconProp[];
 }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const ShownIcon = ({ className, style, icon }) => {
     return icon === "video" ? (
       <AiOutlineYoutube className={className} style={style} />

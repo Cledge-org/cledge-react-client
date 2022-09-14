@@ -14,7 +14,7 @@ function PartDropDown({
   title: string;
   progressRatio: number;
 }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [initialized, setInitialized] = useState(false);
   //console.log(pathwayCheckinList);
   useEffect(() => {
@@ -61,11 +61,9 @@ function PartDropDown({
       </div>
       <div className="d-flex flex-column">
         <button
-          className={`dropdown-btn justify-content-between ${styles.dashboardDropdownHover} mb-2 ms-2 px-1 py-2 mt-3`}
+          className={`dropdown-btn justify-content-start ${styles.dashboardDropdownHover} mb-2 ms-2 px-1 py-2 mt-3`}
           style={{
-            width: "10vw",
-            maxWidth: "30%",
-            minWidth: "15%",
+            width: "20rem",
           }}
           onClick={() => {
             setIsExpanded(!isExpanded);
@@ -92,7 +90,7 @@ function PartDropDown({
           style={{
             backgroundColor: "transparent",
             flex: 1,
-            width: "90vw",
+            width: "100vw",
           }}
         >
           {pathwayCheckinList.map(

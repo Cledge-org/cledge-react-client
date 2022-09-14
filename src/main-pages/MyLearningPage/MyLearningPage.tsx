@@ -326,11 +326,10 @@ const MyLearningPage: NextApplicationPage<{
 
         <div
           className="w-full md:w-auto"
-          style={{ backgroundColor: "lightgray" }}
+          style={{ backgroundColor: "white" }}
         >
           <div
-            className="w-full md:w-auto py-5 d-flex flex-row justify-content-around"
-            style={{ backgroundColor: "#F2F2F7" }}
+            className="w-full py-5 px-5 mx-3 d-flex flex-row justify-content-start"
           >
             <div className="px-5">
               <button
@@ -346,15 +345,15 @@ const MyLearningPage: NextApplicationPage<{
                 </strong>
               </h1>
               <h2>
-                <strong className="" style={{ fontSize: "1.3em" }}>
+                <strong className="" style={{ fontSize: "1.2em" }}>
                   Need more personalized videos?
                 </strong>
               </h2>
-              <h3 className="" style={{ fontSize: "1.6em" }}>
+              <h3 className="" style={{ fontSize: "1.2em" }}>
                 The learning modules are tailored to you based on your current
                 checkin
                 <br></br>
-                progress. Complete the checkin questions to receive more
+                progress. Complete the check-in questions to receive more
                 personalized content!
               </h3>
             </div>
@@ -392,16 +391,13 @@ const MyLearningPage: NextApplicationPage<{
             </div>
           </div>
         </div>
-        <br />
-        <br />
         <div
-          className="d-flex flex-row w-100 px-5 ms-5 mb-3"
+          className="d-flex flex-row w-100 px-5"
           style={{
-            borderBottom: "3px solid #656565",
-            maxWidth: "95vw",
+            borderBottom: "2px solid #D3D3D3",
           }}
         >
-          <div className="ms-2" />
+          <div className="" />
           <DashboardTabButton
             onClick={() => {
               setCurrTab("all modules");
@@ -433,6 +429,7 @@ const MyLearningPage: NextApplicationPage<{
           /> */}
           <div className="me-4" />
         </div>
+        <div style={{ backgroundColor: "#FAFCFF" }}>
         <div className="container-fluid align-self-center mx-0 px-5 pb-5 mx-5 justify-content-evenly">
           <div className="row w-100 flex-wrap">
             {partComponents.length > 0 ? (
@@ -452,6 +449,7 @@ const MyLearningPage: NextApplicationPage<{
               </div>
             )}
           </div>
+        </div>
         </div>
       </div>
     </PageErrorBoundary>
