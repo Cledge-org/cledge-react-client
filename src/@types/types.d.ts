@@ -1,5 +1,7 @@
 // import { ObjectId } from "mongodb";
 
+import { ObjectId } from "mongodb";
+
 export declare global {
   interface Window {
     YT: any;
@@ -18,6 +20,11 @@ export declare global {
   }
 
   //Account Page Types -->
+  interface AccountCounselingInfo extends WithId<Document> {
+    _id?: ObjectId;
+    firebaseId: string;
+    time: number;
+  }
 
   //Resource Page Types -->
   interface ResourcesInfo {
