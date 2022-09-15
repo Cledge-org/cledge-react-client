@@ -5,7 +5,9 @@ import { useRouter } from "next/router";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
-
+import {
+  faChevronLeft
+} from "@fortawesome/free-solid-svg-icons";
 import { updatePathwayProgressAction } from "../../utils/redux/actionFunctions";
 import DropdownTab from "../../common/components/DropdownTab/DropdownTab";
 import { store } from "../../utils/redux/store";
@@ -16,6 +18,7 @@ import classNames from "classnames";
 import PathwayQuestion from "src/main-pages/PathwayPage/components/PathwayQuestion/PathwayQuestion";
 import RichText from "src/common/components/RichText/RichText";
 import SubPageHeader from "src/common/components/SubpageHeader/SubpageHeader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
@@ -246,13 +249,27 @@ const Pathways: NextApplicationPage<{
   }, [currContent]);
   return (
     <PageErrorBoundary>
+      <div className="d-flex flex-column justify-content-start">
+        <div
+          className="border"
+        >
+          <div className="m-3">
+            <a href="/my-learning">
+              <FontAwesomeIcon className="ms-1 cl-blue" icon={faChevronLeft} />
+            </a>
+            <a href="/my-learning" className="ms-3 cl-blue">Back to my learning</a>
+            <text className="ms-2">/</text>
+            <text className="ms-2 cl-mid-gray">{pathwayInfo.name}</text>
+          </div>
+
+        </div>  
       <div
         className="container-fluid d-flex flex-row px-0"
         style={{ minHeight: "94vh", height: "fit-content" }}
       >
         <div
-          className="d-flex flex-column bg-extra-light-gray"
-          style={{ flex: 1 }}
+          className="d-flex flex-column border-end"
+          style={{ width: "18%", backgroundColor: "#EFEFF5"}}
         >
           {pathwayInfo.modules.map(
             ({ name, presetContent, personalizedContent, _id }) => {
@@ -310,6 +327,7 @@ const Pathways: NextApplicationPage<{
           )}
           {getContent()}
         </div>
+      </div>
       </div>
     </PageErrorBoundary>
   );
