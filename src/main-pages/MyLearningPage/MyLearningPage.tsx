@@ -390,7 +390,7 @@ const MyLearningPage: NextApplicationPage<{
             borderBottom: "2px solid #D3D3D3",
           }}
         >
-          <div className="" />
+          <div className="ms-5 ps-3" />
           <DashboardTabButton
             onClick={() => {
               setCurrTab("all modules");
