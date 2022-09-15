@@ -341,24 +341,17 @@ const MyLearningPage: NextApplicationPage<{
               </button>
               <h1>
                 <strong style={{ color: "#2651ED", fontSize: "1em" }}>
-                  Personalized 12th grade videos for {accountInfo.name}
+                  {accountInfo.name}'s Personalized Learning Pathways
                 </strong>
               </h1>
-              <h2>
-                <strong className="" style={{ fontSize: "1.2em" }}>
-                  Need more personalized videos?
-                </strong>
-              </h2>
               <h3 className="" style={{ fontSize: "1.2em" }}>
-                The learning modules are tailored to you based on your current
-                checkin
-                <br></br>
-                progress. Complete the check-in questions to receive more
-                personalized content!
+                Learning modules are dynamically created for you based off the information you tell us.
+                <br />
+                Keep your profile up to date to get the most personalized content!
               </h3>
             </div>
             <div
-              className="d-flex flex-row align-items-center justify-content-between align-self-end"
+              className="d-flex flex-row align-items-center justify-content-between align-self-center"
               style={{ height: "10vh", width: "20vw" }}
             >
               <div style={{ width: "4vw" }}>
@@ -405,13 +398,13 @@ const MyLearningPage: NextApplicationPage<{
             title="All Modules"
             currTab={currTab}
           />
-          <DashboardTabButton
+          {/* <DashboardTabButton
             onClick={() => {
               setCurrTab("current tasks");
             }}
             title="Current Tasks"
             currTab={currTab}
-          />
+          /> */}
           <DashboardTabButton
             onClick={() => {
               setCurrTab("finished tasks");
