@@ -31,6 +31,8 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   });
   const [accessCode, setAccessCode] = useState("");
   const [hasAccess, setHasAccess] = useState(false);
+  const [agreeTOS, setAgreeTOS] = useState(false);
+  const [issueTOS, setIssueTOS] = useState("");
   const [processingSignUpPayment, setProcessingSignUpPayment] = useState(false);
   const [isIncorrectAccessCode, setIsIncorrectAccessCode] = useState(false);
   const stripe = useStripe();
@@ -47,6 +49,9 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
       [parameter]: newValue,
     });
   };
+  const handleAgreeTOS = () => {
+    setAgreeTOS(!agreeTOS);
+  };
 
   const handleSubmit = async () => {
     if (session.status === "authenticated") {
@@ -60,7 +65,8 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
       if (result.error) {
         setIssues((issues) => [...issues, result.error.message]);
         setProcessingSignUpPayment(false);
-      } else {
+      }
+      else {
         callUpdateUser({ ...accountInfo, hasUWAccess: true });
         store.dispatch(
           updateAccountAction({
@@ -216,7 +222,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             <div className="cl-dark-text fw-bold" style={{ fontSize: "28px" }}>
               Create an account
             </div>
-            <div className="cl-dark-text fw-bold" style={{ fontSize: "14px" }}>
+            <div className="cl-dark-text" style={{ fontSize: "14px" }}>
               You’ll use this account to log in and access Cledge’s UW CS
               package
             </div>
@@ -275,7 +281,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
         style={{ width: "40%" }}
       >
         <div
-          className="ps-4 py-3 cl-dark-text fw-bold"
+          className="ps-4 py-3 cl-dark-text"
           style={{
             backgroundColor: "rgba(80, 107, 237, 0.2)",
             fontSize: "28px",
@@ -286,11 +292,25 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
         </div>
         <div className={styles.blobContainer}>
           <div
-            className="d-flex flex-row align-items-center justify-content-between fw-bold cl-dark-text py-3"
-            style={{ fontSize: "24px" }}
+            className="d-flex justify-content-between mb-4"
+            style={{ fontSize: "1.1rem" }}
           >
-            <div>University of Washington Computer Science Package</div>
-            <div className="ms-3">$100</div>
+            <div className="" style={{width: "65%"}}>University of Washington Computer Science Package</div>
+            <div className="align-self-center">$100</div>
+          </div>
+          <div className="mb-4 d-flex flex-row">
+            <div className="pe-3">
+              <input type="checkbox"
+              checked={agreeTOS}
+              onChange={handleAgreeTOS}></input>
+            </div>
+            <div>
+              <text>By creating an account, you agree to our </text>
+              <a href="#" className="cl-blue">Terms</a>
+              <text> and have read and acknowledge the </text> 
+              <a href="#" className="cl-blue">Privacy Statement</a>
+              <text>.</text>
+            </div>
           </div>
           <button
             onClick={() => {
