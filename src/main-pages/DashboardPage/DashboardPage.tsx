@@ -276,7 +276,7 @@ const DashboardPage = ({
                       }% - ${
                         avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
                       }px)`,
-                      top: "24px",
+                      top: "22px",
                       zIndex: 100,
                       alignItems: "center",
                       width: "fit-content",

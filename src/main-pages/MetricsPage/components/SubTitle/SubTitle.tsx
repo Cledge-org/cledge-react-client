@@ -77,7 +77,7 @@ const SubTitle = ({
             <button
               onClick={() => {
                 router.push({
-                  pathname: "/ApplicationProfilePage",
+                  pathname: "/application-profile",
                   query: { page: updatePage, chunk: updateChunk },
                 });
               }}

@@ -38,7 +38,10 @@ const DoubleDropdownQuestion = ({
           )}
         </div>
       )}
-      <div className="d-flex flex-row align-items-center w-100">
+      <div
+        className="d-flex flex-row align-items-center"
+        style={{ width: "90%" }}
+      >
         <DropDownQuestion
           questionTitle={question.data[0].question}
           smallTitle

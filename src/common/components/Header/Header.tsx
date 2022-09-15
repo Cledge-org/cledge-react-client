@@ -61,6 +61,11 @@ const Header = ({
       icon: "application-profile.svg",
       title: "Application Profile",
     },
+    {
+      link: "/blogs",
+      icon: "blogs.svg",
+      title: "Blogs",
+    },
   ];
   const onScroll = useCallback(() => {
     if (!location.includes("uw")) {

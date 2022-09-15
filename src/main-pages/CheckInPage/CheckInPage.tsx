@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { NextApplicationPage } from "../AppPage/AppPage";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
@@ -35,8 +35,6 @@ const CheckIn: NextApplicationPage<{
   const [progress, changeProgress] = useState(0);
   const [page, changePage] = useState(0);
   const [newTags, setNewTags] = useState([]);
-  const [isAdding, setIsAdding] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const [newUserResponses, setNewUserResponses] = useState(userResponses);
   const hiddenFileInput = React.useRef(null);
   const size = useWindowSize();
@@ -58,6 +56,30 @@ const CheckIn: NextApplicationPage<{
     if (page < checkInData.chunks.length - 1) changePage(page + 1);
   };
 
+  const canGoForward = useMemo(() => {
+    console.log(checkInData.chunks[page].questions);
+    for (let i = 0; i < checkInData.chunks[page].questions.length; i++) {
+      console.log(
+        checkInData.chunks[page].questions[i].isRequired &&
+          !newUserResponses.find(
+            ({ questionId }) =>
+              questionId ===
+              checkInData.chunks[page].questions[i]._id.toString()
+          )?.response
+      );
+      if (
+        checkInData.chunks[page].questions[i].isRequired &&
+        !newUserResponses.find(
+          ({ questionId }) =>
+            questionId === checkInData.chunks[page].questions[i]._id.toString()
+        )?.response
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }, [checkInData, page, newUserResponses]);
+
   const submitForm = async (e: { preventDefault: () => void }) => {
     //REMOVE CHECK IN FROM LIST AND UPLOAD DATA
     let checkInList = [];
@@ -72,8 +94,14 @@ const CheckIn: NextApplicationPage<{
     userTags.length === 0
       ? (userTags = newTags)
       : (userTags = userTags.concat(newTags));
-    let newGrade = newUserResponses.find(
+    const newGrade = newUserResponses.find(
       ({ questionId }) => questionId === "61de0b617c405886579656ec"
+    )?.response;
+    const newAddress = newUserResponses.find(
+      ({ questionId }) => questionId === "631fc0482734f1eb370771cc"
+    )?.response;
+    const newName = newUserResponses.find(
+      ({ questionId }) => questionId === "6319632cd1e56282060ad38a"
     )?.response;
     await Promise.all([
       fetch(`/api/user/update-user`, {
@@ -82,13 +110,25 @@ const CheckIn: NextApplicationPage<{
           userInfo: {
             checkIns: checkInList,
             tags: userTags,
-            grade: newGrade
-              ? parseInt(
-                  newGrade.includes("9")
-                    ? "9"
-                    : newGrade.substring(0, newGrade.indexOf("t"))
-                )
-              : grade,
+            address: newAddress.reduce(
+              (prev, curr) =>
+                prev
+                  ? prev +
+                    ", " +
+                    (curr instanceof Array
+                      ? curr.reduce(
+                          (prev, curr) => (prev ? prev + ", " + curr : curr),
+                          ""
+                        )
+                      : curr)
+                  : curr,
+              ""
+            ),
+            name: newName.reduce(
+              (prev, curr) => (prev ? prev + " " + curr : curr),
+              ""
+            ),
+            grade: newGrade,
           },
           userId: session.data.user.uid,
         }),
@@ -98,13 +138,25 @@ const CheckIn: NextApplicationPage<{
       store.dispatch(
         updateAccountAction({
           ...store.getState().accountInfo,
-          grade: newGrade
-            ? parseInt(
-                newGrade.includes("9")
-                  ? "9"
-                  : newGrade.substring(0, newGrade.indexOf("t"))
-              )
-            : grade,
+          address: newAddress.reduce(
+            (prev, curr) =>
+              prev
+                ? prev +
+                  ", " +
+                  (curr instanceof Array
+                    ? curr.reduce(
+                        (prev, curr) => (prev ? prev + ", " + curr : curr),
+                        ""
+                      )
+                    : curr)
+                : curr,
+            ""
+          ),
+          name: newName.reduce(
+            (prev, curr) => (prev ? prev + " " + curr : curr),
+            ""
+          ),
+          grade: newGrade,
           _id: undefined,
         })
       );
@@ -145,6 +197,7 @@ const CheckIn: NextApplicationPage<{
             if (newQTags) {
               setNewTags(filterDuplicates(newTags.concat(newQTags)));
             }
+            setNewUserResponses([...newUserResponses]);
           };
           //console.log(question);
           if (question?.type === "TextInput") {
@@ -152,6 +205,7 @@ const CheckIn: NextApplicationPage<{
               <TextInputQuestion
                 key={question?._id.toString()}
                 question={question}
+                isCentered
                 userAnswer={""}
                 onChange={updateFunc}
               />
@@ -175,6 +229,7 @@ const CheckIn: NextApplicationPage<{
                 key={question?._id.toString()}
                 userAnswer={""}
                 onChange={updateFunc}
+                isCentered
                 tags={userTags}
               />
             );
@@ -185,6 +240,7 @@ const CheckIn: NextApplicationPage<{
                 key={question?._id.toString()}
                 question={question}
                 userAnswers={[]}
+                isCentered
                 onChange={updateFunc}
                 tags={userTags}
               />
@@ -227,6 +283,7 @@ const CheckIn: NextApplicationPage<{
               <DoubleTextInputQuestion
                 userResponses={[]}
                 question={question}
+                isCentered
                 onChange={(value) => {
                   updateFunc(value);
                 }}
@@ -238,6 +295,7 @@ const CheckIn: NextApplicationPage<{
               <DoubleDropdownQuestion
                 userResponses={[]}
                 question={question}
+                isCentered
                 onChange={(value) => {
                   updateFunc(value);
                 }}
@@ -380,12 +438,16 @@ const CheckIn: NextApplicationPage<{
         )}
         style={{
           bottom: "16vh",
-          width: size.width < 800 ? "80%" : "50%",
+          width: size.width < 800 ? "80%" : "55%",
           borderTop: "1px solid #C1C0CE",
         }}
       >
         <div className="px-0">
-          <button type="button" className="btn cl-btn-clear">
+          <button
+            type="button"
+            disabled={!canGoForward}
+            className="btn cl-btn-clear"
+          >
             Skip
           </button>
         </div>
@@ -393,6 +455,7 @@ const CheckIn: NextApplicationPage<{
           {page < checkInPages.length - 1 && (
             <button
               type="button"
+              disabled={!canGoForward}
               className="btn cl-btn-blue"
               onClick={goForward}
             >
@@ -402,6 +465,7 @@ const CheckIn: NextApplicationPage<{
           {page === checkInPages.length - 1 && (
             <button
               type="button"
+              disabled={!canGoForward}
               className="btn cl-btn-blue"
               onClick={submitForm}
             >

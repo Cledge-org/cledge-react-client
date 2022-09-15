@@ -87,7 +87,8 @@ export default function CheckBoxQuestion({
       <div
         className={`d-flex flex-column justify-content-evenly ${
           inEC ? "align-items-start" : "align-items-center"
-        } h-75 w-100`}
+        } h-75`}
+        style={{ width: "90%" }}
       >
         {question.data.map((singleData) => {
           const { op, tag } = singleData;

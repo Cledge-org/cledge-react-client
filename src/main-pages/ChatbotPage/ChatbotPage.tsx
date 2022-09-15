@@ -59,7 +59,7 @@ const Chatbot: NextApplicationPage<{
   >([]);
   const [sendPostOnNextQuestion, setSendPostOnNextQuestion] = useState(true);
   const [currOptions, setCurrOptions] = useState({});
-  const [awaitingChatbotResponse, setAwaitingChatbotResponse] = useState(false)
+  const [awaitingChatbotResponse, setAwaitingChatbotResponse] = useState(false);
   const [currMessageText, setCurrMessageText] = useState("");
   const [pickedOptions, setPickedOptions] = useState<any[][]>([]);
   const [currProblematicMessage, setCurrProblematicMessage] = useState<{
@@ -76,7 +76,7 @@ const Chatbot: NextApplicationPage<{
     if (!currMessageText) {
       return;
     }
-    setAwaitingChatbotResponse(true)
+    setAwaitingChatbotResponse(true);
     const copyOfMessages = messagesList.slice();
     const messageOriginal = currMessageText;
     copyOfMessages.push({ message: currMessageText, isOnLeft: false });
@@ -116,7 +116,7 @@ const Chatbot: NextApplicationPage<{
         isOnLeft: true,
       });
     }
-    setAwaitingChatbotResponse(false)
+    setAwaitingChatbotResponse(false);
     setMessagesList(copyOfMessages2);
     setSendPostOnNextQuestion(false);
   };
@@ -359,7 +359,9 @@ const Chatbot: NextApplicationPage<{
               className="d-flex flex-row align-items-center justify-content-center"
             >
               <span
-                contentEditable={currWorkflow === "none" && !awaitingChatbotResponse}
+                contentEditable={
+                  currWorkflow === "none" && !awaitingChatbotResponse
+                }
                 role="textbox"
                 id="chatbot-input"
                 onInput={(e) => {
@@ -422,6 +424,6 @@ const Chatbot: NextApplicationPage<{
 export default connect((state) => {
   return {
     accountInfo: state.accountInfo,
-    questionResponses: state.questionResponses,
+    questionResponses: state.questionResponses || [],
   };
 })(Chatbot);
