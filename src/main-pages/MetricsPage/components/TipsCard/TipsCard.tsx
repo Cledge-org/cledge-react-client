@@ -33,7 +33,7 @@ const TipsCard = ({
           width: isOverall ? "40%" : "100%",
           height: isOverall ? "100%" : "auto",
         }}
-        className={``}
+        className="pb-2"
       >
         <strong style={{ fontSize: "1.3em" }}>Tips</strong>
         <br />
@@ -45,7 +45,7 @@ const TipsCard = ({
       >
         {tips.map((tip) => (
           <div
-            className="py-2 w-100 px-2 center-child soft-gray-border justify-content-start"
+            className="py-2 w-100 px-2 soft-gray-border justify-content-start px-2 h-100"
             style={{
               height: "5vh",
               borderRadius: "10px",

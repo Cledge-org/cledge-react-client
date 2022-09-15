@@ -59,7 +59,7 @@ const TierRange = ({
           <div
             className="px-3 py-2 bg-cl-dark-text"
             style={{
-              width: "100%",
+              width: "10rem",
               border: "1px solid transparent",
               borderRadius: "10px",
               color: "white",
