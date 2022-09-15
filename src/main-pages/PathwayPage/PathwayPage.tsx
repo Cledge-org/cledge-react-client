@@ -247,6 +247,7 @@ const Pathways: NextApplicationPage<{
       );
     });
   }, [currContent]);
+  
   return (
     <PageErrorBoundary>
       <div className="d-flex flex-column justify-content-start">
