@@ -65,7 +65,7 @@ export default function DropdownTab({
           setIsExpanded(!isExpanded);
         }}
       >
-        <div style={{ textAlign: "left" }}>
+        <div style={{ textAlign: "left", maxWidth: "75%" }}>
           <h6 className="cl-dark-text">{title}</h6>
           {isAll || isPathway || isECAC ? null : (
             <span className="percentage">{percentComplete}%</span>

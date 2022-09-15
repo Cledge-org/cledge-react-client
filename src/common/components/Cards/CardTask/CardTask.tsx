@@ -53,24 +53,24 @@ export default function CardTask({
         }}
       > 
         <Card 
-          className="my-3 mx-4 overflow-hidden" 
+          className="my-3 mx-4" 
           style={{ 
             border: "thin solid #d3d3d3",
             borderRadius: "15px",
-            width: '21rem',
+            width: '18rem',
             boxShadow: isHovering ? "rgba(0, 0, 0, 0.24) 0px 10px 10px" : "rgba(0, 0, 0, 0.24) 0px 3px 6px",
             cursor: isHovering ? "pointer" : "auto"
           }}
         >
-          <div className="position-relative" style={{ aspectRatio: "16/9", width: "100%" }}>
+          <div className="position-relative" style={{ aspectRatio: "16/9", width: "100%", borderRadius: "15px" }}>
             {coverImage ? 
               (
-                <Card.Img variant="top" src={coverImage} />
+                <Card.Img style={{borderTopLeftRadius: "15px", borderTopRightRadius: "15px"}} variant="top" src={coverImage} />
               )
               :
               (
                 <div
-                  style={{ backgroundColor: "lightgray" }}
+                  style={{ backgroundColor: "lightgray", borderTopLeftRadius: "15px", borderTopRightRadius: "15px" }}
                   className="center-child h-100 w-100"
                 >
                   Thumbnail couldn't load :|
@@ -80,8 +80,8 @@ export default function CardTask({
           </div>
           
           <Card.Body>
-            <div className="d-flex flex-column justify-content-between" style={{ height: "8rem"}}>
-              <Card.Title>{title}</Card.Title>
+            <div className="d-flex flex-column justify-content-between" style={{ height: "6rem"}}>
+              <Card.Title style={{fontSize: "1.1rem"}}>{title}</Card.Title>
               <div className="d-flex justify-content-between align-items-end">
                 {numSubtasks > 1 ? 
                   (

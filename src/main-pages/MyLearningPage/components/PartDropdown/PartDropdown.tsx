@@ -88,9 +88,7 @@ function PartDropDown({
             isExpanded ? "dropdown-menu-expanded" : "dropdown-menu-closed"
           } flex-row flex-wrap`}
           style={{
-            backgroundColor: "transparent",
-            flex: 1,
-            width: "100vw",
+            backgroundColor: "transparent"
           }}
         >
           {pathwayCheckinList.map(
