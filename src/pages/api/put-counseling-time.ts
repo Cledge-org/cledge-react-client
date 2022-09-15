@@ -31,8 +31,8 @@ export const updateTime = async (
 	time: number
 ): Promise<void> => {
 	return new Promise(async (res, err) => {
-		const client = await MongoClient.connect(process.env.MONGO_URL);
 		try{
+			const client = await MongoClient.connect(process.env.MONGO_URL);
 			if(time <= 0) {
 				await client
 					.db("users")

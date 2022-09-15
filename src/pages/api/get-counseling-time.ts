@@ -25,25 +25,26 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 //Returns counseling time from database given inputted user id
 export const getTime = async (
   userId: string,
+  overrideClient?: MongoClient
 ): Promise<number> => {
   return new Promise(async (res, err) => {
-    const client = await MongoClient.connect(process.env.MONGO_URL);
-      try{
-        type CounselingTime = Pick<AccountCounselingInfo, "time">;
-        const result = await client
-          .db("users")
-          .collection("counseling-time")
-          .findOne<CounselingTime>(
-            { firebaseId: userId },
-            {
-              projection: { _id: 0, firebaseId: 0, time: 1}
-            }
-          );
-      	res(result.time);
-        client.close();
-      } catch(e) {
-        err(e);
-      }
+    try{
+      const client = overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
+      type CounselingTime = Pick<AccountCounselingInfo, "time">;
+      const result = await client
+        .db("users")
+        .collection("counseling-time")
+        .findOne<CounselingTime>(
+          { firebaseId: userId },
+          {
+            projection: { _id: 0, firebaseId: 0, time: 1}
+          }
+        );
+      res(result.time);
+      client.close();
+    } catch(e) {
+      err(e);
+    }
   });
 }
 
