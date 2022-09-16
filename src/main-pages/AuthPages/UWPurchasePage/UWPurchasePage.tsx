@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PurchasePageInput from "src/main-pages/AuthPages/UWPurchasePage/components/PurchasePageInput/PurchasePageInput";
 import {
   alertSlackNewUser,
@@ -55,6 +55,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
 
   const handleSubmit = async () => {
     if (session.status === "authenticated") {
+      console.log("actually here")
       const result = await stripe.confirmPayment({
         elements,
         redirect: "if_required",
@@ -96,6 +97,13 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
         ]);
         setProcessingSignUpPayment(false);
         return;
+      }
+      if (agreeTOS === false) {
+        setIssueTOS("Please agree to our terms and acknowledge the privacy statement.");
+        setProcessingSignUpPayment(false);
+        return;
+      } else {
+        setIssueTOS("");
       }
       await callCreateUser(signUpDetails.email, signUpDetails.password, {
         name: "",
@@ -299,17 +307,26 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             <div className="align-self-center">$100</div>
           </div>
           <div className="mb-4 d-flex flex-row">
-            <div className="pe-3">
-              <input type="checkbox"
-              checked={agreeTOS}
-              onChange={handleAgreeTOS}></input>
+            <div className="pe-2">
+              <CheckBox
+                selected={agreeTOS}
+                setSelected={() => {
+                  handleAgreeTOS();
+                }}
+              />
             </div>
             <div>
               <text>By creating an account, you agree to our </text>
-              <a href="#" className="cl-blue">Terms</a>
+              <a
+                href="https://docs.google.com/document/d/1rPOqjfcwMF9mADNzEJCtBVHJ9OdCKUaLrtxHPhMeNHA/edit"
+                target="_blank"
+                className="cl-blue">
+                  Terms
+              </a>
               <text> and have read and acknowledge the </text> 
               <a href="#" className="cl-blue">Privacy Statement</a>
               <text>.</text>
+              <text className="cl-red"><br />{issueTOS}</text>
             </div>
           </div>
           <button
