@@ -383,7 +383,7 @@ a {
 }
 @keyframes close {
   0% {
-    max-height: 30vh;
+    max-height: 80vh;
     overflow: visible;
   }
   100% {
@@ -397,7 +397,7 @@ a {
     overflow: hidden;
   }
   100% {
-    max-height: 50vh;
+    max-height: 80vh;
     overflow: visible;
   }
 }
@@ -409,8 +409,6 @@ a {
   animation-duration: 600ms;
 }
 .dropdown-menu-btn {
-  // @extend .pt-2;
-  // @extend .pb-2;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   width: 100%;
