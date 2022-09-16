@@ -353,8 +353,8 @@ const Pathways: NextApplicationPage<{
           </div>
         </div>
 
-        {scrollState !== "bottom" ? <div className="d-flex fixed-bottom justify-content-end mb-5">
-          <div className="d-flex justify-content-center" style={{width: "77%"}}>
+        {scrollState !== "bottom" ? <div className="d-flex fixed-bottom justify-content-end mb-5 me-4">
+          <div className="d-flex justify-content-end" style={{width: "77%"}}>
             <FontAwesomeIcon className="cl-blue fa-3x" icon={faArrowAltCircleDown} />
           </div>
           
