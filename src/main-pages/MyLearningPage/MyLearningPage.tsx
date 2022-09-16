@@ -326,11 +326,10 @@ const MyLearningPage: NextApplicationPage<{
 
         <div
           className="w-full md:w-auto"
-          style={{ backgroundColor: "lightgray" }}
+          style={{ backgroundColor: "white" }}
         >
           <div
-            className="w-full md:w-auto py-5 d-flex flex-row justify-content-around"
-            style={{ backgroundColor: "#F2F2F7" }}
+            className="w-full py-5 px-5 mx-3 d-flex flex-row justify-content-start"
           >
             <div className="px-5">
               <button
@@ -342,24 +341,17 @@ const MyLearningPage: NextApplicationPage<{
               </button>
               <h1>
                 <strong style={{ color: "#2651ED", fontSize: "1em" }}>
-                  Personalized 12th grade videos for {accountInfo.name}
+                  {accountInfo.name}'s Personalized Learning Pathways
                 </strong>
               </h1>
-              <h2>
-                <strong className="" style={{ fontSize: "1.3em" }}>
-                  Need more personalized videos?
-                </strong>
-              </h2>
-              <h3 className="" style={{ fontSize: "1.6em" }}>
-                The learning modules are tailored to you based on your current
-                checkin
-                <br></br>
-                progress. Complete the checkin questions to receive more
-                personalized content!
+              <h3 className="" style={{ fontSize: "1.2em" }}>
+                Learning modules are dynamically created for you based off the information you tell us.
+                <br />
+                Keep your profile up to date to get the most personalized content!
               </h3>
             </div>
             <div
-              className="d-flex flex-row align-items-center justify-content-between align-self-end"
+              className="d-flex flex-row align-items-center justify-content-between align-self-center"
               style={{ height: "10vh", width: "20vw" }}
             >
               <div style={{ width: "4vw" }}>
@@ -392,16 +384,13 @@ const MyLearningPage: NextApplicationPage<{
             </div>
           </div>
         </div>
-        <br />
-        <br />
         <div
-          className="d-flex flex-row w-100 px-5 ms-5 mb-3"
+          className="d-flex flex-row w-100 px-5"
           style={{
-            borderBottom: "3px solid #656565",
-            maxWidth: "95vw",
+            borderBottom: "2px solid #D3D3D3",
           }}
         >
-          <div className="ms-2" />
+          <div className="ms-5 ps-3" />
           <DashboardTabButton
             onClick={() => {
               setCurrTab("all modules");
@@ -409,13 +398,13 @@ const MyLearningPage: NextApplicationPage<{
             title="All Modules"
             currTab={currTab}
           />
-          <DashboardTabButton
+          {/* <DashboardTabButton
             onClick={() => {
               setCurrTab("current tasks");
             }}
             title="Current Tasks"
             currTab={currTab}
-          />
+          /> */}
           <DashboardTabButton
             onClick={() => {
               setCurrTab("finished tasks");
@@ -433,6 +422,7 @@ const MyLearningPage: NextApplicationPage<{
           /> */}
           <div className="me-4" />
         </div>
+        <div style={{ backgroundColor: "#FAFCFF" }}>
         <div className="container-fluid align-self-center mx-0 px-5 pb-5 mx-5 justify-content-evenly">
           <div className="row w-100 flex-wrap">
             {partComponents.length > 0 ? (
@@ -452,6 +442,7 @@ const MyLearningPage: NextApplicationPage<{
               </div>
             )}
           </div>
+        </div>
         </div>
       </div>
     </PageErrorBoundary>

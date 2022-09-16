@@ -76,7 +76,6 @@ const Header = ({
           setColors("cl-blue");
         }
       } else {
-        console.log(isExpanded);
         if (scrollState !== "top") {
           setScrollState("top");
           if (router.pathname === "/" && !isExpanded) {
