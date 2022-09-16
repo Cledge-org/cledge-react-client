@@ -254,7 +254,7 @@ const Pathways: NextApplicationPage<{
 
   const onScroll = useCallback(() => {
       let scrolled = document.body.scrollTop;
-      if (document.body.scrollHeight - scrolled <= document.body.clientHeight) {
+      if (document.body.scrollHeight - scrolled <= document.body.clientHeight + 65) {
           setScrollState("bottom");
           console.log("BOOOOOTY");
       }
