@@ -5,7 +5,7 @@ import Link from 'next/link';
 export default function Layout({ children }) {
   return (
     <div>
-      < className='py-3'>
+      <header className='py-3'>
         <div className='container mx-auto'>
           <FontAwesomeIcon icon={faArrowLeft} />
           <Link href='/blogs'>
