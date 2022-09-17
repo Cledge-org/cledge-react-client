@@ -17,7 +17,7 @@ import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import UWCSLandingPage from "src/main-pages/WelcomePage/components/UWCSLandingPage/UWCSLandingPage";
 import { useLocation } from "src/utils/hooks/useLocation";
-import RecentBlogPost from "src/common/components/RecentBlogPost";
+import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
 const MiddleBlock = dynamic(
@@ -390,7 +390,7 @@ const WelcomePage = ({data}) => {
           icon="landing_3.svg"
           id="product"
           />
-          <RecentBlogPost data={data}/>
+          <NewBlogsCarousel recentBlogs={data.recentBlogs}/>
         <Partner>
           <MiddleBlock
             id="partner"
