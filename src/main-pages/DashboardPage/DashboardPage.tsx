@@ -139,13 +139,12 @@ const DashboardPage = ({
                   </div>
                 </div>
               </div>
-              <div className="cl-dark-text fw-bold">
-                <div className="pb-4">5 successful profiles</div>
+              <div className="fw-bold">
                 {dashboardParts.map(({ name }) => (
                   <Link href="/my-learning">
                     <a>
                       <div
-                        className="py-4"
+                        className="cl-dark-text py-4"
                         style={{ borderTop: "1px solid #E0DFE8" }}
                       >
                         {name}
@@ -247,7 +246,7 @@ const DashboardPage = ({
               <div className="cl-mid-gray" style={{ fontSize: "18px" }}>
                 View tips to improve the competitiveness of your profile
               </div>
-              <div className="w-100 mt-3 position-relative">
+              <div className="w-100 mt-3">
                 <div className="w-100 d-flex flex-row align-items-center justify-content-between">
                   <div>Less competitive</div>
                   <div>More competitive</div>
@@ -263,63 +262,64 @@ const DashboardPage = ({
                       borderRight: "2px solid #506BED",
                       position: "relative",
                     }}
-                  />
-                  <div
-                    className="d-flex flex-column mt-1 position-absolute"
-                    style={{
-                      left: `calc(${
-                        avgTier === 0
-                          ? 0
-                          : avgTier === 12
-                          ? 100
-                          : (avgTier / 12) * 100
-                      }% - ${
-                        avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
-                      }px)`,
-                      top: "22px",
-                      zIndex: 100,
-                      alignItems: "center",
-                      width: "fit-content",
-                    }}
                   >
                     <div
+                      className="d-flex flex-column position-absolute"
                       style={{
-                        border: "2px solid #F7BC76",
-                        height: "36px",
-                        width: 0,
-                        borderRadius: "2px",
-                      }}
-                    />
-                    <div
-                      className="mt-1"
-                      style={{
-                        width: 0,
-                        height: 0,
-                        borderLeft: `${
-                          avgTier === 0 ? 3 : 7
-                        }px solid transparent`,
-                        borderRight: `${
-                          avgTier === 12 ? 3 : 7
-                        }px solid transparent`,
-                        borderBottom: "7px solid #F7BC76",
-                        alignSelf:
+                        left: `calc(${
                           avgTier === 0
-                            ? "start"
+                            ? 0
                             : avgTier === 12
-                            ? "end"
-                            : "center",
-                      }}
-                    />
-                    <div
-                      className="px-3 py-2 cl-dark-text fw-bold"
-                      style={{
+                            ? 100
+                            : (avgTier / 12) * 100
+                        }% - ${
+                          avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
+                        }px)`,
+                        top: "0",
+                        zIndex: 100,
+                        alignItems: "center",
                         width: "fit-content",
-                        backgroundColor: "#F7BC76",
-                        border: "1px solid transparent",
-                        textAlign: "center",
                       }}
                     >
-                      You are here
+                      <div
+                        style={{
+                          border: "2px solid #F7BC76",
+                          height: "36px",
+                          width: 0,
+                          borderRadius: "2px",
+                        }}
+                      />
+                      <div
+                        className="mt-1"
+                        style={{
+                          width: 0,
+                          height: 0,
+                          borderLeft: `${
+                            avgTier === 0 ? 3 : 7
+                          }px solid transparent`,
+                          borderRight: `${
+                            avgTier === 12 ? 3 : 7
+                          }px solid transparent`,
+                          borderBottom: "7px solid #F7BC76",
+                          alignSelf:
+                            avgTier === 0
+                              ? "start"
+                              : avgTier === 12
+                              ? "end"
+                              : "center",
+                        }}
+                      />
+                      <div
+                        className="px-3 py-2 cl-dark-text fw-bold"
+                        style={{
+                          width: "fit-content",
+                          backgroundColor: "#F7BC76",
+                          border: "1px solid transparent",
+                          textAlign: "center",
+                        }}
+                      >
+                        You are here
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -7,6 +7,9 @@ export const config = {
     externalResolver: true,
   },
 };
+interface ModifiedChatbotHistory extends ChatbotHistory {
+  _id: ObjectId;
+}
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
@@ -25,19 +28,30 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 export const putChatbotHistory = async (
-  history: ChatbotHistory
+  history: ChatbotHistory[]
 ): Promise<void> => {
-  if (history !== undefined && history._id) {
-    // Document should not have _id field when sent to database
-    delete history._id;
-  }
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
-      await client
-        .db("chatbot")
-        .collection("chatbot-history")
-        .insertOne(history);
+      await Promise.all(
+        history.map(async (object) => {
+          if (object._id) {
+            delete object._id;
+            await client.db("chatbot").collection("chatbot-history").updateOne(
+              {
+                firebaseId: object.firebaseId,
+                index: object.index,
+              },
+              { $set: object }
+            );
+          } else {
+            client
+              .db("chatbot")
+              .collection("chatbot-history")
+              .insertOne(object as ModifiedChatbotHistory);
+          }
+        })
+      );
       res();
       client.close();
     } catch (e) {

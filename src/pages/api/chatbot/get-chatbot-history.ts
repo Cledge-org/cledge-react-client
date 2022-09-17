@@ -38,7 +38,7 @@ export function getChatbotHistory(
         })
         .toArray()) as ChatbotHistory[];
       if (!chatbotHistory) {
-        res(null);
+        res([]);
       } else {
         res(chatbotHistory);
       }

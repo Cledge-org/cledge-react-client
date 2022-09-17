@@ -66,7 +66,7 @@ const Chatbot: NextApplicationPage<{
     !accountInfo.introducedToChatbot ? "intro" : "none"
   );
   const [isLoading, setIsLoading] = useState(true);
-  const [messagesList, setMessagesList] = useState<ChatbotHistory[]>([]);
+  const [messageList, setMessageList] = useState<ChatbotHistory[]>([]);
   const [sendPostOnNextQuestion, setSendPostOnNextQuestion] = useState(true);
   const [currOptions, setCurrOptions] = useState({});
   const [awaitingChatbotResponse, setAwaitingChatbotResponse] = useState(false);
@@ -76,6 +76,7 @@ const Chatbot: NextApplicationPage<{
     question: string;
     answer: string;
   }>({ question: "", answer: "" });
+  const [shouldUpdateBackend, setShouldUpdateBackend] = useState(false);
 
   //General Hooks
   const session = useSession();
@@ -85,66 +86,90 @@ const Chatbot: NextApplicationPage<{
   const router = useRouter();
 
   const asyncUseEffect = async () => {
-    setMessagesList([
-      { _id: null, index: 0, firebaseId: session.data.user.uid, messages: [] },
-    ]);
+    const history = await (
+      await fetch(`/api/chatbot/get-chatbot-history`, {
+        method: "POST",
+        body: JSON.stringify({
+          userId: session.data.user.uid,
+          offset: 0,
+          numIndecies: 1,
+        }),
+      })
+    ).json();
+    setMessageList(history);
     setIsLoading(false);
   };
+
+  const loadMoreHistory = useCallback(async () => {
+    const newHistory = (await (
+      await fetch(`/api/chatbot/get-chatbot-history`, {
+        method: "POST",
+        body: JSON.stringify({
+          userId: session.data.user.uid,
+          offset: messageList.length,
+          numIndecies: 2,
+        }),
+      })
+    ).json()) as ChatbotHistory[];
+    setMessageList(newHistory.concat(messageList));
+  }, [messageList]);
+
   useEffect(() => {
     asyncUseEffect();
   }, []);
 
-  // useEffect(() => {
-  //   console.log(messagesList);
-  // }, [messagesList]);
+  useEffect(() => {
+    console.log(messageList);
+    if (shouldUpdateBackend) {
+      fetch(`/api/chatbot/put-chatbot-history`, {
+        method: "POST",
+        body: JSON.stringify({
+          history: messageList,
+        }),
+      });
+      setMessageList(
+        messageList.map((list) => ({
+          ...list,
+          _id: "DEFINED",
+        }))
+      );
+      setShouldUpdateBackend(false);
+    }
+  }, [shouldUpdateBackend]);
 
   const addMessages = useCallback(
     (newMessages: (MessageProps | CoupledOptions)[]) => {
-      console.log("Addition");
-      if (
-        newMessages.length +
-          messagesList[messagesList.length - 1].messages.length >
-        25
-      ) {
-        setMessagesList((messageList) => {
-          messageList[messagesList.length - 1].messages = messageList[
-            messagesList.length - 1
-          ].messages.concat(
-            newMessages.slice(
-              0,
-              25 - messagesList[messagesList.length - 1].messages.length
-            )
-          );
-          messageList.push({
-            _id: null,
-            firebaseId: session.data.user.uid,
-            index: messageList[messageList.length - 1].index + 1,
-            messages: newMessages.slice(
-              25 - messagesList[messagesList.length - 1].messages.length
-            ),
-          });
-          return [...messagesList];
+      const lastIndex = messageList.length - 1;
+      if (newMessages.length + messageList[lastIndex].messages.length > 30) {
+        messageList[lastIndex].messages = messageList[
+          lastIndex
+        ].messages.concat(
+          newMessages.slice(0, 30 - messageList[lastIndex].messages.length)
+        );
+        messageList.push({
+          _id: null,
+          firebaseId: session.data.user.uid,
+          index: messageList[lastIndex].index + 1,
+          messages: newMessages.slice(
+            30 - messageList[lastIndex].messages.length
+          ),
         });
+        console.log(messageList);
+        setMessageList([...messageList]);
       } else {
-        setMessagesList((messageList) => {
-          console.log(messageList[messagesList.length - 1].messages);
-          console.log(newMessages);
-          messageList[messagesList.length - 1].messages =
-            messageList[messagesList.length - 1].messages.concat(newMessages);
-          console.log(messageList[messagesList.length - 1].messages);
-          console.log(messageList);
-          return [...messagesList];
-        });
+        messageList[lastIndex].messages =
+          messageList[lastIndex].messages.concat(newMessages);
+        setMessageList([...messageList]);
       }
+      setShouldUpdateBackend(true);
     },
-    [messagesList]
+    [messageList]
   );
 
   const handleMessageSubmit = useCallback(
     async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log("SUBMISSION");
       if (!currMessageText) {
         return;
       }
@@ -159,46 +184,45 @@ const Chatbot: NextApplicationPage<{
       ]);
       setCurrMessageText("");
       document.getElementById("chatbot-input").innerHTML = "";
-      // const { response, responseId } = await callGetChatbotResponse(
-      //   currMessageText,
-      //   accountInfo.name,
-      //   questionResponses.filter(({ questionId }) => {
-      //     return (
-      //       questionId === "627e8fe7e97c3c14537dc7f5" ||
-      //       questionId === "61c6b6f2d3054b6dd0f1fc40" ||
-      //       questionId === "61c6b6f2d3054b6dd0f1fc4b"
-      //     );
-      //   })
-      // ).then((data) => data);
-      // setMessagesList((messageList) => {
-      //   messageList[messageList.length - 1].messages = messageList[
-      //     messageList.length - 1
-      //   ].messages.slice(0, -1);
-      //   return [...messageList];
-      // });
-      // addMessages([
-      //   {
-      //     message: response,
-      //     messageId: responseId,
-      //     isOnLeft: true,
-      //     isAnswer: true,
-      //     onDownVote: onDownVote,
-      //     question: messageOriginal,
-      //   },
-      // ]);
-      // if (sendPostOnNextQuestion) {
-      //   addMessages([
-      //     {
-      //       message:
-      //         "If you do not like the answer, feel free to give it a thumb down 👎 and we will have a real counselor reply back to you.",
-      //       isOnLeft: true,
-      //     },
-      //   ]);
-      // }
-      // setAwaitingChatbotResponse(false);
-      // setSendPostOnNextQuestion(false);
+      const { response, responseId } = await callGetChatbotResponse(
+        currMessageText,
+        accountInfo.name,
+        questionResponses.filter(({ questionId }) => {
+          return (
+            questionId === "627e8fe7e97c3c14537dc7f5" ||
+            questionId === "61c6b6f2d3054b6dd0f1fc40" ||
+            questionId === "61c6b6f2d3054b6dd0f1fc4b"
+          );
+        })
+      ).then((data) => data);
+      messageList[messageList.length - 1].messages = messageList[
+        messageList.length - 1
+      ].messages.slice(0, -1);
+      setMessageList([...messageList]);
+      addMessages([
+        {
+          message: response,
+          messageId: responseId,
+          isOnLeft: true,
+          isAnswer: true,
+          onDownVote: onDownVote,
+          question: messageOriginal,
+        },
+      ]);
+      if (sendPostOnNextQuestion) {
+        addMessages([
+          {
+            message:
+              "If you do not like the answer, feel free to give it a thumb down 👎 and we will have a real counselor reply back to you.",
+            isOnLeft: true,
+          },
+        ]);
+      }
+      setShouldUpdateBackend(true);
+      setAwaitingChatbotResponse(false);
+      setSendPostOnNextQuestion(false);
     },
-    [currMessageText, messagesList, sendPostOnNextQuestion]
+    [currMessageText, messageList, sendPostOnNextQuestion]
   );
 
   const endIntroWorkflow = useCallback(() => {
@@ -225,75 +249,67 @@ const Chatbot: NextApplicationPage<{
     [currWorkflow, downvoteWorkflow, currOptions, pickedOptions]
   );
 
-  const onOptionClick = useCallback(
-    (option: string) => {
-      const workflow =
-        currWorkflow === "downvote" ? downvoteWorkflow : introductionWorkflow;
-      if (workflow[currOptions[option]].backgroundAction) {
-        workflow[currOptions[option]].backgroundAction(
-          accountInfo,
-          currProblematicMessage.question,
-          currProblematicMessage.answer,
+  const onOptionClick = async (option: string) => {
+    const workflow =
+      currWorkflow === "downvote" ? downvoteWorkflow : introductionWorkflow;
+    if (workflow[currOptions[option]]?.backgroundAction) {
+      workflow[currOptions[option]].backgroundAction(
+        accountInfo,
+        currProblematicMessage.question,
+        currProblematicMessage.answer,
+        pickedOptions[pickedOptions.length - 1][
+          pickedOptions[pickedOptions.length - 1].length - 1
+        ]
+      );
+      alertSlackChatbotQuestion({
+        email: accountInfo.email,
+        name: accountInfo.name,
+        resolved: false,
+        question: currProblematicMessage.question,
+        answer: currProblematicMessage.answer,
+        problem:
           pickedOptions[pickedOptions.length - 1][
             pickedOptions[pickedOptions.length - 1].length - 1
-          ]
-        );
-        alertSlackChatbotQuestion({
-          email: accountInfo.email,
-          name: accountInfo.name,
-          resolved: false,
-          question: currProblematicMessage.question,
-          answer: currProblematicMessage.answer,
-          problem:
-            pickedOptions[pickedOptions.length - 1][
-              pickedOptions[pickedOptions.length - 1].length - 1
-            ],
-        });
-      }
-      setPickedOptions((currPicked) => {
-        currPicked[currPicked.length - 1].push(option);
-        return currPicked;
+          ],
       });
-      addMessages([
-        {
-          areOptions: true,
-          options: currOptions,
-          pickedIndex: pickedOptions.length - 1,
-        },
-        {
-          message: <div className={styles.chatbotLoading}>...</div>,
-          isOnLeft: true,
-        },
-      ]);
-      setCurrOptions([]);
-      setTimeout(() => {
-        setMessagesList((messageList) => {
-          messageList[messageList.length - 1].messages = messageList[
-            messageList.length - 1
-          ].messages.slice(0, messageList.length - 1);
-          return [...messageList];
-        });
-        addMessages(
-          getChatbotMessagesFormatted(
-            workflow[currOptions[option]].chatbotMessages
-          )
-        );
-        setCurrOptions(workflow[currOptions[option]].possibleChoices);
-        if (!workflow[currOptions[option]].possibleChoices) {
-          if (currWorkflow === "downvote") {
-            setCurrWorkflow("none");
-          } else {
-            endIntroWorkflow();
-          }
-        }
-      }, 1000);
-    },
-    [currWorkflow]
-  );
+    }
+    setPickedOptions((currPicked) => {
+      currPicked[currPicked.length - 1].push(option);
+      return currPicked;
+    });
+    addMessages([
+      {
+        areOptions: true,
+        options: currOptions,
+        pickedIndex: pickedOptions.length - 1,
+      },
+      {
+        message: <div className={styles.chatbotLoading}>...</div>,
+        isOnLeft: true,
+      },
+    ]);
+    setCurrOptions([]);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    messageList[messageList.length - 1].messages = messageList[
+      messageList.length - 1
+    ].messages.slice(0, -1);
+    setMessageList([...messageList]);
+    addMessages(
+      getChatbotMessagesFormatted(workflow[currOptions[option]].chatbotMessages)
+    );
+    setCurrOptions(workflow[currOptions[option]].possibleChoices);
+    if (!workflow[currOptions[option]]?.possibleChoices) {
+      if (currWorkflow === "downvote") {
+        setCurrWorkflow("none");
+      } else {
+        endIntroWorkflow();
+      }
+    }
+  };
 
   useEffect(() => {
     scrollRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [messagesList, currOptions]);
+  }, [messageList, currOptions, isLoading]);
 
   useEffect(() => {
     if (currWorkflow === "intro") {
@@ -345,15 +361,17 @@ const Chatbot: NextApplicationPage<{
               flexDirection: "column-reverse",
             }}
           >
-            {messagesList.length === 0 ? (
+            {messageList.length === 0 ? (
               <p className="align-self-center mb-5 pb-5">No message history</p>
             ) : null}
             <InfiniteScroll
               className="pb-5 pe-1"
-              dataLength={messagesList.length} //This is important field to render the next data
-              next={null}
+              dataLength={messageList.length} //This is important field to render the next data
+              next={() => {
+                loadMoreHistory();
+              }}
               hasMore={true}
-              loader={<p></p>}
+              loader={<p>Loading...</p>}
               endMessage={
                 <p style={{ textAlign: "center" }}>
                   <b>Yay! You have seen it all</b>
@@ -361,7 +379,7 @@ const Chatbot: NextApplicationPage<{
               } // https://www.npmjs.com/package/react-infinite-scroll-component for infinite scroll
             >
               {(isLoading && <LoadingScreen />) ||
-                messagesList.reduce(
+                messageList.reduce(
                   (prevHistory, history, historyIndex) =>
                     prevHistory.concat(
                       history.messages.map((object, index) => {
@@ -376,9 +394,7 @@ const Chatbot: NextApplicationPage<{
                               <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
                                 {Object.keys(options).map((option, idx) => (
                                   <ChatOption
-                                    isChosen={pickedOptions[
-                                      pickedIndex
-                                    ].includes(option)}
+                                    isChosen={idx === pickedIndex}
                                     onClick={() => {}}
                                     option={option}
                                     key={idx}
@@ -401,9 +417,9 @@ const Chatbot: NextApplicationPage<{
                             key={index}
                             dontShowPicture={
                               isOnLeft &&
-                              index < messagesList.length - 1 &&
+                              index < messageList.length - 1 &&
                               (
-                                messagesList[historyIndex].messages[
+                                messageList[historyIndex].messages[
                                   index + 1
                                 ] as MessageProps
                               ).isOnLeft
