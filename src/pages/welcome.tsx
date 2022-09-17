@@ -7,8 +7,6 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   
   const recentBlogs = await fetch(`http://${ctx.req.headers.host}/api/blogs/get-recent-blogs`)
   const recentBlogsJson = await recentBlogs.json()
-  
-  
   return {
       props:
       {
