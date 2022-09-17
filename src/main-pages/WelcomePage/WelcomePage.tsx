@@ -248,7 +248,7 @@ function useWindowSize() {
   return size;
 }
 
-const WelcomePage = () => {
+const WelcomePage = ({data}) => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
   const [width, height] = useWindowSize();
@@ -390,7 +390,7 @@ const WelcomePage = () => {
           icon="landing_3.svg"
           id="product"
           />
-          <RecentBlogPost/>
+          <RecentBlogPost data={data}/>
         <Partner>
           <MiddleBlock
             id="partner"

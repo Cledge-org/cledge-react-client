@@ -1,8 +1,14 @@
 import React from 'react'
 
-function RecentBlogPost() {
+function RecentBlogPost({ data }) {
+  console.log(data)
   return (
-    <div>RecentBlogPost</div>
+    <div>
+      <p>
+        {JSON.stringify(data)}
+      </p>
+      <p>hello world</p>
+    </div>
   )
 }
 
