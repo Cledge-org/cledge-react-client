@@ -35,7 +35,13 @@ export const putChatbotHistory = async (
       const client = await MongoClient.connect(process.env.MONGO_URL);
       await Promise.all(
         history.map(async (object) => {
-          if (object._id) {
+          if (
+            object._id ||
+            (await client.db("chatbot").collection("chatbot-history").findOne({
+              firebaseId: object.firebaseId,
+              index: object.index,
+            }))
+          ) {
             delete object._id;
             await client.db("chatbot").collection("chatbot-history").updateOne(
               {
@@ -45,7 +51,7 @@ export const putChatbotHistory = async (
               { $set: object }
             );
           } else {
-            client
+            await client
               .db("chatbot")
               .collection("chatbot-history")
               .insertOne(object as ModifiedChatbotHistory);

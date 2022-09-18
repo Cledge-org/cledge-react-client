@@ -40,7 +40,7 @@ import { store } from "src/utils/redux/store";
 import { NextApplicationPage } from "src/main-pages/AppPage/AppPage";
 import { ChatbotHistory } from "src/@types/types";
 import { useSession } from "next-auth/react";
-import LoadingScreen from "src/common/components/Loading/Loading";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface MessageProps {
   message: string | ReactElement;
@@ -77,7 +77,7 @@ const Chatbot: NextApplicationPage<{
     answer: string;
   }>({ question: "", answer: "" });
   const [shouldUpdateBackend, setShouldUpdateBackend] = useState(false);
-
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   //General Hooks
   const session = useSession();
   const scrollRef = useRef(null);
@@ -91,7 +91,7 @@ const Chatbot: NextApplicationPage<{
         method: "POST",
         body: JSON.stringify({
           userId: session.data.user.uid,
-          offset: 0,
+          offset: accountInfo.chatbotHistoryLength,
           numIndecies: 1,
         }),
       })
@@ -101,12 +101,13 @@ const Chatbot: NextApplicationPage<{
   };
 
   const loadMoreHistory = useCallback(async () => {
+    setIsLoadingMore(true);
     const newHistory = (await (
       await fetch(`/api/chatbot/get-chatbot-history`, {
         method: "POST",
         body: JSON.stringify({
           userId: session.data.user.uid,
-          offset: messageList.length,
+          offset: accountInfo.chatbotHistoryLength - messageList.length,
           numIndecies: 2,
         }),
       })
@@ -119,7 +120,6 @@ const Chatbot: NextApplicationPage<{
   }, []);
 
   useEffect(() => {
-    console.log(messageList);
     if (shouldUpdateBackend) {
       fetch(`/api/chatbot/put-chatbot-history`, {
         method: "POST",
@@ -127,12 +127,21 @@ const Chatbot: NextApplicationPage<{
           history: messageList,
         }),
       });
+      let numAddedDocs = 0;
       setMessageList(
-        messageList.map((list) => ({
-          ...list,
-          _id: "DEFINED",
-        }))
+        messageList.map((list) => {
+          if (!list._id) numAddedDocs++;
+          return {
+            ...list,
+            _id: "DEFINED",
+          };
+        })
       );
+      if (numAddedDocs > 0)
+        callUpdateUser({
+          ...accountInfo,
+          chatbotHistoryLength: accountInfo.chatbotHistoryLength + numAddedDocs,
+        });
       setShouldUpdateBackend(false);
     }
   }, [shouldUpdateBackend]);
@@ -161,7 +170,6 @@ const Chatbot: NextApplicationPage<{
           messageList[lastIndex].messages.concat(newMessages);
         setMessageList([...messageList]);
       }
-      setShouldUpdateBackend(true);
     },
     [messageList]
   );
@@ -245,6 +253,7 @@ const Chatbot: NextApplicationPage<{
       );
       setCurrProblematicMessage({ question: message, answer });
       setCurrOptions(downvoteWorkflow.e1.possibleChoices);
+      setShouldUpdateBackend(true);
     },
     [currWorkflow, downvoteWorkflow, currOptions, pickedOptions]
   );
@@ -305,10 +314,13 @@ const Chatbot: NextApplicationPage<{
         endIntroWorkflow();
       }
     }
+    setShouldUpdateBackend(true);
   };
 
   useEffect(() => {
-    scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    if (scrollRef?.current && !isLoadingMore)
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    else setIsLoadingMore(false);
   }, [messageList, currOptions, isLoading]);
 
   useEffect(() => {
@@ -318,6 +330,7 @@ const Chatbot: NextApplicationPage<{
         getChatbotMessagesFormatted(introductionWorkflow.e1.chatbotMessages)
       );
       setCurrOptions(introductionWorkflow.e1.possibleChoices);
+      setShouldUpdateBackend(true);
     }
   }, [currWorkflow]);
 
@@ -337,6 +350,7 @@ const Chatbot: NextApplicationPage<{
         className="w-100 d-flex flex-row align-items-center justify-content-center"
       >
         <div
+          id="chatbot-history-div"
           className={classNames(
             styles.messageScroll,
             "d-flex flex-column position-relative container-fluid"
@@ -347,11 +361,10 @@ const Chatbot: NextApplicationPage<{
             width: isMobile ? "100%" : "70%",
             border: "1px solid #E0DFE8",
             borderRadius: "8px",
-            overflow: "auto",
+            overflowY: "auto",
           }}
         >
           <div
-            id="scrollableDiv"
             className={classNames("pt-3")}
             style={{
               height: "fit-content",
@@ -361,99 +374,125 @@ const Chatbot: NextApplicationPage<{
               flexDirection: "column-reverse",
             }}
           >
-            {messageList.length === 0 ? (
-              <p className="align-self-center mb-5 pb-5">No message history</p>
-            ) : null}
-            <InfiniteScroll
-              className="pb-5 pe-1"
-              dataLength={messageList.length} //This is important field to render the next data
-              next={() => {
-                loadMoreHistory();
-              }}
-              hasMore={true}
-              loader={<p>Loading...</p>}
-              endMessage={
-                <p style={{ textAlign: "center" }}>
-                  <b>Yay! You have seen it all</b>
-                </p>
-              } // https://www.npmjs.com/package/react-infinite-scroll-component for infinite scroll
-            >
-              {(isLoading && <LoadingScreen />) ||
-                messageList.reduce(
-                  (prevHistory, history, historyIndex) =>
-                    prevHistory.concat(
-                      history.messages.map((object, index) => {
-                        if ((object as CoupledOptions).areOptions) {
-                          const { options, pickedIndex } =
-                            object as CoupledOptions;
-                          return (
-                            <div
-                              key={index}
-                              className={`d-flex flex-row w-100 my-3 justify-content-end align-items-end`}
-                            >
-                              <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
-                                {Object.keys(options).map((option, idx) => (
-                                  <ChatOption
-                                    isChosen={idx === pickedIndex}
-                                    onClick={() => {}}
-                                    option={option}
-                                    key={idx}
-                                  />
-                                ))}
-                              </div>
-                            </div>
-                          );
-                        }
-                        const {
-                          message,
-                          messageId,
-                          isOnLeft,
-                          isAnswer,
-                          question,
-                          onDownVote,
-                        } = object as MessageProps;
-                        return (
-                          <Message
-                            key={index}
-                            dontShowPicture={
-                              isOnLeft &&
-                              index < messageList.length - 1 &&
-                              (
-                                messageList[historyIndex].messages[
-                                  index + 1
-                                ] as MessageProps
-                              ).isOnLeft
-                            }
-                            question={question}
-                            message={message}
-                            messageId={messageId}
-                            userName={accountInfo.name}
-                            isOnLeft={isOnLeft}
-                            isAnswer={isAnswer}
-                            onDownVote={onDownVote}
-                          />
-                        );
-                      })
-                    ),
-                  []
-                )}
-              {currOptions && (
-                <div
-                  className={`d-flex flex-row w-100 my-3 justify-content-end align-items-end`}
+            {(isLoading && (
+              <div className="w-100 h-100 center-child">
+                <CircularProgress className="cl-blue" />
+              </div>
+            )) || (
+              <>
+                {messageList.length === 0 ? (
+                  <p className="align-self-center mb-5 pb-5">
+                    No message history
+                  </p>
+                ) : null}
+                <InfiniteScroll
+                  scrollableTarget="chatbot-history-div"
+                  className="pb-5 pe-1"
+                  inverse={true}
+                  dataLength={messageList.length} //This is important field to render the next data
+                  next={() => {
+                    loadMoreHistory();
+                  }}
+                  hasMore={true}
+                  loader={<CircularProgress className="cl-blue" />}
+                  endMessage={
+                    <p style={{ textAlign: "center" }}>
+                      <b>Yay! You have seen it all</b>
+                    </p>
+                  } // https://www.npmjs.com/package/react-infinite-scroll-component for infinite scroll
                 >
-                  <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
-                    {Object.keys(currOptions).map((option, idx) => (
-                      <ChatOption
-                        onClick={onOptionClick}
-                        option={option}
-                        key={idx}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-              <div ref={scrollRef} />
-            </InfiniteScroll>
+                  {messageList.length < accountInfo.chatbotHistoryLength && (
+                    <div className="w-100 center-child">
+                      <a
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          loadMoreHistory();
+                        }}
+                        style={{ alignSelf: "center" }}
+                        className="cl-blue"
+                      >
+                        Load More
+                      </a>
+                    </div>
+                  )}
+                  {messageList.reduce(
+                    (prevHistory, history, historyIndex) =>
+                      prevHistory.concat(
+                        history.messages.map((object, index) => {
+                          if ((object as CoupledOptions).areOptions) {
+                            const { options, pickedIndex } =
+                              object as CoupledOptions;
+                            return (
+                              <div
+                                key={index}
+                                className={`d-flex flex-row w-100 my-3 justify-content-end align-items-end`}
+                              >
+                                <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
+                                  {Object.keys(options).map((option, idx) => (
+                                    <ChatOption
+                                      isChosen={idx === pickedIndex}
+                                      onClick={() => {}}
+                                      option={option}
+                                      key={idx}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                            );
+                          }
+                          const {
+                            message,
+                            messageId,
+                            isOnLeft,
+                            isAnswer,
+                            question,
+                            onDownVote,
+                          } = object as MessageProps;
+                          return (
+                            <Message
+                              key={index}
+                              dontShowPicture={
+                                isOnLeft &&
+                                index < messageList.length - 1 &&
+                                (
+                                  messageList[historyIndex].messages[
+                                    index + 1
+                                  ] as MessageProps
+                                ).isOnLeft
+                              }
+                              question={question}
+                              message={message}
+                              messageId={messageId}
+                              userName={accountInfo.name}
+                              isOnLeft={isOnLeft}
+                              isAnswer={isAnswer}
+                              onDownVote={onDownVote}
+                            />
+                          );
+                        })
+                      ),
+                    []
+                  )}
+                  {currOptions && (
+                    <div
+                      className={`d-flex flex-row w-100 my-3 justify-content-end align-items-end`}
+                    >
+                      <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
+                        {Object.keys(currOptions).map((option, idx) => (
+                          <ChatOption
+                            onClick={onOptionClick}
+                            option={option}
+                            key={idx}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div ref={scrollRef} />
+                </InfiniteScroll>
+              </>
+            )}
           </div>
           <form
             onSubmit={handleMessageSubmit}

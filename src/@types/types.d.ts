@@ -20,6 +20,7 @@ export declare global {
     tags: string[];
     checkIns: string[];
     introducedToChatbot: boolean;
+    chatbotHistoryLength: number;
     hasUWAccess: boolean;
   }
 
