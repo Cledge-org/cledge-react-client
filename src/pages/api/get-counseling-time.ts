@@ -1,6 +1,5 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Account } from "next-auth";
 
 export const config = {
   api: {
@@ -30,15 +29,11 @@ export const getTime = async (
   return new Promise(async (res, err) => {
     try{
       const client = overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
-      type CounselingTime = Pick<AccountCounselingInfo, "time">;
       const result = await client
         .db("users")
         .collection("counseling-time")
-        .findOne<CounselingTime>(
-          { firebaseId: userId },
-          {
-            projection: { _id: 0, firebaseId: 0, time: 1}
-          }
+        .findOne(
+          { firebaseId: userId }
         );
       res(result.time);
       client.close();
