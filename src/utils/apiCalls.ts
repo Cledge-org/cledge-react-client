@@ -259,6 +259,7 @@ export const getPathwayProgressToDownload = async (firebaseId: string) => {
 export const callGetChatbotResponse = async (
   message: string,
   username: string,
+  email: string,
   questionResponses: UserResponse[]
 ) => {
   return await fetch(
@@ -271,6 +272,7 @@ export const callGetChatbotResponse = async (
       body: JSON.stringify({
         question: message,
         username,
+        email,
         student_info: questionResponses,
       }),
     }
