@@ -34,11 +34,11 @@ export function getChatbotHistory(
         .collection("chatbot-history")
         .find({
           firebaseId: userId,
-          index: { $gt: offset - 1, $lt: offset + numIndecies },
+          index: { $gt: offset - 2, $lt: offset + numIndecies },
         })
         .toArray()) as ChatbotHistory[];
       if (!chatbotHistory) {
-        res(null);
+        res([]);
       } else {
         res(chatbotHistory);
       }

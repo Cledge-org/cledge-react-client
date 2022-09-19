@@ -20,6 +20,7 @@ export declare global {
     tags: string[];
     checkIns: string[];
     introducedToChatbot: boolean;
+    chatbotHistoryLength: number;
     hasUWAccess: boolean;
   }
 
@@ -378,7 +379,7 @@ interface updateCollegeList {
 }
 
 interface ChatbotHistory {
-  _id: ObjectId;
+  _id: ObjectId | string;
   index: number;
   firebaseId: string;
   messages: (MessageProps | CoupledOptions)[];
