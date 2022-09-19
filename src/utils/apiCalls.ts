@@ -260,6 +260,7 @@ export const callGetChatbotResponse = async (
   message: string,
   username: string,
   email: string,
+  questionParams: QuestionParams,
   questionResponses: UserResponse[]
 ) => {
   return await fetch(
@@ -273,6 +274,7 @@ export const callGetChatbotResponse = async (
         question: message,
         username,
         email,
+        question_params: questionParams,
         student_info: questionResponses,
       }),
     }

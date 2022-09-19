@@ -96,6 +96,13 @@ export declare global {
     isCheckin?: boolean;
     chunks: QuestionChunk[];
   }
+  interface QuestionParams {
+    get_snippet: boolean;
+    search_similar: boolean;
+    general_answer: boolean;
+    alternate_source: boolean;
+    skip_summary: boolean;
+  }
   interface QuestionList_Db extends WithId<Document> {
     _id?: ObjectId;
     name: string;

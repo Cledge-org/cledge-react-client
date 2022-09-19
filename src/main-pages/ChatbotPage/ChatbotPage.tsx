@@ -76,6 +76,7 @@ const Chatbot: NextApplicationPage<{
     question: string;
     answer: string;
   }>({ question: "", answer: "" });
+  const [questionParams, setQuestionParams] = useState<QuestionParams>();
   const [shouldUpdateBackend, setShouldUpdateBackend] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   //General Hooks
@@ -149,7 +150,7 @@ const Chatbot: NextApplicationPage<{
   const addMessages = useCallback(
     (newMessages: (MessageProps | CoupledOptions)[]) => {
       const lastIndex = messageList.length - 1;
-      if (newMessages.length + messageList[lastIndex].messages.length > 30) {
+      if (messageList[lastIndex] && newMessages.length + messageList[lastIndex].messages.length > 30) {
         messageList[lastIndex].messages = messageList[
           lastIndex
         ].messages.concat(
@@ -166,18 +167,35 @@ const Chatbot: NextApplicationPage<{
         console.log(messageList);
         setMessageList([...messageList]);
       } else {
-        messageList[lastIndex].messages =
-          messageList[lastIndex].messages.concat(newMessages);
+        if (messageList[lastIndex]) {
+          messageList[lastIndex].messages =
+            messageList[lastIndex].messages.concat(newMessages);
+        }
         setMessageList([...messageList]);
       }
     },
     [messageList]
   );
 
+  const handleQuestionParams = () => {
+    const option = pickedOptions[pickedOptions.length - 1];
+    const problem = option[option.length - 1]
+    if (problem in Object.values(downvoteWorkflow.e1.possibleChoices)) {
+      setQuestionParams({
+        ...questionParams,
+        get_snippet: false,
+        search_similar: false,
+        general_answer: problem === downvoteWorkflow.e1.possibleChoices["Not relavant to me"],
+        alternate_source: problem === downvoteWorkflow.e1.possibleChoices["Information is not accurate"],
+        skip_summary: problem === downvoteWorkflow.e1.possibleChoices["Not enough information"]
+      })
+    }
+  }
+
   const handleMessageSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    async (e?) => {
+      e?.preventDefault();
+      e?.stopPropagation();
       if (!currMessageText) {
         return;
       }
@@ -190,12 +208,13 @@ const Chatbot: NextApplicationPage<{
           isOnLeft: true,
         },
       ]);
-      setCurrMessageText("");
+      // setCurrMessageText("");
       document.getElementById("chatbot-input").innerHTML = "";
       const { response, responseId } = await callGetChatbotResponse(
         currMessageText,
         accountInfo.name,
         accountInfo.email,
+        questionParams,
         questionResponses.filter(({ questionId }) => {
           return (
             questionId === "627e8fe7e97c3c14537dc7f5" ||
@@ -204,9 +223,11 @@ const Chatbot: NextApplicationPage<{
           );
         })
       ).then((data) => data);
-      messageList[messageList.length - 1].messages = messageList[
-        messageList.length - 1
-      ].messages.slice(0, -1);
+      if (messageList[messageList.length - 1]) {
+        messageList[messageList.length - 1].messages = messageList[
+          messageList.length - 1
+        ].messages.slice(0, -1);
+      }
       setMessageList([...messageList]);
       addMessages([
         {
@@ -300,9 +321,11 @@ const Chatbot: NextApplicationPage<{
     ]);
     setCurrOptions([]);
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    messageList[messageList.length - 1].messages = messageList[
-      messageList.length - 1
-    ].messages.slice(0, -1);
+    if (messageList[messageList.length - 1]) {
+      messageList[messageList.length - 1].messages = messageList[
+        messageList.length - 1
+      ].messages.slice(0, -1);
+    }
     setMessageList([...messageList]);
     addMessages(
       getChatbotMessagesFormatted(workflow[currOptions[option]].chatbotMessages)
@@ -316,6 +339,8 @@ const Chatbot: NextApplicationPage<{
       }
     }
     setShouldUpdateBackend(true);
+    handleQuestionParams();
+    handleMessageSubmit();
   };
 
   useEffect(() => {
