@@ -259,10 +259,11 @@ export const getPathwayProgressToDownload = async (firebaseId: string) => {
 export const callGetChatbotResponse = async (
   message: string,
   username: string,
+  email: string,
   questionResponses: UserResponse[]
 ) => {
   return await fetch(
-    "https://cledge-chatbot-service.azurewebsites.net/v2/api",
+    "https://cledge-chatbot-service.azurewebsites.net/v3/api",
     {
       method: "POST",
       headers: {
@@ -271,6 +272,7 @@ export const callGetChatbotResponse = async (
       body: JSON.stringify({
         question: message,
         username,
+        email,
         student_info: questionResponses,
       }),
     }
@@ -288,7 +290,7 @@ export const callChatbotVote = (
   username: string,
   messageId: string
 ) => {
-  fetch(`https://cledge-chatbot-service.azurewebsites.net/v2/vote_api`, {
+  fetch(`https://cledge-chatbot-service.azurewebsites.net/v3/vote_api`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

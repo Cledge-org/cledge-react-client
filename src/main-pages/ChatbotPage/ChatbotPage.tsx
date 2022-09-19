@@ -195,6 +195,7 @@ const Chatbot: NextApplicationPage<{
       const { response, responseId } = await callGetChatbotResponse(
         currMessageText,
         accountInfo.name,
+        accountInfo.email,
         questionResponses.filter(({ questionId }) => {
           return (
             questionId === "627e8fe7e97c3c14537dc7f5" ||
