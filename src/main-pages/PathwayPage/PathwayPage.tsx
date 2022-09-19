@@ -5,9 +5,7 @@ import { useRouter } from "next/router";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
-import {
-  faChevronLeft
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { updatePathwayProgressAction } from "../../utils/redux/actionFunctions";
 import DropdownTab from "../../common/components/DropdownTab/DropdownTab";
 import { store } from "../../utils/redux/store";
@@ -78,7 +76,6 @@ const Pathways: NextApplicationPage<{
       };
     }, {})
   );
-  const session = useSession();
   useEffect(() => {
     callPutPathwayProgress(moduleProgress).then((res) => {
       let newProgress = pathwaysProgress.slice();
@@ -134,7 +131,7 @@ const Pathways: NextApplicationPage<{
         currContent.content.length;
     updateContentProgress(currContentProgress);
   };
-  const getContent = useCallback(() => {
+  const currContentJSX = useMemo(() => {
     let questionNumber = 0;
     return currContent.content.map((content) => {
       const { type } = content;
@@ -144,12 +141,16 @@ const Pathways: NextApplicationPage<{
         id: content.id,
         finished: false,
       };
+      console.log(content);
       if (type === "question") {
         questionNumber++;
       }
       return type === "video" ? (
         <div className="center-child pt-4">
-          <div className="d-flex flex-column justify-content-center align-items-center" style={{ width: "90%", height: "100%" }}>
+          <div
+            className="d-flex flex-column justify-content-center align-items-center"
+            style={{ width: "90%", height: "100%" }}
+          >
             <div className="w-75" style={{ aspectRatio: "16 / 9" }}>
               <YoutubeEmbed
                 isPathway
@@ -207,7 +208,7 @@ const Pathways: NextApplicationPage<{
       ) : type === "text" ? (
         <div className="center-child w-100">
           <div className="w-60">
-            <RichText text={content.text} />
+            <RichText key={content.id} text={content.text} />
           </div>
         </div>
       ) : type === "image" ? (
@@ -253,14 +254,15 @@ const Pathways: NextApplicationPage<{
   const [listener, setListener] = useState(null);
 
   const onScroll = useCallback(() => {
-      let scrolled = document.body.scrollTop;
-      if (document.body.scrollHeight - scrolled <= document.body.clientHeight + 65) {
-          setScrollState("bottom");
-          console.log("BOOOOOTY");
-      }
-      else {
-        setScrollState("scrolling");
-      }
+    let scrolled = document.body.scrollTop;
+    if (
+      document.body.scrollHeight - scrolled <=
+      document.body.clientHeight + 65
+    ) {
+      setScrollState("bottom");
+    } else {
+      setScrollState("scrolling");
+    }
   }, [scrollState]);
   useEffect(() => {
     document.removeEventListener("scroll", listener);
@@ -273,94 +275,97 @@ const Pathways: NextApplicationPage<{
   return (
     <PageErrorBoundary>
       <div className="d-flex flex-column justify-content-start">
-        <div
-          className="border"
-        >
+        <div className="border">
           <div className="m-3">
             <a href="/my-learning">
               <FontAwesomeIcon className="ms-1 cl-blue" icon={faChevronLeft} />
             </a>
-            <a href="/my-learning" className="ms-3 cl-blue">Back to my learning</a>
+            <a href="/my-learning" className="ms-3 cl-blue">
+              Back to my learning
+            </a>
             <text className="ms-2">/</text>
             <text className="ms-2 cl-mid-gray">{pathwayInfo.name}</text>
           </div>
-
-        </div>  
-      <div
-        className="container-fluid d-flex flex-row px-0"
-        style={{ minHeight: "94vh", height: "fit-content" }}
-      >
+        </div>
         <div
-          className="d-flex flex-column border-end"
-          style={{ width: "23%", backgroundColor: "#EFEFF5"}}
+          className="container-fluid d-flex flex-row px-0"
+          style={{ minHeight: "94vh", height: "fit-content" }}
         >
-          {pathwayInfo.modules.map(
-            ({ name, presetContent, personalizedContent, _id }) => {
-              const moduleSortedContent = getSortedContent(
-                presetContent,
-                personalizedContent
-              );
-              return (
-                <DropdownTab
-                  isFinishedModule={
-                    pathwaysProgress
+          <div
+            className="d-flex flex-column border-end"
+            style={{ width: "23%", backgroundColor: "#EFEFF5" }}
+          >
+            {pathwayInfo.modules.map(
+              ({ name, presetContent, personalizedContent, _id }) => {
+                const moduleSortedContent = getSortedContent(
+                  presetContent,
+                  personalizedContent
+                );
+                return (
+                  <DropdownTab
+                    isFinishedModule={
+                      pathwaysProgress
+                        .find(({ name }) => pathwayInfo.name === name)
+                        .moduleProgress.find(
+                          (moduleProgress) => moduleProgress.name === name
+                        ).finished
+                    }
+                    isFinishedContent={pathwaysProgress
                       .find(({ name }) => pathwayInfo.name === name)
                       .moduleProgress.find(
                         (moduleProgress) => moduleProgress.name === name
-                      ).finished
-                  }
-                  isFinishedContent={pathwaysProgress
-                    .find(({ name }) => pathwayInfo.name === name)
-                    .moduleProgress.find(
-                      (moduleProgress) => moduleProgress.name === name
-                    )
-                    .contentProgress.map(({ finished }) => finished)}
-                  icons={moduleSortedContent.map(
-                    ({ primaryType }) => primaryType
-                  )}
-                  currSelectedPath={currContent.name}
-                  chunkList={moduleSortedContent.map(
-                    ({ name, primaryType }) => {
-                      return { name, type: primaryType };
-                    }
-                  )}
-                  onClick={(contentTitle) => {
-                    setCurrModuleId(_id);
-                    let currContent = presetContent.find(
-                      ({ name }) => name === contentTitle
-                    );
-                    if (currContent === undefined) {
-                      currContent = personalizedContent.find(
+                      )
+                      .contentProgress.map(({ finished }) => finished)}
+                    icons={moduleSortedContent.map(
+                      ({ primaryType }) => primaryType
+                    )}
+                    currSelectedPath={currContent.name}
+                    chunkList={moduleSortedContent.map(
+                      ({ name, primaryType }) => {
+                        return { name, type: primaryType };
+                      }
+                    )}
+                    onClick={(contentTitle) => {
+                      setCurrModuleId(_id);
+                      let currContent = presetContent.find(
                         ({ name }) => name === contentTitle
                       );
-                    }
-                    setCurrContent(currContent);
-                  }}
-                  title={name}
-                  isPathway
-                  percentComplete={undefined}
+                      console.log(currContent);
+                      if (!currContent) {
+                        currContent = personalizedContent.find(
+                          ({ name }) => name === contentTitle
+                        );
+                      }
+                      setCurrContent(currContent);
+                    }}
+                    title={name}
+                    isPathway
+                    percentComplete={undefined}
+                  />
+                );
+              }
+            )}
+          </div>
+          <div className="d-flex flex-column" style={{ flex: 3 }}>
+            {currContent.primaryType === "question" && (
+              <SubPageHeader title={"Quiz"} isMetrics percentage={undefined} />
+            )}
+            <div className="d-flex flex-column">{currContentJSX}</div>
+          </div>
+          {scrollState !== "bottom" ? (
+            <div className="d-flex fixed-bottom justify-content-end mb-5 me-4">
+              <div
+                className="d-flex justify-content-end"
+                style={{ width: "77%" }}
+              >
+                <FontAwesomeIcon
+                  className="cl-blue fa-3x"
+                  icon={faArrowAltCircleDown}
                 />
-              );
-            }
-          )}
+              </div>
+            </div>
+          ) : null}
         </div>
-        <div className="d-flex flex-column" style={{ flex: 3 }}>
-          {currContent.primaryType === "question" && (
-            <SubPageHeader title={"Quiz"} isMetrics percentage={undefined} />
-          )}
-          <div className="d-flex flex-column">
-            {getContent()}
-          </div>
-        </div>
-
-        {scrollState !== "bottom" ? <div className="d-flex fixed-bottom justify-content-end mb-5 me-4">
-          <div className="d-flex justify-content-end" style={{width: "77%"}}>
-            <FontAwesomeIcon className="cl-blue fa-3x" icon={faArrowAltCircleDown} />
-          </div>
-          
-        </div> : null}
-        
-      </div>
       </div>
     </PageErrorBoundary>
   );
