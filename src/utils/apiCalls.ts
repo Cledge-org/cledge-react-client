@@ -260,8 +260,8 @@ export const callGetChatbotResponse = async (
   message: string,
   username: string,
   email: string,
-  questionParams: QuestionParams,
-  questionResponses: UserResponse[]
+  questionResponses: UserResponse[],
+  questionParams?: QuestionParams,
 ) => {
   return await fetch(
     "https://cledge-chatbot-service.azurewebsites.net/v3/api",
@@ -274,7 +274,7 @@ export const callGetChatbotResponse = async (
         question: message,
         username,
         email,
-        question_params: questionParams,
+        question_params: questionParams || {},
         student_info: questionResponses,
       }),
     }

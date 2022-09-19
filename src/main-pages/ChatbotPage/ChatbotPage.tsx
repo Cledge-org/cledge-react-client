@@ -214,14 +214,14 @@ const Chatbot: NextApplicationPage<{
         currMessageText,
         accountInfo.name,
         accountInfo.email,
-        questionParams,
         questionResponses.filter(({ questionId }) => {
           return (
             questionId === "627e8fe7e97c3c14537dc7f5" ||
             questionId === "61c6b6f2d3054b6dd0f1fc40" ||
             questionId === "61c6b6f2d3054b6dd0f1fc4b"
           );
-        })
+        }),
+        questionParams
       ).then((data) => data);
       if (messageList[messageList.length - 1]) {
         messageList[messageList.length - 1].messages = messageList[
