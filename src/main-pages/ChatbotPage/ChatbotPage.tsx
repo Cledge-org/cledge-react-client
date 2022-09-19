@@ -71,6 +71,7 @@ const Chatbot: NextApplicationPage<{
   const [currOptions, setCurrOptions] = useState({});
   const [awaitingChatbotResponse, setAwaitingChatbotResponse] = useState(false);
   const [currMessageText, setCurrMessageText] = useState("");
+  const [prevMessageText, setPrevMessageText] = useState("");
   const [pickedOptions, setPickedOptions] = useState<any[][]>([]);
   const [currProblematicMessage, setCurrProblematicMessage] = useState<{
     question: string;
@@ -208,7 +209,8 @@ const Chatbot: NextApplicationPage<{
           isOnLeft: true,
         },
       ]);
-      // setCurrMessageText("");
+      setPrevMessageText(currMessageText);
+      setCurrMessageText("");
       document.getElementById("chatbot-input").innerHTML = "";
       const { response, responseId } = await callGetChatbotResponse(
         currMessageText,
@@ -340,6 +342,7 @@ const Chatbot: NextApplicationPage<{
     }
     setShouldUpdateBackend(true);
     handleQuestionParams();
+    setCurrMessageText(prevMessageText);
     handleMessageSubmit();
   };
 
