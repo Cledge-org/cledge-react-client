@@ -263,7 +263,7 @@ export const callGetChatbotResponse = async (
   questionResponses: UserResponse[]
 ) => {
   return await fetch(
-    "https://cledge-chatbot-service.azurewebsites.net/v2/api",
+    "https://cledge-chatbot-service.azurewebsites.net/v3/api",
     {
       method: "POST",
       headers: {
@@ -290,7 +290,7 @@ export const callChatbotVote = (
   username: string,
   messageId: string
 ) => {
-  fetch(`https://cledge-chatbot-service.azurewebsites.net/v2/vote_api`, {
+  fetch(`https://cledge-chatbot-service.azurewebsites.net/v3/vote_api`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
