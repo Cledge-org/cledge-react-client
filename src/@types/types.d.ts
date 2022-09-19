@@ -249,20 +249,20 @@ export declare global {
     points: number;
     tier: number;
     category: number;
-    tip: string;
+    tip: string | JSX.Element;
   }
 
   interface Academics extends WithId<Document> {
     _id?: ObjectId;
     classes: Class[];
     overallClassTier: number;
-    classTip: string;
+    classTip: string | JSX.Element;
     gpa: number;
     gpaTier: number;
-    gpaTip: string;
+    gpaTip: string | JSX.Element;
     satScore: number;
     actScore: number;
-    testTip: string;
+    testTip: string | JSX.Element;
     overallTier: number;
   }
 
