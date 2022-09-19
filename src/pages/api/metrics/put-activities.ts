@@ -79,7 +79,7 @@ export const putActivities = (
 };
 
 // Gets a user's GPA tip based on their GPA tier.
-function getActivityTip(tier: number, category: number): string | JSX.Element {
+function getActivityTip(tier: number, category: number): string {
   try {
     const bar1 = 3;
     const bar2 = 6;
