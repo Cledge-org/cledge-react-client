@@ -14,9 +14,9 @@ function DashboardTabButton({
   const lowerCaseName = title.toLowerCase();
   return (
     <li
-      className="general-tab-nav-btn col-3 col-lg-2 flex-column"
+      className="general-tab-nav-btn flex-column"
       id={lowerCaseName + "-tab"}
-      style={{ border: "none" }}
+      style={{ border: "none", width: "12rem" }}
       onClick={() => {
         onClick(lowerCaseName);
       }}

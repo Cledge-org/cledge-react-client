@@ -32,17 +32,24 @@ const Metrics: NextApplicationPage<{
   const session = useSession();
   //console.log(activities);
   const [currPage, setCurrPage] = useState("all");
+  function BorderDropdownTab({ isAll, chunkList, onClick, title, percentComplete }) {
+    return (
+      <div className="border-bottom border-2">
+      <DropdownTab isAll={isAll} chunkList={chunkList} onClick={onClick} title={title} percentComplete={percentComplete} />
+      </div>
+    )
+  }
   return (
     <PageErrorBoundary>
       <div
-        className="container-fluid d-flex flex-row px-0"
+        className="container-fluid d-flex flex-row px-0 border-top border-2"
         style={{ minHeight: "100vh" }}
       >
         <div
-          className="d-flex flex-column bg-extra-light-gray"
-          style={{ flex: 1 }}
+          className="d-flex flex-column bg-extra-light-gray border-end"
+          style={{ width: "23%" }}
         >
-          <DropdownTab
+          <BorderDropdownTab
             isAll
             chunkList={[]}
             onClick={() => setCurrPage("all")}
@@ -62,14 +69,14 @@ const Metrics: NextApplicationPage<{
             );
           }
         })} */}
-          <DropdownTab
+          <BorderDropdownTab
             isAll
             chunkList={[]}
             onClick={(chunk) => setCurrPage("Extracurriculars")}
             title={"Extracurricular Metrics"}
             percentComplete={undefined}
           />
-          <DropdownTab
+          <BorderDropdownTab
             isAll
             chunkList={[]}
             onClick={(chunk) => setCurrPage("Academics")}
@@ -98,7 +105,7 @@ const Metrics: NextApplicationPage<{
                 <div className="mt-2 ms-5" style={{ width: "50%" }}>
                   <div className="soft-gray-border d-flex flex-row justify-content-start py-3 px-3">
                     <strong
-                      className="cl-dark-text"
+                      className="cl-dark-text ms-1"
                       style={{ fontSize: "1.3em" }}
                     >
                       Extracurriculars Metrics

@@ -11,6 +11,7 @@ interface TextInputQuestionProps {
   userAnswer: string;
   onChange: Function;
   isTextArea?: boolean;
+  isInDouble?: boolean;
   className?: string;
   isGrade?: boolean;
   isDark?: boolean;
@@ -25,6 +26,7 @@ export default function TextInputQuestion({
   isPathwayQuestion,
   onChange,
   isDark,
+  isInDouble,
   className,
   isCentered,
   smallTitle,
@@ -114,8 +116,12 @@ export default function TextInputQuestion({
     >
       {smallTitle ? (
         <span
-          className={`pt-4 "cl-light-gray pb-1"`}
-          style={{ fontSize: "1em" }}
+          className={`pt-4 cl-light-gray pb-1`}
+          style={{
+            fontSize: "1em",
+            width: isInDouble ? "100%" : "90%",
+            textAlign: "left",
+          }}
         >
           {question.question}
         </span>
@@ -145,7 +151,8 @@ export default function TextInputQuestion({
       <div
         className={`d-flex flex-column justify-content-evenly align-items-${
           !isCentered ? "start" : "center"
-        } h-75 w-100`}
+        } h-75`}
+        style={{ width: smallTitle ? "100%" : "90%" }}
       >
         <input
           defaultValue={currValue}
@@ -163,10 +170,15 @@ export default function TextInputQuestion({
             setCurrValue(e.target.value);
             onChange(e.target.value);
           }}
-          className={`form-control w-${
-            isPathwayQuestion || smallTitle ? "100" : "75"
-          } cl-dark-text fw-bold`}
-          style={{ borderRadius: "10px" }}
+          className={`form-control cl-dark-text fw-bold`}
+          style={{
+            borderRadius: "10px",
+            width: isInDouble
+              ? "100%"
+              : isPathwayQuestion || smallTitle
+              ? "90%"
+              : "75%",
+          }}
           placeholder={question.placeholder ?? "Your response..."}
         />
       </div>

@@ -17,6 +17,7 @@ import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import UWCSLandingPage from "src/main-pages/WelcomePage/components/UWCSLandingPage/UWCSLandingPage";
 import { useLocation } from "src/utils/hooks/useLocation";
+import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
 const MiddleBlock = dynamic(
@@ -247,7 +248,7 @@ function useWindowSize() {
   return size;
 }
 
-const WelcomePage = () => {
+const WelcomePage = ({data}) => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
   const [width, height] = useWindowSize();
@@ -381,13 +382,15 @@ const WelcomePage = () => {
             id="mission"
           />
         )}
+
         <ContentBlock
           type="left"
           title={ProductContent.title}
           content={ProductContent.text}
           icon="landing_3.svg"
           id="product"
-        />
+          />
+          <NewBlogsCarousel recentBlogs={data.recentBlogs}/>
         <Partner>
           <MiddleBlock
             id="partner"

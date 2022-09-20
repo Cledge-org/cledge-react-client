@@ -39,6 +39,7 @@ const CompositeQuestion = ({
           smallTitle
           isDark={question.type === "ECTextInput"}
           userAnswer={response}
+          isCentered
           onChange={(answer) => {
             onChange(answer, index, question._id.toString());
           }}
@@ -172,7 +173,11 @@ const CompositeQuestion = ({
     renderedQuestions = renderedQuestions.concat(
       <div className="w-100">
         {questions.map((question, index) => {
-          return getQuestionType(question, responses[index], index);
+          return getQuestionType(
+            question,
+            responses && responses[index],
+            index
+          );
         })}
       </div>
     );
@@ -181,7 +186,7 @@ const CompositeQuestion = ({
   return (
     <div
       className={classNames(
-        `h-100 d-flex flex-column align-items-start justify-content-evenly w-100 cl-dark-text fw-bold`
+        `h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold`
       )}
     >
       <div

@@ -38,6 +38,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         introducedToChatbot: false,
         isOnMailingList: false,
         hasUWAccess: false,
+        chatbotHistoryLength: 0,
       });
       resolve.status(200).send("Success");
     } catch (e) {

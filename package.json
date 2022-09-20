@@ -28,7 +28,7 @@
     "@ramonak/react-progress-bar": "^3.2.1",
     "@reduxjs/toolkit": "^1.6.1",
     "@stripe/react-stripe-js": "^1.10.0",
-    "@stripe/stripe-js": "^1.35.0",
+    "@stripe/stripe-js": "^1.36.0",
     "@svgr/webpack": "^6.2.1",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-chartjs-2": "^2.5.7",
@@ -90,6 +90,7 @@
     "slick-carousel": "^1.8.1",
     "stripe": "^10.8.0",
     "styled-components": "^5.3.3",
+    "swr": "^1.3.0",
     "typescript-plugin-css-modules": "^1.3.1",
     "yup": "^0.32.11"
   },

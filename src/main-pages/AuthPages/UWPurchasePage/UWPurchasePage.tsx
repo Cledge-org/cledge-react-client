@@ -100,6 +100,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
         email: signUpDetails.email,
         tags: [],
         introducedToChatbot: false,
+        chatbotHistoryLength: 0,
         hasUWAccess: true,
         checkIns: ["Onboarding Questions"],
       })
