@@ -52,7 +52,7 @@ const TipsCard = ({
               borderRadius: "10px",
             }}
           >
-            {tip.includes("https") ? (
+            {tip?.includes("https") ? (
               <>
                 {tip.substring(0, tip.indexOf("https"))}
                 <Link href={tip.substring(tip.indexOf("https"))}>

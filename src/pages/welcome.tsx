@@ -1,16 +1,14 @@
 import { GetServerSidePropsContext, NextPage } from "next";
 import React from "react";
+import { getRecentBlogs } from "src/pages/api/blogs/get-recent-blogs";
 import WelcomePage from "../main-pages/WelcomePage/WelcomePage";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const recentBlogs = await fetch(
-    `http://${ctx.req.headers.host}/api/blogs/get-recent-blogs`
-  );
-  const recentBlogsJson = await recentBlogs.json();
+  const recentBlogs = JSON.parse(JSON.stringify(await getRecentBlogs()));
   return {
     props: {
       data: {
-        recentBlogs: recentBlogsJson,
+        recentBlogs,
       },
     },
   };

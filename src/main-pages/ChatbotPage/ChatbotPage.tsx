@@ -96,7 +96,10 @@ const Chatbot: NextApplicationPage<{
         }),
       })
     ).json();
-    setMessageList(history);
+    console.log(history);
+    if (history.length > 0) {
+      setMessageList(history);
+    }
     setIsLoading(false);
   };
 
@@ -118,6 +121,10 @@ const Chatbot: NextApplicationPage<{
   useEffect(() => {
     asyncUseEffect();
   }, []);
+
+  useEffect(() => {
+    console.log(messageList);
+  }, [messageList]);
 
   useEffect(() => {
     if (shouldUpdateBackend) {
@@ -149,7 +156,18 @@ const Chatbot: NextApplicationPage<{
   const addMessages = useCallback(
     (newMessages: (MessageProps | CoupledOptions)[]) => {
       const lastIndex = messageList.length - 1;
-      if (newMessages.length + messageList[lastIndex].messages.length > 30) {
+      if (lastIndex < 0) {
+        messageList.push({
+          _id: null,
+          firebaseId: session.data.user.uid,
+          index: 0,
+          messages: newMessages,
+        });
+        setMessageList([...messageList]);
+      } else if (
+        newMessages.length + messageList[lastIndex].messages.length >
+        30
+      ) {
         messageList[lastIndex].messages = messageList[
           lastIndex
         ].messages.concat(
@@ -163,7 +181,6 @@ const Chatbot: NextApplicationPage<{
             30 - messageList[lastIndex].messages.length
           ),
         });
-        console.log(messageList);
         setMessageList([...messageList]);
       } else {
         messageList[lastIndex].messages =

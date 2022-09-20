@@ -136,8 +136,8 @@ const Pathways: NextApplicationPage<{
     return currContent.content.map((content) => {
       const { type } = content;
       const currSubContentProgress = moduleProgress[currModuleId.toString()]
-        .find(({ name }) => name === currContent.name)
-        .subContentProgress.find(({ id }) => id === content.id) || {
+        ?.find(({ name }) => name === currContent.name)
+        ?.subContentProgress?.find(({ id }) => id === content.id) || {
         id: content.id,
         finished: false,
       };
@@ -306,16 +306,18 @@ const Pathways: NextApplicationPage<{
                     isFinishedModule={
                       pathwaysProgress
                         .find(({ name }) => pathwayInfo.name === name)
-                        .moduleProgress.find(
+                        .moduleProgress?.find(
                           (moduleProgress) => moduleProgress.name === name
-                        ).finished
+                        )?.finished
                     }
-                    isFinishedContent={pathwaysProgress
-                      .find(({ name }) => pathwayInfo.name === name)
-                      .moduleProgress.find(
-                        (moduleProgress) => moduleProgress.name === name
-                      )
-                      .contentProgress.map(({ finished }) => finished)}
+                    isFinishedContent={
+                      pathwaysProgress
+                        ?.find(({ name }) => pathwayInfo.name === name)
+                        ?.moduleProgress?.find(
+                          (moduleProgress) => moduleProgress.name === name
+                        )
+                        ?.contentProgress?.map(({ finished }) => finished) || []
+                    }
                     icons={moduleSortedContent.map(
                       ({ primaryType }) => primaryType
                     )}

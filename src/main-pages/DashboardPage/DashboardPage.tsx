@@ -264,7 +264,12 @@ const DashboardPage = ({
                       }px)`,
                       top: "0",
                       zIndex: 100,
-                      alignItems: "center",
+                      alignItems:
+                        avgTier === 0
+                          ? "start"
+                          : avgTier === 12
+                          ? "end"
+                          : "center",
                       width: "fit-content",
                     }}
                   >

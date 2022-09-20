@@ -32,12 +32,24 @@ const Metrics: NextApplicationPage<{
   const session = useSession();
   //console.log(activities);
   const [currPage, setCurrPage] = useState("all");
-  function BorderDropdownTab({ isAll, chunkList, onClick, title, percentComplete }) {
+  function BorderDropdownTab({
+    isAll,
+    chunkList,
+    onClick,
+    title,
+    percentComplete,
+  }) {
     return (
       <div className="border-bottom border-2">
-      <DropdownTab isAll={isAll} chunkList={chunkList} onClick={onClick} title={title} percentComplete={percentComplete} />
+        <DropdownTab
+          isAll={isAll}
+          chunkList={chunkList}
+          onClick={onClick}
+          title={title}
+          percentComplete={percentComplete}
+        />
       </div>
-    )
+    );
   }
   return (
     <PageErrorBoundary>
@@ -250,23 +262,23 @@ const Metrics: NextApplicationPage<{
                   content={""}
                   updateChunk={"All Academics"}
                   updatePage={"Academics"}
-                  tip={academics.gpaTip}
-                  tier={academics.gpaTier}
+                  tip={academics?.gpaTip}
+                  tier={academics?.gpaTier}
                 />
                 <ActivityDropdown
                   title={"Coursework"}
                   content={""}
                   updateChunk={"All Academics"}
                   updatePage={"Academics"}
-                  tip={academics.classTip}
-                  tier={academics.overallClassTier}
+                  tip={academics?.classTip}
+                  tier={academics?.overallClassTier}
                 />
                 <ActivityDropdown
                   title={"SAT/ACT"}
                   content={""}
                   updateChunk={"All Academics"}
                   updatePage={"Academics"}
-                  tip={academics.testTip}
+                  tip={academics?.testTip}
                   customContent={
                     <>
                       <div
@@ -324,7 +336,7 @@ const Metrics: NextApplicationPage<{
                         <TipsCard
                           isOverall={false}
                           title={""}
-                          tips={[academics.testTip]}
+                          tips={[academics?.testTip]}
                           updatePage={"Academics"}
                           updateChunk={"All Academics"}
                         />
