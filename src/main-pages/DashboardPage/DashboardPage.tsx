@@ -250,8 +250,8 @@ const DashboardPage = ({
                         height: "36px",
                         background:
                           "linear-gradient(90deg, rgba(100, 47, 113, 0.1) 0%, rgba(248, 231, 76, 0.1) 100%)",
-                        borderLeft: "2px solid #506BED",
-                        borderRight: "2px solid #506BED",
+                        borderLeft: "2px solid #554e86",
+                        borderRight: "2px solid #f5e44b",
                         position: "relative",
                       }}
                     >
