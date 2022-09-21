@@ -5,6 +5,7 @@ import { initialStateAction } from "../../../../utils/redux/actionFunctions";
 import { store } from "../../../../utils/redux/store";
 import Header from "../../../../common/components/Header/Header";
 import LoadingScreen from "../../../../common/components/Loading/Loading";
+import Footer from "../../../../common/components/Footer/Footer";
 import {
   callGetAccount,
   callGetAllPathwayProgress,
@@ -16,6 +17,7 @@ export default function Layout({ children }) {
   const session = useSession();
   const [loading, setLoading] = useState(true);
   const [header, setHeader] = useState(<Header key_prop="initial" />);
+  const [footer, setFooter] = useState(<Footer />);
 
   const asyncUseEffect = async () => {
     if (session.data?.user?.uid && !store.getState()) {

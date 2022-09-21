@@ -7,14 +7,16 @@ import {
   faInstagramSquare,
 } from "@fortawesome/free-brands-svg-icons";
 
-export default function Footer() {
+export default function Footer({
+}: {
+}) {
   return (
     <footer
-      className="bg-dark-blue cl-light-gray container-fluid px-6"
+      className="bg-dark-blue cl-light-gray container-fluid"
       style={{ padding: 60, width: "100%" }}
     >
       <div className="row mt-2 cl-translucent-white">
-        <div className="col-10 col-md-3">
+        <div className="col-10 col-md-2">
           <Link href="#">
             <h4
               className="cl-white title"
@@ -93,10 +95,26 @@ export default function Footer() {
             </li>
           </ul>
         </div> */}
-        <div className="col-12 col-md-3  mt-5 mt-md-0">
-          <h6 className="title mb-4 cl-translucent-white">MORE</h6>
-          <a href="mailto:ayan@cledge.org" className="cl-white">
-            Get in Touch
+        <div className="col-12 col-md-3 me-5 mt-5 mt-md-0">
+          <h6 className="cl-translucent-white">Empower every student to maximize</h6>
+          <h6 className="cl-translucent-white"> admissions chances  into their best fit colleges.</h6>
+        </div>
+        <div className="col-12 col-md-2 ms-5 mt-5 mt-md-0">
+          <h6 className="title mb-3 cl-translucent-white">MORE</h6>
+          <a href="mailto:ayan@cledge.org" className="cl-white" target="_blank">
+            Contact Us
+          </a>
+          <br />
+          <a href="#" className="cl-white" target="_blank">
+            Weekly Newsletter
+          </a>
+          <br />
+          <a href="https://docs.google.com/document/d/1yUPYg-s6KNJkkOvLLy5N8vHTfIIwINjaKv2LMUfnmPQ/edit" target="_blank" className="cl-white">
+            Terms and Conditions
+          </a>
+          <br />
+          <a href="#" className="cl-white">
+            Privacy Statement
           </a>
         </div>
       </div>

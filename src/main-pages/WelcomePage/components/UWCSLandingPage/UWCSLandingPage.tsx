@@ -5,7 +5,7 @@ import MissionContent from "../../content/MissionContent.json";
 import MiddleBlockContent from "../../content/MiddleBlockContent.json";
 import PartnerContent from "../../content/PartnerContent.json";
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
-import Footer from "../Footer/Footer";
+import Footer from "../../../../common/components/Footer/Footer";
 import styled from "styled-components";
 import { Fade } from "react-awesome-reveal";
 import { Button } from "../Button/Button";
@@ -553,16 +553,7 @@ const UWCSLandingPage = () => {
           </div>
         )}
       </Container>
-      <Footer
-        onFeatureClick={(featureIndex) => {
-          setCurrFeature(featureIndex);
-          //console.log(slideShowRef.current.offsetTop);
-          document.body.scrollTo({
-            top: slideShowRef.current.offsetTop,
-            behavior: "smooth",
-          });
-        }}
-      />
+      <Footer />
     </PageErrorBoundary>
   );
 };

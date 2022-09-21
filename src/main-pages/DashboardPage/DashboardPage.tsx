@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { connect } from "react-redux";
-import Footer from "./components/Footer/DashboardFooter";
+import Footer from "../../common/components/Footer/Footer";
 
 const DashboardPage = ({
   accountInfo,
@@ -319,7 +319,7 @@ const DashboardPage = ({
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

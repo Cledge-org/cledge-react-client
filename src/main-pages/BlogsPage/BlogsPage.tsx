@@ -4,6 +4,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import BlogText from "../../common/components/Blog/CardBlog";
 import { Button } from "react-bootstrap";
+import Footer from "../../common/components/Footer/Footer";
 
 const BlogsPage = ({ blogInfo }) => {
   //console.log(blogInfo.articles);
@@ -147,6 +148,7 @@ const BlogsPage = ({ blogInfo }) => {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 };

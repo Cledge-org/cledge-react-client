@@ -14,6 +14,7 @@ import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import DropdownTab from "../../common/components/DropdownTab/DropdownTab";
+import Footer from "../../common/components/Footer/Footer";
 
 import QuestionSubPageHeader from "../../common/components/SubpageHeader/SubpageHeader";
 import ActivityDropdown from "./components/ActivityDropdown/ActivityDropdown";
@@ -338,6 +339,7 @@ const Metrics: NextApplicationPage<{
           )}
         </div>
       </div>
+      <Footer />
     </PageErrorBoundary>
   );
 };
