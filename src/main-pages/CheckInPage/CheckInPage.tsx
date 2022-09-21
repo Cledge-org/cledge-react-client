@@ -174,6 +174,9 @@ const CheckIn: NextApplicationPage<{
   const checkInPages = checkInData.chunks.map(({ questions }) => {
     return (
       <div>
+        <div className="cl-blue fw-bold" style={{ fontSize: "18px" }}>
+          Questions with * are required
+        </div>
         {questions.map((question) => {
           const updateFunc = (
             value,
@@ -411,22 +414,10 @@ const CheckIn: NextApplicationPage<{
           ))}
         </div>
       </div>
-      {page > 0 && (
-        <button
-          style={{
-            backgroundColor: "transparent",
-            outline: "none",
-            border: "none",
-          }}
-          className="position-fixed center-child top-0 left-0 mt-5 pt-5 ms-5"
-          onClick={goBack}
-        >
-          <FontAwesomeIcon icon={faArrowLeft} className="me-3" />
-          Back
-        </button>
-      )}
       <div
-        style={{ width: size.width < 800 ? "100%" : "60%" }}
+        style={{
+          width: size.width < 800 ? "100%" : size.width < 1400 ? "60%" : "40%",
+        }}
         className="align-self-center row col-md-5 d-md-flex mx-auto mt-5 pt-5 flex-column justify-content-center text-center checkIn-question"
       >
         {checkInPages[page]}
@@ -438,17 +429,18 @@ const CheckIn: NextApplicationPage<{
         )}
         style={{
           bottom: "16vh",
-          width: size.width < 800 ? "80%" : "55%",
+          width: size.width < 800 ? "100%" : size.width < 1400 ? "60%" : "40%",
           borderTop: "1px solid #C1C0CE",
         }}
       >
         <div className="px-0">
           <button
             type="button"
-            disabled={!canGoForward}
+            disabled={page === 0}
             className="btn cl-btn-clear"
+            onClick={goBack}
           >
-            Skip
+            Back
           </button>
         </div>
         <div className="px-0">

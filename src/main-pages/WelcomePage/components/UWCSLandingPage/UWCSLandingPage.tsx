@@ -409,19 +409,18 @@ const UWCSLandingPage = () => {
                     ? "Releasing September"
                     : "Utilize the power of Cledge to gain an edge on your UW CS application. Get insider access to how UW CS scores your application, view successful applicant profiles, and then get help writing the UW supplemental essay. Still need help? You will get one 30 minute consultation with a college advisor and access to Cledge AI tools."}
                 </div>
-                {width < 800 && (
-                  <div style={{ width: "100%" }}>
-                    <input
-                      value={email}
-                      style={{ color: "black" }}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                      }}
-                      type="text"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-                )}
+
+                <div style={{ width: width < 800 ? "100%" : "50%" }}>
+                  <input
+                    value={email}
+                    style={{ color: "black" }}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                    type="text"
+                    placeholder="Enter your email"
+                  />
+                </div>
                 <div style={{ width: width < 800 ? "100%" : "300px" }}>
                   <Button
                     key="buy-now-btn"

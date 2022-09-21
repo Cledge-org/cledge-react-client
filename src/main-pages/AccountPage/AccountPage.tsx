@@ -145,31 +145,6 @@ const AccountPage: NextApplicationPage<{
           <div className={classNames(styles.myaccountBlob, "px-4 py-4 mb-3")}>
             <span className={styles.title}>Basic Info</span>
             <div className="pb-3" />
-            <div
-              className={classNames(styles.myaccountInfoSection, "pt-1 pb-3")}
-            >
-              <span className={classNames(styles.name, "align-self-start")}>
-                PHOTO
-              </span>
-              <div className={styles.infoContainer}>
-                <div
-                  className="bg-cl-blue center-child"
-                  style={{
-                    color: "white",
-                    fontWeight: "bold",
-                    fontSize: "1.4em",
-                    width: "4vw",
-                    height: "4vw",
-                    border: "1px solid transparent",
-                    borderRadius: "2vw",
-                    userSelect: "none",
-                  }}
-                >
-                  c
-                </div>
-                <div />
-              </div>
-            </div>
             <InfoSection
               name="NAME"
               value={currUserData.name}
@@ -212,7 +187,12 @@ const AccountPage: NextApplicationPage<{
             />
           </div>
           <div className={classNames(styles.myaccountBlob, "px-4 py-4 mb-3")}>
-            <span className="title">Academic Info</span>
+            <span
+              className="cl-dark-text fw-bold align-self-start"
+              style={{ fontSize: "1em" }}
+            >
+              Academic Info
+            </span>
             <InfoSection
               name="Grade"
               value={currUserData.grade}

@@ -75,7 +75,9 @@ export default function CheckBoxQuestion({
         })}
       >
         <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
-          {question.question}
+          {`${question.question}${
+            (question as Question).isRequired ? " *" : ""
+          }`}
         </span>
         {(question as Question).popUpText && (
           <Tooltip
@@ -104,7 +106,7 @@ export default function CheckBoxQuestion({
                 changeSelected(op);
               }}
               className={classNames(
-                selected.includes(op)
+                selected.includes(isPathwayQuestion ? singleData : op)
                   ? styles.checkboxMcqVariantSelected
                   : styles.checkboxMcqVariant,
                 "py-2 my-2",
