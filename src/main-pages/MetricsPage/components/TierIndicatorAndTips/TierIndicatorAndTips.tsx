@@ -20,19 +20,19 @@ const TierIndicatorAndTips = ({
 }) => {
   return (
     <>
-      <TierRange tier={tier} isOverall={isOverall} />
+      <TierRange tier={tier} isOverall={isOverall}/>
       {!noTip && (
         <div
           style={{ minHeight: "30vh", width: isOverall ? "100%" : "50%" }}
-          className="d-flex flex-column align-items-center justify-content-start"
+          className="d-flex flex-column align-items-center ms-5"
         >
-          <TipsCard
-            updateChunk={updateChunk}
-            updatePage={updatePage}
-            isOverall={isOverall}
-            title={tipTitle}
-            tips={[tip]}
-          />
+            <TipsCard
+              updateChunk={updateChunk}
+              updatePage={updatePage}
+              isOverall={isOverall}
+              title={tipTitle}
+              tips={[tip]}
+            />
         </div>
       )}
     </>

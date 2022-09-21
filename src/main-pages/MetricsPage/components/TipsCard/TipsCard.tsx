@@ -22,7 +22,7 @@ const TipsCard = ({
         isOverall ? "between" : "around"
       } w-100 px-3 pt-3 shadow-sm soft-gray-border`}
       style={{
-        height: "30vh",
+        height: "25vh",
         borderRadius: "10px",
         marginTop: isOverall ? "10vh" : 0,
       }}
@@ -51,7 +51,7 @@ const TipsCard = ({
               borderRadius: "10px",
             }}
           >
-            {tip}
+          {tip}
           </div>
         ))}
         <div

@@ -15,8 +15,8 @@ const TierRange = ({
     return (
       <>
         <div
-          className="bg-cl-dark-text"
           style={{
+            backgroundColor: "#f7bc76",
             position: "absolute",
             height: "118%",
             width: "34.8%",
@@ -51,22 +51,22 @@ const TierRange = ({
               height: 0,
               borderLeft: "7px solid transparent",
               borderRight: "7px solid transparent",
-              borderBottom: "7px solid #070452",
+              borderBottom: "7px solid #f7bc76",
               alignSelf: tier === 1 ? "start" : tier === 12 ? "end" : "center",
             }}
             className="mx-2"
           ></div>
           <div
-            className="px-3 py-2 bg-cl-dark-text"
+            className="px-3 py-2"
             style={{
-              width: "10rem",
+              backgroundColor: "#f7bc76",
+              width: "8rem",
               border: "1px solid transparent",
               borderRadius: "10px",
-              color: "white",
               textAlign: "center",
             }}
           >
-            You are at tier {tier}
+            <text style={{ color: "#070452" }}>You are here</text>
           </div>
         </div>
       </>
@@ -86,7 +86,7 @@ const TierRange = ({
           )}
           style={{ flex: 1, height: "100%" }}
         >
-          {tiers.map((currTier, index) => {
+          {/* {tiers.map((currTier, index) => {
             return (
               <div
                 className={`h-100 overflow-hidden center-child ${
@@ -122,7 +122,7 @@ const TierRange = ({
                 </div>
               </div>
             );
-          })}
+          })} */}
           {tier <= tiers[tiers.length - 1] && tier >= tiers[0]
             ? tierIndicator(tiers[0])
             : null}
@@ -135,10 +135,12 @@ const TierRange = ({
     <div
       className="d-flex flex-row align-items-center position-relative px-2 py-1"
       style={{
+        borderLeft: "2vh solid #554e86",
+        borderRight: "2vh solid #f5e44b",
         borderRadius: "8px",
         height: "8vh",
         background:
-          "linear-gradient(90deg, rgba(100, 47, 113, 0.1) 0%, rgba(248, 231, 76, 0.1) 100%)",
+        "linear-gradient(90deg, rgba(100, 47, 113, 0.1) 0%, rgba(248, 231, 76, 0.1) 100%)",
         width: isOverall ? "100%" : "49%",
       }}
     >

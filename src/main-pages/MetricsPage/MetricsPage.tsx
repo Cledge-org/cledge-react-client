@@ -117,14 +117,24 @@ const Metrics: NextApplicationPage<{
                     style={{
                       backgroundColor: "white",
                       borderTop: "none",
-                      height: "20vh",
+                      height: "24vh",
                     }}
                   >
-                    <TierRange
-                      tier={activities?.overallTier}
-                      isOverall
-                      isOverview
-                    />
+                    <div className="d-flex flex-column w-100 mx-3 cl-dark-text">
+                      <div className="d-flex justify-content-between mb-2">
+                        <div>
+                          <text>Least competitive</text>
+                        </div>
+                        <div>
+                          <text>Most competitive</text>
+                        </div>
+                      </div>
+                      <TierRange
+                        tier={activities?.overallTier}
+                        isOverall
+                        isOverview
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="mt-2 ms-5" style={{ width: "50%" }}>
@@ -141,14 +151,24 @@ const Metrics: NextApplicationPage<{
                     style={{
                       backgroundColor: "white",
                       borderTop: "none",
-                      height: "20vh",
+                      height: "24vh",
                     }}
                   >
-                    <TierRange
-                      tier={academics?.overallTier}
-                      isOverall
-                      isOverview
-                    />
+                    <div className="d-flex flex-column w-100 mx-3 cl-dark-text">
+                      <div className="d-flex justify-content-between mb-2">
+                        <div>
+                          <text>Least competitive</text>
+                        </div>
+                        <div>
+                          <text>Most competitive</text>
+                        </div>
+                      </div>
+                      <TierRange
+                        tier={academics?.overallTier}
+                        isOverall
+                        isOverview
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -175,16 +195,27 @@ const Metrics: NextApplicationPage<{
                     title="Overall Tier"
                     isDivider
                   />
-                  <div className="d-flex flex-column">
-                    <TierIndicatorAndTips
-                      tier={activities?.overallTier}
-                      isOverall
-                      updateChunk={"All Activities"}
-                      updatePage={"Extracurriculars"}
-                      tip={""}
-                      noTip
-                      tipTitle={""}
-                    />
+                  <div className="d-flex flex-row justify-content-end">
+                    <div className="w-50 cl-dark-text">
+                      <div className="d-flex justify-content-between mb-2">
+                        <div>
+                          <text>Least competitive</text>
+                        </div>
+                        <div>
+                          <text>Most competitive</text>
+                        </div>
+                      </div>
+                      
+                      <TierIndicatorAndTips
+                        tier={activities?.overallTier}
+                        isOverall
+                        updateChunk={"All Activities"}
+                        updatePage={"Extracurriculars"}
+                        tip={""}
+                        noTip
+                        tipTitle={""}
+                      />
+                    </ div>
                   </div>
                 </div>
                 <SubTitle
@@ -229,8 +260,18 @@ const Metrics: NextApplicationPage<{
                     title="Overall Academics Tier"
                     isDivider
                   />
-                  <div className="d-flex flex-column">
-                    <TierIndicatorAndTips
+                  <div className="d-flex flex-row justify-content-end">
+                    <div className="w-50 cl-dark-text">
+                      <div className="d-flex justify-content-between mb-2">
+                        <div>
+                          <text>Least competitive</text>
+                        </div>
+                        <div>
+                          <text>Most competitive</text>
+                        </div>
+                      </div>
+                      
+                      <TierIndicatorAndTips
                       noTip
                       tip=""
                       updateChunk={"All Academics"}
@@ -239,6 +280,7 @@ const Metrics: NextApplicationPage<{
                       tier={academics?.overallTier}
                       isOverall
                     />
+                    </ div>
                   </div>
                 </div>
                 <SubTitle
