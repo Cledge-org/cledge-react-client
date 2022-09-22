@@ -41,7 +41,9 @@ export default function MCQQuestion({
         })}
       >
         <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
-          {question.question}
+          {`${question.question}${
+            (question as Question).isRequired ? " *" : ""
+          }`}
         </span>
         {(question as Question).popUpText && (
           <Tooltip
@@ -73,7 +75,7 @@ export default function MCQQuestion({
               }}
               style={isPathwayQuestion ? { width: "100%" } : {}}
               className={`${
-                selected === op
+                (isPathwayQuestion ? selected === singleData : selected === op)
                   ? styles.mcqAnswerBtnSelected
                   : styles.mcqAnswerBtn
               } ${inEC ? "w-100" : ""} py-3 ${

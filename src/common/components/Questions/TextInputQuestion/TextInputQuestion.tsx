@@ -14,7 +14,6 @@ interface TextInputQuestionProps {
   isInDouble?: boolean;
   className?: string;
   isGrade?: boolean;
-  isDark?: boolean;
   isCentered?: boolean;
   smallTitle?: boolean;
 }
@@ -25,7 +24,6 @@ export default function TextInputQuestion({
   isTextArea,
   isPathwayQuestion,
   onChange,
-  isDark,
   isInDouble,
   className,
   isCentered,
@@ -78,33 +76,6 @@ export default function TextInputQuestion({
       </div>
     );
   }
-  if (isDark) {
-    return (
-      <div
-        className={classNames(
-          "w-100 d-flex flex-column justify-content-evenly pt-5",
-          className
-        )}
-      >
-        <div
-          className="fw-bold cl-dark-text pb-3"
-          style={{ fontSize: "1.4em" }}
-        >
-          {question.question}
-        </div>
-        <input
-          value={currValue}
-          type="text"
-          className={classNames("form-control", styles.ecTextInput)}
-          placeholder={question.placeholder}
-          onChange={(e) => {
-            setCurrValue(e.target.value);
-            onChange(e.target.value);
-          }}
-        />
-      </div>
-    );
-  }
   return (
     <div
       className={classNames(
@@ -123,7 +94,9 @@ export default function TextInputQuestion({
             textAlign: "left",
           }}
         >
-          {question.question}
+          {`${question.question}${
+            (question as Question).isRequired ? " *" : ""
+          }`}
         </span>
       ) : (
         <div
@@ -138,7 +111,9 @@ export default function TextInputQuestion({
           )}
         >
           <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
-            {question.question}
+            {`${question.question}${
+              (question as Question).isRequired ? " *" : ""
+            }`}
           </span>
           {(question as Question).popUpText && (
             <Tooltip
