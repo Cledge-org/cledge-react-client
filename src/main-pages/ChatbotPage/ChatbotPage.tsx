@@ -71,13 +71,12 @@ const Chatbot: NextApplicationPage<{
   const [currOptions, setCurrOptions] = useState({});
   const [awaitingChatbotResponse, setAwaitingChatbotResponse] = useState(false);
   const [currMessageText, setCurrMessageText] = useState("");
-  const [prevMessageText, setPrevMessageText] = useState("");
   const [pickedOptions, setPickedOptions] = useState<any[][]>([]);
   const [currProblematicMessage, setCurrProblematicMessage] = useState<{
     question: string;
     answer: string;
   }>({ question: "", answer: "" });
-  const [questionParams, setQuestionParams] = useState<QuestionParams>();
+  const [questionParams, setQuestionParams] = useState<QuestionParams>(null);
   const [shouldUpdateBackend, setShouldUpdateBackend] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   //General Hooks
@@ -195,31 +194,29 @@ const Chatbot: NextApplicationPage<{
     [messageList]
   );
 
-  const handleQuestionParams = () => {
+  const adjustQuestionParams = () => {
     const option = pickedOptions[pickedOptions.length - 1];
     const problem = option[option.length - 1];
-    if (problem in Object.values(downvoteWorkflow.e1.possibleChoices)) {
-      setQuestionParams({
-        ...questionParams,
-        get_snippet: false,
-        search_similar: false,
-        general_answer:
-          problem === downvoteWorkflow.e1.possibleChoices["Not relavant to me"],
-        alternate_source:
-          problem ===
-          downvoteWorkflow.e1.possibleChoices["Information is not accurate"],
-        skip_summary:
-          problem ===
-          downvoteWorkflow.e1.possibleChoices["Not enough information"],
-      });
-    }
+    setQuestionParams({
+      ...questionParams,
+      get_snippet: false,
+      search_similar: false,
+      general_answer:
+        problem === downvoteWorkflow.e1.possibleChoices["Not relavant to me"],
+      alternate_source:
+        problem ===
+        downvoteWorkflow.e1.possibleChoices["Information is not accurate"],
+      skip_summary:
+        problem ===
+        downvoteWorkflow.e1.possibleChoices["Not enough information"],
+    });
   };
 
   const handleMessageSubmit = useCallback(
-    async (e?) => {
+    async (e?, customMessage?) => {
       e?.preventDefault();
       e?.stopPropagation();
-      if (!currMessageText) {
+      if (!currMessageText && !customMessage) {
         return;
       }
       setAwaitingChatbotResponse(true);
@@ -231,11 +228,10 @@ const Chatbot: NextApplicationPage<{
           isOnLeft: true,
         },
       ]);
-      setPrevMessageText(currMessageText);
-      setCurrMessageText("");
+      if (!customMessage) setCurrMessageText("");
       document.getElementById("chatbot-input").innerHTML = "";
       const { response, responseId } = await callGetChatbotResponse(
-        currMessageText,
+        customMessage || currMessageText,
         accountInfo.name,
         accountInfo.email,
         questionResponses.filter(({ questionId }) => {
@@ -267,7 +263,7 @@ const Chatbot: NextApplicationPage<{
         addMessages([
           {
             message:
-              "If you do not like the answer, feel free to give it a thumb down 👎 and we will have a real counselor reply back to you.",
+              "If you do not like the answer, feel free to give it a thumb down 👎 to let us collect some feedback.",
             isOnLeft: true,
           },
         ]);
@@ -305,29 +301,11 @@ const Chatbot: NextApplicationPage<{
   );
 
   const onOptionClick = async (option: string) => {
+    const choice = pickedOptions[pickedOptions.length - 1][
+      pickedOptions[pickedOptions.length - 1].length - 1
+    ];
     const workflow =
       currWorkflow === "downvote" ? downvoteWorkflow : introductionWorkflow;
-    if (workflow[currOptions[option]]?.backgroundAction) {
-      workflow[currOptions[option]].backgroundAction(
-        accountInfo,
-        currProblematicMessage.question,
-        currProblematicMessage.answer,
-        pickedOptions[pickedOptions.length - 1][
-          pickedOptions[pickedOptions.length - 1].length - 1
-        ]
-      );
-      alertSlackChatbotQuestion({
-        email: accountInfo.email,
-        name: accountInfo.name,
-        resolved: false,
-        question: currProblematicMessage.question,
-        answer: currProblematicMessage.answer,
-        problem:
-          pickedOptions[pickedOptions.length - 1][
-            pickedOptions[pickedOptions.length - 1].length - 1
-          ],
-      });
-    }
     setPickedOptions((currPicked) => {
       currPicked[currPicked.length - 1].push(option);
       return currPicked;
@@ -344,6 +322,23 @@ const Chatbot: NextApplicationPage<{
       },
     ]);
     setCurrOptions([]);
+    if (workflow[currOptions[option]]?.backgroundAction) {
+      adjustQuestionParams();
+      workflow[currOptions[option]].backgroundAction(
+        accountInfo,
+        currProblematicMessage.question,
+        currProblematicMessage.answer,
+        choice,
+        questionParams
+      ).then((response: string) => {
+        continueWorkflow(option, workflow, response);
+      })
+    } else {
+      continueWorkflow(option, workflow);
+    }
+  };
+
+  const continueWorkflow = async (option: string, workflow: any, response?: string) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     if (messageList[messageList.length - 1]) {
       messageList[messageList.length - 1].messages = messageList[
@@ -351,8 +346,12 @@ const Chatbot: NextApplicationPage<{
       ].messages.slice(0, -1);
     }
     setMessageList([...messageList]);
+    let nextMessages = workflow[currOptions[option]].chatbotMessages
+    if (response) {
+      nextMessages.unshift(response);
+    }
     addMessages(
-      getChatbotMessagesFormatted(workflow[currOptions[option]].chatbotMessages)
+      getChatbotMessagesFormatted(nextMessages)
     );
     setCurrOptions(workflow[currOptions[option]].possibleChoices);
     if (!workflow[currOptions[option]]?.possibleChoices) {
@@ -363,10 +362,7 @@ const Chatbot: NextApplicationPage<{
       }
     }
     setShouldUpdateBackend(true);
-    handleQuestionParams();
-    setCurrMessageText(prevMessageText);
-    handleMessageSubmit();
-  };
+  }
 
   useEffect(() => {
     if (scrollRef?.current && !isLoadingMore)
