@@ -57,16 +57,7 @@ const CheckIn: NextApplicationPage<{
   };
 
   const canGoForward = useMemo(() => {
-    console.log(checkInData.chunks[page].questions);
     for (let i = 0; i < checkInData.chunks[page].questions.length; i++) {
-      console.log(
-        checkInData.chunks[page].questions[i].isRequired &&
-          !newUserResponses.find(
-            ({ questionId }) =>
-              questionId ===
-              checkInData.chunks[page].questions[i]._id.toString()
-          )?.response
-      );
       if (
         checkInData.chunks[page].questions[i].isRequired &&
         !newUserResponses.find(
@@ -171,156 +162,180 @@ const CheckIn: NextApplicationPage<{
       return indexOfDuplicate === -1 || index === indexOfDuplicate;
     });
   };
-  const checkInPages = checkInData.chunks.map(({ questions }) => {
-    return (
-      <div>
-        <div className="cl-blue fw-bold" style={{ fontSize: "18px" }}>
-          Questions with * are required
-        </div>
-        {questions.map((question) => {
-          const updateFunc = (
-            value,
-            newQTags = undefined,
-            oldTags = undefined
-          ) => {
-            newUserResponses.find(
-              (questionResponse) =>
-                questionResponse.questionId === question?._id.toString()
-            )
-              ? (newUserResponses[
-                  newUserResponses.findIndex(
-                    (questionResponse) =>
-                      questionResponse.questionId === question?._id.toString()
-                  )
-                ]["response"] = value)
-              : newUserResponses.push({
-                  questionId: question?._id.toString(),
-                  response: value,
-                });
-            if (newQTags) {
-              setNewTags(filterDuplicates(newTags.concat(newQTags)));
-            }
-            setNewUserResponses([...newUserResponses]);
-          };
-          //console.log(question);
-          if (question?.type === "TextInput") {
-            return (
-              <TextInputQuestion
-                key={question?._id.toString()}
-                question={question}
-                isCentered
-                userAnswer={""}
-                onChange={updateFunc}
-              />
-            );
-          }
-          if (question?.type === "Ranking") {
-            return (
-              <RankingQuestion
-                question={question}
-                key={question?._id.toString()}
-                userAnswers={[]}
-                onChange={updateFunc}
-                tags={userTags}
-              />
-            );
-          }
-          if (question?.type === "MCQ") {
-            return (
-              <MCQQuestion
-                question={question}
-                key={question?._id.toString()}
-                userAnswer={""}
-                onChange={updateFunc}
-                isCentered
-                tags={userTags}
-              />
-            );
-          }
-          if (question?.type === "CheckBox") {
-            return (
-              <CheckBoxQuestion
-                key={question?._id.toString()}
-                question={question}
-                userAnswers={[]}
-                isCentered
-                onChange={updateFunc}
-                tags={userTags}
-              />
-            );
-          }
-          if (question?.type === "CompositeQuestion") {
-            return (
-              <CompositeQuestion
-                question={question}
-                responses={[]}
-                onChange={(value, index, questionId) => {
-                  let currRes = newUserResponses.find(
-                    (questionResponse) =>
-                      questionResponse.questionId === question?._id.toString()
-                  );
-                  if (currRes) {
-                    newUserResponses[
-                      newUserResponses.findIndex(
+  const checkInPages = useMemo(
+    () =>
+      checkInData.chunks.map(({ questions }) => {
+        return (
+          <div>
+            <div className="cl-blue fw-bold" style={{ fontSize: "18px" }}>
+              Questions with * are required
+            </div>
+            {questions.map((question) => {
+              const currQuestionResponse = newUserResponses.find(
+                (questionResponse) =>
+                  questionResponse.questionId === question?._id.toString()
+              );
+              const currQuestionResponseIndex = newUserResponses.findIndex(
+                (questionResponse) =>
+                  questionResponse.questionId === question?._id.toString()
+              );
+              const updateFunc = (
+                value: any,
+                newQTags = undefined,
+                oldTags = undefined
+              ) => {
+                currQuestionResponse
+                  ? (newUserResponses[currQuestionResponseIndex]["response"] =
+                      value)
+                  : newUserResponses.push({
+                      questionId: question?._id.toString(),
+                      response: value,
+                    });
+                if (newQTags) {
+                  setNewTags(filterDuplicates(newTags.concat(newQTags)));
+                }
+                setNewUserResponses([...newUserResponses]);
+              };
+              if (question?.type === "TextInput") {
+                return (
+                  <TextInputQuestion
+                    key={question?._id.toString()}
+                    question={question}
+                    userAnswer={
+                      newUserResponses[currQuestionResponseIndex]?.response ||
+                      ""
+                    }
+                    isCentered
+                    onChange={updateFunc}
+                  />
+                );
+              }
+              if (question?.type === "Ranking") {
+                return (
+                  <RankingQuestion
+                    question={question}
+                    key={question?._id.toString()}
+                    userAnswers={
+                      newUserResponses[currQuestionResponseIndex]?.response ||
+                      []
+                    }
+                    onChange={updateFunc}
+                    tags={userTags}
+                  />
+                );
+              }
+              if (question?.type === "MCQ") {
+                return (
+                  <MCQQuestion
+                    question={question}
+                    key={question?._id.toString()}
+                    userAnswer={
+                      newUserResponses[currQuestionResponseIndex]?.response ||
+                      ""
+                    }
+                    isCentered
+                    onChange={updateFunc}
+                    tags={userTags}
+                  />
+                );
+              }
+              if (question?.type === "CheckBox") {
+                return (
+                  <CheckBoxQuestion
+                    key={question?._id.toString()}
+                    question={question}
+                    isCentered
+                    userAnswers={
+                      newUserResponses[currQuestionResponseIndex]?.response ||
+                      []
+                    }
+                    onChange={updateFunc}
+                    tags={userTags}
+                  />
+                );
+              }
+              if (question?.type === "CompositeQuestion") {
+                return (
+                  <CompositeQuestion
+                    question={question}
+                    responses={
+                      newUserResponses[currQuestionResponseIndex]?.response ||
+                      []
+                    }
+                    onChange={(value, index, questionId) => {
+                      let currRes = newUserResponses.find(
                         (questionResponse) =>
                           questionResponse.questionId ===
                           question?._id.toString()
-                      )
-                    ]["response"][index] = value;
-                  } else {
-                    let newResArr = [];
-                    newResArr[index] = value;
-                    newUserResponses.push({
-                      questionId: question?._id.toString(),
-                      response: newResArr,
-                    });
-                  }
-                }}
-                title={question.question}
-                questions={question.data}
-              />
-            );
-          }
-          if (question?.type === "DoubleTextInputQuestion") {
-            return (
-              <DoubleTextInputQuestion
-                userResponses={[]}
-                question={question}
-                isCentered
-                onChange={(value) => {
-                  updateFunc(value);
-                }}
-              />
-            );
-          }
-          if (question?.type === "DoubleTextInputQuestion") {
-            return (
-              <DoubleDropdownQuestion
-                userResponses={[]}
-                question={question}
-                isCentered
-                onChange={(value) => {
-                  updateFunc(value);
-                }}
-              />
-            );
-          }
-          return (
-            <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
-              <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-                {question?.question}
-              </span>
-              <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
-                <div className="w-75">
-                  Uh Oh. It appears there was an error loading this question
+                      );
+                      if (currRes) {
+                        newUserResponses[
+                          newUserResponses.findIndex(
+                            (questionResponse) =>
+                              questionResponse.questionId ===
+                              question?._id.toString()
+                          )
+                        ]["response"][index] = value;
+                      } else {
+                        let newResArr = [];
+                        newResArr[index] = value;
+                        newUserResponses.push({
+                          questionId: question?._id.toString(),
+                          response: newResArr,
+                        });
+                      }
+                    }}
+                    title={question.question}
+                    questions={question.data}
+                  />
+                );
+              }
+              if (question?.type === "DoubleTextInputQuestion") {
+                return (
+                  <DoubleTextInputQuestion
+                    userResponses={
+                      newUserResponses[currQuestionResponseIndex]?.response ||
+                      []
+                    }
+                    question={question}
+                    onChange={(value) => {
+                      updateFunc(value);
+                    }}
+                  />
+                );
+              }
+              if (question?.type === "DoubleTextInputQuestion") {
+                return (
+                  <DoubleDropdownQuestion
+                    userResponses={
+                      newUserResponses[currQuestionResponseIndex]?.response ||
+                      []
+                    }
+                    question={question}
+                    onChange={(value) => {
+                      updateFunc(value);
+                    }}
+                  />
+                );
+              }
+              return (
+                <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
+                  <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
+                    {question?.question}
+                  </span>
+                  <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
+                    <div className="w-75">
+                      Uh Oh. It appears there was an error loading this question
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  });
+              );
+            })}
+          </div>
+        );
+      }),
+    [newUserResponses, checkInData]
+  );
   if (isShowingStart) {
     return (
       <div className="container-fluid d-flex flex-column justify-content-center align-items-center vh-100">

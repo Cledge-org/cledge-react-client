@@ -35,8 +35,6 @@ export default function MCQQuestion({
       <div
         style={{ width: "90%" }}
         className={classNames("d-flex flex-row pt-4 pb-2 align-items-center", {
-          ["justify-content-center"]:
-            isCentered && !(question as Question).popUpText,
           ["justify-content-between"]: (question as Question).popUpText,
         })}
       >

@@ -104,8 +104,6 @@ export default function TextInputQuestion({
           className={classNames(
             "d-flex flex-row pt-4 pb-2 align-items-center",
             {
-              ["justify-content-center"]:
-                isCentered && !(question as Question).popUpText,
               ["justify-content-between"]: (question as Question).popUpText,
             }
           )}
@@ -148,11 +146,7 @@ export default function TextInputQuestion({
           className={`form-control cl-dark-text fw-bold`}
           style={{
             borderRadius: "10px",
-            width: isInDouble
-              ? "100%"
-              : isPathwayQuestion || smallTitle
-              ? "90%"
-              : "75%",
+            width: isInDouble || smallTitle ? "90%" : "100%",
           }}
           placeholder={question.placeholder ?? "Your response..."}
         />

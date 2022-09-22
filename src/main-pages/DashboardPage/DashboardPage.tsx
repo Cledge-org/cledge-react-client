@@ -6,6 +6,7 @@ import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { connect } from "react-redux";
 import BlogCarouselItem from "src/main-pages/WelcomePage/components/blogsCarousel/components/BlogCaroselItem";
 import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import styles from "./dashboard-page.module.scss";
 
 const DashboardPage = ({
@@ -29,6 +30,8 @@ const DashboardPage = ({
     () => (ecMetrics?.overallTier || 0 + acMetrics?.overallClassTier || 0) / 2,
     [ecMetrics, acMetrics]
   );
+  const { width, height } = useWindowSize();
+
   const parseId = (objectId) => {
     const objectIdStr = objectId.toString();
     if (!objectIdStr.includes('"')) {
@@ -39,6 +42,7 @@ const DashboardPage = ({
       objectIdStr.length - 2
     );
   };
+
   useEffect(() => {
     let totalPathways = 0;
     let finishedPathways = 0;
@@ -66,6 +70,7 @@ const DashboardPage = ({
     });
     setPercentage(Math.round((finishedPathways / totalPathways) * 100));
   }, []);
+
   if (accountInfo.checkIns.length > 0) {
     router.push({
       pathname: "/check-ins/[checkIn]",
@@ -86,7 +91,7 @@ const DashboardPage = ({
         </div>
         <div
           className="d-flex flex-row align-items-center"
-          style={{ height: "38%" }}
+          style={{ height: width < 1400 || height < 800 ? "60%" : "42%" }}
         >
           <div
             className="d-flex flex-column justify-content-between w-100 p-3"
@@ -194,7 +199,7 @@ const DashboardPage = ({
               >
                 Chat with our AI counselor
               </div>
-              <div className="cl-mid-gray" style={{ fontSize: "18px" }}>
+              <div className="cl-mid-gray" style={{ fontSize: "16px" }}>
                 Anything you are not sure about?
                 <br />
                 Our AI counselor is here for you 24/7
@@ -331,7 +336,10 @@ const DashboardPage = ({
           }}
         >
           <div
-            className={classNames("d-flex flex-row px-3", styles.blogCarousel)}
+            className={classNames(
+              "d-flex flex-row px-3 py-3",
+              styles.blogCarousel
+            )}
             style={{ overflowX: "auto" }}
           >
             {recentBlogs.articles[0].map((e) => (

@@ -87,16 +87,16 @@ function getActivityTip(tier: number, category: number): string {
     let activityTip = "";
     if (tier <= bar1) {
       activityTip =
-        "We believe you have a lot of room to grow in this activity. https://uw.cledge.org/blog/tips-for-tier-1-3-extracurriculars";
+        "We believe you have a lot of room to grow in this activity. https://cledge.org/blog/getting-started-producing-a-strong-extracurricular-profile";
     } else if (tier <= bar2) {
       activityTip =
-        "We believe you have some room to grow in this activity. https://uw.cledge.org/blog/tips-for-tier-4-6-extracurriculars";
+        "We believe you have some room to grow in this activity. https://cledge.org/blog/pushing-toward-a-strong-set-of-extracurriculars";
     } else if (tier <= bar3) {
       activityTip =
-        "We believe you have some room to grow in this activity. https://uw.cledge.org/blog/tips-for-tier-7-9-extracurriculars";
+        "We believe you have some room to grow in this activity. https://cledge.org/blog/improving-an-already-strong-extracurricular-profile";
     } else {
       activityTip =
-        "Great job! We believe you are doing great at this activity. https://uw.cledge.org/blog/tips-for-tier-10+-extracurriculars";
+        "Great job! We believe you are doing great at this activity. https://cledge.org/blog/next-steps-after-achieving-an-excellent-extracurricular-profile";
     }
     return activityTip;
   } catch (e) {
