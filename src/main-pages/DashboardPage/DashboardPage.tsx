@@ -19,7 +19,10 @@ const DashboardPage = ({
 }) => {
   const [percentage, setPercentage] = useState(0);
   const router = useRouter();
-  const avgTier = useMemo(() => 11, [ecMetrics, acMetrics]);
+  const avgTier = useMemo(
+    () => (ecMetrics?.overallTier || 0 + acMetrics?.overallClassTier || 0) / 2,
+    [ecMetrics, acMetrics]
+  );
   const parseId = (objectId) => {
     const objectIdStr = objectId.toString();
     if (!objectIdStr.includes('"')) {
@@ -95,15 +98,17 @@ const DashboardPage = ({
               <div className="d-flex flex-row w-100 justify-content-between">
                 <div className="cl-dark-text fw-bold">
                   <Link href="/my-learning">
-                    <img
-                      src="/images/header/my-learning.svg"
-                      style={{
-                        padding: "10px",
-                        width: "50px",
-                        borderRadius: "10px",
-                        backgroundColor: "#DCE1FB",
-                      }}
-                    />
+                    <a>
+                      <img
+                        src="/images/header/my-learning.svg"
+                        style={{
+                          padding: "10px",
+                          width: "50px",
+                          borderRadius: "10px",
+                          backgroundColor: "#DCE1FB",
+                        }}
+                      />
+                    </a>
                   </Link>
                   <div>My Learning</div>
                 </div>
@@ -134,16 +139,17 @@ const DashboardPage = ({
                   </div>
                 </div>
               </div>
-              <div className="cl-dark-text fw-bold">
-                <div className="pb-4">5 successful profiles</div>
+              <div className="fw-bold">
                 {dashboardParts.map(({ name }) => (
                   <Link href="/my-learning">
-                    <div
-                      className="py-4"
-                      style={{ borderTop: "1px solid #E0DFE8" }}
-                    >
-                      {name}
-                    </div>
+                    <a>
+                      <div
+                        className="cl-dark-text py-4"
+                        style={{ borderTop: "1px solid #E0DFE8" }}
+                      >
+                        {name}
+                      </div>
+                    </a>
                   </Link>
                 ))}
               </div>
@@ -176,18 +182,20 @@ const DashboardPage = ({
               >
                 Try it! Cledge's most popular feature
                 <Link href="/chatbot">
-                  <img
-                    src="/images/header/chatbot.svg"
-                    style={{
-                      position: "absolute",
-                      bottom: "-40%",
-                      left: "2%",
-                      padding: "10px",
-                      width: "50px",
-                      borderRadius: "10px",
-                      backgroundColor: "#DCE1FB",
-                    }}
-                  />
+                  <a>
+                    <img
+                      src="/images/header/chatbot.svg"
+                      style={{
+                        position: "absolute",
+                        bottom: "-40%",
+                        left: "2%",
+                        padding: "10px",
+                        width: "50px",
+                        borderRadius: "10px",
+                        backgroundColor: "#DCE1FB",
+                      }}
+                    />
+                  </a>
                 </Link>
               </div>
               <div
@@ -217,15 +225,17 @@ const DashboardPage = ({
               }}
             >
               <Link href="/metrics">
-                <img
-                  src="/images/header/metrics.svg"
-                  style={{
-                    padding: "10px",
-                    width: "50px",
-                    borderRadius: "10px",
-                    backgroundColor: "#DCE1FB",
-                  }}
-                />
+                <a>
+                  <img
+                    src="/images/header/metrics.svg"
+                    style={{
+                      padding: "10px",
+                      width: "50px",
+                      borderRadius: "10px",
+                      backgroundColor: "#DCE1FB",
+                    }}
+                  />
+                </a>
               </Link>
               <div
                 className="cl-dark-text fw-bold mt-3"
@@ -254,60 +264,62 @@ const DashboardPage = ({
                     }}
                   >
                     <div
+                      className="d-flex flex-column position-absolute"
                       style={{
-                        marginLeft: `calc(${(avgTier / 12) * 100}% - 1px)`,
-                        border: "2px solid #F7BC76",
-                        height: "100%",
-                        width: 0,
-                        borderRadius: "2px",
-                      }}
-                    />
-                  </div>
-                  <div
-                    className="d-flex flex-column mt-1"
-                    style={{
-                      marginLeft: `calc(${
-                        avgTier === 0
-                          ? 0
-                          : avgTier === 12
-                          ? 100
-                          : (avgTier / 12) * 100
-                      }% - ${
-                        avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
-                      }px)`,
-                      zIndex: 100,
-                      width: "fit-content",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: 0,
-                        height: 0,
-                        borderLeft: `${
-                          avgTier === 0 ? 3 : 7
-                        }px solid transparent`,
-                        borderRight: `${
-                          avgTier === 12 ? 3 : 7
-                        }px solid transparent`,
-                        borderBottom: "7px solid #F7BC76",
-                        alignSelf:
+                        left: `calc(${
                           avgTier === 0
-                            ? "start"
+                            ? 0
                             : avgTier === 12
-                            ? "end"
-                            : "center",
-                      }}
-                    />
-                    <div
-                      className="px-3 py-2 cl-dark-text fw-bold"
-                      style={{
+                            ? 100
+                            : (avgTier / 12) * 100
+                        }% - ${
+                          avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
+                        }px)`,
+                        top: "0",
+                        zIndex: 100,
+                        alignItems: "center",
                         width: "fit-content",
-                        backgroundColor: "#F7BC76",
-                        border: "1px solid transparent",
-                        textAlign: "center",
                       }}
                     >
-                      You are here
+                      <div
+                        style={{
+                          border: "2px solid #F7BC76",
+                          height: "36px",
+                          width: 0,
+                          borderRadius: "2px",
+                        }}
+                      />
+                      <div
+                        className="mt-1"
+                        style={{
+                          width: 0,
+                          height: 0,
+                          borderLeft: `${
+                            avgTier === 0 ? 3 : 7
+                          }px solid transparent`,
+                          borderRight: `${
+                            avgTier === 12 ? 3 : 7
+                          }px solid transparent`,
+                          borderBottom: "7px solid #F7BC76",
+                          alignSelf:
+                            avgTier === 0
+                              ? "start"
+                              : avgTier === 12
+                              ? "end"
+                              : "center",
+                        }}
+                      />
+                      <div
+                        className="px-3 py-2 cl-dark-text fw-bold"
+                        style={{
+                          width: "fit-content",
+                          backgroundColor: "#F7BC76",
+                          border: "1px solid transparent",
+                          textAlign: "center",
+                        }}
+                      >
+                        You are here
+                      </div>
                     </div>
                   </div>
                 </div>

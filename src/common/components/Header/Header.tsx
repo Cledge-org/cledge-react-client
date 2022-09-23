@@ -61,6 +61,11 @@ const Header = ({
       icon: "application-profile.svg",
       title: "Application Profile",
     },
+    {
+      link: "/blogs",
+      icon: "blogs.svg",
+      title: "Blogs",
+    },
   ];
   const onScroll = useCallback(() => {
     if (!location.includes("uw")) {
@@ -71,7 +76,6 @@ const Header = ({
           setColors("cl-blue");
         }
       } else {
-        console.log(isExpanded);
         if (scrollState !== "top") {
           setScrollState("top");
           if (router.pathname === "/" && !isExpanded) {

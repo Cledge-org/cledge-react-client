@@ -1,7 +1,13 @@
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GetServerSidePropsContext, NextPage } from "next";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import Modal from "react-modal";
 import TextInputQuestion from "../../common/components/Questions/TextInputQuestion/TextInputQuestion";
 import { NextApplicationPage } from "../AppPage/AppPage";
@@ -27,6 +33,10 @@ import PageError from "src/common/components/PageErrorBoundary/PageErrorBoundary
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import Link from "next/link";
+import MCQQuestion from "src/common/components/Questions/MCQQuestion/MCQQuestion";
+import DoubleTextInputQuestion from "src/common/components/Questions/DoubleTextInputQuestion/DoubleTextInputQuestion";
+import CompositeQuestion from "src/common/components/Questions/CompositeQuestion/CompositeQuestion";
+import { accountQuestions } from "src/main-pages/AccountPage/questions";
 // account page
 
 const AccountPage: NextApplicationPage<{
@@ -38,16 +48,17 @@ const AccountPage: NextApplicationPage<{
     AccountInfo,
     Dispatch<SetStateAction<AccountInfo>>
   ] = useState(accountInfo);
-  const [currQuestion, setCurrQuestion] = useState({
-    userAnswer: "",
+  const [currQuestion, setCurrQuestion] = useState<Question>({
     _id: null,
     question: "",
     type: "",
     placeholder: "",
     data: [],
+    popUpText: "",
     isConcatenable: false,
     isRequired: false,
   });
+  const [currUserAnswer, setCurrUserAnswer] = useState<string | any[]>("");
   const [iteratedFirst, setIteratedFirst] = useState(false);
   const size = useWindowSize();
   const updateUserData = async () => {
@@ -66,6 +77,48 @@ const AccountPage: NextApplicationPage<{
       });
     });
   };
+  const updateAccountAndQuestionReponse = useCallback(
+    (value: string | any[], questionIdent: string) => {
+      let newUserData = currUserData;
+      setCurrUserAnswer(value);
+      newUserData[currQuestion.question.toLowerCase()] =
+        value instanceof Array
+          ? questionIdent === "631fc0482734f1eb370771cc"
+            ? value.reduce(
+                (prev, curr) =>
+                  prev
+                    ? prev +
+                      ", " +
+                      (curr instanceof Array
+                        ? curr.reduce(
+                            (prev, curr) => (prev ? prev + ", " + curr : curr),
+                            ""
+                          )
+                        : curr)
+                    : curr,
+                ""
+              )
+            : value.reduce(
+                (prev, curr) => (prev ? prev + " " + curr : curr),
+                ""
+              )
+          : value;
+      setCurrUserData({ ...newUserData });
+      let indexOfResponse = questionResponses.findIndex(
+        ({ questionId }) => questionId === questionIdent
+      );
+      let newUserResponses = questionResponses;
+      if (indexOfResponse === -1) {
+        newUserResponses.push({
+          questionId: questionIdent,
+          response: value,
+        });
+      } else {
+        newUserResponses[indexOfResponse].response = value;
+      }
+    },
+    [currUserData, questionResponses, currQuestion]
+  );
 
   useEffect(() => {
     if (!iteratedFirst) {
@@ -115,37 +168,33 @@ const AccountPage: NextApplicationPage<{
                   c
                 </div>
                 <div />
-                {/* <button className="icon-btn" >
-                <FontAwesomeIcon icon={faPencilAlt} style={{ width: "20px" }} />
-              </button> */}
               </div>
             </div>
             <InfoSection
               name="NAME"
               value={currUserData.name}
               onEdit={() => {
+                setCurrUserAnswer(currUserData.name.split(" "));
                 setCurrQuestion({
                   ...currQuestion,
-                  userAnswer: currUserData.name,
-                  question: "NAME",
+                  ...accountQuestions[1],
                 });
               }}
             />
-            {/* <InfoSection
-            name="BIRTHDAY"
-            value={accountInfo.birthday.toString()}
-            onEdit={() => {
-              setModalOpen(true);
-            }}
-          /> */}
             <InfoSection
               name="ADDRESS"
               value={currUserData.address}
               onEdit={() => {
+                setCurrUserAnswer([
+                  currUserData.address.split(", ")[0],
+                  [
+                    currUserData.address.split(", ")[1],
+                    currUserData.address.split(", ")[2],
+                  ],
+                ]);
                 setCurrQuestion({
                   ...currQuestion,
-                  userAnswer: currUserData.address,
-                  question: "ADDRESS",
+                  ...accountQuestions[0],
                 });
               }}
             />
@@ -162,30 +211,16 @@ const AccountPage: NextApplicationPage<{
               }}
             />
           </div>
-          {/* <div className={classNames(styles.myaccountBlob, "px-4 py-4 mb-3")}>
-            <span className="title">Contact Info</span>
-            <InfoSection
-              name="Email"
-              value={currUserData.email}
-              onEdit={() => {
-                setCurrQuestion({
-                  ...currQuestion,
-                  userAnswer: currUserData.email,
-                  question: "Email",
-                });
-              }}
-            />
-          </div> */}
           <div className={classNames(styles.myaccountBlob, "px-4 py-4 mb-3")}>
             <span className="title">Academic Info</span>
             <InfoSection
               name="Grade"
               value={currUserData.grade}
               onEdit={() => {
+                setCurrUserAnswer(currUserData.grade.toString());
                 setCurrQuestion({
                   ...currQuestion,
-                  userAnswer: currUserData.grade.toString(),
-                  question: "Grade",
+                  ...accountQuestions[2],
                 });
               }}
             />
@@ -216,33 +251,48 @@ const AccountPage: NextApplicationPage<{
           }}
           isOpen={modalOpen}
         >
-          <TextInputQuestion
-            question={currQuestion}
-            userAnswer={currQuestion.userAnswer}
-            isCentered
-            onChange={(value) => {
-              let newUserData = currUserData;
-              newUserData[currQuestion.question.toLowerCase()] =
-                currQuestion.question.toLowerCase() === "grade"
-                  ? parseInt(value)
-                  : value;
-              setCurrUserData({ ...newUserData });
-              if (currQuestion.question.toLowerCase() === "grade") {
-                let indexOfResponse = questionResponses.findIndex(
-                  ({ questionId }) => questionId === "61de0b617c405886579656ec"
+          {(currQuestion.type === "MCQ" && (
+            <MCQQuestion
+              question={currQuestion}
+              userAnswer={currUserAnswer as string}
+              isCentered
+              onChange={(value) => {
+                updateAccountAndQuestionReponse(
+                  value,
+                  "61de0b617c405886579656ec"
                 );
-                let newUserResponses = questionResponses;
-                if (indexOfResponse === -1) {
-                  newUserResponses.push({
-                    questionId: "61de0b617c405886579656ec",
-                    response: value,
-                  });
-                } else {
-                  newUserResponses[indexOfResponse].response = value;
-                }
-              }
-            }}
-          />
+              }}
+              tags={[]}
+            />
+          )) ||
+            (currQuestion.type === "DoubleTextInputQuestion" && (
+              <DoubleTextInputQuestion
+                userResponses={currUserAnswer as string[]}
+                question={currQuestion}
+                onChange={(newResponses: string[]) => {
+                  updateAccountAndQuestionReponse(
+                    newResponses,
+                    "6319632cd1e56282060ad38a"
+                  );
+                }}
+              />
+            )) ||
+            (currQuestion.type === "CompositeQuestion" && (
+              <CompositeQuestion
+                questions={currQuestion.data}
+                responses={currUserAnswer as string[]}
+                title={currQuestion.question}
+                question={currQuestion}
+                onChange={(responses, index) => {
+                  let newResponses = (currUserAnswer as string[]).slice();
+                  newResponses[index] = responses;
+                  updateAccountAndQuestionReponse(
+                    newResponses,
+                    "631fc0482734f1eb370771cc"
+                  );
+                }}
+              />
+            ))}
           <div className="w-100 center-child">
             <button
               className="general-submit-btn mt-2"

@@ -20,6 +20,7 @@ export declare global {
     tags: string[];
     checkIns: string[];
     introducedToChatbot: boolean;
+    chatbotHistoryLength: number;
     hasUWAccess: boolean;
   }
 
@@ -375,4 +376,26 @@ interface collegeListElementRaw {
 interface updateCollegeList {
   user_id: string;
   college_list: collegeListElementRaw[];
+}
+
+interface ChatbotHistory {
+  _id: ObjectId | string;
+  index: number;
+  firebaseId: string;
+  messages: (MessageProps | CoupledOptions)[];
+}
+
+interface MessageProps {
+  message: string | ReactElement;
+  messageId?: string;
+  isOnLeft: boolean;
+  isAnswer?: boolean;
+  question?: string;
+  onDownVote?: (message: string, answer: string) => void;
+}
+
+interface CoupledOptions {
+  areOptions: boolean;
+  pickedIndex: number;
+  options: { [option: string]: string };
 }
