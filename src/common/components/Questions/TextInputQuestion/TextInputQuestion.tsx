@@ -10,7 +10,6 @@ interface TextInputQuestionProps {
   question: Question | PathwayQuestion;
   userAnswer: string;
   onChange: Function;
-  isTextArea?: boolean;
   isInDouble?: boolean;
   className?: string;
   isGrade?: boolean;
@@ -21,7 +20,6 @@ export default function TextInputQuestion({
   question,
   userAnswer,
   isGrade,
-  isTextArea,
   isPathwayQuestion,
   onChange,
   isInDouble,
@@ -31,7 +29,7 @@ export default function TextInputQuestion({
 }: TextInputQuestionProps) {
   const session = useSession();
   const [currValue, setCurrValue] = useState(userAnswer);
-  if (isTextArea) {
+  if ((question as Question).isTextArea) {
     return (
       <div
         className={classNames(
@@ -129,7 +127,7 @@ export default function TextInputQuestion({
       >
         <input
           defaultValue={currValue}
-          type="text"
+          type={(question as Question).numbersOnly ? "number" : "text"}
           onChange={async (e) => {
             if (isGrade) {
               await fetch(`/api/user/update-user`, {

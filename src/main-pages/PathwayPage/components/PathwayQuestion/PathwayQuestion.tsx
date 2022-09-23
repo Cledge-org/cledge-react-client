@@ -69,13 +69,13 @@ PathwayQuestionCardProps) {
       return (
         <TextInputQuestion
           isPathwayQuestion
-          isTextArea
           question={{
             question: `${number}. ${question}`,
             questionType,
             data,
             placeholder,
             type: "question",
+            isTextArea: true,
           }}
           userAnswer={userAnswer}
           onChange={(answer) => {

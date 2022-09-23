@@ -175,6 +175,7 @@ const AccountPage: NextApplicationPage<{
             />
             <InfoSection
               name="PASSWORD"
+              isPasswordEdit
               value="******"
               onEdit={() => {
                 fetch(`/api/user/reset-password`, {
@@ -239,7 +240,7 @@ const AccountPage: NextApplicationPage<{
               onChange={(value) => {
                 updateAccountAndQuestionReponse(
                   value,
-                  "61de0b617c405886579656ec"
+                  "61c6b6f2d3054b6dd0f1fc64"
                 );
               }}
               tags={[]}

@@ -391,6 +391,40 @@ const QuestionForm = ({
             }}
           />
         </div>
+        {currQuestion.type === "TextInputQuestion" && (
+          <>
+            <div className="form-group">
+              <label style={{ fontSize: "0.9em" }} className="text-muted">
+                Numbers Only (Optional):
+              </label>
+              <CheckBox
+                selected={currQuestion.numbersOnly}
+                setSelected={(selectState) => {
+                  let currQuestionListCopy = currQuestionList;
+                  currQuestionListCopy.chunks[chunkIndex].questions[
+                    questionIndex
+                  ].numbersOnly = selectState;
+                  setCurrQuestionList({ ...currQuestionListCopy });
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label style={{ fontSize: "0.9em" }} className="text-muted">
+                Text Area (Optional):
+              </label>
+              <CheckBox
+                selected={currQuestion.isTextArea}
+                setSelected={(selectState) => {
+                  let currQuestionListCopy = currQuestionList;
+                  currQuestionListCopy.chunks[chunkIndex].questions[
+                    questionIndex
+                  ].isTextArea = selectState;
+                  setCurrQuestionList({ ...currQuestionListCopy });
+                }}
+              />
+            </div>
+          </>
+        )}
       </div>
       <button
         onClick={() => {

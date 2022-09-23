@@ -128,6 +128,8 @@ export declare global {
     popUpText?: string;
     isConcatenable?: boolean;
     isRequired?: boolean;
+    isTextArea?: boolean;
+    numbersOnly?: boolean;
   }
 
   //Learning Pathways Types -->

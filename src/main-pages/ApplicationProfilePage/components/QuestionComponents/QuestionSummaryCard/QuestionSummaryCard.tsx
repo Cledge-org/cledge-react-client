@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "react-modal";
@@ -76,6 +82,16 @@ export default function QuestionSummaryCard({
       return indexOfDuplicate === -1 || index === indexOfDuplicate;
     });
   };
+  const hasAnswerOrNotRequired = useMemo(() => {
+    const hasNoResponseRequired = question.isRequired && !userAnswer?.response;
+    if (hasNoResponseRequired) {
+      return false;
+    } else if (question.isRequired && userAnswer.response instanceof Array) {
+      return userAnswer.response.find((res) => res);
+    } else {
+      return true;
+    }
+  }, [question, userAnswer]);
   const getQuestionType = (): JSX.Element => {
     if (question.type === "TextInput") {
       return (
@@ -235,7 +251,6 @@ export default function QuestionSummaryCard({
           },
         }}
         onRequestClose={() => {
-          //console.log(originalAnswer);
           setUserAnswer(originalAnswer);
           setNewTags([]);
           setOldTags([]);
@@ -246,6 +261,7 @@ export default function QuestionSummaryCard({
         {getQuestionType()}
         <div className="center-child w-100">
           <button
+            disabled={!hasAnswerOrNotRequired}
             onClick={async () => {
               if (isAC) {
                 let newUserResponses = allAnswers;
@@ -334,7 +350,7 @@ export default function QuestionSummaryCard({
                   : (userTags = userTags.concat(newTags));
                 setNewTags([]);
                 setOldTags([]);
-                if (question._id.toString() === "61de0b617c405886579656ec") {
+                if (question._id.toString() === "61c6b6f2d3054b6dd0f1fc64") {
                   fetch(`/api/user/update-user`, {
                     method: "POST",
                     body: JSON.stringify({

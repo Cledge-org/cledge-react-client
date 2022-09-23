@@ -86,7 +86,7 @@ const CheckIn: NextApplicationPage<{
       ? (userTags = newTags)
       : (userTags = userTags.concat(newTags));
     const newGrade = newUserResponses.find(
-      ({ questionId }) => questionId === "61de0b617c405886579656ec"
+      ({ questionId }) => questionId === "61c6b6f2d3054b6dd0f1fc64"
     )?.response;
     const newAddress = newUserResponses.find(
       ({ questionId }) => questionId === "631fc0482734f1eb370771cc"
