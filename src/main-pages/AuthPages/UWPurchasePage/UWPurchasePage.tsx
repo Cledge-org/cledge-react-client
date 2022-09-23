@@ -305,7 +305,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             style={{ fontSize: "1.1rem" }}
           >
             <div className="" style={{width: "65%"}}>University of Washington Computer Science Package</div>
-            <div className="align-self-center">$100</div>
+            <div className="align-self-center">$99</div>
           </div>
           <div className="mb-4 d-flex flex-row">
             <div className="pe-2">
