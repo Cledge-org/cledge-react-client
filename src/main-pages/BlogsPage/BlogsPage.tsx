@@ -22,9 +22,9 @@ const BlogsPage = ({ blogInfo }) => {
       >
         {props.display}
       </Button>
-    )
+    );
   }
-  
+
   return (
     <>
       <div className="d-flex justify-content-center">
@@ -65,7 +65,7 @@ const BlogsPage = ({ blogInfo }) => {
                         />
                       </a>
                     </Link>
-                    <div className="mx-1 mb-4" >
+                    <div className="mx-1 mb-4">
                       {blog.topics.map(function (topic) {
                         return (
                           <div className="btn btn-light rounded-pill mx-2">
@@ -80,7 +80,6 @@ const BlogsPage = ({ blogInfo }) => {
           </div>
         </div>
         <div className="col-md-4 border-start">
-          
           <div className="mx-4 mt-5">
             <div className="d-flex mt-4 mb-4">
               <div className="d-flex align-items-center">
@@ -88,7 +87,7 @@ const BlogsPage = ({ blogInfo }) => {
                   <FontAwesomeIcon icon={faSearch} />
                 </div>
                 <input
-                  style={{width: "30em", height: "4vh"}}
+                  style={{ width: "30em", height: "4vh" }}
                   onChange={(e) => {
                     setSearchTerm(e.target.value);
                   }}
@@ -101,7 +100,10 @@ const BlogsPage = ({ blogInfo }) => {
             <p className="row text-muted mx-2">Topics</p>
             <div className="w-75">
               <FilterItem display="All" filter="" />
-              <FilterItem display="Extracurriculars" filter="Extracurriculars" />
+              <FilterItem
+                display="Extracurriculars"
+                filter="Extracurriculars"
+              />
               <FilterItem display="Essay" filter="Essay" />
               <FilterItem display="Application" filter="Application" />
               <FilterItem display="Standardized Tests" filter="Application" />
@@ -109,12 +111,21 @@ const BlogsPage = ({ blogInfo }) => {
               <FilterItem display="Grades" filter="Grades" />
               <FilterItem display="Scholarships" filter="Scholarships" />
             </div>
-            <div className="alert alert-primary w-75 mt-3" style={{ maxWidth: "450px" }} role="alert">
+            <div
+              className="alert alert-primary w-75 mt-3"
+              style={{ maxWidth: "450px" }}
+              role="alert"
+            >
               <div className="pb-2">
-                <h6 className="alert-link">Be the first to know when we release</h6>
+                <h6 className="alert-link">
+                  Be the first to know when we release
+                </h6>
               </div>
-              <p>Cledge uses AI and data to help you plan your path ahead and give you an edge on your application. We're releasing soon!</p>
-              <div className="d-flex justify-content-center">             
+              <p>
+                Cledge uses AI and data to help you plan your path ahead and
+                give you an edge on your application. We're releasing soon!
+              </p>
+              <div className="d-flex justify-content-center">
                 <Button
                   className="w-75"
                   key="subscribe-btn"
@@ -129,19 +140,29 @@ const BlogsPage = ({ blogInfo }) => {
                 </Button>
               </div>
             </div>
-            <div className="alert alert-primary w-75" style={{ maxWidth: "450px" }} role="alert">
+            <div
+              className="alert alert-primary w-75"
+              style={{ maxWidth: "450px" }}
+              role="alert"
+            >
               <div className="pb-2">
                 <h6 className="alert-link">Other free resources</h6>
               </div>
-              
+
               <div>
-                <a href="#" className="alert-link">Monthly access to free live webinars ➜</a>
+                <a href="#" className="alert-link">
+                  Monthly access to free live webinars ➜
+                </a>
               </div>
               <div>
-                <a href="#" className="alert-link">Join WhatsApp community ➜</a>
+                <a href="#" className="alert-link">
+                  Join WhatsApp community ➜
+                </a>
               </div>
               <div>
-                <a href="#" className="alert-link">Join Discord community ➜</a>
+                <a href="#" className="alert-link">
+                  Join Discord community ➜
+                </a>
               </div>
             </div>
           </div>

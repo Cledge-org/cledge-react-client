@@ -1,14 +1,19 @@
+import classNames from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { connect } from "react-redux";
+import BlogCarouselItem from "src/main-pages/WelcomePage/components/blogsCarousel/components/BlogCaroselItem";
+import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
+import styles from "./dashboard-page.module.scss";
 
 const DashboardPage = ({
   accountInfo,
   dashboardParts,
   pathwaysProgress,
   ecMetrics,
+  recentBlogs,
   acMetrics,
 }: {
   accountInfo: AccountInfo;
@@ -16,6 +21,7 @@ const DashboardPage = ({
   pathwaysProgress: PathwayProgress[];
   ecMetrics: Activities;
   acMetrics: Academics;
+  recentBlogs: any;
 }) => {
   const [percentage, setPercentage] = useState(0);
   const router = useRouter();
@@ -67,29 +73,27 @@ const DashboardPage = ({
     });
   }
   return (
-    <div
-      className="d-flex align-items-center justify-content-center w-100 vh-100"
-      style={{ backgroundColor: "#F9FAFF" }}
-    >
-      <div className="d-flex flex-column w-75" style={{ height: "90%" }}>
-        <div className="cl-dark-text fw-bold mb-5" style={{ fontSize: "28px" }}>
-          Hi, {accountInfo.name}. Welcome to the dashboard
-        </div>
-        <div
-          className="d-flex flex-row align-items-center"
-          style={{ height: "75%" }}
-        >
+    <div>
+
+      <div
+        className="d-flex align-items-center justify-content-center w-100 vh-100"
+        style={{ backgroundColor: "#F9FAFF" }}
+      >
+        <div className="d-flex flex-column w-75" style={{ height: "90%" }}>
+          <div className="cl-dark-text fw-bold mb-5" style={{ fontSize: "28px" }}>
+            Hi, {accountInfo.name}. Welcome to the dashboard
+          </div>
+          <div className="cl-dark-text fw-bold pb-2" style={{ fontSize: "18px" }}>
+            The essential assistance we provide
+          </div>
           <div
-            className="d-flex flex-column justify-content-between h-100"
-            style={{ width: "48%" }}
+            className="d-flex flex-row align-items-center"
+            style={{ height: "38%" }}
           >
-            <div className="cl-dark-text fw-bold" style={{ fontSize: "18px" }}>
-              The essential resources for UW CS applications
-            </div>
             <div
               className="d-flex flex-column justify-content-between w-100 p-3"
               style={{
-                height: "90%",
+                height: "100%",
                 borderRadius: "10px",
                 backgroundColor: "white",
                 border: "1px solid #E0DFE8",
@@ -143,33 +147,17 @@ const DashboardPage = ({
                 {dashboardParts.map(({ name }) => (
                   <Link href="/my-learning">
                     <a>
-                      <div
-                        className="cl-dark-text py-4"
-                        style={{ borderTop: "1px solid #E0DFE8" }}
-                      >
-                        {name}
-                      </div>
+                      <div className="cl-dark-text py-2">{name}</div>
                     </a>
                   </Link>
                 ))}
               </div>
             </div>
-          </div>
-          <div
-            className="h-100 mx-3"
-            style={{ width: "2px", backgroundColor: "#E0DFE8" }}
-          />
-          <div
-            className="d-flex flex-column justify-content-between h-100"
-            style={{ width: "48%" }}
-          >
-            <div className="cl-dark-text fw-bold" style={{ fontSize: "18px" }}>
-              Cledge's powerful features to assist you
-            </div>
+            <div style={{ width: "4%" }} />
             <div
               className="w-100"
               style={{
-                height: "42.5%",
+                height: "100%",
                 borderRadius: "10px",
                 backgroundColor: "white",
                 border: "1px solid #E0DFE8",
@@ -215,10 +203,11 @@ const DashboardPage = ({
                 </div>
               </div>
             </div>
+            <div style={{ width: "4%" }} />
             <div
               className="w-100 p-3"
               style={{
-                height: "42.5%",
+                height: "100%",
                 borderRadius: "10px",
                 backgroundColor: "white",
                 border: "1px solid #E0DFE8",
@@ -266,18 +255,21 @@ const DashboardPage = ({
                     <div
                       className="d-flex flex-column position-absolute"
                       style={{
-                        left: `calc(${
-                          avgTier === 0
+                        left: `calc(${avgTier === 0
                             ? 0
                             : avgTier === 12
-                            ? 100
-                            : (avgTier / 12) * 100
-                        }% - ${
-                          avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
-                        }px)`,
+                              ? 100
+                              : (avgTier / 12) * 100
+                          }% - ${avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
+                          }px)`,
                         top: "0",
                         zIndex: 100,
-                        alignItems: "center",
+                        alignItems:
+                          avgTier === 0
+                            ? "start"
+                            : avgTier === 12
+                              ? "end"
+                              : "center",
                         width: "fit-content",
                       }}
                     >
@@ -294,19 +286,17 @@ const DashboardPage = ({
                         style={{
                           width: 0,
                           height: 0,
-                          borderLeft: `${
-                            avgTier === 0 ? 3 : 7
-                          }px solid transparent`,
-                          borderRight: `${
-                            avgTier === 12 ? 3 : 7
-                          }px solid transparent`,
+                          borderLeft: `${avgTier === 0 ? 3 : 7
+                            }px solid transparent`,
+                          borderRight: `${avgTier === 12 ? 3 : 7
+                            }px solid transparent`,
                           borderBottom: "7px solid #F7BC76",
                           alignSelf:
                             avgTier === 0
                               ? "start"
                               : avgTier === 12
-                              ? "end"
-                              : "center",
+                                ? "end"
+                                : "center",
                         }}
                       />
                       <div
@@ -327,7 +317,9 @@ const DashboardPage = ({
             </div>
           </div>
         </div>
+
       </div>
+          <NewBlogsCarousel recentBlogs={recentBlogs} />
     </div>
   );
 };

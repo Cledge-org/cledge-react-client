@@ -6,6 +6,7 @@ const RichText = ({ text }: { text: Descendant[] }) => {
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withReact(createEditor()), []);
+  console.log(text);
   return (
     <Slate editor={editor} value={text}>
       <Editable

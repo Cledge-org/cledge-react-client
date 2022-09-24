@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 const TipsCard = ({
@@ -51,7 +52,18 @@ const TipsCard = ({
               borderRadius: "10px",
             }}
           >
-            {tip}
+            {tip?.includes("https") ? (
+              <>
+                {tip.substring(0, tip.indexOf("https"))}
+                <Link href={tip.substring(tip.indexOf("https"))}>
+                  <a className="cl-blue">
+                    {tip.substring(tip.indexOf("https"))}
+                  </a>
+                </Link>
+              </>
+            ) : (
+              tip
+            )}
           </div>
         ))}
         <div

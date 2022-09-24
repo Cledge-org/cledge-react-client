@@ -1,1 +1,22 @@
 @use "src/common/styles" as *;
+
+.blogCarousel {
+  &::-webkit-scrollbar {
+    width: 7px;
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $cl-extra-light-gray;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $cl-mid-gray;
+    border-radius: 10px;
+    &:hover {
+      background: rgba($color: $cl-mid-gray, $alpha: 0.7);
+    }
+  }
+}

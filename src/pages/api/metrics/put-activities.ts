@@ -85,34 +85,18 @@ function getActivityTip(tier: number, category: number): string {
     const bar2 = 6;
     const bar3 = 9;
     let activityTip = "";
-    if (category == 1) {
-      if (tier <= bar1) {
-        activityTip =
-          "We believe you have a lot of room to grow in this activity. Link to Tier 1-3 stem document";
-      } else if (tier <= bar2) {
-        activityTip =
-          "We believe you have some room to grow in this activity. Link to Tier 4-6 stem document";
-      } else if (tier <= bar3) {
-        activityTip =
-          "We believe you have some room to grow in this activity. Link to Tier 7-9 stem document";
-      } else {
-        activityTip =
-          "Great job! We believe you are doing great at this activity. Link to Tier 10-12 stem document";
-      }
+    if (tier <= bar1) {
+      activityTip =
+        "We believe you have a lot of room to grow in this activity. https://uw.cledge.org/blog/tips-for-tier-1-3-extracurriculars";
+    } else if (tier <= bar2) {
+      activityTip =
+        "We believe you have some room to grow in this activity. https://uw.cledge.org/blog/tips-for-tier-4-6-extracurriculars";
+    } else if (tier <= bar3) {
+      activityTip =
+        "We believe you have some room to grow in this activity. https://uw.cledge.org/blog/tips-for-tier-7-9-extracurriculars";
     } else {
-      if (tier <= bar1) {
-        activityTip =
-          "We believe you have a lot of room to grow in this activity. Link to Tier 1-3 general document";
-      } else if (tier <= bar2) {
-        activityTip =
-          "We believe you have some room to grow in this activity. Link to Tier 4-6 general document";
-      } else if (tier <= bar3) {
-        activityTip =
-          "We believe you have some room to grow in this activity. Link to Tier 7-9 general document";
-      } else {
-        activityTip =
-          "Great job! We believe you are doing great at this activity. Link to Tier 10-12 general document";
-      }
+      activityTip =
+        "Great job! We believe you are doing great at this activity. https://uw.cledge.org/blog/tips-for-tier-10+-extracurriculars";
     }
     return activityTip;
   } catch (e) {

@@ -291,7 +291,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             style={{ fontSize: "24px" }}
           >
             <div>University of Washington Computer Science Package</div>
-            <div className="ms-3">$100</div>
+            <div className="ms-3">$99</div>
           </div>
           <button
             onClick={() => {
