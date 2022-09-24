@@ -406,3 +406,9 @@ interface CoupledOptions {
   pickedIndex: number;
   options: { [option: string]: string };
 }
+
+interface QuickAccessLinkData{
+  title: string;
+  content: string;
+  link: string;
+}

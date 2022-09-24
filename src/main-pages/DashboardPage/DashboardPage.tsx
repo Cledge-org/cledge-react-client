@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { connect } from "react-redux";
+import QuickAccessLinks from "src/main-pages/DashboardPage/components/QuickAccessLinks/QuickAccessLinks";
 import BlogCarouselItem from "src/main-pages/WelcomePage/components/blogsCarousel/components/BlogCaroselItem";
 import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
 import styles from "./dashboard-page.module.scss";
@@ -320,6 +321,7 @@ const DashboardPage = ({
 
       </div>
           <NewBlogsCarousel recentBlogs={recentBlogs} />
+          <QuickAccessLinks/>
     </div>
   );
 };

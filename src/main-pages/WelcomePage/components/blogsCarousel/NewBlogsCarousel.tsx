@@ -25,7 +25,7 @@ const RightArrow = styled.div`
   display: flex;
   align-self: center;
   justify-self: flex-end;
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 900px) {
     display: none;
   }
 `;
@@ -35,7 +35,7 @@ const LeftArrow = styled.div`
   align-self: center;
   justify-self: flex-end;
   transform: rotate(180deg);
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 900px) {
     display: none;
   }
 `;

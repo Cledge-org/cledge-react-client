@@ -1,28 +1,27 @@
 {
-    "header": "Important UW CS Quick Access Links",
-    "subHeaders": [
+    "QuickAccessLinks": [
         {
-            "subheading": "Allen School Monthly Information Session",
+            "title": "Allen School Monthly Information Session",
             "content": "Allen School Monthly Information Session The Allen School offers an information session for prospective high school students on the first Friday of every month from 3: 30PM - 4: 30PM PT. All information sessions online via Zoom until further notice. You can join us via Zoom here:",
             "link": "https://washington.zoom.us/j/98318749408"
         },
         {
-            "subheading": "Meet with a Current Allen School Student",
+            "title": "Meet with a Current Allen School Student",
             "content": "Prospective students can schedule a virtual appointment via zoom to meet with one of our Allen School ambassadors who are current students studying Computer Science or Computer Engineering. These meetings are intended for K-12 students to ask questions and learn more about the student experience.",
             "link": "https://uwcseappointments.as.me/meetwithastudent"
         },
         {
-            "subheading": "Allen School Resources for High School Students",
+            "title": "Allen School Resources for High School Students",
             "content": "View the UW Allen School page to see all the resources that are available to prospective Allen School students.",
             "link": "https://www.cs.washington.edu/academics/ugrad/admissions/direct"
         },
         {
-            "subheading": "Allen School Graduation Requirements",
+            "title": "Allen School Graduation Requirements",
             "content":"Degree Requirements | Paul G. Allen School of Computer Science & Engineering (washington.edu)",
             "link": "https://www.cs.washington.edu/academics/ugrad/current-students/degree"
         },
         {
-            "subheading": "Allen School Non-Major Courses",
+            "title": "Allen School Non-Major Courses",
             "content": "If you are not admitted directly into the Allen School, you still have the option to take Non-Major courses which are CSE courses open to anyone at the UW. ",
             "link": "https://www.cs.washington.edu/academics/ugrad/nonmajor-options/nonmajor-courses#:~:text=Non-Major%20Courses%20Computing-Related%20Majors%20The%20Allen%20School%20has,students%20at%20UW%20who%20meet%20the%20course%20prerequisites."
         }
