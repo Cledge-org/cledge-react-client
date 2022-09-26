@@ -33,18 +33,51 @@ export default function TextInputQuestion({
     return (
       <div
         className={classNames(
-          `container-fluid h-100 d-flex flex-column align-items-${
-            isCentered ? "start" : "center"
+          `h-100 d-flex flex-column align-items-${
+            !isCentered ? "start" : "center"
           } justify-content-evenly w-100 cl-dark-text fw-bold`,
           className
         )}
       >
-        <span
-          className={`pt-4 pb-2 ${smallTitle ? "cl-light-gray pb-1" : "pb-3"}`}
-          style={{ fontSize: smallTitle ? "1em" : "1.4em" }}
-        >
-          {question.question}
-        </span>
+        {smallTitle ? (
+          <span
+            className={`pt-4 cl-light-gray pb-1`}
+            style={{
+              fontSize: "1em",
+              width: isInDouble ? "100%" : "90%",
+              textAlign: "left",
+            }}
+          >
+            {`${question.question}${
+              (question as Question).isRequired ? " *" : ""
+            }`}
+          </span>
+        ) : (
+          <div
+            style={{ width: "90%" }}
+            className={classNames(
+              "d-flex flex-row pt-4 pb-2 align-items-center",
+              {
+                ["justify-content-between"]: (question as Question).popUpText,
+              }
+            )}
+          >
+            <span
+              className="cl-dark-text fw-bold"
+              style={{ fontSize: "1.4em" }}
+            >
+              {`${question.question}${
+                (question as Question).isRequired ? " *" : ""
+              }`}
+            </span>
+            {(question as Question).popUpText && (
+              <Tooltip
+                tipId={(question as Question)._id.toString()}
+                text={(question as Question).popUpText}
+              />
+            )}
+          </div>
+        )}
         <div
           className={`d-flex flex-column justify-content-evenly align-items-${
             isCentered ? "start" : "center"
@@ -66,7 +99,11 @@ export default function TextInputQuestion({
               onChange(e.target.value);
             }}
             rows={8}
-            className={`form-control w-${isPathwayQuestion ? "100" : "75"}`}
+            className={`form-control cl-dark-text fw-bold`}
+            style={{
+              borderRadius: "10px",
+              width: isInDouble || smallTitle ? "90%" : "100%",
+            }}
             placeholder={question.placeholder}
           />
         </div>

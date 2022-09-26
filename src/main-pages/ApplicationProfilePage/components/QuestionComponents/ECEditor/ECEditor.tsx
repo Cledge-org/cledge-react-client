@@ -212,6 +212,42 @@ export default function ECEditor({
               />
             );
           }
+          if (type === "TextInput") {
+            return (
+              <TextInputQuestion
+                question={questionData}
+                userAnswer={
+                  isEditing &&
+                  userResponse &&
+                  userResponse.find(
+                    ({ questionId }) => questionId === _id.toString()
+                  )
+                    ? userResponse.find(
+                        ({ questionId }) => questionId === _id.toString()
+                      ).response
+                    : ""
+                }
+                onChange={(value) => {
+                  let totallyNewResponse = newResponse.slice();
+                  if (
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id.toString()
+                    )
+                  ) {
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id.toString()
+                    ).response = value;
+                  } else {
+                    totallyNewResponse.push({
+                      questionId: _id.toString(),
+                      response: value,
+                    });
+                  }
+                  setNewResponse(totallyNewResponse);
+                }}
+              />
+            );
+          }
           if (type === "ECTimeFrame") {
             let response =
               isEditing &&

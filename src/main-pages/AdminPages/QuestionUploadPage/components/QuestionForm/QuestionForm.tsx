@@ -391,7 +391,7 @@ const QuestionForm = ({
             }}
           />
         </div>
-        {currQuestion.type === "TextInputQuestion" && (
+        {currQuestion.type === "TextInput" && (
           <>
             <div className="form-group">
               <label style={{ fontSize: "0.9em" }} className="text-muted">

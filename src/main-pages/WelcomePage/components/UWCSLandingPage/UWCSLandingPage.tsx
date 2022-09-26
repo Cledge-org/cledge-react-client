@@ -308,7 +308,7 @@ const UWCSLandingPage = () => {
               "Insider look at how UW CS scores your application",
               "How to approach the UW supplemental essays",
               "Should you apply to Computer Engineering or CS?",
-              "The Cledge AI Advisor & College Search Tool",
+              "100 questions to ask the Cledge AI Advisor",
             ].map((option) => (
               <div className="d-flex flex-row">
                 <div
