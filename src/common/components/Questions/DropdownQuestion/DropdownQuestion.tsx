@@ -23,6 +23,9 @@ interface DropDownQuestionProps {
   containerStyles?: React.CSSProperties;
   buttonStyles?: React.CSSProperties;
   isForDashboard?: boolean;
+  isCentered?: boolean;
+  smallTitle?: boolean;
+  isForCST?: boolean;
 }
 const defaultProps: DropDownQuestionProps = {
   isConcatenable: false,
@@ -55,8 +58,11 @@ export default function DropDownQuestion({
   isForWaitlist,
   questionTitle,
   isForDashboard,
+  isForCST,
   onChange,
+  isCentered,
   containerStyles,
+  smallTitle,
   buttonStyles,
 }: DropDownQuestionProps) {
   const [chosen, setChosen] = useState(
@@ -81,7 +87,6 @@ export default function DropDownQuestion({
         return value;
       }
       let prevChosenArr = prevChosen instanceof Array ? prevChosen.slice() : [];
-      console.log(prevChosenArr);
       if (prevChosenArr.includes(" " + value)) {
         prevChosenArr.splice(prevChosen.indexOf(" " + value));
         onChange(prevChosenArr.map((element) => element.substring(1)));
@@ -118,11 +123,13 @@ export default function DropDownQuestion({
   }, [rankings]);
   return (
     <div
-      className={
-        !forCalendar && !isForWaitlist
-          ? "w-100 d-flex flex-column justify-content-evenly pt-5"
-          : "w-100 d-flex flex-column justify-content-evenly"
-      }
+      className={`${
+        isForCST
+          ? "w-100 d-flex flex-column"
+          : !forCalendar && !isForWaitlist && !smallTitle
+          ? "w-100 d-flex flex-column pt-5"
+          : "w-100 d-flex flex-column"
+      } ${isCentered ? "justify-content-center" : ""}`}
       style={
         isForDashboard
           ? { flex: "0.2", ...containerStyles }
@@ -131,8 +138,13 @@ export default function DropDownQuestion({
     >
       {!forCalendar && !isForWaitlist ? (
         <div
-          className="fw-bold cl-dark-text pb-3"
-          style={{ fontSize: "1.4em" }}
+          className={`fw-bold ${
+            smallTitle ? "cl-light-gray pb-1" : "cl-dark-text pb-3"
+          }`}
+          style={{
+            fontSize: smallTitle ? "1em" : "1.4em",
+            width: "fit-content",
+          }}
         >
           {questionTitle}
         </div>
@@ -140,7 +152,7 @@ export default function DropDownQuestion({
       <div ref={wrapperRef} style={{ position: "relative" }}>
         <button
           className={`${styles.dropdownQuestionBtn + " px-3 py-3"} ${
-            isForWaitlist ? "bg-white" : ""
+            isForWaitlist || isForCST ? "bg-white" : ""
           } ${
             isForDashboard ? "py-0 " + styles.bottomBorderPathwayFilter : ""
           }`}
@@ -191,9 +203,12 @@ export default function DropDownQuestion({
             "shadow-sm"
           )}
           style={
-            !forCalendar && !isForWaitlist
+            !forCalendar && !isForWaitlist && !isForCST && !smallTitle
               ? { display: isOpen ? "flex" : "none" }
-              : { width: "100%", display: isOpen ? "flex" : "none" }
+              : {
+                  width: "100%",
+                  display: isOpen ? "flex" : "none",
+                }
           }
         >
           {valuesList.map((name) => (

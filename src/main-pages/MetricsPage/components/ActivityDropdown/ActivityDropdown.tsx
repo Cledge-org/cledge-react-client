@@ -10,11 +10,17 @@ const ActivityDropdown = ({
   tier,
   content,
   customContent,
+  tip,
+  updateChunk,
+  updatePage,
 }: {
   title: string;
+  updatePage: string;
+  updateChunk: string;
   tier: number;
   content: string;
   customContent?: ReactElement;
+  tip: string;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
@@ -55,7 +61,15 @@ const ActivityDropdown = ({
           {content}
         </div>
         <div className="d-flex flex-row align-items-start justify-content-between w-100">
-          {customContent ?? <TierIndicatorAndTips tier={tier} />}
+          {customContent ?? (
+            <TierIndicatorAndTips
+              tip={tip}
+              tipTitle={""}
+              tier={tier}
+              updatePage={updatePage}
+              updateChunk={updateChunk}
+            />
+          )}
         </div>
       </div>
     </div>

@@ -15,6 +15,9 @@ import { Button } from "./components/Button/Button";
 import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
+import UWCSLandingPage from "src/main-pages/WelcomePage/components/UWCSLandingPage/UWCSLandingPage";
+import { useLocation } from "src/utils/hooks/useLocation";
+import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
 const MiddleBlock = dynamic(
@@ -151,7 +154,7 @@ export const SubscribeWrapper = styled("div")`
   }
 `;
 export const BlobBlock = styled("div")`
-  background: center / cover url("images/gradient-blob.svg") no-repeat;
+  background-color: white;
 
   button {
     padding: 1rem;
@@ -173,20 +176,13 @@ export const BlobBlock = styled("div")`
   }
 
   .BlobContainer {
-    padding: 5rem 18px;
-
-    button {
-      width: 100%;
-    }
-
-    p {
-      margin-top: 1rem;
-    }
-
-    & img {
-      width: 100%;
-      margin: 3rem 0;
-    }
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 80vw;
+    height: 50vh;
+    border: 1px solid transparent;
+    background: center / cover url("images/gradient-blob.svg") no-repeat;
   }
 
   @media only screen and (min-width: 767px) {
@@ -200,26 +196,6 @@ export const BlobBlock = styled("div")`
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .BlobContainer {
-      width: 80vw;
-      height: 50vh;
-      border: 1px solid transparent;
-      border-radius: 15px;
-      background-color: rgba(255, 255, 255, 0.3);
-
-      button {
-        width: 20vw;
-      }
-
-      & img {
-        width: 100%;
-      }
-
-      div:last-child {
-        position: absolute;
-      }
     }
 
     & > div > div {
@@ -272,11 +248,15 @@ function useWindowSize() {
   return size;
 }
 
-const WelcomePage = () => {
+const WelcomePage = ({ data }) => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
   const [width, height] = useWindowSize();
+  const windowOrigin = useLocation();
 
+  if (windowOrigin.includes("uw")) {
+    return <UWCSLandingPage />;
+  }
   return (
     <PageErrorBoundary>
       <Container>
@@ -409,6 +389,7 @@ const WelcomePage = () => {
           icon="landing_3.svg"
           id="product"
         />
+        <NewBlogsCarousel recentBlogs={data.recentBlogs} />
         <Partner>
           <MiddleBlock
             id="partner"
@@ -419,30 +400,53 @@ const WelcomePage = () => {
         </Partner>
         <BlobBlock>
           <Fade direction="right" className="center-child w-100">
-            <div className="BlobContainer">
-              <div style={{ color: "white" }}>
-                <strong style={{ fontSize: "2em" }}>
-                  Ready to take the next step towards your dreams?
-                </strong>
-                <p style={{ color: "white" }}>
-                  Join our Insider Program to get first access to the 24/7
-                  college chat service
-                </p>
+            <div className="BlobContainer flex-wrap">
+              <div
+                className="d-flex flex-column justify-content-end ps-5"
+                style={{
+                  color: "white",
+                  width: width < 800 ? "100%" : "50%",
+                  height: width < 800 ? "50%" : "75%",
+                }}
+              >
+                <div
+                  className="center-child px-3 fw-bold"
+                  style={{
+                    width: "fit-content",
+                    background:
+                      "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
+                    borderRadius: "13px",
+                  }}
+                >
+                  New
+                </div>
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: width < 800 ? "18px" : "52px",
+                  }}
+                >
+                  Cledge is now available for University of Washington CS
+                  Admissions
+                </div>
               </div>
-              <img src="images/insider-blob.svg" />
-              <div style={{ bottom: "-2vh", left: "5vw" }}>
+              <div
+                className="d-flex flex-row-reverse align-items-end pe-5"
+                style={{
+                  width: width < 800 ? "100%" : "50%",
+                  height: width < 800 ? "50%" : "75%",
+                }}
+              >
                 <Button
                   key="subscribe-btn"
                   color="#F7BC76"
                   fixedWidth={false}
+                  className={width < 800 ? "w-75 mb-3" : "w-25"}
                   onClick={() => {
-                    window.open(
-                      "https://forms.gle/M1GxLK45Yi3Esfn5A",
-                      "_blank"
-                    );
+                    window.open("https://uw.cledge.org", "_blank");
                   }}
                 >
-                  Join Insider Program for Free ➜
+                  Learn More
                 </Button>
               </div>
             </div>
@@ -452,7 +456,7 @@ const WelcomePage = () => {
       <Footer
         onFeatureClick={(featureIndex) => {
           setCurrFeature(featureIndex);
-          console.log(slideShowRef.current.offsetTop);
+          //console.log(slideShowRef.current.offsetTop);
           document.body.scrollTo({
             top: slideShowRef.current.offsetTop,
             behavior: "smooth",

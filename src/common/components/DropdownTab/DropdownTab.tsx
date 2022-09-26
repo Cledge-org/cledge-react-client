@@ -12,6 +12,7 @@ import { FaCheckCircle, FaBookOpen } from "react-icons/fa";
 import { BsPencilSquare } from "react-icons/bs";
 import { RiFileTextFill } from "react-icons/ri";
 import styles from "./dropdown-tab.module.scss";
+import { purple } from "@mui/material/colors";
 
 export default function DropdownTab({
   chunkList,
@@ -19,7 +20,7 @@ export default function DropdownTab({
   percentComplete,
   isAll,
   onClick,
-  isExtracurricular,
+  isECAC,
   icons,
   isPathway,
   currSelectedPath,
@@ -31,14 +32,14 @@ export default function DropdownTab({
   isAll?: boolean;
   percentComplete: number;
   onClick: Function;
-  isExtracurricular?: boolean;
+  isECAC?: boolean;
   isPathway?: boolean;
   isFinishedContent?: boolean[];
   isFinishedModule?: boolean;
   currSelectedPath?: string;
   icons?: IconProp[];
 }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const ShownIcon = ({ className, style, icon }) => {
     return icon === "video" ? (
       <AiOutlineYoutube className={className} style={style} />
@@ -56,17 +57,17 @@ export default function DropdownTab({
     <div className="dropdown-container">
       <button
         className="dropdown-btn"
+        style={{ border: "0px", fontWeight: "bold"}}
         onClick={() => {
           if (isAll) {
             onClick();
           }
           setIsExpanded(!isExpanded);
         }}
-        style={isFinishedModule ? { borderTopColor: "#2651ed" } : {}}
       >
-        <div className="text">
-          {title}
-          {isAll || isPathway ? null : (
+        <div style={{ textAlign: "left", maxWidth: "75%" }}>
+          <h6 className="cl-dark-text">{title}</h6>
+          {isAll || isPathway || isECAC ? null : (
             <span className="percentage">{percentComplete}%</span>
           )}
         </div>
@@ -103,13 +104,13 @@ export default function DropdownTab({
             }
             key={index.toString()}
           >
-            <div className="center-child icon">
+            <div className="center-child icon me-3" style={{ alignSelf: "start", paddingTop: "3px"  }}>
               <ShownIcon
                 className={`${
                   isPathway
                     ? isFinishedModule || isFinishedContent[index]
                       ? "cl-blue"
-                      : ""
+                      : "cl-dark-text"
                     : ""
                 }`}
                 style={
@@ -128,8 +129,10 @@ export default function DropdownTab({
                 }
               />
             </div>
-            <div className="text">
-              {isPathway ? chunkTitle.name : chunkTitle}
+            <div className="cl-dark-text" style={{ textAlign: "left", maxWidth: "75%" }}>
+              <text>
+                {isPathway ? chunkTitle.name : chunkTitle}
+              </text>
             </div>
           </button>
         ))}

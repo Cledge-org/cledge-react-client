@@ -2,6 +2,8 @@ import React, { useState } from "react";
 
 import styles from "./mcq-question.module.scss";
 import palette from "src/common/styles/palette.module.scss";
+import classNames from "classnames";
+import { Tooltip } from "src/common/components/Tooltip/Tooltip";
 interface MCQQuestionProps {
   isPathwayQuestion?: boolean;
   question: Question | PathwayQuestion;
@@ -9,6 +11,7 @@ interface MCQQuestionProps {
   onChange: Function;
   tags: string[];
   inEC?: boolean;
+  isCentered?: boolean;
 }
 
 export default function MCQQuestion({
@@ -18,24 +21,40 @@ export default function MCQQuestion({
   tags,
   isPathwayQuestion,
   inEC,
+  isCentered,
 }: MCQQuestionProps) {
-  console.log(userAnswer);
   const [selected, setSelected] = useState(userAnswer?.slice());
-  console.log(palette);
   return (
     <div
       className={`h-100 d-flex flex-column ${
         inEC
           ? "align-items-start w-100"
-          : `container-fluid ${
-              isPathwayQuestion ? "align-items-start" : "align-items-center"
-            }`
+          : `${!isCentered ? "align-items-start" : "align-items-center"}`
       } justify-content-evenly cl-dark-text fw-bold`}
     >
-      <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-        {question.question}
-      </span>
-      <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
+      <div
+        style={{ width: "90%" }}
+        className={classNames("d-flex flex-row pt-4 pb-2 align-items-center", {
+          ["justify-content-between"]: (question as Question).popUpText,
+        })}
+      >
+        <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
+          {`${question.question}${
+            (question as Question).isRequired ? " *" : ""
+          }`}
+        </span>
+        {(question as Question).popUpText && (
+          <Tooltip
+            tipId={(question as Question)._id.toString()}
+            text={(question as Question).popUpText}
+          />
+        )}
+      </div>
+      <div
+        className={`d-flex flex-column justify-content-evenly align-items-${
+          !isCentered ? "start" : "center"
+        } h-75 w-100`}
+      >
         {question.data.map((singleData) => {
           const { op, tag } = singleData;
           return (
@@ -52,41 +71,46 @@ export default function MCQQuestion({
                 setSelected(op);
                 onChange(op, [tag], oldTag ? [oldTag] : []);
               }}
-              style={
-                isPathwayQuestion
-                  ? { backgroundColor: "white", width: "100%" }
-                  : {}
-              }
+              style={isPathwayQuestion ? { width: "100%" } : {}}
               className={`${
-                selected === op
+                (isPathwayQuestion ? selected === singleData : selected === op)
                   ? styles.mcqAnswerBtnSelected
                   : styles.mcqAnswerBtn
               } ${inEC ? "w-100" : ""} py-3 ${
                 isPathwayQuestion ? "" : "ps-4"
               } my-2`}
             >
-              {isPathwayQuestion && (
-                <div
-                  className="center-child me-3"
-                  style={{
-                    width: "2em",
-                    height: "2em",
-                    border: "2px solid darkgray",
-                    borderRadius: "1em",
-                  }}
-                >
-                  {selected === singleData && (
-                    <div
-                      style={{
-                        width: "1.5em",
-                        height: "1.5em",
-                        borderRadius: "0.75em",
-                        backgroundColor: "#2651ed",
-                      }}
-                    />
-                  )}
-                </div>
-              )}
+              <div
+                className="center-child me-2"
+                style={{
+                  minWidth: "20px",
+                  minHeight: "20px",
+                  backgroundColor: "white",
+                  border: `1px solid ${
+                    (
+                      isPathwayQuestion
+                        ? selected === singleData
+                        : selected === op
+                    )
+                      ? palette.clBlue
+                      : palette.clLightGray
+                  }`,
+                  borderRadius: "10px",
+                }}
+              >
+                {(isPathwayQuestion
+                  ? selected === singleData
+                  : selected === op) && (
+                  <div
+                    style={{
+                      width: "10px",
+                      height: "10px",
+                      borderRadius: "5px",
+                      backgroundColor: "#2651ed",
+                    }}
+                  />
+                )}
+              </div>
               {isPathwayQuestion ? singleData : op}
             </button>
           );

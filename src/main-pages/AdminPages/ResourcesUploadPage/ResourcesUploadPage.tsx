@@ -18,12 +18,11 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
       onUpload={() => {
         let resourceSendData = {};
         resourceSendData[resourceType.toLowerCase()] = resourceData;
-        console.log(resourceSendData);
         fetch(`/api/resources/put-resource-${resourceType.toLowerCase()}`, {
           method: "POST",
           body: JSON.stringify(resourceSendData),
         }).then((res) => {
-          console.log(res.status);
+          //console.log(res.status);
         });
       }}
     >
@@ -49,7 +48,7 @@ const ResourcesUploadPage: NextApplicationPage<{}> = ({}) => {
       <DropDownQuestion
         isForWaitlist
         onChange={(value) => {
-          console.log(value);
+          //console.log(value);
           setResourceType(value);
         }}
         defaultValue={resourceType}

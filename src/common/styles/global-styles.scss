@@ -17,7 +17,8 @@ body {
   font-weight: 500;
   height: 100%;
   width: 100vw;
-  overflow-x: hidden;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }
 div,
 button {
@@ -112,6 +113,9 @@ a {
 .bg-light-gray {
   background-color: $cl-light-gray;
 }
+.bg-extra-light-gray {
+  background-color: $cl-extra-light-gray;
+}
 .cl-btn-gray {
   @extend .cl-btn;
   color: $cl-dark-text;
@@ -138,6 +142,10 @@ a {
     border-color: rgba($color: $cl-white, $alpha: 0.9);
   }
 }
+.inline {
+  display: flex;
+  justify-content: space-between;
+}
 
 .cl-btn-gray-selected {
   @extend .cl-btn-gray;
@@ -157,6 +165,7 @@ a {
   padding-top: 1.5vh;
   padding-bottom: 1.5vh;
   font-size: 0.9em;
+  transition: 200ms;
   // @include button-size(
   //   $padding-x: 1.5vw,
   //   $padding-y: 1.5vh,
@@ -278,7 +287,7 @@ a {
   top: 130%;
   display: flex;
   flex-direction: column;
-  z-index: 1000;
+  z-index: 2000;
 }
 .dropdown-container {
   transition: height 1s;
@@ -338,7 +347,7 @@ a {
     animation-name: rotate;
     animation-duration: 600ms;
   }
-  background-color: $cl-light-gray;
+  background-color: $cl-extra-light-gray;
   border: none;
   border-top: 2px solid rgba($color: $cl-secondary-text, $alpha: 0.7);
   display: flex;
@@ -357,7 +366,7 @@ a {
   }
 }
 .dropdown-menu-closed {
-  background-color: $cl-light-gray;
+  background-color: $cl-extra-light-gray;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -366,7 +375,7 @@ a {
   animation-duration: 600ms;
 }
 .dropdown-menu-closed-no-animation {
-  background-color: $cl-light-gray;
+  background-color: $cl-extra-light-gray;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -374,7 +383,7 @@ a {
 }
 @keyframes close {
   0% {
-    max-height: 30vh;
+    max-height: 80vh;
     overflow: visible;
   }
   100% {
@@ -388,20 +397,18 @@ a {
     overflow: hidden;
   }
   100% {
-    max-height: 50vh;
+    max-height: 80vh;
     overflow: visible;
   }
 }
 .dropdown-menu-expanded {
-  background-color: $cl-light-gray;
+  background-color: $cl-extra-light-gray;
   display: flex;
   flex-direction: column;
   animation-name: expand;
   animation-duration: 600ms;
 }
 .dropdown-menu-btn {
-  // @extend .pt-2;
-  // @extend .pb-2;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   width: 100%;
@@ -410,7 +417,7 @@ a {
   display: flex;
   align-items: center;
   height: fit-content;
-  background-color: $cl-light-gray;
+  background-color: $cl-extra-light-gray;
   .text {
     // @extend .ps-4;
     padding-left: 3em;
@@ -478,4 +485,16 @@ a {
     cursor: pointer;
     background: rgba($color: #000000, $alpha: 0.1);
   }
+}
+span[contenteditable] {
+  display: inline-block;
+}
+span[contenteditable]:empty::before {
+  content: "Ask something";
+  color: $cl-mid-gray;
+  display: inline-block;
+}
+span[contenteditable]:empty:focus::before {
+  content: "Ask something";
+  color: $cl-mid-gray;
 }

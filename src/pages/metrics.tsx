@@ -1,8 +1,8 @@
 import React from "react";
 import { GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
-import { getAcademics } from "./api/get-academics";
-import { getActivities } from "./api/get-activities";
+import { getAcademics } from "./api/metrics/get-academics";
+import { getActivities } from "./api/metrics/get-activities";
 import MetricsPage from "../main-pages/MetricsPage/MetricsPage";
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -25,7 +25,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     };
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     ctx.res.end();
     return { props: {} as never };
   }
@@ -33,4 +33,5 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const Metrics = ({ activities, academics }) => {
   return <MetricsPage activities={activities} academics={academics} />;
 };
+Metrics.requireAuth = true;
 export default Metrics;

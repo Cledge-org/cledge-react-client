@@ -7,13 +7,13 @@ import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
-  console.log(session);
-  const router = useRouter()
+  const router = useRouter();
   if (status === "authenticated") {
-    router.replace('/dashboard')
-    return<LoadingScreen/>
+    router.replace("/dashboard");
+  } else {
+    router.replace("/welcome");
   }
-  return <Welcome></Welcome>;
+  return <LoadingScreen />;
 };
 
 export default Home;

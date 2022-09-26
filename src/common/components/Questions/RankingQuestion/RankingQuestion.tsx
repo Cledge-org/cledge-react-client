@@ -21,7 +21,7 @@ export default function RankingQuestion({
     userAnswers !== null ? userAnswers.slice() : question.data.map(() => "")
   );
   useEffect(() => {
-    console.log(selected);
+    //console.log(selected);
   }, [selected]);
   let changeRank = (value: string, index: number) => {
     let selectedCopy = selected.slice();
@@ -36,7 +36,7 @@ export default function RankingQuestion({
   return (
     <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
       <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
-        {question.question}
+        {`${question.question}${(question as Question).isRequired ? " *" : ""}`}
       </span>
       <div className="d-flex flex-column justify-content-evenly align-items-center h-75 w-100">
         {question.data.map(({ op, tag }, index) => {

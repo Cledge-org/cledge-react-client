@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
-
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { updatePathwayProgressAction } from "../../utils/redux/actionFunctions";
 import DropdownTab from "../../common/components/DropdownTab/DropdownTab";
 import { store } from "../../utils/redux/store";
@@ -14,16 +14,10 @@ import { callPutPathwayProgress } from "src/utils/apiCalls";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import classNames from "classnames";
 import PathwayQuestion from "src/main-pages/PathwayPage/components/PathwayQuestion/PathwayQuestion";
-import { Editable, Slate, withReact } from "slate-react";
-import { createEditor } from "slate";
-import {
-  faBook,
-  faImage,
-  faMoneyCheck,
-  faVideo,
-} from "@fortawesome/free-solid-svg-icons";
 import RichText from "src/common/components/RichText/RichText";
 import SubPageHeader from "src/common/components/SubpageHeader/SubpageHeader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowAltCircleDown } from "@fortawesome/free-regular-svg-icons";
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
@@ -82,7 +76,6 @@ const Pathways: NextApplicationPage<{
       };
     }, {})
   );
-  const session = useSession();
   useEffect(() => {
     callPutPathwayProgress(moduleProgress).then((res) => {
       let newProgress = pathwaysProgress.slice();
@@ -95,7 +88,8 @@ const Pathways: NextApplicationPage<{
     });
   }, [moduleProgress]);
   const updateContentProgress = (newContentProgress: ContentProgress) => {
-    let allModuleContentProgress = moduleProgress[currModuleId] ?? [];
+    let allModuleContentProgress =
+      moduleProgress[currModuleId.toString()] ?? [];
     const contentIndex = allModuleContentProgress.findIndex(
       ({ name }) => name === newContentProgress.name
     );
@@ -106,7 +100,7 @@ const Pathways: NextApplicationPage<{
     }
     setModuleProgress({
       ...moduleProgress,
-      [currModuleId]: allModuleContentProgress,
+      [currModuleId.toString()]: allModuleContentProgress,
     });
   };
   const updateSubContentProgress = (
@@ -115,8 +109,7 @@ const Pathways: NextApplicationPage<{
       | PathwayVideoProgress
       | PathwayTextProgress
   ) => {
-    console.log(newSubContentProgress);
-    let currContentProgress = moduleProgress[currModuleId].find(
+    let currContentProgress = moduleProgress[currModuleId.toString()].find(
       ({ name }) => name === currContent.name
     );
     const subContentIndex = currContentProgress.subContentProgress.findIndex(
@@ -138,23 +131,27 @@ const Pathways: NextApplicationPage<{
         currContent.content.length;
     updateContentProgress(currContentProgress);
   };
-  const getContent = useCallback(() => {
+  const currContentJSX = useMemo(() => {
     let questionNumber = 0;
     return currContent.content.map((content) => {
       const { type } = content;
-      const currSubContentProgress = moduleProgress[currModuleId]
-        .find(({ name }) => name === currContent.name)
-        .subContentProgress.find(({ id }) => id === content.id) || {
+      const currSubContentProgress = moduleProgress[currModuleId.toString()]
+        ?.find(({ name }) => name === currContent.name)
+        ?.subContentProgress?.find(({ id }) => id === content.id) || {
         id: content.id,
         finished: false,
       };
+      console.log(content);
       if (type === "question") {
         questionNumber++;
       }
       return type === "video" ? (
         <div className="center-child pt-4">
-          <div style={{ width: "90%", height: "100vh" }}>
-            <div className="w-100" style={{ height: "60%" }}>
+          <div
+            className="d-flex flex-column justify-content-center align-items-center"
+            style={{ width: "90%", height: "100%" }}
+          >
+            <div className="w-75" style={{ aspectRatio: "16 / 9" }}>
               <YoutubeEmbed
                 isPathway
                 key={`youtube-container-${content.url.substring(
@@ -185,7 +182,7 @@ const Pathways: NextApplicationPage<{
                 )}
               />
             </div>
-            <div className="w-100 center-child flex-column py-5">
+            <div className="w-100 center-child flex-column pt-5">
               <div className={classNames("pb-2 w-100")}>
                 <span
                   className="fw-bold cl-dark-text"
@@ -211,7 +208,7 @@ const Pathways: NextApplicationPage<{
       ) : type === "text" ? (
         <div className="center-child w-100">
           <div className="w-60">
-            <RichText text={content.text} />
+            <RichText key={content.id} text={content.text} />
           </div>
         </div>
       ) : type === "image" ? (
@@ -233,7 +230,7 @@ const Pathways: NextApplicationPage<{
                 undefined
               }
               onUpdate={(answer) => {
-                console.log("Whot is op");
+                //console.log("Whot is op");
                 updateSubContentProgress({
                   ...currSubContentProgress,
                   questionAnswer: answer,
@@ -243,7 +240,7 @@ const Pathways: NextApplicationPage<{
                     answer !== "",
                 });
               }}
-              helpText={content.helpText}
+              placeholder={content.placeholder}
               data={content.data}
               id={content.id}
             />
@@ -252,60 +249,124 @@ const Pathways: NextApplicationPage<{
       );
     });
   }, [currContent]);
+
+  const [scrollState, setScrollState] = useState("scrolling");
+  const [listener, setListener] = useState(null);
+
+  const onScroll = useCallback(() => {
+    let scrolled = document.body.scrollTop;
+    if (
+      document.body.scrollHeight - scrolled <=
+      document.body.clientHeight + 65
+    ) {
+      setScrollState("bottom");
+    } else {
+      setScrollState("scrolling");
+    }
+  }, [scrollState]);
+  useEffect(() => {
+    document.removeEventListener("scroll", listener);
+    document.body.addEventListener("scroll", onScroll);
+    setListener(onScroll);
+    return () => {
+      document.removeEventListener("scroll", listener);
+    };
+  }, [scrollState, onScroll]);
   return (
     <PageErrorBoundary>
-      <div
-        className="container-fluid d-flex flex-row px-0"
-        style={{ minHeight: "94vh", height: "fit-content" }}
-      >
-        <div className="d-flex flex-column bg-light-gray" style={{ flex: 1 }}>
-          {pathwayInfo.modules.map(
-            (
-              { name, presetContent, personalizedContent, _id },
-              moduleIndex
-            ) => {
-              const moduleSortedContent = getSortedContent(
-                presetContent,
-                personalizedContent
-              );
-              return (
-                <DropdownTab
-                  isFinishedModule={false}
-                  isFinishedContent={[false]}
-                  icons={moduleSortedContent.map(
-                    ({ primaryType }) => primaryType
-                  )}
-                  currSelectedPath={currContent.name}
-                  chunkList={moduleSortedContent.map(
-                    ({ name, primaryType }) => {
-                      return { name, type: primaryType };
+      <div className="d-flex flex-column justify-content-start">
+        <div className="border">
+          <div className="m-3">
+            <a href="/my-learning">
+              <FontAwesomeIcon className="ms-1 cl-blue" icon={faChevronLeft} />
+            </a>
+            <a href="/my-learning" className="ms-3 cl-blue">
+              Back to my learning
+            </a>
+            <text className="ms-2">/</text>
+            <text className="ms-2 cl-mid-gray">{pathwayInfo.name}</text>
+          </div>
+        </div>
+        <div
+          className="container-fluid d-flex flex-row px-0"
+          style={{ minHeight: "94vh", height: "fit-content" }}
+        >
+          <div
+            className="d-flex flex-column border-end"
+            style={{ width: "23%", backgroundColor: "#EFEFF5" }}
+          >
+            {pathwayInfo.modules.map(
+              ({ name, presetContent, personalizedContent, _id }) => {
+                const moduleSortedContent = getSortedContent(
+                  presetContent,
+                  personalizedContent
+                );
+                return (
+                  <DropdownTab
+                    isFinishedModule={
+                      pathwaysProgress
+                        .find(({ name }) => pathwayInfo.name === name)
+                        .moduleProgress?.find(
+                          (moduleProgress) => moduleProgress.name === name
+                        )?.finished
                     }
-                  )}
-                  onClick={(contentTitle) => {
-                    setCurrModuleId(_id);
-                    let currContent = presetContent.find(
-                      ({ name }) => name === contentTitle
-                    );
-                    if (currContent === undefined) {
-                      currContent = personalizedContent.find(
+                    isFinishedContent={
+                      pathwaysProgress
+                        ?.find(({ name }) => pathwayInfo.name === name)
+                        ?.moduleProgress?.find(
+                          (moduleProgress) => moduleProgress.name === name
+                        )
+                        ?.contentProgress?.map(({ finished }) => finished) || []
+                    }
+                    icons={moduleSortedContent.map(
+                      ({ primaryType }) => primaryType
+                    )}
+                    currSelectedPath={currContent.name}
+                    chunkList={moduleSortedContent.map(
+                      ({ name, primaryType }) => {
+                        return { name, type: primaryType };
+                      }
+                    )}
+                    onClick={(contentTitle) => {
+                      setCurrModuleId(_id);
+                      let currContent = presetContent.find(
                         ({ name }) => name === contentTitle
                       );
-                    }
-                    setCurrContent(currContent);
-                  }}
-                  title={name}
-                  isPathway
-                  percentComplete={undefined}
+                      console.log(currContent);
+                      if (!currContent) {
+                        currContent = personalizedContent.find(
+                          ({ name }) => name === contentTitle
+                        );
+                      }
+                      setCurrContent(currContent);
+                    }}
+                    title={name}
+                    isPathway
+                    percentComplete={undefined}
+                  />
+                );
+              }
+            )}
+          </div>
+          <div className="d-flex flex-column" style={{ flex: 3 }}>
+            {currContent.primaryType === "question" && (
+              <SubPageHeader title={"Quiz"} isMetrics percentage={undefined} />
+            )}
+            <div className="d-flex flex-column">{currContentJSX}</div>
+          </div>
+          {scrollState !== "bottom" ? (
+            <div className="d-flex fixed-bottom justify-content-end mb-5 me-4">
+              <div
+                className="d-flex justify-content-end"
+                style={{ width: "77%" }}
+              >
+                <FontAwesomeIcon
+                  className="cl-blue fa-3x"
+                  icon={faArrowAltCircleDown}
                 />
-              );
-            }
-          )}
-        </div>
-        <div className="d-flex flex-column" style={{ flex: 3 }}>
-          {currContent.primaryType === "question" && (
-            <SubPageHeader title={"Quiz"} isMetrics percentage={undefined} />
-          )}
-          {getContent()}
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </PageErrorBoundary>
@@ -324,7 +385,7 @@ function checkPathwayDiscrepancies(pathwayInfo: Pathway) {
     }
     pathwayProgress.moduleProgress.forEach((progressModule, index) => {
       const matchingModule = pathwayInfo.modules.find(
-        ({ _id }) => progressModule.moduleId === _id
+        ({ _id }) => progressModule.moduleId === _id.toString()
       );
       if (matchingModule && matchingModule.name !== progressModule.name) {
         pathwayProgress.moduleProgress[index].name = matchingModule.name;

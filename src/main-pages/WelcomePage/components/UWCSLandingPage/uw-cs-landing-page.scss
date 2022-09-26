@@ -1,0 +1,47 @@
+@use "src/common/styles" as *;
+
+.landing-page-white-text,
+.landing-page-white-text p {
+  color: $cl-white;
+}
+
+.landing-page-gray-text p {
+  color: $cl-light-gray;
+}
+.landing-update-button {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  border-width: 0;
+  color: black;
+  padding-left: calc(1.5em + 10px);
+  padding-right: 1.5em;
+  max-lines: 1;
+  max-width: 75vw;
+  transform: translate(-15px, 0);
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+#landing-main {
+  background-image: url("/images/uw-landing-bg.svg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 999;
+  height: 100%;
+  @media (min-width: 992px) {
+    height: 100vh;
+  }
+}
+
+.feature-tabbar {
+  border-radius: 10px;
+}
+
+.feature-tab {
+  cursor: pointer;
+  padding: 1em;
+  margin: 0.5em;
+  border: 2px solid;
+  border-radius: 12px;
+}

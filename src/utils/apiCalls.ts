@@ -5,7 +5,7 @@ export const callPutQuestionResponses = async (
   newUserResponses: UserResponse[]
 ) => {
   const session = getSession();
-  return await fetch(`/api/put-question-responses`, {
+  return await fetch(`/api/user/put-question-responses`, {
     method: "POST",
     body: JSON.stringify({
       responses: newUserResponses,
@@ -13,13 +13,16 @@ export const callPutQuestionResponses = async (
     }),
   });
 };
-export const callUpdateUser = async (userInfo: AccountInfo) => {
+export const callUpdateUser = async (
+  userInfo: AccountInfo,
+  userId?: string
+) => {
   const session = getSession();
-  return await fetch(`/api/update-user`, {
+  return await fetch(`/api/user/update-user`, {
     method: "POST",
     body: JSON.stringify({
       userInfo: userInfo,
-      userId: (await session).user.uid,
+      userId: userId || (await session).user.uid,
     }),
   });
 };
@@ -27,7 +30,7 @@ export const callPutPathwayProgress = async (
   contentProgress: Record<string, ContentProgress[]>
 ) => {
   const session = getSession();
-  return await fetch(`/api/put-pathway-progress`, {
+  return await fetch(`/api/user/put-pathway-progress`, {
     method: "POST",
     body: JSON.stringify({
       contentProgress,
@@ -42,7 +45,7 @@ export const callPutPathway = async ({
   pathway?: Pathway;
   pathwayId?: ObjectId | string;
 }) => {
-  return await fetch("/api/put-pathway", {
+  return await fetch("/api/admin/learning-pathway/put-pathway", {
     method: "POST",
     body: JSON.stringify({
       pathwayId,
@@ -57,7 +60,7 @@ export const callPutQuestion = async ({
   question?: Question;
   questionId?: ObjectId | string;
 }) => {
-  return await fetch("/api/put-question", {
+  return await fetch("/api/admin/question/put-question", {
     method: "POST",
     body: JSON.stringify({
       questionId,
@@ -83,9 +86,24 @@ export const callPutResource = async ({
     }),
   });
 };
+export const callPutChatbotCounselorQuestion = async ({
+  chatbotDataId,
+  chatbotData,
+}: {
+  chatbotDataId?: ObjectId | string;
+  chatbotData: ChatbotCounselorQuestionData;
+}) => {
+  return await fetch("/api/chatbot/put-chatbot-counselor-question", {
+    method: "POST",
+    body: JSON.stringify({
+      chatbotDataId,
+      chatbotData,
+    }),
+  });
+};
 export const callPutActivities = async (activities: Activities) => {
   const session = getSession();
-  return await fetch(`/api/put-activities`, {
+  return await fetch(`/api/metrics/put-activities`, {
     method: "POST",
     body: JSON.stringify({
       userId: activities ? (await session).user.uid : null,
@@ -95,7 +113,7 @@ export const callPutActivities = async (activities: Activities) => {
 };
 export const callPutAcademics = async (academics: Academics) => {
   const session = getSession();
-  return await fetch(`/api/put-academics`, {
+  return await fetch(`/api/metrics/put-academics`, {
     method: "POST",
     body: JSON.stringify({
       userId: academics ? (await session).user.uid : null,
@@ -110,7 +128,7 @@ export const callPutPathwayModule = async ({
   pathwayModule?: PathwayModule_Db;
   pathwayModuleId?: ObjectId | string;
 }) => {
-  return await fetch("/api/put-pathway-module", {
+  return await fetch("/api/admin/learning-pathway/put-pathway-module", {
     method: "POST",
     body: JSON.stringify({
       pathwayModuleId,
@@ -125,13 +143,16 @@ export const callPutPathwayModulePersonalizedContent = async ({
   content?: PersonalizedContent;
   contentId?: ObjectId | string;
 }) => {
-  return await fetch("/api/put-pathway-module-personalized-content", {
-    method: "POST",
-    body: JSON.stringify({
-      contentId,
-      content,
-    }),
-  });
+  return await fetch(
+    "/api/admin/learning-pathway/put-pathway-module-personalized-content",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        contentId,
+        content,
+      }),
+    }
+  );
 };
 export const callPutQuestionChunk = async ({
   questionChunk,
@@ -140,7 +161,7 @@ export const callPutQuestionChunk = async ({
   questionChunk?: QuestionChunk;
   questionChunkId?: ObjectId | string;
 }) => {
-  return await fetch("/api/put-question-chunk", {
+  return await fetch("/api/admin/question/put-question-chunk", {
     method: "POST",
     body: JSON.stringify({
       questionChunkId,
@@ -155,7 +176,7 @@ export const callPutQuestionList = async ({
   questionList?: QuestionList_Db;
   questionListId?: ObjectId | string;
 }) => {
-  return await fetch("/api/put-question-list", {
+  return await fetch("/api/admin/question/put-question-list", {
     method: "POST",
     body: JSON.stringify({
       questionListId,
@@ -170,7 +191,7 @@ export const callPutPathwayPart = async ({
   part?: PathwayPart_Db;
   partId?: ObjectId | string;
 }) => {
-  return await fetch(`/api/put-pathway-part`, {
+  return await fetch(`/api/admin/learning-pathway/put-pathway-part`, {
     method: "POST",
     body: JSON.stringify({
       part,
@@ -183,6 +204,33 @@ export const alertSlackError = (error: string) => {
     "https://hooks.slack.com/services/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",
     { method: "POST", body: JSON.stringify({ text: error }) }
   );
+};
+export const alertSlackNewUser = (numUsers: number) => {
+  fetch(
+    "https://hooks.slack.com/services/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",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        text: "A new user has appeared!\nCurrent number of users: " + numUsers,
+      }),
+    }
+  );
+};
+export const alertSlackChatbotQuestion = (
+  chatbotData: ChatbotCounselorQuestionData
+) => {
+  fetch(
+    "https://hooks.slack.com/services/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",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        text: `<@U01QZ80JC00> ${chatbotData.name} just asked the chatbot a question and received an answer they didn't like :/ go to: https://cledge.org/admin/chatbot-counselor-questions to check it out`,
+      }),
+    }
+  );
+};
+export const getNumUsers = async () => {
+  return await (await fetch("/api/admin/get-num-accounts")).text();
 };
 export const callCreateUser = async (
   email: string,
@@ -200,7 +248,7 @@ export const callCreateUser = async (
 };
 export const getPathwayProgressToDownload = async (firebaseId: string) => {
   return (await (
-    await fetch(`/api/get-all-pathway-progress`, {
+    await fetch(`/api/admin/learning-pathway/get-all-pathway-progress`, {
       method: "POST",
       body: JSON.stringify({
         userId: firebaseId,
@@ -208,9 +256,89 @@ export const getPathwayProgressToDownload = async (firebaseId: string) => {
     })
   ).json()) as PathwayProgress[];
 };
+export const callGetChatbotResponse = async (
+  message: string,
+  username: string,
+  email: string,
+  questionResponses: UserResponse[],
+  questionParams?: QuestionParams,
+) => {
+  return await fetch(
+    "https://cledge-chatbot-service.azurewebsites.net/v3/api",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question: message,
+        username,
+        email,
+        question_params: questionParams || {},
+        student_info: questionResponses,
+      }),
+    }
+  )
+    .then(async (response) => await response.json())
+    .catch((error) => {
+      console.error(error);
+      return "Sorry, the chatbot seems to be experiencing difficulties right now!";
+    });
+};
+export const callChatbotVote = (
+  question: string,
+  answer: string,
+  vote: boolean,
+  username: string,
+  messageId: string
+) => {
+  fetch(`https://cledge-chatbot-service.azurewebsites.net/v3/vote_api`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      question,
+      answer,
+      username,
+      vote,
+      responseId: messageId,
+    }),
+  });
+};
+export const callGetQuestionResponses = async (userId: string) => {
+  return await fetch(`/api/user/get-question-responses`, {
+    method: "POST",
+    body: JSON.stringify({ userId }),
+  });
+};
+export const callGetAccount = async (userId: string) => {
+  return await fetch(`/api/user/get-account`, {
+    method: "POST",
+    body: JSON.stringify({ userId }),
+  });
+};
+export const callGetAllPathwayProgress = async (userId: string) => {
+  return await fetch(`/api/admin/learning-pathway/get-all-pathway-progress`, {
+    method: "POST",
+    body: JSON.stringify({ userId }),
+  });
+};
 export const callPutBlog = async (articleId: string, article) => {
-  return await fetch(`/api/put-blog`, {
+  return await fetch(`/api/blogs/put-blog`, {
     method: "POST",
     body: JSON.stringify({ articleId, article }),
+  });
+};
+export const callPutUWWaitlist = async (waitlistData: any) => {
+  return await fetch(`/api/user/add-to-uw-waitlist`, {
+    method: "POST",
+    body: JSON.stringify({ data: waitlistData }),
+  });
+};
+export const callCreatePaymentIntent = async (product_id: string) => {
+  return await fetch(`/api/stripe/create-payment-intent`, {
+    body: JSON.stringify({ product_id }),
+    method: "POST",
   });
 };

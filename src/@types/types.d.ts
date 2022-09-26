@@ -1,4 +1,7 @@
+import { TimePickerLocale } from "antd/lib/time-picker";
 import { ObjectId } from "mongodb";
+import { Key } from "react";
+
 
 export declare global {
   interface Window {
@@ -11,10 +14,14 @@ export declare global {
     name: string;
     address: string;
     grade: number;
+    isOnMailingList: boolean;
     birthday: Date;
     email: string;
     tags: string[];
     checkIns: string[];
+    introducedToChatbot: boolean;
+    chatbotHistoryLength: number;
+    hasUWAccess: boolean;
   }
 
   //Account Page Types -->
@@ -94,6 +101,13 @@ export declare global {
     isCheckin?: boolean;
     chunks: QuestionChunk[];
   }
+  interface QuestionParams {
+    get_snippet: boolean;
+    search_similar: boolean;
+    general_answer: boolean;
+    alternate_source: boolean;
+    skip_summary: boolean;
+  }
   interface QuestionList_Db extends WithId<Document> {
     _id?: ObjectId;
     name: string;
@@ -114,10 +128,13 @@ export declare global {
     _id?: ObjectId;
     question: string;
     type: string;
-    helpVid?: string;
-    helpText?: string;
+    placeholder?: string;
     data?: any[];
+    popUpText?: string;
     isConcatenable?: boolean;
+    isRequired?: boolean;
+    isTextArea?: boolean;
+    numbersOnly?: boolean;
   }
 
   //Learning Pathways Types -->
@@ -139,7 +156,7 @@ export declare global {
     moduleProgress: ModuleProgress[];
   }
   interface ModuleProgress {
-    moduleId: ObjectId;
+    moduleId: string;
     finished: boolean;
     name: string;
     contentProgress: ContentProgress[]; // Map between content ID and whether that content is finished
@@ -216,7 +233,7 @@ export declare global {
     question: string;
     questionType: string;
     data?: any[];
-    helpText: string;
+    placeholder: string;
   }
   interface PathwayImage extends PathwaySubContent {
     image: string;
@@ -237,6 +254,7 @@ export declare global {
 
   interface Activity {
     activityID: number;
+    actTitle: string;
     actType: string;
     hoursYear: number;
     yearsSpent: number;
@@ -244,16 +262,21 @@ export declare global {
     description: string;
     points: number;
     tier: number;
+    category: number;
+    tip: string;
   }
 
   interface Academics extends WithId<Document> {
     _id?: ObjectId;
     classes: Class[];
     overallClassTier: number;
+    classTip: string;
     gpa: number;
     gpaTier: number;
+    gpaTip: string;
     satScore: number;
     actScore: number;
+    testTip: string;
     overallTier: number;
   }
 
@@ -262,6 +285,7 @@ export declare global {
     name: string;
     tier: number;
   }
+  //End of Student Metrics
 
   interface ContainerProps {
     border?: boolean;
@@ -271,6 +295,7 @@ export declare global {
   interface ButtonProps {
     color?: string;
     fixedWidth?: boolean;
+    className?: string;
     name?: string;
     children: React.ReactNode;
     onClick?: () => void;
@@ -319,4 +344,72 @@ export declare global {
     type: string;
     routeId: ObjectId;
   }
+  interface ChatbotCounselorQuestionData extends WithId<Document> {
+    _id?: ObjectId;
+    email: string;
+    name: string;
+    resolved: boolean;
+    question: string;
+    answer: string;
+    problem: string;
+  }
+}
+
+interface collegeListIndivudialInfo {
+  college_id: string;
+  fit_type: -1 | 0 | 1 | 2 | 3;
+  img_url: string;
+  img_title?: string;
+  college_name: string;
+  location: string;
+  in_state_tuition: number;
+  out_state_tuition: number;
+  college_type: "Public" | "Private";
+}
+
+interface collegeInfo {
+  _id: ObjectId | string;
+  college_id: string;
+  img_url: string;
+  img_title: string;
+  college_name: string;
+  target_tier: number;
+  safety_tier: number;
+  location: string;
+  in_state_tuition: number;
+  out_state_tuition: number;
+  college_type: "Public" | "Private";
+}
+
+interface collegeListElementRaw {
+  college_id: string;
+  fit_type: -1 | 0 | 1 | 2 | 3;
+  index: number;
+}
+
+interface updateCollegeList {
+  user_id: string;
+  college_list: collegeListElementRaw[];
+}
+
+interface ChatbotHistory {
+  _id: ObjectId | string;
+  index: number;
+  firebaseId: string;
+  messages: (MessageProps | CoupledOptions)[];
+}
+
+interface MessageProps {
+  message: string | ReactElement;
+  messageId?: string;
+  isOnLeft: boolean;
+  isAnswer?: boolean;
+  question?: string;
+  onDownVote?: (message: string, answer: string) => void;
+}
+
+interface CoupledOptions {
+  areOptions: boolean;
+  pickedIndex: number;
+  options: { [option: string]: string };
 }

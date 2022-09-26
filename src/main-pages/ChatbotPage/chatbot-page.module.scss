@@ -1,3 +1,5 @@
+@use "src/common/styles" as *;
+
 .chatbot-loading {
   font-weight: bold;
   display: inline-block;
@@ -10,5 +12,23 @@
 @keyframes l {
   to {
     clip-path: inset(0 -1ch 0 0);
+  }
+}
+.message-scroll {
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $cl-extra-light-gray;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($color: $cl-mid-gray, $alpha: 0.6);
+    border-radius: 10px;
+    &:hover {
+      background: rgba($color: $cl-mid-gray, $alpha: 0.4);
+    }
   }
 }

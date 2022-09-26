@@ -44,7 +44,7 @@ const RichTextEditor = ({
   return (
     <div
       className={classNames("px-4", className)}
-      style={{ width: "fit-content", border: "2px solid lightgray" }}
+      style={{ width: "fit-content" }}
     >
       <Slate
         onChange={(text) => {
@@ -53,7 +53,7 @@ const RichTextEditor = ({
         editor={editor}
         value={initialValue}
       >
-        <Toolbar>
+        <Toolbar className="d-flex justify-content-center align-items-center mt-3">
           <MarkButton format="bold" icon="format_bold" />
           <MarkButton format="italic" icon="format_italic" />
           <MarkButton format="underline" icon="format_underlined" />
@@ -234,12 +234,12 @@ const FontSizeDropdown = () => {
 };
 const toggleMark = (editor: CustomEditor, format, customVal?: any) => {
   const isActive = isMarkActive(editor, format);
-  console.log(isActive);
+  //console.log(isActive);
   if (isActive) {
     Editor.removeMark(editor, format);
   } else {
-    console.log("adding mark");
-    console.log(Editor.string(editor, editor.selection));
+    //console.log("adding mark");
+    //console.log(Editor.string(editor, editor.selection));
     Editor.addMark(editor, format, customVal ?? true);
   }
 };

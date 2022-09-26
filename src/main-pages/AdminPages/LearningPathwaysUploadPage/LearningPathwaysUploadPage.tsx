@@ -94,7 +94,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
             let jsonArr = await Promise.all(
               resArr.map(async (res) => await res.json())
             );
-            console.log(jsonArr);
+            //console.log(jsonArr);
             let personalizedContentUpload: PersonalizedContent[] = [];
             for (let i = 0; i < sendPathwayData.modules.length; i++) {
               personalizedContentUpload = personalizedContentUpload.concat(
@@ -135,7 +135,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
               .then((values) => {
                 let unsuccessful = false;
                 values.forEach((value, index) => {
-                  console.log(index + " " + value.status);
+                  //console.log(index + " " + value.status);
                   if (value.status !== 200) {
                     unsuccessful = true;
                     alert(
@@ -146,11 +146,11 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                 if (!unsuccessful) {
                   alert("Upload Successful!");
                 }
-                router.push({ pathname: "/dashboard" });
+                router.push({ pathname: "/my-learning" });
               })
-              .catch((err) => console.error("AYO" + err));
+              .catch((err) => console.error(err));
           })
-          .catch((err) => console.error("AYO2" + err));
+          .catch((err) => console.error(err));
       }}
     >
       <div className="mt-4 d-flex flex-column w-100">
@@ -579,7 +579,7 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                       .then((values) => {
                         let unsuccessful = false;
                         values.forEach((value, index) => {
-                          console.log(index + " " + value.status);
+                          //console.log(index + " " + value.status);
                           if (value.status !== 200) {
                             unsuccessful = true;
                             alert(
@@ -590,11 +590,11 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                         if (!unsuccessful) {
                           alert("Upload Successful!");
                         }
-                        router.push({ pathname: "/dashboard" });
+                        router.push({ pathname: "/my-learning" });
                       })
-                      .catch((err) => console.error("AYO" + err));
+                      .catch((err) => console.error(err));
                   })
-                  .catch((err) => console.error("AYO2" + err));
+                  .catch((err) => console.error(err));
               }}
             >
               Yes

@@ -35,7 +35,7 @@ export default function PathwayQuestion({
   question,
   questionType,
   data,
-  helpText,
+  placeholder,
   userAnswer,
   number,
   onUpdate,
@@ -55,7 +55,7 @@ PathwayQuestionCardProps) {
             question: `${number}. ${question}`,
             questionType,
             data,
-            helpText,
+            placeholder,
             type: "question",
           }}
           userAnswer={userAnswer}
@@ -69,13 +69,13 @@ PathwayQuestionCardProps) {
       return (
         <TextInputQuestion
           isPathwayQuestion
-          isTextArea
           question={{
             question: `${number}. ${question}`,
             questionType,
             data,
-            helpText,
+            placeholder,
             type: "question",
+            isTextArea: true,
           }}
           userAnswer={userAnswer}
           onChange={(answer) => {
@@ -111,7 +111,7 @@ PathwayQuestionCardProps) {
     //         question: `${number}. ${question}`,
     //         questionType,
     //         data,
-    //         helpText,
+    //         placeholder,
     //         type: "question",
     //       }}
     //       tags={[]}
@@ -131,7 +131,7 @@ PathwayQuestionCardProps) {
             question: `${number}. ${question}`,
             questionType,
             data,
-            helpText,
+            placeholder,
             type: "question",
           }}
           userAnswer={userAnswer}
@@ -150,7 +150,7 @@ PathwayQuestionCardProps) {
             question: `${number}. ${question}`,
             questionType,
             data,
-            helpText,
+            placeholder,
             type: "question",
           }}
           userAnswers={userAnswer}

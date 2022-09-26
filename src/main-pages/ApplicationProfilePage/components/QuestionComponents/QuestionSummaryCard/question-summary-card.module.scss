@@ -1,0 +1,53 @@
+@use "src/common/styles" as *;
+
+.qsummary-card-container {
+  border: 1px solid $cl-secondary-text;
+  border-radius: 20px;
+  .question-text {
+    @extend .cl-dark-text;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+  .icon-btn {
+    background-color: transparent;
+    outline: none;
+    border: 1px solid transparent;
+    width: 3.5em;
+    height: 3.5em;
+    border-radius: 1.75em;
+    &:hover {
+      background-color: rgba($color: $cl-light-gray, $alpha: 0.5);
+    }
+  }
+}
+.modal {
+  inset: 15% 40px 40px 35%;
+  width: 30%;
+  height: fit-content;
+  max-height: 80%;
+  overflow: auto;
+  border-radius: 10px;
+  border: 1px solid rgb(204, 204, 204);
+  position: absolute;
+  background: rgb(255, 255, 255);
+  outline: none;
+  padding: 20px;
+
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $cl-extra-light-gray;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $cl-mid-gray;
+    border-radius: 10px;
+    &:hover {
+      background: rgba($color: $cl-mid-gray, $alpha: 0.7);
+    }
+  }
+}

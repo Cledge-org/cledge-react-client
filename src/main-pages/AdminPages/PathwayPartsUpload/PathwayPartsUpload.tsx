@@ -36,7 +36,7 @@ const PathwayPartsUploadPage: NextApplicationPage<{
           partId: currPartData._id,
         }).then((value) => {
           let unsuccessful = false;
-          console.log(value.status);
+          //console.log(value.status);
           if (value.status !== 200) {
             unsuccessful = true;
             alert(
@@ -46,7 +46,7 @@ const PathwayPartsUploadPage: NextApplicationPage<{
           if (!unsuccessful) {
             alert("Upload Successful!");
           }
-          router.push({ pathname: "/dashboard" });
+          router.push({ pathname: "/my-learning" });
         });
       }}
     >
@@ -205,7 +205,7 @@ const PathwayPartsUploadPage: NextApplicationPage<{
                         type === "pathway"
                           ? allPathways.find(({ name }) => name === value)._id
                           : allCheckins.find(({ name }) => name === value)._id;
-                      console.log(part.dynamicRoutes[index]);
+                      //console.log(part.dynamicRoutes[index]);
                       setCurrPartData({
                         ...currPartData,
                         dynamicRoutes: part.dynamicRoutes,
@@ -274,7 +274,7 @@ const PathwayPartsUploadPage: NextApplicationPage<{
                     partId: currPartData._id,
                   }).then((value) => {
                     let unsuccessful = false;
-                    console.log(value.status);
+                    //console.log(value.status);
                     if (value.status !== 200) {
                       unsuccessful = true;
                       alert(
@@ -284,7 +284,7 @@ const PathwayPartsUploadPage: NextApplicationPage<{
                     if (!unsuccessful) {
                       alert("Upload Successful!");
                     }
-                    router.push({ pathname: "/dashboard" });
+                    router.push({ pathname: "/my-learning" });
                   });
                 }}
               >

@@ -46,10 +46,9 @@ const ListQuestion = ({
       return (
         <TextInputQuestion
           question={question}
-          isDark={question.type === "ECTextInput"}
           userAnswer={response}
           onChange={(answer) => {
-            onChange(answer, index, question._id);
+            onChange(answer, index, question._id.toString());
           }}
         />
       );
@@ -61,7 +60,7 @@ const ListQuestion = ({
           tags={userTags}
           userAnswers={response}
           onChange={(answer) => {
-            onChange(answer, index, question._id);
+            onChange(answer, index, question._id.toString());
           }}
         />
       );
@@ -73,7 +72,7 @@ const ListQuestion = ({
           question={question}
           userAnswer={response}
           onChange={(answer, newQTags, oldQTags) => {
-            onChange(answer, index, question._id);
+            onChange(answer, index, question._id.toString());
           }}
         />
       );
@@ -85,7 +84,7 @@ const ListQuestion = ({
           question={question}
           userAnswers={response}
           onChange={(answer, newQTags, oldQTags) => {
-            onChange(answer, index, question._id);
+            onChange(answer, index, question._id.toString());
           }}
         />
       );
@@ -99,7 +98,7 @@ const ListQuestion = ({
           onChange={(value) => {
             onChange(value, index, question._id);
           }}
-          key={question._id}
+          key={question._id.toString()}
           questionTitle={question.question}
           defaultValue={response}
         />
@@ -120,7 +119,7 @@ const ListQuestion = ({
               : new Date(response.finished)
           }
           onChange={(value) => {
-            onChange(value, index, question._id);
+            onChange(value, index, question._id.toString());
           }}
         />
       );
@@ -143,8 +142,12 @@ const ListQuestion = ({
       renderedQuestions.push(
         <div>
           {questions.map((question) => {
-            console.log(response[question._id]);
-            return getQuestionType(question, response[question._id], index);
+            console.log(response[question._id.toString()]);
+            return getQuestionType(
+              question,
+              response[question._id.toString()],
+              index
+            );
           })}
         </div>
       );

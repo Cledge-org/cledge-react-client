@@ -14,6 +14,14 @@
   position: absolute;
   z-index: 1000;
 }
+.new-card-task-container {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 6px;
+  transition: 200ms;
+}
+.new-card-task-container:hover {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 10px 10px;
+  cursor: pointer;
+}
 @media screen and (max-width: 1200px) {
   .card-task-container {
     width: 200px;

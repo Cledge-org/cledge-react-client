@@ -1,6 +1,6 @@
 import React from "react";
 import { GetServerSidePropsContext } from "next";
-import { getPathway } from "../api/get-pathway";
+import { getPathway } from "../api/learning-pathway/get-pathway";
 import { getSession } from "next-auth/react";
 import { ObjectId } from "mongodb";
 import PathwayPage from "../../main-pages/PathwayPage/PathwayPage";
@@ -10,8 +10,6 @@ import PathwayPage from "../../main-pages/PathwayPage/PathwayPage";
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = await getSession(ctx);
-    console.error(ctx.query.id);
-
     return {
       props: {
         pathwayInfo: JSON.parse(
@@ -25,7 +23,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     };
   } catch (err) {
-    //console.log(err);
+    ////console.log(err);
     ctx.res.end();
     return { props: {} as never };
   }

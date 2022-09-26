@@ -1,0 +1,20 @@
+@use "src/common/styles" as *;
+
+.scrollable-left-panel {
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $cl-extra-light-gray;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($color: $cl-mid-gray, $alpha: 0.8);
+    border-radius: 10px;
+    &:hover {
+      background: rgba($color: $cl-mid-gray, $alpha: 0.6);
+    }
+  }
+}

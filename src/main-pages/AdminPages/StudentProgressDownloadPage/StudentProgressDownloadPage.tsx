@@ -7,7 +7,7 @@ const StudentProgressDownloadPage = ({
 }: {
   allStudents: AccountInfo[];
 }) => {
-  console.log(allStudents);
+  //console.log(allStudents);
   return (
     <div className="vw-100 d-flex flex-column vh-100 align-items-center">
       {allStudents.map(({ firebaseId, name }) => (
@@ -18,7 +18,7 @@ const StudentProgressDownloadPage = ({
           {name}
           <button
             onClick={async () => {
-              console.log(firebaseId);
+              //console.log(firebaseId);
               const userPathwayProgress = await getPathwayProgressToDownload(
                 firebaseId
               );
