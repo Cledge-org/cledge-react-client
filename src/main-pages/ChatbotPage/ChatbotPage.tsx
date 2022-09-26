@@ -578,6 +578,7 @@ const Chatbot: NextApplicationPage<{
                 onChange={(e) => {
                   setCurrMessageText(e.target.value);
                 }}
+                value={currMessageText}
                 onKeyDown={(e) => {
                   console.log(currMessageText);
                   if (e.key === "Enter" && !e.shiftKey) {
