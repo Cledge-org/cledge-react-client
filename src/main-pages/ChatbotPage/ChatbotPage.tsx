@@ -126,28 +126,23 @@ const Chatbot: NextApplicationPage<{
   }, []);
 
   useEffect(() => {
+    console.log("Hi ;)");
     if (shouldUpdateBackend) {
+      console.log("YOOOOO");
       fetch(`/api/chatbot/put-chatbot-history`, {
         method: "POST",
         body: JSON.stringify({
           history: messageList,
         }),
       });
-      let numAddedDocs = 0;
       setMessageList(
         messageList.map((list) => {
-          if (!list._id) numAddedDocs++;
           return {
             ...list,
             _id: "DEFINED",
           };
         })
       );
-      if (numAddedDocs > 0)
-        callUpdateUser({
-          ...accountInfo,
-          chatbotHistoryLength: accountInfo.chatbotHistoryLength + numAddedDocs,
-        });
       setShouldUpdateBackend(false);
     }
   }, [shouldUpdateBackend]);
@@ -298,7 +293,7 @@ const Chatbot: NextApplicationPage<{
     [currWorkflow, downvoteWorkflow, currOptions, pickedOptions]
   );
 
-  const onOptionClick = async (option: string) => {
+  const onOptionClick = async (option: string, optionIndex: number) => {
     const choice =
       pickedOptions[pickedOptions.length - 1][
         pickedOptions[pickedOptions.length - 1].length - 1
@@ -313,7 +308,7 @@ const Chatbot: NextApplicationPage<{
       {
         areOptions: true,
         options: currOptions,
-        pickedIndex: pickedOptions.length - 1,
+        pickedIndex: optionIndex,
       },
       {
         message: <div className={styles.chatbotLoading}>...</div>,
@@ -479,7 +474,12 @@ const Chatbot: NextApplicationPage<{
                               object as CoupledOptions;
                             return (
                               <div
-                                key={index}
+                                key={
+                                  Object.keys(options).toString() +
+                                  index +
+                                  pickedIndex +
+                                  historyIndex
+                                }
                                 className={`d-flex flex-row w-100 my-3 justify-content-end align-items-end`}
                               >
                                 <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
@@ -488,7 +488,7 @@ const Chatbot: NextApplicationPage<{
                                       isChosen={idx === pickedIndex}
                                       onClick={() => {}}
                                       option={option}
-                                      key={idx}
+                                      key={option + idx + index}
                                     />
                                   ))}
                                 </div>
@@ -505,7 +505,7 @@ const Chatbot: NextApplicationPage<{
                           } = object as MessageProps;
                           return (
                             <Message
-                              key={index}
+                              key={messageId + index}
                               dontShowPicture={
                                 isOnLeft &&
                                 index < messageList.length - 1 &&
@@ -535,9 +535,11 @@ const Chatbot: NextApplicationPage<{
                       <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
                         {Object.keys(currOptions).map((option, idx) => (
                           <ChatOption
-                            onClick={onOptionClick}
+                            onClick={() => {
+                              onOptionClick(option, idx);
+                            }}
                             option={option}
-                            key={idx}
+                            key={option + idx}
                           />
                         ))}
                       </div>

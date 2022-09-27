@@ -32,7 +32,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // will not be updated, so its old value will remain.
 export const updateUser = async (
   firebaseId: string,
-  user: AccountInfo
+  user: AccountInfo | any
 ): Promise<void> => {
   return new Promise(async (res, err) => {
     const client = await MongoClient.connect(process.env.MONGO_URL);
