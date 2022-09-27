@@ -37,7 +37,6 @@ const CompositeQuestion = ({
         <TextInputQuestion
           question={question}
           smallTitle
-          isDark={question.type === "ECTextInput"}
           userAnswer={response}
           isCentered
           onChange={(answer) => {
@@ -196,7 +195,9 @@ const CompositeQuestion = ({
         )}
       >
         <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
-          {question.question}
+          {`${question.question}${
+            (question as Question).isRequired ? " *" : ""
+          }`}
         </span>
         {(question as Question).popUpText && (
           <Tooltip

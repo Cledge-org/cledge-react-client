@@ -46,7 +46,6 @@ const ListQuestion = ({
       return (
         <TextInputQuestion
           question={question}
-          isDark={question.type === "ECTextInput"}
           userAnswer={response}
           onChange={(answer) => {
             onChange(answer, index, question._id.toString());

@@ -1,6 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ChatbotHistory } from "src/@types/types";
+import { updateUser } from "src/pages/api/user/update-user";
 
 export const config = {
   api: {
@@ -13,11 +14,11 @@ interface ModifiedChatbotHistory extends ChatbotHistory {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   // TODO: authentication
-  const { history } = JSON.parse(req.body);
+  const { history, currHistoryLength } = JSON.parse(req.body);
 
   if (history) {
     try {
-      const result = await putChatbotHistory(history);
+      const result = await putChatbotHistory(history, currHistoryLength);
       resolve.status(200).send(result);
     } catch (e) {
       resolve.status(500).send(e);
@@ -28,11 +29,13 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 export const putChatbotHistory = async (
-  history: ChatbotHistory[]
+  history: ChatbotHistory[],
+  currHistoryLength: number
 ): Promise<void> => {
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
+      let addedLists = 0;
       await Promise.all(
         history.map(async (object) => {
           if (
@@ -51,10 +54,14 @@ export const putChatbotHistory = async (
               { $set: object }
             );
           } else {
+            addedLists++;
             await client
               .db("chatbot")
               .collection("chatbot-history")
               .insertOne(object as ModifiedChatbotHistory);
+          }
+          if (addedLists > 0) {
+            updateUser(history[0].firebaseId, currHistoryLength + addedLists);
           }
         })
       );

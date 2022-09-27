@@ -1,4 +1,4 @@
-import { callPutChatbotCounselorQuestion } from "src/utils/apiCalls";
+import { callGetChatbotResponse, callPutChatbotCounselorQuestion } from "src/utils/apiCalls";
 
 export const introductionWorkflow = {
   e1: {
@@ -49,20 +49,64 @@ export const downvoteWorkflow = {
   },
   e2: {
     chatbotMessages: [
-      "Thank you. We’ll use your feedback to improve your chatbot experience.",
-      "Would you like a human counselor to give you a better answer?",
+      "Thank you for your feedback. Would you like me to try to answer the question again?",
     ],
     possibleChoices: {
-      "Yes, I would love a better response from a human counselor": "e3op1",
+      "Yes, go ahead": "e3op1",
       "No it's fine": "e3op2",
     },
   },
   e3op1: {
-    backgroundAction: (
+    backgroundAction: async (
       accountInfo: AccountInfo,
       question: string,
       answer: string,
-      problem: string
+      problem: string,
+      questionParams?: QuestionParams,
+    ) => {
+      const {response, responseId} = await callGetChatbotResponse(
+        question,
+        accountInfo.name,
+        accountInfo.email,
+        null,
+        questionParams
+      );
+      return response;
+    },
+    chatbotMessages: [
+      "Did this do a better job of answering your question?"
+    ],
+    possibleChoices: {
+      "Yes it did, thank you!": "e3op4",
+      "No, it did not": "e4"
+    }
+  },
+  e3op2: {
+    chatbotMessages: [
+      "Understood. Feel free to ask another question."
+    ]
+  },
+  e3op4: {
+    chatbotMessages: [
+      "Glad I could be of help. Feel free to ask another question!"
+    ]
+  },
+  e4: {
+    chatbotMessages: [
+      "Sorry about that. Would you like a human counselor to give you a better answer?",
+    ],
+    possibleChoices: {
+      "Yes, I would love a better response from a human counselor": "e5op1",
+      "No it's fine": "e5op2",
+    },
+  },
+  e5op1: {
+    backgroundAction: async (
+      accountInfo: AccountInfo,
+      question: string,
+      answer: string,
+      problem: string,
+      questionParams?: QuestionParams
     ) => {
       callPutChatbotCounselorQuestion({
         chatbotData: {
@@ -74,12 +118,13 @@ export const downvoteWorkflow = {
           problem,
         },
       });
+      return Promise.resolve("");
     },
     chatbotMessages: [
       "Got it! Our counselor will get back to you within 48 hours. Expect an email from: ayan@cledge.org",
     ],
   },
-  e3op2: {
+  e5op2: {
     chatbotMessages: [],
   },
 };

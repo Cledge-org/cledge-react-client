@@ -20,7 +20,7 @@ export default function BlogText({
   return (
     <>
       <div
-        className={"d-flex flex-row"}
+        className={"d-flex flex-row overflow-hidden"}
         style={{ height: "vh" }}
       >
         <div
@@ -38,7 +38,7 @@ export default function BlogText({
             {author} - {date}
           </div>
           <div
-            className="pt-3 text-dark"
+            className="pt-3 text-dark overflow-hidden"
           >
             {description}
           </div>

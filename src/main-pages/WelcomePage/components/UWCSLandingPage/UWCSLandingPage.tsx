@@ -5,7 +5,7 @@ import MissionContent from "../../content/MissionContent.json";
 import MiddleBlockContent from "../../content/MiddleBlockContent.json";
 import PartnerContent from "../../content/PartnerContent.json";
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
-import Footer from "../Footer/Footer";
+import Footer from "../../../../common/components/Footer/Footer";
 import styled from "styled-components";
 import { Fade } from "react-awesome-reveal";
 import { Button } from "../Button/Button";
@@ -308,7 +308,7 @@ const UWCSLandingPage = () => {
               "Insider look at how UW CS scores your application",
               "How to approach the UW supplemental essays",
               "Should you apply to Computer Engineering or CS?",
-              "The Cledge AI Advisor & College Search Tool",
+              "100 questions to ask the Cledge AI Advisor",
             ].map((option) => (
               <div className="d-flex flex-row">
                 <div
@@ -409,19 +409,18 @@ const UWCSLandingPage = () => {
                     ? "Releasing September"
                     : "Utilize the power of Cledge to gain an edge on your UW CS application. Get insider access to how UW CS scores your application, view successful applicant profiles, and then get help writing the UW supplemental essay. Still need help? You will get one 30 minute consultation with a college advisor and access to Cledge AI tools."}
                 </div>
-                {width < 800 && (
-                  <div style={{ width: "100%" }}>
-                    <input
-                      value={email}
-                      style={{ color: "black" }}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                      }}
-                      type="text"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-                )}
+
+                <div style={{ width: width < 800 ? "100%" : "50%" }}>
+                  <input
+                    value={email}
+                    style={{ color: "black" }}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                    type="text"
+                    placeholder="Enter your email"
+                  />
+                </div>
                 <div style={{ width: width < 800 ? "100%" : "300px" }}>
                   <Button
                     key="buy-now-btn"
@@ -553,16 +552,7 @@ const UWCSLandingPage = () => {
           </div>
         )}
       </Container>
-      <Footer
-        onFeatureClick={(featureIndex) => {
-          setCurrFeature(featureIndex);
-          //console.log(slideShowRef.current.offsetTop);
-          document.body.scrollTo({
-            top: slideShowRef.current.offsetTop,
-            behavior: "smooth",
-          });
-        }}
-      />
+      <Footer />
     </PageErrorBoundary>
   );
 };

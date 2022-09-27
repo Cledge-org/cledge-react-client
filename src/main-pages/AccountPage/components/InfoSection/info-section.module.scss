@@ -31,4 +31,31 @@
       }
     }
   }
+  .send-email-btn {
+    outline: none;
+    border: none;
+    color: white;
+    background-color: $cl-dark-text;
+    padding: 5px;
+    font-weight: bold;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transition: 200ms;
+    &:hover {
+      cursor: pointer;
+      background-color: rgba($color: $cl-dark-text, $alpha: 0.7);
+    }
+  }
+  .send-email-btn-sent {
+    outline: none;
+    border: none;
+    color: white;
+    background-color: green;
+    font-weight: bold;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transition: 200ms;
+  }
 }

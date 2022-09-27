@@ -14,6 +14,7 @@ import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import DropdownTab from "../../common/components/DropdownTab/DropdownTab";
+import Footer from "../../common/components/Footer/Footer";
 
 import QuestionSubPageHeader from "../../common/components/SubpageHeader/SubpageHeader";
 import ActivityDropdown from "./components/ActivityDropdown/ActivityDropdown";
@@ -32,12 +33,24 @@ const Metrics: NextApplicationPage<{
   const session = useSession();
   //console.log(activities);
   const [currPage, setCurrPage] = useState("all");
-  function BorderDropdownTab({ isAll, chunkList, onClick, title, percentComplete }) {
+  function BorderDropdownTab({
+    isAll,
+    chunkList,
+    onClick,
+    title,
+    percentComplete,
+  }) {
     return (
       <div className="border-bottom border-2">
-      <DropdownTab isAll={isAll} chunkList={chunkList} onClick={onClick} title={title} percentComplete={percentComplete} />
+        <DropdownTab
+          isAll={isAll}
+          chunkList={chunkList}
+          onClick={onClick}
+          title={title}
+          percentComplete={percentComplete}
+        />
       </div>
-    )
+    );
   }
   return (
     <PageErrorBoundary>
@@ -116,14 +129,24 @@ const Metrics: NextApplicationPage<{
                     style={{
                       backgroundColor: "white",
                       borderTop: "none",
-                      height: "20vh",
+                      height: "24vh",
                     }}
                   >
-                    <TierRange
-                      tier={activities?.overallTier}
-                      isOverall
-                      isOverview
-                    />
+                    <div className="d-flex flex-column w-100 mx-3 cl-dark-text">
+                      <div className="d-flex justify-content-between mb-2">
+                        <div>
+                          <text>Least competitive</text>
+                        </div>
+                        <div>
+                          <text>Most competitive</text>
+                        </div>
+                      </div>
+                      <TierRange
+                        tier={activities?.overallTier}
+                        isOverall
+                        isOverview
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="mt-2 ms-5" style={{ width: "50%" }}>
@@ -140,14 +163,24 @@ const Metrics: NextApplicationPage<{
                     style={{
                       backgroundColor: "white",
                       borderTop: "none",
-                      height: "20vh",
+                      height: "24vh",
                     }}
                   >
-                    <TierRange
-                      tier={academics?.overallTier}
-                      isOverall
-                      isOverview
-                    />
+                    <div className="d-flex flex-column w-100 mx-3 cl-dark-text">
+                      <div className="d-flex justify-content-between mb-2">
+                        <div>
+                          <text>Least competitive</text>
+                        </div>
+                        <div>
+                          <text>Most competitive</text>
+                        </div>
+                      </div>
+                      <TierRange
+                        tier={academics?.overallTier}
+                        isOverall
+                        isOverview
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -171,19 +204,30 @@ const Metrics: NextApplicationPage<{
                   <SubTitle
                     updatePage="Extracurriculars"
                     updateChunk="All Activities"
-                    title="Overall Tier"
+                    title="Overall Extracurriculars Tier"
                     isDivider
                   />
-                  <div className="d-flex flex-column">
-                    <TierIndicatorAndTips
-                      tier={activities?.overallTier}
-                      isOverall
-                      updateChunk={"All Activities"}
-                      updatePage={"Extracurriculars"}
-                      tip={""}
-                      noTip
-                      tipTitle={""}
-                    />
+                  <div className="d-flex flex-row justify-content-end">
+                    <div className="w-50 cl-dark-text">
+                      <div className="d-flex justify-content-between mb-2">
+                        <div>
+                          <text>Least competitive</text>
+                        </div>
+                        <div>
+                          <text>Most competitive</text>
+                        </div>
+                      </div>
+                      
+                      <TierIndicatorAndTips
+                        tier={activities?.overallTier}
+                        isOverall
+                        updateChunk={"All Activities"}
+                        updatePage={"Extracurriculars"}
+                        tip={""}
+                        noTip
+                        tipTitle={""}
+                      />
+                    </ div>
                   </div>
                 </div>
                 <SubTitle
@@ -228,8 +272,18 @@ const Metrics: NextApplicationPage<{
                     title="Overall Academics Tier"
                     isDivider
                   />
-                  <div className="d-flex flex-column">
-                    <TierIndicatorAndTips
+                  <div className="d-flex flex-row justify-content-end">
+                    <div className="w-50 cl-dark-text">
+                      <div className="d-flex justify-content-between mb-2">
+                        <div>
+                          <text>Least competitive</text>
+                        </div>
+                        <div>
+                          <text>Most competitive</text>
+                        </div>
+                      </div>
+                      
+                      <TierIndicatorAndTips
                       noTip
                       tip=""
                       updateChunk={"All Academics"}
@@ -238,6 +292,7 @@ const Metrics: NextApplicationPage<{
                       tier={academics?.overallTier}
                       isOverall
                     />
+                    </ div>
                   </div>
                 </div>
                 <SubTitle
@@ -250,23 +305,23 @@ const Metrics: NextApplicationPage<{
                   content={""}
                   updateChunk={"All Academics"}
                   updatePage={"Academics"}
-                  tip={academics.gpaTip}
-                  tier={academics.gpaTier}
+                  tip={academics?.gpaTip}
+                  tier={academics?.gpaTier}
                 />
                 <ActivityDropdown
                   title={"Coursework"}
                   content={""}
                   updateChunk={"All Academics"}
                   updatePage={"Academics"}
-                  tip={academics.classTip}
-                  tier={academics.overallClassTier}
+                  tip={academics?.classTip}
+                  tier={academics?.overallClassTier}
                 />
                 <ActivityDropdown
                   title={"SAT/ACT"}
                   content={""}
                   updateChunk={"All Academics"}
                   updatePage={"Academics"}
-                  tip={academics.testTip}
+                  tip={academics?.testTip}
                   customContent={
                     <>
                       <div
@@ -324,7 +379,7 @@ const Metrics: NextApplicationPage<{
                         <TipsCard
                           isOverall={false}
                           title={""}
-                          tips={[academics.testTip]}
+                          tips={[academics?.testTip]}
                           updatePage={"Academics"}
                           updateChunk={"All Academics"}
                         />
@@ -338,6 +393,7 @@ const Metrics: NextApplicationPage<{
           )}
         </div>
       </div>
+      <Footer />
     </PageErrorBoundary>
   );
 };
