@@ -1,7 +1,7 @@
 import { TimePickerLocale } from "antd/lib/time-picker";
-
 import { ObjectId } from "mongodb";
 import { Key } from "react";
+
 
 export declare global {
   interface Window {
@@ -25,6 +25,11 @@ export declare global {
   }
 
   //Account Page Types -->
+  interface AccountCounselingInfo extends WithId<Document> {
+    _id?: ObjectId;
+    firebaseId: string;
+    time: number;
+  }
 
   //Resource Page Types -->
   interface ResourcesInfo {
