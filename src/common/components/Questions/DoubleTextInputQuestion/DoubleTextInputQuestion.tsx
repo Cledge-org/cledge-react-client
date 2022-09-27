@@ -26,7 +26,9 @@ const DoubleTextInputQuestion = ({
         style={{ width: "90%" }}
       >
         <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
-          {question.question}
+          {`${question.question}${
+            (question as Question).isRequired ? " *" : ""
+          }`}
         </span>
         {question.popUpText && (
           <Tooltip tipId={question._id.toString()} text={question.popUpText} />

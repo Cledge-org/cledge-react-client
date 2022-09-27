@@ -10,15 +10,16 @@ interface ECQuestionSummaryCardProps {
   response: UserResponse[];
   chunkQuestions: Question[];
   onClick: Function;
+  altText?: string;
 }
 
 export default function ECQuestionSummaryCard({
   response,
   chunkQuestions,
   onClick,
+  altText,
 }: ECQuestionSummaryCardProps) {
   const [displayingQuestion, setDisplayingQuestion] = useState(false);
-  //console.log(response);
   const titleQuestion = response.find(
     ({ questionId }) =>
       questionId ===
@@ -26,7 +27,6 @@ export default function ECQuestionSummaryCard({
         .find(({ question }) => question === "Title")
         ?._id.toString()
   );
-  //console.log(response);
   return (
     <div
       className={classNames(
@@ -36,7 +36,7 @@ export default function ECQuestionSummaryCard({
       )}
     >
       <div className="d-flex justify-content-between align-items-center px-4 pt-3 question-text">
-        {titleQuestion ? titleQuestion.response : "No Title Given"}
+        {titleQuestion ? titleQuestion.response : altText || <div />}
         <button
           onClick={() => onClick()}
           className={classNames(styles.iconBtn, "center-child")}
@@ -81,7 +81,7 @@ export default function ECQuestionSummaryCard({
               </div>
               {type === "ListQuestion"
                 ? questionFound.response.questionsResponses.map(
-                    (questionResponse) => {
+                    (questionResponse, greaterIndex) => {
                       return data.map(({ question, _id }, index) => {
                         const subQuestionFound = questionResponse[_id];
                         return (
@@ -92,7 +92,7 @@ export default function ECQuestionSummaryCard({
                             )}
                           >
                             <div className={styles.name}>
-                              {question.toLocaleUpperCase() + ` ${index + 1}`}
+                              {question.toUpperCase() + ` ${greaterIndex + 1}`}
                             </div>
                             <div className={styles.value}>
                               {subQuestionFound !== undefined

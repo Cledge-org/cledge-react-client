@@ -17,6 +17,8 @@ interface ECEditorProps {
   userResponse: UserResponse[];
   isEditing: boolean;
   index: number;
+  editText?: string;
+  addingText?: string;
 }
 
 export default function ECEditor({
@@ -25,6 +27,8 @@ export default function ECEditor({
   isEditing,
   userResponse,
   index,
+  editText,
+  addingText,
   onAbort,
 }: ECEditorProps) {
   const [newResponse, setNewResponse] = useState(
@@ -51,7 +55,9 @@ export default function ECEditor({
           className="cl-dark-text"
           style={{ fontSize: "1.8em", fontWeight: 800 }}
         >
-          {isEditing ? "Editing Activity" : "Adding a New Activity"}
+          {isEditing
+            ? editText || "Editing Activity"
+            : addingText || "Adding a New Activity"}
         </span>
         {chunkQuestions.map((questionData) => {
           const { question, isConcatenable, data, type, _id } = questionData;
@@ -171,6 +177,42 @@ export default function ECEditor({
             );
           }
           if (type === "ECTextInput") {
+            return (
+              <TextInputQuestion
+                question={questionData}
+                userAnswer={
+                  isEditing &&
+                  userResponse &&
+                  userResponse.find(
+                    ({ questionId }) => questionId === _id.toString()
+                  )
+                    ? userResponse.find(
+                        ({ questionId }) => questionId === _id.toString()
+                      ).response
+                    : ""
+                }
+                onChange={(value) => {
+                  let totallyNewResponse = newResponse.slice();
+                  if (
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id.toString()
+                    )
+                  ) {
+                    totallyNewResponse.find(
+                      ({ questionId }) => questionId === _id.toString()
+                    ).response = value;
+                  } else {
+                    totallyNewResponse.push({
+                      questionId: _id.toString(),
+                      response: value,
+                    });
+                  }
+                  setNewResponse(totallyNewResponse);
+                }}
+              />
+            );
+          }
+          if (type === "TextInput") {
             return (
               <TextInputQuestion
                 question={questionData}

@@ -10,11 +10,10 @@ const Home: NextPage = () => {
   const router = useRouter();
   if (status === "authenticated") {
     router.replace("/dashboard");
+  } else {
+    router.replace("/welcome");
   }
-  else{
-    router.replace('/welcome');
-  }
-  return <LoadingScreen/>
+  return <LoadingScreen />;
 };
 
 export default Home;
