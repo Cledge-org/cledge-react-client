@@ -33,6 +33,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   const [hasAccess, setHasAccess] = useState(false);
   const [processingSignUpPayment, setProcessingSignUpPayment] = useState(false);
   const [isIncorrectAccessCode, setIsIncorrectAccessCode] = useState(false);
+  const [acceptedTOSPP, setAcceptedTOSPP] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
   const session = useSession();
@@ -49,6 +50,14 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   };
 
   const handleSubmit = async () => {
+    if (!acceptedTOSPP) {
+      setIssues((issues) => [
+        ...issues,
+        "If you want to make an account you must agree to the terms of service and privacy policy",
+      ]);
+      setProcessingSignUpPayment(false);
+      return;
+    }
     if (session.status === "authenticated") {
       const result = await stripe.confirmPayment({
         elements,
@@ -292,6 +301,33 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
           >
             <div>University of Washington Computer Science Package</div>
             <div className="ms-3">$99</div>
+          </div>
+          <div className="d-flex flex-row mt-3 mb-2">
+            <CheckBox
+              selected={acceptedTOSPP}
+              setSelected={(value) => {
+                setAcceptedTOSPP(value);
+              }}
+            />
+            <div className="ms-2">
+              By creating an account, you agree to our{" "}
+              <a
+                target="_blank"
+                className="cl-blue"
+                href="https://docs.google.com/document/d/1rPOqjfcwMF9mADNzEJCtBVHJ9OdCKUaLrtxHPhMeNHA/edit?usp=sharing"
+              >
+                Terms of Service
+              </a>{" "}
+              and have read and acknowledge the{" "}
+              <a
+                target="_blank"
+                className="cl-blue"
+                href="https://docs.google.com/document/d/1Ah8jEKJqggYH-4cgfWA0nc90Dnc-ySV8DjSSu_yJpbA/edit?usp=sharing"
+              >
+                Privacy Statement
+              </a>
+              .
+            </div>
           </div>
           <button
             onClick={() => {

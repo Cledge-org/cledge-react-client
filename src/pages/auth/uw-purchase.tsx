@@ -10,20 +10,24 @@ const stripePromise = loadStripe(
 const UWPurchase = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [clientSecret, setClientSecret] = useState(null);
+
   useEffect(() => {
     if (clientSecret) {
       setIsLoading(false);
     }
   }, [clientSecret]);
+
   const asyncUseEffect = async () => {
     const { clientSecret } = await (
       await callCreatePaymentIntent("uw-package")
     ).json();
     setClientSecret(clientSecret);
   };
+
   useEffect(() => {
     asyncUseEffect();
   }, []);
+
   if (isLoading) {
     return <LoadingScreen />;
   }

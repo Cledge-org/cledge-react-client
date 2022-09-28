@@ -113,6 +113,8 @@ export default function QuestionACSubpage({
   return isAdding || isEditing ? (
     <ACEditor
       index={currACIndex}
+      editText="Editing Courses"
+      addingText="Adding Courses"
       isEditing={isEditing}
       onAbort={() => {
         setIsAdding(false);
@@ -192,6 +194,7 @@ export default function QuestionACSubpage({
               .response[chunk.name].semesterQuestions.map((response, index) => {
                 return (
                   <ACQuestionSummaryCard
+                    altText="Courses"
                     response={response}
                     chunkQuestions={chunk.questions.filter(
                       ({ _id }) => _id.toString() === "627950c272f6d134f0b63665"
