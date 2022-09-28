@@ -262,6 +262,7 @@ export const callGetChatbotResponse = async (
   email: string,
   questionResponses: UserResponse[],
   questionParams?: QuestionParams,
+  shouldCount?: boolean,
 ) => {
   return await fetch(
     "https://cledge-chatbot-service.azurewebsites.net/v3/api",
@@ -276,6 +277,7 @@ export const callGetChatbotResponse = async (
         email,
         question_params: questionParams || {},
         student_info: questionResponses,
+        should_count: shouldCount || true
       }),
     }
   )

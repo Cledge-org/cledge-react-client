@@ -321,7 +321,8 @@ const Chatbot: NextApplicationPage<{
           currProblematicMessage.question,
           currProblematicMessage.answer,
           choice,
-          questionParams
+          questionParams,
+          false
         )
         .then((response: string) => {
           continueWorkflow(option, workflow, response);
