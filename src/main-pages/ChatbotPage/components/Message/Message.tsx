@@ -94,7 +94,13 @@ const Message = ({
                   setVote("none");
                 } else {
                   setVote("upvote");
-                  callChatbotVote(question, message as string, true, userName, messageId);
+                  callChatbotVote(
+                    question,
+                    message as string,
+                    true,
+                    userName,
+                    messageId
+                  );
                 }
               }}
               className={classNames(
@@ -118,9 +124,15 @@ const Message = ({
                 if (vote === "downvote") {
                   setVote("none");
                 } else {
-                  callChatbotVote(question, message as string, false, userName, messageId);
-                  setVote("downvote");
                   onDownVote && onDownVote(question, message as string);
+                  callChatbotVote(
+                    question,
+                    message as string,
+                    false,
+                    userName,
+                    messageId
+                  );
+                  setVote("downvote");
                 }
               }}
               className={classNames(

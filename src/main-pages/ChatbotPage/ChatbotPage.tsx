@@ -99,7 +99,6 @@ const Chatbot: NextApplicationPage<{
         }),
       })
     ).json();
-    console.log(history);
     if (history.length > 0) {
       setMessageList(history);
     }
@@ -126,9 +125,7 @@ const Chatbot: NextApplicationPage<{
   }, []);
 
   useEffect(() => {
-    console.log("Hi ;)");
     if (shouldUpdateBackend) {
-      console.log("YOOOOO");
       fetch(`/api/chatbot/put-chatbot-history`, {
         method: "POST",
         body: JSON.stringify({
@@ -501,7 +498,6 @@ const Chatbot: NextApplicationPage<{
                             isOnLeft,
                             isAnswer,
                             question,
-                            onDownVote,
                           } = object as MessageProps;
                           return (
                             <Message
@@ -582,7 +578,6 @@ const Chatbot: NextApplicationPage<{
                 }}
                 value={currMessageText}
                 onKeyDown={(e) => {
-                  console.log(currMessageText);
                   if (e.key === "Enter" && !e.shiftKey) {
                     handleMessageSubmit(e);
                   }
