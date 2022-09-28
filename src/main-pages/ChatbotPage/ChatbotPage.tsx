@@ -41,7 +41,7 @@ import { NextApplicationPage } from "src/main-pages/AppPage/AppPage";
 import { ChatbotHistory } from "src/@types/types";
 import { useSession } from "next-auth/react";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import autosize from "autosize";
 interface MessageProps {
   message: string | ReactElement;
   messageId?: string;
@@ -71,18 +71,19 @@ const Chatbot: NextApplicationPage<{
   const [currOptions, setCurrOptions] = useState({});
   const [awaitingChatbotResponse, setAwaitingChatbotResponse] = useState(false);
   const [currMessageText, setCurrMessageText] = useState("");
-  const [prevMessageText, setPrevMessageText] = useState("");
   const [pickedOptions, setPickedOptions] = useState<any[][]>([]);
   const [currProblematicMessage, setCurrProblematicMessage] = useState<{
     question: string;
     answer: string;
   }>({ question: "", answer: "" });
-  const [questionParams, setQuestionParams] = useState<QuestionParams>();
+  const [questionParams, setQuestionParams] = useState<QuestionParams>(null);
   const [shouldUpdateBackend, setShouldUpdateBackend] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [textInputRows, setTextInputRows] = useState(1);
   //General Hooks
   const session = useSession();
   const scrollRef = useRef(null);
+  const inputRef = useRef(null);
   const size = useWindowSize();
   const isMobile = useMemo(() => size.width < 900 || size.height < 740, [size]);
   const router = useRouter();
@@ -98,7 +99,6 @@ const Chatbot: NextApplicationPage<{
         }),
       })
     ).json();
-    console.log(history);
     if (history.length > 0) {
       setMessageList(history);
     }
@@ -125,10 +125,6 @@ const Chatbot: NextApplicationPage<{
   }, []);
 
   useEffect(() => {
-    console.log(messageList);
-  }, [messageList]);
-
-  useEffect(() => {
     if (shouldUpdateBackend) {
       fetch(`/api/chatbot/put-chatbot-history`, {
         method: "POST",
@@ -136,21 +132,14 @@ const Chatbot: NextApplicationPage<{
           history: messageList,
         }),
       });
-      let numAddedDocs = 0;
       setMessageList(
         messageList.map((list) => {
-          if (!list._id) numAddedDocs++;
           return {
             ...list,
             _id: "DEFINED",
           };
         })
       );
-      if (numAddedDocs > 0)
-        callUpdateUser({
-          ...accountInfo,
-          chatbotHistoryLength: accountInfo.chatbotHistoryLength + numAddedDocs,
-        });
       setShouldUpdateBackend(false);
     }
   }, [shouldUpdateBackend]);
@@ -195,31 +184,29 @@ const Chatbot: NextApplicationPage<{
     [messageList]
   );
 
-  const handleQuestionParams = () => {
+  const adjustQuestionParams = () => {
     const option = pickedOptions[pickedOptions.length - 1];
     const problem = option[option.length - 1];
-    if (problem in Object.values(downvoteWorkflow.e1.possibleChoices)) {
-      setQuestionParams({
-        ...questionParams,
-        get_snippet: false,
-        search_similar: false,
-        general_answer:
-          problem === downvoteWorkflow.e1.possibleChoices["Not relavant to me"],
-        alternate_source:
-          problem ===
-          downvoteWorkflow.e1.possibleChoices["Information is not accurate"],
-        skip_summary:
-          problem ===
-          downvoteWorkflow.e1.possibleChoices["Not enough information"],
-      });
-    }
+    setQuestionParams({
+      ...questionParams,
+      get_snippet: false,
+      search_similar: false,
+      general_answer:
+        problem === downvoteWorkflow.e1.possibleChoices["Not relavant to me"],
+      alternate_source:
+        problem ===
+        downvoteWorkflow.e1.possibleChoices["Information is not accurate"],
+      skip_summary:
+        problem ===
+        downvoteWorkflow.e1.possibleChoices["Not enough information"],
+    });
   };
 
   const handleMessageSubmit = useCallback(
-    async (e?) => {
+    async (e?, customMessage?) => {
       e?.preventDefault();
       e?.stopPropagation();
-      if (!currMessageText) {
+      if (!currMessageText && !customMessage) {
         return;
       }
       setAwaitingChatbotResponse(true);
@@ -231,11 +218,10 @@ const Chatbot: NextApplicationPage<{
           isOnLeft: true,
         },
       ]);
-      setPrevMessageText(currMessageText);
-      setCurrMessageText("");
+      if (!customMessage) setCurrMessageText("");
       document.getElementById("chatbot-input").innerHTML = "";
       const { response, responseId } = await callGetChatbotResponse(
-        currMessageText,
+        customMessage || currMessageText,
         accountInfo.name,
         accountInfo.email,
         questionResponses.filter(({ questionId }) => {
@@ -267,7 +253,7 @@ const Chatbot: NextApplicationPage<{
         addMessages([
           {
             message:
-              "If you do not like the answer, feel free to give it a thumb down 👎 and we will have a real counselor reply back to you.",
+              "If you do not like the answer, feel free to give it a thumb down 👎 to let us collect some feedback.",
             isOnLeft: true,
           },
         ]);
@@ -304,30 +290,13 @@ const Chatbot: NextApplicationPage<{
     [currWorkflow, downvoteWorkflow, currOptions, pickedOptions]
   );
 
-  const onOptionClick = async (option: string) => {
+  const onOptionClick = async (option: string, optionIndex: number) => {
+    const choice =
+      pickedOptions[pickedOptions.length - 1][
+        pickedOptions[pickedOptions.length - 1].length - 1
+      ];
     const workflow =
       currWorkflow === "downvote" ? downvoteWorkflow : introductionWorkflow;
-    if (workflow[currOptions[option]]?.backgroundAction) {
-      workflow[currOptions[option]].backgroundAction(
-        accountInfo,
-        currProblematicMessage.question,
-        currProblematicMessage.answer,
-        pickedOptions[pickedOptions.length - 1][
-          pickedOptions[pickedOptions.length - 1].length - 1
-        ]
-      );
-      alertSlackChatbotQuestion({
-        email: accountInfo.email,
-        name: accountInfo.name,
-        resolved: false,
-        question: currProblematicMessage.question,
-        answer: currProblematicMessage.answer,
-        problem:
-          pickedOptions[pickedOptions.length - 1][
-            pickedOptions[pickedOptions.length - 1].length - 1
-          ],
-      });
-    }
     setPickedOptions((currPicked) => {
       currPicked[currPicked.length - 1].push(option);
       return currPicked;
@@ -336,7 +305,7 @@ const Chatbot: NextApplicationPage<{
       {
         areOptions: true,
         options: currOptions,
-        pickedIndex: pickedOptions.length - 1,
+        pickedIndex: optionIndex,
       },
       {
         message: <div className={styles.chatbotLoading}>...</div>,
@@ -344,6 +313,34 @@ const Chatbot: NextApplicationPage<{
       },
     ]);
     setCurrOptions([]);
+    if (workflow[currOptions[option]]?.backgroundAction) {
+      adjustQuestionParams();
+      workflow[currOptions[option]]
+        .backgroundAction(
+          accountInfo,
+          currProblematicMessage.question,
+          currProblematicMessage.answer,
+          choice,
+          questionParams,
+          false
+        )
+        .then((response: string) => {
+          continueWorkflow(option, workflow, response);
+        });
+    } else {
+      continueWorkflow(option, workflow);
+    }
+  };
+  useEffect(() => {
+    if (inputRef?.current) {
+      autosize(inputRef.current);
+    }
+  }, [currMessageText, inputRef]);
+  const continueWorkflow = async (
+    option: string,
+    workflow: any,
+    response?: string
+  ) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     if (messageList[messageList.length - 1]) {
       messageList[messageList.length - 1].messages = messageList[
@@ -351,9 +348,11 @@ const Chatbot: NextApplicationPage<{
       ].messages.slice(0, -1);
     }
     setMessageList([...messageList]);
-    addMessages(
-      getChatbotMessagesFormatted(workflow[currOptions[option]].chatbotMessages)
-    );
+    let nextMessages = workflow[currOptions[option]].chatbotMessages;
+    if (response) {
+      nextMessages.unshift(response);
+    }
+    addMessages(getChatbotMessagesFormatted(nextMessages));
     setCurrOptions(workflow[currOptions[option]].possibleChoices);
     if (!workflow[currOptions[option]]?.possibleChoices) {
       if (currWorkflow === "downvote") {
@@ -363,9 +362,6 @@ const Chatbot: NextApplicationPage<{
       }
     }
     setShouldUpdateBackend(true);
-    handleQuestionParams();
-    setCurrMessageText(prevMessageText);
-    handleMessageSubmit();
   };
 
   useEffect(() => {
@@ -476,7 +472,12 @@ const Chatbot: NextApplicationPage<{
                               object as CoupledOptions;
                             return (
                               <div
-                                key={index}
+                                key={
+                                  Object.keys(options).toString() +
+                                  index +
+                                  pickedIndex +
+                                  historyIndex
+                                }
                                 className={`d-flex flex-row w-100 my-3 justify-content-end align-items-end`}
                               >
                                 <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
@@ -485,7 +486,7 @@ const Chatbot: NextApplicationPage<{
                                       isChosen={idx === pickedIndex}
                                       onClick={() => {}}
                                       option={option}
-                                      key={idx}
+                                      key={option + idx + index}
                                     />
                                   ))}
                                 </div>
@@ -498,11 +499,10 @@ const Chatbot: NextApplicationPage<{
                             isOnLeft,
                             isAnswer,
                             question,
-                            onDownVote,
                           } = object as MessageProps;
                           return (
                             <Message
-                              key={index}
+                              key={messageId + index}
                               dontShowPicture={
                                 isOnLeft &&
                                 index < messageList.length - 1 &&
@@ -532,9 +532,11 @@ const Chatbot: NextApplicationPage<{
                       <div className="d-flex flex-row align-items-center justify-content-end flex-wrap w-50">
                         {Object.keys(currOptions).map((option, idx) => (
                           <ChatOption
-                            onClick={onOptionClick}
+                            onClick={() => {
+                              onOptionClick(option, idx);
+                            }}
                             option={option}
-                            key={idx}
+                            key={option + idx}
                           />
                         ))}
                       </div>
@@ -565,19 +567,26 @@ const Chatbot: NextApplicationPage<{
               }}
               className="d-flex flex-row align-items-center justify-content-center"
             >
-              <span
-                contentEditable={
-                  currWorkflow === "none" && !awaitingChatbotResponse
+              <textarea
+                ref={inputRef}
+                disabled={
+                  !(currWorkflow === "none" && !awaitingChatbotResponse)
                 }
-                role="textbox"
                 id="chatbot-input"
-                onInput={(e) => {
-                  setCurrMessageText(e.currentTarget.textContent);
+                rows={1}
+                onChange={(e) => {
+                  setCurrMessageText(e.target.value);
+                }}
+                value={currMessageText}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    handleMessageSubmit(e);
+                  }
                 }}
                 placeholder="Ask anything here"
                 className={classNames("py-2 px-3", isMobile ? "ms-1" : "")}
                 style={{
-                  resize: "vertical",
+                  resize: "none",
                   height: "max-content",
                   width:
                     size.width < 800 || size.height < 740 ? "55vw" : "35vw",

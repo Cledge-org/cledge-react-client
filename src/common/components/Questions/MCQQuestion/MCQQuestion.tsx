@@ -35,13 +35,13 @@ export default function MCQQuestion({
       <div
         style={{ width: "90%" }}
         className={classNames("d-flex flex-row pt-4 pb-2 align-items-center", {
-          ["justify-content-center"]:
-            isCentered && !(question as Question).popUpText,
           ["justify-content-between"]: (question as Question).popUpText,
         })}
       >
         <span className="cl-dark-text fw-bold" style={{ fontSize: "1.4em" }}>
-          {question.question}
+          {`${question.question}${
+            (question as Question).isRequired ? " *" : ""
+          }`}
         </span>
         {(question as Question).popUpText && (
           <Tooltip
@@ -73,7 +73,7 @@ export default function MCQQuestion({
               }}
               style={isPathwayQuestion ? { width: "100%" } : {}}
               className={`${
-                selected === op
+                (isPathwayQuestion ? selected === singleData : selected === op)
                   ? styles.mcqAnswerBtnSelected
                   : styles.mcqAnswerBtn
               } ${inEC ? "w-100" : ""} py-3 ${
