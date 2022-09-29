@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { connect } from "react-redux";
+import QuickAccessLinks from "src/main-pages/DashboardPage/components/QuickAccessLinks/QuickAccessLinks";
 import BlogCarouselItem from "src/main-pages/WelcomePage/components/blogsCarousel/components/BlogCaroselItem";
 import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
@@ -78,6 +79,8 @@ const DashboardPage = ({
     });
   }
   return (
+    <div>
+
     <div
       className="d-flex align-items-center justify-content-center w-100 vh-100"
       style={{ backgroundColor: "#F9FAFF" }}
@@ -91,7 +94,7 @@ const DashboardPage = ({
         </div>
         <div
           className="d-flex flex-row align-items-center"
-          style={{ height: width < 1400 || height < 800 ? "60%" : "42%" }}
+          style={{ height: "38%" }}
         >
           <div
             className="d-flex flex-column justify-content-between w-100 p-3"
@@ -199,7 +202,7 @@ const DashboardPage = ({
               >
                 Chat with our AI counselor
               </div>
-              <div className="cl-mid-gray" style={{ fontSize: "16px" }}>
+              <div className="cl-mid-gray" style={{ fontSize: "18px" }}>
                 Anything you are not sure about?
                 <br />
                 Our AI counselor is here for you 24/7
@@ -258,23 +261,21 @@ const DashboardPage = ({
                   <div
                     className="d-flex flex-column position-absolute"
                     style={{
-                      left: `calc(${
-                        avgTier === 0
+                      left: `calc(${avgTier === 0
                           ? 0
                           : avgTier === 12
-                          ? 100
-                          : (avgTier / 12) * 100
-                      }% - ${
-                        avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
-                      }px)`,
+                            ? 100
+                            : (avgTier / 12) * 100
+                        }% - ${avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
+                        }px)`,
                       top: "0",
                       zIndex: 100,
                       alignItems:
                         avgTier === 0
                           ? "start"
                           : avgTier === 12
-                          ? "end"
-                          : "center",
+                            ? "end"
+                            : "center",
                       width: "fit-content",
                     }}
                   >
@@ -291,19 +292,17 @@ const DashboardPage = ({
                       style={{
                         width: 0,
                         height: 0,
-                        borderLeft: `${
-                          avgTier === 0 ? 3 : 7
-                        }px solid transparent`,
-                        borderRight: `${
-                          avgTier === 12 ? 3 : 7
-                        }px solid transparent`,
+                        borderLeft: `${avgTier === 0 ? 3 : 7
+                          }px solid transparent`,
+                        borderRight: `${avgTier === 12 ? 3 : 7
+                          }px solid transparent`,
                         borderBottom: "7px solid #F7BC76",
                         alignSelf:
                           avgTier === 0
                             ? "start"
                             : avgTier === 12
-                            ? "end"
-                            : "center",
+                              ? "end"
+                              : "center",
                       }}
                     />
                     <div
@@ -323,32 +322,12 @@ const DashboardPage = ({
             </div>
           </div>
         </div>
-        <div className="cl-dark-text fw-bold py-3" style={{ fontSize: "18px" }}>
-          Blogs
-        </div>
-        <div
-          className="w-100 center-child"
-          style={{
-            height: "50%",
-            borderRadius: "10px",
-            backgroundColor: "white",
-            border: "1px solid #E0DFE8",
-          }}
-        >
-          <div
-            className={classNames(
-              "d-flex flex-row px-3 py-3",
-              styles.blogCarousel
-            )}
-            style={{ overflowX: "auto" }}
-          >
-            {recentBlogs.articles[0].map((e) => (
-              <BlogCarouselItem className="shadow-none" article={e} />
-            ))}
-          </div>
-        </div>
       </div>
+
     </div>
+        <NewBlogsCarousel recentBlogs={recentBlogs} />
+        <QuickAccessLinks/>
+  </div>
   );
 };
 export default connect((state) => {
