@@ -55,9 +55,10 @@ const TipsCard = ({
             {tip?.includes("https") ? (
               <>
                 {tip.substring(0, tip.indexOf("https"))}
+                <br />
                 <Link href={tip.substring(tip.indexOf("https"))}>
-                  <a className="cl-blue">
-                    {tip.substring(tip.indexOf("https"))}
+                  <a className="cl-blue" target="_blank">
+                    View Resource
                   </a>
                 </Link>
               </>

@@ -80,8 +80,8 @@ const DashboardPage = ({
   }
   return (
     <div
-      className="d-flex align-items-center justify-content-center w-100 vh-100"
-      style={{ backgroundColor: "#F9FAFF" }}
+      className="d-flex align-items-center justify-content-center w-100"
+      style={{ backgroundColor: "#F9FAFF", height: "106.5vh" }}
     >
       <div className="d-flex flex-column w-75" style={{ height: "90%" }}>
         <div className="cl-dark-text fw-bold mb-5" style={{ fontSize: "28px" }}>
@@ -348,8 +348,8 @@ const DashboardPage = ({
             ))}
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
   );
 };

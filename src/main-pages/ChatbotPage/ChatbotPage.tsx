@@ -99,7 +99,6 @@ const Chatbot: NextApplicationPage<{
         }),
       })
     ).json();
-    console.log(history);
     if (history.length > 0) {
       setMessageList(history);
     }
@@ -126,9 +125,7 @@ const Chatbot: NextApplicationPage<{
   }, []);
 
   useEffect(() => {
-    console.log("Hi ;)");
     if (shouldUpdateBackend) {
-      console.log("YOOOOO");
       fetch(`/api/chatbot/put-chatbot-history`, {
         method: "POST",
         body: JSON.stringify({
@@ -280,13 +277,13 @@ const Chatbot: NextApplicationPage<{
   }, [accountInfo, currWorkflow]);
 
   const onDownVote = useCallback(
-    (message: string, answer: string) => {
+    (question: string, answer: string) => {
       setCurrWorkflow("downvote");
       setPickedOptions((pickedOptions) => [...pickedOptions, []]);
       addMessages(
         getChatbotMessagesFormatted(downvoteWorkflow.e1.chatbotMessages)
       );
-      setCurrProblematicMessage({ question: message, answer });
+      setCurrProblematicMessage({ question: question, answer });
       setCurrOptions(downvoteWorkflow.e1.possibleChoices);
       setShouldUpdateBackend(true);
     },
@@ -501,7 +498,6 @@ const Chatbot: NextApplicationPage<{
                             isOnLeft,
                             isAnswer,
                             question,
-                            onDownVote,
                           } = object as MessageProps;
                           return (
                             <Message
@@ -582,7 +578,6 @@ const Chatbot: NextApplicationPage<{
                 }}
                 value={currMessageText}
                 onKeyDown={(e) => {
-                  console.log(currMessageText);
                   if (e.key === "Enter" && !e.shiftKey) {
                     handleMessageSubmit(e);
                   }
