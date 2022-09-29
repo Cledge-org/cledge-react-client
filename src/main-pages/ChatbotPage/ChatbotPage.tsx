@@ -199,6 +199,9 @@ const Chatbot: NextApplicationPage<{
       skip_summary:
         problem ===
         downvoteWorkflow.e1.possibleChoices["Not enough information"],
+      ignore_content_filter:
+        problem ===
+        downvoteWorkflow.e1.possibleChoices["Incorrectly classified question"]
     });
   };
 
