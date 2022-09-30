@@ -65,7 +65,7 @@ export const calculateOverallECTier = (tiers: number[]) => {
       totalMultiplier += 4;
     }
   });
-  let overallAverage = totalPoints / totalMultiplier;
+  let overallAverage = Math.trunc(totalPoints / totalMultiplier);
   //Adjustment for number of ECs: <3 or >10 -> -/+2, 3-4 or 8-9 -> -/+ 1, 5-7 = no change
   if(tiers.length < 3)
   {
