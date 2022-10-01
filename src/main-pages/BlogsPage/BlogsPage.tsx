@@ -13,7 +13,7 @@ const BlogsPage = ({ blogInfo }) => {
     const blogs = blogInfo.articles[0];
     const [searchTerm, setSearchTerm] = useState("");
     const [topicFilter, setTopicFilter] = useState("");
-    const [accountInfo, setAccount] = useState();
+    const [accountInfo, setAccount] = useState<Object>();
     const session = useSession();
 
     useEffect(() => {
@@ -22,7 +22,6 @@ const BlogsPage = ({ blogInfo }) => {
                 return res.json();
             })
             .then((res) => {
-                console.log(res);
                 setAccount(res);
             });
     }, []);
@@ -148,7 +147,7 @@ const BlogsPage = ({ blogInfo }) => {
                                 filter="Scholarships"
                             />
                         </div>
-                        {!accountInfo?.hasUWAccess && (
+                        {(!accountInfo?.hasUWAccess ?? true) && (
                             <div
                                 className="alert alert-primary w-75 mt-3"
                                 style={{ maxWidth: "450px" }}
