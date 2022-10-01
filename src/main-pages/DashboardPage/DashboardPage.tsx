@@ -81,8 +81,8 @@ const DashboardPage = ({
   return (
     <div>
       <div
-        className="d-flex align-items-center justify-content-center w-100 vh-100"
-        style={{ backgroundColor: "#F9FAFF" }}
+        className="d-flex align-items-center justify-content-center w-100"
+        style={{ backgroundColor: "#F9FAFF", height: "70vh" }}
       >
         <div className="d-flex flex-column w-75" style={{ height: "90%" }}>
           <div
@@ -91,26 +91,42 @@ const DashboardPage = ({
           >
             Hi, {accountInfo.name}. Welcome to the dashboard
           </div>
+          <div
+            className="cl-dark-text fw-bold pb-2"
+            style={{ fontSize: "18px" }}
+          >
+            Counselor booking
+          </div>
           <div className="w-100 center-child">
             <div
-              className="d-flex flex-column justify-content-between w-100 p-3"
+              className="d-flex cl-dark-text flex-column justify-content-between w-100 p-3"
               style={{
                 height: "100%",
                 borderRadius: "10px",
                 backgroundColor: "white",
                 border: "1px solid #E0DFE8",
               }}
-            ></div>
+            >
+              <div style={{ fontSize: "18px" }} className="fw-bold">
+                Sign up for counselor hours on our{" "}
+                <a
+                  className="cl-blue"
+                  href="https://calendly.com/ayan-college-counseling/one-on-one?month=2022-10"
+                >
+                  calendly
+                </a>
+              </div>
+            </div>
           </div>
           <div
-            className="cl-dark-text fw-bold pb-2"
+            className="cl-dark-text fw-bold pb-2 mt-2"
             style={{ fontSize: "18px" }}
           >
             The essential assistance we provide
           </div>
           <div
             className="d-flex flex-row align-items-center"
-            style={{ height: "38%" }}
+            style={{ height: "60%" }}
           >
             <div
               className="d-flex flex-column justify-content-between w-100 p-3"
