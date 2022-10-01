@@ -13,7 +13,7 @@ const BlogsPage = ({ blogInfo }) => {
     const blogs = blogInfo.articles[0];
     const [searchTerm, setSearchTerm] = useState("");
     const [topicFilter, setTopicFilter] = useState("");
-    const [accountInfo, setAccount] = useState<Object>();
+    const [accountInfo, setAccount] = useState<AccountInfo>();
     const session = useSession();
 
     useEffect(() => {
