@@ -48,7 +48,7 @@ const AccountPage: NextApplicationPage<{
     AccountInfo,
     Dispatch<SetStateAction<AccountInfo>>
   ] = useState(accountInfo);
-  const [currQuestion, setCurrQuestion] = useState<Question>({
+    const [currQuestion, setCurrQuestion] = useState<Question>({
     _id: null,
     question: "",
     type: "",
