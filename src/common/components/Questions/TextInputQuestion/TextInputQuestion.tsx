@@ -33,7 +33,7 @@ export default function TextInputQuestion({
     return (
       <div
         className={classNames(
-          `h-100 d-flex flex-column align-items-${
+          `d-flex flex-column align-items-${
             !isCentered ? "start" : "center"
           } justify-content-evenly w-100 cl-dark-text fw-bold`,
           className
@@ -114,7 +114,7 @@ export default function TextInputQuestion({
   return (
     <div
       className={classNames(
-        `h-100 d-flex flex-column align-items-${
+        `d-flex flex-column align-items-${
           !isCentered ? "start" : "center"
         } justify-content-evenly w-100 cl-dark-text fw-bold`,
         className

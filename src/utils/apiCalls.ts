@@ -115,12 +115,16 @@ export const callPutActivities = async (
     }),
   });
 };
-export const callPutAcademics = async (academics: Academics) => {
-  const session = getSession();
+export const callPutAcademics = async (
+  academics: Academics,
+  hasAcademics: boolean
+) => {
+  const session = await getSession();
   return await fetch(`/api/metrics/put-academics`, {
     method: "POST",
     body: JSON.stringify({
-      userId: academics ? (await session).user.uid : null,
+      userId: academics ? session.user.uid : null,
+      insertionId: hasAcademics ? undefined : session.user.uid,
       academics,
     }),
   });

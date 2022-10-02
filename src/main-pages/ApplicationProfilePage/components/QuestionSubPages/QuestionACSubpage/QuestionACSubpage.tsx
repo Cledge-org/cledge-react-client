@@ -81,7 +81,6 @@ export default function QuestionACSubpage({
       gpa,
       classTypes
     );
-
     return {
       classes: everyClassTier,
       overallClassTier: classTiers,
@@ -89,13 +88,13 @@ export default function QuestionACSubpage({
       gpaTier,
       satScore: parseInt(
         chunkResponses.generalQuestions.find(
-          ({ questionId }) => questionId == "627a7bff145665a4e88ace07"
-        )?.response
+          ({ questionId }) => questionId == "632a35c30f7dc2c69700d61c"
+        )?.response[0]
       ),
       actScore: parseInt(
         chunkResponses.generalQuestions.find(
-          ({ questionId }) => questionId == "627a7bff145665a4e88ace08"
-        )?.response
+          ({ questionId }) => questionId == "632a35c3f618d61248bb821a"
+        )?.response[0]
       ),
       overallTier: overallTier,
       classTip: "",
@@ -145,8 +144,10 @@ export default function QuestionACSubpage({
         } catch (e) {
           academics = null;
         }
-        //console.log(academics);
-        callPutAcademics(getAcademics(ACResponse.response[chunk.name]));
+        callPutAcademics(
+          getAcademics(ACResponse.response[chunk.name]),
+          academics
+        );
         store.dispatch(updateQuestionResponsesAction(userResponses));
         if (isAdding) {
           setCurrACIndex((currACIndex) => currACIndex + 1);

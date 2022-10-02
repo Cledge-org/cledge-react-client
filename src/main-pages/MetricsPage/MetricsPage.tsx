@@ -292,23 +292,23 @@ const Metrics: NextApplicationPage<{
                   content={""}
                   updateChunk={"All Academics"}
                   updatePage={"Academics"}
-                  tip={academics.gpaTip}
-                  tier={academics.gpaTier}
+                  tip={academics?.gpaTip}
+                  tier={academics?.gpaTier}
                 />
                 <ActivityDropdown
                   title={"Coursework"}
                   content={""}
                   updateChunk={"All Academics"}
                   updatePage={"Academics"}
-                  tip={academics.classTip}
-                  tier={academics.overallClassTier}
+                  tip={academics?.classTip}
+                  tier={academics?.overallClassTier}
                 />
                 <ActivityDropdown
                   title={"SAT/ACT"}
                   content={""}
                   updateChunk={"All Academics"}
                   updatePage={"Academics"}
-                  tip={academics.testTip}
+                  tip={academics?.testTip}
                   customContent={
                     <>
                       <div
@@ -331,7 +331,7 @@ const Metrics: NextApplicationPage<{
                                 className="py-2"
                                 style={{ fontSize: "1.2em" }}
                               >
-                                {academics.satScore}
+                                {academics?.satScore}
                               </div>
                             </>
                           )}
@@ -350,7 +350,7 @@ const Metrics: NextApplicationPage<{
                                 className="py-2"
                                 style={{ fontSize: "1.3em" }}
                               >
-                                {academics.actScore}
+                                {academics?.actScore}
                               </div>
                             </>
                           )}
@@ -366,7 +366,7 @@ const Metrics: NextApplicationPage<{
                         <TipsCard
                           isOverall={false}
                           title={""}
-                          tips={[academics.testTip]}
+                          tips={[academics?.testTip]}
                           updatePage={"Academics"}
                           updateChunk={"All Academics"}
                         />
