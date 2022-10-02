@@ -19,26 +19,22 @@ export const calculateECActivityTier = (
   }
   let lowerCaseRecognition = recognition.toLowerCase();
   if (lowerCaseRecognition === "school") {
-    if(tier <= 5)
-    {
+    if (tier <= 5) {
       return 6;
     }
     tier++;
   } else if (lowerCaseRecognition === "state/regional") {
-    if(tier <= 6)
-    {
+    if (tier <= 6) {
       return 8; //Baseline tier for state/regional awards
     }
     tier += 2;
   } else if (lowerCaseRecognition === "national") {
-    if(tier <= 7)
-    {
+    if (tier <= 7) {
       return 10;
     }
     tier += 3;
   } else if (lowerCaseRecognition === "international") {
-    if(tier <= 8)
-    {
+    if (tier <= 8) {
       return 11;
     }
     tier += 4;
@@ -59,28 +55,20 @@ export const calculateOverallECTier = (tiers: number[]) => {
     } else if (tier <= 9) {
       totalPoints += tier * 3;
       totalMultiplier += 3;
-    }
-    else {
+    } else {
       totalPoints += tier * 4;
       totalMultiplier += 4;
     }
   });
-  let overallAverage = totalPoints / totalMultiplier;
+  let overallAverage = Math.trunc(totalPoints / totalMultiplier);
   //Adjustment for number of ECs: <3 or >10 -> -/+2, 3-4 or 8-9 -> -/+ 1, 5-7 = no change
-  if(tiers.length < 3)
-  {
+  if (tiers.length < 3) {
     overallAverage -= 2;
-  }
-  else if(tiers.length > 10)
-  {
+  } else if (tiers.length > 10) {
     overallAverage += 2;
-  }
-  else if(tiers.length < 5)
-  {
+  } else if (tiers.length < 5) {
     overallAverage -= 1;
-  }
-  else if(tiers.length > 7)
-  {
+  } else if (tiers.length > 7) {
     overallAverage += 1;
   }
   //Returns adjusted average for overall tier.

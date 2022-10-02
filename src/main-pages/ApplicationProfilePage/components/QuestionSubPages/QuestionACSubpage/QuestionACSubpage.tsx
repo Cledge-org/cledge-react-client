@@ -12,11 +12,7 @@ import ACEditor from "../../QuestionComponents/ECEditor/ECEditor";
 import ACQuestionSummaryCard from "../../QuestionComponents/ECQuestionSummaryCard/ECQuestionSummaryCard";
 import QuestionSubPageHeader from "../../../../../common/components/SubpageHeader/SubpageHeader";
 import QuestionSummaryCard from "../../QuestionComponents/QuestionSummaryCard/QuestionSummaryCard";
-import {
-  callPutAcademics,
-  callPutActivities,
-  callPutQuestionResponses,
-} from "src/utils/apiCalls";
+import { callPutAcademics, callPutQuestionResponses } from "src/utils/apiCalls";
 interface QuestionACSubpageProps {
   userResponses: UserResponse[];
   isShowing: boolean;
