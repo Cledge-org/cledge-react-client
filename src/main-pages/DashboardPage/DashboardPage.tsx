@@ -108,10 +108,10 @@ const DashboardPage = ({
               }}
             >
               <div style={{ fontSize: "18px" }} className="fw-bold">
-                Sign up for counselor hours on our{" "}
+                Sign up for your complementary 30 minute session on our{" "}
                 <a
                   className="cl-blue"
-                  href="https://calendly.com/ayan-college-counseling/one-on-one?month=2022-10"
+                  href="https://calendly.com/ayan-college-counseling/cledge-uw-cs-advising-session"
                 >
                   calendly
                 </a>
