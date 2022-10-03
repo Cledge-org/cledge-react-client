@@ -1,3 +1,4 @@
+import { Button, createTheme, ThemeProvider } from "@mui/material";
 import classNames from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -10,6 +11,13 @@ import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarouse
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import styles from "./dashboard-page.module.scss";
 
+const theme= createTheme({
+  palette:{
+    secondary:{
+      main:"#A5A6F6"
+    }
+  }
+})
 const DashboardPage = ({
   accountInfo,
   dashboardParts,
@@ -79,16 +87,18 @@ const DashboardPage = ({
     });
   }
   return (
+    <ThemeProvider theme={theme}>
+
     <div>
       <div
         className="d-flex align-items-center justify-content-center w-100"
         style={{ backgroundColor: "#F9FAFF", height: "70vh" }}
-      >
+        >
         <div className="d-flex flex-column w-75" style={{ height: "90%" }}>
           <div
             className="cl-dark-text fw-bold mb-5"
             style={{ fontSize: "28px" }}
-          >
+            >
             Hi, {accountInfo.name}. Welcome to the dashboard
           </div>
           <div
@@ -112,7 +122,7 @@ const DashboardPage = ({
                 <a
                   className="cl-blue"
                   href="https://calendly.com/ayan-college-counseling/cledge-uw-cs-advising-session"
-                >
+                  >
                   calendly
                 </a>
               </div>
@@ -160,7 +170,7 @@ const DashboardPage = ({
                       strokeWidth={10}
                       children={
                         <div
-                          style={{ fontWeight: "bold", fontSize: "1.1em" }}
+                        style={{ fontWeight: "bold", fontSize: "1.1em" }}
                         >{`${percentage}%`}</div>
                       }
                       className="center-child"
@@ -205,7 +215,7 @@ const DashboardPage = ({
               <div
                 className="d-flex justify-content-end w-100 py-3 cl-dark-text fw-bold px-3"
                 style={{ backgroundColor: "#A5A6F6", position: "relative" }}
-              >
+                >
                 Try it! Cledge's most popular feature
                 <Link href="/chatbot">
                   <a>
@@ -227,11 +237,11 @@ const DashboardPage = ({
               <div
                 className="px-3 pt-5 d-flex flex-column justify-content-end"
                 style={{ height: "70%" }}
-              >
+                >
                 <div
                   className="cl-dark-text fw-bold mb-3"
                   style={{ fontSize: "24px" }}
-                >
+                  >
                   Chat with our AI counselor
                 </div>
                 <div className="cl-mid-gray" style={{ fontSize: "18px" }}>
@@ -250,7 +260,7 @@ const DashboardPage = ({
                 backgroundColor: "white",
                 border: "1px solid #E0DFE8",
               }}
-            >
+              >
               <Link href="/metrics">
                 <a>
                   <img
@@ -261,13 +271,13 @@ const DashboardPage = ({
                       borderRadius: "10px",
                       backgroundColor: "#DCE1FB",
                     }}
-                  />
+                    />
                 </a>
               </Link>
               <div
                 className="cl-dark-text fw-bold mt-3"
                 style={{ fontSize: "24px" }}
-              >
+                >
                 Competitive Metrics
               </div>
               <div className="cl-mid-gray" style={{ fontSize: "18px" }}>
@@ -284,7 +294,7 @@ const DashboardPage = ({
                     style={{
                       height: "36px",
                       background:
-                        "linear-gradient(90deg, rgba(100, 47, 113, 0.1) 0%, rgba(248, 231, 76, 0.1) 100%)",
+                      "linear-gradient(90deg, rgba(100, 47, 113, 0.1) 0%, rgba(248, 231, 76, 0.1) 100%)",
                       borderLeft: "2px solid #506BED",
                       borderRight: "2px solid #506BED",
                       position: "relative",
@@ -293,26 +303,24 @@ const DashboardPage = ({
                     <div
                       className="d-flex flex-column position-absolute"
                       style={{
-                        left: `calc(${
-                          avgTier === 0
-                            ? 0
-                            : avgTier === 12
-                            ? 100
+                        left: `calc(${avgTier === 0
+                          ? 0
+                          : avgTier === 12
+                          ? 100
                             : (avgTier / 12) * 100
-                        }% - ${
-                          avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
-                        }px)`,
+                          }% - ${avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
+                          }px)`,
                         top: "0",
                         zIndex: 100,
                         alignItems:
-                          avgTier === 0
+                        avgTier === 0
                             ? "start"
                             : avgTier === 12
-                            ? "end"
-                            : "center",
-                        width: "fit-content",
+                              ? "end"
+                              : "center",
+                              width: "fit-content",
                       }}
-                    >
+                      >
                       <div
                         style={{
                           border: "2px solid #F7BC76",
@@ -320,38 +328,69 @@ const DashboardPage = ({
                           width: 0,
                           borderRadius: "2px",
                         }}
-                      />
+                        />
                       <div
                         className="mt-1"
                         style={{
                           width: 0,
                           height: 0,
-                          borderLeft: `${
-                            avgTier === 0 ? 3 : 7
+                          borderLeft: `${avgTier === 0 ? 3 : 7
                           }px solid transparent`,
-                          borderRight: `${
-                            avgTier === 12 ? 3 : 7
+                          borderRight: `${avgTier === 12 ? 3 : 7
                           }px solid transparent`,
                           borderBottom: "7px solid #F7BC76",
                           alignSelf:
                             avgTier === 0
-                              ? "start"
+                            ? "start"
                               : avgTier === 12
                               ? "end"
                               : "center",
-                        }}
-                      />
-                      <div
+                            }}
+                            />
+                      {
+                        avgTier == 2.5 ? <div
                         className="px-3 py-2 cl-dark-text fw-bold"
-                        style={{
-                          width: "fit-content",
-                          backgroundColor: "#F7BC76",
-                          border: "1px solid transparent",
-                          textAlign: "center",
-                        }}
-                      >
-                        You are here
-                      </div>
+                          style={{
+                            width: "fit-content",
+                            backgroundColor: "#DCE1FB",
+                            border: "1px solid transparent",
+                            textAlign: "center",
+                            display: "flex",
+                            flexDirection: "column",
+                            borderRadius: 5,
+                            fontSize: 16,
+                            alignItems: "flex-start"
+                          }}
+                          >
+                          No Assessments for you yet!
+                          <Button
+                            variant="contained"
+                            
+                            style={{ textTransform: "none" }}
+                          >
+                            Update profile
+                          </Button>
+                        </div> :
+                          <div
+                            className="px-3 py-2 cl-dark-text fw-bold"
+                            style={{
+                              width: "fit-content",
+                              backgroundColor: "#F7BC76",
+                              border: "1px solid transparent",
+                              textAlign: "center",
+                            }}
+                            >
+                            {
+                              
+                            }
+                            {
+                              avgTier == 0 ?
+                                "No assessment for you yet!" :
+                                "You are here"
+                              }
+
+                          </div>
+                      }
                     </div>
                   </div>
                 </div>
@@ -363,6 +402,7 @@ const DashboardPage = ({
       <NewBlogsCarousel recentBlogs={recentBlogs} />
       <QuickAccessLinks />
     </div>
+</ThemeProvider>
   );
 };
 export default connect((state) => {
