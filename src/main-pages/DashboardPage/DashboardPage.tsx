@@ -79,23 +79,6 @@ const DashboardPage = ({
     });
   }
   return (
-<<<<<<< HEAD
-    <div
-      className="d-flex align-items-center justify-content-center w-100 vh-100"
-      style={{ backgroundColor: "#F9FAFF" }}
-    >
-      <div className="d-flex flex-column w-75" style={{ height: "90%" }}>
-        <div className="cl-dark-text fw-bold mb-5" style={{ fontSize: "28px" }}>
-          Hi, {accountInfo.name}. Welcome to the dashboard
-        </div>
-        <div className="cl-dark-text fw-bold pb-2" style={{ fontSize: "18px" }}>
-          The essential assistance we provide
-        </div>
-        <div
-          className="d-flex flex-row align-items-center"
-          style={{ height: width < 1400 || height < 800 ? "60%" : "42%" }}
-        >
-=======
     <div>
       <div
         className="d-flex align-items-center justify-content-center w-100"
@@ -141,7 +124,6 @@ const DashboardPage = ({
           >
             The essential assistance we provide
           </div>
->>>>>>> 9e2b01b749b4134c2da4a536505def396dc2b81e
           <div
             className="d-flex flex-row align-items-center"
             style={{ height: "60%" }}
@@ -288,15 +270,8 @@ const DashboardPage = ({
               >
                 Competitive Metrics
               </div>
-<<<<<<< HEAD
-              <div className="cl-mid-gray" style={{ fontSize: "16px" }}>
-                Anything you are not sure about?
-                <br />
-                Our AI counselor is here for you 24/7
-=======
               <div className="cl-mid-gray" style={{ fontSize: "18px" }}>
                 View tips to improve the competitiveness of your profile
->>>>>>> 9e2b01b749b4134c2da4a536505def396dc2b81e
               </div>
               <div className="w-100 mt-3">
                 <div className="w-100 d-flex flex-row align-items-center justify-content-between">
@@ -384,33 +359,6 @@ const DashboardPage = ({
             </div>
           </div>
         </div>
-<<<<<<< HEAD
-        <div className="cl-dark-text fw-bold py-3" style={{ fontSize: "18px" }}>
-          Blogs
-        </div>
-        <div
-          className="w-100 center-child"
-          style={{
-            height: "50%",
-            borderRadius: "10px",
-            backgroundColor: "white",
-            border: "1px solid #E0DFE8",
-          }}
-        >
-          <div
-            className={classNames(
-              "d-flex flex-row px-3 py-3",
-              styles.blogCarousel
-            )}
-            style={{ overflowX: "auto" }}
-          >
-            {recentBlogs.articles[0].map((e) => (
-              <BlogCarouselItem className="shadow-none" article={e} />
-            ))}
-          </div>
-        </div>
-=======
->>>>>>> 9e2b01b749b4134c2da4a536505def396dc2b81e
       </div>
       <NewBlogsCarousel recentBlogs={recentBlogs} />
       <QuickAccessLinks />
