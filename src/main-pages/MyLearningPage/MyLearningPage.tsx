@@ -413,10 +413,12 @@ const MyLearningPage: NextApplicationPage<{
               ) : (
                 <div
                   className="container-fluid center-child"
-                  style={{ height: "40vh", display:"flex", flexDirection:"column" }}
+                  style={{ height: "40vh", display: "flex", flexDirection: "column" }}
                 >
-                  <Image src={emptyImgGray}/>
-                 <p>Oops, There is nothing here</p>
+                  <Image src={emptyImgGray} />
+                  <p>
+                    Oops, nothing here yet
+                  </p>
                 </div>
               )}
             </div>
