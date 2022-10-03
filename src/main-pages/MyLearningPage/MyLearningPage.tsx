@@ -15,7 +15,8 @@ import PartDropDown from "./components/PartDropdown/PartDropdown";
 import DashboardTabButton from "./components/MyLearningTabButton/MyLearningTabButton";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import { useLocation } from "src/utils/hooks/useLocation";
-
+import Image from "next/image";
+import emptyImgGray from './empty-img-gray.png';
 // logged in landing page
 const MyLearningPage: NextApplicationPage<{
   dashboardParts: PathwayPart[];
@@ -412,15 +413,10 @@ const MyLearningPage: NextApplicationPage<{
               ) : (
                 <div
                   className="container-fluid center-child"
-                  style={{ height: "40vh" }}
+                  style={{ height: "40vh", display:"flex", flexDirection:"column" }}
                 >
-                  You have no{" "}
-                  {currTab === "finished tasks"
-                    ? "finished"
-                    : currTab === "current tasks"
-                    ? "current"
-                    : ""}{" "}
-                  tasks.
+                  <Image src={emptyImgGray}/>
+                 <p>Oops, There is nothing here</p>
                 </div>
               )}
             </div>
