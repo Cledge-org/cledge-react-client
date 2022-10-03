@@ -14,7 +14,7 @@ import styles from "./dashboard-page.module.scss";
 const theme= createTheme({
   palette:{
     secondary:{
-      main:"#A5A6F6"
+      main:"#506bed"
     }
   }
 })
@@ -348,7 +348,7 @@ const DashboardPage = ({
                             }}
                             />
                       {
-                        avgTier == 2.5 ? <div
+                        avgTier == 0 ? <div
                         className="px-3 py-2 cl-dark-text fw-bold"
                           style={{
                             width: "fit-content",
@@ -365,7 +365,7 @@ const DashboardPage = ({
                           No Assessments for you yet!
                           <Button
                             variant="contained"
-                            
+                            color="secondary"
                             style={{ textTransform: "none" }}
                           >
                             Update profile
