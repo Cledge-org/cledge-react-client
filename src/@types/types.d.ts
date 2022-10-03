@@ -107,6 +107,7 @@ export declare global {
     general_answer: boolean;
     alternate_source: boolean;
     skip_summary: boolean;
+    ignore_content_filter: boolean;
   }
   interface QuestionList_Db extends WithId<Document> {
     _id?: ObjectId;
@@ -412,4 +413,10 @@ interface CoupledOptions {
   areOptions: boolean;
   pickedIndex: number;
   options: { [option: string]: string };
+}
+
+interface QuickAccessLinkData{
+  title: string;
+  content: string;
+  link: string;
 }

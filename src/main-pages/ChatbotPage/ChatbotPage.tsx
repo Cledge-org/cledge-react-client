@@ -199,6 +199,9 @@ const Chatbot: NextApplicationPage<{
       skip_summary:
         problem ===
         downvoteWorkflow.e1.possibleChoices["Not enough information"],
+      ignore_content_filter:
+        problem ===
+        downvoteWorkflow.e1.possibleChoices["Incorrectly classified question"],
     });
   };
 
@@ -287,7 +290,7 @@ const Chatbot: NextApplicationPage<{
       setCurrOptions(downvoteWorkflow.e1.possibleChoices);
       setShouldUpdateBackend(true);
     },
-    [currWorkflow, downvoteWorkflow, currOptions, pickedOptions]
+    [currWorkflow, downvoteWorkflow, currOptions, pickedOptions, messageList]
   );
 
   const onOptionClick = async (option: string, optionIndex: number) => {

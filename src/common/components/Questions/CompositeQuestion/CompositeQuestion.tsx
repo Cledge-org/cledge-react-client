@@ -40,7 +40,7 @@ const CompositeQuestion = ({
           userAnswer={response}
           isCentered
           onChange={(answer) => {
-            onChange(answer, index, question._id.toString());
+            onChange(answer, index, question._id?.toString());
           }}
         />
       );
@@ -52,7 +52,7 @@ const CompositeQuestion = ({
           tags={userTags}
           userAnswers={response}
           onChange={(answer) => {
-            onChange(answer, index, question._id.toString());
+            onChange(answer, index, question._id?.toString());
           }}
         />
       );
@@ -64,7 +64,7 @@ const CompositeQuestion = ({
           question={question}
           userAnswer={response}
           onChange={(answer, newQTags, oldQTags) => {
-            onChange(answer, index, question._id.toString());
+            onChange(answer, index, question._id?.toString());
           }}
         />
       );
@@ -76,7 +76,7 @@ const CompositeQuestion = ({
           question={question}
           userAnswers={response}
           onChange={(answer, newQTags, oldQTags) => {
-            onChange(answer, index, question._id.toString());
+            onChange(answer, index, question._id?.toString());
           }}
         />
       );
@@ -88,9 +88,9 @@ const CompositeQuestion = ({
           isConcatenable={question.isConcatenable}
           valuesList={question.data}
           onChange={(value) => {
-            onChange(value, index, question._id.toString());
+            onChange(value, index, question._id?.toString());
           }}
-          key={question._id.toString()}
+          key={question._id?.toString()}
           questionTitle={question.question}
           defaultValue={response}
         />
@@ -201,7 +201,7 @@ const CompositeQuestion = ({
         </span>
         {(question as Question).popUpText && (
           <Tooltip
-            tipId={(question as Question)._id.toString()}
+            tipId={(question as Question)._id?.toString()}
             text={(question as Question).popUpText}
           />
         )}

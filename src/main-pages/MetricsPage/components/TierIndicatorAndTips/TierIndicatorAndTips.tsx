@@ -24,7 +24,7 @@ const TierIndicatorAndTips = ({
       {!noTip && (
         <div
           style={{ minHeight: "30vh", width: isOverall ? "100%" : "50%" }}
-          className="d-flex flex-column align-items-center justify-content-start"
+          className="d-flex flex-column align-items-center ms-5"
         >
           <TipsCard
             updateChunk={updateChunk}

@@ -9,10 +9,13 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId, activities }: { userId: string; activities: Activities } =
+  const {
+    userId,
+    activities,
+    insertionId,
+  }: { userId: string; activities: Activities; insertionId: string } =
     JSON.parse(req.body);
   try {
-    const session = getSession({ req });
     if (activities) {
       for (let i = 0; i < activities.activities.length; i++) {
         activities.activities[i].tip = getActivityTip(
@@ -21,13 +24,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         );
       }
     }
-    const result = await putActivities(
-      userId,
-      activities,
-      (
-        await session
-      ).user.uid
-    );
+    const result = await putActivities(userId, activities, insertionId);
     resolve.status(200).send(result);
   } catch (e) {
     resolve.status(500).send(e);
@@ -50,7 +47,7 @@ export const putActivities = (
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
-      if (!userId && activities && insertionId) {
+      if (activities && insertionId) {
         await client
           .db("metrics")
           .collection("extracurriculars")

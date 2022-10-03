@@ -34,6 +34,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   const [processingSignUpPayment, setProcessingSignUpPayment] = useState(false);
   const [isIncorrectAccessCode, setIsIncorrectAccessCode] = useState(false);
   const [acceptedTOSPP, setAcceptedTOSPP] = useState(false);
+  const [understands, setUnderstands] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
   const session = useSession();
@@ -50,6 +51,14 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   };
 
   const handleSubmit = async () => {
+    if (!understands) {
+      setIssues((issues) => [
+        ...issues,
+        "If you want to make an account you must understand that it is in beta",
+      ]);
+      setProcessingSignUpPayment(false);
+      return;
+    }
     if (!acceptedTOSPP) {
       setIssues((issues) => [
         ...issues,
@@ -327,6 +336,22 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
                 Privacy Statement
               </a>
               .
+            </div>
+          </div>
+          <div className="d-flex flex-row mt-3 mb-2">
+            <CheckBox
+              selected={understands}
+              setSelected={(value) => {
+                setUnderstands(value);
+              }}
+            />
+            <div className="ms-2">
+              I understand that Cledge is in Beta. I may experience bugs and
+              other minor issues. The Cledge team is committed to maintaining a
+              high standard and will resolve the issue as soon as possible after
+              contacted. You may contact ayan@cledge.org with any issues that
+              arise or report a problem using the contact at the bottom of any
+              page.
             </div>
           </div>
           <button
