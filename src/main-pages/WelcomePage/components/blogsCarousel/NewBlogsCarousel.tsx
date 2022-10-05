@@ -21,7 +21,6 @@ const CarouselDiv = styled.div`
 `;
 
 const RightArrow = styled.div`
-
   display: flex;
   align-self: center;
   justify-self: flex-end;
@@ -56,9 +55,11 @@ function NewBlogsCarousel({ recentBlogs }) {
     <ThemeProvider theme={theme}>
       <div className={styles.mainContainer}>
         <h1>Get started with our free expert-written blogs</h1>
-          <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "row" }}>
           <LeftArrow>
             <Fab
+              className="ms-3"
+              style={{ boxShadow: "none", backgroundColor: "white" }}
               color="secondary"
               onClick={() => {
                 document
@@ -70,51 +71,27 @@ function NewBlogsCarousel({ recentBlogs }) {
               <Image src={ArrowIcon} />
             </Fab>
           </LeftArrow>
-            <CarouselDiv id="carouselDiv">
-              {/* <LeftArrow>
-              <Fab
+          <CarouselDiv id="carouselDiv">
+            {recentBlogsData.map((e) => (
+              <BlogCarouselItem article={e} />
+            ))}
+          </CarouselDiv>
+          <RightArrow>
+            <Fab
+              className="ms-3"
+              style={{ boxShadow: "none", backgroundColor: "white" }}
               color="secondary"
               onClick={() => {
-                  document
+                document
                   .getElementById("carouselDiv")
-                  .scrollBy({ left: -400, behavior: "smooth" });
-                }}
-                size="large"
-              >
+                  .scrollBy({ left: 400, behavior: "smooth" });
+              }}
+              size="large"
+            >
               <Image src={ArrowIcon} />
-              </Fab>
-            </LeftArrow> */}
-              {recentBlogsData.map((e) => (
-                <BlogCarouselItem article={e} />
-              ))}
-              {/* <RightArrow>
-              <Fab
-              color="secondary"
-                onClick={() => {
-                  document
-                    .getElementById("carouselDiv")
-                    .scrollBy({ left: 400, behavior: "smooth" });
-                  }}
-                  size="large"
-                  >
-                <Image src={ArrowIcon} />
-                </Fab>
-            </RightArrow> */}
-            </CarouselDiv>
-            <RightArrow>
-              <Fab
-              color="secondary"
-                onClick={() => {
-                  document
-                    .getElementById("carouselDiv")
-                    .scrollBy({ left: 400, behavior: "smooth" });
-                  }}
-                  size="large"
-                  >
-                <Image src={ArrowIcon} />
-                </Fab>
-            </RightArrow>
-          </div>
+            </Fab>
+          </RightArrow>
+        </div>
         <Button
           variant="contained"
           color="primary"

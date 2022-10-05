@@ -1,10 +1,10 @@
-import React from 'react'
-import QuickAccessLinkBlock from 'src/main-pages/DashboardPage/components/QuickAccessLinks/QuickAccessLinkBlock'
-import styled from 'styled-components'
-import QALinksData from './QALinksData.json'
-import Arrow from '../../../WelcomePage/components/blogsCarousel/Arrow.png'
-import { createTheme, Fab, ThemeProvider } from '@mui/material'
-import Image from 'next/image'
+import React from "react";
+import QuickAccessLinkBlock from "src/main-pages/DashboardPage/components/QuickAccessLinks/QuickAccessLinkBlock";
+import styled from "styled-components";
+import QALinksData from "./QALinksData.json";
+import Arrow from "../../../WelcomePage/components/blogsCarousel/Arrow.png";
+import { createTheme, Fab, ThemeProvider } from "@mui/material";
+import Image from "next/image";
 const CarouselDiv = styled.div`
   background-color: #f9faff;
   margin-bottom: 50px;
@@ -21,7 +21,7 @@ const CarouselDiv = styled.div`
 `;
 
 const MainContainer = styled.div`
-padding: 50px;
+  padding: 50px;
   margin-top: 100px;
   margin-bottom: 100px;
   background: #f9faff;
@@ -33,9 +33,8 @@ padding: 50px;
     line-height: 43px;
     color: #070452;
   }
-`
+`;
 const RightArrow = styled.div`
-
   display: flex;
   align-self: center;
   justify-self: flex-end;
@@ -66,12 +65,13 @@ function QuickAccessLinks() {
   });
   return (
     <ThemeProvider theme={theme}>
-
       <MainContainer>
         <h1>University of Washington quick access links</h1>
-        <div style={{ display: 'flex', flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "row" }}>
           <LeftArrow>
             <Fab
+              className="ms-3"
+              style={{ boxShadow: "none", backgroundColor: "white" }}
               color="secondary"
               onClick={() => {
                 document
@@ -83,13 +83,24 @@ function QuickAccessLinks() {
               <Image src={Arrow} />
             </Fab>
           </LeftArrow>
-          <CarouselDiv id='qalCarouselDiv'>
+          <CarouselDiv
+            id="qalCarouselDiv"
+            style={{ backgroundColor: "transparent" }}
+          >
             {QALinksData.QuickAccessLinks.map((e) => {
-              return <QuickAccessLinkBlock title={e.title} link={e.link} content={e.content} />
+              return (
+                <QuickAccessLinkBlock
+                  title={e.title}
+                  link={e.link}
+                  content={e.content}
+                />
+              );
             })}
           </CarouselDiv>
           <RightArrow>
             <Fab
+              className="ms-3"
+              style={{ boxShadow: "none", backgroundColor: "white" }}
               color="secondary"
               onClick={() => {
                 document
@@ -104,7 +115,7 @@ function QuickAccessLinks() {
         </div>
       </MainContainer>
     </ThemeProvider>
-  )
+  );
 }
 
-export default QuickAccessLinks
+export default QuickAccessLinks;

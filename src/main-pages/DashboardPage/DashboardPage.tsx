@@ -230,11 +230,14 @@ const DashboardPage = ({
               >
                 <div
                   className="cl-dark-text fw-bold mb-3"
-                  style={{ fontSize: "24px" }}
+                  style={{ fontSize: width >= 1500 ? " 24px" : "22px" }}
                 >
                   Chat with our AI counselor
                 </div>
-                <div className="cl-mid-gray" style={{ fontSize: "18px" }}>
+                <div
+                  className="cl-mid-gray"
+                  style={{ fontSize: width >= 1500 ? "18px" : "16px" }}
+                >
                   Anything you are not sure about?
                   <br />
                   Our AI counselor is here for you 24/7

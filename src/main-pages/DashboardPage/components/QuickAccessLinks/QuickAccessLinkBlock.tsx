@@ -1,18 +1,17 @@
-import { Button } from '@mui/material';
-import { useRouter } from 'next/router';
+import { Button } from "@mui/material";
+import { useRouter } from "next/router";
 
-import React from 'react'
-import styled from 'styled-components'
+import React from "react";
+import styled from "styled-components";
 
 interface Props {
   title: string;
   link: string;
   content: string;
-
 }
 
 const Block = styled.div`
-display: flex;
+  display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 20px;
@@ -34,22 +33,26 @@ display: flex;
   }
   box-shadow: 0px 2px 22px 9px rgba(0, 0, 0, 0.03);
   border-radius: 8px;
-h2{
-  font-size: 20px;
-  font-weight: 600;
-}
-`
-
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+  }
+`;
 
 function QuickAccessLinkBlock({ title, content, link }) {
   const router = useRouter();
 
   return (
-    <Block onClick={() => { window.open(link, "_blank") }}>
+    <Block
+      style={{ boxShadow: "none" }}
+      onClick={() => {
+        window.open(link, "_blank");
+      }}
+    >
       <h2>{title}</h2>
       <p>{content}</p>
     </Block>
-  )
+  );
 }
 
-export default QuickAccessLinkBlock
+export default QuickAccessLinkBlock;
