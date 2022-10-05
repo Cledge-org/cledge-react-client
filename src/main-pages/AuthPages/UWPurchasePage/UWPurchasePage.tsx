@@ -29,10 +29,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
     confirmedPassword: "",
     isOnMailingList: true,
   });
-  const [accessCode, setAccessCode] = useState("");
-  const [hasAccess, setHasAccess] = useState(false);
   const [processingSignUpPayment, setProcessingSignUpPayment] = useState(false);
-  const [isIncorrectAccessCode, setIsIncorrectAccessCode] = useState(false);
   const [acceptedTOSPP, setAcceptedTOSPP] = useState(false);
   const [understands, setUnderstands] = useState(false);
   const stripe = useStripe();
@@ -165,48 +162,6 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
     accountInfo.hasUWAccess
   ) {
     router.replace("/");
-  }
-  if (!hasAccess && session.status === "unauthenticated") {
-    return (
-      <div className="container">
-        <form
-          className="col col-md-5 d-flex mx-auto flex-column justify-content-center align-items-center"
-          style={{ height: "80vh" }}
-        >
-          <div className="fs-1 fw-bold cl-dark-text">Enter Access Code</div>
-          {isIncorrectAccessCode ? (
-            <div className="cl-red d-flex flex-column">
-              Incorrect Access Code
-            </div>
-          ) : null}
-          <div className="form-group mt-3 w-100">
-            <input
-              value={accessCode}
-              onChange={(e) => {
-                setAccessCode(e.target.value);
-              }}
-              type="text"
-              className="px-3 form-control"
-              id="email"
-              placeholder="Enter code"
-            />
-          </div>
-          <input
-            type="submit"
-            className="cl-btn-blue mt-4"
-            onClick={(e) => {
-              e.preventDefault();
-              if (accessCode === "596382") {
-                setHasAccess(true);
-              } else {
-                setIsIncorrectAccessCode(true);
-              }
-            }}
-            value="Access Signup"
-          />
-        </form>
-      </div>
-    );
   }
   return (
     <div
