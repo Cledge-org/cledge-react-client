@@ -60,8 +60,19 @@ export const putChatbotHistory = async (
               .collection("chatbot-history")
               .insertOne(object as ModifiedChatbotHistory);
           }
+          const newestDoc = await client
+            .db("chatbot")
+            .collection("chatbot-history")
+            .find({ firebaseId: history[0].firebaseId })
+            .sort({ index: -1 })
+            .limit(1);
           if (addedLists > 0) {
-            updateUser(history[0].firebaseId, currHistoryLength + addedLists);
+            updateUser(newestDoc.firebaseId, currHistoryLength + addedLists);
+          } else if (
+            newestDoc.index + 1 > currHistoryLength ||
+            currHistoryLength < newestDoc.index + 1
+          ) {
+            updateUser(newestDoc.firebaseId, newestDoc.index + 1);
           }
         })
       );
