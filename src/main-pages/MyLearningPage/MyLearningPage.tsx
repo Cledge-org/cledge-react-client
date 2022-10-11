@@ -230,7 +230,10 @@ const MyLearningPage: NextApplicationPage<{
       query: { checkIn: accountInfo.checkIns },
     });
   }
-  if (session.data?.user?.email === "test31@gmail.com" && !isInUserView) {
+  if (
+    session.data?.user?.email === "hello.cledge@outlook.com" &&
+    !isInUserView
+  ) {
     return (
       <div className="container-fluid p-5 align-items-center d-flex flex-column">
         <button
@@ -317,7 +320,7 @@ const MyLearningPage: NextApplicationPage<{
         <div className="w-full md:w-auto" style={{ backgroundColor: "white" }}>
           <div className="w-full py-5 px-5 mx-3 d-flex flex-row align-items-center justify-content-between">
             <div className="px-5">
-              {session.data?.user?.email === "test31@gmail.com" && (
+              {session.data?.user?.email === "hello.cledge@outlook.com" && (
                 <button
                   onClick={() => {
                     setIsInUserView(false);

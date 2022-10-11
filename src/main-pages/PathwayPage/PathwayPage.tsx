@@ -141,7 +141,6 @@ const Pathways: NextApplicationPage<{
         id: content.id,
         finished: false,
       };
-      console.log(content);
       if (type === "question") {
         questionNumber++;
       }
