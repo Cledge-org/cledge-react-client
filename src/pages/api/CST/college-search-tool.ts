@@ -111,6 +111,7 @@ export const getCollegeInfo = (
         });
         output.push(await formatOutput(result["document"], client));
       }
+      console.log(output.length);
       res(output);
     } catch (e) {
       err(res);
@@ -149,10 +150,14 @@ const createFilterExpression = (filters) => {
 };
 
 const formatOutput = async (college, client: MongoClient) => {
-  const image_db = client.db("images");
+  const image_db = await client.db("images");
   const imageRes = await image_db
     .collection("college_images")
     .findOne({ INSTID: college["UNITID"] });
+  const collegedata_db = await client.db("colleges");
+  const collegedataRes = await collegedata_db
+    .collection("colleges-data")
+    .findOne({ college_id: college["UNITID"] });
   const output = {
     img_title: imageRes["img_title"],
     img_wiki_link: imageRes["img_wiki_link"],
@@ -387,6 +392,16 @@ const formatOutput = async (college, client: MongoClient) => {
       safety: college["SAFETY_TIER"],
     },
   };
+  // append collegedata data
+  if (collegedataRes != null) {
+    output["admission"] = collegedataRes["admission"];
+    output["financials"] = collegedataRes["financials"];
+    output["academics"] = collegedataRes["academics"];
+    output["campus_life"] = collegedataRes["campus_life"];
+    output["students"] = collegedataRes["students"];
+    output["undergraduate majors"] = collegedataRes["undergraduate majors"];
+  }
+
   return output;
 };
 
