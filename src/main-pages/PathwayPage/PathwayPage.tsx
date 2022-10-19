@@ -33,7 +33,7 @@ const Pathways: NextApplicationPage<{
   if (
     !pathwaysProgress
       .slice()
-      .find(({ pathwayId }) => pathwayId === pathwayInfo._id)
+      ?.find(({ pathwayId }) => pathwayId === pathwayInfo._id)
   ) {
     addPathwayProgress();
   }
@@ -54,7 +54,7 @@ const Pathways: NextApplicationPage<{
     () =>
       pathwaysProgress
         .slice()
-        .find(({ pathwayId }) => pathwayId === pathwayInfo._id),
+        ?.find(({ pathwayId }) => pathwayId === pathwayInfo._id),
     [pathwaysProgress]
   );
   useEffect(() => {
@@ -109,10 +109,10 @@ const Pathways: NextApplicationPage<{
       | PathwayVideoProgress
       | PathwayTextProgress
   ) => {
-    let currContentProgress = moduleProgress[currModuleId.toString()].find(
+    let currContentProgress = moduleProgress[currModuleId.toString()]?.find(
       ({ name }) => name === currContent.name
     );
-    const subContentIndex = currContentProgress.subContentProgress.findIndex(
+    const subContentIndex = currContentProgress.subContentProgress?.findIndex(
       ({ id }) => id === newSubContentProgress.id
     );
 
@@ -141,7 +141,6 @@ const Pathways: NextApplicationPage<{
         id: content.id,
         finished: false,
       };
-      console.log(content);
       if (type === "question") {
         questionNumber++;
       }
@@ -305,7 +304,7 @@ const Pathways: NextApplicationPage<{
                   <DropdownTab
                     isFinishedModule={
                       pathwaysProgress
-                        .find(({ name }) => pathwayInfo.name === name)
+                        ?.find(({ name }) => pathwayInfo.name === name)
                         .moduleProgress?.find(
                           (moduleProgress) => moduleProgress.name === name
                         )?.finished
@@ -329,12 +328,11 @@ const Pathways: NextApplicationPage<{
                     )}
                     onClick={(contentTitle) => {
                       setCurrModuleId(_id);
-                      let currContent = presetContent.find(
+                      let currContent = presetContent?.find(
                         ({ name }) => name === contentTitle
                       );
-                      console.log(currContent);
                       if (!currContent) {
-                        currContent = personalizedContent.find(
+                        currContent = personalizedContent?.find(
                           ({ name }) => name === contentTitle
                         );
                       }
@@ -384,7 +382,7 @@ function checkPathwayDiscrepancies(pathwayInfo: Pathway) {
       pathwayProgress.name = pathwayInfo.name;
     }
     pathwayProgress.moduleProgress.forEach((progressModule, index) => {
-      const matchingModule = pathwayInfo.modules.find(
+      const matchingModule = pathwayInfo.modules?.find(
         ({ _id }) => progressModule.moduleId === _id.toString()
       );
       if (matchingModule && matchingModule.name !== progressModule.name) {
@@ -392,11 +390,11 @@ function checkPathwayDiscrepancies(pathwayInfo: Pathway) {
       }
       progressModule.contentProgress.forEach(
         (progressContent, contentIndex) => {
-          let matchingContent = matchingModule.presetContent.find(
+          let matchingContent = matchingModule.presetContent?.find(
             ({ name }) => progressContent.name === name
           );
           if (!matchingContent) {
-            matchingContent = matchingModule.personalizedContent.find(
+            matchingContent = matchingModule.personalizedContent?.find(
               ({ name }) => progressContent.name === name
             );
           }

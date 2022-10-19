@@ -19,13 +19,11 @@ const UploadPage = ({
 }) => {
   const router = useRouter();
   const session = useSession();
-  if (session.data?.user?.email === "test31@gmail.com") {
+  if (session.data?.user?.email === "hello.cledge@outlook.com") {
     return (
       <PageErrorBoundary>
         <div className="">
-          <div className="">
-            {children}
-          </div>
+          <div className="">{children}</div>
         </div>
       </PageErrorBoundary>
     );

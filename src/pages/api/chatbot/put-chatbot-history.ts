@@ -37,45 +37,59 @@ export const putChatbotHistory = async (
       const client = await MongoClient.connect(process.env.MONGO_URL);
       let addedLists = 0;
       await Promise.all(
-        history.map(async (object) => {
-          if (
-            object._id ||
-            (await client.db("chatbot").collection("chatbot-history").findOne({
-              firebaseId: object.firebaseId,
-              index: object.index,
-            }))
-          ) {
-            delete object._id;
-            await client.db("chatbot").collection("chatbot-history").updateOne(
-              {
-                firebaseId: object.firebaseId,
-                index: object.index,
-              },
-              { $set: object }
-            );
-          } else {
-            addedLists++;
-            await client
-              .db("chatbot")
-              .collection("chatbot-history")
-              .insertOne(object as ModifiedChatbotHistory);
-          }
-          const newestDoc = await client
+        history
+          .map((object) => async () => {
+            if (
+              object._id ||
+              (await client
+                .db("chatbot")
+                .collection("chatbot-history")
+                .findOne({
+                  firebaseId: object.firebaseId,
+                  index: object.index,
+                }))
+            ) {
+              delete object._id;
+              await client
+                .db("chatbot")
+                .collection("chatbot-history")
+                .updateOne(
+                  {
+                    firebaseId: object.firebaseId,
+                    index: object.index,
+                  },
+                  { $set: object }
+                );
+            } else {
+              addedLists++;
+              await client
+                .db("chatbot")
+                .collection("chatbot-history")
+                .insertOne(object as ModifiedChatbotHistory);
+            }
+          })
+          .map((func) => func())
+      );
+      if (addedLists > 0) {
+        await updateUser(history[0].firebaseId, {
+          chatbotHistoryLength: currHistoryLength + addedLists,
+        });
+      } else {
+        const newestDoc = (
+          await client
             .db("chatbot")
             .collection("chatbot-history")
             .find({ firebaseId: history[0].firebaseId })
             .sort({ index: -1 })
-            .limit(1);
-          if (addedLists > 0) {
-            updateUser(newestDoc.firebaseId, currHistoryLength + addedLists);
-          } else if (
-            newestDoc.index + 1 > currHistoryLength ||
-            currHistoryLength < newestDoc.index + 1
-          ) {
-            updateUser(newestDoc.firebaseId, newestDoc.index + 1);
-          }
-        })
-      );
+            .limit(1)
+            .toArray()
+        )[0];
+        if (newestDoc && newestDoc.index + 1 !== currHistoryLength) {
+          await updateUser(history[0].firebaseId, {
+            chatbotHistoryLength: newestDoc.index + 1,
+          });
+        }
+      }
       res();
       client.close();
     } catch (e) {

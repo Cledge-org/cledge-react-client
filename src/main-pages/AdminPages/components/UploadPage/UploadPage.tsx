@@ -17,7 +17,7 @@ const UploadPage: NextApplicationPage<{
 }> = ({ children, onUpload }) => {
   const router = useRouter();
   const session = useSession();
-  if (session.data?.user?.email === "test31@gmail.com") {
+  if (session.data?.user?.email === "hello.cledge@outlook.com") {
     return (
       <PageErrorBoundary>
         <div className="container-fluid p-5 d-flex flex-column align-items-center justify-content-center">

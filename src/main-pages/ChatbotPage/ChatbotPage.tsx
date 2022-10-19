@@ -288,7 +288,7 @@ const Chatbot: NextApplicationPage<{
       setCurrOptions(downvoteWorkflow.e1.possibleChoices);
       setShouldUpdateBackend(true);
     },
-    [currWorkflow, downvoteWorkflow, currOptions, pickedOptions]
+    [currWorkflow, downvoteWorkflow, currOptions, pickedOptions, messageList]
   );
 
   const onOptionClick = async (option: string, optionIndex: number) => {

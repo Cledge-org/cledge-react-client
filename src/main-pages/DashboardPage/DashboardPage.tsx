@@ -81,8 +81,8 @@ const DashboardPage = ({
   return (
     <div>
       <div
-        className="d-flex align-items-center justify-content-center w-100 vh-100"
-        style={{ backgroundColor: "#F9FAFF" }}
+        className="d-flex align-items-center justify-content-center w-100"
+        style={{ backgroundColor: "#F9FAFF", height: "70vh" }}
       >
         <div className="d-flex flex-column w-75" style={{ height: "90%" }}>
           <div
@@ -95,11 +95,38 @@ const DashboardPage = ({
             className="cl-dark-text fw-bold pb-2"
             style={{ fontSize: "18px" }}
           >
+            Counselor booking
+          </div>
+          <div className="w-100 center-child">
+            <div
+              className="d-flex cl-dark-text flex-column justify-content-between w-100 p-3"
+              style={{
+                height: "100%",
+                borderRadius: "10px",
+                backgroundColor: "white",
+                border: "1px solid #E0DFE8",
+              }}
+            >
+              <div style={{ fontSize: "18px" }} className="fw-bold">
+                Sign up for your complementary 30 minute session on our{" "}
+                <a
+                  className="cl-blue"
+                  href="https://calendly.com/ayan-college-counseling/cledge-uw-cs-advising-session"
+                >
+                  calendly
+                </a>
+              </div>
+            </div>
+          </div>
+          <div
+            className="cl-dark-text fw-bold pb-2 mt-2"
+            style={{ fontSize: "18px" }}
+          >
             The essential assistance we provide
           </div>
           <div
             className="d-flex flex-row align-items-center"
-            style={{ height: "38%" }}
+            style={{ height: "60%" }}
           >
             <div
               className="d-flex flex-column justify-content-between w-100 p-3"
@@ -203,11 +230,14 @@ const DashboardPage = ({
               >
                 <div
                   className="cl-dark-text fw-bold mb-3"
-                  style={{ fontSize: "24px" }}
+                  style={{ fontSize: width >= 1500 ? " 24px" : "22px" }}
                 >
                   Chat with our AI counselor
                 </div>
-                <div className="cl-mid-gray" style={{ fontSize: "18px" }}>
+                <div
+                  className="cl-mid-gray"
+                  style={{ fontSize: width >= 1500 ? "18px" : "16px" }}
+                >
                   Anything you are not sure about?
                   <br />
                   Our AI counselor is here for you 24/7
