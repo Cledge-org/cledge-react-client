@@ -31,7 +31,7 @@ export function getAllPathwayProgress(
 ): Promise<PathwayProgress[]> {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       const pathwaysDb = client.db("pathways");
       const usersDb = client.db("users");
       const [pathways, userInfo, progressByModule]: [

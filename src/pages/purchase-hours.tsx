@@ -2,7 +2,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { getEnvVariable } from "src/config/getConfig";
 
 const stripePromise = loadStripe(
-  getEnvVariable("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY")
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
 export default function Checkout() {

@@ -25,8 +25,7 @@ export const getNumAccounts = async (
   return new Promise(async (res, err) => {
     try {
       const client =
-        overrideClient ??
-        (await MongoClient.connect(getEnvVariable("MONGO_URL")));
+        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
       res(await client.db("users").collection("users").count());
       if (!overrideClient) {
         client.close();

@@ -43,7 +43,7 @@ export const putPathwayModulePersonalizedContent = (
   }
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       try {
         if (!contentId && content) {
           let insertedDoc = await client

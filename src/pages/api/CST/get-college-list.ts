@@ -33,7 +33,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const getCollegeIdList = (user_id: String): Promise<Object> => {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       const userDb = client.db("users");
       const userCollegeList = await userDb
         .collection("college-list")
@@ -63,7 +63,7 @@ export const getCollegeListInfo = async (
       collegeList.forEach((curCollege) => {
         collegeIdList.push(curCollege["college_id"]);
       });
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       const collegeDb = client.db("colleges");
       const collegeListData = await collegeDb
         .collection("colleges")

@@ -89,7 +89,7 @@ const questionObjectId = new ObjectId();
 
 beforeEach(async () => {
   // Clear relevant databases
-  const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+  const client = await MongoClient.connect(process.env.MONGO_URL);
   for (const connection of await client.db("questions").collections()) {
     await connection.deleteMany({});
   }

@@ -32,7 +32,7 @@ export const rateResource = async (
   vote: boolean
 ): Promise<void> => {
   return new Promise(async (res, err) => {
-    const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+    const client = await MongoClient.connect(process.env.MONGO_URL);
     try {
       const resourceVoters: ResourceVoters = await client
         .db("resources")

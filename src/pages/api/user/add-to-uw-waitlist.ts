@@ -25,7 +25,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putWaitlistData = async (data: any): Promise<void> => {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       await client.db("users").collection("uw-waitlist").insertOne(data);
       res();
       client.close();

@@ -28,12 +28,12 @@ const PageErrorBoundary = ({
         </div>
       )}
       onError={(error) => {
-        if (getEnvVariable("NEXTAUTH_URL") !== "http://localhost:3000") {
+        if (process.env.NEXTAUTH_URL !== "http://localhost:3000") {
           logEvent(getAnalytics(getFirebaseClientApp()), "error", {
             error_name: error.name as string,
           });
           alertSlackError(
-            `${getEnvVariable("NEXTAUTH_URL") + router.pathname}\n${
+            `${process.env.NEXTAUTH_URL + router.pathname}\n${
               error.name as string
             }\n\n${error.message as string}\n\n${error.stack as string}\n\n${
               error.cause && (error.cause.stack as string)

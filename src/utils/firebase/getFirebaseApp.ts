@@ -1,15 +1,14 @@
 import { initializeApp, getApp } from "firebase/app";
 import { getEnvVariable } from "src/config/getConfig";
-
 const firebaseCreds = {
-  apiKey: getEnvVariable("NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY"),
-  authDomain: getEnvVariable("NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN"),
-  projectId: getEnvVariable("NEXT_PUBLIC_FIREBASE_PROJECT_ID"),
-  appId: getEnvVariable("NEXT_PUBLIC_FIREBASE_APP_ID"),
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
-
 export const getFirebaseClientApp = () => {
   let firebaseApp;
+  console.log(firebaseCreds);
   try {
     firebaseApp = getApp();
   } catch (error) {

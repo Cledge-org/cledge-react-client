@@ -25,7 +25,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export function getPost(slug: string): Promise<any> {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       const resourcesDb = client.db("resources");
       const [post]: [any] = await Promise.all([
         resourcesDb.collection("articles").findOne({

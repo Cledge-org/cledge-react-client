@@ -7,7 +7,7 @@ import UWPurchasePage from "src/main-pages/AuthPages/UWPurchasePage/UWPurchasePa
 import { callCreatePaymentIntent } from "src/utils/apiCalls";
 
 const stripePromise = loadStripe(
-  getEnvVariable("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY")
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 const UWPurchase = () => {
   const [isLoading, setIsLoading] = useState(true);

@@ -205,7 +205,7 @@ const testDashboard2: Dashboard = {
 
 beforeEach(async () => {
   // clear relevant databases
-  const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+  const client = await MongoClient.connect(process.env.MONGO_URL);
   for (const connection of await client.db("pathways").collections()) {
     await connection.deleteMany({});
   }

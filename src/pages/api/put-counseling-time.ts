@@ -35,7 +35,7 @@ export const updateTime = async (
 ): Promise<void> => {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       if (user.time <= 0) {
         await client
           .db("users")
@@ -74,8 +74,7 @@ const checkDB = async (
   return new Promise(async (res, err) => {
     try {
       const client =
-        overrideClient ??
-        (await MongoClient.connect(getEnvVariable("MONGO_URL")));
+        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
       const result = await client
         .db("users")
         .collection("counseling-time")

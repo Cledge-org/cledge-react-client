@@ -32,8 +32,7 @@ export const getQuestionResponses = (
   return new Promise(async (res, err) => {
     try {
       const client =
-        overrideClient ??
-        (await MongoClient.connect(getEnvVariable("MONGO_URL")));
+        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
       const user_responses = (await client
         .db("users")
         .collection("question-responses")

@@ -24,7 +24,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
 export const putEmail = async (email: string): Promise<void> => {
   return new Promise(async (res, err) => {
-    const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+    const client = await MongoClient.connect(process.env.MONGO_URL);
     try {
       let mailList = (
         await client

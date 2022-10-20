@@ -23,5 +23,9 @@ type EnvVariables =
   | "GOOGLE_SECRET";
 
 export const getEnvVariable = (variable: EnvVariables) => {
+  if (!process.env[variable]) {
+    console.log("BRUH");
+  }
+  console.log(process.env);
   return process.env[variable];
 };

@@ -46,7 +46,7 @@ export const putActivities = (
   }
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       if (activities && insertionId) {
         await client
           .db("metrics")

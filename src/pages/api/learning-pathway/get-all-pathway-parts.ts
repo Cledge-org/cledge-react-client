@@ -23,7 +23,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export function getAllParts(): Promise<PathwayPart_Db[]> {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       const pathwaysDb = client.db("pathways");
       const parts: PathwayPart_Db[] = (await pathwaysDb
         .collection("parts")
@@ -43,7 +43,7 @@ export function getAllParts(): Promise<PathwayPart_Db[]> {
 export function getSpecificPart(partId: ObjectId): Promise<PathwayPart_Db> {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       const pathwaysDb = client.db("pathways");
       const part: PathwayPart_Db = (await pathwaysDb
         .collection("parts")
@@ -78,7 +78,7 @@ export function getSpecificPart(partId: ObjectId): Promise<PathwayPart_Db> {
 export function getSpecificPathwayById(pathwayId: ObjectId): Promise<Pathway> {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       const pathwaysDb = client.db("pathways");
       const pathway: Pathway_Db = (await pathwaysDb
         .collection("pathways")

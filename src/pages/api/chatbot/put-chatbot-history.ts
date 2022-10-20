@@ -35,7 +35,7 @@ export const putChatbotHistory = async (
 ): Promise<void> => {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       let addedLists = 0;
       await Promise.all(
         history

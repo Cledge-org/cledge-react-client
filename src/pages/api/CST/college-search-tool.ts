@@ -30,7 +30,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
       resolve.status(200).send(collegeMetricResult);
     } else {
       const { searchText, top, skip, filters, searchFields } = req.body;
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       const collegeSearchResult = await getCollegeInfo(
         searchText,
         top,

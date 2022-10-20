@@ -25,8 +25,7 @@ export function getAllCheckins(
   return new Promise(async (res, err) => {
     try {
       const client =
-        overrideClient ??
-        (await MongoClient.connect(getEnvVariable("MONGO_URL")));
+        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
       const questionsDb = client.db("questions");
       const allCheckins: QuestionList_Db[] = (await questionsDb
         .collection("question-lists")

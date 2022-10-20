@@ -44,7 +44,7 @@ export const putPathway = async (
   }
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       if (!pathwayId && pathway) {
         await client.db("pathways").collection("pathways").insertOne(pathway);
       } else if (pathwayId && !pathway) {

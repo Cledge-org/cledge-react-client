@@ -52,7 +52,7 @@ export const putResource = async (
     };
   }
   return new Promise(async (res, err) => {
-    const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+    const client = await MongoClient.connect(process.env.MONGO_URL);
     try {
       if (!resourceId && resource) {
         await client

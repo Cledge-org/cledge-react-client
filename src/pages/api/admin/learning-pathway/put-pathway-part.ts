@@ -47,7 +47,7 @@ export const putPart = async (
   }
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       if (!partId && part) {
         await client.db("pathways").collection("parts").insertOne(part);
       } else if (partId && !part) {

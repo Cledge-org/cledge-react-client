@@ -16,7 +16,7 @@ export default NextAuth({
     secret: "3tPVVnhAzQIyBnrgzL/+fRMmJLz8WzzbbLK8QljweTA",
     maxAge: 60 * 60 * 24 * 30,
   },
-  secret: getEnvVariable("NEXT_AUTH_SECRET"),
+  secret: process.env.NEXT_AUTH_SECRET,
   providers: [
     CredentialsProvider({
       async authorize(credentials, req) {

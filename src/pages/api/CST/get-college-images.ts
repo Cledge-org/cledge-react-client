@@ -24,7 +24,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const getCollegeImages = (collegeList): Promise<Object> => {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       const image_db = client.db("images");
       const imageResList = await image_db
         .collection("college_images")

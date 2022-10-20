@@ -53,7 +53,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const createUser = async (user: AccountInfo): Promise<void> => {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       await client.db("users").collection("users").insertOne(user);
       res();
       client.close();

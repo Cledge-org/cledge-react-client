@@ -24,7 +24,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export function getAcademics(userId: string): Promise<Academics> {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const client = await MongoClient.connect(process.env.MONGO_URL);
       const metricsDb = client.db("metrics");
       const academics: Academics = (await metricsDb
         .collection("academics")
