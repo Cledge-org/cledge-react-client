@@ -1,5 +1,6 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -23,7 +24,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export function getActivities(userId: string): Promise<Activities> {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
       const metricsDb = client.db("metrics");
       const extracurriculars: Activities = (await metricsDb
         .collection("extracurriculars")

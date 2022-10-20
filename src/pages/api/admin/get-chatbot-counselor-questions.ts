@@ -1,5 +1,6 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -23,7 +24,7 @@ export const getChatbotCounselorQuestions = async (): Promise<
   ChatbotCounselorQuestionData[]
 > => {
   return new Promise(async (res, err) => {
-    const client = await MongoClient.connect(process.env.MONGO_URL);
+    const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
     try {
       const allQuestions = (await client
         .db("chatbot")

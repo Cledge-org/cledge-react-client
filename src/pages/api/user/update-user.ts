@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import assert from "assert";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -35,7 +35,7 @@ export const updateUser = async (
   user: AccountInfo | any
 ): Promise<void> => {
   return new Promise(async (res, err) => {
-    const client = await MongoClient.connect(process.env.MONGO_URL);
+    const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
     try {
       // Remove undefined and null fields in user as to not delete them
       if (user._id) {

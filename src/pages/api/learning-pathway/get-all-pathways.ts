@@ -1,5 +1,6 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -21,7 +22,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export function getAllPathways(): Promise<Pathway[]> {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
       const pathwaysDb = client.db("pathways");
       const pathways: Pathway_Db[] = (await pathwaysDb
         .collection("pathways")

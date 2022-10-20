@@ -1,5 +1,6 @@
-import { Db, MongoClient, ObjectId, WithId } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -21,33 +22,30 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   }
 };
 
-export function getPost(
-    slug: string
-  ): Promise<any> {
-    return new Promise(async (res, err) => {
-      try {
-        const client = await MongoClient.connect(process.env.MONGO_URL);
-        const resourcesDb = client.db("resources");
-        const [post] : [any] =
-          await Promise.all([
-            resourcesDb.collection("articles").findOne({
-              _slug: slug
-            }) as Promise<any>,
-          ]);
-        res({
-          title: post.title,
+export function getPost(slug: string): Promise<any> {
+  return new Promise(async (res, err) => {
+    try {
+      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
+      const resourcesDb = client.db("resources");
+      const [post]: [any] = await Promise.all([
+        resourcesDb.collection("articles").findOne({
           _slug: slug,
-          author: post.author,
-          date: post.date,
-          description: post.description,
-          content: post.content,
-          topics: post.topics,
-          image: post.image,
-          keywords: post.keywords
-        });
-        client.close();
-      } catch (e) {
-        err(e);
-      }
-    });
-  }
+        }) as Promise<any>,
+      ]);
+      res({
+        title: post.title,
+        _slug: slug,
+        author: post.author,
+        date: post.date,
+        description: post.description,
+        content: post.content,
+        topics: post.topics,
+        image: post.image,
+        keywords: post.keywords,
+      });
+      client.close();
+    } catch (e) {
+      err(e);
+    }
+  });
+}
