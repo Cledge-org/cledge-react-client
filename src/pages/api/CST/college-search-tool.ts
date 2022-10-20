@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { SearchClient, AzureKeyCredential } from "@azure/search-documents";
 import dicts from "../../../../college-search-tool/assets/cst_result_parse.json";
 import { MongoClient } from "mongodb";
+import { getEnvVariable } from "src/config/getConfig";
 
 // References:
 // https://docs.microsoft.com/en-us/javascript/api/overview/azure/search-documents-readme?view=azure-node-latest
@@ -29,7 +30,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
       resolve.status(200).send(collegeMetricResult);
     } else {
       const { searchText, top, skip, filters, searchFields } = req.body;
-      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
       const collegeSearchResult = await getCollegeInfo(
         searchText,
         top,

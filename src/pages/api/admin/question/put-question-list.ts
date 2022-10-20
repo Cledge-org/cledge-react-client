@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -39,7 +40,7 @@ export const putQuestionList = (
   }
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
       if (!questionListId && questionList) {
         await client
           .db("questions")

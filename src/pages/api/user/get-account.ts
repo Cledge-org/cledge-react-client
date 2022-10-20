@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -31,7 +32,8 @@ export const getAccountInfo = async (
     console.error(userId);
     try {
       const client =
-        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
+        overrideClient ??
+        (await MongoClient.connect(getEnvVariable("MONGO_URL")));
       res(
         (await client
           .db("users")

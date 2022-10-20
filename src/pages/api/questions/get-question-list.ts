@@ -1,5 +1,6 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -30,7 +31,8 @@ export const getQuestionList = (
   return new Promise(async (res, err) => {
     try {
       const client =
-        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
+        overrideClient ??
+        (await MongoClient.connect(getEnvVariable("MONGO_URL")));
       const questionsDb = client.db("questions");
       const gradeQuestionList: QuestionList_Db = (await questionsDb
         .collection("question-lists")
@@ -62,7 +64,8 @@ export const getQuestionListById = (
   return new Promise(async (res, err) => {
     try {
       const client =
-        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
+        overrideClient ??
+        (await MongoClient.connect(getEnvVariable("MONGO_URL")));
       const questionsDb = client.db("questions");
       const gradeQuestionList: QuestionList_Db = (await questionsDb
         .collection("question-lists")
@@ -96,7 +99,8 @@ export const getQuestionListByDocument = (
   return new Promise(async (res, err) => {
     try {
       const client =
-        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
+        overrideClient ??
+        (await MongoClient.connect(getEnvVariable("MONGO_URL")));
       const questionsDb = client.db("questions");
       const gradeQuestionChunks: QuestionChunk[] = (await Promise.all(
         list.chunks.map((chunkName: any) =>

@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -23,7 +24,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
 export const putEmail = async (email: string): Promise<void> => {
   return new Promise(async (res, err) => {
-    const client = await MongoClient.connect(process.env.MONGO_URL);
+    const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
     try {
       let mailList = (
         await client

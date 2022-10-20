@@ -11,7 +11,16 @@ type EnvVariables =
   | "STRIPE_SECRET_KEY"
   | "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"
   | "PRICE_ID"
-  | "HOURS_PRICE_ID";
+  | "HOURS_PRICE_ID"
+  | "NEXTAUTH_URL"
+  | "NODE_ENV"
+  | "AZURE_CLIENT_ID"
+  | "AZURE_CLIENT_SECRET"
+  | "AZURE_TENANT_NAME"
+  | "AZURE_TENANT_GUID"
+  | "USER_FLOW_AUTH"
+  | "GOOGLE_ID"
+  | "GOOGLE_SECRET";
 
 export const getEnvVariable = (variable: EnvVariables) => {
   return process.env[variable];

@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-
+import { getEnvVariable } from "src/config/getConfig";
 import { getQuestionListByDocument } from "../questions/get-question-list";
 
 export const config = {
@@ -25,7 +25,8 @@ export function getAllCheckins(
   return new Promise(async (res, err) => {
     try {
       const client =
-        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
+        overrideClient ??
+        (await MongoClient.connect(getEnvVariable("MONGO_URL")));
       const questionsDb = client.db("questions");
       const allCheckins: QuestionList_Db[] = (await questionsDb
         .collection("question-lists")

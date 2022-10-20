@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -46,7 +47,7 @@ export const putPart = async (
   }
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
       if (!partId && part) {
         await client.db("pathways").collection("parts").insertOne(part);
       } else if (partId && !part) {

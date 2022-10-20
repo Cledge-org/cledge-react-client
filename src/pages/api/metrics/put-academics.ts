@@ -1,7 +1,6 @@
-import { getTimeProps } from "antd/lib/date-picker/generatePicker";
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -48,7 +47,7 @@ export const putAcademics = (
   }
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
       if (academics && insertionId) {
         await client
           .db("metrics")

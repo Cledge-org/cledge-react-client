@@ -2,6 +2,7 @@ import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ChatbotHistory } from "src/@types/types";
 import { updateUser } from "src/pages/api/user/update-user";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -34,7 +35,7 @@ export const putChatbotHistory = async (
 ): Promise<void> => {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
       let addedLists = 0;
       await Promise.all(
         history

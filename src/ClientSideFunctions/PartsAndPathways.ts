@@ -5,7 +5,7 @@ import { getQuestionListById } from "src/pages/api/questions/get-question-list";
 export function getDashboardParts(userId: string): Promise<PathwayPart[]> {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
       const pathwaysDb = client.db("pathways");
       const parts: PathwayPart_Db[] = (await pathwaysDb
         .collection("parts")
@@ -32,7 +32,7 @@ export function getSpecificFullPart(
 ): Promise<PathwayPart> {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
       const pathwaysDb = client.db("pathways");
       const part: PathwayPart_Db = (await pathwaysDb
         .collection("parts")

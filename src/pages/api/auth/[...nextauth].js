@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AuthFunctions from "./firebase-auth";
+import { getEnvVariable } from "src/config/getConfig";
 
 export default NextAuth({
   pages: {
@@ -15,7 +16,7 @@ export default NextAuth({
     secret: "3tPVVnhAzQIyBnrgzL/+fRMmJLz8WzzbbLK8QljweTA",
     maxAge: 60 * 60 * 24 * 30,
   },
-  secret: process.env.NEXT_AUTH_SECRET,
+  secret: getEnvVariable("NEXT_AUTH_SECRET"),
   providers: [
     CredentialsProvider({
       async authorize(credentials, req) {

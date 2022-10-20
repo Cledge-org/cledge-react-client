@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-
 import { getAllQuestionLists } from "./get-all-questions";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -25,7 +25,8 @@ export function getQuestionProgress(
   return new Promise(async (res, err) => {
     try {
       const client =
-        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
+        overrideClient ??
+        (await MongoClient.connect(getEnvVariable("MONGO_URL")));
       const questionData = await getAllQuestionLists(client);
       res({
         questionData,

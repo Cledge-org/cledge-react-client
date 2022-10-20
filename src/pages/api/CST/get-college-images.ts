@@ -1,5 +1,6 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -23,7 +24,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const getCollegeImages = (collegeList): Promise<Object> => {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const client = await MongoClient.connect(getEnvVariable("MONGO_URL"));
       const image_db = client.db("images");
       const imageResList = await image_db
         .collection("college_images")
