@@ -1,12 +1,13 @@
 import React from "react";
 import "antd/dist/antd.css";
 import { useRouter } from "next/router";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import InfoContainer from "../CollegePage/components/InfoContainer/InfoContainer";
-import { Row, Col, Divider } from "antd";
+import { Row, Col, Divider, Collapse } from "antd";
 import { Tabs, Tab } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import RoomIcon from "@mui/icons-material/Room";
 import OverviewCard from "src/main-pages/CollegeDetailPage/components/OverviewCard/OverviewCard";
 import DataRow from "./components/DataRow/DataRow";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -16,6 +17,7 @@ import "chart.js/auto";
 import { connect } from "react-redux";
 import styles from "./college-detail-page.module.scss";
 import classNames from "classnames";
+import { Map, Marker, ZoomControl } from "pigeon-maps";
 
 const CollegeDetailPage = ({
   questionResponses,
@@ -26,30 +28,21 @@ const CollegeDetailPage = ({
   const router = useRouter();
   const raw = router.query.data;
   const data = JSON.parse(raw.toString());
+  const { Panel } = Collapse;
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
   const userResponse = questionResponses.find(
     ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
   )?.response;
+
   const userTier = userResponse.includes("Level 1")
     ? 1
     : userResponse.includes("Level 2")
     ? 2
     : 3;
-  const BackButton = styled.div`
-    border-radius: 50%;
-    box-shadow: 0px 0px 22px 9px rgba(0, 0, 0, 0.06);
-    position: sticky;
-    width: 50px;
-    height: 50px;
-    margin: 0;
-    top: 100px;
-    left: 50px;
-    z-index: 100;
-    background: white;
-  `;
 
   // *********************Data Parsing Functions*******************
   function parsePercent(data) {
@@ -87,7 +80,7 @@ const CollegeDetailPage = ({
     return data ? data : "No data";
   }
 
-  // ********************Chart Data*******************************
+  // ********************Chart/Map Data*******************************
   const ethnicityData = [
     data["student_ethnicity_ratio"]["asian"] +
       data["student_ethnicity_ratio"]["native_hawaiian_or_pacific_islander"],
@@ -193,6 +186,7 @@ const CollegeDetailPage = ({
     ],
   };
 
+  //***************Page Content *************/
   return (
     <Wrapper>
       <div
@@ -245,7 +239,7 @@ const CollegeDetailPage = ({
             <Tab className="me-5" label="Overview" />
             <Tab className="mx-5" label="Admission" />
             <Tab className="mx-5" label="Academics" />
-            <Tab className="mx-5" label="Finance" />
+            <Tab className="mx-5" label="Financials" />
             <Tab className="ms-5" label="Student" />
             {/* <Tab label="Insights" /> */}
           </Tabs>
@@ -309,6 +303,31 @@ const CollegeDetailPage = ({
                   </h3>
                 </div>
               </InfoContainer>
+              {data["coordinates"]["latitude"] &&
+              data["coordinates"]["longitude"] ? (
+                <div className="rounded">
+                  <Map
+                    height={300}
+                    defaultCenter={[
+                      data["coordinates"]["latitude"],
+                      data["coordinates"]["longitude"],
+                    ]}
+                    attribution={false}
+                    defaultZoom={10}>
+                    <ZoomControl />
+                    <Marker
+                      width={40}
+                      color={"#415EE6"}
+                      anchor={[
+                        data["coordinates"]["latitude"],
+                        data["coordinates"]["longitude"],
+                      ]}
+                    />
+                  </Map>
+                </div>
+              ) : (
+                <></>
+              )}
               {data["mission_statement"] ? (
                 <InfoContainer>
                   <h3>Mission Statement</h3>
@@ -408,21 +427,21 @@ const CollegeDetailPage = ({
                 <div className="inline">
                   <p className="cl-dark-text">Highschool GPA</p>
                   <h3 className="cl-dark-text">
-                    {data["admission_factors"]["high_school_gpa"]}
+                    {parse(data["admission_factors"]["high_school_gpa"])}
                   </h3>
                 </div>
                 <Divider />
                 <div className="inline">
                   <p className="cl-dark-text">Highschool rank</p>
                   <h3 className="cl-dark-text">
-                    {data["admission_factors"]["high_school_rank"]}
+                    {parse(data["admission_factors"]["high_school_rank"])}
                   </h3>
                 </div>
                 <Divider />
                 <div className="inline">
                   <p className="cl-dark-text">Highschool record</p>
                   <h3 className="cl-dark-text">
-                    {data["admission_factors"]["high_school_record"]}
+                    {parse(data["admission_factors"]["high_school_record"])}
                   </h3>
                 </div>
                 <Divider />
@@ -431,14 +450,18 @@ const CollegeDetailPage = ({
                     College-Prep Program Completion
                   </p>
                   <h3 className="cl-dark-text">
-                    {data["admission_factors"]["completion_college_prep"]}
+                    {parse(
+                      data["admission_factors"]["completion_college_prep"]
+                    )}
                   </h3>
                 </div>
                 <Divider />
                 <div className="inline">
                   <p className="cl-dark-text">Letters of recommendation</p>
                   <h3 className="cl-dark-text">
-                    {data["admission_factors"]["letters_of_recommendation"]}
+                    {parse(
+                      data["admission_factors"]["letters_of_recommendation"]
+                    )}
                   </h3>
                 </div>
                 <Divider />
@@ -447,18 +470,20 @@ const CollegeDetailPage = ({
                     Formal Demonstration of Competencies
                   </p>
                   <h3 className="cl-dark-text">
-                    {
+                    {parse(
                       data["admission_factors"][
                         "formal_demonstration_of_competencies"
                       ]
-                    }
+                    )}
                   </h3>
                 </div>
                 <Divider />
                 <div className="inline">
                   <p>SAT/ACT</p>
                   <h3>
-                    {data["admission_factors"]["standardized_test_scores"]}
+                    {parse(
+                      data["admission_factors"]["standardized_test_scores"]
+                    )}
                   </h3>
                 </div>
                 <Divider />
@@ -495,12 +520,18 @@ const CollegeDetailPage = ({
                   colNum={3}
                   sub1="Overall average"
                   sub2={
-                    data["sat/act_score"]["sat_critical_reading_25"] +
+                    data["sat/act_score"]["sat_critical_reading_25"] &&
                     data["sat/act_score"]["sat_math_25"]
+                      ? data["sat/act_score"]["sat_critical_reading_25"] +
+                        data["sat/act_score"]["sat_math_25"]
+                      : "No Data"
                   }
                   sub3={
-                    data["sat/act_score"]["sat_critical_reading_75"] +
+                    data["sat/act_score"]["sat_critical_reading_75"] &&
                     data["sat/act_score"]["sat_math_75"]
+                      ? data["sat/act_score"]["sat_critical_reading_75"] +
+                        data["sat/act_score"]["sat_math_75"]
+                      : "No Data"
                   }
                   type="content"
                 />
@@ -605,7 +636,85 @@ const CollegeDetailPage = ({
           </Row>
         ) : value == 2 ? (
           <Row gutter={[16, 16]} justify="space-evenly">
-            <Col span={12}>
+            <Col span={15}>
+              <InfoContainer>
+                <h1>Education</h1>
+                <div>
+                  <p className="cl-dark-text">Undergradate Majors Offered</p>
+                  {Object.keys(data["bachelor_degree_disciplines"]).length !==
+                  0 ? (
+                    <Collapse ghost>
+                      <Panel header="See All" key="1">
+                        {(() => {
+                          let majors = data["bachelor_degree_disciplines"];
+                          console.log(majors);
+                          let majorList = [];
+                          Object.entries(majors).map(([k, v]) => {
+                            if (v) {
+                              majorList.push(<p>{k}</p>);
+                            }
+                          });
+                          if (majorList.length === 0) return "No Data";
+                          return majorList;
+                        })()}
+                      </Panel>
+                    </Collapse>
+                  ) : (
+                    "No Data"
+                  )}
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">Most popular Area of Study</p>
+                  <h3 className="cl-dark-text">
+                    {(() => {
+                      let d = data["study_disciplines"];
+                      if (!d) {
+                        return "No Data";
+                      }
+                      let mostPopularArea = Object.keys(d).reduce(function (
+                        a,
+                        b
+                      ) {
+                        return d[a] > d[b] ? a : b;
+                      });
+                      return mostPopularArea ? mostPopularArea : "No Data";
+                    })()}
+                  </h3>
+                </div>
+              </InfoContainer>
+              <InfoContainer>
+                <h1>Faculty Statistics</h1>
+                <div className="inline">
+                  <p className="cl-dark-text">Total Instructional Staff</p>
+                  <h3 className="cl-dark-text">
+                    {parseNumber(data["instructional_staff"]["total"])}
+                  </h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">Total Research Staff</p>
+                  <h3 className="cl-dark-text">
+                    {parseNumber(data["research_staff_count"])}
+                  </h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">Total Male Staff</p>
+                  <h3 className="cl-dark-text">
+                    {parseNumber(data["instructional_staff"]["men"])}
+                  </h3>
+                </div>
+                <Divider />
+                <div className="inline">
+                  <p className="cl-dark-text">Total Female Staff</p>
+                  <h3 className="cl-dark-text">
+                    {parseNumber(data["instructional_staff"]["women"])}
+                  </h3>
+                </div>
+              </InfoContainer>
+            </Col>
+            <Col span={9}>
               <InfoContainer>
                 <h1>Academic Statistics</h1>
                 <div className="inline">
@@ -622,8 +731,6 @@ const CollegeDetailPage = ({
                   </h3>
                 </div>
               </InfoContainer>
-            </Col>
-            <Col span={12}>
               <InfoContainer>
                 <h1>Academic Offerings</h1>
                 {/* TODO No Data Found
@@ -1035,36 +1142,6 @@ const CollegeDetailPage = ({
                 sub13="Live Off Campus Students"
                 sub13data={parse(data["live_off_campus_student_count"])}
               />
-              <InfoContainer>
-                <h1>Faculty Statistics</h1>
-                <div className="inline">
-                  <p className="cl-dark-text">Total Instructional Staff</p>
-                  <h3 className="cl-dark-text">
-                    {parseNumber(data["instructional_staff"]["total"])}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Total Research Staff</p>
-                  <h3 className="cl-dark-text">
-                    {parseNumber(data["research_staff_count"])}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Total Male Staff</p>
-                  <h3 className="cl-dark-text">
-                    {parseNumber(data["instructional_staff"]["men"])}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Total Female Staff</p>
-                  <h3 className="cl-dark-text">
-                    {parseNumber(data["instructional_staff"]["women"])}
-                  </h3>
-                </div>
-              </InfoContainer>
             </Col>
             <Col span={9}>
               <InfoContainer>
