@@ -85,7 +85,7 @@ const College = ({
   function getData() {
     let data = axios({
       method: "post",
-      url: "api/college-search-tool",
+      url: "api/CST/college-search-tool",
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
         "Access-Control-Allow-Origin": "*",
@@ -93,6 +93,7 @@ const College = ({
       data: JSON.stringify(requestData),
     })
       .then(function (response) {
+        console.log(response.data);
         return response.data;
       })
       .catch(function (error) {
