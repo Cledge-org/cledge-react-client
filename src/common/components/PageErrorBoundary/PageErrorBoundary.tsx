@@ -33,7 +33,7 @@ const PageErrorBoundary = ({
             `${process.env.NEXTAUTH_URL + router.pathname}\n${
               error.name as string
             }\n\n${error.message as string}\n\n${error.stack as string}\n\n${
-              error.cause && (error.cause?.stack as string)
+              error.cause && (error.cause as string)
             }\n\n`
           );
         }
