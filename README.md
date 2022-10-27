@@ -2,8 +2,13 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First, install dependencies and then create a docker container:
+```bash
+npm install
+docker compose -f docker-compose.local.yml create
+```
 
+Next, run the development server:
 ```bash
 npm run dev
 # or
