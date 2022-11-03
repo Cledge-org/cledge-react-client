@@ -647,7 +647,6 @@ const CollegeDetailPage = ({
                       <Panel header="See All" key="1">
                         {(() => {
                           let majors = data["bachelor_degree_disciplines"];
-                          console.log(majors);
                           let majorList = [];
                           Object.entries(majors).map(([k, v]) => {
                             if (v) {

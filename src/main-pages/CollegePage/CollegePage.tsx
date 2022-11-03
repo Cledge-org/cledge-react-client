@@ -93,7 +93,6 @@ const College = ({
       data: JSON.stringify(requestData),
     })
       .then(function (response) {
-        console.log(response.data);
         return response.data;
       })
       .catch(function (error) {
