@@ -509,7 +509,7 @@ const Chatbot: NextApplicationPage<{
                                   messageList[historyIndex].messages[
                                     index + 1
                                   ] as MessageProps
-                                ).isOnLeft
+                                )?.isOnLeft
                               }
                               question={question}
                               message={message}
