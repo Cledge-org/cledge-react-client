@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { NextApplicationPage } from "../AppPage/AppPage";
-import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import DropdownTab from "../../common/components/DropdownTab/DropdownTab";
 import Footer from "../../common/components/Footer/Footer";
@@ -191,7 +190,7 @@ const Metrics: NextApplicationPage<{
                   <SubTitle
                     updatePage="Extracurriculars"
                     updateChunk="All Activities"
-                    title="Overall Tier"
+                    title="Overall Extracurriculars Tier"
                     isDivider
                   />
                   <div className="d-flex flex-row justify-content-end">

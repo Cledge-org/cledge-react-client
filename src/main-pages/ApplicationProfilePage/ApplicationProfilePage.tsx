@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import CardCheckIn from "../../common/components/Cards/CardCheckIn/CardCheckIn";
 import TabButton from "../../common/components/TabButton/TabButton";
+import Footer from "../../common/components/Footer/Footer";
 
 import { NextApplicationPage } from "../AppPage/AppPage";
 import QuestionSubPageHeader from "../../common/components/SubpageHeader/SubpageHeader";
@@ -306,6 +307,7 @@ const ApplicationProfilePage: NextApplicationPage<{
           )}
         </div>
       </div>
+      <Footer />
     </PageErrorBoundary>
   );
 };

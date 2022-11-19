@@ -18,7 +18,7 @@ const TierRange = ({
           style={{
             backgroundColor: "#f7bc76",
             position: "absolute",
-            height: "118%",
+            height: "100%",
             width: "34.8%",
             zIndex: 1,
             left: `${offSet * 100 - offSet * 34 - 1}%`,

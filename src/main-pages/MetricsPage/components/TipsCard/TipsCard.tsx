@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 const TipsCard = ({
@@ -51,7 +52,19 @@ const TipsCard = ({
               borderRadius: "10px",
             }}
           >
-            {tip}
+            {tip?.includes("https") ? (
+              <>
+                {tip.substring(0, tip.indexOf("https"))}
+                <br />
+                <Link href={tip.substring(tip.indexOf("https"))}>
+                  <a className="cl-blue" target="_blank">
+                    View Resource
+                  </a>
+                </Link>
+              </>
+            ) : (
+              tip
+            )}
           </div>
         ))}
         <div
@@ -68,7 +81,7 @@ const TipsCard = ({
                 query: { page: updatePage, chunk: updateChunk },
               });
             }}
-            className="cl-btn-clear"
+            className="cl-btn-blue"
           >
             Update my profile
           </button>
