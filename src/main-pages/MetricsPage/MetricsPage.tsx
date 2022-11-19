@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { NextApplicationPage } from "../AppPage/AppPage";
-import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
 import DropdownTab from "../../common/components/DropdownTab/DropdownTab";
 import Footer from "../../common/components/Footer/Footer";

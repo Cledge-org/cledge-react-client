@@ -4,12 +4,12 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { connect } from "react-redux";
+import QuickAccessLinks from "src/main-pages/DashboardPage/components/QuickAccessLinks/QuickAccessLinks";
 import Footer from "../../common/components/Footer/Footer";
 import BlogCarouselItem from "src/main-pages/WelcomePage/components/blogsCarousel/components/BlogCaroselItem";
 import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import styles from "./dashboard-page.module.scss";
-import QuickAccessLinks from "src/main-pages/DashboardPage/components/QuickAccessLinks/QuickAccessLinks";
 
 const DashboardPage = ({
   accountInfo,
