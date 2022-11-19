@@ -278,13 +278,13 @@ const Chatbot: NextApplicationPage<{
   }, [accountInfo, currWorkflow]);
 
   const onDownVote = useCallback(
-    (message: string, answer: string) => {
+    (question: string, answer: string) => {
       setCurrWorkflow("downvote");
       setPickedOptions((pickedOptions) => [...pickedOptions, []]);
       addMessages(
         getChatbotMessagesFormatted(downvoteWorkflow.e1.chatbotMessages)
       );
-      setCurrProblematicMessage({ question: message, answer });
+      setCurrProblematicMessage({ question: question, answer });
       setCurrOptions(downvoteWorkflow.e1.possibleChoices);
       setShouldUpdateBackend(true);
     },

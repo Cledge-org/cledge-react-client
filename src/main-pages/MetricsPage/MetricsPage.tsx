@@ -191,7 +191,7 @@ const Metrics: NextApplicationPage<{
                   <SubTitle
                     updatePage="Extracurriculars"
                     updateChunk="All Activities"
-                    title="Overall Tier"
+                    title="Overall Extracurriculars Tier"
                     isDivider
                   />
                   <div className="d-flex flex-row justify-content-end">
