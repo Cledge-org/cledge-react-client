@@ -355,7 +355,7 @@ export declare global {
   }
 }
 
-interface collegeListIndivudialInfo {
+interface collegeListIndividualInfo {
   college_id: string;
   fit_type: -1 | 0 | 1 | 2 | 3;
   img_url: string;
@@ -367,7 +367,7 @@ interface collegeListIndivudialInfo {
   college_type: "Public" | "Private";
 }
 
-interface collegeInfo {
+interface CollegeInfo {
   _id: ObjectId | string;
   college_id: string;
   img_url: string;
@@ -379,6 +379,12 @@ interface collegeInfo {
   in_state_tuition: number;
   out_state_tuition: number;
   college_type: "Public" | "Private";
+}
+
+interface CollegeDB {
+  _id: ObjectID | string;
+  firebaseId: string;
+  college_list: collegeListIndivudialInfo[];
 }
 
 interface collegeListElementRaw {

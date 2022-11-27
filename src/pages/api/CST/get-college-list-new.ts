@@ -19,7 +19,8 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
       resolve.status(500).send(e);
     }
   }  
-};
+
+  };
 
 export const getCollegeList = (userId: string): Promise<any> => {
   return new Promise(async (res, err) => {

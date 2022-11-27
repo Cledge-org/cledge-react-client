@@ -2,7 +2,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import { GetServerSidePropsContext } from "next";
 import { getSession, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
-import { collegeListIndivudialInfo } from "src/@types/types";
+import { collegeListIndividualInfo } from "src/@types/types";
 import CollegeListPage from "src/main-pages/CollegeList/CollegeListPage";
 
 // comment and uncomment to toggle between server and client side rendering
@@ -15,7 +15,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       ).user.uid
     }`
   );
-  const responseJson = (await response.json()) as collegeListIndivudialInfo[];
+  const responseJson = (await response.json()) as collegeListIndividualInfo[];
   return {
     props: {
       serverSideData: responseJson["college_list"],
@@ -24,7 +24,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 }
 
 function CollegeList({ serverSideData }) {
-  const [data, setData] = useState<collegeListIndivudialInfo[]>(serverSideData);
+  const [data, setData] = useState<collegeListIndividualInfo[]>(serverSideData);
 
   // Uncomment this to enable client side rendering
   // const {data:session} = useSession()

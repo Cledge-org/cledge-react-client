@@ -4,25 +4,24 @@ import { NextApplicationPage } from "src/main-pages/AppPage/AppPage";
 import styles from "./college-list-page.module.scss";
 import TierCard from "src/main-pages/CollegeList/components/TierCard";
 import {
-  collegeListElementRaw,
-  collegeListIndivudialInfo,
+  collegeListIndividualInfo,
 } from "src/@types/types";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@mui/material";
 import { useSession } from "next-auth/react";
 
 const CollegeListPage: NextApplicationPage<{
   accountInfo: AccountInfo;
-  collegeList: collegeListIndivudialInfo[];
+  collegeList: collegeListIndividualInfo[];
   setCollegeList;
-}> = ({ accountInfo, collegeList, setCollegeList }) => {
-  const [targetSchools, setTargetSchools] = useState<
-    collegeListIndivudialInfo[]
-  >([]);
-  const [fitSchools, setFitSchools] = useState<collegeListIndivudialInfo[]>([]);
-  const [reachSchools, setReachSchools] = useState<collegeListIndivudialInfo[]>(
-    []
-  );
+}> = ({ collegeList, setCollegeList }) => {
+  let targetList = [];
+  let fitList = [];
+  let reachList = [];
+  const [targetSchools, setTargetSchools] = useState(targetList);
+  const [fitSchools, setFitSchools] = useState(fitList);
+  const [reachSchools, setReachSchools] = useState(reachList);
+
   const [reloadCounter, setReloadCounter] = useState<number>(0);
   const { data: session } = useSession();
   const handleSubmit = async () => {
@@ -44,7 +43,6 @@ const CollegeListPage: NextApplicationPage<{
     const temporaryList = collegeList.filter(
       (college) => college.college_id != college_id
     );
-    setCollegeList(temporaryList);
     setReloadCounter(reloadCounter + 1);
   };
 
@@ -54,7 +52,6 @@ const CollegeListPage: NextApplicationPage<{
       const temporaryElement = temporaryList[result.source.index];
       temporaryList.splice(result.source.index, 1);
       temporaryList.splice(result.destination.index, 0, temporaryElement);
-      setCollegeList(temporaryList);
       setReloadCounter(reloadCounter + 1);
     }
     if (result.destination.droppableId != result.source.droppableId) {
@@ -62,7 +59,6 @@ const CollegeListPage: NextApplicationPage<{
         temporaryList.map((college) => {
           if (college.college_id == result.draggableId) {
             college.fit_type = 0;
-            setCollegeList(temporaryList);
           }
         });
       }
@@ -70,7 +66,6 @@ const CollegeListPage: NextApplicationPage<{
         temporaryList.map((college) => {
           if (college.college_id == result.draggableId) {
             college.fit_type = 1;
-            setCollegeList(temporaryList);
           }
         });
       }
@@ -78,7 +73,6 @@ const CollegeListPage: NextApplicationPage<{
         temporaryList.map((college) => {
           if (college.college_id == result.draggableId) {
             college.fit_type = 2;
-            setCollegeList(temporaryList);
           }
         });
       }
@@ -86,13 +80,6 @@ const CollegeListPage: NextApplicationPage<{
     }
   };
 
-  // const getUpdatableListFormat = (list: collegeListIndivudialInfo[]) => {
-  //     var college_list: collegeListElementRaw[] = []
-  //     list.map((college, index) => {
-  //         college_list.push({ college_id: college.college_id, fit_type: college.fit_type, index: index })
-  //     })
-  //     return college_list
-  // }
   useEffect(() => {
     if (collegeList?.length > 0) {
       setTargetSchools(
