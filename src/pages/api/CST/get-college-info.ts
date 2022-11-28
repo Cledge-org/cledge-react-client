@@ -1,7 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { CollegeDB } from "src/@types/types";
+import { CollegeDB, CollegeInfo } from "src/@types/types";
 
 export const config = {
   api: {
@@ -11,32 +11,32 @@ export const config = {
 
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId } = JSON.parse(req.body);
-  if (userId) {
+  const { collegeId } = JSON.parse(req.body);
+  if (collegeId) {
     try {
-      const collegeList = await getCollegeList(userId);
-      resolve.status(collegeList ? 200 : 404).send(collegeList);
+      const college = await getCollege(collegeId);
+      resolve.status(college ? 200 : 404).send(college);
     } catch (e) {
       resolve.status(500).send(e);
     }
   }  
 };
 
-export const getCollegeList = (userId: string): Promise<any> => {
+export const getCollege = (collegeTitle: string): Promise<any> => {
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
-      const users_db = client.db("users");
-      const collegelist: CollegeDB = (await users_db
-        .collection("college-list")
+      const colleges_db = client.db("colleges");
+      const college: CollegeInfo = (await colleges_db
+        .collection("colleges")
         .findOne({
-          firebaseId: userId,
-        })) as CollegeDB;
-      if (!collegelist) {
+          college_name: collegeTitle,
+        })) as CollegeInfo;
+      if (!college) {
         res(null);
       } else {
         res({
-          list: collegelist.college_list,
+          college: college
         });
       }
       client.close();

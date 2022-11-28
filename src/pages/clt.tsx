@@ -7,7 +7,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = getSession(ctx);
     const userId = (await session).user.uid;
-    const collegeList = await getCollegeList("rybYEMoHtzQuJPdMJWpD0Ra9yyv1");
+    const collegeList = await getCollegeList(userId);
     let collegeListJSON = {};
     try {
       collegeListJSON = JSON.parse(JSON.stringify(collegeList)).list;
@@ -17,6 +17,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     return {
       props: {
+        firebaseId: userId,
         collegeListData: collegeListJSON
       },
     };
@@ -27,8 +28,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 };
 
+const alertReturn = (e: any) => {
+  alert(JSON.stringify(e));
+}
+
 const CLT = ({ collegeListData }) => {
-  return <CollegeListPage collegeList={collegeListData} setCollegeList={null} />;
+  return <CollegeListPage collegeList={collegeListData} />;
 };
 
+CLT.requireAuth = true;
 export default CLT;

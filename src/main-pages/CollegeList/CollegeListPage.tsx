@@ -13,36 +13,36 @@ import { useSession } from "next-auth/react";
 const CollegeListPage: NextApplicationPage<{
   accountInfo: AccountInfo;
   collegeList: collegeListIndividualInfo[];
-  setCollegeList;
-}> = ({ collegeList, setCollegeList }) => {
-  let targetList = [];
-  let fitList = [];
-  let reachList = [];
-  const [targetSchools, setTargetSchools] = useState(targetList);
-  const [fitSchools, setFitSchools] = useState(fitList);
-  const [reachSchools, setReachSchools] = useState(reachList);
+}> = ({ collegeList }) => {
+  const [targetSchools, setTargetSchools] = useState([]);
+  const [fitSchools, setFitSchools] = useState([]);
+  const [reachSchools, setReachSchools] = useState([]);
 
-  const [reloadCounter, setReloadCounter] = useState<number>(0);
+  const [reloadCounter, setReloadCounter] = useState(0);
   const { data: session } = useSession();
   const handleSubmit = async () => {
-    const response = await fetch(`/api/cst/replace-college-list`, {
+    const response = await fetch(`/api/CST/replace-college-list`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
       },
       body: JSON.stringify({
         user_id: session.user.uid,
-        college_list: collegeList,
+        college_list: targetSchools.concat(fitSchools).concat(reachSchools),
       }),
     });
     const responseJson = await response.json();
     alert(responseJson.message);
   };
 
+
   const handleRemoveCollege = (college_id: string) => {
     const temporaryList = collegeList.filter(
       (college) => college.college_id != college_id
     );
+    setTargetSchools(collegeList.filter((colleges) => colleges.fit_type == 0).filter((colleges) => colleges.college_id != college_id));
+    setFitSchools(collegeList.filter((colleges) => colleges.fit_type == 1).filter((colleges) => colleges.college_id != college_id));
+    setReachSchools(collegeList.filter((colleges) => colleges.fit_type == 2).filter((colleges) => colleges.college_id != college_id));
     setReloadCounter(reloadCounter + 1);
   };
 
@@ -76,6 +76,7 @@ const CollegeListPage: NextApplicationPage<{
           }
         });
       }
+      
       setReloadCounter(reloadCounter + 1);
     }
   };

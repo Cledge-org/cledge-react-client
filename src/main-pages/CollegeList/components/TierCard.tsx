@@ -1,12 +1,12 @@
 import React from "react";
-import { collegeListIndivudialInfo } from "src/@types/types";
+import { collegeListIndividualInfo } from "src/@types/types";
 import CollegeListCard from "src/main-pages/CollegeList/components/CollegeListCard";
 import styles from "./componentStyles.module.scss";
 
 import { Droppable } from "react-beautiful-dnd";
 interface props {
   name: string;
-  collegeList: collegeListIndivudialInfo[];
+  collegeList: collegeListIndividualInfo[];
   RemoveCollegeFromListFunction: Function;
 }
 const TierCard = ({
@@ -30,6 +30,7 @@ const TierCard = ({
               <div>
                 {collegeList.map((college, index) => {
                   return (
+                    // eslint-disable-next-line react/jsx-key
                     <CollegeListCard
                       name={college.college_name}
                       location={college.location}

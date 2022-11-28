@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -8,6 +9,7 @@ import styled from "styled-components";
 import styles from "./college-card.module.scss";
 import { CardActionArea, Tab, Tabs } from "@mui/material";
 import classNames from "classnames";
+import { useSession } from "next-auth/react";
 
 interface CardProps {
   abbreviation?: string;
@@ -106,10 +108,23 @@ function InnerCard({
 }: CardProps) {
   const [imageHasLoaded, setImageHasLoaded] = useState(false);
   const [addedToList, setAddedToList] = useState(false);
-  const handleAddCollege = (event) => {
+  const { data: session } = useSession();
+  const handleAddCollege = async (event) => {
     event.stopPropagation();
     setAddedToList(!addedToList);
     // add to college list
+    const response = await fetch(`/api/CST/add-college-to-list`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: session.user.uid,
+        college_title: title,
+      }),
+    });
+    const responseJson = await response.json();
+    alert(responseJson.message);
   }
   return (
     <>

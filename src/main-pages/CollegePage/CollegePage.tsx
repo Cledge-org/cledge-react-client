@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import React, { useEffect, useState } from "react";
 import "antd/dist/antd.css";
 import { Layout, Row, Col, Input } from "antd";
