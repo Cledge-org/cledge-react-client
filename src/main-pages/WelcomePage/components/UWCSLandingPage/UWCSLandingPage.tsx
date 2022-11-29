@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import dynamic from "next/dynamic";
 
 import IntroContent from "../../content/IntroContent.json";
@@ -20,6 +21,9 @@ import { useRouter } from "next/router";
 import classNames from "classnames";
 import { callPutUWWaitlist } from "src/utils/apiCalls";
 import { CircularProgress } from "@mui/material";
+import UWQuoteBlock from "./components/UWPackageFeature/UWQuoteBlock";
+import UWLandingCard from "./components/UWPackageFeature/UWLandingCard";
+import BlogCarouselItem from "../blogsCarousel/components/BlogCaroselItem";
 
 const Contact = dynamic(() => import("../ContactForm/ContactForm"));
 const MiddleBlock = dynamic(() => import("../MiddleBlock/MiddleBlock"));
@@ -122,7 +126,7 @@ export const SubscribeWrapper = styled("div")`
   }
 `;
 export const BlobBlock = styled("div")`
-  background: #dce1fb;
+  background: #FFFFFF;
 
   button {
     padding: 1rem;
@@ -149,8 +153,18 @@ export const BlobBlock = styled("div")`
     height: 52vh;
     border: 1px solid transparent;
     border-radius: 15px;
-    background-color: white;
+    background-color: #DCE1FB4D;
   }
+
+  .MobileBlobContainer {
+    padding: 36px;
+    width: 80vw;
+    height: 52vh;
+    border: 1px solid transparent;
+    border-radius: 15px;
+    background-color: #DCE1FB4D;
+  }
+  
   @media only screen and (max-width: 800px) {
     .BlobContainer {
       height: auto;
@@ -220,42 +234,47 @@ function useWindowSize() {
   return size;
 }
 
-const UWCSLandingPage = () => {
+const UWCSLandingPage = ({
+  blogData,
+}: {
+  blogData: any;
+}) => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
   const [width, height] = useWindowSize();
   const [email, setEmail] = useState("");
   const [submittedEmail, setSubmittedEmail] = useState(false);
   const router = useRouter();
+  const isMobile = width <= 810;
   const packageAd = (
     <BlobBlock>
-      <Fade direction="right" className="center-child w-100">
+      <Fade triggerOnce={true} direction="right" className="center-child w-100">
         <div
           className={classNames(
-            "BlobContainer d-flex flex-row justify-content-between align-items-center flex-wrap",
-            { "my-3": width < 800 }
+            "d-flex flex-row justify-content-between align-items-center flex-wrap",
+            { "my-4 mt-5 mx-3": isMobile }, {"BlobContainer": !isMobile}
           )}
         >
           <div
             className="d-flex flex-column justify-content-between h-100"
-            style={{ width: width < 800 ? "100%" : "48%" }}
+            style={{ width: isMobile ? "100%" : "48%" }}
           >
-            <div className="cl-dark-text fw-bold">
-              <div style={{ fontSize: width < 800 ? "28px" : "36px" }}>
+            <div className="cl-dark-text fw-bold ms-3">
+              <div className="mb-3 w-75" style={{ fontSize: isMobile ? "28px" : "28px", lineHeight: isMobile ? "30.46px" : "" }}>
                 UW CS Application Prep Package
               </div>
-              <div className="cl-mid-gray mb-2" style={{ fontSize: "24px" }}>
+              <div className="cl-mid-gray" style={{ fontSize: isMobile ? "14px" : "16px"}}>
                 Early bird price
               </div>
               <div
                 className="d-flex flex-row align-items-center"
-                style={{ fontSize: "64px" }}
+                style={{ fontSize: "44px" }}
               >
                 $99
                 <div
                   className="fw-bold center-child ms-3 px-3 py-2"
                   style={{
-                    fontSize: width < 800 ? "22px" : "32px",
+                    fontSize: isMobile ? "16px" : "16px",
                     background:
                       "linear-gradient(92.92deg, rgba(80, 107, 237, 0.2) -8.48%, #F7BC76 95.28%)",
                     borderRadius: "4px",
@@ -264,9 +283,40 @@ const UWCSLandingPage = () => {
                   1 YEAR
                 </div>
               </div>
+              {!isMobile ? (
+              <div style={{ fontSize: "18px" }}>
+                for everything
+              </div>
+              ) : null}
             </div>
+            {!isMobile ? (
+            <div className={classNames("ms-3 cl-dark-text fw-bold")} style={{ fontSize: "14px" }}>
+                Releasing September
+            </div>
+            ) : null }
+            {!isMobile ? (
+              <div 
+              className={classNames("mb-3 ms-3")}
+              style={{
+                width: width < 800 ? "100%" : "50%",
+                border: "1px solid #C1C0CE",
+                borderRadius: "4px"
+              }}
+            >
+              <input
+                value={email}
+                style={{ color: "black" }}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                type="text"
+                placeholder="Enter your email"
+              />
+            </div>
+            ) : null}
+            {!isMobile ? (
             <button
-              className="cl-btn-blue"
+              className="cl-btn-blue ms-3"
               onClick={() => {
                 window.open(
                   `/uw-interest-form?ref=${router.query.ref}`,
@@ -274,32 +324,36 @@ const UWCSLandingPage = () => {
                 );
               }}
               style={{
-                width: width < 800 ? "100%" : "35%",
+                width: isMobile ? "100%" : "35%",
                 borderRadius: "8px",
                 fontSize: "18px",
               }}
             >
               Join the Waitlist
             </button>
+            ) : null }
           </div>
           <div
             className={classNames({
-              "mx-3": width > 800,
-              "my-3": width < 800,
+              "mx-3": !isMobile,
+              "my-3": isMobile,
             })}
             style={{
-              height: width < 800 ? "0" : "100%",
-              width: width < 800 ? "100%" : "0",
+              height: isMobile ? "0" : "100%",
+              width: isMobile ? "100%" : "0",
               border: "1px solid #D9D9D9",
             }}
           />
           <div
             className="d-flex flex-column justify-content-evenly h-100"
-            style={{ width: width < 800 ? "100%" : "48%" }}
+            style={{ width: isMobile ? "100%" : "48%" }}
           >
             <div
-              className="cl-dark-text mb-2"
-              style={{ fontWeight: 700, fontSize: "24px" }}
+              className="cl-dark-text my-2 ms-3"
+              style={{ 
+                fontWeight: 700, 
+                fontSize: isMobile ? "18px" : "22px",
+              }}
             >
               What you get with the package
             </div>
@@ -307,12 +361,12 @@ const UWCSLandingPage = () => {
               "Analysis of 5+ successful applications & why they worked",
               "Insider look at how UW CS scores your application",
               "How to approach the UW supplemental essays",
-              "Should you apply to Computer Engineering or CS?",
-              "100 questions to ask the Cledge AI Advisor",
+              "Should you apply to Computer Engineering or Computer Science?",
+              "The Cledge AI Advisor & College Search Tool",
             ].map((option) => (
-              <div className="d-flex flex-row">
+              <div className={classNames("d-flex flex-row ms-3 align-items-center", {"mt-3": isMobile})}>
                 <div
-                  className="me-2 center-child"
+                  className="me-3 center-child"
                   style={{
                     background:
                       "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
@@ -321,30 +375,87 @@ const UWCSLandingPage = () => {
                     minWidth: "25px",
                     height: "25px",
                     borderRadius: "12.5px",
+                    lineHeight: "20px"
                   }}
                 >
                   <FontAwesomeIcon icon={faCheck} />
                 </div>
                 <div
                   className="cl-dark-text"
-                  style={{ fontSize: "18px", fontWeight: 500 }}
+                  style={{ fontSize: isMobile ? "14px" : "16px", fontWeight: 500 }}
                 >
                   {option}
                 </div>
               </div>
             ))}
             <div
-              className="fw-bold p-3 mt-2"
+              className="p-3 mt-4 mx-3"
               style={{
                 background: "rgba(80, 107, 237, 0.2)",
                 border: "1px solid #E0DFE8",
                 borderRadius: "10px",
-                fontSize: "20px",
+                fontSize: "18px",
+                width: "fit-content",
+                fontWeight: 600
               }}
             >
-              Plus a chance to have a 30 min consultation with a college
+              Plus a free 30 min consultation with your college
               counselor
             </div>
+            {isMobile ? (
+              <div
+                className={classNames("my-4")}
+                style={{
+                  height: isMobile ? "0" : "100%",
+                  width: isMobile ? "100%" : "0",
+                  border: "1px solid #D9D9D9",
+                }}
+              />
+            ) : null}
+            {isMobile ? (
+            <div className={classNames("d-flex flex-column justify-content-center mx-3")}>
+            <div className={classNames("cl-dark-text fw-bold mb-3")} style={{ fontSize: "14px" }}>
+                Releasing September
+            </div>
+            <div 
+              className={classNames("mb-3")}
+              style={{
+                width: width < 800 ? "100%" : "50%",
+                border: "1px solid #C1C0CE",
+                borderRadius: "4px"
+              }}
+            >
+              <input
+                value={email}
+                style={{ color: "black" }}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                type="text"
+                placeholder="Enter your email"
+              />
+            </div>
+            <button
+              onClick={() => {
+                window.open(
+                  `/uw-interest-form?ref=${router.query.ref}`,
+                  "_self"
+                );
+              }}
+              style={{
+                width: isMobile ? "100%" : "35%",
+                borderRadius: "8px",
+                fontSize: "18px",
+                background: '#506BED',
+                color: "#FFFFFF",
+                fontWeight: 600
+              }}
+            >
+              Join the Waitlist
+            </button>
+
+            </div>
+            ) : null}
           </div>
         </div>
       </Fade>
@@ -357,78 +468,52 @@ const UWCSLandingPage = () => {
           className="container-margin"
           style={{
             backgroundSize: "cover",
-            backgroundPosition: width < 800 ? "top left" : "center",
+            height: "40rem",
+            backgroundPosition: isMobile ? "top left" : "center",
           }}
         >
-          <Fade className="w-100 justify-content-start h-100" direction="right">
+          <Fade triggerOnce={true} className="w-100 justify-content-center h-100" direction="right">
             <div
               style={{
                 color: "white",
                 width: width < 1850 ? (width < 1350 ? "100%" : "70%") : "50%",
               }}
               className={classNames(
-                `d-flex flex-column justify-content-around h-100 ${
-                  width < 800 ? "px-3" : "px-5"
+                `d-flex flex-column justify-content-center h-100 ${
+                  isMobile ? "px-3" : "px-5"
                 }`,
-                { "align-items-center": width < 800 }
+                { "align-items-center": isMobile }
               )}
             >
-              <div className="w-100">
-                <div
-                  className="center-child px-3 fw-bold mt-5"
-                  style={{
-                    width: "fit-content",
-                    background:
-                      "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
-                    borderRadius: "13px",
-                  }}
-                >
-                  New
-                </div>
+              <div className="w-100 d-flex flex-column justify-content-center align-items-center">
                 <div
                   style={{
                     fontWeight: "bold",
                     color: "#F7BC76",
-                    fontSize: width < 800 ? "24px" : "40px",
+                    fontSize: isMobile ? "22px" : "45px",
+                    textAlign: "center",
+                    lineHeight: "1.25em"
                   }}
                 >
-                  Cledge improves your chances for
+                  { isMobile ? "Cledge improves your chances" : "Cledge improves your chances for"}
                 </div>
                 <div
                   style={{
                     fontWeight: "bold",
-                    fontSize: width < 800 ? "30px" : "52px",
+                    fontSize: isMobile ? "22px" : "52px",
+                    textAlign: "center",
+                    lineHeight: "1.25em"
                   }}
                 >
-                  University of Washington Computer Science Admissions
+                  { isMobile ? "for University of Washington Computer Science Admissions" : "University of Washington Computer Science Admissions"}
                 </div>
-              </div>
-              <div className={classNames({ "w-100": width < 800 })}>
-                <div style={{ fontSize: "20px" }}>
-                  {width < 800
-                    ? "Releasing September"
-                    : "Utilize the power of Cledge to gain an edge on your UW CS application. Get insider access to how UW CS scores your application, view successful applicant profiles, and then get help writing the UW supplemental essay. Still need help? You will get one 30 minute consultation with a college advisor and access to Cledge AI tools."}
-                </div>
-
-                <div style={{ width: width < 800 ? "100%" : "50%" }}>
-                  <input
-                    value={email}
-                    style={{ color: "black" }}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }}
-                    type="text"
-                    placeholder="Enter your email"
-                  />
-                </div>
-                <div style={{ width: width < 800 ? "100%" : "300px" }}>
-                  <Button
+                <Button
                     key="buy-now-btn"
                     color="#F7BC76"
                     fixedWidth={false}
-                    className={classNames("px-5", { "w-100": width < 800 })}
+                    className={classNames(`${ isMobile ? "w-50" : "w-25" } mt-4`)}
                     onClick={() => {
-                      if (width < 800) {
+                      if (isMobile) {
                         setSubmittedEmail(true);
                         callPutUWWaitlist({
                           email,
@@ -448,109 +533,170 @@ const UWCSLandingPage = () => {
                     {submittedEmail ? (
                       <CircularProgress style={{ color: "white" }} />
                     ) : (
-                      "Join the Waitlist"
+                      "Sign Up"
                     )}
                   </Button>
-                </div>
               </div>
             </div>
           </Fade>
         </Intro>
-        {width < 800 && packageAd}
-        <ContentBlock
-          type="left"
-          title={
-            "Diverse profiles of accepted students and analysis of profiles"
-          }
-          content={
-            "View comprehensive profiles of students who were accepted directly into Computer Science at UW Seattle. Understand what characteristics UW is looking for in students as well as extracurricular ideas, supplemental essays, and an analysis on why each profile was successful"
-          }
-          icon="uw_landing_1.svg"
-          id="mission"
-        />
-        <Fade direction="right">
-          <ContentBlockContent
-            type={width < 800 ? "left" : "right"}
-            title={"An insider look at how your application is scored"}
-            content={
-              "We have insider access on the scoring system used to admit students to UW CS. We will walk you through what your application is scored on to give you the advantage on your application."
-            }
-            icon="uw_landing_2.svg"
-            id="mission2"
-          />
-        </Fade>
-        <Partner className="py-3 pb-5">
-          <div className="d-flex flex-column py-3 align-items-center">
-            <div style={{ fontSize: "48px", fontWeight: 700 }}>
-              Plus, you get:
-            </div>
-          </div>
+        <div className="py-3 pb-5" style={{ background: "#0B1142" }}>
           <div
-            className={classNames({ "px-2": width < 800 })}
+            className="d-flex"
             style={{
               overflowX: "auto",
               overflowY: "hidden",
               width: "100%",
+              height: "40rem"
             }}
           >
             <div
               className="d-flex flex-row align-items-center justify-content-center"
               style={{ width: "fit-content" }}
             >
-              <UWPackageFeature
+              <UWLandingCard
                 className="me-2"
-                title="AI Advisor"
-                description="Get instant answers from our AI college advisor chat. Not satisfied? Upload it to ask a real counselor."
-                imageSrc="uw_package_1.svg"
+                title="New to the application process?"
+                description="Learn from successful UW CS profiles and the Cledge courses curated for you"
+                imageSrc="uwcard1.png"
               />
-              <UWPackageFeature
+              <UWLandingCard
                 className="mx-2"
-                title="College Search"
-                description="Use our college search tool to get information on acceptance rate ratios between male/female applicants, average salary after graduation and more."
-                imageSrc="uw_package_2.svg"
+                title="Have specific questions?"
+                description="Get answers from your assigned college counselor and the Cledge AI."
+                imageSrc="uwcard2.png"
               />
-              <UWPackageFeature
+              <UWLandingCard
                 className="ms-2"
-                title="Metrics"
-                description="See how you are doing in academics and extracurriculars. Get
-                recommendations on how to improve."
-                imageSrc="uw_package_3.svg"
+                title="Not sure how to improve?"
+                description="Get personalized metrics on where you stand and how to improve your academics or extracurriculars."
+                imageSrc="uwcard3.svg"
               />
             </div>
           </div>
-        </Partner>
-        {width > 800 && packageAd}
-        {width > 800 && (
-          <div
-            className="d-flex align-items-center justify-content-center w-100 py-5"
-            style={{
-              background:
-                "linear-gradient(92.92deg, #3B68DF -8.48%, #8D32D5 95.28%)",
-            }}
-          >
-            <Fade direction="right">
-              <div className="d-flex flex-column align-items-center py-5">
-                <div
-                  className="fw-bold"
-                  style={{ fontSize: "28px", color: "white" }}
-                >
-                  Want to learn more about what Cledge does?
-                </div>
-                <Button
-                  key=""
-                  color="#F7BC76"
-                  fixedWidth={true}
-                  className={classNames("px-3 w-50")}
-                  onClick={() => {
-                    window.open("https://cledge.org", "_blank");
-                  }}
-                >
-                  Learn More
-                </Button>
+        </div>
+        {packageAd}
+        <div className="py-3 pb-5" style={{ background: "#0B1142", height: "26rem" }}>
+          <div className="d-flex flex-column py-3 center-child" style={{ padding: "36px" }}>
+            <div style={{ width: "80vw", height: "52vh" }}>
+              <div style={{ fontSize: "28px", fontWeight: 700, color: "#FFFFFF" }}>
+                Trusted by both students and parents:
               </div>
-            </Fade>
+              <div className="d-flex flex-row justify-content-between">
+                <UWQuoteBlock
+                  content={
+                    "I prefer Cledge's Chatbot over Google. It provides straightforward information and eliminates the navigation of multiple websites."
+                  }
+                />
+                <UWQuoteBlock
+                  content={
+                    "I prefer Cledge's Chatbot over Google. It provides straightforward information and eliminates the navigation of multiple websites."
+                  }
+                />
+                <UWQuoteBlock
+                  content={
+                    "I prefer Cledge's Chatbot over Google. It provides straightforward information and eliminates the navigation of multiple websites."
+                  }
+                />
+              </div>
+            </div>
           </div>
-        )}
+        </div>
+        <div style={{ background: "#DCE1FB" }}>
+          <Fade triggerOnce={true} direction="right">
+            <div style={{background: "#DCE1FB"}}>
+              <div className="pt-5 pb-5">
+                <ContentBlockContent
+                  type={"right"}
+                  title={"Get personalized help based off what you tell us and what type of applicant you are."}
+                  content={
+                    ""
+                  }
+                  icon="uw_question.svg"
+                  id="mission2"
+                />
+              </div>
+            </div>
+          </Fade>
+          <Fade triggerOnce={true} direction="left">
+            <div style={{background: "#DCE1FB"}}>
+              <div className="pt-5 pb-5">
+                <ContentBlockContent
+                  type={"right"}
+                  title={"Get started with learning pathways guiding you to successfully stand out on your UW CS application."}
+                  content={
+                    ""
+                  }
+                  icon="uw_pathway.svg"
+                  id="mission2"
+                />
+              </div>
+            </div>
+          </Fade>
+          <Fade triggerOnce={true} direction="right">
+            <div style={{background: "#DCE1FB"}}>
+              <div className="pt-5 pb-5">
+                <ContentBlockContent
+                  type={"right"}
+                  title={"Get questions answered by your assigned college counselor and AI advisor"}
+                  content={
+                    ""
+                  }
+                  icon="uw_chatbot.svg"
+                  id="mission2"
+                />
+              </div>
+            </div>
+          </Fade>
+          <Fade triggerOnce={true} direction="left">
+            <div style={{background: "#DCE1FB"}}>
+              <div className="pt-5 pb-5">
+                <ContentBlockContent
+                  type={"right"}
+                  title={"Get specific metrics on how to improve your application"}
+                  content={
+                    ""
+                  }
+                  icon="uw_metric.svg"
+                  id="mission2"
+                />
+              </div>
+            </div>
+          </Fade>
+        </div>
+        <div className="py-3 pb-5 pt-4 ms-3" style={{ background: "#FFFFFF", height: "30rem" }}>
+          <div className="d-flex flex-column py-3 center-child" style={{ padding: "36px" }}>
+            <div style={{ width: "80vw", height: "52vh" }}>
+              <div style={{ fontSize: "28px", fontWeight: 700, color: "#070452" }}>
+                Get started with our free expert-written blogs
+              </div>
+
+              <div
+                className="w-100 center-child mb-2"
+                style={{
+                  height: "50%",
+                  borderRadius: "10px",
+                  backgroundColor: "white",
+                }}
+              >
+                <div
+                  className={classNames(
+                    "d-flex flex-row py-3",
+                  )}
+                  style={{ overflowX: "auto" }}
+                >
+                  {blogData.recentBlogs.articles[0].map((e) => (
+                    <BlogCarouselItem className="shadow-none" article={e} />
+                  ))}
+                </div>
+              </div>
+              
+              <a href="/blogs" style={{ color: "#070452", textDecoration: "underline" }}>View more blogs</a>
+            </div>
+          </div>
+        </div>
+
+
       </Container>
       <Footer />
     </PageErrorBoundary>

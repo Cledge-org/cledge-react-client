@@ -255,7 +255,7 @@ const WelcomePage = ({ data }) => {
   const windowOrigin = useLocation();
 
   if (windowOrigin.includes("uw")) {
-    return <UWCSLandingPage />;
+    return <UWCSLandingPage blogData={data} />;
   }
   return (
     <PageErrorBoundary>
