@@ -112,7 +112,7 @@ const Pathways: NextApplicationPage<{
     let currContentProgress = moduleProgress[currModuleId.toString()]?.find(
       ({ name }) => name === currContent.name
     );
-    const subContentIndex = currContentProgress.subContentProgress.findIndex(
+    const subContentIndex = currContentProgress.subContentProgress?.findIndex(
       ({ id }) => id === newSubContentProgress.id
     );
 
@@ -141,7 +141,6 @@ const Pathways: NextApplicationPage<{
         id: content.id,
         finished: false,
       };
-      console.log(content);
       if (type === "question") {
         questionNumber++;
       }

@@ -230,7 +230,10 @@ const MyLearningPage: NextApplicationPage<{
       query: { checkIn: accountInfo.checkIns },
     });
   }
-  if (session.data?.user?.email === "test31@gmail.com" && !isInUserView) {
+  if (
+    session.data?.user?.email === "hello.cledge@outlook.com" &&
+    !isInUserView
+  ) {
     return (
       <div className="container-fluid p-5 align-items-center d-flex flex-column">
         <button
@@ -314,26 +317,18 @@ const MyLearningPage: NextApplicationPage<{
   return (
     <PageErrorBoundary>
       <div className="vh-100" style={{ backgroundColor: "#FAFCFF" }}>
-        {/* {session.data?.user?.email === "test31@gmail.com" ? (
-        <button
-          onClick={() => {
-            setIsInUserView(false);
-          }}
-        >
-          Switch to Admin View
-        </button>
-      ) : null} */}
-
         <div className="w-full md:w-auto" style={{ backgroundColor: "white" }}>
           <div className="w-full py-5 px-5 mx-3 d-flex flex-row align-items-center justify-content-between">
             <div className="px-5">
-              <button
-                onClick={() => {
-                  setIsInUserView(false);
-                }}
-              >
-                Switch to Admin View
-              </button>
+              {session.data?.user?.email === "hello.cledge@outlook.com" && (
+                <button
+                  onClick={() => {
+                    setIsInUserView(false);
+                  }}
+                >
+                  Switch to Admin View
+                </button>
+              )}
               <h1>
                 <strong style={{ color: "#2651ED", fontSize: "1em" }}>
                   {accountInfo.name}'s Personalized Learning Pathways

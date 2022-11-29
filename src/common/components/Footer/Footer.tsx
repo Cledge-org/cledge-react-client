@@ -7,9 +7,7 @@ import {
   faInstagramSquare,
 } from "@fortawesome/free-brands-svg-icons";
 
-export default function Footer({
-}: {
-}) {
+export default function Footer({}: {}) {
   return (
     <footer
       className="bg-dark-blue cl-light-gray container-fluid"
@@ -96,8 +94,13 @@ export default function Footer({
           </ul>
         </div> */}
         <div className="col-12 col-md-3 me-5 mt-5 mt-md-0">
-          <h6 className="cl-translucent-white">Empower every student to maximize</h6>
-          <h6 className="cl-translucent-white"> admissions chances  into their best fit colleges.</h6>
+          <h6 className="cl-translucent-white">
+            Empower every student to maximize
+          </h6>
+          <h6 className="cl-translucent-white">
+            {" "}
+            admissions chances into their best fit colleges.
+          </h6>
         </div>
         <div className="col-12 col-md-2 ms-5 mt-5 mt-md-0">
           <h6 className="title mb-3 cl-translucent-white">MORE</h6>
@@ -109,7 +112,11 @@ export default function Footer({
             Weekly Newsletter
           </a>
           <br />
-          <a href="https://docs.google.com/document/d/1yUPYg-s6KNJkkOvLLy5N8vHTfIIwINjaKv2LMUfnmPQ/edit" target="_blank" className="cl-white">
+          <a
+            href="https://docs.google.com/document/d/1yUPYg-s6KNJkkOvLLy5N8vHTfIIwINjaKv2LMUfnmPQ/edit"
+            target="_blank"
+            className="cl-white"
+          >
             Terms and Conditions
           </a>
           <br />

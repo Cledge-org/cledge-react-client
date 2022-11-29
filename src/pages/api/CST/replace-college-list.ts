@@ -1,6 +1,7 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { collegeListElementRaw } from "src/@types/types";
+import { getEnvVariable } from "src/config/getConfig";
 
 interface props {
   user_id: string;

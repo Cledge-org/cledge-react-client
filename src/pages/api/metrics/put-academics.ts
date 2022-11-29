@@ -1,7 +1,6 @@
-import { getTimeProps } from "antd/lib/date-picker/generatePicker";
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -10,9 +9,10 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId, academics, applicantType } = JSON.parse(req.body);
+  const { userId, academics, applicantType, insertionId } = JSON.parse(
+    req.body
+  );
   try {
-    const session = getSession({ req });
     if (academics) {
       academics.gpaTip = getGPATip(academics.gpaTier);
       academics.classTip = getClassTip(
@@ -25,13 +25,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         applicantType
       );
     }
-    const result = await putAcademics(
-      userId,
-      academics,
-      (
-        await session
-      ).user.uid
-    );
+    const result = await putAcademics(userId, academics, insertionId);
     resolve.status(200).send(result);
   } catch (e) {
     resolve.status(500).send(e);
@@ -51,14 +45,10 @@ export const putAcademics = (
     // Document should not have _id field when sent to database
     delete academics._id;
   }
-  //console.log(userId);
-  //console.log(academics);
-  //console.log(insertionId);
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
-      if (!userId && academics && insertionId) {
-        //console.log("SURPRISE");
+      if (academics && insertionId) {
         await client
           .db("metrics")
           .collection("academics")

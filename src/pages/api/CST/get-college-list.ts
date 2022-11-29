@@ -1,6 +1,7 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { collegeListIndivudialInfo } from "src/@types/types";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {

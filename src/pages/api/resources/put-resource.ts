@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -57,7 +58,7 @@ export const putResource = async (
         await client
           .db("resources")
           .collection("all_resources")
-          .insertOne(resourceWithType); 
+          .insertOne(resourceWithType);
       } else if (resourceId && !resource) {
         await client
           .db("resources")

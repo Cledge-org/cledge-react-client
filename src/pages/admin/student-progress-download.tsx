@@ -6,7 +6,7 @@ import StudentProgressDownloadPage from "src/main-pages/AdminPages/StudentProgre
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = await getSession(ctx);
-    if (session?.user?.email === "test31@gmail.com") {
+    if (session?.user?.email === "hello.cledge@outlook.com") {
       return {
         props: {
           allStudents: JSON.parse(JSON.stringify(await getAllUserInfo())),

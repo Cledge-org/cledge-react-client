@@ -2,6 +2,7 @@
 const { createServer } = require("http");
 const { parse } = require("url");
 const next = require("next");
+const { getEnvVariable } = require("./src/config/getConfig");
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";

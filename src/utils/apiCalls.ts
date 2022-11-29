@@ -101,22 +101,30 @@ export const callPutChatbotCounselorQuestion = async ({
     }),
   });
 };
-export const callPutActivities = async (activities: Activities) => {
-  const session = getSession();
+export const callPutActivities = async (
+  activities: Activities,
+  hasActivities: boolean
+) => {
+  const session = await getSession();
   return await fetch(`/api/metrics/put-activities`, {
     method: "POST",
     body: JSON.stringify({
-      userId: activities ? (await session).user.uid : null,
+      userId: activities ? session.user.uid : null,
       activities,
+      insertionId: hasActivities ? undefined : session.user.uid,
     }),
   });
 };
-export const callPutAcademics = async (academics: Academics) => {
-  const session = getSession();
+export const callPutAcademics = async (
+  academics: Academics,
+  hasAcademics: boolean
+) => {
+  const session = await getSession();
   return await fetch(`/api/metrics/put-academics`, {
     method: "POST",
     body: JSON.stringify({
-      userId: academics ? (await session).user.uid : null,
+      userId: academics ? session.user.uid : null,
+      insertionId: hasAcademics ? undefined : session.user.uid,
       academics,
     }),
   });
@@ -262,6 +270,7 @@ export const callGetChatbotResponse = async (
   email: string,
   questionResponses: UserResponse[],
   questionParams?: QuestionParams,
+  shouldCount?: boolean
 ) => {
   return await fetch(
     "https://cledge-chatbot-service.azurewebsites.net/v3/api",
@@ -276,6 +285,7 @@ export const callGetChatbotResponse = async (
         email,
         question_params: questionParams || {},
         student_info: questionResponses,
+        should_count: shouldCount || true,
       }),
     }
   )

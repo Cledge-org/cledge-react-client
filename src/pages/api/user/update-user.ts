@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import assert from "assert";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {

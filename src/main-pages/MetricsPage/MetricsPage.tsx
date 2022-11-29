@@ -1,18 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowDown,
-  faChevronDown,
-  faArrowRight,
-  faInfoCircle,
-} from "@fortawesome/free-solid-svg-icons";
-import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
-import { AppProps } from "next/dist/shared/lib/router/router";
-import { GetServerSidePropsContext } from "next";
 import { NextApplicationPage } from "../AppPage/AppPage";
-import { getSession, useSession } from "next-auth/react";
 import { connect } from "react-redux";
-import { useRouter } from "next/router";
 import DropdownTab from "../../common/components/DropdownTab/DropdownTab";
 import Footer from "../../common/components/Footer/Footer";
 
@@ -30,8 +18,6 @@ const Metrics: NextApplicationPage<{
   questionResponses: UserResponse[];
   academics: Academics;
 }> = ({ activities, userTags, questionResponses, academics }) => {
-  const session = useSession();
-  //console.log(activities);
   const [currPage, setCurrPage] = useState("all");
   function BorderDropdownTab({
     isAll,
@@ -217,7 +203,7 @@ const Metrics: NextApplicationPage<{
                           <text>Most competitive</text>
                         </div>
                       </div>
-                      
+
                       <TierIndicatorAndTips
                         tier={activities?.overallTier}
                         isOverall
@@ -227,7 +213,7 @@ const Metrics: NextApplicationPage<{
                         noTip
                         tipTitle={""}
                       />
-                    </ div>
+                    </div>
                   </div>
                 </div>
                 <SubTitle
@@ -282,17 +268,17 @@ const Metrics: NextApplicationPage<{
                           <text>Most competitive</text>
                         </div>
                       </div>
-                      
+
                       <TierIndicatorAndTips
-                      noTip
-                      tip=""
-                      updateChunk={"All Academics"}
-                      updatePage={"Academics"}
-                      tipTitle=""
-                      tier={academics?.overallTier}
-                      isOverall
-                    />
-                    </ div>
+                        noTip
+                        tip=""
+                        updateChunk={"All Academics"}
+                        updatePage={"Academics"}
+                        tipTitle=""
+                        tier={academics?.overallTier}
+                        isOverall
+                      />
+                    </div>
                   </div>
                 </div>
                 <SubTitle
@@ -344,7 +330,7 @@ const Metrics: NextApplicationPage<{
                                 className="py-2"
                                 style={{ fontSize: "1.2em" }}
                               >
-                                {academics.satScore}
+                                {academics?.satScore}
                               </div>
                             </>
                           )}
@@ -363,7 +349,7 @@ const Metrics: NextApplicationPage<{
                                 className="py-2"
                                 style={{ fontSize: "1.3em" }}
                               >
-                                {academics.actScore}
+                                {academics?.actScore}
                               </div>
                             </>
                           )}

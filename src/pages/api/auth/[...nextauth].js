@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AuthFunctions from "./firebase-auth";
+import { getEnvVariable } from "src/config/getConfig";
 
 export default NextAuth({
   pages: {

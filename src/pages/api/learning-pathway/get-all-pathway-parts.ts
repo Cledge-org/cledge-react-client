@@ -1,6 +1,7 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSpecificModule } from "src/pages/api/learning-pathway/get-all-pathways";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {

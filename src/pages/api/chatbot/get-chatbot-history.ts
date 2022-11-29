@@ -1,6 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ChatbotHistory } from "src/@types/types";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {

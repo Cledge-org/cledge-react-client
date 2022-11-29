@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {
@@ -9,7 +10,7 @@ export const config = {
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const { userId } = JSON.parse(req.body);
-  if(!userId) {
+  if (!userId) {
     resolve.status(400).send("No user id provided");
   } else {
     try {
@@ -27,19 +28,17 @@ export const getTime = async (
   overrideClient?: MongoClient
 ): Promise<number> => {
   return new Promise(async (res, err) => {
-    try{
-      const client = overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
+    try {
+      const client =
+        overrideClient ?? (await MongoClient.connect(process.env.MONGO_URL));
       const result = await client
         .db("users")
         .collection("counseling-time")
-        .findOne(
-          { firebaseId: userId }
-        );
+        .findOne({ firebaseId: userId });
       res(result.time);
       client.close();
-    } catch(e) {
+    } catch (e) {
       err(e);
     }
   });
-}
-
+};
