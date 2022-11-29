@@ -231,7 +231,7 @@ const Pathways: NextApplicationPage<{
               }
               onUpdate={(answer) => {
                 //console.log("Whot is op");
-                updateSubContentProgress({
+                updateSubContentProgress({ 
                   ...currSubContentProgress,
                   questionAnswer: answer,
                   finished:

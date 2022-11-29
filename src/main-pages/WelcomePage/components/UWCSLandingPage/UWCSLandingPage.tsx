@@ -20,6 +20,10 @@ import { useRouter } from "next/router";
 import classNames from "classnames";
 import { callPutUWWaitlist } from "src/utils/apiCalls";
 import { CircularProgress } from "@mui/material";
+import UWQuestionsExplained from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWPackageFeature/UWQuestionsExplained";
+import UWQuotes from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWPackageFeature/UWStudentQuotes";
+import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
+
 
 const Contact = dynamic(() => import("../ContactForm/ContactForm"));
 const MiddleBlock = dynamic(() => import("../MiddleBlock/MiddleBlock"));
@@ -32,13 +36,14 @@ const FullWidthContainer = styled("div")`
 `;
 
 const Intro = styled(FullWidthContainer)`
-  background: url("images/uw-landing-bg.svg") no-repeat;
-  height: 90vh;
+  background: url("images/gates-center-background_1.jpg") no-repeat;
+  height: 65vh;
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: right;
   padding: 0 90px 30px 90px;
+
 
   @media only screen and (max-width: 767px) {
     display: block;
@@ -59,7 +64,11 @@ const Intro = styled(FullWidthContainer)`
       height: 100vh;
     }
   }
-
+  
+  button {
+    // margin-top: 200px;
+  }
+  
   section {
     max-width: 1500px;
   }
@@ -75,10 +84,6 @@ const Intro = styled(FullWidthContainer)`
   }
 `;
 
-const Partner = styled(FullWidthContainer)`
-  background: #f9faff;
-  margin-top: 4rem;
-`;
 
 export const SubscribeWrapper = styled("div")`
   background: #0b1142;
@@ -122,7 +127,7 @@ export const SubscribeWrapper = styled("div")`
   }
 `;
 export const BlobBlock = styled("div")`
-  background: #dce1fb;
+  background: #FFFFFF;
 
   button {
     padding: 1rem;
@@ -145,11 +150,12 @@ export const BlobBlock = styled("div")`
 
   .BlobContainer {
     padding: 36px;
-    width: 80vw;
+    width: 65vw;
     height: 52vh;
     border: 1px solid transparent;
-    border-radius: 15px;
-    background-color: white;
+    // border-radius: 15px;
+    background-color: #EFF2FE
+    ;
   }
   @media only screen and (max-width: 800px) {
     .BlobContainer {
@@ -207,6 +213,30 @@ export const MediaButton = styled("button")`
   }
 `;
 
+const Partner = styled(FullWidthContainer)`
+background: #0B1142;
+// margin-top: 1rem;
+`;
+
+const Partner2 = styled(FullWidthContainer)`
+background: #DCE1FB;
+// margin-top: 1rem;
+
+
+`;
+
+const Quotes = styled(FullWidthContainer)`
+background: #0B1142;
+// margin-top: 1rem;
+
+`;
+
+// const BlogsCarousel = styled(FullWidthContainer)`
+// background: #0B1142;
+// // margin-top: 1rem;
+// BlogsCarousel
+// `;
+
 function useWindowSize() {
   const [size, setSize] = useState([0, 0]);
   useLayoutEffect(() => {
@@ -220,7 +250,7 @@ function useWindowSize() {
   return size;
 }
 
-const UWCSLandingPage = () => {
+const UWCSLandingPage = ({ data }) => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
   const [width, height] = useWindowSize();
@@ -241,7 +271,7 @@ const UWCSLandingPage = () => {
             style={{ width: width < 800 ? "100%" : "48%" }}
           >
             <div className="cl-dark-text fw-bold">
-              <div style={{ fontSize: width < 800 ? "28px" : "36px" }}>
+              <div style={{ fontSize: width < 800 ? "28px" : "36px"}}>
                 UW CS Application Prep Package
               </div>
               <div className="cl-mid-gray mb-2" style={{ fontSize: "24px" }}>
@@ -383,7 +413,6 @@ const UWCSLandingPage = () => {
                     borderRadius: "13px",
                   }}
                 >
-                  New
                 </div>
                 <div
                   style={{
@@ -392,36 +421,25 @@ const UWCSLandingPage = () => {
                     fontSize: width < 800 ? "24px" : "40px",
                   }}
                 >
-                  Cledge improves your chances for
+                 Cledge improve your chances for
                 </div>
                 <div
                   style={{
                     fontWeight: "bold",
-                    fontSize: width < 800 ? "30px" : "52px",
+                    fontSize: width < 800 ? "20px" : "22px",
+                    // width: "370px",
+                    // textAlign: "center",
+                    // position: "relative",
+                    // left: "160px",
                   }}
                 >
-                  University of Washington Computer Science Admissions
+                  University of Washington 
+                  Computer Science Admissions
                 </div>
               </div>
-              <div className={classNames({ "w-100": width < 800 })}>
-                <div style={{ fontSize: "20px" }}>
-                  {width < 800
-                    ? "Releasing September"
-                    : "Utilize the power of Cledge to gain an edge on your UW CS application. Get insider access to how UW CS scores your application, view successful applicant profiles, and then get help writing the UW supplemental essay. Still need help? You will get one 30 minute consultation with a college advisor and access to Cledge AI tools."}
-                </div>
-
-                <div style={{ width: width < 800 ? "100%" : "50%" }}>
-                  <input
-                    value={email}
-                    style={{ color: "black" }}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }}
-                    type="text"
-                    placeholder="Enter your email"
-                  />
-                </div>
-                <div style={{ width: width < 800 ? "100%" : "300px" }}>
+              
+              <div className={classNames({ "w-100": width < 800 })}>                
+                <div style={{ width: width < 800 ? "100%" : "300px", position: "relative", bottom: "170px"}}>
                   <Button
                     key="buy-now-btn"
                     color="#F7BC76"
@@ -448,7 +466,7 @@ const UWCSLandingPage = () => {
                     {submittedEmail ? (
                       <CircularProgress style={{ color: "white" }} />
                     ) : (
-                      "Join the Waitlist"
+                      "Sign Up"
                     )}
                   </Button>
                 </div>
@@ -456,34 +474,55 @@ const UWCSLandingPage = () => {
             </div>
           </Fade>
         </Intro>
-        {width < 800 && packageAd}
-        <ContentBlock
-          type="left"
-          title={
-            "Diverse profiles of accepted students and analysis of profiles"
-          }
-          content={
-            "View comprehensive profiles of students who were accepted directly into Computer Science at UW Seattle. Understand what characteristics UW is looking for in students as well as extracurricular ideas, supplemental essays, and an analysis on why each profile was successful"
-          }
-          icon="uw_landing_1.svg"
-          id="mission"
-        />
-        <Fade direction="right">
-          <ContentBlockContent
-            type={width < 800 ? "left" : "right"}
-            title={"An insider look at how your application is scored"}
-            content={
-              "We have insider access on the scoring system used to admit students to UW CS. We will walk you through what your application is scored on to give you the advantage on your application."
-            }
-            icon="uw_landing_2.svg"
-            id="mission2"
-          />
-        </Fade>
         <Partner className="py-3 pb-5">
-          <div className="d-flex flex-column py-3 align-items-center">
-            <div style={{ fontSize: "48px", fontWeight: 700 }}>
-              Plus, you get:
+          <div
+            className={classNames({ "px-2": width < 800 })}
+            style={{
+              overflowX: "auto",
+              overflowY: "hidden",
+              width: "100%",
+              background: "#0B1142",
+            }}
+          >
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ width: "fit-content" }}
+            >
+              <UWPackageFeature
+                className="me-2"
+                title="New to the application process?"
+                description="Learn From succesful UW CS profiles and the Cledge courses curated for you."
+                imageSrc="application_process.svg"
+              />
+              <UWPackageFeature
+                className="mx-2"
+                title="Have Specific Questions?"
+                description="Get answers from your assigned college counselor and the Cledge AI."
+                imageSrc="specific_questions.svg"
+              />
+              <UWPackageFeature
+                className="ms-2"
+                title="Not sure how to improve?"
+                description="Get personalized metrics on where you stand and how to improve your
+                academics or extracurriculars"
+                imageSrc="how_to_improve.svg"
+              />
             </div>
+          </div>
+        </Partner>
+        {width > 800 && packageAd}
+        <Quotes className="py-3 pb-5">
+        <div
+          style={{
+          fontWeight: "bold",
+          color: "#FFFFFF",
+          fontSize:  "24px",
+          position: "relative",
+          top: "80px",
+          left: "200px",
+          }}
+          >
+          Trusted by both students and parents
           </div>
           <div
             className={classNames({ "px-2": width < 800 })}
@@ -497,29 +536,127 @@ const UWCSLandingPage = () => {
               className="d-flex flex-row align-items-center justify-content-center"
               style={{ width: "fit-content" }}
             >
-              <UWPackageFeature
+              <UWQuotes
                 className="me-2"
-                title="AI Advisor"
-                description="Get instant answers from our AI college advisor chat. Not satisfied? Upload it to ask a real counselor."
-                imageSrc="uw_package_1.svg"
+                description="I prefer Cledge's Chatbot over Google. It provides straightforward 
+                information and eliminates the navigation of multiple websites."
+                imageSrc="quotation_icon.svg"
               />
-              <UWPackageFeature
-                className="mx-2"
-                title="College Search"
-                description="Use our college search tool to get information on acceptance rate ratios between male/female applicants, average salary after graduation and more."
-                imageSrc="uw_package_2.svg"
+               <UWQuotes
+                className="me-2"
+                description="Cledge's platform is far more personalized compared to alternatives. 
+                Cledge provides actionable steps to achieve academic success."
+                imageSrc="quotation_icon.svg"
               />
-              <UWPackageFeature
-                className="ms-2"
-                title="Metrics"
-                description="See how you are doing in academics and extracurriculars. Get
-                recommendations on how to improve."
-                imageSrc="uw_package_3.svg"
+              <UWQuotes
+                className="me-2"
+                description="I have never seen online college counseling provide such an advanced chatbot feature. 
+                Each response was very detailed and helped answer my questions in a concise manner"
+                imageSrc="quotation_icon.svg"
+              />                          
+            </div>
+          </div>
+        </Quotes>
+
+        <Partner2 className="py-3 pb-5">
+          <div
+            className={classNames({ "px-2": width < 800 })}
+            style={{
+              overflowX: "auto",
+              overflowY: "hidden",
+              width: "100%",
+              background: "#DCE1FB",
+              overflowWrap: "break-word",
+            }}
+          >
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ width: "fit-content" }}
+            >
+              <UWQuestionsExplained
+                className="me-2"
+                LogoSrc="one_icon.svg"
+                description="Get dynamic help based off what you tell us and what type of applicant you are."
+                imageSrc="ai_page.svg"
               />
             </div>
           </div>
-        </Partner>
-        {width > 800 && packageAd}
+        </Partner2>
+
+        <Partner2 className="py-3 pb-5">
+          <div
+            className={classNames({ "px-2": width < 800 })}
+            style={{
+              // overflowX: "auto",
+              // overflowY: "hidden",
+              // width: "100%",
+              background: "#DCE1FB",
+            }}
+          >
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ width: "fit-content" }}
+            >
+              <UWQuestionsExplained
+                className="me-2"
+                LogoSrc="two_icon.svg"
+                description="Get started with learning pathways guiding you to successfully stand out on your UW CS application."
+                imageSrc="my_learning.svg"
+              />
+            </div>
+          </div>
+        </Partner2>
+
+        <Partner2 className="py-3 pb-5">
+          <div
+            className={classNames({ "px-2": width < 800 })}
+            style={{
+              overflowX: "auto",
+              overflowY: "hidden",
+              width: "100%",
+              background: "#DCE1FB",
+            }}
+          >
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ width: "fit-content" }}
+            >
+              <UWQuestionsExplained
+                className="me-2"
+                LogoSrc="three_icon.svg"
+                description="Get questions answered by your assigned college counselor and AI advisor."
+                imageSrc="cledge_ai_landing.svg"
+              />
+            </div>
+          </div>
+        </Partner2>
+
+        <Partner2 className="py-3 pb-5">
+          <div
+            className={classNames({ "px-2": width < 800 })}
+            style={{
+              overflowX: "auto",
+              overflowY: "hidden",
+              width: "100%",
+              background: "#DCE1FB",
+            }}
+          >
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ width: "fit-content" }}
+            >
+              <UWQuestionsExplained
+                className="me-2"
+                LogoSrc="four_icon.svg"
+                description="Get personalized metrics on how to improve your application."
+                imageSrc="personalized_metrics.svg"
+              />
+            </div>
+          </div>
+        </Partner2>
+
+        {/* <NewBlogsCarousel recentBlogs={data.recentBlogs} /> */}
+
         {width > 800 && (
           <div
             className="d-flex align-items-center justify-content-center w-100 py-5"

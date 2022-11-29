@@ -17,7 +17,7 @@ export default function YoutubeEmbed({
   //**********************************
   //****************NOTE*************:
   //THIS ALL WORKS EVEN THOUGH IT DOESN'T LOOK LIKE IT DOES!
-  //*************************************
+  //************************************* 
   const [player, setPlayer] = useState(null);
   const [intervalId, setIntervalId] = useState(null);
   useEffect(() => {

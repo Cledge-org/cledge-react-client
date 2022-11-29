@@ -7,7 +7,7 @@ import ArrowIcon from "./Arrow.png";
 import Image from "next/image";
 const CarouselDiv = styled.div`
   background-color: #f9faff;
-  margin-bottom: 50px;
+  margin-bottom: 50px; 
   width: 100%;
   display: flex;
   flex-direction: row;

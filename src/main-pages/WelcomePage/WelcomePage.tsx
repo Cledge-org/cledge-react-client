@@ -269,7 +269,7 @@ const WelcomePage = ({ data }) => {
               button={IntroContent.button}
               video={<YoutubeEmbed videoId="Bly0QbY3fV4" />}
               id="intro"
-              width={width}
+              width={width} 
             />
           </div>
           <SubscribeWrapper>
@@ -388,7 +388,7 @@ const WelcomePage = ({ data }) => {
           content={ProductContent.text}
           icon="landing_3.svg"
           id="product"
-        />
+        /> 
         <NewBlogsCarousel recentBlogs={data.recentBlogs} />
         <Partner>
           <MiddleBlock

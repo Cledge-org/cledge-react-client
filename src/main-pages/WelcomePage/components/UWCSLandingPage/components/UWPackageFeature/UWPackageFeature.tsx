@@ -17,14 +17,16 @@ const UWPackageFeature = ({
     <div
       className={classNames("d-flex flex-column p-4", className)}
       style={{
-        height: width < 800 ? "60vh" : "50vh",
+        height: width < 800 ? "60vh" : "45vh",
         width: width < 800 ? "85vw" : "25%",
-        background: "#506BED",
-        borderRadius: "8px",
+        marginTop: "30px",
+        background: "#818EFF",
+        // marginLeft: "10px",
+        // borderRadius: "8px",
         color: "white",
       }}
     >
-      <div style={{ fontSize: "36px", fontWeight: 800 }}>{title}</div>
+      <div style={{ fontSize: "22px", fontWeight: 800, marginBottom: "6px" }}>{title}</div>
       <div>{description}</div>
       <img src={`images/${imageSrc}`} />
     </div>
