@@ -5,24 +5,27 @@ function InfoContainer(props) {
   const StyledDiv = styled.div`
     box-shadow: 0px 0px 22px 9px rgba(0, 0, 0, 0.03);
     border-radius: 12px;
-    padding: 24px;
     margin-top: 2rem;
     margin-bottom: 1rem;
     border: 1px solid #e0dfe8;
 
     & > div {
-      margin: 1rem 0;
+      margin: 24px;
+    }
+
+    & h2 {
+      margin: 0.5rem 0;
     }
 
     & > div > h2 {
-      margin: 0.5rem 0;
+      margin: 0.5rem 0 1rem 0;
     }
 
     & > h1 {
       font-size: 20px;
       font-weight: bold;
       color: #070452;
-      margin-bottom: 1rem;
+      margin: 24px 24px 0 24px;
     }
 
     & h2 {

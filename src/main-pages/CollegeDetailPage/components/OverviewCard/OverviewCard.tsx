@@ -36,8 +36,10 @@ function OverviewCard(props) {
   return (
     <InfoContainer isOverview={true}>
       <h1>{props.title}</h1>
-      {props.isOverview ? <Divider></Divider> : <></>}
-      <Row gutter={[16, 16]}>{cols}</Row>
+      <div>
+        {props.isOverview ? <Divider></Divider> : <></>}
+        <Row gutter={[16, 16]}>{cols}</Row>
+      </div>
     </InfoContainer>
   );
 }
