@@ -19,6 +19,7 @@ import styles from "./college-detail-page.module.scss";
 import classNames from "classnames";
 import { Map, Marker, ZoomControl } from "pigeon-maps";
 import { useSession } from "next-auth/react";
+import { maxHeight } from "@mui/system";
 
 const CollegeDetailPage = ({
   questionResponses,
@@ -242,7 +243,7 @@ const CollegeDetailPage = ({
       </div>
       <div
         className="w-100 d-flex flex-column align-items-center justify-content-end"
-        style={{ backgroundColor: "#FBFCFF", height: "25vh" }}>
+        style={{ backgroundColor: "#FBFCFF", height: "25vh", maxHeight: "260px" }}>
         <div className="h-100 d-flex flex-column justify-content-between">
           <div className="mt-5">
             <h1
@@ -1264,44 +1265,46 @@ const CollegeDetailPage = ({
               <InfoContainer>
                 <h1>Atheletics</h1>
                 <div>
-                  <div className="inline">
-                    <p className="cl-dark-text">NCAA Member</p>
-                    <h3 className="cl-dark-text">
-                      {parseYesNo(data["ncaa"]["member_ncaa"], "Yes")}
-                    </h3>
+                  <div>
+                    <div className="inline">
+                      <p className="cl-dark-text">NCAA Member</p>
+                      <h3 className="cl-dark-text">
+                        {parseYesNo(data["ncaa"]["member_ncaa"], "Yes")}
+                      </h3>
+                    </div>
+                    <Divider />
+                    <div className="inline">
+                      <p className="cl-dark-text">NCAA for Football</p>
+                      <h3 className="cl-dark-text">
+                        {parseYesNo(data["ncaa"]["ncaa_football"], "Yes")}
+                      </h3>
+                    </div>
+                    <Divider />
+                    <div className="inline">
+                      <p className="cl-dark-text">NCAA for Basketball</p>
+                      <h3 className="cl-dark-text">
+                        {parseYesNo(data["ncaa"]["ncaa_basketball"], "Yes")}
+                      </h3>
+                    </div>
+                    <Divider />
+                    <div className="inline">
+                      <p className="cl-dark-text">NCAA for Track</p>
+                      <h3 className="cl-dark-text">
+                        {parseYesNo(
+                          data["ncaa"]["ncaa_cross_country_track"],
+                          "Yes"
+                        )}
+                      </h3>
+                    </div>
+                    <Divider />
+                    <div className="inline">
+                      <p className="cl-dark-text">NCAA for Baseball</p>
+                      <h3 className="cl-dark-text">
+                        {parseYesNo(data["ncaa"]["ncaa_baseball"], "Yes")}
+                      </h3>
+                    </div>
+                    <Divider />
                   </div>
-                  <Divider />
-                  <div className="inline">
-                    <p className="cl-dark-text">NCAA for Football</p>
-                    <h3 className="cl-dark-text">
-                      {parseYesNo(data["ncaa"]["ncaa_football"], "Yes")}
-                    </h3>
-                  </div>
-                  <Divider />
-                  <div className="inline">
-                    <p className="cl-dark-text">NCAA for Basketball</p>
-                    <h3 className="cl-dark-text">
-                      {parseYesNo(data["ncaa"]["ncaa_basketball"], "Yes")}
-                    </h3>
-                  </div>
-                  <Divider />
-                  <div className="inline">
-                    <p className="cl-dark-text">NCAA for Track</p>
-                    <h3 className="cl-dark-text">
-                      {parseYesNo(
-                        data["ncaa"]["ncaa_cross_country_track"],
-                        "Yes"
-                      )}
-                    </h3>
-                  </div>
-                  <Divider />
-                  <div className="inline">
-                    <p className="cl-dark-text">NCAA for Baseball</p>
-                    <h3 className="cl-dark-text">
-                      {parseYesNo(data["ncaa"]["ncaa_baseball"], "Yes")}
-                    </h3>
-                  </div>
-                  <Divider />
                 </div>
               </InfoContainer>
             </Col>
