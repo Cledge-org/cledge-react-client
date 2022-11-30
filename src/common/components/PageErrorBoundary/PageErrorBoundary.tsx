@@ -28,7 +28,7 @@ const PageErrorBoundary = ({
         </div>
       )}
       onError={(error) => {
-        if (process.env.NEXTAUTH_URL !== "http://localhost:3000" && process.env.NEXTAUTH_URL !== "http://uw.localhost:3000") {
+        if (process.env.NEXTAUTH_URL !== "http://localhost:3000") {
           logEvent(getAnalytics(getFirebaseClientApp()), "error", {
             error_name: error.name as string,
           });
