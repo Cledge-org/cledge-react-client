@@ -111,6 +111,11 @@ const CollegeDetailPage = ({
     return data;
   }
 
+  function dummyDataPaywall(data) {
+    if (!hasUWAccess) return "00000";
+    return data;
+  }
+
   const BlockPaywallCover = () => {
     if (!hasUWAccess)
       return (
@@ -649,7 +654,6 @@ const CollegeDetailPage = ({
               <InfoContainer>
                 <h1>Admission Rate</h1>
                 <div>
-                  <BlockPaywallCover />
                   <div>
                     <h2>Overall acceptance rate</h2>
                     <h3>
@@ -661,17 +665,17 @@ const CollegeDetailPage = ({
                   <div>
                     <h2>Female acceptance rate</h2>
                     <h3>
-                      {parsePercent(
+                      {singlePaywall(parsePercent(
                         data["acceptance_rate"]["acceptance_rate_women"]
-                      )}
+                      ))}
                     </h3>
                   </div>
                   <div>
                     <h2>Male acceptance rate</h2>
                     <h3>
-                      {parsePercent(
+                      {singlePaywall(parsePercent(
                         data["acceptance_rate"]["acceptance_rate_men"]
-                      )}
+                      ))}
                     </h3>
                   </div>
                 </div>
@@ -683,15 +687,15 @@ const CollegeDetailPage = ({
                   <div>
                     <h2>Female commit rate</h2>
                     <h3>
-                      {parsePercent(
+                      {dummyDataPaywall(parsePercent(
                         data["acceptance_rate"]["commit_rate_women"]
-                      )}
+                      ))}
                     </h3>
                   </div>
                   <div>
                     <h2>Male commit rate</h2>
                     <h3>
-                      {parsePercent(data["acceptance_rate"]["commit_rate_men"])}
+                      {dummyDataPaywall(parsePercent(data["acceptance_rate"]["commit_rate_men"]))}
                     </h3>
                   </div>
                 </div>
@@ -1116,37 +1120,38 @@ const CollegeDetailPage = ({
               <InfoContainer>
                 <h1>Average Salary</h1>
                 <div>
+                  <BlockPaywallCover />
                   <h2>6 years after graduation</h2>
                   <div className="inline">
                     <p className="cl-dark-text">25th percentile</p>
                     <h3 className="cl-dark-text">
-                      {parseAmount(
+                      {dummyDataPaywall(parseAmount(
                         data["6_yrs_after_entry.working_not_enrolled"][
                           "earnings_percentile.25"
                         ]
-                      )}
+                      ))}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">75th percentile</p>
                     <h3 className="cl-dark-text">
-                      {parseAmount(
+                      {dummyDataPaywall(parseAmount(
                         data["6_yrs_after_entry.working_not_enrolled"][
                           "earnings_percentile.75"
                         ]
-                      )}
+                      ))}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">90th percentile</p>
                     <h3 className="cl-dark-text">
-                      {parseAmount(
+                      {dummyDataPaywall(parseAmount(
                         data["6_yrs_after_entry.working_not_enrolled"][
                           "earnings_percentile.90"
                         ]
-                      )}
+                      ))}
                     </h3>
                   </div>
                   <Divider />
@@ -1155,33 +1160,33 @@ const CollegeDetailPage = ({
                   <div className="inline">
                     <p className="cl-dark-text">25th percentile</p>
                     <h3 className="cl-dark-text">
-                      {parseAmount(
+                      {dummyDataPaywall(parseAmount(
                         data["10_yrs_after_entry.working_not_enrolled"][
                           "earnings_percentile.25"
                         ]
-                      )}
+                      ))}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">75th percentile</p>
                     <h3 className="cl-dark-text">
-                      {parseAmount(
+                      {dummyDataPaywall(parseAmount(
                         data["10_yrs_after_entry.working_not_enrolled"][
                           "earnings_percentile.75"
                         ]
-                      )}
+                      ))}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">90th percentile</p>
                     <h3 className="cl-dark-text">
-                      {parseAmount(
+                      {dummyDataPaywall(parseAmount(
                         data["10_yrs_after_entry.working_not_enrolled"][
                           "earnings_percentile.90"
                         ]
-                      )}
+                      ))}
                     </h3>
                   </div>
                   <Divider />
