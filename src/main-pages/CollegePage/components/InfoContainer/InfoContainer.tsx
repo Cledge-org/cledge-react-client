@@ -10,7 +10,8 @@ function InfoContainer(props) {
     border: 1px solid #e0dfe8;
 
     & > div {
-      margin: 24px;
+      padding: 24px;
+      position: relative;
     }
 
     & h2 {

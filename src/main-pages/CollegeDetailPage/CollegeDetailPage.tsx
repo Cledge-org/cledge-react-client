@@ -34,8 +34,7 @@ const CollegeDetailPage = ({
   const { data: session } = useSession();
   const [accountInfo, setAccountInfo] = React.useState(null);
   // const hasUWAccess = accountInfo?.hasUWAccess;
-  const hasUWAccess = true;
-  console.log(hasUWAccess);
+  const hasUWAccess = false;
 
   React.useEffect(() => {
     if (session) {
@@ -103,23 +102,24 @@ const CollegeDetailPage = ({
   }
 
   function singlePaywall(data) {
-    if (!hasUWAccess) return (
-      <div>
-        <LockIcon style={{ color: "#070452" }} />
-      </div>
-    );
+    if (!hasUWAccess)
+      return (
+        <div>
+          <LockIcon style={{ color: "#070452" }} />
+        </div>
+      );
     return data;
   }
 
-  function blockPaywall(block) {
-        if (!hasUWAccess)
-          return (
-            <div className={styles.paywallBlock}>
-              <LockIcon style={{ color: "#070452" }} />
-            </div>
-          );
-        return block;
-  }
+  const BlockPaywallCover = () => {
+    if (!hasUWAccess)
+      return (
+        <div className={styles.paywallBlock}>
+          <LockIcon style={{ color: "#070452" }} />
+        </div>
+      )
+    else return <></>;
+  };
 
   // ********************Chart/Map Data*******************************
   const ethnicityData = [
@@ -243,7 +243,11 @@ const CollegeDetailPage = ({
       </div>
       <div
         className="w-100 d-flex flex-column align-items-center justify-content-end"
-        style={{ backgroundColor: "#FBFCFF", height: "25vh", maxHeight: "260px" }}>
+        style={{
+          backgroundColor: "#FBFCFF",
+          height: "25vh",
+          maxHeight: "260px",
+        }}>
         <div className="h-100 d-flex flex-column justify-content-between">
           <div className="mt-5">
             <h1
@@ -644,42 +648,44 @@ const CollegeDetailPage = ({
             <Col span={9}>
               <InfoContainer>
                 <h1>Admission Rate</h1>
-                {blockPaywall(
+                <div>
+                  <BlockPaywallCover />
                   <div>
-                    <div>
-                      <h2>Overall acceptance rate</h2>
-                      <h3>
-                        {parsePercent(
-                          data["acceptance_rate"]["acceptance_rate_total"]
-                        )}
-                      </h3>
-                    </div>
-                    <div>
-                      <h2>Female acceptance rate</h2>
-                      <h3>
-                        {parsePercent(
-                          data["acceptance_rate"]["acceptance_rate_women"]
-                        )}
-                      </h3>
-                    </div>
-                    <div>
-                      <h2>Male acceptance rate</h2>
-                      <h3>
-                        {parsePercent(
-                          data["acceptance_rate"]["acceptance_rate_men"]
-                        )}
-                      </h3>
-                    </div>
+                    <h2>Overall acceptance rate</h2>
+                    <h3>
+                      {parsePercent(
+                        data["acceptance_rate"]["acceptance_rate_total"]
+                      )}
+                    </h3>
                   </div>
-                )}
+                  <div>
+                    <h2>Female acceptance rate</h2>
+                    <h3>
+                      {parsePercent(
+                        data["acceptance_rate"]["acceptance_rate_women"]
+                      )}
+                    </h3>
+                  </div>
+                  <div>
+                    <h2>Male acceptance rate</h2>
+                    <h3>
+                      {parsePercent(
+                        data["acceptance_rate"]["acceptance_rate_men"]
+                      )}
+                    </h3>
+                  </div>
+                </div>
               </InfoContainer>
               <InfoContainer>
                 <h1>Commit Rate</h1>
                 <div>
+                  <BlockPaywallCover />
                   <div>
                     <h2>Female commit rate</h2>
                     <h3>
-                      {parsePercent(data["acceptance_rate"]["commit_rate_women"])}
+                      {parsePercent(
+                        data["acceptance_rate"]["commit_rate_women"]
+                      )}
                     </h3>
                   </div>
                   <div>
@@ -866,7 +872,9 @@ const CollegeDetailPage = ({
                   <Row>
                     <Col span={8}>
                       <h2>Instruction Expenses</h2>
-                      <h3>{parseAmount(data["instruction_expense_per_fte"])}</h3>
+                      <h3>
+                        {parseAmount(data["instruction_expense_per_fte"])}
+                      </h3>
                     </Col>
                     <Col span={8}>
                       <h2>Student Service Expenses</h2>
@@ -999,7 +1007,9 @@ const CollegeDetailPage = ({
                     <p className="cl-dark-text">Other</p>
                     <h3 className="cl-dark-text">
                       {parsePercent(
-                        data["percent_full_time_first_time_finance"]["other_loan"]
+                        data["percent_full_time_first_time_finance"][
+                          "other_loan"
+                        ]
                       )}
                     </h3>
                   </div>

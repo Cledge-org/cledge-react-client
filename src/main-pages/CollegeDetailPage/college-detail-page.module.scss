@@ -18,10 +18,15 @@
   word-wrap: break-word;
 }
 .paywall-block {
-  background-color: #ebf1fd;
+  background-color: #ebf1fd84;
+  backdrop-filter: blur(5px);
   width: 100%;
-  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0 !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
 }
