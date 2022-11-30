@@ -5,7 +5,6 @@ const UWQuoteBlock = ({
     content,
   }: {
     content: string,
-    isMobile: boolean,
   }) => {
     return (
       <div className="mx-3">
@@ -16,7 +15,7 @@ const UWQuoteBlock = ({
           style={{
             background: "#DCE1FB", 
             width: "25rem", 
-            height: "11rem",
+            height: "12rem",
             border: "1px solid transparent",
             borderRadius: "10px"
           }}
@@ -30,7 +29,7 @@ const UWQuoteBlock = ({
               fontWeight: 600,
               fontSize: "16px",
               lineHeight: "24px",
-              width: "85%"
+              width: "80%"
             }}
           >
             {content}

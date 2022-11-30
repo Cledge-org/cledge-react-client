@@ -17,18 +17,19 @@ const UWLandingCard = ({
     <div
       className={classNames("d-flex flex-column mx-4", className)}
       style={{
-        height: width < 800 ? "60vh" : "50vh",
+        height: "60vh",
         width: width < 800 ? "85vw" : "25%",
         background: "#818EFF",
         borderRadius: "8px",
         color: "white",
       }}
     >
-      <div className="w-100 p-4" style={{ background: "rgb(0, 0, 0, 0.5)", height: "15rem" }}>
-        <div style={{ fontSize: "20px", fontWeight: 700 }}>{title}</div>
-        <div className="mt-3">{description}</div>
+      <div style={{ height: "0.7vh", background: "linear-gradient(92.92deg, rgba(80, 107, 237, 0.2) -8.48%, #F7BC76 95.28%)" }}></div>
+      <div className="w-100 p-4" style={{ background: "rgb(0, 0, 0, 0.5)", height: width < 800 ? "30%" : "35%" }}>
+        <div style={{ fontSize: width < 800 ? "18px" : "2.5vh", fontWeight: 700 }}>{title}</div>
+        <div style={{ fontSize: width < 800 ? "16px" :"1.8vh" }} className="mt-3">{description}</div>
       </div>
-      <div className="d-flex justify-content-center h-100 mx-5">
+      <div className="d-flex justify-content-center mx-5 mt-3" style={{ height: "50%" }}>
         <img src={`images/${imageSrc}`} />
       </div>
     </div>
