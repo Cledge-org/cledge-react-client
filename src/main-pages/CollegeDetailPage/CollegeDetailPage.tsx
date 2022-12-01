@@ -317,40 +317,42 @@ const CollegeDetailPage = ({
               </div>
               <InfoContainer>
                 <div>
-                  <h2>Phone Number</h2>
-                  <h3>{data["contact_phone_num"]}</h3>
-                </div>
-                <div>
-                  <h2>Address</h2>
-                  <h3>{data["standard_address"]}</h3>
-                </div>
-                <div>
-                  <h2>Homepage</h2>
-                  <h3>
-                    <a
-                      href={`https://${data["institution_url"]}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={classNames("cl-blue", styles.linkWrapping)}>
-                      {data["institution_url"]}
-                    </a>
-                  </h3>
-                </div>
-                <div>
-                  <h2>Institutional Category</h2>
-                  <h3>{data["instituional_category"]}</h3>
-                </div>
-                <div>
-                  <h2>Institution Size</h2>
-                  <h3>{data["inst_size"]}</h3>
-                </div>
-                <div>
-                  <h2>Religious Affiliation</h2>
-                  <h3>
-                    {data["religious_affiliation"]
-                      ? data["religious_affiliation"]
-                      : "No Data"}
-                  </h3>
+                  <div>
+                    <h2>Phone Number</h2>
+                    <h3>{data["contact_phone_num"]}</h3>
+                  </div>
+                  <div>
+                    <h2>Address</h2>
+                    <h3>{data["standard_address"]}</h3>
+                  </div>
+                  <div>
+                    <h2>Homepage</h2>
+                    <h3>
+                      <a
+                        href={`https://${data["institution_url"]}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={classNames("cl-blue", styles.linkWrapping)}>
+                        {data["institution_url"]}
+                      </a>
+                    </h3>
+                  </div>
+                  <div>
+                    <h2>Institutional Category</h2>
+                    <h3>{data["instituional_category"]}</h3>
+                  </div>
+                  <div>
+                    <h2>Institution Size</h2>
+                    <h3>{data["inst_size"]}</h3>
+                  </div>
+                  <div>
+                    <h2>Religious Affiliation</h2>
+                    <h3>
+                      {data["religious_affiliation"]
+                        ? data["religious_affiliation"]
+                        : "No Data"}
+                    </h3>
+                  </div>
                 </div>
               </InfoContainer>
               {data["coordinates"]["latitude"] &&
@@ -575,7 +577,7 @@ const CollegeDetailPage = ({
               </InfoContainer>
               <InfoContainer>
                 <h1>SAT Score Data (Admitted Students)</h1>
-                <div>
+                <div className={styles.content}>
                   <DataRow
                     colNum={3}
                     sub1="Section"
@@ -633,7 +635,7 @@ const CollegeDetailPage = ({
               </InfoContainer>
               <InfoContainer>
                 <h1>ACT Score Data (Admitted Students)</h1>
-                <div>
+                <div className={styles.content}>
                   <DataRow
                     colNum={3}
                     sub1="Section"
@@ -665,17 +667,21 @@ const CollegeDetailPage = ({
                   <div>
                     <h2>Female acceptance rate</h2>
                     <h3>
-                      {singlePaywall(parsePercent(
-                        data["acceptance_rate"]["acceptance_rate_women"]
-                      ))}
+                      {singlePaywall(
+                        parsePercent(
+                          data["acceptance_rate"]["acceptance_rate_women"]
+                        )
+                      )}
                     </h3>
                   </div>
                   <div>
                     <h2>Male acceptance rate</h2>
                     <h3>
-                      {singlePaywall(parsePercent(
-                        data["acceptance_rate"]["acceptance_rate_men"]
-                      ))}
+                      {singlePaywall(
+                        parsePercent(
+                          data["acceptance_rate"]["acceptance_rate_men"]
+                        )
+                      )}
                     </h3>
                   </div>
                 </div>
@@ -687,15 +693,19 @@ const CollegeDetailPage = ({
                   <div>
                     <h2>Female commit rate</h2>
                     <h3>
-                      {dummyDataPaywall(parsePercent(
-                        data["acceptance_rate"]["commit_rate_women"]
-                      ))}
+                      {dummyDataPaywall(
+                        parsePercent(
+                          data["acceptance_rate"]["commit_rate_women"]
+                        )
+                      )}
                     </h3>
                   </div>
                   <div>
                     <h2>Male commit rate</h2>
                     <h3>
-                      {dummyDataPaywall(parsePercent(data["acceptance_rate"]["commit_rate_men"]))}
+                      {dummyDataPaywall(
+                        parsePercent(data["acceptance_rate"]["commit_rate_men"])
+                      )}
                     </h3>
                   </div>
                 </div>
@@ -1125,33 +1135,39 @@ const CollegeDetailPage = ({
                   <div className="inline">
                     <p className="cl-dark-text">25th percentile</p>
                     <h3 className="cl-dark-text">
-                      {dummyDataPaywall(parseAmount(
-                        data["6_yrs_after_entry.working_not_enrolled"][
-                          "earnings_percentile.25"
-                        ]
-                      ))}
+                      {dummyDataPaywall(
+                        parseAmount(
+                          data["6_yrs_after_entry.working_not_enrolled"][
+                            "earnings_percentile.25"
+                          ]
+                        )
+                      )}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">75th percentile</p>
                     <h3 className="cl-dark-text">
-                      {dummyDataPaywall(parseAmount(
-                        data["6_yrs_after_entry.working_not_enrolled"][
-                          "earnings_percentile.75"
-                        ]
-                      ))}
+                      {dummyDataPaywall(
+                        parseAmount(
+                          data["6_yrs_after_entry.working_not_enrolled"][
+                            "earnings_percentile.75"
+                          ]
+                        )
+                      )}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">90th percentile</p>
                     <h3 className="cl-dark-text">
-                      {dummyDataPaywall(parseAmount(
-                        data["6_yrs_after_entry.working_not_enrolled"][
-                          "earnings_percentile.90"
-                        ]
-                      ))}
+                      {dummyDataPaywall(
+                        parseAmount(
+                          data["6_yrs_after_entry.working_not_enrolled"][
+                            "earnings_percentile.90"
+                          ]
+                        )
+                      )}
                     </h3>
                   </div>
                   <Divider />
@@ -1160,33 +1176,39 @@ const CollegeDetailPage = ({
                   <div className="inline">
                     <p className="cl-dark-text">25th percentile</p>
                     <h3 className="cl-dark-text">
-                      {dummyDataPaywall(parseAmount(
-                        data["10_yrs_after_entry.working_not_enrolled"][
-                          "earnings_percentile.25"
-                        ]
-                      ))}
+                      {dummyDataPaywall(
+                        parseAmount(
+                          data["10_yrs_after_entry.working_not_enrolled"][
+                            "earnings_percentile.25"
+                          ]
+                        )
+                      )}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">75th percentile</p>
                     <h3 className="cl-dark-text">
-                      {dummyDataPaywall(parseAmount(
-                        data["10_yrs_after_entry.working_not_enrolled"][
-                          "earnings_percentile.75"
-                        ]
-                      ))}
+                      {dummyDataPaywall(
+                        parseAmount(
+                          data["10_yrs_after_entry.working_not_enrolled"][
+                            "earnings_percentile.75"
+                          ]
+                        )
+                      )}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">90th percentile</p>
                     <h3 className="cl-dark-text">
-                      {dummyDataPaywall(parseAmount(
-                        data["10_yrs_after_entry.working_not_enrolled"][
-                          "earnings_percentile.90"
-                        ]
-                      ))}
+                      {dummyDataPaywall(
+                        parseAmount(
+                          data["10_yrs_after_entry.working_not_enrolled"][
+                            "earnings_percentile.90"
+                          ]
+                        )
+                      )}
                     </h3>
                   </div>
                   <Divider />
