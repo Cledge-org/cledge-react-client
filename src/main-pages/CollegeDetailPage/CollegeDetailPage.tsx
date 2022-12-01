@@ -382,10 +382,12 @@ const CollegeDetailPage = ({
               )}
               {data["mission_statement"] ? (
                 <InfoContainer>
-                  <h3>Mission Statement</h3>
-                  <h2 className={styles.linkWrapping}>
-                    {data["mission_statement"]}
-                  </h2>
+                  <div>
+                    <h3>Mission Statement</h3>
+                    <h2 className={styles.linkWrapping}>
+                      {data["mission_statement"]}
+                    </h2>
+                  </div>
                 </InfoContainer>
               ) : (
                 <></>
