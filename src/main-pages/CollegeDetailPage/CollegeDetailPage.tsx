@@ -34,7 +34,7 @@ const CollegeDetailPage = ({
   const { data: session } = useSession();
   const [accountInfo, setAccountInfo] = React.useState(null);
   // const hasUWAccess = accountInfo?.hasUWAccess;
-  const hasUWAccess = false;
+  const [hasUWAccess, setHasUWAccess] = React.useState(false);
 
   React.useEffect(() => {
     if (session) {
@@ -49,6 +49,7 @@ const CollegeDetailPage = ({
     });
     const accountInfoJSON = await accountInfoResponse.json();
     setAccountInfo(accountInfoJSON);
+    setHasUWAccess(accountInfoJSON.hasUWAccess === true);
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -480,7 +481,7 @@ const CollegeDetailPage = ({
                   </div>
                   <Divider />
                   <div className="inline">
-                    <p className="cl-dark-text">Highschool GPA</p>
+                    <p className="cl-dark-text">High school GPA</p>
                     <h3 className="cl-dark-text">
                       {singlePaywall(
                         parse(data["admission_factors"]["high_school_gpa"])
@@ -489,7 +490,7 @@ const CollegeDetailPage = ({
                   </div>
                   <Divider />
                   <div className="inline">
-                    <p className="cl-dark-text">Highschool rank</p>
+                    <p className="cl-dark-text">High school rank</p>
                     <h3 className="cl-dark-text">
                       {singlePaywall(
                         parse(data["admission_factors"]["high_school_rank"])
@@ -498,7 +499,7 @@ const CollegeDetailPage = ({
                   </div>
                   <Divider />
                   <div className="inline">
-                    <p className="cl-dark-text">Highschool record</p>
+                    <p className="cl-dark-text">High school record</p>
                     <h3 className="cl-dark-text">
                       {singlePaywall(
                         parse(data["admission_factors"]["high_school_record"])
