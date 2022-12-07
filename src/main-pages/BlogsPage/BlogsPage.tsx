@@ -17,13 +17,15 @@ const BlogsPage = ({ blogInfo }) => {
     const session = useSession();
 
     useEffect(() => {
-        callGetAccount(session.data.user.uid)
-            .then((res) => {
-                return res.json();
-            })
-            .then((res) => {
-                setAccount(res);
-            });
+        if (session.data) {
+            callGetAccount(session.data.user.uid)
+                .then((res) => {
+                    return res.json();
+                })
+                .then((res) => {
+                    setAccount(res);
+                });
+        }
     }, []);
 
     // grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 md:p-0

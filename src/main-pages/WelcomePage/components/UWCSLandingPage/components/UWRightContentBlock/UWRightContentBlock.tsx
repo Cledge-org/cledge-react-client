@@ -82,7 +82,7 @@ const UWRightContentBlock = ({
           {id === "intro" ? (
             <VideoWrapper id="videoWrapper">{video}</VideoWrapper>
           ) : (
-            <SvgIcon src={icon} width="100%" height="100%" />
+            <img src={icon} width="100%" height="100%" />
           )}
         </Col>
       </Row>
