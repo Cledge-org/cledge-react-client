@@ -83,7 +83,7 @@ const UWCSLandingPage = ({
               </div>
               {!isMobile ? (
               <div style={{ fontSize: "18px" }}>
-                for everything
+                Full Package
               </div>
               ) : null}
             </div>
@@ -350,19 +350,19 @@ const UWCSLandingPage = ({
             >
               <UWLandingCard
                 className="me-2"
-                title="New to the application process?"
-                description="Learn from successful UW CS profiles and the Cledge courses curated for you."
+                title="Learn from successful student profiles"
+                description="Learn from our comprehensive profile analysis and curated courses."
                 imageSrc="uwcard1.png"
               />
               <UWLandingCard
                 className="mx-2"
-                title="Have specific questions?"
+                title="Ask a college counselor & AI"
                 description="Get answers from your assigned college counselor and the Cledge AI."
                 imageSrc="uwcard2.png"
               />
               <UWLandingCard
                 className="ms-2"
-                title="Not sure how to improve?"
+                title="Personalized improvement metrics"
                 description="Get personalized metrics on where you stand and how to improve your academics or extracurriculars."
                 imageSrc="uwcard3.svg"
               />
