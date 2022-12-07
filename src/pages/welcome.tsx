@@ -16,7 +16,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 }
 
 function Welcome({ data }) {
-  return <UWCSLandingPage blogData={data} />;
+  return <WelcomePage data={data} />;
 }
 
 export default Welcome;
