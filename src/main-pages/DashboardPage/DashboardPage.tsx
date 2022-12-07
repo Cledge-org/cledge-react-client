@@ -5,11 +5,11 @@ import { useEffect, useMemo, useState } from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { connect } from "react-redux";
 import QuickAccessLinks from "src/main-pages/DashboardPage/components/QuickAccessLinks/QuickAccessLinks";
-import Footer from "../../common/components/Footer/Footer";
 import BlogCarouselItem from "src/main-pages/WelcomePage/components/blogsCarousel/components/BlogCaroselItem";
 import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import styles from "./dashboard-page.module.scss";
+import Footer from "src/common/components/Footer/Footer";
 
 const DashboardPage = ({
   accountInfo,
@@ -80,21 +80,18 @@ const DashboardPage = ({
     });
   }
   return (
-    <div
-      className="d-flex align-items-center justify-content-center w-100"
-      style={{ backgroundColor: "#F9FAFF", height: "106.5vh" }}
-    >
-      <div className="d-flex flex-column w-75" style={{ height: "90%" }}>
-        <div className="cl-dark-text fw-bold mb-5" style={{ fontSize: "28px" }}>
-          Hi, {accountInfo.name}. Welcome to the dashboard
-        </div>
-        <div className="cl-dark-text fw-bold pb-2" style={{ fontSize: "18px" }}>
-          The essential assistance we provide
-        </div>
-        <div
-          className="d-flex flex-row align-items-center"
-          style={{ height: width < 1400 || height < 800 ? "60%" : "42%" }}
-        >
+    <div>
+      <div
+        className="d-flex align-items-center justify-content-center w-100"
+        style={{ backgroundColor: "#F9FAFF", height: "70vh" }}
+      >
+        <div className="d-flex flex-column w-75" style={{ height: "90%" }}>
+          <div
+            className="cl-dark-text fw-bold mb-5"
+            style={{ fontSize: "28px" }}
+          >
+            Hi, {accountInfo.name}. Welcome to the Dashboard!
+          </div>
           <div
             className="cl-dark-text fw-bold pb-2"
             style={{ fontSize: "18px" }}
@@ -117,7 +114,7 @@ const DashboardPage = ({
                   className="cl-blue"
                   href="https://calendly.com/ayan-college-counseling/cledge-uw-cs-advising-session"
                 >
-                  calendly
+                  Calendly.
                 </a>
               </div>
             </div>
@@ -156,7 +153,7 @@ const DashboardPage = ({
                       />
                     </a>
                   </Link>
-                  <div>My Learning</div>
+                  <div className="mt-3" style={{ fontSize: "1vw" }}>My Learning</div>
                 </div>
                 <div>
                   <div style={{ width: "4vw" }}>
@@ -189,7 +186,7 @@ const DashboardPage = ({
                 {dashboardParts.map(({ name }) => (
                   <Link href="/my-learning">
                     <a>
-                      <div className="cl-dark-text py-2">{name}</div>
+                      <div className="cl-dark-text py-2" style={{ fontSize: "0.7vw" }}>{name}</div>
                     </a>
                   </Link>
                 ))}
@@ -197,7 +194,7 @@ const DashboardPage = ({
             </div>
             <div style={{ width: "4%" }} />
             <div
-              className="w-100"
+              className="w-100 d-flex flex-column justify-content-between"
               style={{
                 height: "100%",
                 borderRadius: "10px",
@@ -208,7 +205,7 @@ const DashboardPage = ({
             >
               <div
                 className="d-flex justify-content-end w-100 py-3 cl-dark-text fw-bold px-3"
-                style={{ backgroundColor: "#A5A6F6", position: "relative" }}
+                style={{ backgroundColor: "#A5A6F6", position: "relative", fontSize: "0.8vw" }}
               >
                 Try it! Cledge's most popular feature
                 <Link href="/chatbot">
@@ -218,7 +215,7 @@ const DashboardPage = ({
                       style={{
                         position: "absolute",
                         bottom: "-40%",
-                        left: "2%",
+                        left: "3%",
                         padding: "10px",
                         width: "50px",
                         borderRadius: "10px",
@@ -229,18 +226,18 @@ const DashboardPage = ({
                 </Link>
               </div>
               <div
-                className="px-3 pt-5 d-flex flex-column justify-content-end"
-                style={{ height: "70%" }}
+                className="ps-3 pb-3 d-flex flex-column justify-content-end"
+                style={{ height: "100%" }}
               >
                 <div
                   className="cl-dark-text fw-bold mb-3"
-                  style={{ fontSize: width >= 1500 ? " 24px" : "22px" }}
+                  style={{ fontSize: "1.1vw" }}
                 >
                   Chat with our AI counselor
                 </div>
                 <div
                   className="cl-mid-gray"
-                  style={{ fontSize: width >= 1500 ? "18px" : "16px" }}
+                  style={{ fontSize: "0.85vw" }}
                 >
                   Anything you are not sure about?
                   <br />
@@ -273,11 +270,11 @@ const DashboardPage = ({
               </Link>
               <div
                 className="cl-dark-text fw-bold mt-3"
-                style={{ fontSize: "24px" }}
+                style={{ fontSize: "1.1vw" }}
               >
                 Competitive Metrics
               </div>
-              <div className="cl-mid-gray" style={{ fontSize: "18px" }}>
+              <div className="cl-mid-gray" style={{ fontSize: "0.85vw" }}>
                 View tips to improve the competitiveness of your profile
               </div>
               <div className="w-100 mt-3">
@@ -366,34 +363,18 @@ const DashboardPage = ({
             </div>
           </div>
         </div>
-        <div className="cl-dark-text fw-bold py-3" style={{ fontSize: "18px" }}>
-          Blogs
-        </div>
-        <div
-          className="w-100 center-child"
-          style={{
-            height: "50%",
-            borderRadius: "10px",
-            backgroundColor: "white",
-            border: "1px solid #E0DFE8",
-          }}
-        >
-          <div
-            className={classNames(
-              "d-flex flex-row px-3 py-3",
-              styles.blogCarousel
-            )}
-            style={{ overflowX: "auto" }}
-          >
-            {recentBlogs.articles[0].map((e) => (
-              <BlogCarouselItem className="shadow-none" article={e} />
-            ))}
-          </div>
-        </div>
-        <Footer />
       </div>
-      <NewBlogsCarousel recentBlogs={recentBlogs} />
-      <QuickAccessLinks />
+      <div style={{ backgroundColor: "rgb(249, 250, 255)" }} className="d-flex align-items-center justify-content-center w-100">
+        <div className="d-flex flex-column w-75">
+          <NewBlogsCarousel recentBlogs={recentBlogs} />
+        </div>
+      </div>
+      <div style={{ backgroundColor: "rgb(249, 250, 255)" }} className="d-flex align-items-center justify-content-center w-100">
+        <div className="d-flex flex-column w-75 pt-5">
+        <QuickAccessLinks />
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 };

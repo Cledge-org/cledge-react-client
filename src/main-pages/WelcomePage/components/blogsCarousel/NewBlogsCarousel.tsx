@@ -53,8 +53,8 @@ function NewBlogsCarousel({ recentBlogs }) {
   const recentBlogsData = recentBlogs.articles[0];
   return (
     <ThemeProvider theme={theme}>
-      <div className={styles.mainContainer}>
-        <h1>Get started with our free expert-written blogs</h1>
+      <div className="">
+        <div className="cl-dark-text fw-bold" style={{ fontSize: "28px" }}>Get started with our free expert-written blogs</div>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <LeftArrow>
             <Fab
