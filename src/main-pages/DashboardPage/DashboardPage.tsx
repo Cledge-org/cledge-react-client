@@ -90,7 +90,7 @@ const DashboardPage = ({
             className="cl-dark-text fw-bold mb-5"
             style={{ fontSize: "28px" }}
           >
-            Hi, {accountInfo.name}. Welcome to the dashboard
+            Hi, {accountInfo.name}. Welcome to the Dashboard!
           </div>
           <div
             className="cl-dark-text fw-bold pb-2"
@@ -114,7 +114,7 @@ const DashboardPage = ({
                   className="cl-blue"
                   href="https://calendly.com/ayan-college-counseling/cledge-uw-cs-advising-session"
                 >
-                  calendly
+                  Calendly.
                 </a>
               </div>
             </div>
@@ -153,7 +153,7 @@ const DashboardPage = ({
                       />
                     </a>
                   </Link>
-                  <div>My Learning</div>
+                  <div className="mt-3" style={{ fontSize: "1vw" }}>My Learning</div>
                 </div>
                 <div>
                   <div style={{ width: "4vw" }}>
@@ -186,7 +186,7 @@ const DashboardPage = ({
                 {dashboardParts.map(({ name }) => (
                   <Link href="/my-learning">
                     <a>
-                      <div className="cl-dark-text py-2">{name}</div>
+                      <div className="cl-dark-text py-2" style={{ fontSize: "0.7vw" }}>{name}</div>
                     </a>
                   </Link>
                 ))}
@@ -194,7 +194,7 @@ const DashboardPage = ({
             </div>
             <div style={{ width: "4%" }} />
             <div
-              className="w-100"
+              className="w-100 d-flex flex-column justify-content-between"
               style={{
                 height: "100%",
                 borderRadius: "10px",
@@ -205,7 +205,7 @@ const DashboardPage = ({
             >
               <div
                 className="d-flex justify-content-end w-100 py-3 cl-dark-text fw-bold px-3"
-                style={{ backgroundColor: "#A5A6F6", position: "relative" }}
+                style={{ backgroundColor: "#A5A6F6", position: "relative", fontSize: "0.8vw" }}
               >
                 Try it! Cledge's most popular feature
                 <Link href="/chatbot">
@@ -215,7 +215,7 @@ const DashboardPage = ({
                       style={{
                         position: "absolute",
                         bottom: "-40%",
-                        left: "2%",
+                        left: "3%",
                         padding: "10px",
                         width: "50px",
                         borderRadius: "10px",
@@ -226,18 +226,18 @@ const DashboardPage = ({
                 </Link>
               </div>
               <div
-                className="px-3 pt-5 d-flex flex-column justify-content-end"
-                style={{ height: "70%" }}
+                className="ps-3 pb-3 d-flex flex-column justify-content-end"
+                style={{ height: "100%" }}
               >
                 <div
                   className="cl-dark-text fw-bold mb-3"
-                  style={{ fontSize: width >= 1500 ? " 24px" : "22px" }}
+                  style={{ fontSize: "1.1vw" }}
                 >
                   Chat with our AI counselor
                 </div>
                 <div
                   className="cl-mid-gray"
-                  style={{ fontSize: width >= 1500 ? "18px" : "16px" }}
+                  style={{ fontSize: "0.85vw" }}
                 >
                   Anything you are not sure about?
                   <br />
@@ -270,11 +270,11 @@ const DashboardPage = ({
               </Link>
               <div
                 className="cl-dark-text fw-bold mt-3"
-                style={{ fontSize: "24px" }}
+                style={{ fontSize: "1.1vw" }}
               >
                 Competitive Metrics
               </div>
-              <div className="cl-mid-gray" style={{ fontSize: "18px" }}>
+              <div className="cl-mid-gray" style={{ fontSize: "0.85vw" }}>
                 View tips to improve the competitiveness of your profile
               </div>
               <div className="w-100 mt-3">
