@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-key */
-/* eslint-disable react/no-children-prop */
 import classNames from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
