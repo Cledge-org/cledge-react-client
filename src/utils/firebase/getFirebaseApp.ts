@@ -8,7 +8,6 @@ const firebaseCreds = {
 };
 export const getFirebaseClientApp = () => {
   let firebaseApp;
-  console.log(firebaseCreds);
   try {
     firebaseApp = getApp();
   } catch (error) {
