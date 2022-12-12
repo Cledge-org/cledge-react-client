@@ -65,8 +65,8 @@ function QuickAccessLinks() {
   });
   return (
     <ThemeProvider theme={theme}>
-      <MainContainer>
-        <h1>University of Washington quick access links</h1>
+      <div>
+      <div className="cl-dark-text fw-bold" style={{ fontSize: "28px" }}>University of Washington quick access links</div>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <LeftArrow>
             <Fab
@@ -113,7 +113,7 @@ function QuickAccessLinks() {
             </Fab>
           </RightArrow>
         </div>
-      </MainContainer>
+      </div>
     </ThemeProvider>
   );
 }

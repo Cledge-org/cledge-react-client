@@ -16,7 +16,7 @@ import UWLandingCard from "./components/UWPackageFeature/UWLandingCard";
 import UWRightContentBlock from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWRightContentBlock/UWRightContentBlock";
 import { Intro, BlobBlock } from "./components/UWPackageFeature/styles";
 
-const Footer = dynamic(() => import("src/common/components/Footer/Footer"));
+const UWLandingFooter = dynamic(() => import("./components/footer/UWLandingFooter"));
 const Container = dynamic(() => import("../Container/Container"));
 const BlogCarouselItem = dynamic(() => import("../blogsCarousel/components/BlogCaroselItem"));
 
@@ -83,19 +83,14 @@ const UWCSLandingPage = ({
               </div>
               {!isMobile ? (
               <div style={{ fontSize: "18px" }}>
-                for everything
+                Full Package
               </div>
               ) : null}
             </div>
             <div className="ms-3">
               {!isMobile ? (
-              <div className={classNames("cl-dark-text fw-bold mt-5")} style={{ fontSize: "14px" }}>
-                  Releasing September
-              </div>
-              ) : null }
-              {!isMobile ? (
                 <div 
-                className={classNames("mt-2")}
+                className={classNames("mt-5")}
                 style={{
                   width: isMobile ? "100%" : "50%",
                   border: "1px solid #C1C0CE",
@@ -118,7 +113,7 @@ const UWCSLandingPage = ({
                 className="cl-btn-blue mt-3"
                 onClick={() => {
                   window.open(
-                    `/uw-interest-form?ref=${router.query.ref}`,
+                    `/auth/uw-purchase`,
                     "_self"
                   );
                 }}
@@ -128,7 +123,7 @@ const UWCSLandingPage = ({
                   fontSize: "18px",
                 }}
               >
-                Join the Waitlist
+                Sign Up
               </button>
               ) : null }
             </div>
@@ -161,7 +156,7 @@ const UWCSLandingPage = ({
               "Analysis of 5+ successful applications & why they worked",
               "Insider look at how UW CS scores your application",
               "How to approach the UW supplemental essays",
-              "Should you apply to Computer Engineering or Computer Science?",
+              "Advice on whether to apply to Computer Engineering or Computer Science",
               "The Cledge AI Advisor & College Search Tool",
             ].map((option) => (
               <div className={classNames("d-flex flex-row ms-3 mt-4 align-items-center", {"mt-3": isMobile})}>
@@ -212,11 +207,8 @@ const UWCSLandingPage = ({
                 }}
               />
             ) : null}
-            {isMobile ? (
-            <div className={classNames("d-flex flex-column justify-content-center mx-3")}>
-            <div className={classNames("cl-dark-text fw-bold mb-3")} style={{ fontSize: "14px" }}>
-                Releasing September
-            </div>
+          {isMobile ? (
+          <div className={classNames("d-flex flex-column justify-content-center mx-3")}>
             <div 
               className={classNames("mb-3")}
               style={{
@@ -238,7 +230,7 @@ const UWCSLandingPage = ({
             <button
               onClick={() => {
                 window.open(
-                  `/uw-interest-form?ref=${router.query.ref}`,
+                  `/auth/uw-purchase`,
                   "_self"
                 );
               }}
@@ -251,7 +243,7 @@ const UWCSLandingPage = ({
                 fontWeight: 600
               }}
             >
-              Join the Waitlist
+              Sign Up
             </button>
 
             </div>
@@ -326,7 +318,7 @@ const UWCSLandingPage = ({
                         });
                       } else {
                         window.open(
-                          `/uw-interest-form?ref=${router.query.ref}`,
+                          `/auth/uw-purchase`,
                           "_self"
                         );
                       }
@@ -358,19 +350,19 @@ const UWCSLandingPage = ({
             >
               <UWLandingCard
                 className="me-2"
-                title="New to the application process?"
-                description="Learn from successful UW CS profiles and the Cledge courses curated for you."
+                title="Learn from successful student profiles"
+                description="Learn from our comprehensive profile analysis and curated courses."
                 imageSrc="uwcard1.png"
               />
               <UWLandingCard
                 className="mx-2"
-                title="Have specific questions?"
+                title="Ask a college counselor & AI"
                 description="Get answers from your assigned college counselor and the Cledge AI."
                 imageSrc="uwcard2.png"
               />
               <UWLandingCard
                 className="ms-2"
-                title="Not sure how to improve?"
+                title="Personalized improvement metrics"
                 description="Get personalized metrics on where you stand and how to improve your academics or extracurriculars."
                 imageSrc="uwcard3.svg"
               />
@@ -378,10 +370,10 @@ const UWCSLandingPage = ({
           </div>
         </div>
         {packageAd}
-        <div className="py-3 pb-5" style={{ background: "#0B1142", height: "26rem" }}>
-          <div className="d-flex flex-column py-3 center-child" style={{ padding: "36px" }}>
-            <div style={{ height: "52vh" }}>
-              <div className={classNames("ms-4 d-flex")} style={{ fontSize: isMobile ? "22px" : "28px", fontWeight: 700, color: "#FFFFFF" }}>
+        <div className="pt-5" style={{ background: "#0B1142", height: "26rem" }}>
+          <div className="d-flex flex-column justify-content-center align-items-center" >
+            <div>
+              <div className={classNames("d-flex", {"justify-content-center": isMobile})} style={{ fontSize: isMobile ? "4.5vw" : "28px", fontWeight: 700, color: "#FFFFFF" }}>
                 Trusted by both students and parents:
               </div>
               <div className="d-flex flex-row justify-content-start">
@@ -426,7 +418,7 @@ const UWCSLandingPage = ({
                   content={
                     ""
                   }
-                  icon="uw_question.svg"
+                  icon="images/uw_question.png"
                   id="mission2"
                 />
               </div>
@@ -449,7 +441,7 @@ const UWCSLandingPage = ({
                   content={
                     ""
                   }
-                  icon="uw_pathway.svg"
+                  icon="images/uw_pathway.png"
                   id="mission2"
                 />
               </div>
@@ -472,7 +464,7 @@ const UWCSLandingPage = ({
                   content={
                     ""
                   }
-                  icon="uw_chatbot.svg"
+                  icon="images/uw_chatbot.png"
                   id="mission2"
                 />
               </div>
@@ -495,7 +487,7 @@ const UWCSLandingPage = ({
                   content={
                     ""
                   }
-                  icon="uw_metric.svg"
+                  icon="images/uw_metric.png"
                   id="mission2"
                 />
               </div>
@@ -534,7 +526,7 @@ const UWCSLandingPage = ({
           </div>
         </div>
       </Container>
-      <Footer />
+      <UWLandingFooter />
     </PageErrorBoundary>
   );
 };

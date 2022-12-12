@@ -24,13 +24,13 @@ const UWLandingCard = ({
         color: "white",
       }}
     >
-      <div style={{ height: "0.7vh", background: "linear-gradient(92.92deg, rgba(80, 107, 237, 0.2) -8.48%, #F7BC76 95.28%)" }}></div>
+      <div style={{ height: "0.8vh", background: "linear-gradient(92.92deg, rgba(80, 107, 237, 0.2) -8.48%, #F7BC76 95.28%)" }}></div>
       <div className="w-100 p-4" style={{ background: "rgb(0, 0, 0, 0.5)", height: width < 800 ? "30%" : "35%" }}>
-        <div style={{ fontSize: width < 800 ? "18px" : "2.5vh", fontWeight: 700 }}>{title}</div>
-        <div style={{ fontSize: width < 800 ? "16px" :"1.8vh" }} className="mt-3">{description}</div>
+        <div style={{ fontSize: width < 800 ? "1.8vh" : "1.1vw", fontWeight: 700 }}>{title}</div>
+        <div style={{ fontSize: width < 800 ? "1.5vh" :"0.9vw" }} className="mt-3">{description}</div>
       </div>
       <div className="d-flex justify-content-center mx-5 mt-3" style={{ height: "50%" }}>
-        <img src={`images/${imageSrc}`} />
+        <img style={{display: "block"}} src={`images/${imageSrc}`} />
       </div>
     </div>
   );
