@@ -131,12 +131,9 @@ export const getAllClassesFormatted = (classTypes: any[]) => {
 export const calculateGPATier = (applicantLevel: number, gpa: number) => {
   let gpaTier = 0;
   if (applicantLevel === 2) {
-    // gpaTier = Math.floor( 6.3 / (1 + Math.exp(-0.3376 * (gpa - 1))) - 2.15);
-    gpaTier = Math.floor(
-      -2.96209 * Math.log(0.713480623 * (6.3 / (gpa + 2.15) - 1))
-    );
+    gpaTier = Math.floor((0.2275 * Math.pow(gpa, 3)) - (0.85 * Math.pow(gpa, 2)) + (3 * gpa) - 1.6);
   } else if (applicantLevel === 1) {
-    gpaTier = Math.floor(-5.65291 * Math.log(0.83786 * (8 / (gpa + 3) - 1)));
+    gpaTier = Math.floor((0.2 * Math.pow(gpa, 3)) - (0.9 * Math.pow(gpa, 2)) + (3.78 * gpa) - 1.6);
   } else {
     gpaTier = Math.floor((11 / 3) * gpa - 8 / 3);
   }
