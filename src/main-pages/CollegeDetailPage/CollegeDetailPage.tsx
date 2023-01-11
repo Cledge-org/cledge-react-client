@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import LockIcon from "@mui/icons-material/Lock";
 import OverviewCard from "src/main-pages/CollegeDetailPage/components/OverviewCard/OverviewCard";
+import Card from "src/main-pages/CollegeDetailPage/components/Card/Card";
 import DataRow from "./components/DataRow/DataRow";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -19,7 +20,6 @@ import styles from "./college-detail-page.module.scss";
 import classNames from "classnames";
 import { Map, Marker, ZoomControl } from "pigeon-maps";
 import { useSession } from "next-auth/react";
-import { maxHeight } from "@mui/system";
 
 const CollegeDetailPage = ({
   questionResponses,
@@ -30,6 +30,7 @@ const CollegeDetailPage = ({
   const router = useRouter();
   const raw = router.query.data;
   const data = JSON.parse(raw.toString());
+  console.log(data);
   const { Panel } = Collapse;
   const { data: session } = useSession();
   const [accountInfo, setAccountInfo] = React.useState(null);
@@ -291,7 +292,8 @@ const CollegeDetailPage = ({
             <Tab className="mx-5" label="Admission" />
             <Tab className="mx-5" label="Academics" />
             <Tab className="mx-5" label="Financials" />
-            <Tab className="ms-5" label="Student" />
+            <Tab className="mx-5" label="Student" />
+            <Tab className="ms-5" label="Campus Life" />
             {/* <Tab label="Insights" /> */}
           </Tabs>
         </div>
@@ -454,7 +456,11 @@ const CollegeDetailPage = ({
                 elNum={4}
                 title="Students"
                 sub1="Student faculty ratio"
-                sub1data={data["student_faculty_ratio"] + " : 1"}
+                sub1data={
+                  data["student_faculty_ratio"]
+                    ? data["student_faculty_ratio"] + " : 1"
+                    : "No Data"
+                }
                 sub2="4 year graduation rate"
                 sub2data={parsePercent(data["4_year_graduation_rate"])}
                 sub3="Retention rate"
@@ -469,7 +475,7 @@ const CollegeDetailPage = ({
           </Row>
         ) : value == 1 ? (
           <Row gutter={[16, 16]}>
-            <Col span={15}>
+            <Col span={17}>
               <InfoContainer>
                 <h1>Admission Requirements</h1>
                 <div>
@@ -635,9 +641,138 @@ const CollegeDetailPage = ({
                     type="content"
                   />
                 </div>
+                <div>
+                  <h2>Reading Percentage</h2>
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 200 - 300"
+                    sub2={parse(
+                      data["admission"]["SAT EBRW"]["data"][
+                        "Score of 200 - 300"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 300 - 400"
+                    sub2={parse(
+                      data["admission"]["SAT EBRW"]["data"][
+                        "Score of 300 - 400"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 400 - 500"
+                    sub2={parse(
+                      data["admission"]["SAT EBRW"]["data"][
+                        "Score of 400 - 500"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 500 - 600"
+                    sub2={parse(
+                      data["admission"]["SAT EBRW"]["data"][
+                        "Score of 500 - 600"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 600 - 700"
+                    sub2={parse(
+                      data["admission"]["SAT EBRW"]["data"][
+                        "Score of 600 - 700"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 700 - 800"
+                    sub2={parse(
+                      data["admission"]["SAT EBRW"]["data"][
+                        "Score of 700 - 800"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                <div>
+                  <h2>Math Percentage</h2>
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 200 - 300"
+                    sub2={parse(
+                      data["admission"]["SAT EBRW"]["data"][
+                        "Score of 200 - 300"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 300 - 400"
+                    sub2={parse(
+                      data["admission"]["SAT EBRW"]["data"][
+                        "Score of 300 - 400"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 400 - 500"
+                    sub2={parse(
+                      data["admission"]["SAT EBRW"]["data"][
+                        "Score of 400 - 500"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 500 - 600"
+                    sub2={parse(
+                      data["admission"]["SAT EBRW"]["data"][
+                        "Score of 500 - 600"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 600 - 700"
+                    sub2={parse(
+                      data["admission"]["SAT EBRW"]["data"][
+                        "Score of 600 - 700"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 700 - 800"
+                    sub2={parse(
+                      data["admission"]["SAT EBRW"]["data"][
+                        "Score of 700 - 800"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                </div>
               </InfoContainer>
               <InfoContainer>
                 <h1>ACT Score Data (Admitted Students)</h1>
+                {/* Score of 5 or Below : "0%" Score of 6 - 11 : "0%" Score of 12 -
+                17 : "0%" Score of 18 - 23 : "1.2%" Score of 24 - 29 : "12.3%"
+                Score of 30 - 36 : "86.5%" */}
+                <></>
                 <div className={styles.content}>
                   <DataRow
                     colNum={3}
@@ -655,7 +790,7 @@ const CollegeDetailPage = ({
                 </div>
               </InfoContainer>
             </Col>
-            <Col span={9}>
+            <Col span={7}>
               <InfoContainer>
                 <h1>Admission Rate</h1>
                 <div>
@@ -729,7 +864,7 @@ const CollegeDetailPage = ({
           </Row>
         ) : value == 2 ? (
           <Row gutter={[16, 16]} justify="space-evenly">
-            <Col span={15}>
+            <Col span={17}>
               <InfoContainer>
                 <h1>Education</h1>
                 <div>
@@ -760,7 +895,7 @@ const CollegeDetailPage = ({
                   <div className="inline">
                     <p className="cl-dark-text">Most popular Area of Study</p>
                     <h3 className="cl-dark-text">
-                      {(() => {
+                      {/* {(() => {
                         let d = data["study_disciplines"];
                         if (!d) {
                           return "No Data";
@@ -772,7 +907,181 @@ const CollegeDetailPage = ({
                           return d[a] > d[b] ? a : b;
                         });
                         return mostPopularArea ? mostPopularArea : "No Data";
-                      })()}
+                      })()} */}
+                      {data["academics"]["Most Popular Disciplines"]
+                        ? data["academics"]["Most Popular Disciplines"][0] +
+                          ", " +
+                          data["academics"]["Most Popular Disciplines"][1] +
+                          ", " +
+                          data["academics"]["Most Popular Disciplines"][2]
+                        : "No Data"}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Student Faculty Ratio</p>
+                    <h3 className="cl-dark-text">
+                      {data["student_faculty_ratio"]
+                        ? data["student_faculty_ratio"] + " : 1"
+                        : "No Data"}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">
+                      Advanced Placement (AP) Examinations
+                    </p>
+                    <h3 className="cl-dark-text">
+                      {parse(
+                        data["academics"][
+                          "Advanced Placement (AP) Examinations"
+                        ]
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Study Abroad</p>
+                    <h3 className="cl-dark-text">
+                      {parse(data["academics"]["Study Abroad"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">
+                      General Education/Core Curriculum
+                    </p>
+                    <h3 className="cl-dark-text">
+                      {parse(
+                        data["academics"]["General Education/Core Curriculum"]
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Foreign Language</p>
+                    <h3 className="cl-dark-text">
+                      {parse(data["academics"]["Foreign Language"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Math/Science</p>
+                    <h3 className="cl-dark-text">
+                      {parse(data["academics"]["Math/Science"])}
+                    </h3>
+                  </div>
+                  {/* <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Regular Class Size</p>
+                    <h3 className="cl-dark-text">
+                      {parse(data["academics"]["Regular Class Size"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">
+                      Discussion Section/Lab Class Size
+                    </p>
+                    <h3 className="cl-dark-text">
+                      {parse(
+                        data["academics"]["Discussion Section/Lab Class Size"]
+                      )}
+                    </h3>
+                  </div> */}
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">International Baccalaureate</p>
+                    <h3 className="cl-dark-text">
+                      {parse(data["academics"]["International Baccalaureate"])}
+                    </h3>
+                  </div>
+
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Sophomore Standing</p>
+                    <h3 className="cl-dark-text">
+                      {parse(data["academics"]["Sophomore Standing"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Library Available on Campus</p>
+                    <h3 className="cl-dark-text">
+                      {parse(data["academics"]["Library Available on Campus"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Holdings</p>
+                    <h3 className="cl-dark-text">
+                      {parse(data["academics"]["Holdings"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Computer Ownership</p>
+                    <h3 className="cl-dark-text">
+                      {parse(data["academics"]["Computer Ownership"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">
+                      Computers Available on Campus
+                    </p>
+                    <h3 className="cl-dark-text">
+                      {data["academics"]["Computers Available on Campus"]
+                        ? data["academics"]["Computers Available on Campus"] +
+                          "+"
+                        : "No Data"}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Internet/E-mail Access</p>
+                    <h3 className="cl-dark-text">
+                      {parse(data["academics"]["Internet/E-mail Access"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Remedial Instruction</p>
+                    <h3 className="cl-dark-text">
+                      {parse(data["academics"]["Remedial Instruction"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Tutoring</p>
+                    <h3 className="cl-dark-text">
+                      {parse(data["academics"]["Tutoring"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">
+                      Services for Learning Disabled Students
+                    </p>
+                    <h3 className="cl-dark-text">
+                      {parse(
+                        data["academics"][
+                          "Services for Learning Disabled Students"
+                        ]
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">
+                      Services for Physically Disabled Students
+                    </p>
+                    <h3 className="cl-dark-text">
+                      {parse(
+                        data["academics"][
+                          "Services for Physically Disabled Students"
+                        ]
+                      )}
                     </h3>
                   </div>
                 </div>
@@ -810,7 +1119,7 @@ const CollegeDetailPage = ({
                 </div>
               </InfoContainer>
             </Col>
-            <Col span={9}>
+            <Col span={7}>
               <InfoContainer>
                 <h1>Academic Statistics</h1>
                 <div>
@@ -852,7 +1161,7 @@ const CollegeDetailPage = ({
                   </div>
                   <Divider />
                   <div className="inline">
-                    <p className="cl-dark-text">Land grant institution</p>
+                    <p className="cl-dark-text">Land Grant Institution</p>
                     <h3 className="cl-dark-text">
                       {data["land_grant_institution?"] ===
                       "Land Grant Institution" ? (
@@ -1224,7 +1533,7 @@ const CollegeDetailPage = ({
             <Col span={15}>
               <OverviewCard
                 isOverview={true}
-                elNum={13}
+                elNum={16}
                 title="Student Body Statistics"
                 sub1="Total Undergraduate Enrollment"
                 sub1data={parseNumber(data["enrollment"]["total_undergrad"])}
@@ -1246,14 +1555,12 @@ const CollegeDetailPage = ({
                 sub8data={parsePercent(data["percent_first_gen"])}
                 sub9="6-Year Graduation Rate"
                 sub9data={parsePercent(data["6_year_graduation_rate"])}
-                sub10="Student Faculty Ratio"
-                sub10data={data["student_faculty_ratio"] + " : 1"}
                 // sub11="Enrolled Men"
                 // sub11data={data["enrollment"]["enrolled_men"]}
                 // sub12="Enrolled Women"
                 // sub12data={data["enrollment"]["enrolled_women"]}
-                sub11="Admission Policy"
-                sub11data={
+                sub10="Admission Policy"
+                sub10data={
                   data["admission policy"]
                     ? data["admission policy"]["coeducational"]
                       ? "Co-Ed"
@@ -1264,10 +1571,25 @@ const CollegeDetailPage = ({
                       : "Co-Ed"
                     : "No Data"
                 }
-                sub12="Admission Yield"
-                sub12data={parsePercent(data["enrollment"]["admission_yield"])}
-                sub13="Live Off Campus Students"
-                sub13data={parse(data["live_off_campus_student_count"])}
+                sub11="Admission Yield"
+                sub11data={parsePercent(data["enrollment"]["admission_yield"])}
+                sub12="Live Off Campus Students"
+                sub12data={parse(data["live_off_campus_student_count"])}
+                sub13="Sororities"
+                sub13data={parse(data["students"]["Sororities"])}
+                sub14="Fraternities"
+                sub14data={parse(data["students"]["Fraternities"])}
+                sub15="Graduates Offered Full-Time Employment Within 6 Months"
+                sub15data={parse(
+                  data["students"][
+                    "Graduates Offered Full-Time Employment Within 6 Months"
+                  ]
+                )}
+                sub16="Graduates Pursuing Advanced Study Directly"
+                sub16data={parse(
+                  data["students"]["Graduates Pursuing Advanced Study Directly"]
+                )}
+                Sororities
               />
             </Col>
             <Col span={9}>
@@ -1302,6 +1624,55 @@ const CollegeDetailPage = ({
                   </div>
                 </div>
               </InfoContainer>
+            </Col>
+          </Row>
+        ) : value == 5 ? (
+          <Row gutter={[16, 16]}>
+            <Col span={17}>
+              <Card
+                elNum={13}
+                title="Campus Life"
+                sub1="Nearest Metropolitan Area"
+                sub1data={parse(
+                  data["campus_life"]["Nearest Metropolitan Area"]
+                )}
+                sub2="Average Low Temprature In Jan"
+                sub2data={parseNumber(data["campus_life"]["Avg Low In Jan"])}
+                sub3="Average High Temprature In Sep"
+                sub3data={parseNumber(data["campus_life"]["Avg High In Sep"])}
+                sub4="Rainy Days per Year"
+                sub4data={parseNumber(data["campus_life"]["Rainy Days / Year"])}
+                sub5="Students in College Housing"
+                sub5data={parseNumber(
+                  data["campus_life"]["Students in College Housing"]
+                )}
+                sub6="Freshman Housing Guarantee"
+                sub6data={parse(
+                  data["campus_life"]["Freshman Housing Guarantee"]
+                )}
+                sub7="Late-Night Transport/Escort Services"
+                sub7data={parse(
+                  data["campus_life"]["Late-Night Transport/Escort Services"]
+                )}
+                sub8="24-Hour Emergency Phone/Alarm Devices"
+                sub8data={parse(
+                  data["campus_life"]["24-Hour Emergency Phone/Alarm Devices"]
+                )}
+                sub9="24-Hour Security Patrols"
+                sub9data={parse(
+                  data["campus_life"]["24-Hour Security Patrols"]
+                )}
+                sub10="Health Service"
+                sub10data={parse(data["campus_life"]["Health Service"])}
+                sub11="Personal Counseling"
+                sub11data={parse(data["campus_life"]["Personal Counseling"])}
+                sub12="Child Care"
+                sub12data={parse(data["campus_life"]["Child Care"])}
+                sub13="City Population"
+                sub13data={parse(data["campus_life"]["City Population"])}
+              />
+            </Col>
+            <Col span={7}>
               <InfoContainer>
                 <h1>Atheletics</h1>
                 <div>
@@ -1343,13 +1714,12 @@ const CollegeDetailPage = ({
                         {parseYesNo(data["ncaa"]["ncaa_baseball"], "Yes")}
                       </h3>
                     </div>
-                    <Divider />
                   </div>
                 </div>
               </InfoContainer>
             </Col>
           </Row>
-        ) : value == 5 ? (
+        ) : value == 6 ? (
           <></>
         ) : (
           <></>
