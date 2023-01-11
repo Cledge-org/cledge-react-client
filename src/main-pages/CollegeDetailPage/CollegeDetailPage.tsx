@@ -124,7 +124,7 @@ const CollegeDetailPage = ({
         <div className={styles.paywallBlock}>
           <LockIcon style={{ color: "#070452" }} />
         </div>
-      )
+      );
     else return <></>;
   };
 
@@ -703,13 +703,14 @@ const CollegeDetailPage = ({
                     )}
                     type="normal"
                   />
+                </div>
                 <div>
                   <h2>Math Percentage</h2>
                   <DataRow
                     colNum={3}
                     sub1="Score of 200 - 300"
                     sub2={parse(
-                      data["admission"]["SAT EBRW"]["data"][
+                      data["admission"]["SAT Math"]["data"][
                         "Score of 200 - 300"
                       ]
                     )}
@@ -719,7 +720,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 300 - 400"
                     sub2={parse(
-                      data["admission"]["SAT EBRW"]["data"][
+                      data["admission"]["SAT Math"]["data"][
                         "Score of 300 - 400"
                       ]
                     )}
@@ -729,7 +730,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 400 - 500"
                     sub2={parse(
-                      data["admission"]["SAT EBRW"]["data"][
+                      data["admission"]["SAT Math"]["data"][
                         "Score of 400 - 500"
                       ]
                     )}
@@ -739,7 +740,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 500 - 600"
                     sub2={parse(
-                      data["admission"]["SAT EBRW"]["data"][
+                      data["admission"]["SAT Math"]["data"][
                         "Score of 500 - 600"
                       ]
                     )}
@@ -749,7 +750,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 600 - 700"
                     sub2={parse(
-                      data["admission"]["SAT EBRW"]["data"][
+                      data["admission"]["SAT Math"]["data"][
                         "Score of 600 - 700"
                       ]
                     )}
@@ -759,7 +760,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 700 - 800"
                     sub2={parse(
-                      data["admission"]["SAT EBRW"]["data"][
+                      data["admission"]["SAT Math"]["data"][
                         "Score of 700 - 800"
                       ]
                     )}
@@ -772,7 +773,6 @@ const CollegeDetailPage = ({
                 {/* Score of 5 or Below : "0%" Score of 6 - 11 : "0%" Score of 12 -
                 17 : "0%" Score of 18 - 23 : "1.2%" Score of 24 - 29 : "12.3%"
                 Score of 30 - 36 : "86.5%" */}
-                <></>
                 <div className={styles.content}>
                   <DataRow
                     colNum={3}
@@ -786,6 +786,165 @@ const CollegeDetailPage = ({
                     sub2={parse(data["sat/act_score"]["act_cumulative_25"])}
                     sub3={parse(data["sat/act_score"]["act_cumulative_75"])}
                     type="content"
+                  />
+                </div>
+                <div>
+                  <h2>Overall Percentage</h2>
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 5 or Below"
+                    sub2={parse(
+                      data["admission"]["ACT Eng"]["data"][
+                        "Score of 5 or Below"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 6 - 11"
+                    sub2={parse(
+                      data["admission"]["ACT Eng"]["data"]["Score of 6 - 11"]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 12 - 17"
+                    sub2={parse(
+                      data["admission"]["ACT Eng"]["data"]["Score of 12 - 17"]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 18 - 23"
+                    sub2={parse(
+                      data["admission"]["ACT Eng"]["data"]["Score of 18 - 23"]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 24 - 29"
+                    sub2={parse(
+                      data["admission"]["ACT Eng"]["data"]["Score of 24 - 29"]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 30 - 36"
+                    sub2={parse(
+                      data["admission"]["ACT Eng"]["data"]["Score of 30 - 36"]
+                    )}
+                    type="normal"
+                  />
+                </div>
+                <div>
+                  <h2>Reading Percentage</h2>
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 5 or Below"
+                    sub2={parse(
+                      data["admission"]["ACT Eng"]["data"][
+                        "Score of 5 or Below"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 6 - 11"
+                    sub2={parse(
+                      data["admission"]["ACT Eng"]["data"]["Score of 6 - 11"]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 12 - 17"
+                    sub2={parse(
+                      data["admission"]["ACT Eng"]["data"]["Score of 12 - 17"]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 18 - 23"
+                    sub2={parse(
+                      data["admission"]["ACT Eng"]["data"]["Score of 18 - 23"]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 24 - 29"
+                    sub2={parse(
+                      data["admission"]["ACT Eng"]["data"]["Score of 24 - 29"]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 30 - 36"
+                    sub2={parse(
+                      data["admission"]["ACT Eng"]["data"]["Score of 30 - 36"]
+                    )}
+                    type="normal"
+                  />
+                </div>
+                <div>
+                  <h2>Math Percentage</h2>
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 5 or Below"
+                    sub2={parse(
+                      data["admission"]["ACT Math"]["data"][
+                        "Score of 5 or Below"
+                      ]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 6 - 11"
+                    sub2={parse(
+                      data["admission"]["ACT Math"]["data"]["Score of 6 - 11"]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 12 - 17"
+                    sub2={parse(
+                      data["admission"]["ACT Math"]["data"]["Score of 12 - 17"]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 18 - 23"
+                    sub2={parse(
+                      data["admission"]["ACT Math"]["data"]["Score of 18 - 23"]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 24 - 29"
+                    sub2={parse(
+                      data["admission"]["ACT Math"]["data"]["Score of 24 - 29"]
+                    )}
+                    type="normal"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Score of 30 - 36"
+                    sub2={parse(
+                      data["admission"]["ACT Math"]["data"]["Score of 30 - 36"]
+                    )}
+                    type="normal"
                   />
                 </div>
               </InfoContainer>
