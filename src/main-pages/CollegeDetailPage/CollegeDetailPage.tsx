@@ -34,7 +34,6 @@ const CollegeDetailPage = ({
   const { Panel } = Collapse;
   const { data: session } = useSession();
   const [accountInfo, setAccountInfo] = React.useState(null);
-  // const hasUWAccess = accountInfo?.hasUWAccess;
   const [hasUWAccess, setHasUWAccess] = React.useState(false);
 
   React.useEffect(() => {
@@ -1172,7 +1171,7 @@ const CollegeDetailPage = ({
                   </div>
                   <Divider />
                   <div className="inline">
-                    <p className="cl-dark-text">Holdings</p>
+                    <p className="cl-dark-text">Library Holdings</p>
                     <h3 className="cl-dark-text">
                       {parse(data["academics"]["Holdings"])}
                     </h3>
