@@ -23,6 +23,9 @@ import TierIndicatorAndTips from "./components/TierIndicatorAndTips/TierIndicato
 import TierRange from "./components/TierRange/TierRange";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import TipsCard from "src/main-pages/MetricsPage/components/TipsCard/TipsCard";
+import { NodeNextRequest } from "next/dist/server/base-http/node";
+
+const s = require('./metrics.css');
 
 const Metrics: NextApplicationPage<{
   activities: Activities;
@@ -32,6 +35,8 @@ const Metrics: NextApplicationPage<{
 }> = ({ activities, userTags, questionResponses, academics }) => {
   const session = useSession();
   //console.log(activities);
+  const element = document.getElementById("blurred") as HTMLElement;
+  element.style.filter = "blur(5px)"; 
   const [currPage, setCurrPage] = useState("all");
   function BorderDropdownTab({
     isAll,
@@ -52,7 +57,9 @@ const Metrics: NextApplicationPage<{
       </div>
     );
   }
+
   return (
+    <div class="blur">
     <PageErrorBoundary>
       <div
         className="container-fluid d-flex flex-row px-0 border-top border-2"
@@ -251,9 +258,10 @@ const Metrics: NextApplicationPage<{
               </div>
             </div>
           ) : (
+
             <div
               className="container-fluid d-flex flex-column"
-              style={{ flex: 1 }}
+              style={{ flex: 1,   }}
             >
               <QuestionSubPageHeader
                 title="Academics Metrics"
@@ -395,6 +403,7 @@ const Metrics: NextApplicationPage<{
       </div>
       <Footer />
     </PageErrorBoundary>
+    </div>
   );
 };
 
