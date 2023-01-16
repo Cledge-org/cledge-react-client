@@ -45,6 +45,92 @@ export const calculateECActivityTier = (
   }
   return tier;
 };
+
+export const calculateECTier = (
+  hoursPerWeek: number,
+  weeksPerYear: number,
+  yearsSpent: number,
+  awardScale: number,
+  awardQuality: number,
+  leadershipTier: number,
+  impactTier: number,
+) => {
+  let timeTier = calculateTimeTier(hoursPerWeek, weeksPerYear, yearsSpent);
+  let awardTier = calculateAwardTier(awardScale, awardQuality);
+  let leadingTier = calculateLeadershipTier(leadershipTier, impactTier);
+  let tier = (timeTier * 3 + awardTier * 1 + leadingTier * 1)/5;
+  return tier;
+};
+
+export const calculateTimeTier = (
+hoursPerWeek: number,
+weeksPerYear: number,
+yearsSpent: number,
+) => {
+  if(hoursPerWeek < 0 || weeksPerYear < 0 || yearsSpent < 1)
+  {
+      return -1;
+  }
+  let tier = yearsSpent;
+  if(hoursPerWeek <= 3)
+  {
+      tier += 1;
+  }
+  else if(hoursPerWeek > 25)
+  {
+      tier += 6;
+  }
+  else
+  {
+      tier += (hoursPerWeek / 5) - ((hoursPerWeek / 5)%1) + 2;
+  }
+  if(weeksPerYear > 40)
+  {
+      tier += 4;
+  }
+  else
+  {
+      tier += (weeksPerYear - 10)/15 + (((weeksPerYear - 10)/15)%1) + 2;
+  }
+  if(tier > 12)
+  {
+      return 12;
+  }
+  return tier;
+};
+
+export const calculateAwardTier = (
+awardScale: number,
+awardQuality: number,
+) => {
+  if(awardScale < 0 || awardScale > 4 || awardQuality < 0 || awardQuality > 4)
+  {
+      return -1;
+  }
+  let tier = 2 * awardQuality + awardScale + 1;
+  if(tier > 12)
+  {
+      return 12;
+  }
+  return tier;
+}; 
+
+export const calculateLeadershipTier = (
+leadershipTier: number,
+impactTier: number,
+) => {
+  if(leadershipTier < 0 || leadershipTier > 4 || impactTier < 0 || impactTier > 4)
+  {
+      return -1;
+  }
+  let tier = 2 * leadershipTier + impactTier + 1;
+  if(tier > 12)
+  {
+      return 12;
+  }
+  return tier;
+};
+
 export const calculateOverallECTier = (tiers: number[]) => {
   let totalPoints = 0;
   let totalMultiplier = 0;
