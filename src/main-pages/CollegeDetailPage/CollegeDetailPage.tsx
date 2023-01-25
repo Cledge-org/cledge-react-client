@@ -49,7 +49,7 @@ const CollegeDetailPage = ({
     });
     const accountInfoJSON = await accountInfoResponse.json();
     setAccountInfo(accountInfoJSON);
-    setHasUWAccess(accountInfoJSON.hasUWAccess === true);
+    setHasUWAccess(accountInfoJSON.hasUWAccess === false);
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -247,6 +247,10 @@ const CollegeDetailPage = ({
           <ArrowBackIosNewIcon fontSize="inherit" />
         </IconButton>
       </div>
+      <button
+        onClick={(e) => setHasUWAccess(!hasUWAccess)}>
+        Toggle UW Access
+      </button>
       <div
         className="w-100 d-flex flex-column align-items-center justify-content-end"
         style={{
