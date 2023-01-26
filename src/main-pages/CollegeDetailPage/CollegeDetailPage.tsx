@@ -52,7 +52,6 @@ const CollegeDetailPage = ({
       }),
     });
     const responseJson = await response.json();
-    alert(responseJson.message);
     setAddedToList(!addedToList);
   }
 
