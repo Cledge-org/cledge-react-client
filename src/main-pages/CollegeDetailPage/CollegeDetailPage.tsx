@@ -61,7 +61,6 @@ const CollegeDetailPage = ({
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  const { data: session } = useSession();
   const handleAddCollege = async () => {
       // add to college list
     const response = await fetch(`/api/CST/add-college-to-list`, {
