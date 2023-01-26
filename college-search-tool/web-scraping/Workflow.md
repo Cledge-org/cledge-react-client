@@ -1,0 +1,5 @@
+1. Get college link: [collegedata_link.ipynb](./collegedata_link.ipynb)
+2. Get general data for each college: [collegedata_general.ipynb](./collegedata_general.ipynb)
+3. Get major list data for each college: [collegedata_major_list.ipynb](./collegedata_major_list.ipynb)
+4. Map collegedata college name with previous CST dataset college name: [college_name_map.ipynb](./college_name_map.ipynb)
+5. Merge general and major list data; upload to Cosmos DB: [webscrape_data_integration.ipynb](./webscrape_data_integration.ipynb)

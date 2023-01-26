@@ -17,3 +17,16 @@
   white-space: -o-pre-wrap;
   word-wrap: break-word;
 }
+.paywall-block {
+  background-color: #ebf1fd84;
+  backdrop-filter: blur(5px);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+}

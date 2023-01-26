@@ -352,3 +352,10 @@ export const callCreatePaymentIntent = async (product_id: string) => {
     method: "POST",
   });
 };
+
+export const redeemCode = async (userCode: string, email: string) => {
+  return await fetch(`/api/auth/redeemCode`, {
+    body: JSON.stringify({ userCode, email }),
+    method: "POST",
+  });
+}
