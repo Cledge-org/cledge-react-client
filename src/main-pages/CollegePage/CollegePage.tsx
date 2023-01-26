@@ -104,13 +104,10 @@ const College = ({
     return data;
   }
   
-  // console.log(collegeList);
   for (let i = 0; i < collegeList.length; i++) {
     collegeListArray[i] = collegeList[i].college_name;
   }
 
- 
-  console.log(collegeListArray);
 
   useEffect(() => {
     setPrevRequest(requestData);
@@ -352,7 +349,6 @@ const College = ({
                 })
               ) : collegeData && collegeData.length > 0 ? (
                 collegeData.map((data) => {
-                  //console.log(data);
                   return (
                     <CollegeCard
                       key={data.title + data.location}
