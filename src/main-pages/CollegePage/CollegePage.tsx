@@ -14,7 +14,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { connect } from "react-redux";
 
 const axios = require("axios").default;
-const { Search } = Input;
 
 const CardsWrapper = styled.div`
   display: flex;
@@ -34,15 +33,18 @@ const CardsWrapper = styled.div`
 `;
 
 const College = ({
+  collegeList,
   questionResponses,
 }: {
   questionResponses: UserResponse[];
+  collegeList: any
 }) => {
   const [collegeData, setData] = useState(null);
   const [filter, setFilter] = useState({});
   const [searchText, setSearchText] = useState("*");
   const [isLoading, setIsLoading] = useState(true);
   const [currSort, setCurrSort] = useState("");
+  let collegeListArray = [];
   const [currNumericalSortOrder, setCurrNumericalSortOrder] =
     useState("Least-Greatest");
   const userResponse = questionResponses.find(
@@ -101,6 +103,14 @@ const College = ({
       });
     return data;
   }
+  
+  // console.log(collegeList);
+  for (let i = 0; i < collegeList.length; i++) {
+    collegeListArray[i] = collegeList[i].college_name;
+  }
+
+ 
+  console.log(collegeListArray);
 
   useEffect(() => {
     setPrevRequest(requestData);
@@ -248,6 +258,7 @@ const College = ({
                         outState={""}
                         abbreviation={""}
                         data={{}}
+                        onList={false}
                       />
                     );
                   })}
@@ -335,11 +346,13 @@ const College = ({
                       abbreviation={""}
                       data={{}}
                       schoolFit=""
+                      onList={false}
                     />
                   );
                 })
               ) : collegeData && collegeData.length > 0 ? (
                 collegeData.map((data) => {
+                  //console.log(data);
                   return (
                     <CollegeCard
                       key={data.title + data.location}
@@ -364,6 +377,7 @@ const College = ({
                       outState={data["out-state_tuition"]}
                       abbreviation={"uw"}
                       data={data}
+                      onList={collegeListArray.includes(data["title"])}
                     />
                   );
                 })

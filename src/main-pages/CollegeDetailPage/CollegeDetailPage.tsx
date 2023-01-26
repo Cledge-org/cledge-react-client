@@ -19,6 +19,7 @@ import styles from "./college-detail-page.module.scss";
 import classNames from "classnames";
 import { Map, Marker, ZoomControl } from "pigeon-maps";
 import { Button } from "@mui/material"
+import { useSession } from "next-auth/react";
 
 const CollegeDetailPage = ({
   questionResponses,
@@ -28,17 +29,48 @@ const CollegeDetailPage = ({
   const [value, setValue] = React.useState(0);
   const router = useRouter();
   const raw = router.query.data;
+  const raw2 = router.query.onList;
   const data = JSON.parse(raw.toString());
+  const onList = JSON.parse(raw2.toString());
   const { Panel } = Collapse;
-  const [addedToList, setAddedToList] = useState(false);
+  const [addedToList, setAddedToList] = useState(onList);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
-  const handleAddCollege = () => {
-    // add this college to user's list
+  const { data: session } = useSession();
+  const handleAddCollege = async () => {
+      // add to college list
+    const response = await fetch(`/api/CST/add-college-to-list`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: session.user.uid,
+        college_title: data.title,
+      }),
+    });
+    const responseJson = await response.json();
+    alert(responseJson.message);
     setAddedToList(!addedToList);
+  }
+
+  const handleRemoveCollege = async (event) => {
+    event.stopPropagation();
+    setAddedToList(!addedToList);
+    // remove from college list
+    const response = await fetch(`/api/CST/remove-college-from-list`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: session.user.uid,
+        college_title: data.title,
+      }),
+    });
+    const responseJson = await response.json();
   }
 
   const userResponse = questionResponses.find(
@@ -248,7 +280,7 @@ const CollegeDetailPage = ({
                 <Button
                       variant="contained"
                       style={{ textTransform: "none", background: addedToList ? "red" : "" }}
-                      onClick={handleAddCollege} 
+                      onClick={!addedToList ? handleAddCollege : handleRemoveCollege} 
                     >
                       {addedToList ? "Remove From My List" : "Add To My College List"}
                 </Button>

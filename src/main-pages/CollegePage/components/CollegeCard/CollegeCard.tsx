@@ -24,6 +24,7 @@ interface CardProps {
   tabValue?: number;
   data?: object;
   schoolFit: string;
+  onList: boolean;
 }
 
 function CollegeCard(props: CardProps) {
@@ -76,6 +77,7 @@ function CollegeCard(props: CardProps) {
                   pathname: URL,
                   query: {
                     data: JSON.stringify(props.data),
+                    onList: props.onList
                   },
                 },
                 URL
@@ -105,9 +107,10 @@ function InnerCard({
   inState,
   outState,
   schoolFit,
+  onList
 }: CardProps) {
   const [imageHasLoaded, setImageHasLoaded] = useState(false);
-  const [addedToList, setAddedToList] = useState(false);
+  const [addedToList, setAddedToList] = useState(onList);
   const { data: session } = useSession();
   const handleAddCollege = async (event) => {
     event.stopPropagation();
@@ -124,8 +127,26 @@ function InnerCard({
       }),
     });
     const responseJson = await response.json();
-    alert(responseJson.message);
   }
+
+  const handleRemoveCollege = async (event) => {
+    event.stopPropagation();
+    setAddedToList(!addedToList);
+    // remove from college list
+    const response = await fetch(`/api/CST/remove-college-from-list`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: session.user.uid,
+        college_title: title,
+      }),
+    });
+    const responseJson = await response.json();
+  }
+
+  
   return (
     <>
       {!img ? (
@@ -184,7 +205,7 @@ function InnerCard({
                 className="ms-3"
                 variant="contained"
                 style={{ textTransform: "none", width: "2rem", height: "2rem", background: addedToList ? 'red' : ''}}
-                onClick={handleAddCollege}
+                onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
               >
                 {addedToList ? "x" : "+"}
               </Button>
