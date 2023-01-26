@@ -2,6 +2,7 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { CollegeDB, collegeListElementRaw, collegeListIndividualInfo } from "src/@types/types";
+import { getEnvVariable } from "src/config/getConfig";
 
 interface props {
   user_id: string,

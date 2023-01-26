@@ -6,6 +6,7 @@ import {
   callCreateUser,
   callUpdateUser,
   getNumUsers,
+  redeemCode
 } from "src/utils/apiCalls";
 import styles from "./uw-purchase-page.module.scss";
 import {
@@ -29,11 +30,12 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
     confirmedPassword: "",
     isOnMailingList: true,
   });
-  const [accessCode, setAccessCode] = useState("");
-  const [hasAccess, setHasAccess] = useState(false);
   const [processingSignUpPayment, setProcessingSignUpPayment] = useState(false);
-  const [isIncorrectAccessCode, setIsIncorrectAccessCode] = useState(false);
   const [acceptedTOSPP, setAcceptedTOSPP] = useState(false);
+  const [understands, setUnderstands] = useState(false);
+  const [promotionCode, setPromotionCode] = useState("");
+  const [validCode, setValidCode] = useState(false);
+  const [price, setPrice] = useState(99);
   const stripe = useStripe();
   const elements = useElements();
   const session = useSession();
@@ -49,7 +51,25 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
     });
   };
 
+  const handlePromotionCode = async () => {
+    let res = await redeemCode(promotionCode, signUpDetails.email);
+    let data = await res.json();
+    let nest = data.post[0];
+    if (promotionCode == nest.code && nest.redeemed == 0 && nest.redeemedBy == '') {
+      setValidCode(true);
+      setPrice(0);
+    }
+  }
+
   const handleSubmit = async () => {
+    if (!understands) {
+      setIssues((issues) => [
+        ...issues,
+        "If you want to make an account you must understand that it is in beta",
+      ]);
+      setProcessingSignUpPayment(false);
+      return;
+    }
     if (!acceptedTOSPP) {
       setIssues((issues) => [
         ...issues,
@@ -150,54 +170,90 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
         });
     }
   };
+
+  const handleRedemption = async () => {
+    if (!understands) {
+      setIssues((issues) => [
+        ...issues,
+        "If you want to make an account you must understand that it is in beta",
+      ]);
+      setProcessingSignUpPayment(false);
+      return;
+    }
+    if (!acceptedTOSPP) {
+      setIssues((issues) => [
+        ...issues,
+        "If you want to make an account you must agree to the terms of service and privacy policy",
+      ]);
+      setProcessingSignUpPayment(false);
+      return;
+    }
+    if (session.status === "authenticated") {
+        callUpdateUser({ ...accountInfo, hasUWAccess: true });
+        store.dispatch(
+          updateAccountAction({
+            ...accountInfo,
+            hasUWAccess: true,
+          })
+        );
+        router.push("/my-learning");
+    } else {
+      if (
+        !signUpDetails.email ||
+        !signUpDetails.password ||
+        !signUpDetails.confirmedPassword
+      ) {
+        setIssues((issues) => [
+          ...issues,
+          "Please make sure to fill out all fields",
+        ]);
+        setProcessingSignUpPayment(false);
+        return;
+      }
+      if (signUpDetails.password !== signUpDetails.confirmedPassword) {
+        setIssues((issues) => [
+          ...issues,
+          "Your confirmed password isn't the same as your password",
+        ]);
+        setProcessingSignUpPayment(false);
+        return;
+      }
+      await callCreateUser(signUpDetails.email, signUpDetails.password, {
+        name: "",
+        address: "",
+        birthday: new Date(),
+        isOnMailingList: signUpDetails.isOnMailingList,
+        grade: -1,
+        email: signUpDetails.email,
+        tags: [],
+        introducedToChatbot: false,
+        chatbotHistoryLength: 0,
+        hasUWAccess: true,
+        checkIns: ["Onboarding Questions"],
+      })
+        .then(async (res) => {
+          alertSlackNewUser(parseInt(await getNumUsers()) - 36);
+          const user = await res.json();
+          signIn("credentials", {
+            password: signUpDetails.password,
+            email: signUpDetails.email,
+            redirect: false,
+          }).then(async () => {
+            router.push("/my-learning");
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  };
+
   if (
     session.status === "authenticated" &&
     accountInfo &&
     accountInfo.hasUWAccess
   ) {
     router.replace("/");
-  }
-  if (!hasAccess && session.status === "unauthenticated") {
-    return (
-      <div className="container">
-        <form
-          className="col col-md-5 d-flex mx-auto flex-column justify-content-center align-items-center"
-          style={{ height: "80vh" }}
-        >
-          <div className="fs-1 fw-bold cl-dark-text">Enter Access Code</div>
-          {isIncorrectAccessCode ? (
-            <div className="cl-red d-flex flex-column">
-              Incorrect Access Code
-            </div>
-          ) : null}
-          <div className="form-group mt-3 w-100">
-            <input
-              value={accessCode}
-              onChange={(e) => {
-                setAccessCode(e.target.value);
-              }}
-              type="text"
-              className="px-3 form-control"
-              id="email"
-              placeholder="Enter code"
-            />
-          </div>
-          <input
-            type="submit"
-            className="cl-btn-blue mt-4"
-            onClick={(e) => {
-              e.preventDefault();
-              if (accessCode === "596382") {
-                setHasAccess(true);
-              } else {
-                setIsIncorrectAccessCode(true);
-              }
-            }}
-            value="Access Signup"
-          />
-        </form>
-      </div>
-    );
   }
   return (
     <div
@@ -277,7 +333,29 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
           >
             Payment method
           </div>
-          <PaymentElement />
+          <div className="d-flex flex-column mb-4">
+            <div className="d-flex flex-row align-items-end">
+              <PurchasePageInput
+                  heading={"Promotion Code"}
+                  placeholder={""}
+                  onChange={(value: string) => {
+                    setPromotionCode(value);
+                  }}
+              />
+              <button
+                onClick={() => {
+                  handlePromotionCode();
+                }}
+                disabled={processingSignUpPayment}
+                className="cl-btn-blue center-child h-50 ms-3"
+              >
+                Enter
+              </button>
+
+            </div>
+            {validCode ? (<text>CODE ACCEPTED</text>) : ""}
+          </div>
+          {!validCode ? (<PaymentElement />) : ""}
         </div>
       </div>
       <div
@@ -300,7 +378,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             style={{ fontSize: "24px" }}
           >
             <div>University of Washington Computer Science Package</div>
-            <div className="ms-3">$99</div>
+            <div className="ms-3">${price}</div>
           </div>
           <div className="d-flex flex-row mt-3 mb-2">
             <CheckBox
@@ -329,7 +407,23 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
               .
             </div>
           </div>
-          <button
+          <div className="d-flex flex-row mt-3 mb-2">
+            <CheckBox
+              selected={understands}
+              setSelected={(value) => {
+                setUnderstands(value);
+              }}
+            />
+            <div className="ms-2 mb-3">
+              I understand that Cledge is in Beta. I may experience bugs and
+              other minor issues. The Cledge team is committed to maintaining a
+              high standard and will resolve the issue as soon as possible after
+              contacted. You may contact ayan@cledge.org with any issues that
+              arise or report a problem using the contact at the bottom of any
+              page.
+            </div>
+          </div>
+          {!validCode ? (<button
             onClick={() => {
               setProcessingSignUpPayment(true);
               setIssues([]);
@@ -344,7 +438,23 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             ) : (
               "Pay now"
             )}
-          </button>
+          </button>) :
+          (<button
+            onClick={() => {
+              setProcessingSignUpPayment(true);
+              setIssues([]);
+              handleRedemption();
+            }}
+            disabled={processingSignUpPayment}
+            className="cl-btn-blue w-100 center-child"
+            style={{ borderRadius: "58x", fontSize: "18px" }}
+          >
+            {processingSignUpPayment ? (
+              <CircularProgress style={{ color: "white" }} />
+            ) : (
+              "Redeem Access"
+            )}
+          </button>) }
         </div>
       </div>
     </div>

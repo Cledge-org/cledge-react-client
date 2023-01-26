@@ -21,24 +21,20 @@ const CarouselDiv = styled.div`
 `;
 
 const RightArrow = styled.div`
-  right: 23px;
-  position: absolute;
   display: flex;
   align-self: center;
   justify-self: flex-end;
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 900px) {
     display: none;
   }
 `;
 
 const LeftArrow = styled.div`
-  left: 23px;
-  position: absolute;
   display: flex;
   align-self: center;
   justify-self: flex-end;
   transform: rotate(180deg);
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 900px) {
     display: none;
   }
 `;
@@ -57,40 +53,44 @@ function NewBlogsCarousel({ recentBlogs }) {
   const recentBlogsData = recentBlogs.articles[0];
   return (
     <ThemeProvider theme={theme}>
-      <div className={styles.mainContainer}>
-        <h1>Get started with our free expert-written blogs</h1>
+      <div className="">
+        <div className="cl-dark-text fw-bold" style={{ fontSize: "28px" }}>Get started with our free expert-written blogs</div>
         <div style={{ display: "flex", flexDirection: "row" }}>
+          <LeftArrow>
+            <Fab
+              className="ms-3"
+              style={{ boxShadow: "none", backgroundColor: "white" }}
+              color="secondary"
+              onClick={() => {
+                document
+                  .getElementById("carouselDiv")
+                  .scrollBy({ left: -400, behavior: "smooth" });
+              }}
+              size="large"
+            >
+              <Image src={ArrowIcon} />
+            </Fab>
+          </LeftArrow>
           <CarouselDiv id="carouselDiv">
-            <LeftArrow>
-              <Fab
-                color="secondary"
-                onClick={() => {
-                  document
-                    .getElementById("carouselDiv")
-                    .scrollBy({ left: -400, behavior: "smooth" });
-                }}
-                size="large"
-              >
-                <Image src={ArrowIcon} />
-              </Fab>
-            </LeftArrow>
             {recentBlogsData.map((e) => (
               <BlogCarouselItem article={e} />
             ))}
-            <RightArrow>
-              <Fab
-                color="secondary"
-                onClick={() => {
-                  document
-                    .getElementById("carouselDiv")
-                    .scrollBy({ left: 400, behavior: "smooth" });
-                }}
-                size="large"
-              >
-                <Image src={ArrowIcon} />
-              </Fab>
-            </RightArrow>
           </CarouselDiv>
+          <RightArrow>
+            <Fab
+              className="ms-3"
+              style={{ boxShadow: "none", backgroundColor: "white" }}
+              color="secondary"
+              onClick={() => {
+                document
+                  .getElementById("carouselDiv")
+                  .scrollBy({ left: 400, behavior: "smooth" });
+              }}
+              size="large"
+            >
+              <Image src={ArrowIcon} />
+            </Fab>
+          </RightArrow>
         </div>
         <Button
           variant="contained"

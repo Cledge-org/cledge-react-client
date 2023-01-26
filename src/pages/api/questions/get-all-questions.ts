@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-
+import { getEnvVariable } from "src/config/getConfig";
 import { getQuestionListByDocument } from "./get-question-list";
 
 export const config = {

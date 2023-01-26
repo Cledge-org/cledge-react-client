@@ -206,6 +206,7 @@ a {
 input[type="text"],
 input[type="email"],
 input[type="password"],
+select,
 input[type="number"] {
   // @extend.px-3;
   // @extend.py-3;
@@ -245,6 +246,9 @@ a {
   &:hover {
     background-color: $cl-light-blue;
   }
+}
+.ant-divider-horizontal {
+  margin: 0.5rem 0 1rem 0 !important;
 }
 
 // $spacers: (

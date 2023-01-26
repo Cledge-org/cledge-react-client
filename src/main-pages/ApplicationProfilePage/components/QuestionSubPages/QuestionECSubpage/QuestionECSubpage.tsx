@@ -138,8 +138,10 @@ export default function QuestionECSubpage({
         } catch (e) {
           activities = null;
         }
-        //console.log(activities);
-        callPutActivities(getActivities(ECResponse.response[chunk.name]));
+        callPutActivities(
+          getActivities(ECResponse.response[chunk.name]),
+          activities
+        );
         store.dispatch(updateQuestionResponsesAction(userResponses));
         setIsAdding(false);
         setIsEditing(false);

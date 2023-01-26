@@ -60,7 +60,10 @@ const ActivityDropdown = ({
         <div className="py-3 mb-5" style={{ fontSize: "1.2em" }}>
           {content}
         </div>
-        <div className="d-flex flex-row align-items-start justify-content-between" style={{width: "95%"}}>
+        <div
+          className="d-flex flex-row align-items-start justify-content-between"
+          style={{ width: "95%" }}
+        >
           {customContent ?? (
             <TierIndicatorAndTips
               tip={tip}

@@ -63,13 +63,15 @@ export const downvoteWorkflow = {
       answer: string,
       problem: string,
       questionParams?: QuestionParams,
+      shouldCount?: boolean,
     ) => {
       const {response, responseId} = await callGetChatbotResponse(
         question,
         accountInfo.name,
         accountInfo.email,
         null,
-        questionParams
+        questionParams,
+        shouldCount
       );
       return response;
     },

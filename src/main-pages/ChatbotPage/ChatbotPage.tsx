@@ -14,10 +14,8 @@ import React, {
   useState,
 } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { fixControlledValue } from "antd/lib/input/Input";
 import { connect } from "react-redux";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
-import LeftPannel from "src/main-pages/ChatbotPage/components/LeftPanel/LeftPanel";
 import styles from "./chatbot-page.module.scss";
 import Message from "src/main-pages/ChatbotPage/components/Message/Message";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
@@ -199,6 +197,9 @@ const Chatbot: NextApplicationPage<{
       skip_summary:
         problem ===
         downvoteWorkflow.e1.possibleChoices["Not enough information"],
+      ignore_content_filter:
+        problem ===
+        downvoteWorkflow.e1.possibleChoices["Incorrectly classified question"],
     });
   };
 
@@ -287,7 +288,7 @@ const Chatbot: NextApplicationPage<{
       setCurrOptions(downvoteWorkflow.e1.possibleChoices);
       setShouldUpdateBackend(true);
     },
-    [currWorkflow, downvoteWorkflow, currOptions, pickedOptions]
+    [currWorkflow, downvoteWorkflow, currOptions, pickedOptions, messageList]
   );
 
   const onOptionClick = async (option: string, optionIndex: number) => {
@@ -321,7 +322,8 @@ const Chatbot: NextApplicationPage<{
           currProblematicMessage.question,
           currProblematicMessage.answer,
           choice,
-          questionParams
+          questionParams,
+          false
         )
         .then((response: string) => {
           continueWorkflow(option, workflow, response);

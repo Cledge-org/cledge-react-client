@@ -44,26 +44,34 @@ const Header = ({
     navclass = styles.navRegular + " shadow-sm";
   }
   const linkData = [
-    { link: "/dashboard", icon: "dashboard.svg", title: "Dashboard" },
+    {
+      link: "/dashboard",
+      icon: "dashboard.svg?alt=media&token=90850805-8011-45af-aab8-95cbc8d7eb95",
+      title: "Dashboard",
+    },
     {
       link: "/my-learning",
-      icon: "my-learning.svg",
+      icon: "my-learning.svg?alt=media&token=4ccc96fe-3db9-45b9-849a-24fcac93367b",
       title: "My Learning",
     },
-    { link: "/chatbot", icon: "chatbot.svg", title: "AI Chat" },
+    {
+      link: "/chatbot",
+      icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
+      title: "AI Chat",
+    },
     {
       link: "/metrics",
-      icon: "metrics.svg",
+      icon: "metrics.svg?alt=media&token=9eed7da0-8292-4847-9d73-a007d5850f0a",
       title: "Metrics",
     },
     {
       link: "/application-profile",
-      icon: "application-profile.svg",
+      icon: "application-profile.svg?alt=media&token=07dc1585-f1bd-4bee-804b-1db88296c62f",
       title: "Application Profile",
     },
     {
       link: "/blogs",
-      icon: "blogs.svg",
+      icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
       title: "Blogs",
     },
   ];
@@ -175,7 +183,7 @@ const Header = ({
                             ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
                             : "",
                       }}
-                      src={`images/header/${icon}`}
+                      src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
                     />
                     <div className="px-1" />
                     <span>{title}</span>

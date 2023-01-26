@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import "antd/dist/antd.css";
 import { useRouter } from "next/router";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import InfoContainer from "../CollegePage/components/InfoContainer/InfoContainer";
 import { Row, Col, Divider, Collapse } from "antd";
 import { Tabs, Tab } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import RoomIcon from "@mui/icons-material/Room";
+import LockIcon from "@mui/icons-material/Lock";
 import OverviewCard from "src/main-pages/CollegeDetailPage/components/OverviewCard/OverviewCard";
 import DataRow from "./components/DataRow/DataRow";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -18,8 +18,10 @@ import { connect } from "react-redux";
 import styles from "./college-detail-page.module.scss";
 import classNames from "classnames";
 import { Map, Marker, ZoomControl } from "pigeon-maps";
-import { Button } from "@mui/material"
 import { useSession } from "next-auth/react";
+import { maxHeight } from "@mui/system";
+import { Button } from "@mui/material";
+
 
 const CollegeDetailPage = ({
   questionResponses,
@@ -33,7 +35,28 @@ const CollegeDetailPage = ({
   const data = JSON.parse(raw.toString());
   const onList = JSON.parse(raw2.toString());
   const { Panel } = Collapse;
+
+  const { data: session } = useSession();
+  const [accountInfo, setAccountInfo] = React.useState(null);
   const [addedToList, setAddedToList] = useState(onList);
+  // const hasUWAccess = accountInfo?.hasUWAccess;
+  const [hasUWAccess, setHasUWAccess] = React.useState(false);
+
+  React.useEffect(() => {
+    if (session) {
+      getAccountInfo();
+    }
+  }, [session]);
+
+  async function getAccountInfo() {
+    const accountInfoResponse = await fetch(`/api/user/get-account`, {
+      method: "POST",
+      body: JSON.stringify({ userId: session.user.uid }),
+    });
+    const accountInfoJSON = await accountInfoResponse.json();
+    setAccountInfo(accountInfoJSON);
+    setHasUWAccess(accountInfoJSON.hasUWAccess === false);
+  }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -117,6 +140,31 @@ const CollegeDetailPage = ({
   function parse(data) {
     return data ? data : "No data";
   }
+
+  function singlePaywall(data) {
+    if (!hasUWAccess)
+      return (
+        <div>
+          <LockIcon style={{ color: "#070452" }} />
+        </div>
+      );
+    return data;
+  }
+
+  function dummyDataPaywall(data) {
+    if (!hasUWAccess) return "00000";
+    return data;
+  }
+
+  const BlockPaywallCover = () => {
+    if (!hasUWAccess)
+      return (
+        <div className={styles.paywallBlock}>
+          <LockIcon style={{ color: "#070452" }} />
+        </div>
+      )
+    else return <></>;
+  };
 
   // ********************Chart/Map Data*******************************
   const ethnicityData = [
@@ -238,9 +286,17 @@ const CollegeDetailPage = ({
           <ArrowBackIosNewIcon fontSize="inherit" />
         </IconButton>
       </div>
+      <button
+        onClick={(e) => setHasUWAccess(!hasUWAccess)}>
+        Toggle UW Access
+      </button>
       <div
         className="w-100 d-flex flex-column align-items-center justify-content-end"
-        style={{ backgroundColor: "#FBFCFF", height: "25vh" }}>
+        style={{
+          backgroundColor: "#FBFCFF",
+          height: "25vh",
+          maxHeight: "260px",
+        }}>
         <div className="h-100 d-flex flex-column justify-content-between">
           <div className="d-flex flex-row justify-content-between">
             <div className="mt-5">
@@ -317,40 +373,42 @@ const CollegeDetailPage = ({
               </div>
               <InfoContainer>
                 <div>
-                  <h2>Phone Number</h2>
-                  <h3>{data["contact_phone_num"]}</h3>
-                </div>
-                <div>
-                  <h2>Address</h2>
-                  <h3>{data["standard_address"]}</h3>
-                </div>
-                <div>
-                  <h2>Homepage</h2>
-                  <h3>
-                    <a
-                      href={`https://${data["institution_url"]}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={classNames("cl-blue", styles.linkWrapping)}>
-                      {data["institution_url"]}
-                    </a>
-                  </h3>
-                </div>
-                <div>
-                  <h2>Institutional Category</h2>
-                  <h3>{data["instituional_category"]}</h3>
-                </div>
-                <div>
-                  <h2>Institution Size</h2>
-                  <h3>{data["inst_size"]}</h3>
-                </div>
-                <div>
-                  <h2>Religious Affiliation</h2>
-                  <h3>
-                    {data["religious_affiliation"]
-                      ? data["religious_affiliation"]
-                      : "No Data"}
-                  </h3>
+                  <div>
+                    <h2>Phone Number</h2>
+                    <h3>{data["contact_phone_num"]}</h3>
+                  </div>
+                  <div>
+                    <h2>Address</h2>
+                    <h3>{data["standard_address"]}</h3>
+                  </div>
+                  <div>
+                    <h2>Homepage</h2>
+                    <h3>
+                      <a
+                        href={`https://${data["institution_url"]}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={classNames("cl-blue", styles.linkWrapping)}>
+                        {data["institution_url"]}
+                      </a>
+                    </h3>
+                  </div>
+                  <div>
+                    <h2>Institutional Category</h2>
+                    <h3>{data["instituional_category"]}</h3>
+                  </div>
+                  <div>
+                    <h2>Institution Size</h2>
+                    <h3>{data["inst_size"]}</h3>
+                  </div>
+                  <div>
+                    <h2>Religious Affiliation</h2>
+                    <h3>
+                      {data["religious_affiliation"]
+                        ? data["religious_affiliation"]
+                        : "No Data"}
+                    </h3>
+                  </div>
                 </div>
               </InfoContainer>
               {data["coordinates"]["latitude"] &&
@@ -380,10 +438,12 @@ const CollegeDetailPage = ({
               )}
               {data["mission_statement"] ? (
                 <InfoContainer>
-                  <h3>Mission Statement</h3>
-                  <h2 className={styles.linkWrapping}>
-                    {data["mission_statement"]}
-                  </h2>
+                  <div>
+                    <h3>Mission Statement</h3>
+                    <h2 className={styles.linkWrapping}>
+                      {data["mission_statement"]}
+                    </h2>
+                  </div>
                 </InfoContainer>
               ) : (
                 <></>
@@ -467,207 +527,245 @@ const CollegeDetailPage = ({
             <Col span={15}>
               <InfoContainer>
                 <h1>Admission Requirements</h1>
-                <div className="inline">
-                  <p className="cl-dark-text">Application fee</p>
-                  <h3 className="cl-dark-text">
-                    {parseAmount(data["application_fee"])}
-                  </h3>
+                <div>
+                  <div className="inline">
+                    <p className="cl-dark-text">Application fee</p>
+                    <h3 className="cl-dark-text">
+                      {parseAmount(data["application_fee"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">High school GPA</p>
+                    <h3 className="cl-dark-text">
+                      {singlePaywall(
+                        parse(data["admission_factors"]["high_school_gpa"])
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">High school rank</p>
+                    <h3 className="cl-dark-text">
+                      {singlePaywall(
+                        parse(data["admission_factors"]["high_school_rank"])
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">High school record</p>
+                    <h3 className="cl-dark-text">
+                      {singlePaywall(
+                        parse(data["admission_factors"]["high_school_record"])
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">
+                      College-Prep Program Completion
+                    </p>
+                    <h3 className="cl-dark-text">
+                      {singlePaywall(
+                        parse(
+                          data["admission_factors"]["completion_college_prep"]
+                        )
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Letters of recommendation</p>
+                    <h3 className="cl-dark-text">
+                      {singlePaywall(
+                        parse(
+                          data["admission_factors"]["letters_of_recommendation"]
+                        )
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">
+                      Formal Demonstration of Competencies
+                    </p>
+                    <h3 className="cl-dark-text">
+                      {singlePaywall(
+                        parse(
+                          data["admission_factors"][
+                            "formal_demonstration_of_competencies"
+                          ]
+                        )
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p>SAT/ACT</p>
+                    <h3>
+                      {singlePaywall(
+                        parse(
+                          data["admission_factors"]["standardized_test_scores"]
+                        )
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p>SAT Submit Rate</p>
+                    <h3>{parsePercent(data["submit_sat_percent"])}</h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p>ACT Submit Rate</p>
+                    <h3>{parsePercent(data["submit_act_percent"])}</h3>
+                  </div>
+                  {/* TODO No TOFEL DATA Found */}
+                  {/* <Divider />
+                                  <div className="inline">
+                                      <p className="cl-dark-text">
+                                          TOEFL policy (International appllicants)
+                                      </p>
+                                      <h3 className="cl-dark-text">
+                                          {data["applicants_per_year"]}
+                                      </h3>
+                                  </div> */}
                 </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Highschool GPA</p>
-                  <h3 className="cl-dark-text">
-                    {parse(data["admission_factors"]["high_school_gpa"])}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Highschool rank</p>
-                  <h3 className="cl-dark-text">
-                    {parse(data["admission_factors"]["high_school_rank"])}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Highschool record</p>
-                  <h3 className="cl-dark-text">
-                    {parse(data["admission_factors"]["high_school_record"])}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">
-                    College-Prep Program Completion
-                  </p>
-                  <h3 className="cl-dark-text">
-                    {parse(
-                      data["admission_factors"]["completion_college_prep"]
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Letters of recommendation</p>
-                  <h3 className="cl-dark-text">
-                    {parse(
-                      data["admission_factors"]["letters_of_recommendation"]
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">
-                    Formal Demonstration of Competencies
-                  </p>
-                  <h3 className="cl-dark-text">
-                    {parse(
-                      data["admission_factors"][
-                        "formal_demonstration_of_competencies"
-                      ]
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p>SAT/ACT</p>
-                  <h3>
-                    {parse(
-                      data["admission_factors"]["standardized_test_scores"]
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p>SAT Submit Rate</p>
-                  <h3>{parsePercent(data["submit_sat_percent"])}</h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p>ACT Submit Rate</p>
-                  <h3>{parsePercent(data["submit_act_percent"])}</h3>
-                </div>
-
-                {/* TODO No TOFEL DATA Found */}
-                {/* <Divider />
-                                <div className="inline">
-                                    <p className="cl-dark-text">
-                                        TOEFL policy (International appllicants)
-                                    </p>
-                                    <h3 className="cl-dark-text">
-                                        {data["applicants_per_year"]}
-                                    </h3>
-                                </div> */}
               </InfoContainer>
               <InfoContainer>
                 <h1>SAT Score Data (Admitted Students)</h1>
-                <DataRow
-                  colNum={3}
-                  sub1="Section"
-                  sub2="25th percentile"
-                  sub3="75th percentile"
-                />
-                <DataRow
-                  colNum={3}
-                  sub1="Overall average"
-                  sub2={
-                    data["sat/act_score"]["sat_critical_reading_25"] &&
-                    data["sat/act_score"]["sat_math_25"]
-                      ? data["sat/act_score"]["sat_critical_reading_25"] +
-                        data["sat/act_score"]["sat_math_25"]
-                      : "No Data"
-                  }
-                  sub3={
-                    data["sat/act_score"]["sat_critical_reading_75"] &&
-                    data["sat/act_score"]["sat_math_75"]
-                      ? data["sat/act_score"]["sat_critical_reading_75"] +
-                        data["sat/act_score"]["sat_math_75"]
-                      : "No Data"
-                  }
-                  type="content"
-                />
-                <Divider />
-                <DataRow
-                  colNum={3}
-                  sub1="Reading"
-                  sub2={parse(data["sat/act_score"]["sat_critical_reading_25"])}
-                  sub3={parse(data["sat/act_score"]["sat_critical_reading_75"])}
-                  type="content"
-                />
-                <Divider />
-                <DataRow
-                  colNum={3}
-                  sub1="Math"
-                  sub2={parse(data["sat/act_score"]["sat_math_25"])}
-                  sub3={parse(data["sat/act_score"]["sat_math_75"])}
-                  type="content"
-                />
-                <Divider />
-                <DataRow
-                  colNum={3}
-                  sub1="Writing"
-                  sub2={parse(data["sat/act_score"]["sat_writing_25"])}
-                  sub3={parse(data["sat/act_score"]["sat_writing_75"])}
-                  type="content"
-                />
+                <div className={styles.content}>
+                  <DataRow
+                    colNum={3}
+                    sub1="Section"
+                    sub2="25th percentile"
+                    sub3="75th percentile"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Overall average"
+                    sub2={
+                      data["sat/act_score"]["sat_critical_reading_25"] &&
+                      data["sat/act_score"]["sat_math_25"]
+                        ? data["sat/act_score"]["sat_critical_reading_25"] +
+                          data["sat/act_score"]["sat_math_25"]
+                        : "No Data"
+                    }
+                    sub3={
+                      data["sat/act_score"]["sat_critical_reading_75"] &&
+                      data["sat/act_score"]["sat_math_75"]
+                        ? data["sat/act_score"]["sat_critical_reading_75"] +
+                          data["sat/act_score"]["sat_math_75"]
+                        : "No Data"
+                    }
+                    type="content"
+                  />
+                  <Divider />
+                  <DataRow
+                    colNum={3}
+                    sub1="Reading"
+                    sub2={parse(
+                      data["sat/act_score"]["sat_critical_reading_25"]
+                    )}
+                    sub3={parse(
+                      data["sat/act_score"]["sat_critical_reading_75"]
+                    )}
+                    type="content"
+                  />
+                  <Divider />
+                  <DataRow
+                    colNum={3}
+                    sub1="Math"
+                    sub2={parse(data["sat/act_score"]["sat_math_25"])}
+                    sub3={parse(data["sat/act_score"]["sat_math_75"])}
+                    type="content"
+                  />
+                  <Divider />
+                  <DataRow
+                    colNum={3}
+                    sub1="Writing"
+                    sub2={parse(data["sat/act_score"]["sat_writing_25"])}
+                    sub3={parse(data["sat/act_score"]["sat_writing_75"])}
+                    type="content"
+                  />
+                </div>
               </InfoContainer>
               <InfoContainer>
                 <h1>ACT Score Data (Admitted Students)</h1>
-                <DataRow
-                  colNum={3}
-                  sub1="Section"
-                  sub2="25th percentile"
-                  sub3="75th percentile"
-                />
-                <DataRow
-                  colNum={3}
-                  sub1="Overall average"
-                  sub2={parse(data["sat/act_score"]["act_cumulative_25"])}
-                  sub3={parse(data["sat/act_score"]["act_cumulative_75"])}
-                  type="content"
-                />
+                <div className={styles.content}>
+                  <DataRow
+                    colNum={3}
+                    sub1="Section"
+                    sub2="25th percentile"
+                    sub3="75th percentile"
+                  />
+                  <DataRow
+                    colNum={3}
+                    sub1="Overall average"
+                    sub2={parse(data["sat/act_score"]["act_cumulative_25"])}
+                    sub3={parse(data["sat/act_score"]["act_cumulative_75"])}
+                    type="content"
+                  />
+                </div>
               </InfoContainer>
             </Col>
             <Col span={9}>
               <InfoContainer>
                 <h1>Admission Rate</h1>
                 <div>
-                  <h2>Overall acceptance rate</h2>
-                  <h3>
-                    {parsePercent(
-                      data["acceptance_rate"]["acceptance_rate_total"]
-                    )}
-                  </h3>
-                </div>
-                <div>
-                  <h2>Female acceptance rate</h2>
-                  <h3>
-                    {parsePercent(
-                      data["acceptance_rate"]["acceptance_rate_women"]
-                    )}
-                  </h3>
-                </div>
-                <div>
-                  <h2>Male acceptance rate</h2>
-                  <h3>
-                    {parsePercent(
-                      data["acceptance_rate"]["acceptance_rate_men"]
-                    )}
-                  </h3>
+                  <div>
+                    <h2>Overall acceptance rate</h2>
+                    <h3>
+                      {parsePercent(
+                        data["acceptance_rate"]["acceptance_rate_total"]
+                      )}
+                    </h3>
+                  </div>
+                  <div>
+                    <h2>Female acceptance rate</h2>
+                    <h3>
+                      {singlePaywall(
+                        parsePercent(
+                          data["acceptance_rate"]["acceptance_rate_women"]
+                        )
+                      )}
+                    </h3>
+                  </div>
+                  <div>
+                    <h2>Male acceptance rate</h2>
+                    <h3>
+                      {singlePaywall(
+                        parsePercent(
+                          data["acceptance_rate"]["acceptance_rate_men"]
+                        )
+                      )}
+                    </h3>
+                  </div>
                 </div>
               </InfoContainer>
               <InfoContainer>
                 <h1>Commit Rate</h1>
                 <div>
-                  <h2>Female commit rate</h2>
-                  <h3>
-                    {parsePercent(data["acceptance_rate"]["commit_rate_women"])}
-                  </h3>
-                </div>
-                <div>
-                  <h2>Male commit rate</h2>
-                  <h3>
-                    {parsePercent(data["acceptance_rate"]["commit_rate_men"])}
-                  </h3>
+                  <BlockPaywallCover />
+                  <div>
+                    <h2>Female commit rate</h2>
+                    <h3>
+                      {dummyDataPaywall(
+                        parsePercent(
+                          data["acceptance_rate"]["commit_rate_women"]
+                        )
+                      )}
+                    </h3>
+                  </div>
+                  <div>
+                    <h2>Male commit rate</h2>
+                    <h3>
+                      {dummyDataPaywall(
+                        parsePercent(data["acceptance_rate"]["commit_rate_men"])
+                      )}
+                    </h3>
+                  </div>
                 </div>
               </InfoContainer>
               {/* TODO No enrollment rate data
@@ -690,94 +788,100 @@ const CollegeDetailPage = ({
               <InfoContainer>
                 <h1>Education</h1>
                 <div>
-                  <p className="cl-dark-text">Undergradate Majors Offered</p>
-                  {Object.keys(data["bachelor_degree_disciplines"]).length !==
-                  0 ? (
-                    <Collapse ghost>
-                      <Panel header="See All" key="1">
-                        {(() => {
-                          let majors = data["bachelor_degree_disciplines"];
-                          let majorList = [];
-                          Object.entries(majors).map(([k, v]) => {
-                            if (v) {
-                              majorList.push(<p>{k}</p>);
-                            }
-                          });
-                          if (majorList.length === 0) return "No Data";
-                          return majorList;
-                        })()}
-                      </Panel>
-                    </Collapse>
-                  ) : (
-                    "No Data"
-                  )}
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Most popular Area of Study</p>
-                  <h3 className="cl-dark-text">
-                    {(() => {
-                      let d = data["study_disciplines"];
-                      if (!d) {
-                        return "No Data";
-                      }
-                      let mostPopularArea = Object.keys(d).reduce(function (
-                        a,
-                        b
-                      ) {
-                        return d[a] > d[b] ? a : b;
-                      });
-                      return mostPopularArea ? mostPopularArea : "No Data";
-                    })()}
-                  </h3>
+                  <div>
+                    <p className="cl-dark-text">Undergradate Majors Offered</p>
+                    {Object.keys(data["bachelor_degree_disciplines"]).length !==
+                    0 ? (
+                      <Collapse ghost>
+                        <Panel header="See All" key="1">
+                          {(() => {
+                            let majors = data["bachelor_degree_disciplines"];
+                            let majorList = [];
+                            Object.entries(majors).map(([k, v]) => {
+                              if (v) {
+                                majorList.push(<p>{k}</p>);
+                              }
+                            });
+                            if (majorList.length === 0) return "No Data";
+                            return majorList;
+                          })()}
+                        </Panel>
+                      </Collapse>
+                    ) : (
+                      "No Data"
+                    )}
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Most popular Area of Study</p>
+                    <h3 className="cl-dark-text">
+                      {(() => {
+                        let d = data["study_disciplines"];
+                        if (!d) {
+                          return "No Data";
+                        }
+                        let mostPopularArea = Object.keys(d).reduce(function (
+                          a,
+                          b
+                        ) {
+                          return d[a] > d[b] ? a : b;
+                        });
+                        return mostPopularArea ? mostPopularArea : "No Data";
+                      })()}
+                    </h3>
+                  </div>
                 </div>
               </InfoContainer>
               <InfoContainer>
                 <h1>Faculty Statistics</h1>
-                <div className="inline">
-                  <p className="cl-dark-text">Total Instructional Staff</p>
-                  <h3 className="cl-dark-text">
-                    {parseNumber(data["instructional_staff"]["total"])}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Total Research Staff</p>
-                  <h3 className="cl-dark-text">
-                    {parseNumber(data["research_staff_count"])}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Total Male Staff</p>
-                  <h3 className="cl-dark-text">
-                    {parseNumber(data["instructional_staff"]["men"])}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Total Female Staff</p>
-                  <h3 className="cl-dark-text">
-                    {parseNumber(data["instructional_staff"]["women"])}
-                  </h3>
+                <div>
+                  <div className="inline">
+                    <p className="cl-dark-text">Total Instructional Staff</p>
+                    <h3 className="cl-dark-text">
+                      {parseNumber(data["instructional_staff"]["total"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Total Research Staff</p>
+                    <h3 className="cl-dark-text">
+                      {parseNumber(data["research_staff_count"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Total Male Staff</p>
+                    <h3 className="cl-dark-text">
+                      {parseNumber(data["instructional_staff"]["men"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Total Female Staff</p>
+                    <h3 className="cl-dark-text">
+                      {parseNumber(data["instructional_staff"]["women"])}
+                    </h3>
+                  </div>
                 </div>
               </InfoContainer>
             </Col>
             <Col span={9}>
               <InfoContainer>
                 <h1>Academic Statistics</h1>
-                <div className="inline">
-                  <p className="cl-dark-text">4-year graduation rate</p>
-                  <h3 className="cl-dark-text">
-                    {parsePercent(data["4_year_graduation_rate"])}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">6-year graduation rate</p>
-                  <h3 className="cl-dark-text">
-                    {parsePercent(data["6_year_graduation_rate"])}
-                  </h3>
+                <div>
+                  <div className="inline">
+                    <p className="cl-dark-text">4-year graduation rate</p>
+                    <h3 className="cl-dark-text">
+                      {parsePercent(data["4_year_graduation_rate"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">6-year graduation rate</p>
+                    <h3 className="cl-dark-text">
+                      {parsePercent(data["6_year_graduation_rate"])}
+                    </h3>
+                  </div>
                 </div>
               </InfoContainer>
               <InfoContainer>
@@ -790,27 +894,29 @@ const CollegeDetailPage = ({
                                     </h3>
                                 </div>
                                 <Divider /> */}
-                <div className="inline">
-                  <p className="cl-dark-text">ROTC</p>
-                  <h3 className="cl-dark-text">
-                    {data["offer_rotc"] == "Yes" ? (
-                      <CheckCircleIcon style={{ color: "#2651ED" }} />
-                    ) : (
-                      <CancelIcon style={{ color: "#ef3f2b" }} />
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Land grant institution</p>
-                  <h3 className="cl-dark-text">
-                    {data["land_grant_institution?"] ===
-                    "Land Grant Institution" ? (
-                      <CheckCircleIcon style={{ color: "#2651ED" }} />
-                    ) : (
-                      <CancelIcon style={{ color: "#ef3f2b" }} />
-                    )}
-                  </h3>
+                <div>
+                  <div className="inline">
+                    <p className="cl-dark-text">ROTC</p>
+                    <h3 className="cl-dark-text">
+                      {data["offer_rotc"] == "Yes" ? (
+                        <CheckCircleIcon style={{ color: "#2651ED" }} />
+                      ) : (
+                        <CancelIcon style={{ color: "#ef3f2b" }} />
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Land grant institution</p>
+                    <h3 className="cl-dark-text">
+                      {data["land_grant_institution?"] ===
+                      "Land Grant Institution" ? (
+                        <CheckCircleIcon style={{ color: "#2651ED" }} />
+                      ) : (
+                        <CancelIcon style={{ color: "#ef3f2b" }} />
+                      )}
+                    </h3>
+                  </div>
                 </div>
               </InfoContainer>
             </Col>
@@ -820,324 +926,351 @@ const CollegeDetailPage = ({
             <Col span={24}>
               <InfoContainer>
                 <h1>Total Costs</h1>
-                <Row>
-                  <Col span={8}>
-                    <h2>In-State Tuition</h2>
-                    <h3>{parseAmount(data["in-state_tuition"])}</h3>
-                  </Col>
-                  <Col span={8}>
-                    <h2>Out-Of-State Tuition</h2>
-                    <h3>{parseAmount(data["out-state_tuition"])}</h3>
-                  </Col>
-                  <Col span={8}>
-                    <h2>Average Room and Board Cost</h2>
-                    <h3>{parseAmount(data["avg_cost_room_and_board"])}</h3>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={8}>
-                    <h2>Instruction Expenses</h2>
-                    <h3>{parseAmount(data["instruction_expense_per_fte"])}</h3>
-                  </Col>
-                  <Col span={8}>
-                    <h2>Student Service Expenses</h2>
-                    <h3>
-                      {parseAmount(data["student_service_expense_per_fte"])}
-                    </h3>
-                  </Col>
-                  <Col span={8}>
-                    <h2>Other Expenses</h2>
-                    <h3>{parseAmount(data["other_expense_per_fte"])}</h3>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={8}>
-                    <h2>On-Campus Living Cost (In-State Student)</h2>
-                    <h3>
-                      {parseAmount(
-                        data["estimate_cost_in_state_living_on_campus"]
-                      )}
-                    </h3>
-                  </Col>
-                  <Col span={8}>
-                    <h2>On-Campus Living Cost (Out-of-State Student)</h2>
-                    <h3>
-                      {parseAmount(
-                        data["estimate_cost_out_state_living_on_campus"]
-                      )}
-                    </h3>
-                  </Col>
-                  <Col span={8}>
-                    <h2>Off-Campus Living Cost (In-State Student)</h2>
-                    <h3>
-                      {parseAmount(
-                        data["estimate_cost_in_state_living_off_campus"]
-                      )}
-                    </h3>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={8}>
-                    <h2>Off-Campus Living Cost (Out-of-State Student)</h2>
-                    <h3>
-                      {parseAmount(
-                        data["estimate_cost_out_state_living_off_campus"]
-                      )}
-                    </h3>
-                  </Col>
-                  <Col span={8}>
-                    <h2>Estimated In-State Tuition</h2>
-                    <h3>{parseAmount(data["estimate_tuition_in_state"])}</h3>
-                  </Col>
-                  <Col span={8}>
-                    <h2>Estimated Out-Of-State Tuition</h2>
-                    <h3>{parseAmount(data["estimate_tuition_out_state"])}</h3>
-                  </Col>
-                </Row>
+                <div>
+                  <Row>
+                    <Col span={8}>
+                      <h2>In-State Tuition</h2>
+                      <h3>{parseAmount(data["in-state_tuition"])}</h3>
+                    </Col>
+                    <Col span={8}>
+                      <h2>Out-Of-State Tuition</h2>
+                      <h3>{parseAmount(data["out-state_tuition"])}</h3>
+                    </Col>
+                    <Col span={8}>
+                      <h2>Average Room and Board Cost</h2>
+                      <h3>{parseAmount(data["avg_cost_room_and_board"])}</h3>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={8}>
+                      <h2>Instruction Expenses</h2>
+                      <h3>
+                        {parseAmount(data["instruction_expense_per_fte"])}
+                      </h3>
+                    </Col>
+                    <Col span={8}>
+                      <h2>Student Service Expenses</h2>
+                      <h3>
+                        {parseAmount(data["student_service_expense_per_fte"])}
+                      </h3>
+                    </Col>
+                    <Col span={8}>
+                      <h2>Other Expenses</h2>
+                      <h3>{parseAmount(data["other_expense_per_fte"])}</h3>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={8}>
+                      <h2>On-Campus Living Cost (In-State Student)</h2>
+                      <h3>
+                        {parseAmount(
+                          data["estimate_cost_in_state_living_on_campus"]
+                        )}
+                      </h3>
+                    </Col>
+                    <Col span={8}>
+                      <h2>On-Campus Living Cost (Out-of-State Student)</h2>
+                      <h3>
+                        {parseAmount(
+                          data["estimate_cost_out_state_living_on_campus"]
+                        )}
+                      </h3>
+                    </Col>
+                    <Col span={8}>
+                      <h2>Off-Campus Living Cost (In-State Student)</h2>
+                      <h3>
+                        {parseAmount(
+                          data["estimate_cost_in_state_living_off_campus"]
+                        )}
+                      </h3>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={8}>
+                      <h2>Off-Campus Living Cost (Out-of-State Student)</h2>
+                      <h3>
+                        {parseAmount(
+                          data["estimate_cost_out_state_living_off_campus"]
+                        )}
+                      </h3>
+                    </Col>
+                    <Col span={8}>
+                      <h2>Estimated In-State Tuition</h2>
+                      <h3>{parseAmount(data["estimate_tuition_in_state"])}</h3>
+                    </Col>
+                    <Col span={8}>
+                      <h2>Estimated Out-Of-State Tuition</h2>
+                      <h3>{parseAmount(data["estimate_tuition_out_state"])}</h3>
+                    </Col>
+                  </Row>
+                </div>
               </InfoContainer>
             </Col>
             <Col span={15}>
               <InfoContainer>
                 <h1>Financial Aid Statistics</h1>
-                <h2>All Undergraduate Students Awarded</h2>
-                <div className="inline">
-                  <p className="cl-dark-text">Any Financial Aid</p>
-                  <h3 className="cl-dark-text">
-                    {parsePercent(data["percent_undergrad_grant_aid"])}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Pell Grant</p>
-                  <h3 className="cl-dark-text">
-                    {parsePercent(data["percent_undergrad_pell_grant"])}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Federal Grant Loan</p>
-                  <h3 className="cl-dark-text">
-                    {parsePercent(data["percent_undergrad_federal_loan"])}
-                  </h3>
-                </div>
-                <br />
-                <h2>First Time Undergraduate Students Awarded</h2>
-                <div className="inline">
-                  <p className="cl-dark-text">Any Financial Aid</p>
-                  <h3 className="cl-dark-text">
-                    {parsePercent(
-                      data["percent_full_time_first_time_finance"]["any_aid"]
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Pell Grant</p>
-                  <h3 className="cl-dark-text">
-                    {parsePercent(
-                      data["percent_full_time_first_time_finance"][
-                        "pell_grants"
-                      ]
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Federal Student Loan</p>
-                  <h3 className="cl-dark-text">
-                    {parsePercent(
-                      data["percent_full_time_first_time_finance"][
-                        "federal_loan"
-                      ]
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Federal Grant Aid</p>
-                  <h3 className="cl-dark-text">
-                    {parsePercent(
-                      data["percent_full_time_first_time_finance"][
-                        "other_federal_grant_aid"
-                      ]
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">Other</p>
-                  <h3 className="cl-dark-text">
-                    {parsePercent(
-                      data["percent_full_time_first_time_finance"]["other_loan"]
-                    )}
-                  </h3>
+                <div>
+                  <h2>All Undergraduate Students Awarded</h2>
+                  <div className="inline">
+                    <p className="cl-dark-text">Any Financial Aid</p>
+                    <h3 className="cl-dark-text">
+                      {parsePercent(data["percent_undergrad_grant_aid"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Pell Grant</p>
+                    <h3 className="cl-dark-text">
+                      {parsePercent(data["percent_undergrad_pell_grant"])}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Federal Grant Loan</p>
+                    <h3 className="cl-dark-text">
+                      {parsePercent(data["percent_undergrad_federal_loan"])}
+                    </h3>
+                  </div>
+                  <br />
+                  <h2>First Time Undergraduate Students Awarded</h2>
+                  <div className="inline">
+                    <p className="cl-dark-text">Any Financial Aid</p>
+                    <h3 className="cl-dark-text">
+                      {parsePercent(
+                        data["percent_full_time_first_time_finance"]["any_aid"]
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Pell Grant</p>
+                    <h3 className="cl-dark-text">
+                      {parsePercent(
+                        data["percent_full_time_first_time_finance"][
+                          "pell_grants"
+                        ]
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Federal Student Loan</p>
+                    <h3 className="cl-dark-text">
+                      {parsePercent(
+                        data["percent_full_time_first_time_finance"][
+                          "federal_loan"
+                        ]
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Federal Grant Aid</p>
+                    <h3 className="cl-dark-text">
+                      {parsePercent(
+                        data["percent_full_time_first_time_finance"][
+                          "other_federal_grant_aid"
+                        ]
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">Other</p>
+                    <h3 className="cl-dark-text">
+                      {parsePercent(
+                        data["percent_full_time_first_time_finance"][
+                          "other_loan"
+                        ]
+                      )}
+                    </h3>
+                  </div>
                 </div>
               </InfoContainer>
               <InfoContainer>
                 {/* TODO Net Price Not Found */}
                 <h1>Average Grant/Scholarship and Net Price</h1>
-                <DataRow
-                  colNum={4}
-                  sub1="Income Level"
-                  sub2="Median Debt"
-                  sub3="Average Grant"
-                  sub4="Net Price"
-                />
-                <DataRow
-                  colNum={4}
-                  sub1="$0–30,000"
-                  sub2={parseAmount(data["median_debt"]["0_30"])}
-                  sub3={parseAmount(
-                    data["avg_grant_scholarship_19_20"]["0_30"]
-                  )}
-                  sub4={parseAmount(data["family_income_public"]["0_30"])}
-                  type="content"
-                />
-                <Divider />
-                <DataRow
-                  colNum={4}
-                  sub1="$30,000–48,000"
-                  sub2={parseAmount(data["median_debt"]["30_75"])}
-                  sub3={parseAmount(
-                    data["avg_grant_scholarship_19_20"]["30_48"]
-                  )}
-                  sub4={parseAmount(data["family_income_public"]["30_48"])}
-                  type="content"
-                />
-                <Divider />
-                <DataRow
-                  colNum={4}
-                  sub1="$48,001–75,000"
-                  sub2={parseAmount(data["median_debt"]["30_75"])}
-                  sub3={parseAmount(
-                    data["avg_grant_scholarship_19_20"]["48_75"]
-                  )}
-                  sub4={parseAmount(data["family_income_public"]["48_75"])}
-                  type="content"
-                />
-                <Divider />
-                <DataRow
-                  colNum={4}
-                  sub1="$75,001–110,000"
-                  sub2={parseAmount(data["median_debt"]["75+"])}
-                  sub3={parseAmount(
-                    data["avg_grant_scholarship_19_20"]["75_110"]
-                  )}
-                  sub4={parseAmount(data["family_income_public"]["75_110"])}
-                  type="content"
-                />
-                <Divider />
-                <DataRow
-                  colNum={4}
-                  sub1="+$110,000"
-                  sub2={parseAmount(data["median_debt"]["75+"])}
-                  sub3={parseAmount(
-                    data["avg_grant_scholarship_19_20"]["gt110"]
-                  )}
-                  sub4={parseAmount(data["family_income_public"]["110+"])}
-                  type="content"
-                />
+                <div>
+                  <DataRow
+                    colNum={4}
+                    sub1="Income Level"
+                    sub2="Median Debt"
+                    sub3="Average Grant"
+                    sub4="Net Price"
+                  />
+                  <DataRow
+                    colNum={4}
+                    sub1="$0–30,000"
+                    sub2={parseAmount(data["median_debt"]["0_30"])}
+                    sub3={parseAmount(
+                      data["avg_grant_scholarship_19_20"]["0_30"]
+                    )}
+                    sub4={parseAmount(data["family_income_public"]["0_30"])}
+                    type="content"
+                  />
+                  <Divider />
+                  <DataRow
+                    colNum={4}
+                    sub1="$30,000–48,000"
+                    sub2={parseAmount(data["median_debt"]["30_75"])}
+                    sub3={parseAmount(
+                      data["avg_grant_scholarship_19_20"]["30_48"]
+                    )}
+                    sub4={parseAmount(data["family_income_public"]["30_48"])}
+                    type="content"
+                  />
+                  <Divider />
+                  <DataRow
+                    colNum={4}
+                    sub1="$48,001–75,000"
+                    sub2={parseAmount(data["median_debt"]["30_75"])}
+                    sub3={parseAmount(
+                      data["avg_grant_scholarship_19_20"]["48_75"]
+                    )}
+                    sub4={parseAmount(data["family_income_public"]["48_75"])}
+                    type="content"
+                  />
+                  <Divider />
+                  <DataRow
+                    colNum={4}
+                    sub1="$75,001–110,000"
+                    sub2={parseAmount(data["median_debt"]["75+"])}
+                    sub3={parseAmount(
+                      data["avg_grant_scholarship_19_20"]["75_110"]
+                    )}
+                    sub4={parseAmount(data["family_income_public"]["75_110"])}
+                    type="content"
+                  />
+                  <Divider />
+                  <DataRow
+                    colNum={4}
+                    sub1="+$110,000"
+                    sub2={parseAmount(data["median_debt"]["75+"])}
+                    sub3={parseAmount(
+                      data["avg_grant_scholarship_19_20"]["gt110"]
+                    )}
+                    sub4={parseAmount(data["family_income_public"]["110+"])}
+                    type="content"
+                  />
+                </div>
               </InfoContainer>
             </Col>
             <Col span={9}>
               <InfoContainer style={"display: flex, gap: 1rem"}>
                 <h1>Grant</h1>
                 <div>
-                  <h2>State Grants Awarded amount</h2>
-                  <h3>{parseAmount(data["grant"]["state_grant"])}</h3>
-                </div>
-                <div>
-                  <h2>Net grant aid awarded amount</h2>
-                  <h3>{parseAmount(data["grant"]["net_grant_aided"])}</h3>
-                </div>
-                <div>
-                  <h2>Total Grants awarded amount</h2>
-                  <h3>{parseAmount(data["grant"]["total_grant"])}</h3>
-                </div>
-                <div>
-                  <h2>Local grants awarded amount</h2>
-                  <h3>{parseAmount(data["grant"]["local_grant"])}</h3>
-                </div>
-                <div>
-                  <h2>Pell grant administered amount</h2>
-                  <h3>{parseAmount(data["grant"]["pell_administered"])}</h3>
-                </div>
-                <div>
-                  <h2>Other federal grant amount</h2>
-                  <h3>{parseAmount(data["grant"]["other_federal"])}</h3>
+                  <div>
+                    <h2>State Grants Awarded amount</h2>
+                    <h3>{parseAmount(data["grant"]["state_grant"])}</h3>
+                  </div>
+                  <div>
+                    <h2>Net grant aid awarded amount</h2>
+                    <h3>{parseAmount(data["grant"]["net_grant_aided"])}</h3>
+                  </div>
+                  <div>
+                    <h2>Total Grants awarded amount</h2>
+                    <h3>{parseAmount(data["grant"]["total_grant"])}</h3>
+                  </div>
+                  <div>
+                    <h2>Local grants awarded amount</h2>
+                    <h3>{parseAmount(data["grant"]["local_grant"])}</h3>
+                  </div>
+                  <div>
+                    <h2>Pell grant administered amount</h2>
+                    <h3>{parseAmount(data["grant"]["pell_administered"])}</h3>
+                  </div>
+                  <div>
+                    <h2>Other federal grant amount</h2>
+                    <h3>{parseAmount(data["grant"]["other_federal"])}</h3>
+                  </div>
                 </div>
               </InfoContainer>
               <InfoContainer>
                 <h1>Average Salary</h1>
-                <h2>6 years after graduation</h2>
-                <div className="inline">
-                  <p className="cl-dark-text">25th percentile</p>
-                  <h3 className="cl-dark-text">
-                    {parseAmount(
-                      data["6_yrs_after_entry.working_not_enrolled"][
-                        "earnings_percentile.25"
-                      ]
-                    )}
-                  </h3>
+                <div>
+                  <BlockPaywallCover />
+                  <h2>6 years after graduation</h2>
+                  <div className="inline">
+                    <p className="cl-dark-text">25th percentile</p>
+                    <h3 className="cl-dark-text">
+                      {dummyDataPaywall(
+                        parseAmount(
+                          data["6_yrs_after_entry.working_not_enrolled"][
+                            "earnings_percentile.25"
+                          ]
+                        )
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">75th percentile</p>
+                    <h3 className="cl-dark-text">
+                      {dummyDataPaywall(
+                        parseAmount(
+                          data["6_yrs_after_entry.working_not_enrolled"][
+                            "earnings_percentile.75"
+                          ]
+                        )
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">90th percentile</p>
+                    <h3 className="cl-dark-text">
+                      {dummyDataPaywall(
+                        parseAmount(
+                          data["6_yrs_after_entry.working_not_enrolled"][
+                            "earnings_percentile.90"
+                          ]
+                        )
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <br />
+                  <h2>10 years after graduation</h2>
+                  <div className="inline">
+                    <p className="cl-dark-text">25th percentile</p>
+                    <h3 className="cl-dark-text">
+                      {dummyDataPaywall(
+                        parseAmount(
+                          data["10_yrs_after_entry.working_not_enrolled"][
+                            "earnings_percentile.25"
+                          ]
+                        )
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">75th percentile</p>
+                    <h3 className="cl-dark-text">
+                      {dummyDataPaywall(
+                        parseAmount(
+                          data["10_yrs_after_entry.working_not_enrolled"][
+                            "earnings_percentile.75"
+                          ]
+                        )
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
+                  <div className="inline">
+                    <p className="cl-dark-text">90th percentile</p>
+                    <h3 className="cl-dark-text">
+                      {dummyDataPaywall(
+                        parseAmount(
+                          data["10_yrs_after_entry.working_not_enrolled"][
+                            "earnings_percentile.90"
+                          ]
+                        )
+                      )}
+                    </h3>
+                  </div>
+                  <Divider />
                 </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">75th percentile</p>
-                  <h3 className="cl-dark-text">
-                    {parseAmount(
-                      data["6_yrs_after_entry.working_not_enrolled"][
-                        "earnings_percentile.75"
-                      ]
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">90th percentile</p>
-                  <h3 className="cl-dark-text">
-                    {parseAmount(
-                      data["6_yrs_after_entry.working_not_enrolled"][
-                        "earnings_percentile.90"
-                      ]
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <br />
-                <h2>10 years after graduation</h2>
-                <div className="inline">
-                  <p className="cl-dark-text">25th percentile</p>
-                  <h3 className="cl-dark-text">
-                    {parseAmount(
-                      data["10_yrs_after_entry.working_not_enrolled"][
-                        "earnings_percentile.25"
-                      ]
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">75th percentile</p>
-                  <h3 className="cl-dark-text">
-                    {parseAmount(
-                      data["10_yrs_after_entry.working_not_enrolled"][
-                        "earnings_percentile.75"
-                      ]
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">90th percentile</p>
-                  <h3 className="cl-dark-text">
-                    {parseAmount(
-                      data["10_yrs_after_entry.working_not_enrolled"][
-                        "earnings_percentile.90"
-                      ]
-                    )}
-                  </h3>
-                </div>
-                <Divider />
               </InfoContainer>
             </Col>
           </Row>
@@ -1195,73 +1328,79 @@ const CollegeDetailPage = ({
             <Col span={9}>
               <InfoContainer>
                 <h1>Student Composition</h1>
-                <Divider />
-                <div className="chart">
-                  <Doughnut
-                    data={ethnicityChartData}
-                    options={{
-                      plugins: {
-                        legend: {
-                          position: "bottom",
+                <div>
+                  <Divider />
+                  <div className="chart">
+                    <Doughnut
+                      data={ethnicityChartData}
+                      options={{
+                        plugins: {
+                          legend: {
+                            position: "bottom",
+                          },
                         },
-                      },
-                    }}
-                  />
-                </div>
-                <br />
-                <div className="chart">
-                  <Doughnut
-                    data={genderChartData}
-                    options={{
-                      plugins: {
-                        legend: {
-                          position: "bottom",
+                      }}
+                    />
+                  </div>
+                  <br />
+                  <div className="chart">
+                    <Doughnut
+                      data={genderChartData}
+                      options={{
+                        plugins: {
+                          legend: {
+                            position: "bottom",
+                          },
                         },
-                      },
-                    }}
-                  />
+                      }}
+                    />
+                  </div>
                 </div>
               </InfoContainer>
               <InfoContainer>
                 <h1>Atheletics</h1>
-                <div className="inline">
-                  <p className="cl-dark-text">NCAA Member</p>
-                  <h3 className="cl-dark-text">
-                    {parseYesNo(data["ncaa"]["member_ncaa"], "Yes")}
-                  </h3>
+                <div>
+                  <div>
+                    <div className="inline">
+                      <p className="cl-dark-text">NCAA Member</p>
+                      <h3 className="cl-dark-text">
+                        {parseYesNo(data["ncaa"]["member_ncaa"], "Yes")}
+                      </h3>
+                    </div>
+                    <Divider />
+                    <div className="inline">
+                      <p className="cl-dark-text">NCAA for Football</p>
+                      <h3 className="cl-dark-text">
+                        {parseYesNo(data["ncaa"]["ncaa_football"], "Yes")}
+                      </h3>
+                    </div>
+                    <Divider />
+                    <div className="inline">
+                      <p className="cl-dark-text">NCAA for Basketball</p>
+                      <h3 className="cl-dark-text">
+                        {parseYesNo(data["ncaa"]["ncaa_basketball"], "Yes")}
+                      </h3>
+                    </div>
+                    <Divider />
+                    <div className="inline">
+                      <p className="cl-dark-text">NCAA for Track</p>
+                      <h3 className="cl-dark-text">
+                        {parseYesNo(
+                          data["ncaa"]["ncaa_cross_country_track"],
+                          "Yes"
+                        )}
+                      </h3>
+                    </div>
+                    <Divider />
+                    <div className="inline">
+                      <p className="cl-dark-text">NCAA for Baseball</p>
+                      <h3 className="cl-dark-text">
+                        {parseYesNo(data["ncaa"]["ncaa_baseball"], "Yes")}
+                      </h3>
+                    </div>
+                    <Divider />
+                  </div>
                 </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">NCAA for Football</p>
-                  <h3 className="cl-dark-text">
-                    {parseYesNo(data["ncaa"]["ncaa_football"], "Yes")}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">NCAA for Basketball</p>
-                  <h3 className="cl-dark-text">
-                    {parseYesNo(data["ncaa"]["ncaa_basketball"], "Yes")}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">NCAA for Track</p>
-                  <h3 className="cl-dark-text">
-                    {parseYesNo(
-                      data["ncaa"]["ncaa_cross_country_track"],
-                      "Yes"
-                    )}
-                  </h3>
-                </div>
-                <Divider />
-                <div className="inline">
-                  <p className="cl-dark-text">NCAA for Baseball</p>
-                  <h3 className="cl-dark-text">
-                    {parseYesNo(data["ncaa"]["ncaa_baseball"], "Yes")}
-                  </h3>
-                </div>
-                <Divider />
               </InfoContainer>
             </Col>
           </Row>

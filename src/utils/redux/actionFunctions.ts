@@ -1,4 +1,4 @@
-import { actions } from "../../../config";
+import { actions } from "./actions";
 
 export const initialStateAction = (initialState) => {
   return {

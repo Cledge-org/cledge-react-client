@@ -2,6 +2,7 @@ import { Db, MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getPathway } from "src/pages/api/learning-pathway/get-pathway";
 import { getQuestionListById } from "src/pages/api/questions/get-question-list";
+import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
   api: {

@@ -1,12 +1,11 @@
 import { DefaultRootState } from "react-redux";
 import { Action, Reducer } from "redux";
-import { actions } from "../../../config";
+import { actions } from "./actions";
 
 export const reducer: Reducer<any, any> = (
   state: DefaultRootState | undefined,
   action: Action<any> | undefined
 ) => {
-  //console.log(action);
   if (action.type === actions.CLEAR_STATE) {
     return {};
   }
