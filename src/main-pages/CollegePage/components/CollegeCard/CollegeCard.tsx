@@ -1,12 +1,15 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import styles from "./college-card.module.scss";
 import { CardActionArea, Tab, Tabs } from "@mui/material";
 import classNames from "classnames";
+import { useSession } from "next-auth/react";
 
 interface CardProps {
   abbreviation?: string;
@@ -21,6 +24,7 @@ interface CardProps {
   tabValue?: number;
   data?: object;
   schoolFit: string;
+  onList: boolean;
 }
 
 function CollegeCard(props: CardProps) {
@@ -30,7 +34,7 @@ function CollegeCard(props: CardProps) {
   return (
     <CardWrapper style={{ marginBottom: "25px" }}>
       {(props.isLoading && (
-        <Card sx={{ width: 700, height: 400 }}>
+        <Card sx={{ width: "40rem", height: 400 }}>
           <div
             className={classNames(styles.gradient, "w-100")}
             style={{ height: "60%" }}
@@ -61,8 +65,8 @@ function CollegeCard(props: CardProps) {
       )) || (
         <Card
           sx={{
-            width: 700,
-            minHeight: 400,
+            width: "40rem",
+            minHeight: "10rem",
             height: "fit-content",
           }}
         >
@@ -73,6 +77,7 @@ function CollegeCard(props: CardProps) {
                   pathname: URL,
                   query: {
                     data: JSON.stringify(props.data),
+                    onList: props.onList
                   },
                 },
                 URL
@@ -102,8 +107,46 @@ function InnerCard({
   inState,
   outState,
   schoolFit,
+  onList
 }: CardProps) {
   const [imageHasLoaded, setImageHasLoaded] = useState(false);
+  const [addedToList, setAddedToList] = useState(onList);
+  const { data: session } = useSession();
+  const handleAddCollege = async (event) => {
+    event.stopPropagation();
+    setAddedToList(!addedToList);
+    // add to college list
+    const response = await fetch(`/api/CST/add-college-to-list`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: session.user.uid,
+        college_title: title,
+      }),
+    });
+    const responseJson = await response.json();
+  }
+
+  const handleRemoveCollege = async (event) => {
+    event.stopPropagation();
+    setAddedToList(!addedToList);
+    // remove from college list
+    const response = await fetch(`/api/CST/remove-college-from-list`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: session.user.uid,
+        college_title: title,
+      }),
+    });
+    const responseJson = await response.json();
+  }
+
+  
   return (
     <>
       {!img ? (
@@ -144,19 +187,29 @@ function InnerCard({
         >
           {title}
         </h1>
+        <h6 className="text-secondary" style={{ fontSize: "1.4em" }}>
+          {schoolType == "Public"
+            ? "Public School -"
+            : schoolType == "Private for-profit" || "Private non-profit"
+            ? "Private School -"
+            : ""}
+          <span style={{ marginLeft: 5 }}>{location}</span>
+        </h6>
         <div
           className="w-100 d-flex justify-content-between align-items-end"
-          style={{ height: "90px" }}
+          style={{ height: "4rem" }}
         >
           <div className={styles.collegeFitContainer}>{schoolFit}</div>
-          <h6 className="text-secondary" style={{ fontSize: "1.4em" }}>
-            {schoolType == "Public"
-              ? "Public School | "
-              : schoolType == "Private for-profit" || "Private non-profit"
-              ? "Private School | "
-              : ""}
-            <span style={{ marginLeft: 5 }}>{location}</span>
-          </h6>
+            <div className="d-flex">
+              <Button
+                className="ms-3"
+                variant="contained"
+                style={{ textTransform: "none", width: "2rem", height: "2rem", background: addedToList ? 'red' : ''}}
+                onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
+              >
+                {addedToList ? "x" : "+"}
+              </Button>
+            </div>
         </div>
       </CardContent>
     </>
