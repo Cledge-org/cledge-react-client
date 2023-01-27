@@ -24,21 +24,26 @@ import { Button } from "@mui/material";
 
 
 const CollegeDetailPage = ({
+  collegeData,
   questionResponses,
 }: {
+  collegeData: any
   questionResponses: UserResponse[];
 }) => {
   const [value, setValue] = React.useState(0);
   const router = useRouter();
   const raw = router.query.data;
-  const raw2 = router.query.onList;
-  const data = JSON.parse(raw.toString());
-  const onList = JSON.parse(raw2.toString());
+  //const raw2 = router.query.onList;
+  //const data = JSON.parse(raw.toString());
+  const data = collegeData.collegeData;
+  //console.log("RAW = " + JSON.stringify(data));
+  console.log("COLLEGEDATA = " + JSON.stringify(data));
+  //const onList = JSON.parse(raw2.toString());
   const { Panel } = Collapse;
 
   const { data: session } = useSession();
   const [accountInfo, setAccountInfo] = React.useState(null);
-  const [addedToList, setAddedToList] = useState(onList);
+  const [addedToList, setAddedToList] = useState(false);
   // const hasUWAccess = accountInfo?.hasUWAccess;
   const [hasUWAccess, setHasUWAccess] = React.useState(false);
 

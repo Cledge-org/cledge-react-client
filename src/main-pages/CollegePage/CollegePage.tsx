@@ -349,6 +349,7 @@ const College = ({
                 })
               ) : collegeData && collegeData.length > 0 ? (
                 collegeData.map((data) => {
+                  console.log("COL DATA : " + JSON.stringify(collegeData));
                   return (
                     <CollegeCard
                       key={data.title + data.location}
