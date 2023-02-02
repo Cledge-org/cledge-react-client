@@ -31,6 +31,8 @@ const CollegeDetailPage = ({
   const raw = router.query.data;
   const data = JSON.parse(raw.toString());
   console.log(data);
+  // TODO: see CollegeCard
+  // do not pass data around, pass college abbreviation around in query as key to do api.get(abbreiviation) in detail page to get data
   const { Panel } = Collapse;
   const { data: session } = useSession();
   const [accountInfo, setAccountInfo] = React.useState(null);

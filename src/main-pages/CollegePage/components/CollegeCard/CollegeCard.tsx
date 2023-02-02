@@ -37,16 +37,14 @@ function CollegeCard(props: CardProps) {
           />
           <div
             className="d-flex flex-column w-100 justify-content-between"
-            style={{ height: "40%" }}
-          >
+            style={{ height: "40%" }}>
             <div
               className={classNames(styles.gradient, "mt-3 ms-2")}
               style={{ height: "24%", width: "70%" }}
             />
             <div
               className="d-flex flex-row w-100 justify-content-between align-items-center mb-4"
-              style={{ height: "20%" }}
-            >
+              style={{ height: "20%" }}>
               <div
                 className={classNames(styles.gradient, "mt-3 ms-2")}
                 style={{ height: "100%", width: "20%" }}
@@ -64,8 +62,9 @@ function CollegeCard(props: CardProps) {
             width: 700,
             minHeight: 400,
             height: "fit-content",
-          }}
-        >
+          }}>
+          {/*     // TODO: see CollegeCard
+  // do not pass data around, pass college abbreviation around in query as key to do api.get(abbreiviation) in detail page to get data */}
           <CardActionArea
             onClick={() => {
               router.push(
@@ -81,8 +80,7 @@ function CollegeCard(props: CardProps) {
             className={
               "d-flex flex-column justify-content-start align-items-start"
             }
-            style={{ minHeight: "400px", height: "auto" }}
-          >
+            style={{ minHeight: "400px", height: "auto" }}>
             <InnerCard {...props} />
           </CardActionArea>
         </Card>
