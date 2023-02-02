@@ -99,7 +99,12 @@ const CollegeDetailPage = ({
   }
 
   function parse(data) {
-    return data ? data : "No data";
+    if (data && data.isArray() && data.length >= 1) {
+      return data;
+    } else if (data) {
+      return data;
+    }
+    return "No data";
   }
 
   function singlePaywall(data) {
