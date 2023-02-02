@@ -55,11 +55,11 @@ jobs:
           unzip -q release.zip
           rm release.zip
 
-      - name: "Deploy to Azure Web App"
+      - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: "cledge-main"
-          slot-name: "Production"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9CAB1B047A88415EADB3099D0FE5C4C9 }}
+          app-name: 'cledge-main-site'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_583ca8ce1d8b4488aa94ccfc59c5d2eb }}
           package: .

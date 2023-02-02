@@ -28,9 +28,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 };
 
-const CollegeList = ({ collegeListData }) => {
+const alertReturn = (e: any) => {
+  alert(JSON.stringify(e));
+}
+
+const CLT = ({ collegeListData }) => {
   return <CollegeListPage collegeList={collegeListData} />;
 };
 
-CollegeList.requireAuth = true;
-export default CollegeList;
+CLT.requireAuth = true;
+export default CLT;
