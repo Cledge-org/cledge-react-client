@@ -361,7 +361,7 @@ const College = ({
                       schoolType={data["college_type"]}
                       inState={data["in-state_tuition"]}
                       outState={data["out-state_tuition"]}
-                      abbreviation={"uw"}
+                      abbreviation={data["abbreviation"]}
                       data={data}
                     />
                   );

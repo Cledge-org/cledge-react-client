@@ -26,6 +26,7 @@ interface CardProps {
 function CollegeCard(props: CardProps) {
   const router = useRouter();
   const URL = `/collegeDetail/`;
+  console.log(props);
 
   return (
     <CardWrapper style={{ marginBottom: "25px" }}>
@@ -63,8 +64,8 @@ function CollegeCard(props: CardProps) {
             minHeight: 400,
             height: "fit-content",
           }}>
-          {/*     // TODO: see CollegeCard
-  // do not pass data around, pass college abbreviation around in query as key to do api.get(abbreiviation) in detail page to get data */}
+          {/*     // TODO: V5 Feature see CollegeCard
+  // do not pass data around, pass college abbreviation/collegeName around in query as key to do api.get(abbreiviation) in detail page to get data */}
           <CardActionArea
             onClick={() => {
               router.push(
