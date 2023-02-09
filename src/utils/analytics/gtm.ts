@@ -1,3 +1,4 @@
+/*
 import TagManager from "react-gtm-module";
 import { getEnvVariable } from "src/config/getConfig";
 
@@ -10,3 +11,4 @@ const tagManagerArgs = {
 export const initializeTagManager = () => {
   TagManager.initialize(tagManagerArgs);
 };
+*/
