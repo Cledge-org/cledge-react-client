@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import React, { useEffect, useState } from "react";
 import "antd/dist/antd.css";
 import { Layout, Row, Col, Input } from "antd";
@@ -13,7 +14,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { connect } from "react-redux";
 
 const axios = require("axios").default;
-const { Search } = Input;
 
 const CardsWrapper = styled.div`
   display: flex;
@@ -33,15 +33,18 @@ const CardsWrapper = styled.div`
 `;
 
 const College = ({
+  collegeList,
   questionResponses,
 }: {
   questionResponses: UserResponse[];
+  collegeList: any
 }) => {
   const [collegeData, setData] = useState(null);
   const [filter, setFilter] = useState({});
   const [searchText, setSearchText] = useState("*");
   const [isLoading, setIsLoading] = useState(true);
   const [currSort, setCurrSort] = useState("");
+  let collegeListArray = [];
   const [currNumericalSortOrder, setCurrNumericalSortOrder] =
     useState("Least-Greatest");
   const userResponse = questionResponses.find(
@@ -100,6 +103,11 @@ const College = ({
       });
     return data;
   }
+  
+  for (let i = 0; i < collegeList.length; i++) {
+    collegeListArray[i] = collegeList[i].college_name;
+  }
+
 
   useEffect(() => {
     setPrevRequest(requestData);
@@ -247,6 +255,7 @@ const College = ({
                         outState={""}
                         abbreviation={""}
                         data={{}}
+                        onList={false}
                       />
                     );
                   })}
@@ -334,6 +343,7 @@ const College = ({
                       abbreviation={""}
                       data={{}}
                       schoolFit=""
+                      onList={false}
                     />
                   );
                 })
@@ -363,6 +373,7 @@ const College = ({
                       outState={data["out-state_tuition"]}
                       abbreviation={data["abbreviation"]}
                       data={data}
+                      onList={collegeListArray.includes(data["title"])}
                     />
                   );
                 })

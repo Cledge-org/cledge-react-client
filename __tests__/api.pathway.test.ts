@@ -1,18 +1,18 @@
-import { getAllPathwayProgress } from "../src/pages/api/get-all-pathway-progress";
-import { getAllPathways } from "../src/pages/api/get-all-pathways";
-import { getPathwayProgress } from "../src/pages/api/get-pathway-progress";
-import { getPathway } from "../src/pages/api/get-pathway";
+import { getAllPathwayProgress } from "../src/pages/api/admin/learning-pathway/get-all-pathway-progress";
+import { getAllPathways } from "../src/pages/api/learning-pathway/get-all-pathways";
+import { getPathwayProgress } from "../src/pages/api/user/get-pathway-progress";
+import { getPathway } from "../src/pages/api/learning-pathway/get-pathway";
 import { putPathwayModulePersonalizedContent } from "../src/pages/api/admin/learning-pathway/put-pathway-module-personalized-content";
-import { putPathwayModule } from "../src/pages/api/put-pathway-module";
-import { putPathwayProgress } from "../src/pages/api/put-pathway-progress";
-import { putPathway } from "../src/pages/api/put-pathway";
+import { putPathwayModule } from "../src/pages/api/admin/learning-pathway/put-pathway-module";
+import { putPathwayProgress } from "../src/pages/api/user/put-pathway-progress";
+import { putPathway } from "../src/pages/api/admin/learning-pathway/put-pathway";
 import { MongoClient, ObjectId } from "mongodb";
 import { createUser } from "../src/pages/api/user/create-user";
-import { updateUser } from "../src/pages/api/update-user";
+import { updateUser } from "../src/pages/api/user/update-user";
 import {
   getPathwayTags,
   putPathwayTags,
-} from "../src/pages/api/cache-new-tags";
+} from "../src/pages/api/MSC/cache-new-tags";
 
 const testPersonalizedContentTag = ["Test Tag 1", "Test Tag 2", "Test Tag 3"];
 const pathwayModule1ObjectId = new ObjectId();
