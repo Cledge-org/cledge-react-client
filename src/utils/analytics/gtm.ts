@@ -12,3 +12,5 @@ export const initializeTagManager = () => {
   TagManager.initialize(tagManagerArgs);
 };
 */
+
+export {}
