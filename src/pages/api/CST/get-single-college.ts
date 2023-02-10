@@ -14,17 +14,12 @@ const serviceName = "college-search-service";
 const indexName = "college-search-index";
 const queryKey = "1F7801474A40D9360ED57EC698A3CF10";
 const endPoint = "https://" + serviceName + ".search.windows.net/";
-const searchClient = new SearchClient(
-  endPoint,
-  indexName,
-  new AzureKeyCredential(queryKey)
-);
+
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const reqBodyJson = req.body;
   try {
-      const { searchText, top, skip, filters, searchFields } = req.body;
-      const collegeSearchResult = await getSingleCollegeInfo('collegeId'
+      const { collegeId } = req.body
+      const collegeSearchResult = await getSingleCollegeInfo(collegeId
       );
       resolve.status(200).send(collegeSearchResult);
   } catch (e) {
