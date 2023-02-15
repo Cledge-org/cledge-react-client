@@ -162,11 +162,13 @@ const formatOutput = async (college: any, client: MongoClient, err: any) => {
     const collegedataRes = await collegedata_db
       .collection("colleges-data")
       .findOne({ college_id: college["UNITID"] });
+    console.log(collegedataRes);
     const output = {
       img_title: imageRes["img_title"],
       img_wiki_link: imageRes["img_wiki_link"],
       img_link: imageRes["img_link"],
       img_description: imageRes["img_description"],
+      college_id: collegedataRes["college_id"],
       title: college["INSTNM"],
       region: college["REGION"],
       college_abbrev: college["IALIAS"],

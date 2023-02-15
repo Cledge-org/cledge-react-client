@@ -10,18 +10,11 @@ import { getEnvVariable } from "src/config/getConfig";
 // Data Master List:
 // https://docs.google.com/document/d/1K6c2FKCbVZgcndtt0A7tJAf2QgC4rzy9Tmxvf-mus9M/edit
 
-const serviceName = "college-search-service";
-const indexName = "college-search-index";
-const queryKey = '59bp6Txm4A6ualhWE86SLaC9XbIPj0SVcEKKhe7mfvAzSeAuzXJi'
-const endPoint = "https://" + serviceName + ".search.windows.net/";
-
-
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   try {
-      const { collegeId } = req.body
-      const collegeSearchResult = await getSingleCollegeInfo(collegeId
-      );
-      resolve.status(200).send(collegeSearchResult);
+    const { college_id } = req.body;
+    const collegeSearchResult = await getSingleCollegeInfo(college_id);
+    resolve.status(200).send(collegeSearchResult);
   } catch (e) {
     resolve.status(500).send(e);
   }
@@ -29,18 +22,15 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
 // Return a list of colleges that contains formatted attributes
 // *For Searching colleges based on filters and search text*
-export const getSingleCollegeInfo = (
-  collegeId: String
-): Promise<Object> => {
+export const getSingleCollegeInfo = (collegeId: String): Promise<Object> => {
   return new Promise(async (res, err) => {
     try {
-      const client = await MongoClient.connect(process.env.MONGO_URL)
-      const collegedata_db = await client.db('colleges')
-      const collegedataRes = await collegedata_db
-          .collection('colleges-data')
-          .findOne({ college_id: collegeId })
-      let output = formatOutput(collegedataRes);
-
+      const client = await MongoClient.connect(process.env.MONGO_URL);
+      const collegedata_db = await client.db("colleges");
+      const singleCollegeData = await collegedata_db
+        .collection("colleges-data")
+        .findOne({ college_id: collegeId });
+      let output = formatOutput(singleCollegeData, client, err);
       res(output);
     } catch (e) {
       err(res);
@@ -48,12 +38,18 @@ export const getSingleCollegeInfo = (
   });
 };
 
-const formatOutput = async (collegeId : String) => {
+const formatOutput = async (college: any,  client: MongoClient, err: any) => {
+  try {
+    const image_db = await client.db("images");
+    const imageRes = await image_db
+      .collection("college_images")
+      .findOne({ INSTID: college["college_id"] });
     const output = {
       img_title: imageRes["img_title"],
       img_wiki_link: imageRes["img_wiki_link"],
       img_link: imageRes["img_link"],
       img_description: imageRes["img_description"],
+      college_id: college["college_id"],
       title: college["INSTNM"],
       region: college["REGION"],
       college_abbrev: college["IALIAS"],
@@ -182,7 +178,9 @@ const formatOutput = async (collegeId : String) => {
       carnegie_class_18_undergrad_profile:
         dicts.carnegie_class_18_undergrad_profile[college["C18UGPRF"]],
       carnegie_class_18_undergrad_enrollment_profile:
-        dicts.carnegie_class_18_undergrad_enrollment_profile[college["C18ENPRF"]],
+        dicts.carnegie_class_18_undergrad_enrollment_profile[
+          college["C18ENPRF"]
+        ],
       carnegie_class_18_size_setting:
         dicts.carnegie_class_18_size_setting[college["C18SZSET"]],
       retention_rate_4_years: college["RET_FT4"],
@@ -283,17 +281,19 @@ const formatOutput = async (collegeId : String) => {
         safety: college["SAFETY_TIER"],
       },
     };
-    // append collegedata data
-    if (collegedataRes != null) {
-      output["admission"] = collegedataRes["admission"];
-      output["financials"] = collegedataRes["financials"];
-      output["academics"] = collegedataRes["academics"];
-      output["campus_life"] = collegedataRes["campus_life"];
-      output["students"] = collegedataRes["students"];
-      output["undergraduate majors"] = collegedataRes["undergraduate majors"];
-    }
+      output["admission"] = college["admission"];
+      output["financials"] = college["financials"];
+      output["academics"] = college["academics"];
+      output["campus_life"] = college["campus_life"];
+      output["students"] = college["students"];
+      output["undergraduate majors"] = college["undergraduate majors"];
 
     return output;
+  } catch (e) {
+    console.log(e)
+    err(e);
+    return {};
+  }
 };
 
 const formatStudyDisciplines = (college, cds_categories) => {
