@@ -77,7 +77,6 @@ function CollegeCard(props: CardProps) {
                 {
                   pathname: URL,
                   query: {
-                    data: JSON.stringify(props.data),
                     onList: props.onList,
                   },
                 },

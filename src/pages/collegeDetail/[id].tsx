@@ -27,10 +27,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 
 const CollegeDetail = ({ collegeData }) => {
-  console.log(collegeData);
-
   return <CollegeDetailPage collegeData={collegeData}/>;
-  // return <CollegeDetailPage collegeData={collegeData}/>;
 };
 
 CollegeDetail.requireAuth = true;
