@@ -2,8 +2,8 @@ import { getResourcesInfo } from "../src/pages/api/resources/get-resources";
 import { putResource } from "../src/pages/api/resources/put-resource";
 import { ObjectId } from "mongodb";
 import { rateResource } from "../src/pages/api/resources/rate-resource";
-import { putResourceTags } from "../src/pages/api/cache-new-tags";
-import { getResourceTags } from "../src/pages/api/cache-new-tags";
+import { putResourceTags } from "../src/pages/api/MSC/cache-new-tags";
+import { getResourceTags } from "../src/pages/api/MSC/cache-new-tags";
 
 const titleArticle = "Test Article";
 const testArticle1: CardArticle = {
