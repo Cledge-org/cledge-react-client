@@ -12,7 +12,7 @@ import { getEnvVariable } from "src/config/getConfig";
 
 const serviceName = "college-search-service";
 const indexName = "college-search-index";
-const queryKey = "1F7801474A40D9360ED57EC698A3CF10";
+const queryKey = '59bp6Txm4A6ualhWE86SLaC9XbIPj0SVcEKKhe7mfvAzSeAuzXJi'
 const endPoint = "https://" + serviceName + ".search.windows.net/";
 
 

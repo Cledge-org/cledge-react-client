@@ -12,7 +12,7 @@ import { getEnvVariable } from "src/config/getConfig";
 
 const serviceName = "college-search-tool";
 const indexName = "college-search-index";
-const queryKey = "1F7801474A40D9360ED57EC698A3CF10"; // college-search-tool resource -> Keys
+const queryKey = "59bp6Txm4A6ualhWE86SLaC9XbIPj0SVcEKKhe7mfvAzSeAuzXJi"; // college-search-tool resource -> Keys
 const endPoint = "https://" + serviceName + ".search.windows.net/";
 const searchClient = new SearchClient(
   endPoint,
@@ -82,7 +82,7 @@ export const getCollegeMetrics = (userTier): Promise<Object> => {
 // Return a list of colleges that contains formatted attributes
 // *For Searching colleges based on filters and search text*
 export const getCollegeInfo = (
-  searchText,
+  searchRawText,
   top,
   skip,
   filters,
@@ -91,11 +91,14 @@ export const getCollegeInfo = (
 ): Promise<Object> => {
   return new Promise(async (res, err) => {
     try {
-      const searchResults = await searchClient.search(searchText, {
+      let searchFuzzyText = toFuzzyString(searchRawText);
+      console.log(searchFuzzyText);
+      const searchResults = await searchClient.search(searchFuzzyText, {
         top: top,
         skip: skip,
         includeTotalCount: true,
         searchMode: "all",
+        queryType: "full",
         filter: createFilterExpression(filters),
         searchFields: searchFields,
       });
@@ -292,7 +295,9 @@ const formatOutput = async (college: any, client: MongoClient, err: any) => {
       carnegie_class_18_undergrad_profile:
         dicts.carnegie_class_18_undergrad_profile[college["C18UGPRF"]],
       carnegie_class_18_undergrad_enrollment_profile:
-        dicts.carnegie_class_18_undergrad_enrollment_profile[college["C18ENPRF"]],
+        dicts.carnegie_class_18_undergrad_enrollment_profile[
+          college["C18ENPRF"]
+        ],
       carnegie_class_18_size_setting:
         dicts.carnegie_class_18_size_setting[college["C18SZSET"]],
       retention_rate_4_years: college["RET_FT4"],
@@ -408,7 +413,6 @@ const formatOutput = async (college: any, client: MongoClient, err: any) => {
     err(e);
     return {};
   }
-
 };
 
 const formatStudyDisciplines = (college, cds_categories) => {
@@ -445,4 +449,9 @@ const truncateNumericalResult = (collegeField) => {
 
 const reportZeroAsNoData = (collegeField) => {
   return collegeField === 0 ? null : collegeField;
+};
+
+const toFuzzyString = (str) => {
+  if (typeof str === "string") return str.split(" ").join("~ ") + "~";
+  return str;
 };
