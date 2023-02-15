@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "antd/dist/antd.css";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -20,6 +20,8 @@ import classNames from "classnames";
 import { Map, Marker, ZoomControl } from "pigeon-maps";
 import { useSession } from "next-auth/react";
 import { maxHeight } from "@mui/system";
+import { Button } from "@mui/material";
+
 
 const CollegeDetailPage = ({
   questionResponses,
@@ -29,10 +31,14 @@ const CollegeDetailPage = ({
   const [value, setValue] = React.useState(0);
   const router = useRouter();
   const raw = router.query.data;
+  const raw2 = router.query.onList;
   const data = JSON.parse(raw.toString());
+  const onList = JSON.parse(raw2.toString());
   const { Panel } = Collapse;
+
   const { data: session } = useSession();
   const [accountInfo, setAccountInfo] = React.useState(null);
+  const [addedToList, setAddedToList] = useState(onList);
   // const hasUWAccess = accountInfo?.hasUWAccess;
   const [hasUWAccess, setHasUWAccess] = React.useState(false);
 
@@ -49,12 +55,44 @@ const CollegeDetailPage = ({
     });
     const accountInfoJSON = await accountInfoResponse.json();
     setAccountInfo(accountInfoJSON);
-    setHasUWAccess(accountInfoJSON.hasUWAccess === true);
+    setHasUWAccess(accountInfoJSON.hasUWAccess === false);
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+  const handleAddCollege = async () => {
+      // add to college list
+    const response = await fetch(`/api/CST/add-college-to-list`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: session.user.uid,
+        college_title: data.title,
+      }),
+    });
+    const responseJson = await response.json();
+    setAddedToList(!addedToList);
+  }
+
+  const handleRemoveCollege = async (event) => {
+    event.stopPropagation();
+    setAddedToList(!addedToList);
+    // remove from college list
+    const response = await fetch(`/api/CST/remove-college-from-list`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: session.user.uid,
+        college_title: data.title,
+      }),
+    });
+    const responseJson = await response.json();
+  }
 
   const userResponse = questionResponses.find(
     ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
@@ -255,36 +293,48 @@ const CollegeDetailPage = ({
           maxHeight: "260px",
         }}>
         <div className="h-100 d-flex flex-column justify-content-between">
-          <div className="mt-5">
-            <h1
-              className="cl-dark-text mb-3"
-              style={{
-                fontSize: "1.9rem",
-                fontWeight: 700,
-                marginBottom: 5,
-              }}>
-              {data.title}
-            </h1>
-            <div className="w-50 d-flex flex-row align-items-center">
-              <div className={styles.collegeFitContainer}>
-                {userTier >= data["college_fit_metric"].safety
-                  ? "Safety School"
-                  : userTier < data["college_fit_metric"].target
-                  ? "Reach School"
-                  : "Fit School"}
+          <div className="d-flex flex-row justify-content-between">
+            <div className="mt-5">
+              <h1
+                className="cl-dark-text mb-3"
+                style={{
+                  fontSize: "1.9rem",
+                  fontWeight: 700,
+                  marginBottom: 5,
+                }}>
+                {data.title}
+              </h1>
+              <div className="w-100 d-flex flex-row align-items-center">
+                <div className={styles.collegeFitContainer}>
+                  {userTier >= data["college_fit_metric"].safety
+                    ? "Safety School"
+                    : userTier < data["college_fit_metric"].target
+                    ? "Reach School"
+                    : "Fit School"}
+                </div>
+                <h6
+                  className="text-secondary ms-3"
+                  style={{ fontSize: "1.2em", marginBottom: 0 }}>
+                  {data["college_type"] == "Public"
+                    ? "Public School | "
+                    : data["college_type"] == "Private for-profit" ||
+                      "Private non-profit"
+                    ? "Private School | "
+                    : ""}
+                  <span style={{ marginLeft: 5 }}>{data.location}</span>
+                </h6>
+                
               </div>
-              <h6
-                className="text-secondary ms-3"
-                style={{ fontSize: "1.2em", marginBottom: 0 }}>
-                {data["college_type"] == "Public"
-                  ? "Public School | "
-                  : data["college_type"] == "Private for-profit" ||
-                    "Private non-profit"
-                  ? "Private School | "
-                  : ""}
-                <span style={{ marginLeft: 5 }}>{data.location}</span>
-              </h6>
             </div>
+            <div className="mt-5">
+                <Button
+                      variant="contained"
+                      style={{ textTransform: "none", background: addedToList ? "red" : "" }}
+                      onClick={!addedToList ? handleAddCollege : handleRemoveCollege} 
+                    >
+                      {addedToList ? "Remove From My List" : "Add To My College List"}
+                </Button>
+              </div>
           </div>
           <Tabs value={value} onChange={handleChange}>
             <Tab className="me-5" label="Overview" />

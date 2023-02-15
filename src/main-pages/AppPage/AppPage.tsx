@@ -12,6 +12,7 @@ import { Router, useRouter } from "next/router";
 import LoadingScreen from "../../common/components/Loading/Loading";
 import { getFirebaseClientApp } from "src/utils/firebase/getFirebaseApp";
 import { initializeTagManager } from "src/utils/analytics/gtm";
+import { initializeClarity } from "src/utils/analytics/clarity";
 
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
   requireAuth?: boolean;
@@ -30,7 +31,10 @@ function MyApp({
   useEffect(() => {
     // Log page visit to analytics
     logEvent(getAnalytics(getFirebaseClientApp()), router.pathname);
+
+    // Connect 3rd party data streaming services
     initializeTagManager();
+    initializeClarity();
 
     const endLoading = () => {
       setLoading(false);
