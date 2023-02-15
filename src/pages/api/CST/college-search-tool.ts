@@ -91,8 +91,9 @@ export const getCollegeInfo = (
 ): Promise<Object> => {
   return new Promise(async (res, err) => {
     try {
+      console.log("r " + searchRawText);
       let searchFuzzyText = toFuzzyString(searchRawText);
-      console.log(searchFuzzyText);
+      console.log("fz " + searchFuzzyText);
       const searchResults = await searchClient.search(searchFuzzyText, {
         top: top,
         skip: skip,
@@ -162,7 +163,6 @@ const formatOutput = async (college: any, client: MongoClient, err: any) => {
     const collegedataRes = await collegedata_db
       .collection("colleges-data")
       .findOne({ college_id: college["UNITID"] });
-    console.log(collegedataRes);
     const output = {
       img_title: imageRes["img_title"],
       img_wiki_link: imageRes["img_wiki_link"],
@@ -449,11 +449,13 @@ const truncateNumericalResult = (collegeField) => {
     : collegeField;
 };
 
+
 const reportZeroAsNoData = (collegeField) => {
   return collegeField === 0 ? null : collegeField;
 };
 
 const toFuzzyString = (str) => {
-  if (typeof str === "string") return str.split(" ").join("~ ") + "~";
+  if (str !== "" && str !== "*" && typeof str === "string")
+    return str.split(" ").join("~ ") + "~";
   return str;
 };

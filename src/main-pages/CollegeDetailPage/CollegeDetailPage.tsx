@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { GetServerSidePropsContext } from "next";
 import "antd/dist/antd.css";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -22,21 +23,19 @@ import { Map, Marker, ZoomControl } from "pigeon-maps";
 import { useSession } from "next-auth/react";
 import { Button } from "@mui/material";
 
-
 const CollegeDetailPage = ({
-  questionResponses,
+  questionResponses, collegeData
 }: {
   questionResponses: UserResponse[];
+  collegeData : any
 }) => {
+  console.log(collegeData);
+
   const [value, setValue] = React.useState(0);
   const router = useRouter();
-  const raw = router.query.data;
-  const raw2 = router.query.onList;
-  const data = JSON.parse(raw.toString());
-  console.log(data);
-  // TODO: see CollegeCard
-  // do not pass data around, pass college abbreviation around in query as key to do api.get(abbreiviation) in detail page to get data
-  const onList = JSON.parse(raw2.toString());
+  const data = collegeData;
+  const raw = router.query.onList;
+  const onList = JSON.parse(raw.toString());
   const { Panel } = Collapse;
 
   const { data: session } = useSession();
@@ -65,7 +64,7 @@ const CollegeDetailPage = ({
     setValue(newValue);
   };
   const handleAddCollege = async () => {
-      // add to college list
+    // add to college list
     const response = await fetch(`/api/CST/add-college-to-list`, {
       method: "PUT",
       headers: {
@@ -78,7 +77,7 @@ const CollegeDetailPage = ({
     });
     const responseJson = await response.json();
     setAddedToList(!addedToList);
-  }
+  };
 
   const handleRemoveCollege = async (event) => {
     event.stopPropagation();
@@ -95,7 +94,7 @@ const CollegeDetailPage = ({
       }),
     });
     const responseJson = await response.json();
-  }
+  };
 
   const userResponse = questionResponses.find(
     ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
@@ -140,7 +139,7 @@ const CollegeDetailPage = ({
   }
 
   function parse(data) {
-    if (data && data.isArray() && data.length >= 1) {
+    if (data) {
       return data;
     } else if (data) {
       return data;
@@ -285,11 +284,13 @@ const CollegeDetailPage = ({
       <div
         className="position-absolute"
         style={{ left: "8%", top: "10%" }}
-        onClick={() => router.push(`/college/`)}>
+        onClick={() => router.push(`/college/`)}
+      >
         <IconButton
           style={{ backgroundColor: "white" }}
           aria-label="delete"
-          size="large">
+          size="large"
+        >
           <ArrowBackIosNewIcon fontSize="inherit" />
         </IconButton>
       </div>
@@ -299,7 +300,8 @@ const CollegeDetailPage = ({
           backgroundColor: "#FBFCFF",
           height: "25vh",
           maxHeight: "260px",
-        }}>
+        }}
+      >
         <div className="h-100 d-flex flex-column justify-content-between">
           <div className="d-flex flex-row justify-content-between">
             <div className="mt-5">
@@ -309,7 +311,8 @@ const CollegeDetailPage = ({
                   fontSize: "1.9rem",
                   fontWeight: 700,
                   marginBottom: 5,
-                }}>
+                }}
+              >
                 {data.title}
               </h1>
               <div className="w-100 d-flex flex-row align-items-center">
@@ -322,7 +325,8 @@ const CollegeDetailPage = ({
                 </div>
                 <h6
                   className="text-secondary ms-3"
-                  style={{ fontSize: "1.2em", marginBottom: 0 }}>
+                  style={{ fontSize: "1.2em", marginBottom: 0 }}
+                >
                   {data["college_type"] == "Public"
                     ? "Public School | "
                     : data["college_type"] == "Private for-profit" ||
@@ -331,18 +335,20 @@ const CollegeDetailPage = ({
                     : ""}
                   <span style={{ marginLeft: 5 }}>{data.location}</span>
                 </h6>
-                
               </div>
             </div>
             <div className="mt-5">
-                <Button
-                      variant="contained"
-                      style={{ textTransform: "none", background: addedToList ? "red" : "" }}
-                      onClick={!addedToList ? handleAddCollege : handleRemoveCollege} 
-                    >
-                      {addedToList ? "Remove From My List" : "Add To My College List"}
-                </Button>
-              </div>
+              <Button
+                variant="contained"
+                style={{
+                  textTransform: "none",
+                  background: addedToList ? "red" : "",
+                }}
+                onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
+              >
+                {addedToList ? "Remove From My List" : "Add To My College List"}
+              </Button>
+            </div>
           </div>
           <Tabs value={value} onChange={handleChange}>
             <Tab className="me-5" label="Overview" />
@@ -367,7 +373,8 @@ const CollegeDetailPage = ({
                   marginBottom: "1rem",
                   overflow: "hidden",
                   border: "1px solid #e0dfe8",
-                }}>
+                }}
+              >
                 <img
                   style={{ width: "100%" }}
                   src={
@@ -392,7 +399,8 @@ const CollegeDetailPage = ({
                         href={`https://${data["institution_url"]}`}
                         target="_blank"
                         rel="noreferrer"
-                        className={classNames("cl-blue", styles.linkWrapping)}>
+                        className={classNames("cl-blue", styles.linkWrapping)}
+                      >
                         {data["institution_url"]}
                       </a>
                     </h3>
@@ -425,7 +433,8 @@ const CollegeDetailPage = ({
                       data["coordinates"]["longitude"],
                     ]}
                     attribution={false}
-                    defaultZoom={10}>
+                    defaultZoom={10}
+                  >
                     <ZoomControl />
                     <Marker
                       width={40}

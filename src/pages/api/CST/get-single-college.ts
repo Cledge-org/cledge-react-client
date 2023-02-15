@@ -13,6 +13,7 @@ import { getEnvVariable } from "src/config/getConfig";
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   try {
     const { college_id } = req.body;
+    console.log("3 " + college_id);
     const collegeSearchResult = await getSingleCollegeInfo(college_id);
     resolve.status(200).send(collegeSearchResult);
   } catch (e) {

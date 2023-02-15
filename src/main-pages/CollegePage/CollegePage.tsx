@@ -40,8 +40,8 @@ const College = ({
   collegeList: any
 }) => {
   const [collegeData, setData] = useState(null);
+  console.log(collegeData);
   const [filter, setFilter] = useState({});
-  const [searchText, setSearchText] = useState("*");
   const [isLoading, setIsLoading] = useState(true);
   const [currSort, setCurrSort] = useState("");
   let collegeListArray = [];
@@ -76,16 +76,18 @@ const College = ({
   });
 
   function handleSearch(e) {
+    console.log(e.target.searchText.value);
     e.preventDefault();
     e.stopPropagation();
     setPrevRequest(requestData);
     setRequest({
       ...requestData,
-      searchText: searchText ? searchText : "*",
+      searchText: e.target.searchText.value ? e.target.searchText.value : "*",
     });
   }
 
   function getData() {
+    console.log("getData")
     let data = axios({
       method: "post",
       url: "api/CST/college-search-tool",
@@ -280,9 +282,7 @@ const College = ({
               >
                 <input
                   className={classNames(styles.searchInput, "py-3 px-3")}
-                  onChange={(e) => {
-                    setSearchText(e.target.value);
-                  }}
+                  name="searchText"
                   placeholder="Search College"
                 />
                 <button

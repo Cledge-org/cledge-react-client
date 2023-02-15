@@ -29,8 +29,7 @@ interface CardProps {
 
 function CollegeCard(props: CardProps) {
   const router = useRouter();
-  const URL = `/collegeDetail/`;
-  console.log(props);
+  const URL = `/collegeDetail/${props.data["college_id"]}`;
 
   return (
     <CardWrapper style={{ marginBottom: "25px" }}>
@@ -42,14 +41,16 @@ function CollegeCard(props: CardProps) {
           />
           <div
             className="d-flex flex-column w-100 justify-content-between"
-            style={{ height: "40%" }}>
+            style={{ height: "40%" }}
+          >
             <div
               className={classNames(styles.gradient, "mt-3 ms-2")}
               style={{ height: "24%", width: "70%" }}
             />
             <div
               className="d-flex flex-row w-100 justify-content-between align-items-center mb-4"
-              style={{ height: "20%" }}>
+              style={{ height: "20%" }}
+            >
               <div
                 className={classNames(styles.gradient, "mt-3 ms-2")}
                 style={{ height: "100%", width: "20%" }}
@@ -67,7 +68,8 @@ function CollegeCard(props: CardProps) {
             width: "40rem",
             minHeight: "10rem",
             height: "fit-content",
-          }}>
+          }}
+        >
           {/*     // TODO: V5 Feature see CollegeCard
   // do not pass data around, pass college abbreviation/collegeName around in query as key to do api.get(abbreiviation) in detail page to get data */}
           <CardActionArea
@@ -77,7 +79,7 @@ function CollegeCard(props: CardProps) {
                   pathname: URL,
                   query: {
                     data: JSON.stringify(props.data),
-                    onList: props.onList
+                    onList: props.onList,
                   },
                 },
                 URL
@@ -86,7 +88,8 @@ function CollegeCard(props: CardProps) {
             className={
               "d-flex flex-column justify-content-start align-items-start"
             }
-            style={{ minHeight: "400px", height: "auto" }}>
+            style={{ minHeight: "400px", height: "auto" }}
+          >
             <InnerCard {...props} />
           </CardActionArea>
         </Card>
@@ -106,7 +109,7 @@ function InnerCard({
   inState,
   outState,
   schoolFit,
-  onList
+  onList,
 }: CardProps) {
   const [imageHasLoaded, setImageHasLoaded] = useState(false);
   const [addedToList, setAddedToList] = useState(onList);
@@ -126,7 +129,7 @@ function InnerCard({
       }),
     });
     const responseJson = await response.json();
-  }
+  };
 
   const handleRemoveCollege = async (event) => {
     event.stopPropagation();
@@ -143,9 +146,8 @@ function InnerCard({
       }),
     });
     const responseJson = await response.json();
-  }
+  };
 
-  
   return (
     <>
       {!img ? (
@@ -199,16 +201,21 @@ function InnerCard({
           style={{ height: "4rem" }}
         >
           <div className={styles.collegeFitContainer}>{schoolFit}</div>
-            <div className="d-flex">
-              <Button
-                className="ms-3"
-                variant="contained"
-                style={{ textTransform: "none", width: "2rem", height: "2rem", background: addedToList ? 'red' : ''}}
-                onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
-              >
-                {addedToList ? "x" : "+"}
-              </Button>
-            </div>
+          <div className="d-flex">
+            <Button
+              className="ms-3"
+              variant="contained"
+              style={{
+                textTransform: "none",
+                width: "2rem",
+                height: "2rem",
+                background: addedToList ? "red" : "",
+              }}
+              onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
+            >
+              {addedToList ? "x" : "+"}
+            </Button>
+          </div>
         </div>
       </CardContent>
     </>
