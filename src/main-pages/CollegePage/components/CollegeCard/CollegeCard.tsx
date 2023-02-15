@@ -69,8 +69,6 @@ function CollegeCard(props: CardProps) {
             height: "fit-content",
           }}
         >
-          {/*     // TODO: V5 Feature see CollegeCard
-  // do not pass data around, pass college abbreviation/collegeName around in query as key to do api.get(abbreiviation) in detail page to get data */}
           <CardActionArea
             onClick={() => {
               router.push(
