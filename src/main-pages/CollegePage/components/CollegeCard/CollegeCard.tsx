@@ -22,15 +22,14 @@ interface CardProps {
   outState: string;
   tabCallBack?: (e, newValue) => void;
   tabValue?: number;
-  data?: object;
+  college_id: string;
   schoolFit: string;
   onList: boolean;
 }
 
 function CollegeCard(props: CardProps) {
   const router = useRouter();
-  const URL = `/collegeDetail/${props.data["college_id"]}`;
-
+  const URL = `/collegeDetail/${props.college_id}`;
   return (
     <CardWrapper style={{ marginBottom: "25px" }}>
       {(props.isLoading && (

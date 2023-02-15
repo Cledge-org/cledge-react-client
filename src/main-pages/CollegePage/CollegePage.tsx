@@ -255,8 +255,8 @@ const College = ({
                         schoolType={""}
                         inState={""}
                         outState={""}
+                        college_id={""}
                         abbreviation={""}
-                        data={{}}
                         onList={false}
                       />
                     );
@@ -341,8 +341,8 @@ const College = ({
                       inState={""}
                       outState={""}
                       abbreviation={""}
-                      data={{}}
                       schoolFit=""
+                      college_id=""
                       onList={false}
                     />
                   );
@@ -352,6 +352,7 @@ const College = ({
                   return (
                     <CollegeCard
                       key={data.title + data.location}
+                      college_id={data.college_id}
                       title={data.title}
                       location={data.location}
                       schoolFit={
@@ -372,7 +373,6 @@ const College = ({
                       inState={data["in-state_tuition"]}
                       outState={data["out-state_tuition"]}
                       abbreviation={data["abbreviation"]}
-                      data={data}
                       onList={collegeListArray.includes(data["title"])}
                     />
                   );
