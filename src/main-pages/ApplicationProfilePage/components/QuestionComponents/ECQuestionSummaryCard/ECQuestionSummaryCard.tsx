@@ -53,7 +53,7 @@ export default function ECQuestionSummaryCard({
       </div>
       <div
         className={classNames(
-          "w-100 d-flex flex-column align-items-center justify-content-center",
+          "w-100 d-flex flex-column align-items-center justify-content-center border-top border-2",
           styles.ecsummaryInfoContainer
         )}
       >

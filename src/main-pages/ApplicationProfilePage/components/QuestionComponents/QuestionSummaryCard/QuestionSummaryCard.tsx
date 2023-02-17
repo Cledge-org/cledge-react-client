@@ -217,7 +217,7 @@ export default function QuestionSummaryCard({
     >
       <div
         className={classNames(
-          "d-flex justify-content-between align-items-center px-4 pt-3",
+          "d-flex justify-content-between align-items-center px-4 pt-3 border-bottom border-2",
           styles.questionText
         )}
       >
