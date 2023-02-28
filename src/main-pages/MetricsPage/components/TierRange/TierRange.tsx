@@ -6,7 +6,7 @@ const TierRange = ({
   isOverall,
   isOverview,
 }: {
-  tier: number;
+  tier: number; 
   isOverall?: boolean;
   isOverview?: boolean;
 }) => {
@@ -64,6 +64,7 @@ const TierRange = ({
               border: "1px solid transparent",
               borderRadius: "10px",
               textAlign: "center",
+              alignSelf: tier === 1 ? "start" : null,
             }}
           >
             <text style={{ color: "#070452" }}>You are here</text>
