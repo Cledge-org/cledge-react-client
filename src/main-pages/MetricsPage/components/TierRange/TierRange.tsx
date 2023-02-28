@@ -64,7 +64,7 @@ const TierRange = ({
               border: "1px solid transparent",
               borderRadius: "10px",
               textAlign: "center",
-              alignSelf: tier === 1 ? "start" : null,
+              alignSelf: tier === 1 ? "start" : tier === 12 ? "end" : null,
             }}
           >
             <text style={{ color: "#070452" }}>You are here</text>
