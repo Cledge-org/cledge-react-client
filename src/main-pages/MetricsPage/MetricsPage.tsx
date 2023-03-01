@@ -210,11 +210,6 @@ const Metrics: NextApplicationPage<{
                     </div>
                   </div>
                 </div>
-                {/* <SubTitle
-                  updatePage="Extracurriculars"
-                  updateChunk="All Activities"
-                  title="Individual activity metrics"
-                /> */}
                 <div className="pt-3 pb-5">
                   <strong className="cl-dark-text" style={{ fontSize: "1.6em" }}>Individual activity metrics</strong>
                 </div>

@@ -45,35 +45,36 @@ const ActivityDropdown = ({
           <FontAwesomeIcon icon={faChevronDown} />
         </div>
       </button>
+      
       <div
         className={classNames(
           {
             [styles.metricsDropdownMenuExpanded]: isExpanded,
             [styles.metricsDropdownMenuClosed]: !isExpanded,
           },
-          "pt-2 px-2 flex-column align-items-center justify-content-start mb-3 pb-3"
+          "pt-2 px-2 flex-column mb-3 pb-3"
         )}
         style={{
           borderTop: "none",
         }}
       >
-        <div className="py-3 mb-5" style={{ fontSize: "1.2em" }}>
-          {content}
-        </div>
-        <div
-          className="d-flex flex-row align-items-start justify-content-between"
-          style={{ width: "95%" }}
-        >
-          {customContent ?? (
-            <TierIndicatorAndTips
-              tip={tip}
-              tipTitle={""}
-              tier={tier}
-              updatePage={updatePage}
-              updateChunk={updateChunk}
-            />
-          )}
-        </div>
+      <div className="py-3 mb-5 ps-4" style={{ fontSize: "1.2em" }}>
+        {content} 
+      </div>
+      <div
+        className="d-flex flex-row align-items-start ps-4"
+        style={{ width: "95%" }}
+      >
+        {customContent ?? (
+          <TierIndicatorAndTips
+            tip={tip}
+            tipTitle={""}
+            tier={tier}
+            updatePage={updatePage}
+            updateChunk={updateChunk}
+          />
+        )}
+      </div>
       </div>
     </div>
   );
