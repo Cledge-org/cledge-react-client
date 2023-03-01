@@ -111,7 +111,7 @@ const Metrics: NextApplicationPage<{
                     </strong>
                   </div>
                   <div
-                    className={`soft-gray-border d-flex pt-2 px-2 flex-row align-items-start justify-content-center mb-3 w-100`}
+                    className={`soft-gray-border d-flex pt-2 px-2 flex-row align-items-start justify-content-center mb-5 w-100`}
                     style={{
                       backgroundColor: "white",
                       borderTop: "none",
@@ -135,7 +135,7 @@ const Metrics: NextApplicationPage<{
                     </div>
                   </div>
                 </div>
-                <div className="mt-2 ms-5" style={{ width: "50%" }}>
+                <div className="mt-2 ms-5 w-50">
                   <div className="soft-gray-border d-flex flex-row justify-content-start py-3 px-3">
                     <strong
                       className="cl-dark-text"
@@ -145,7 +145,7 @@ const Metrics: NextApplicationPage<{
                     </strong>
                   </div>
                   <div
-                    className={`soft-gray-border d-flex pt-2 px-2 flex-row align-items-start justify-content-center mb-3 w-100`}
+                    className={`soft-gray-border d-flex pt-2 px-2 flex-row align-items-start justify-content-center mb-5 w-100`}
                     style={{
                       backgroundColor: "white",
                       borderTop: "none",

@@ -62,7 +62,7 @@ const TierRange = ({
               backgroundColor: "#f7bc76",
               width: "8rem",
               border: "1px solid transparent",
-              borderRadius: "10px",
+              borderRadius: "5px",
               textAlign: "center",
               alignSelf: tier === 1 ? "start" : tier === 12 ? "end" : null,
             }}
