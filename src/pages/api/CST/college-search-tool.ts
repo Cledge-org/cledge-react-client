@@ -10,9 +10,9 @@ import { getEnvVariable } from "src/config/getConfig";
 // Data Master List:
 // https://docs.google.com/document/d/1K6c2FKCbVZgcndtt0A7tJAf2QgC4rzy9Tmxvf-mus9M/edit
 
-const serviceName = "college-search-service";
+const serviceName = "college-search-tool";
 const indexName = "college-search-index";
-const queryKey = "1F7801474A40D9360ED57EC698A3CF10";
+const queryKey = "59bp6Txm4A6ualhWE86SLaC9XbIPj0SVcEKKhe7mfvAzSeAuzXJi";
 const endPoint = "https://" + serviceName + ".search.windows.net/";
 const searchClient = new SearchClient(
   endPoint,

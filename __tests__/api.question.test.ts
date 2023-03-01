@@ -1,11 +1,11 @@
 import { getAllQuestionLists } from "../src/pages/api/questions/get-all-questions";
-import { getQuestionList } from "../src/pages/api/get-question-list";
-import { getQuestionProgress } from "../src/pages/api/get-question-progress";
-import { getQuestionResponses } from "../src/pages/api/get-question-responses";
+import { getQuestionList } from "../src/pages/api/questions/get-question-list";
+import { getQuestionProgress } from "../src/pages/api/questions/get-question-progress";
+import { getQuestionResponses } from "../src/pages/api/user/get-question-responses";
 import { putQuestionChunk } from "../src/pages/api/admin/question/put-question-chunk";
-import { putQuestionList } from "../src/pages/api/put-question-list";
-import { putQuestionResponses } from "../src/pages/api/put-question-responses";
-import { putQuestion } from "../src/pages/api/put-question";
+import { putQuestionList } from "../src/pages/api/admin/question/put-question-list";
+import { putQuestionResponses } from "../src/pages/api/user/put-question-responses";
+import { putQuestion } from "../src/pages/api/admin/question/put-question";
 import { MongoClient, ObjectId } from "mongodb";
 
 const testUserResponse: UserResponse = {
