@@ -3,7 +3,6 @@ import { NextApplicationPage } from "../AppPage/AppPage";
 import { connect } from "react-redux";
 import DropdownTab from "../../common/components/DropdownTab/DropdownTab";
 import Footer from "../../common/components/Footer/Footer";
-
 import QuestionSubPageHeader from "../../common/components/SubpageHeader/SubpageHeader";
 import ActivityDropdown from "./components/ActivityDropdown/ActivityDropdown";
 import SubTitle from "./components/SubTitle/SubTitle";
@@ -177,7 +176,7 @@ const Metrics: NextApplicationPage<{
               style={{ flex: 1 }}
             >
               <QuestionSubPageHeader
-                title="Extracurriculars Completion"
+                title="Extracurriculars Metrics"
                 percentage={undefined}
                 isMetrics
                 subText=""
@@ -187,13 +186,8 @@ const Metrics: NextApplicationPage<{
                   style={{ borderBottom: "1px solid #BBBBC0" }}
                   className="pb-5"
                 >
-                  <SubTitle
-                    updatePage="Extracurriculars"
-                    updateChunk="All Activities"
-                    title="Overall Extracurriculars Tier"
-                    isDivider
-                  />
-                  <div className="d-flex flex-row justify-content-end">
+                  <div className="d-flex flex-row justify-content-between mb-5">
+                    <strong className="cl-dark-text" style={{ fontSize: "1.6em" }}>Overall Tier</strong>
                     <div className="w-50 cl-dark-text">
                       <div className="d-flex justify-content-between mb-2">
                         <div>
@@ -216,11 +210,14 @@ const Metrics: NextApplicationPage<{
                     </div>
                   </div>
                 </div>
-                <SubTitle
+                {/* <SubTitle
                   updatePage="Extracurriculars"
                   updateChunk="All Activities"
-                  title="Individual Activities"
-                />
+                  title="Individual activity metrics"
+                /> */}
+                <div className="pt-3 pb-5">
+                  <strong className="cl-dark-text" style={{ fontSize: "1.6em" }}>Individual activity metrics</strong>
+                </div>
                 {activities?.activities?.map((activity) => {
                   console.log(activity.tip);
                   return (
