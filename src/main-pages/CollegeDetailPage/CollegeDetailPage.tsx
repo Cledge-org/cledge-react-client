@@ -141,8 +141,6 @@ const CollegeDetailPage = ({
   function parse(data) {
     if (data) {
       return data;
-    } else if (data) {
-      return data;
     }
     return "No data";
   }
@@ -174,27 +172,27 @@ const CollegeDetailPage = ({
 
   // ********************Chart/Map Data*******************************
   const ethnicityData = [
-    data["student_ethnicity_ratio"]["asian"] +
-      data["student_ethnicity_ratio"]["native_hawaiian_or_pacific_islander"],
-    data["student_ethnicity_ratio"]["black_african_american"],
-    data["student_ethnicity_ratio"]["hispanic_or_latino"],
-    data["student_ethnicity_ratio"]["american_indian_or_alaska_native"],
-    data["student_ethnicity_ratio"]["unknown"] +
-      data["student_ethnicity_ratio"]["non_resident_aliens"] +
-      data["student_ethnicity_ratio"]["two_or_more_races"],
-    data["student_ethnicity_ratio"]["white"]
-      ? data["student_ethnicity_ratio"]["white"]
+    data["student_ethnicity_ratio"]?.["asian"] +
+      data["student_ethnicity_ratio"]?.["native_hawaiian_or_pacific_islander"],
+    data["student_ethnicity_ratio"]?.["black_african_american"],
+    data["student_ethnicity_ratio"]?.["hispanic_or_latino"],
+    data["student_ethnicity_ratio"]?.["american_indian_or_alaska_native"],
+    data["student_ethnicity_ratio"]?.["unknown"] +
+      data["student_ethnicity_ratio"]?.["non_resident_aliens"] +
+      data["student_ethnicity_ratio"]?.["two_or_more_races"],
+    data["student_ethnicity_ratio"]?.["white"]
+      ? data["student_ethnicity_ratio"]?.["white"]
       : 1 -
-        (data["student_ethnicity_ratio"]["asian"] +
-          data["student_ethnicity_ratio"][
+        (data["student_ethnicity_ratio"]?.["asian"] +
+          data["student_ethnicity_ratio"]?.[
             "native_hawaiian_or_pacific_islander"
           ] +
-          data["student_ethnicity_ratio"]["black_african_american"] +
-          data["student_ethnicity_ratio"]["hispanic_or_latino"] +
-          data["student_ethnicity_ratio"]["american_indian_or_alaska_native"] +
-          data["student_ethnicity_ratio"]["unknown"] +
-          data["student_ethnicity_ratio"]["non_resident_aliens"] +
-          data["student_ethnicity_ratio"]["two_or_more_races"]),
+          data["student_ethnicity_ratio"]?.["black_african_american"] +
+          data["student_ethnicity_ratio"]?.["hispanic_or_latino"] +
+          data["student_ethnicity_ratio"]?.["american_indian_or_alaska_native"] +
+          data["student_ethnicity_ratio"]?.["unknown"] +
+          data["student_ethnicity_ratio"]?.["non_resident_aliens"] +
+          data["student_ethnicity_ratio"]?.["two_or_more_races"]),
   ];
 
   const ethnicityChartData = {
@@ -317,9 +315,9 @@ const CollegeDetailPage = ({
               </h1>
               <div className="w-100 d-flex flex-row align-items-center">
                 <div className={styles.collegeFitContainer}>
-                  {userTier >= data["college_fit_metric"].safety
+                  {userTier >= data?.["college_fit_metric"].safety
                     ? "Safety School"
-                    : userTier < data["college_fit_metric"].target
+                    : userTier < data?.["college_fit_metric"].target
                     ? "Reach School"
                     : "Fit School"}
                 </div>
@@ -327,9 +325,9 @@ const CollegeDetailPage = ({
                   className="text-secondary ms-3"
                   style={{ fontSize: "1.2em", marginBottom: 0 }}
                 >
-                  {data["college_type"] == "Public"
+                  {data?.["college_type"] == "Public"
                     ? "Public School | "
-                    : data["college_type"] == "Private for-profit" ||
+                    : data?.["college_type"] == "Private for-profit" ||
                       "Private non-profit"
                     ? "Private School | "
                     : ""}
@@ -416,21 +414,21 @@ const CollegeDetailPage = ({
                   <div>
                     <h2>Religious Affiliation</h2>
                     <h3>
-                      {data["religious_affiliation"]
-                        ? data["religious_affiliation"]
+                      {data?.["religious_affiliation"]
+                        ? data?.["religious_affiliation"]
                         : "No Data"}
                     </h3>
                   </div>
                 </div>
               </InfoContainer>
-              {data["coordinates"]["latitude"] &&
-              data["coordinates"]["longitude"] ? (
+              {data?.["coordinates"]?.["latitude"] &&
+              data?.["coordinates"]?.["longitude"] ? (
                 <div className="rounded">
                   <Map
                     height={300}
                     defaultCenter={[
-                      data["coordinates"]["latitude"],
-                      data["coordinates"]["longitude"],
+                      data?.["coordinates"]?.["latitude"],
+                      data?.["coordinates"]?.["longitude"],
                     ]}
                     attribution={false}
                     defaultZoom={10}
@@ -440,8 +438,8 @@ const CollegeDetailPage = ({
                       width={40}
                       color={"#415EE6"}
                       anchor={[
-                        data["coordinates"]["latitude"],
-                        data["coordinates"]["longitude"],
+                        data?.["coordinates"]?.["latitude"],
+                        data?.["coordinates"]?.["longitude"],
                       ]}
                     />
                   </Map>
@@ -469,7 +467,7 @@ const CollegeDetailPage = ({
                 title="Admissions"
                 sub1="Acceptance rate"
                 sub1data={parsePercent(
-                  data["acceptance_rate"]["acceptance_rate_total"]
+                  data["acceptance_rate"]?.["acceptance_rate_total"]
                 )}
                 sub2="Total number of applicants/year"
                 sub2data={data["applicants_per_year"]}
@@ -532,10 +530,10 @@ const CollegeDetailPage = ({
                 sub3="Retention rate"
                 sub3data={parsePercent(data["retention_rate_4_years"])}
                 sub4="Total enrollment"
-                sub4data={(
-                  data["enrollment"]["total_undergrad"] +
-                  data["enrollment"]["total_grad"]
-                ).toLocaleString("en-US")}
+                sub4data={parseNumber(
+                  data?.["enrollment"]?.["total_undergrad"] +
+                    data?.["enrollment"]?.["total_grad"]
+                )}
               />
             </Col>
           </Row>
@@ -556,7 +554,7 @@ const CollegeDetailPage = ({
                     <p className="cl-dark-text">High school GPA</p>
                     <h3 className="cl-dark-text">
                       {singlePaywall(
-                        parse(data["admission_factors"]["high_school_gpa"])
+                        parse(data?.["admission_factors"]?.["high_school_gpa"])
                       )}
                     </h3>
                   </div>
@@ -565,7 +563,7 @@ const CollegeDetailPage = ({
                     <p className="cl-dark-text">High school rank</p>
                     <h3 className="cl-dark-text">
                       {singlePaywall(
-                        parse(data["admission_factors"]["high_school_rank"])
+                        parse(data?.["admission_factors"]?.["high_school_rank"])
                       )}
                     </h3>
                   </div>
@@ -574,7 +572,9 @@ const CollegeDetailPage = ({
                     <p className="cl-dark-text">High school record</p>
                     <h3 className="cl-dark-text">
                       {singlePaywall(
-                        parse(data["admission_factors"]["high_school_record"])
+                        parse(
+                          data?.["admission_factors"]?.["high_school_record"]
+                        )
                       )}
                     </h3>
                   </div>
@@ -586,7 +586,9 @@ const CollegeDetailPage = ({
                     <h3 className="cl-dark-text">
                       {singlePaywall(
                         parse(
-                          data["admission_factors"]["completion_college_prep"]
+                          data?.["admission_factors"]?.[
+                            "completion_college_prep"
+                          ]
                         )
                       )}
                     </h3>
@@ -597,7 +599,9 @@ const CollegeDetailPage = ({
                     <h3 className="cl-dark-text">
                       {singlePaywall(
                         parse(
-                          data["admission_factors"]["letters_of_recommendation"]
+                          data?.["admission_factors"]?.[
+                            "letters_of_recommendation"
+                          ]
                         )
                       )}
                     </h3>
@@ -610,7 +614,7 @@ const CollegeDetailPage = ({
                     <h3 className="cl-dark-text">
                       {singlePaywall(
                         parse(
-                          data["admission_factors"][
+                          data["admission_factors"]?.[
                             "formal_demonstration_of_competencies"
                           ]
                         )
@@ -623,7 +627,7 @@ const CollegeDetailPage = ({
                     <h3>
                       {singlePaywall(
                         parse(
-                          data["admission_factors"]["standardized_test_scores"]
+                          data["admission_factors"]?.["standardized_test_scores"]
                         )
                       )}
                     </h3>
@@ -663,17 +667,17 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Overall average"
                     sub2={
-                      data["sat/act_score"]["sat_critical_reading_25"] &&
-                      data["sat/act_score"]["sat_math_25"]
-                        ? data["sat/act_score"]["sat_critical_reading_25"] +
-                          data["sat/act_score"]["sat_math_25"]
+                      data["sat/act_score"]?.["sat_critical_reading_25"] &&
+                      data["sat/act_score"]?.["sat_math_25"]
+                        ? data["sat/act_score"]?.["sat_critical_reading_25"] +
+                          data["sat/act_score"]?.["sat_math_25"]
                         : "No Data"
                     }
                     sub3={
-                      data["sat/act_score"]["sat_critical_reading_75"] &&
-                      data["sat/act_score"]["sat_math_75"]
-                        ? data["sat/act_score"]["sat_critical_reading_75"] +
-                          data["sat/act_score"]["sat_math_75"]
+                      data["sat/act_score"]?.["sat_critical_reading_75"] &&
+                      data["sat/act_score"]?.["sat_math_75"]
+                        ? data["sat/act_score"]?.["sat_critical_reading_75"] +
+                          data["sat/act_score"]?.["sat_math_75"]
                         : "No Data"
                     }
                     type="content"
@@ -683,10 +687,10 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Reading"
                     sub2={parse(
-                      data["sat/act_score"]["sat_critical_reading_25"]
+                      data["sat/act_score"]?.["sat_critical_reading_25"]
                     )}
                     sub3={parse(
-                      data["sat/act_score"]["sat_critical_reading_75"]
+                      data["sat/act_score"]?.["sat_critical_reading_75"]
                     )}
                     type="content"
                   />
@@ -694,16 +698,16 @@ const CollegeDetailPage = ({
                   <DataRow
                     colNum={3}
                     sub1="Math"
-                    sub2={parse(data["sat/act_score"]["sat_math_25"])}
-                    sub3={parse(data["sat/act_score"]["sat_math_75"])}
+                    sub2={parse(data["sat/act_score"]?.["sat_math_25"])}
+                    sub3={parse(data["sat/act_score"]?.["sat_math_75"])}
                     type="content"
                   />
                   <Divider />
                   <DataRow
                     colNum={3}
                     sub1="Writing"
-                    sub2={parse(data["sat/act_score"]["sat_writing_25"])}
-                    sub3={parse(data["sat/act_score"]["sat_writing_75"])}
+                    sub2={parse(data["sat/act_score"]?.["sat_writing_25"])}
+                    sub3={parse(data["sat/act_score"]?.["sat_writing_75"])}
                     type="content"
                   />
                 </div>
@@ -713,7 +717,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 200 - 300"
                     sub2={parse(
-                      data["admission"]["SAT EBRW"]["data"][
+                      data["admission"]?.["SAT EBRW"]?.["data"]?.[
                         "Score of 200 - 300"
                       ]
                     )}
@@ -723,7 +727,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 300 - 400"
                     sub2={parse(
-                      data["admission"]["SAT EBRW"]["data"][
+                      data["admission"]?.["SAT EBRW"]?.["data"]?.[
                         "Score of 300 - 400"
                       ]
                     )}
@@ -733,7 +737,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 400 - 500"
                     sub2={parse(
-                      data["admission"]["SAT EBRW"]["data"][
+                      data["admission"]?.["SAT EBRW"]?.["data"]?.[
                         "Score of 400 - 500"
                       ]
                     )}
@@ -743,7 +747,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 500 - 600"
                     sub2={parse(
-                      data["admission"]["SAT EBRW"]["data"][
+                      data["admission"]?.["SAT EBRW"]?.["data"]?.[
                         "Score of 500 - 600"
                       ]
                     )}
@@ -753,7 +757,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 600 - 700"
                     sub2={parse(
-                      data["admission"]["SAT EBRW"]["data"][
+                      data["admission"]?.["SAT EBRW"]?.["data"]?.[
                         "Score of 600 - 700"
                       ]
                     )}
@@ -763,7 +767,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 700 - 800"
                     sub2={parse(
-                      data["admission"]["SAT EBRW"]["data"][
+                      data["admission"]?.["SAT EBRW"]?.["data"]?.[
                         "Score of 700 - 800"
                       ]
                     )}
@@ -776,7 +780,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 200 - 300"
                     sub2={parse(
-                      data["admission"]["SAT Math"]["data"][
+                      data["admission"]?.["SAT Math"]?.["data"]?.[
                         "Score of 200 - 300"
                       ]
                     )}
@@ -786,7 +790,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 300 - 400"
                     sub2={parse(
-                      data["admission"]["SAT Math"]["data"][
+                      data["admission"]?.["SAT Math"]?.["data"]?.[
                         "Score of 300 - 400"
                       ]
                     )}
@@ -796,7 +800,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 400 - 500"
                     sub2={parse(
-                      data["admission"]["SAT Math"]["data"][
+                      data["admission"]?.["SAT Math"]?.["data"]?.[
                         "Score of 400 - 500"
                       ]
                     )}
@@ -806,7 +810,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 500 - 600"
                     sub2={parse(
-                      data["admission"]["SAT Math"]["data"][
+                      data["admission"]?.["SAT Math"]?.["data"]?.[
                         "Score of 500 - 600"
                       ]
                     )}
@@ -816,7 +820,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 600 - 700"
                     sub2={parse(
-                      data["admission"]["SAT Math"]["data"][
+                      data["admission"]?.["SAT Math"]?.["data"]?.[
                         "Score of 600 - 700"
                       ]
                     )}
@@ -826,7 +830,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 700 - 800"
                     sub2={parse(
-                      data["admission"]["SAT Math"]["data"][
+                      data["admission"]?.["SAT Math"]?.["data"]?.[
                         "Score of 700 - 800"
                       ]
                     )}
@@ -849,8 +853,8 @@ const CollegeDetailPage = ({
                   <DataRow
                     colNum={3}
                     sub1="Overall average"
-                    sub2={parse(data["sat/act_score"]["act_cumulative_25"])}
-                    sub3={parse(data["sat/act_score"]["act_cumulative_75"])}
+                    sub2={parse(data["sat/act_score"]?.["act_cumulative_25"])}
+                    sub3={parse(data["sat/act_score"]?.["act_cumulative_75"])}
                     type="content"
                   />
                 </div>
@@ -860,7 +864,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 5 or Below"
                     sub2={parse(
-                      data["admission"]["ACT Eng"]["data"][
+                      data["admission"]?.["ACT Eng"]?.["data"]?.[
                         "Score of 5 or Below"
                       ]
                     )}
@@ -870,7 +874,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 6 - 11"
                     sub2={parse(
-                      data["admission"]["ACT Eng"]["data"]["Score of 6 - 11"]
+                      data["admission"]?.["ACT Eng"]?.["data"]?.["Score of 6 - 11"]
                     )}
                     type="normal"
                   />
@@ -878,7 +882,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 12 - 17"
                     sub2={parse(
-                      data["admission"]["ACT Eng"]["data"]["Score of 12 - 17"]
+                      data["admission"]?.["ACT Eng"]?.["data"]?.["Score of 12 - 17"]
                     )}
                     type="normal"
                   />
@@ -886,7 +890,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 18 - 23"
                     sub2={parse(
-                      data["admission"]["ACT Eng"]["data"]["Score of 18 - 23"]
+                      data["admission"]?.["ACT Eng"]?.["data"]?.["Score of 18 - 23"]
                     )}
                     type="normal"
                   />
@@ -894,7 +898,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 24 - 29"
                     sub2={parse(
-                      data["admission"]["ACT Eng"]["data"]["Score of 24 - 29"]
+                      data["admission"]?.["ACT Eng"]?.["data"]?.["Score of 24 - 29"]
                     )}
                     type="normal"
                   />
@@ -902,7 +906,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 30 - 36"
                     sub2={parse(
-                      data["admission"]["ACT Eng"]["data"]["Score of 30 - 36"]
+                      data["admission"]?.["ACT Eng"]?.["data"]?.["Score of 30 - 36"]
                     )}
                     type="normal"
                   />
@@ -913,7 +917,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 5 or Below"
                     sub2={parse(
-                      data["admission"]["ACT Eng"]["data"][
+                      data["admission"]?.["ACT Eng"]?.["data"]?.[
                         "Score of 5 or Below"
                       ]
                     )}
@@ -923,7 +927,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 6 - 11"
                     sub2={parse(
-                      data["admission"]["ACT Eng"]["data"]["Score of 6 - 11"]
+                      data["admission"]?.["ACT Eng"]?.["data"]?.["Score of 6 - 11"]
                     )}
                     type="normal"
                   />
@@ -931,7 +935,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 12 - 17"
                     sub2={parse(
-                      data["admission"]["ACT Eng"]["data"]["Score of 12 - 17"]
+                      data["admission"]?.["ACT Eng"]?.["data"]?.["Score of 12 - 17"]
                     )}
                     type="normal"
                   />
@@ -939,7 +943,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 18 - 23"
                     sub2={parse(
-                      data["admission"]["ACT Eng"]["data"]["Score of 18 - 23"]
+                      data["admission"]?.["ACT Eng"]?.["data"]?.["Score of 18 - 23"]
                     )}
                     type="normal"
                   />
@@ -947,7 +951,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 24 - 29"
                     sub2={parse(
-                      data["admission"]["ACT Eng"]["data"]["Score of 24 - 29"]
+                      data["admission"]?.["ACT Eng"]?.["data"]?.["Score of 24 - 29"]
                     )}
                     type="normal"
                   />
@@ -955,7 +959,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 30 - 36"
                     sub2={parse(
-                      data["admission"]["ACT Eng"]["data"]["Score of 30 - 36"]
+                      data["admission"]?.["ACT Eng"]?.["data"]?.["Score of 30 - 36"]
                     )}
                     type="normal"
                   />
@@ -966,7 +970,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 5 or Below"
                     sub2={parse(
-                      data["admission"]["ACT Math"]["data"][
+                      data["admission"]?.["ACT Math"]?.["data"]?.[
                         "Score of 5 or Below"
                       ]
                     )}
@@ -976,7 +980,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 6 - 11"
                     sub2={parse(
-                      data["admission"]["ACT Math"]["data"]["Score of 6 - 11"]
+                      data["admission"]?.["ACT Math"]?.["data"]?.["Score of 6 - 11"]
                     )}
                     type="normal"
                   />
@@ -984,7 +988,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 12 - 17"
                     sub2={parse(
-                      data["admission"]["ACT Math"]["data"]["Score of 12 - 17"]
+                      data["admission"]?.["ACT Math"]?.["data"]?.["Score of 12 - 17"]
                     )}
                     type="normal"
                   />
@@ -992,7 +996,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 18 - 23"
                     sub2={parse(
-                      data["admission"]["ACT Math"]["data"]["Score of 18 - 23"]
+                      data["admission"]?.["ACT Math"]?.["data"]?.["Score of 18 - 23"]
                     )}
                     type="normal"
                   />
@@ -1000,7 +1004,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 24 - 29"
                     sub2={parse(
-                      data["admission"]["ACT Math"]["data"]["Score of 24 - 29"]
+                      data["admission"]?.["ACT Math"]?.["data"]?.["Score of 24 - 29"]
                     )}
                     type="normal"
                   />
@@ -1008,7 +1012,7 @@ const CollegeDetailPage = ({
                     colNum={3}
                     sub1="Score of 30 - 36"
                     sub2={parse(
-                      data["admission"]["ACT Math"]["data"]["Score of 30 - 36"]
+                      data["admission"]?.["ACT Math"]?.["data"]?.["Score of 30 - 36"]
                     )}
                     type="normal"
                   />
@@ -1023,7 +1027,7 @@ const CollegeDetailPage = ({
                     <h2>Overall acceptance rate</h2>
                     <h3>
                       {parsePercent(
-                        data["acceptance_rate"]["acceptance_rate_total"]
+                        data["acceptance_rate"]?.["acceptance_rate_total"]
                       )}
                     </h3>
                   </div>
@@ -1032,7 +1036,7 @@ const CollegeDetailPage = ({
                     <h3>
                       {singlePaywall(
                         parsePercent(
-                          data["acceptance_rate"]["acceptance_rate_women"]
+                          data["acceptance_rate"]?.["acceptance_rate_women"]
                         )
                       )}
                     </h3>
@@ -1042,7 +1046,7 @@ const CollegeDetailPage = ({
                     <h3>
                       {singlePaywall(
                         parsePercent(
-                          data["acceptance_rate"]["acceptance_rate_men"]
+                          data["acceptance_rate"]?.["acceptance_rate_men"]
                         )
                       )}
                     </h3>
@@ -1058,7 +1062,7 @@ const CollegeDetailPage = ({
                     <h3>
                       {dummyDataPaywall(
                         parsePercent(
-                          data["acceptance_rate"]["commit_rate_women"]
+                          data["acceptance_rate"]?.["commit_rate_women"]
                         )
                       )}
                     </h3>
@@ -1067,7 +1071,7 @@ const CollegeDetailPage = ({
                     <h2>Male commit rate</h2>
                     <h3>
                       {dummyDataPaywall(
-                        parsePercent(data["acceptance_rate"]["commit_rate_men"])
+                        parsePercent(data["acceptance_rate"]?.["commit_rate_men"])
                       )}
                     </h3>
                   </div>
@@ -1133,12 +1137,12 @@ const CollegeDetailPage = ({
                         });
                         return mostPopularArea ? mostPopularArea : "No Data";
                       })()} */}
-                      {data["academics"]["Most Popular Disciplines"]
-                        ? data["academics"]["Most Popular Disciplines"][0] +
+                      {data["academics"]?.["Most Popular Disciplines"]
+                        ? data["academics"]?.["Most Popular Disciplines"]?.[0] +
                           ", " +
-                          data["academics"]["Most Popular Disciplines"][1] +
+                          data["academics"]?.["Most Popular Disciplines"]?.[1] +
                           ", " +
-                          data["academics"]["Most Popular Disciplines"][2]
+                          data["academics"]?.["Most Popular Disciplines"]?.[2]
                         : "No Data"}
                     </h3>
                   </div>
@@ -1158,7 +1162,7 @@ const CollegeDetailPage = ({
                     </p>
                     <h3 className="cl-dark-text">
                       {parse(
-                        data["academics"][
+                        data["academics"]?.[
                           "Advanced Placement (AP) Examinations"
                         ]
                       )}
@@ -1168,7 +1172,7 @@ const CollegeDetailPage = ({
                   <div className="inline">
                     <p className="cl-dark-text">Study Abroad</p>
                     <h3 className="cl-dark-text">
-                      {parse(data["academics"]["Study Abroad"])}
+                      {parse(data["academics"]?.["Study Abroad"])}
                     </h3>
                   </div>
                   <Divider />
@@ -1178,7 +1182,7 @@ const CollegeDetailPage = ({
                     </p>
                     <h3 className="cl-dark-text">
                       {parse(
-                        data["academics"]["General Education/Core Curriculum"]
+                        data["academics"]?.["General Education/Core Curriculum"]
                       )}
                     </h3>
                   </div>
@@ -1186,21 +1190,21 @@ const CollegeDetailPage = ({
                   <div className="inline">
                     <p className="cl-dark-text">Foreign Language</p>
                     <h3 className="cl-dark-text">
-                      {parse(data["academics"]["Foreign Language"])}
+                      {parse(data["academics"]?.["Foreign Language"])}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">Math/Science</p>
                     <h3 className="cl-dark-text">
-                      {parse(data["academics"]["Math/Science"])}
+                      {parse(data["academics"]?.["Math/Science"])}
                     </h3>
                   </div>
                   {/* <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">Regular Class Size</p>
                     <h3 className="cl-dark-text">
-                      {parse(data["academics"]["Regular Class Size"])}
+                      {parse(data["academics"]?.["Regular Class Size"])}
                     </h3>
                   </div>
                   <Divider />
@@ -1210,7 +1214,7 @@ const CollegeDetailPage = ({
                     </p>
                     <h3 className="cl-dark-text">
                       {parse(
-                        data["academics"]["Discussion Section/Lab Class Size"]
+                        data["academics"]?.["Discussion Section/Lab Class Size"]
                       )}
                     </h3>
                   </div> */}
@@ -1218,7 +1222,7 @@ const CollegeDetailPage = ({
                   <div className="inline">
                     <p className="cl-dark-text">International Baccalaureate</p>
                     <h3 className="cl-dark-text">
-                      {parse(data["academics"]["International Baccalaureate"])}
+                      {parse(data["academics"]?.["International Baccalaureate"])}
                     </h3>
                   </div>
 
@@ -1226,28 +1230,28 @@ const CollegeDetailPage = ({
                   <div className="inline">
                     <p className="cl-dark-text">Sophomore Standing</p>
                     <h3 className="cl-dark-text">
-                      {parse(data["academics"]["Sophomore Standing"])}
+                      {parse(data["academics"]?.["Sophomore Standing"])}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">Library Available on Campus</p>
                     <h3 className="cl-dark-text">
-                      {parse(data["academics"]["Library Available on Campus"])}
+                      {parse(data["academics"]?.["Library Available on Campus"])}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">Library Holdings</p>
                     <h3 className="cl-dark-text">
-                      {parse(data["academics"]["Holdings"])}
+                      {parse(data["academics"]?.["Holdings"])}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">Computer Ownership</p>
                     <h3 className="cl-dark-text">
-                      {parse(data["academics"]["Computer Ownership"])}
+                      {parse(data["academics"]?.["Computer Ownership"])}
                     </h3>
                   </div>
                   <Divider />
@@ -1256,8 +1260,8 @@ const CollegeDetailPage = ({
                       Computers Available on Campus
                     </p>
                     <h3 className="cl-dark-text">
-                      {data["academics"]["Computers Available on Campus"]
-                        ? data["academics"]["Computers Available on Campus"] +
+                      {data["academics"]?.["Computers Available on Campus"]
+                        ? data["academics"]?.["Computers Available on Campus"] +
                           "+"
                         : "No Data"}
                     </h3>
@@ -1266,21 +1270,21 @@ const CollegeDetailPage = ({
                   <div className="inline">
                     <p className="cl-dark-text">Internet/E-mail Access</p>
                     <h3 className="cl-dark-text">
-                      {parse(data["academics"]["Internet/E-mail Access"])}
+                      {parse(data["academics"]?.["Internet/E-mail Access"])}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">Remedial Instruction</p>
                     <h3 className="cl-dark-text">
-                      {parse(data["academics"]["Remedial Instruction"])}
+                      {parse(data["academics"]?.["Remedial Instruction"])}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">Tutoring</p>
                     <h3 className="cl-dark-text">
-                      {parse(data["academics"]["Tutoring"])}
+                      {parse(data["academics"]?.["Tutoring"])}
                     </h3>
                   </div>
                   <Divider />
@@ -1290,7 +1294,7 @@ const CollegeDetailPage = ({
                     </p>
                     <h3 className="cl-dark-text">
                       {parse(
-                        data["academics"][
+                        data["academics"]?.[
                           "Services for Learning Disabled Students"
                         ]
                       )}
@@ -1303,7 +1307,7 @@ const CollegeDetailPage = ({
                     </p>
                     <h3 className="cl-dark-text">
                       {parse(
-                        data["academics"][
+                        data["academics"]?.[
                           "Services for Physically Disabled Students"
                         ]
                       )}
@@ -1317,7 +1321,7 @@ const CollegeDetailPage = ({
                   <div className="inline">
                     <p className="cl-dark-text">Total Instructional Staff</p>
                     <h3 className="cl-dark-text">
-                      {parseNumber(data["instructional_staff"]["total"])}
+                      {parseNumber(data["instructional_staff"]?.["total"])}
                     </h3>
                   </div>
                   <Divider />
@@ -1331,14 +1335,14 @@ const CollegeDetailPage = ({
                   <div className="inline">
                     <p className="cl-dark-text">Total Male Staff</p>
                     <h3 className="cl-dark-text">
-                      {parseNumber(data["instructional_staff"]["men"])}
+                      {parseNumber(data["instructional_staff"]?.["men"])}
                     </h3>
                   </div>
                   <Divider />
                   <div className="inline">
                     <p className="cl-dark-text">Total Female Staff</p>
                     <h3 className="cl-dark-text">
-                      {parseNumber(data["instructional_staff"]["women"])}
+                      {parseNumber(data["instructional_staff"]?.["women"])}
                     </h3>
                   </div>
                 </div>
@@ -1516,7 +1520,7 @@ const CollegeDetailPage = ({
                     <p className="cl-dark-text">Any Financial Aid</p>
                     <h3 className="cl-dark-text">
                       {parsePercent(
-                        data["percent_full_time_first_time_finance"]["any_aid"]
+                        data["percent_full_time_first_time_finance"]?.["any_aid"]
                       )}
                     </h3>
                   </div>
@@ -1525,7 +1529,7 @@ const CollegeDetailPage = ({
                     <p className="cl-dark-text">Pell Grant</p>
                     <h3 className="cl-dark-text">
                       {parsePercent(
-                        data["percent_full_time_first_time_finance"][
+                        data["percent_full_time_first_time_finance"]?.[
                           "pell_grants"
                         ]
                       )}
@@ -1536,7 +1540,7 @@ const CollegeDetailPage = ({
                     <p className="cl-dark-text">Federal Student Loan</p>
                     <h3 className="cl-dark-text">
                       {parsePercent(
-                        data["percent_full_time_first_time_finance"][
+                        data["percent_full_time_first_time_finance"]?.[
                           "federal_loan"
                         ]
                       )}
@@ -1547,7 +1551,7 @@ const CollegeDetailPage = ({
                     <p className="cl-dark-text">Federal Grant Aid</p>
                     <h3 className="cl-dark-text">
                       {parsePercent(
-                        data["percent_full_time_first_time_finance"][
+                        data["percent_full_time_first_time_finance"]?.[
                           "other_federal_grant_aid"
                         ]
                       )}
@@ -1558,7 +1562,7 @@ const CollegeDetailPage = ({
                     <p className="cl-dark-text">Other</p>
                     <h3 className="cl-dark-text">
                       {parsePercent(
-                        data["percent_full_time_first_time_finance"][
+                        data["percent_full_time_first_time_finance"]?.[
                           "other_loan"
                         ]
                       )}
@@ -1580,55 +1584,55 @@ const CollegeDetailPage = ({
                   <DataRow
                     colNum={4}
                     sub1="$0–30,000"
-                    sub2={parseAmount(data["median_debt"]["0_30"])}
+                    sub2={parseAmount(data["median_debt"]?.["0_30"])}
                     sub3={parseAmount(
-                      data["avg_grant_scholarship_19_20"]["0_30"]
+                      data["avg_grant_scholarship_19_20"]?.["0_30"]
                     )}
-                    sub4={parseAmount(data["family_income_public"]["0_30"])}
+                    sub4={parseAmount(data["family_income_public"]?.["0_30"])}
                     type="content"
                   />
                   <Divider />
                   <DataRow
                     colNum={4}
                     sub1="$30,000–48,000"
-                    sub2={parseAmount(data["median_debt"]["30_75"])}
+                    sub2={parseAmount(data["median_debt"]?.["30_75"])}
                     sub3={parseAmount(
-                      data["avg_grant_scholarship_19_20"]["30_48"]
+                      data["avg_grant_scholarship_19_20"]?.["30_48"]
                     )}
-                    sub4={parseAmount(data["family_income_public"]["30_48"])}
+                    sub4={parseAmount(data["family_income_public"]?.["30_48"])}
                     type="content"
                   />
                   <Divider />
                   <DataRow
                     colNum={4}
                     sub1="$48,001–75,000"
-                    sub2={parseAmount(data["median_debt"]["30_75"])}
+                    sub2={parseAmount(data["median_debt"]?.["30_75"])}
                     sub3={parseAmount(
-                      data["avg_grant_scholarship_19_20"]["48_75"]
+                      data["avg_grant_scholarship_19_20"]?.["48_75"]
                     )}
-                    sub4={parseAmount(data["family_income_public"]["48_75"])}
+                    sub4={parseAmount(data["family_income_public"]?.["48_75"])}
                     type="content"
                   />
                   <Divider />
                   <DataRow
                     colNum={4}
                     sub1="$75,001–110,000"
-                    sub2={parseAmount(data["median_debt"]["75+"])}
+                    sub2={parseAmount(data["median_debt"]?.["75+"])}
                     sub3={parseAmount(
-                      data["avg_grant_scholarship_19_20"]["75_110"]
+                      data["avg_grant_scholarship_19_20"]?.["75_110"]
                     )}
-                    sub4={parseAmount(data["family_income_public"]["75_110"])}
+                    sub4={parseAmount(data["family_income_public"]?.["75_110"])}
                     type="content"
                   />
                   <Divider />
                   <DataRow
                     colNum={4}
                     sub1="+$110,000"
-                    sub2={parseAmount(data["median_debt"]["75+"])}
+                    sub2={parseAmount(data["median_debt"]?.["75+"])}
                     sub3={parseAmount(
-                      data["avg_grant_scholarship_19_20"]["gt110"]
+                      data["avg_grant_scholarship_19_20"]?.["gt110"]
                     )}
-                    sub4={parseAmount(data["family_income_public"]["110+"])}
+                    sub4={parseAmount(data["family_income_public"]?.["110+"])}
                     type="content"
                   />
                 </div>
@@ -1640,27 +1644,27 @@ const CollegeDetailPage = ({
                 <div>
                   <div>
                     <h2>State Grants Awarded amount</h2>
-                    <h3>{parseAmount(data["grant"]["state_grant"])}</h3>
+                    <h3>{parseAmount(data["grant"]?.["state_grant"])}</h3>
                   </div>
                   <div>
                     <h2>Net grant aid awarded amount</h2>
-                    <h3>{parseAmount(data["grant"]["net_grant_aided"])}</h3>
+                    <h3>{parseAmount(data["grant"]?.["net_grant_aided"])}</h3>
                   </div>
                   <div>
                     <h2>Total Grants awarded amount</h2>
-                    <h3>{parseAmount(data["grant"]["total_grant"])}</h3>
+                    <h3>{parseAmount(data["grant"]?.["total_grant"])}</h3>
                   </div>
                   <div>
                     <h2>Local grants awarded amount</h2>
-                    <h3>{parseAmount(data["grant"]["local_grant"])}</h3>
+                    <h3>{parseAmount(data["grant"]?.["local_grant"])}</h3>
                   </div>
                   <div>
                     <h2>Pell grant administered amount</h2>
-                    <h3>{parseAmount(data["grant"]["pell_administered"])}</h3>
+                    <h3>{parseAmount(data["grant"]?.["pell_administered"])}</h3>
                   </div>
                   <div>
                     <h2>Other federal grant amount</h2>
-                    <h3>{parseAmount(data["grant"]["other_federal"])}</h3>
+                    <h3>{parseAmount(data["grant"]?.["other_federal"])}</h3>
                   </div>
                 </div>
               </InfoContainer>
@@ -1674,7 +1678,7 @@ const CollegeDetailPage = ({
                     <h3 className="cl-dark-text">
                       {dummyDataPaywall(
                         parseAmount(
-                          data["6_yrs_after_entry.working_not_enrolled"][
+                          data["6_yrs_after_entry.working_not_enrolled"]?.[
                             "earnings_percentile.25"
                           ]
                         )
@@ -1687,7 +1691,7 @@ const CollegeDetailPage = ({
                     <h3 className="cl-dark-text">
                       {dummyDataPaywall(
                         parseAmount(
-                          data["6_yrs_after_entry.working_not_enrolled"][
+                          data["6_yrs_after_entry.working_not_enrolled"]?.[
                             "earnings_percentile.75"
                           ]
                         )
@@ -1700,7 +1704,7 @@ const CollegeDetailPage = ({
                     <h3 className="cl-dark-text">
                       {dummyDataPaywall(
                         parseAmount(
-                          data["6_yrs_after_entry.working_not_enrolled"][
+                          data["6_yrs_after_entry.working_not_enrolled"]?.[
                             "earnings_percentile.90"
                           ]
                         )
@@ -1715,7 +1719,7 @@ const CollegeDetailPage = ({
                     <h3 className="cl-dark-text">
                       {dummyDataPaywall(
                         parseAmount(
-                          data["10_yrs_after_entry.working_not_enrolled"][
+                          data["10_yrs_after_entry.working_not_enrolled"]?.[
                             "earnings_percentile.25"
                           ]
                         )
@@ -1728,7 +1732,7 @@ const CollegeDetailPage = ({
                     <h3 className="cl-dark-text">
                       {dummyDataPaywall(
                         parseAmount(
-                          data["10_yrs_after_entry.working_not_enrolled"][
+                          data["10_yrs_after_entry.working_not_enrolled"]?.[
                             "earnings_percentile.75"
                           ]
                         )
@@ -1741,7 +1745,7 @@ const CollegeDetailPage = ({
                     <h3 className="cl-dark-text">
                       {dummyDataPaywall(
                         parseAmount(
-                          data["10_yrs_after_entry.working_not_enrolled"][
+                          data["10_yrs_after_entry.working_not_enrolled"]?.[
                             "earnings_percentile.90"
                           ]
                         )
@@ -1761,12 +1765,12 @@ const CollegeDetailPage = ({
                 elNum={16}
                 title="Student Body Statistics"
                 sub1="Total Undergraduate Enrollment"
-                sub1data={parseNumber(data["enrollment"]["total_undergrad"])}
+                sub1data={parseNumber(data["enrollment"]?.["total_undergrad"])}
                 sub2="Total Graduate Enrollment"
-                sub2data={parseNumber(data["enrollment"]["total_grad"])}
+                sub2data={parseNumber(data["enrollment"]?.["total_grad"])}
                 sub3="Enrolled First-Year Students"
                 sub3data={parseNumber(
-                  data["enrollment"]["first_year_students"]
+                  data["enrollment"]?.["first_year_students"]
                 )}
                 sub4="Undergradate Students In-State"
                 sub4data={parsePercent(data["percent_undergrad_in_state"])}
@@ -1781,38 +1785,38 @@ const CollegeDetailPage = ({
                 sub9="6-Year Graduation Rate"
                 sub9data={parsePercent(data["6_year_graduation_rate"])}
                 // sub11="Enrolled Men"
-                // sub11data={data["enrollment"]["enrolled_men"]}
+                // sub11data={data["enrollment"]?.["enrolled_men"]}
                 // sub12="Enrolled Women"
-                // sub12data={data["enrollment"]["enrolled_women"]}
+                // sub12data={data["enrollment"]?.["enrolled_women"]}
                 sub10="Admission Policy"
                 sub10data={
                   data["admission policy"]
-                    ? data["admission policy"]["coeducational"]
+                    ? data["admission policy"]?.["coeducational"]
                       ? "Co-Ed"
-                      : data["admission policy"]["men_only"]
+                      : data["admission policy"]?.["men_only"]
                       ? "Men Only"
-                      : data["admission policy"]["women_only"]
+                      : data["admission policy"]?.["women_only"]
                       ? "Women Only"
                       : "Co-Ed"
                     : "No Data"
                 }
                 sub11="Admission Yield"
-                sub11data={parsePercent(data["enrollment"]["admission_yield"])}
+                sub11data={parsePercent(data["enrollment"]?.["admission_yield"])}
                 sub12="Live Off Campus Students"
                 sub12data={parse(data["live_off_campus_student_count"])}
                 sub13="Sororities"
-                sub13data={parse(data["students"]["Sororities"])}
+                sub13data={parse(data["students"]?.["Sororities"])}
                 sub14="Fraternities"
-                sub14data={parse(data["students"]["Fraternities"])}
+                sub14data={parse(data["students"]?.["Fraternities"])}
                 sub15="Graduates Offered Full-Time Employment Within 6 Months"
                 sub15data={parse(
-                  data["students"][
+                  data["students"]?.[
                     "Graduates Offered Full-Time Employment Within 6 Months"
                   ]
                 )}
                 sub16="Graduates Pursuing Advanced Study Directly"
                 sub16data={parse(
-                  data["students"]["Graduates Pursuing Advanced Study Directly"]
+                  data["students"]?.["Graduates Pursuing Advanced Study Directly"]
                 )}
                 Sororities
               />
@@ -1859,42 +1863,42 @@ const CollegeDetailPage = ({
                 title="Campus Life"
                 sub1="Nearest Metropolitan Area"
                 sub1data={parse(
-                  data["campus_life"]["Nearest Metropolitan Area"]
+                  data["campus_life"]?.["Nearest Metropolitan Area"]
                 )}
                 sub2="Average Low Temprature In Jan"
-                sub2data={parseNumber(data["campus_life"]["Avg Low In Jan"])}
+                sub2data={parseNumber(data["campus_life"]?.["Avg Low In Jan"])}
                 sub3="Average High Temprature In Sep"
-                sub3data={parseNumber(data["campus_life"]["Avg High In Sep"])}
+                sub3data={parseNumber(data["campus_life"]?.["Avg High In Sep"])}
                 sub4="Rainy Days per Year"
-                sub4data={parseNumber(data["campus_life"]["Rainy Days / Year"])}
+                sub4data={parseNumber(data["campus_life"]?.["Rainy Days / Year"])}
                 sub5="Students in College Housing"
                 sub5data={parseNumber(
-                  data["campus_life"]["Students in College Housing"]
+                  data["campus_life"]?.["Students in College Housing"]
                 )}
                 sub6="Freshman Housing Guarantee"
                 sub6data={parse(
-                  data["campus_life"]["Freshman Housing Guarantee"]
+                  data["campus_life"]?.["Freshman Housing Guarantee"]
                 )}
                 sub7="Late-Night Transport/Escort Services"
                 sub7data={parse(
-                  data["campus_life"]["Late-Night Transport/Escort Services"]
+                  data["campus_life"]?.["Late-Night Transport/Escort Services"]
                 )}
                 sub8="24-Hour Emergency Phone/Alarm Devices"
                 sub8data={parse(
-                  data["campus_life"]["24-Hour Emergency Phone/Alarm Devices"]
+                  data["campus_life"]?.["24-Hour Emergency Phone/Alarm Devices"]
                 )}
                 sub9="24-Hour Security Patrols"
                 sub9data={parse(
-                  data["campus_life"]["24-Hour Security Patrols"]
+                  data["campus_life"]?.["24-Hour Security Patrols"]
                 )}
                 sub10="Health Service"
-                sub10data={parse(data["campus_life"]["Health Service"])}
+                sub10data={parse(data["campus_life"]?.["Health Service"])}
                 sub11="Personal Counseling"
-                sub11data={parse(data["campus_life"]["Personal Counseling"])}
+                sub11data={parse(data["campus_life"]?.["Personal Counseling"])}
                 sub12="Child Care"
-                sub12data={parse(data["campus_life"]["Child Care"])}
+                sub12data={parse(data["campus_life"]?.["Child Care"])}
                 sub13="City Population"
-                sub13data={parse(data["campus_life"]["City Population"])}
+                sub13data={parse(data["campus_life"]?.["City Population"])}
               />
             </Col>
             <Col span={7}>
@@ -1905,21 +1909,21 @@ const CollegeDetailPage = ({
                     <div className="inline">
                       <p className="cl-dark-text">NCAA Member</p>
                       <h3 className="cl-dark-text">
-                        {parseYesNo(data["ncaa"]["member_ncaa"], "Yes")}
+                        {parseYesNo(data["ncaa"]?.["member_ncaa"], "Yes")}
                       </h3>
                     </div>
                     <Divider />
                     <div className="inline">
                       <p className="cl-dark-text">NCAA for Football</p>
                       <h3 className="cl-dark-text">
-                        {parseYesNo(data["ncaa"]["ncaa_football"], "Yes")}
+                        {parseYesNo(data["ncaa"]?.["ncaa_football"], "Yes")}
                       </h3>
                     </div>
                     <Divider />
                     <div className="inline">
                       <p className="cl-dark-text">NCAA for Basketball</p>
                       <h3 className="cl-dark-text">
-                        {parseYesNo(data["ncaa"]["ncaa_basketball"], "Yes")}
+                        {parseYesNo(data["ncaa"]?.["ncaa_basketball"], "Yes")}
                       </h3>
                     </div>
                     <Divider />
@@ -1927,7 +1931,7 @@ const CollegeDetailPage = ({
                       <p className="cl-dark-text">NCAA for Track</p>
                       <h3 className="cl-dark-text">
                         {parseYesNo(
-                          data["ncaa"]["ncaa_cross_country_track"],
+                          data["ncaa"]?.["ncaa_cross_country_track"],
                           "Yes"
                         )}
                       </h3>
@@ -1936,7 +1940,7 @@ const CollegeDetailPage = ({
                     <div className="inline">
                       <p className="cl-dark-text">NCAA for Baseball</p>
                       <h3 className="cl-dark-text">
-                        {parseYesNo(data["ncaa"]["ncaa_baseball"], "Yes")}
+                        {parseYesNo(data["ncaa"]?.["ncaa_baseball"], "Yes")}
                       </h3>
                     </div>
                   </div>
