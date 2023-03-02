@@ -107,7 +107,7 @@ const College = ({
   }
   
   for (let i = 0; i < collegeList.length; i++) {
-    collegeListArray[i] = collegeList[i].college_name;
+    collegeListArray[i] = collegeList[i]?.college_name;
   }
 
 
@@ -357,13 +357,14 @@ const College = ({
                       location={data.location}
                       schoolFit={
                         requestData.userTier >=
-                        data["college_fit_metric"].safety
+                        data["college_fit_metric"]?.safety
                           ? "Safety School"
                           : requestData.userTier <
-                            data["college_fit_metric"].target
+                            data["college_fit_metric"]?.target
                           ? "Reach School"
                           : "Fit School"
                       }
+                      // TODO: what if college fit metric does not exist
                       img={
                         data["img_link"]
                           ? data["img_link"]

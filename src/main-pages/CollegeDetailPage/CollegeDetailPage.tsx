@@ -110,13 +110,13 @@ const CollegeDetailPage = ({
   function parsePercent(data) {
     if (data) {
       return Math.round(data * 100) + "%";
-    } else return "No Data";
+    } else return "Not Reported";
   }
 
   function parseAmount(data) {
     if (data) {
       return "$ " + data.toLocaleString("en-US");
-    } else return "No Data";
+    } else return "Not Reported";
   }
 
   function parseYesNo(data, word) {
@@ -127,7 +127,7 @@ const CollegeDetailPage = ({
         return <CancelIcon style={{ color: "#ef3f2b" }} />;
       }
     } else {
-      return "No Data";
+      return "Not Reported";
     }
   }
 
@@ -135,14 +135,14 @@ const CollegeDetailPage = ({
     if (data) {
       return data.toLocaleString("en-US");
     }
-    return "No data";
+    return "Not Reported";
   }
 
   function parse(data) {
     if (data) {
       return data;
     }
-    return "No data";
+    return "Not Reported";
   }
 
   function singlePaywall(data) {
