@@ -315,9 +315,9 @@ const CollegeDetailPage = ({
               </h1>
               <div className="w-100 d-flex flex-row align-items-center">
                 <div className={styles.collegeFitContainer}>
-                  {userTier >= data?.["college_fit_metric"].safety
+                  {userTier >= data?.["college_fit_metric"]?.safety
                     ? "Safety School"
-                    : userTier < data?.["college_fit_metric"].target
+                    : userTier < data?.["college_fit_metric"]?.target
                     ? "Reach School"
                     : "Fit School"}
                 </div>
