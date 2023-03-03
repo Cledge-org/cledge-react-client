@@ -146,6 +146,8 @@ a {
   @extend .cl-btn;
   @extend .cl-btn-clear;
   border-radius: 5px !important;
+  color: $cl-blue;
+  border: 1px solid $cl-blue;
 }
 
 .inline {
