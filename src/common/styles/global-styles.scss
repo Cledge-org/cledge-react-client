@@ -142,6 +142,12 @@ a {
     border-color: rgba($color: $cl-white, $alpha: 0.9);
   }
 }
+.cl-btn-tips {
+  @extend .cl-btn;
+  @extend .cl-btn-clear;
+  border-radius: 5px !important;
+}
+
 .inline {
   display: flex;
   justify-content: space-between;

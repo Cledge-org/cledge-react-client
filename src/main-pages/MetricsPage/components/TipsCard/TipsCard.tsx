@@ -81,7 +81,7 @@ const TipsCard = ({
                 query: { page: updatePage, chunk: updateChunk },
               });
             }}
-            className="cl-btn-blue"
+            className="cl-btn-tips"
           >
             Update my profile
           </button>
