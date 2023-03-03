@@ -32,9 +32,9 @@ const TierRange = ({
             top: "100%",
             left: `${
               tier === 1
-                ? 0 
+                ? -48
                 : tier === 12
-                ? -30
+                ? 18.25
                 : offSet * 100 -
                   65 +
                   (tier - minTier === 0
@@ -52,7 +52,6 @@ const TierRange = ({
               borderLeft: "7px solid transparent",
               borderRight: "7px solid transparent",
               borderBottom: "7px solid #f7bc76",
-              alignSelf: tier === 1 ? "start" : tier === 12 ? "end" : "center",
             }}
             className="mx-2"
           ></div>
@@ -64,7 +63,6 @@ const TierRange = ({
               border: "1px solid transparent",
               borderRadius: "5px",
               textAlign: "center",
-              alignSelf: tier === 1 ? "start" : tier === 12 ? "end" : null,
             }}
           >
             <text style={{ color: "#070452" }}>You are here</text>
