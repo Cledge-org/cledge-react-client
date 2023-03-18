@@ -225,3 +225,79 @@ export const calculateGPATier = (applicantLevel: number, gpa: number) => {
   }
   return gpaTier;
 };
+
+export const calculateCollegeFit = (
+  accRate: number,
+  ECTier: number,
+  courseworkTier: number,
+  GPATier: number,
+  collegeGPAAvg: number,
+  studFirstGen: number,
+  //0 for not, 1 for is
+  studSATScore: number,
+  studACTScore: number,
+  collegeSATAvg: number,
+  collegeACTAvg: number,
+  studentType: number,
+  //Leisurely = 3, Avg = 2, Competitive = 1
+  importances: number[],
+  //Pass importances in as: Coursework, GPA, EC, FirstGen, TestScore
+  //0-3
+
+) => {
+  //Reach = 3, Target = 2, Safety = 1
+  if(accRate <= 15)
+  {
+    return 3;
+  }
+  let collegeTier = 0.000754*accRate*accRate-.164*accRate+12.3;
+  if(accRate >= 90)
+  {
+    collegeTier = 2;
+  }
+  let dSAT = studSATScore - collegeSATAvg;
+  if(dSAT > 0)
+  {
+    dSAT = dSAT/50;
+  }
+  else
+  {
+    dSAT = dSAT/30;
+  }
+  let dACT = studACTScore - collegeACTAvg;
+  if(dACT > 0)
+  {
+    dACT = dACT/2;
+  }
+  let collegeGPATier = calculateGPATier(studentType, collegeGPAAvg);
+  let weightedAvg = importances[0]*(courseworkTier - collegeTier) + importances[1]*(GPATier - collegeGPATier)
+                    + importances[2]*(ECTier - collegeTier) + importances[3]*2*studFirstGen + 
+                    importances[4]*Math.max(dSAT, dACT);
+  if(weightedAvg >= 2)
+  {
+    return 1;
+  }
+  if(studentType === 1)
+  {
+    if(weightedAvg < -1)
+    {
+      return 3;
+    }
+    else
+    {
+      return 2;
+    }
+  }
+  else
+  {
+    if(weightedAvg < -2)
+    {
+      return 3;
+    }
+    else
+    {
+      return 2;
+    }
+  }
+};
+
