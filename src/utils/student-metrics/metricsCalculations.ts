@@ -41,6 +41,92 @@ export const calculateECActivityTier = (
   }
   return tier;
 };
+
+export const calculateECTier = (
+  hoursPerWeek: number,
+  weeksPerYear: number,
+  yearsSpent: number,
+  awardScale: number,
+  awardQuality: number,
+  leadershipTier: number,
+  impactTier: number,
+) => {
+  let timeTier = calculateTimeTier(hoursPerWeek, weeksPerYear, yearsSpent);
+  let awardTier = calculateAwardTier(awardScale, awardQuality);
+  let leadingTier = calculateLeadershipTier(leadershipTier, impactTier);
+  let tier = (timeTier * 3 + awardTier * 1 + leadingTier * 1)/5;
+  return tier;
+};
+
+export const calculateTimeTier = (
+hoursPerWeek: number,
+weeksPerYear: number,
+yearsSpent: number,
+) => {
+  if(hoursPerWeek < 0 || weeksPerYear < 0 || yearsSpent < 1)
+  {
+      return -1;
+  }
+  let tier = yearsSpent;
+  if(hoursPerWeek <= 3)
+  {
+      tier += 1;
+  }
+  else if(hoursPerWeek > 25)
+  {
+      tier += 6;
+  }
+  else
+  {
+      tier += (hoursPerWeek / 5) - ((hoursPerWeek / 5)%1) + 2;
+  }
+  if(weeksPerYear > 40)
+  {
+      tier += 4;
+  }
+  else
+  {
+      tier += (weeksPerYear - 10)/15 + (((weeksPerYear - 10)/15)%1) + 2;
+  }
+  if(tier > 12)
+  {
+      return 12;
+  }
+  return tier;
+};
+
+export const calculateAwardTier = (
+awardScale: number,
+awardQuality: number,
+) => {
+  if(awardScale < 0 || awardScale > 4 || awardQuality < 0 || awardQuality > 4)
+  {
+      return -1;
+  }
+  let tier = 2 * awardQuality + awardScale + 1;
+  if(tier > 12)
+  {
+      return 12;
+  }
+  return tier;
+}; 
+
+export const calculateLeadershipTier = (
+leadershipTier: number,
+impactTier: number,
+) => {
+  if(leadershipTier < 0 || leadershipTier > 4 || impactTier < 0 || impactTier > 4)
+  {
+      return -1;
+  }
+  let tier = 2 * leadershipTier + impactTier + 1;
+  if(tier > 12)
+  {
+      return 12;
+  }
+  return tier;
+};
+
 export const calculateOverallECTier = (tiers: number[]) => {
   let totalPoints = 0;
   let totalMultiplier = 0;
@@ -74,6 +160,7 @@ export const calculateOverallECTier = (tiers: number[]) => {
   //Returns adjusted average for overall tier.
   return overallAverage;
 };
+
 export const calculateECTotalPoints = (tiers: number[]) => {
   let overallPoints = 0;
   tiers.forEach((tier) => {
@@ -139,3 +226,79 @@ export const calculateGPATier = (applicantLevel: number, gpa: number) => {
   }
   return gpaTier;
 };
+export const calculateCollegeFit = (
+  accRate: number,
+  ECTier: number,
+  courseworkTier: number,
+  GPATier: number,
+  collegeGPAAvg: number,
+  studFirstGen: number,
+  //0 for not, 1 for is
+  studSATScore: number,
+  studACTScore: number,
+  collegeSATAvg: number,
+  collegeACTAvg: number,
+  studentType: number,
+  //Leisurely = 3, Avg = 2, Competitive = 1
+  importances: number[],
+  //Pass importances in as: Coursework, GPA, EC, FirstGen, TestScore
+  //0-3
+
+) => {
+  //Reach = 3, Target = 2, Safety = 1
+  if(accRate <= 15)
+  {
+    return 3;
+  }
+  let collegeTier = 0.000754*accRate*accRate-.164*accRate+12.3;
+  if(accRate >= 90)
+  {
+    collegeTier = 2;
+  }
+  let dSAT = studSATScore - collegeSATAvg;
+  if(dSAT > 0)
+  {
+    dSAT = dSAT/50;
+  }
+  else
+  {
+    dSAT = dSAT/30;
+  }
+  let dACT = studACTScore - collegeACTAvg;
+  if(dACT > 0)
+  {
+    dACT = dACT/2;
+  }
+  let collegeGPATier = calculateGPATier(studentType, collegeGPAAvg);
+  let weightedAvg = importances[0]*(courseworkTier - collegeTier) + importances[1]*(GPATier - collegeGPATier)
+                    + importances[2]*(ECTier - collegeTier) + importances[3]*2*studFirstGen + 
+                    importances[4]*Math.max(dSAT, dACT);
+  if(weightedAvg >= 2)
+  {
+    return 1;
+  }
+  if(studentType === 1)
+  {
+    if(weightedAvg < -1)
+    {
+      return 3;
+    }
+    else
+    {
+      return 2;
+    }
+  }
+  else
+  {
+    if(weightedAvg < -2)
+    {
+      return 3;
+    }
+    else
+    {
+      return 2;
+    }
+  }
+};
+
+
