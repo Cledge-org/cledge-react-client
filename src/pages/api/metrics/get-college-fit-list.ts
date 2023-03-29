@@ -16,17 +16,34 @@ const getAllColleges = (
     client: MongoClient
 ): Promise<Object> => {
     return new Promise(async(res, err) => {
+        const projection = {
+            _id: 0,
+            UNITID: 1,
+            UGDS: 1,
+            COTSOFF: 1,
+            CINSOFF: 1,
+            CONTROL: 1,
+            LOCALE: 1,
+            STABBR: 1,
+            ADM_RATE: 1,
+            SAT_AVG: 1,
+            ACTCMMID: 1,
+            academics: 1,
+            admission: 1,
+            financials: 1
+        };
         try {
             const collegesRes = await client
                 .db("colleges")
                 .collection("colleges-data")
-                .find()
+                .find({admission: {$exists: true}})
+                .project(projection)
                 .toArray();
             let output = [];
             collegesRes.forEach((eachCollege) => {
                 output.push(eachCollege["UNITID"]);
             });
-            res(output);
+            res(output.length);
         } catch (e) {
             err(res);
         }
@@ -39,7 +56,7 @@ Avg total cost of attendance: COTSOFF for default, if prefer in-state college th
 public/private: CONTROL
 urban/rural: LOCALE
 in-state/out-state: STABBR
-avg class size: Regular class size, need calculation
+avg class size: academics/Regular class size, need calculation
 financial aid need based: financials/undergraduate_19_20_profile, Average Award
 financial aid merit based: financials/undergraduate_19_20_profile, Merit-Based Gift
 */
@@ -59,3 +76,4 @@ const ADMGPACalculation = (gpa) => {
 
     })
 }
+
