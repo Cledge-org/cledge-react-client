@@ -1,5 +1,26 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { MongoClient } from "mongodb";
+import { calculateCollegeFit } from "src/utils/student-metrics/metricsCalculations";
+
+
+/*
+    request form:
+    {
+        preferences: {
+            <variable (e.g. school size)> : {
+                <value (e.g. 0, 1, 2 for <5000, 5000-15000, >15000)> : ,
+                <preference fit (e.g. 2, 6, 10)>: ,
+            }
+        }
+        ECTier: ,
+        courseworkTier: ,
+        GPATier: ,
+        studFirstGen: ,
+        studSATScore: ,
+        studACTScore: ,
+        studentType: ,
+    }
+*/
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     const reqBodyJson = req.body;
@@ -13,25 +34,12 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 };
 
 const getAllColleges = (
-    client: MongoClient
+    client: MongoClient,
+    studentType: number,
+
 ): Promise<Object> => {
     return new Promise(async(res, err) => {
-        const projection = {
-            _id: 0,
-            UNITID: 1,
-            UGDS: 1,
-            COTSOFF: 1,
-            CINSOFF: 1,
-            CONTROL: 1,
-            LOCALE: 1,
-            STABBR: 1,
-            ADM_RATE: 1,
-            SAT_AVG: 1,
-            ACTCMMID: 1,
-            academics: 1,
-            admission: 1,
-            financials: 1
-        };
+
         try {
             const collegesRes = await client
                 .db("colleges")
@@ -39,15 +47,58 @@ const getAllColleges = (
                 .find({admission: {$exists: true}})
                 .project(projection)
                 .toArray();
-            let output = [];
+            let safety = [];
+            let target = [];
+            let reach = [];
             collegesRes.forEach((eachCollege) => {
-                output.push(eachCollege["UNITID"]);
+                let preferenceFit = calculatePreferenceFit(eachCollege);
+                let collegeFit = calculateCollegeFit();
+                let collegeRankInfo = [eachCollege["UNITID"], eachCollege["INSTNM"], preferenceFit];
+                if (collegeFit === 1) {
+                    safety.push(collegeRankInfo);
+                } else if (collegeFit === 2) {
+                    target.push(collegeRankInfo);
+                } else {
+                    reach.push(collegeRankInfo);
+                }
             });
-            res(output.length);
+            let [safetyCount, targetCount, reachCount] = studentTypeData[studentType];
+            // prevent missing college in one fit category
+            if (safety.length < safetyCount) {
+                let safetyDiff = safetyCount - safety.length;
+                safetyCount -= safetyDiff;
+                targetCount += safetyDiff;
+            }
+            if (target.length < targetCount) {
+                let targetDiff = targetCount - target.length;
+                targetCount -= targetDiff;
+                reachCount += targetDiff;
+            }
+            if (reach.length < reachCount) {
+                let reachDiff = reachCount - reach.length;
+                reachCount -= reachDiff;
+                targetCount += reachDiff;
+            }
+            const output = {
+                safety: getRankByPreferenceFit(safety, safetyCount),
+                target: getRankByPreferenceFit(target, targetCount),
+                reach: getRankByPreferenceFit(reach, reachCount)
+            }
+            res(output);
         } catch (e) {
             err(res);
         }
     })
+}
+
+const calculatePreferenceFit = (
+    college: any
+) => {
+    return 0;
+}
+
+const getRankByPreferenceFit = (fit: any[], rank: number) => {
+    return fit.sort((first, second) => second[2] - first[2]).slice(0, rank);
 }
 
 /* fit variable need (0 fit if no data)
@@ -77,3 +128,26 @@ const ADMGPACalculation = (gpa) => {
     })
 }
 
+const projection = {
+    _id: 0,
+    UNITID: 1,
+    INSTNM: 1,
+    UGDS: 1,
+    COTSOFF: 1,
+    CINSOFF: 1,
+    CONTROL: 1,
+    LOCALE: 1,
+    STABBR: 1,
+    ADM_RATE: 1,
+    SAT_AVG: 1,
+    ACTCMMID: 1,
+    academics: 1,
+    admission: 1,
+    financials: 1
+};
+
+const studentTypeData = {
+    1: [6, 5, 4],
+    2: [4, 6, 5],
+    3: [2, 5, 8]
+}
