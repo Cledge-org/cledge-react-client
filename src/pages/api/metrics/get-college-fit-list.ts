@@ -1,12 +1,37 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { MongoClient } from "mongodb";
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
+    const reqBodyJson = req.body;
     try {
-
+        const client = await MongoClient.connect(process.env.MONGO_URL);
+        const result = await getAllColleges(client);
+        resolve.status(200).send(result);
     } catch (e) {
         resolve.status(500).send(e);
     }
 };
+
+const getAllColleges = (
+    client: MongoClient
+): Promise<Object> => {
+    return new Promise(async(res, err) => {
+        try {
+            const collegesRes = await client
+                .db("colleges")
+                .collection("colleges-data")
+                .find()
+                .toArray();
+            let output = [];
+            collegesRes.forEach((eachCollege) => {
+                output.push(eachCollege["UNITID"]);
+            });
+            res(output);
+        } catch (e) {
+            err(res);
+        }
+    })
+}
 
 /* fit variable need (0 fit if no data)
 School size: UGDS
@@ -26,3 +51,11 @@ collegeSATAvg: SAT_AVG
 collegeACTAvg: ACTCMMID
 importances: admission/selection_of_students, [Class Rank, Academic GPA, Extracurricular Activities, First Generation to Attend College, Standardized Tests]
 */
+
+const ADMGPACalculation = (gpa) => {
+    let overallgpa = 0.0;
+    Object.entries(gpa).forEach(([key, value], index) => {
+        const curGPARange = key.split(" ");
+
+    })
+}
