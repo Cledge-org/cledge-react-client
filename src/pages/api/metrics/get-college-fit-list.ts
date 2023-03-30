@@ -8,8 +8,9 @@ import { calculateCollegeFit } from "src/utils/student-metrics/metricsCalculatio
     {
         preferences: {
             <variable (e.g. school size)> : {
-                <value (e.g. 0, 1, 2 for <5000, 5000-15000, >15000)> : ,
-                <preference fit (e.g. 2, 6, 10)>: ,
+                <low_val (lower bound)> : , (low_val === high_val for categorical value)
+                <high_val (upper bound)> : ,
+                <preferenceLevel (e.g. 1, 3, 5)>: ,
             }
         }
         ECTier: ,
@@ -91,10 +92,50 @@ const getAllColleges = (
     })
 }
 
+/*
+    Preferences:
+    schoolSize
+    costOfAttendance
+    schoolPreference (1 for public, 2 for private)
+    localePreference (urban/rural)
+    statePreference
+    classSize
+    finAidNeed
+    finAidMerit
+*/
 const calculatePreferenceFit = (
-    college: any
+    college: any,
+    preferences: any
 ) => {
-    return 0;
+    let fitVal = 0;
+    if (preferences["schoolSize"]) {
+        let schoolSizeInfo = preferences["schoolSize"];
+        if (college["UGDS"] != null) {
+            if (college["UGDS"] >= schoolSizeInfo["low_val"] - 1000 && college["UGDS"] <= schoolSizeInfo["high_val"] + 1000) {
+                fitVal += schoolSizeInfo["preferenceLevel"];
+            }
+            if (college["UGDS"] >= schoolSizeInfo["low_val"] && college["UGDS"] <= schoolSizeInfo["high_val"]) {
+                fitVal += schoolSizeInfo["preferenceLevel"];
+            }
+        }
+    }
+    if (preferences["costOfAttendance"]) {
+        let costOfAttendanceInfo = preferences["costOfAttendance"];
+        if (college["CINSOFF"] != null) {
+            let collegeCostofAttendance = college["CINSOFF"];
+            if (preferences["schoolPreference"] && preferences["schoolPreference"]["low_val"] === 1) {
+                collegeCostofAttendance = college["COTSOFF"] ? college["COTSOFF"] : collegeCostofAttendance;
+            }
+        }
+
+    }
+    if (preferences["schoolPreference"]) {
+        let schoolPreferenceInfo = preferences["schoolPreference"];
+        if (college["CONTROL"] === schoolPreferenceInfo["low_val"]) {
+            fitVal += schoolPreferenceInfo["preferenceLevel"] * 2;
+        }
+    }
+    return fitVal;
 }
 
 const getRankByPreferenceFit = (fit: any[], rank: number) => {
@@ -150,4 +191,8 @@ const studentTypeData = {
     1: [6, 5, 4],
     2: [4, 6, 5],
     3: [2, 5, 8]
+}
+
+const studentCollegePreferenceMapping = {
+
 }
