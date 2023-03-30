@@ -23,11 +23,30 @@ import { calculateCollegeFit } from "src/utils/student-metrics/metricsCalculatio
     }
 */
 
+/* fit variable need (0 fit if no data)
+School size: UGDS
+Avg total cost of attendance: COTSOFF for default, if prefer in-state college then use CINSOFF
+public/private: CONTROL
+urban/rural: LOCALE
+in-state/out-state: STABBR
+avg class size: academics/Regular class size, need calculation
+financial aid need based: financials/undergraduate_19_20_profile, Average Award
+financial aid merit based: financials/undergraduate_19_20_profile, Merit-Based Gift
+*/
+
+/* student performance fit
+accRate: ADM_RATE
+collegeGPAAvg: admission/GPA, based on calculation (median of each level * percentage, round up to 2 decimals)
+collegeSATAvg: SAT_AVG
+collegeACTAvg: ACTCMMID
+importances: admission/selection_of_students, [Class Rank, Academic GPA, Extracurricular Activities, First Generation to Attend College, Standardized Tests]
+*/
+
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-    const reqBodyJson = req.body;
+    const { preferences, ECTier, courseworkTier, GPATier, studFirstGen, studSATScore, studACTScore, studentType } = req.body;
     try {
         const client = await MongoClient.connect(process.env.MONGO_URL);
-        const result = await getAllColleges(client);
+        const result = await getAllColleges(client, preferences, ECTier, courseworkTier, GPATier, studFirstGen, studSATScore, studACTScore, studentType);
         resolve.status(200).send(result);
     } catch (e) {
         resolve.status(500).send(e);
@@ -36,11 +55,16 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 
 const getAllColleges = (
     client: MongoClient,
+    preferences: any,
+    ECTier: number,
+    courseworkTier: number,
+    GPATier: number,
+    studFirstGen: number,
+    studSATScore: number,
+    studACTScore: number,
     studentType: number,
-
 ): Promise<Object> => {
     return new Promise(async(res, err) => {
-
         try {
             const collegesRes = await client
                 .db("colleges")
@@ -51,15 +75,22 @@ const getAllColleges = (
             let safety = [];
             let target = [];
             let reach = [];
-            collegesRes.forEach((eachCollege) => {
-                let preferenceFit = calculatePreferenceFit(eachCollege);
-                let collegeFit = calculateCollegeFit();
-                let collegeRankInfo = [eachCollege["UNITID"], eachCollege["INSTNM"], preferenceFit];
+            collegesRes.forEach((college) => {
+                let preferenceFit = calculatePreferenceFit(college, preferences);
+                let collegeFit = 0;
+                if (college["ADM_RATE"] != null && college["SAT_AVG"] && college["ACTCMMID"] && "admission" in college && "GPA" in college["admission"] && "selection_of_students" in college["admission"]) {
+                    let importances = selectionOfStudentsData(college["admission"]["selection_of_students"]);
+                    let collegeADMAvgGPA = ADMGPACalculation(college["admission"]["GPA"]);
+                    if (collegeADMAvgGPA != null) {
+                        collegeFit = calculateCollegeFit(college["ADM_RATE"], ECTier, courseworkTier, GPATier, collegeADMAvgGPA, studFirstGen, studSATScore, studACTScore, college["SAT_AVG"], college["ACTCMMID"], studentType, importances);
+                    }
+                }
+                let collegeRankInfo = [college["UNITID"], college["INSTNM"], preferenceFit];
                 if (collegeFit === 1) {
                     safety.push(collegeRankInfo);
                 } else if (collegeFit === 2) {
                     target.push(collegeRankInfo);
-                } else {
+                } else if (collegeFit === 3) {
                     reach.push(collegeRankInfo);
                 }
             });
@@ -205,18 +236,20 @@ const calculatePreferenceFit = (
         let classSizeInfo = preferences["classSize"];
         if (college["academics"] != null && college["academics"]["Regular Class Size"] != null) {
             let collegeAvgClassSize = avgClassSizeCalculation(college["academics"]["Regular Class Size"]);
-            if (collegeAvgClassSize >= classSizeInfo["low_val"] - 5) {
-                if ("high_val" in classSizeInfo && collegeAvgClassSize <= classSizeInfo["high_val"] + 5) {
-                    fitVal += classSizeInfo["preferenceLevel"];
-                } else if (!("high_val" in classSizeInfo)) {
-                    fitVal += classSizeInfo["preferenceLevel"];
+            if (collegeAvgClassSize != null) {
+                if (collegeAvgClassSize >= classSizeInfo["low_val"] - 5) {
+                    if ("high_val" in classSizeInfo && collegeAvgClassSize <= classSizeInfo["high_val"] + 5) {
+                        fitVal += classSizeInfo["preferenceLevel"];
+                    } else if (!("high_val" in classSizeInfo)) {
+                        fitVal += classSizeInfo["preferenceLevel"];
+                    }
                 }
-            }
-            if (collegeAvgClassSize >= classSizeInfo["low_val"]) {
-                if ("high_val" in classSizeInfo && collegeAvgClassSize <= classSizeInfo["high_val"]) {
-                    fitVal += classSizeInfo["preferenceLevel"];
-                } else if (!("high_val" in classSizeInfo)) {
-                    fitVal += classSizeInfo["preferenceLevel"];
+                if (collegeAvgClassSize >= classSizeInfo["low_val"]) {
+                    if ("high_val" in classSizeInfo && collegeAvgClassSize <= classSizeInfo["high_val"]) {
+                        fitVal += classSizeInfo["preferenceLevel"];
+                    } else if (!("high_val" in classSizeInfo)) {
+                        fitVal += classSizeInfo["preferenceLevel"];
+                    }
                 }
             }
         }
@@ -277,25 +310,6 @@ const getRankByPreferenceFit = (fit: any[], rank: number) => {
     return fit.sort((first, second) => second[2] - first[2]).slice(0, rank);
 }
 
-/* fit variable need (0 fit if no data)
-School size: UGDS
-Avg total cost of attendance: COTSOFF for default, if prefer in-state college then use CINSOFF
-public/private: CONTROL
-urban/rural: LOCALE
-in-state/out-state: STABBR
-avg class size: academics/Regular class size, need calculation
-financial aid need based: financials/undergraduate_19_20_profile, Average Award
-financial aid merit based: financials/undergraduate_19_20_profile, Merit-Based Gift
-*/
-
-/* student performance fit
-accRate: ADM_RATE
-collegeGPAAvg: admission/GPA, based on calculation (median of each level * percentage, round up to 2 decimals)
-collegeSATAvg: SAT_AVG
-collegeACTAvg: ACTCMMID
-importances: admission/selection_of_students, [Class Rank, Academic GPA, Extracurricular Activities, First Generation to Attend College, Standardized Tests]
-*/
-
 const avgClassSizeCalculation = (classSize: { [id: string] : string; }) => {
     let avgClassSize = 0;
     Object.entries(classSize).forEach(([key, value], index) => {
@@ -304,6 +318,8 @@ const avgClassSizeCalculation = (classSize: { [id: string] : string; }) => {
         let percent = 0;
         if (value != null && value != "" && value != "Not Reported") {
             percent = parseInt(value.slice(0, -1));
+        } else {
+            return null;
         }
         if (keyInfo.length === 3) {
             studentNum = parseInt(keyInfo[1]);
@@ -320,12 +336,39 @@ const finAidParse = (finAidStr: string) => {
     return parseInt(finAidStrSplit[finAidStrSplit.length - 1].replace(/,/g, ''));
 }
 
-const ADMGPACalculation = (gpa) => {
-    let overallgpa = 0.0;
+const ADMGPACalculation = (gpa: { [id: string] : string; }) => {
+    let overallgpa = 0;
     Object.entries(gpa).forEach(([key, value], index) => {
         const curGPARange = key.split(" ");
-
+        let curGPARangeAvg = 0;
+        let percent = 0;
+        if (value != null && value != "" && value != "Not Reported") {
+            percent = parseInt(value.slice(0, -1));
+        } else {
+            return null;
+        }
+        if (curGPARange[1] === "-") {
+            curGPARangeAvg = (parseFloat(curGPARange[0]) + parseFloat(curGPARange[2])) / 2;
+        } else {
+            curGPARangeAvg = parseFloat(curGPARange[0]);
+        }
+        overallgpa += percent * curGPARangeAvg;
     })
+    return overallgpa;
+}
+
+const selectionOfStudentsData = (selections) => {
+    let importances = [];
+    importancesAttributes.forEach((value) => {
+        if (value in selections) {
+            if (selections[value] != null) {
+                importances.push(selectionOfStudentMapping[selections[value]]);
+            }
+        } else {
+            importances.push(0);
+        }
+    })
+    return importances;
 }
 
 const projection = {
@@ -352,6 +395,12 @@ const studentTypeData = {
     3: [2, 5, 8]
 }
 
-const studentCollegePreferenceMapping = {
-
+const selectionOfStudentMapping = {
+    "Not Considered": 0,
+    "Considered": 1,
+    "Important": 2,
+    "Very Important": 3,
+    "Not Reported": 0
 }
+
+const importancesAttributes = ["Class Rank", "Academic GPA", "Extracurricular Activities", "First Generation to Attend College", "Standardized Tests"];
