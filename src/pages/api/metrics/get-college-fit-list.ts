@@ -12,7 +12,7 @@ import { calculateCollegeFit } from "src/utils/student-metrics/metricsCalculatio
                 <high_val (upper bound)> : ,
                 <preferenceLevel (e.g. 1, 3, 5)>: ,
             }
-        }
+        },
         ECTier: ,
         courseworkTier: ,
         GPATier: ,
@@ -94,6 +94,7 @@ const getAllColleges = (
                     reach.push(collegeRankInfo);
                 }
             });
+
             let [safetyCount, targetCount, reachCount] = studentTypeData[studentType];
             // prevent missing college in one fit category
             if (safety.length < safetyCount) {
@@ -151,7 +152,7 @@ const calculatePreferenceFit = (
     // preference for schoolSize
     if ("schoolSize" in preferences) {
         let schoolSizeInfo = preferences["schoolSize"];
-        if (college["UGDS"] != null) {
+        if ("UGDS" in college && college["UGDS"] != null) {
             if (college["UGDS"] >= schoolSizeInfo["low_val"] - 1000) {
                 if ("high_val" in schoolSizeInfo && college["UGDS"] <= schoolSizeInfo["high_val"] + 1000) {
                     fitVal += schoolSizeInfo["preferenceLevel"];
@@ -302,7 +303,6 @@ const calculatePreferenceFit = (
             }
         }
     }
-
     return fitVal;
 }
 
