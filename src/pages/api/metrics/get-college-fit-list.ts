@@ -66,7 +66,7 @@ const getAllColleges = (
 ): Promise<Object> => {
     return new Promise(async(res, err) => {
         try {
-            const collegesRes = await client
+            let collegesRes = await client
                 .db("colleges")
                 .collection("colleges-data")
                 .find({admission: {$exists: true}})
@@ -75,6 +75,7 @@ const getAllColleges = (
             let safety = [];
             let target = [];
             let reach = [];
+            collegesRes = collegesRes.sort(() => Math.random() - 0.5);
             collegesRes.forEach((college) => {
                 let preferenceFit = calculatePreferenceFit(college, preferences);
                 let collegeFit = 0;
@@ -83,9 +84,6 @@ const getAllColleges = (
                     let collegeADMAvgGPA = ADMGPACalculation(college["admission"]["GPA"]);
                     if (collegeADMAvgGPA != null) {
                         collegeFit = calculateCollegeFit(college["ADM_RATE"] * 100, ECTier, courseworkTier, GPATier, collegeADMAvgGPA, studFirstGen, studSATScore, studACTScore, college["SAT_AVG"], college["ACTCMMID"], studentType, importances);
-                        if (college["UNITID"] === "222178") {
-                            console.log(importances);
-                        }
                     }
                 }
                 let collegeRankInfo = [college["UNITID"], college["INSTNM"], preferenceFit];
@@ -98,7 +96,7 @@ const getAllColleges = (
                 }
             });
 
-            let [safetyCount, targetCount, reachCount] = studentTypeData[studentType];
+            let [reachCount, targetCount, safetyCount] = studentTypeData[studentType];
             // prevent missing college in one fit category
             if (safety.length < safetyCount) {
                 let safetyDiff = safetyCount - safety.length;
