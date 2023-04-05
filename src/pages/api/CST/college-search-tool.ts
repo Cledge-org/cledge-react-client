@@ -91,9 +91,9 @@ export const getCollegeInfo = (
 ): Promise<Object> => {
   return new Promise(async (res, err) => {
     try {
-      console.log("r " + searchRawText);
+
       let searchFuzzyText = toFuzzyString(searchRawText);
-      console.log("fz " + searchFuzzyText);
+
       const searchResults = await searchClient.search(searchFuzzyText, {
         top: top,
         skip: skip,

@@ -29,7 +29,6 @@ const CollegeDetailPage = ({
   questionResponses: UserResponse[];
   collegeData : any
 }) => {
-  console.log(collegeData);
 
   const [value, setValue] = React.useState(0);
   const router = useRouter();

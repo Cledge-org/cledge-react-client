@@ -40,7 +40,6 @@ const College = ({
   collegeList: any
 }) => {
   const [collegeData, setData] = useState(null);
-  console.log(collegeData);
   const [filter, setFilter] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [currSort, setCurrSort] = useState("");
@@ -76,7 +75,6 @@ const College = ({
   });
 
   function handleSearch(e) {
-    console.log(e.target.searchText.value);
     e.preventDefault();
     e.stopPropagation();
     setPrevRequest(requestData);
@@ -87,7 +85,6 @@ const College = ({
   }
 
   function getData() {
-    console.log("getData")
     let data = axios({
       method: "post",
       url: "api/CST/college-search-tool",

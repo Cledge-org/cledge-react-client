@@ -3,20 +3,7 @@ import InfoContainer from "../../../CollegePage/components/InfoContainer/InfoCon
 import { Row, Col, Divider } from "antd";
 import "antd/dist/antd.css";
 
-interface CardProps {
-  title: string;
-  sub1: string;
-  sub1data: string | number | Function;
-  sub2: string;
-  sub2data: string | number | Function;
-  sub3: string;
-  sub3data: string | number | Function;
-  sub4: string;
-  sub4data: string | number | Function;
-  elNum: number;
-}
-
-function Card(props: CardProps) {
+function Card(props) {
   const rows = [];
   for (let i = 1; i <= props.elNum; i++) {
     rows.push(
