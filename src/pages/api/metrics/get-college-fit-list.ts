@@ -82,7 +82,10 @@ const getAllColleges = (
                     let importances = selectionOfStudentsData(college["admission"]["selection_of_students"]);
                     let collegeADMAvgGPA = ADMGPACalculation(college["admission"]["GPA"]);
                     if (collegeADMAvgGPA != null) {
-                        collegeFit = calculateCollegeFit(college["ADM_RATE"], ECTier, courseworkTier, GPATier, collegeADMAvgGPA, studFirstGen, studSATScore, studACTScore, college["SAT_AVG"], college["ACTCMMID"], studentType, importances);
+                        collegeFit = calculateCollegeFit(college["ADM_RATE"] * 100, ECTier, courseworkTier, GPATier, collegeADMAvgGPA, studFirstGen, studSATScore, studACTScore, college["SAT_AVG"], college["ACTCMMID"], studentType, importances);
+                        if (college["UNITID"] === "222178") {
+                            console.log(importances);
+                        }
                     }
                 }
                 let collegeRankInfo = [college["UNITID"], college["INSTNM"], preferenceFit];
@@ -352,7 +355,7 @@ const ADMGPACalculation = (gpa: { [id: string] : string; }) => {
         } else {
             curGPARangeAvg = parseFloat(curGPARange[0]);
         }
-        overallgpa += percent * curGPARangeAvg;
+        overallgpa += percent * curGPARangeAvg / 100;
     })
     return overallgpa;
 }
