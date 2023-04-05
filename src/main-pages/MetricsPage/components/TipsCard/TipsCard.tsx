@@ -40,13 +40,14 @@ const TipsCard = ({
         <br />
         {title}
       </div>
+      
       <div
         className={`d-flex flex-column align-items-center justify-content-evenly`}
         style={{ height: "95%", width: isOverall ? "40%" : "100%" }}
       >
         {tips.map((tip) => (
           <div
-            className="py-2 w-100 px-2 soft-gray-border justify-content-start px-2 h-100"
+            className="py-2 w-100 px-2 justify-content-start px-2 h-100"
             style={{
               height: "5vh",
               borderRadius: "10px",
@@ -60,7 +61,7 @@ const TipsCard = ({
                   <a className="cl-blue" target="_blank">
                     View Resource
                   </a>
-                </Link>
+                </Link>    
               </>
             ) : (
               tip
@@ -81,7 +82,7 @@ const TipsCard = ({
                 query: { page: updatePage, chunk: updateChunk },
               });
             }}
-            className="cl-btn-blue"
+            className="cl-btn-tips"
           >
             Update my profile
           </button>

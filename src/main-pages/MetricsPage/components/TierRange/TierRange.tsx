@@ -6,7 +6,7 @@ const TierRange = ({
   isOverall,
   isOverview,
 }: {
-  tier: number;
+  tier: number; 
   isOverall?: boolean;
   isOverview?: boolean;
 }) => {
@@ -29,12 +29,12 @@ const TierRange = ({
           style={{
             position: "absolute",
             width: "130%",
-            top: "130%",
+            top: "100%",
             left: `${
               tier === 1
-                ? 0
+                ? -48
                 : tier === 12
-                ? -30
+                ? 18.25
                 : offSet * 100 -
                   65 +
                   (tier - minTier === 0
@@ -52,7 +52,6 @@ const TierRange = ({
               borderLeft: "7px solid transparent",
               borderRight: "7px solid transparent",
               borderBottom: "7px solid #f7bc76",
-              alignSelf: tier === 1 ? "start" : tier === 12 ? "end" : "center",
             }}
             className="mx-2"
           ></div>
@@ -62,7 +61,7 @@ const TierRange = ({
               backgroundColor: "#f7bc76",
               width: "8rem",
               border: "1px solid transparent",
-              borderRadius: "10px",
+              borderRadius: "5px",
               textAlign: "center",
             }}
           >
@@ -133,11 +132,10 @@ const TierRange = ({
   };
   return (
     <div
-      className="d-flex flex-row align-items-center position-relative px-2 py-1"
+      className="d-flex flex-row align-items-center position-relative px-2"
       style={{
         borderLeft: "2vh solid #554e86",
         borderRight: "2vh solid #f5e44b",
-        borderRadius: "8px",
         height: "8vh",
         background:
           "linear-gradient(90deg, rgba(100, 47, 113, 0.1) 0%, rgba(248, 231, 76, 0.1) 100%)",
