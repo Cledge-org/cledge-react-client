@@ -1,3 +1,4 @@
+//To Remove
 export const calculateECActivityTier = (
   hoursPerWeek: number,
   weeksPerYear: number,
@@ -42,6 +43,18 @@ export const calculateECActivityTier = (
   return tier;
 };
 
+/**
+ * Calculates the tier for a single extracurricular
+ * All params are the student inputted data for the extracurricular on the site
+ * @param hoursPerWeek 
+ * @param weeksPerYear 
+ * @param yearsSpent 
+ * @param awardScale 
+ * @param awardQuality 
+ * @param leadershipTier 
+ * @param impactTier 
+ * @returns The tier for the extracurricular (int from 1-12)
+ */
 export const calculateECTier = (
   hoursPerWeek: number,
   weeksPerYear: number,
@@ -55,9 +68,10 @@ export const calculateECTier = (
   let awardTier = calculateAwardTier(awardScale, awardQuality);
   let leadingTier = calculateLeadershipTier(leadershipTier, impactTier);
   let tier = (timeTier * 3 + awardTier * 1 + leadingTier * 1)/5;
-  return tier;
+  return Math.round(tier);
 };
 
+//Calculates the tier for the time aspect of an extracurricular.
 export const calculateTimeTier = (
 hoursPerWeek: number,
 weeksPerYear: number,
@@ -95,6 +109,7 @@ yearsSpent: number,
   return tier;
 };
 
+//Calculates the tier for the award aspect of an extracurricular.
 export const calculateAwardTier = (
 awardScale: number,
 awardQuality: number,
@@ -111,6 +126,7 @@ awardQuality: number,
   return tier;
 }; 
 
+//Calculates the tier for the leadership aspect of an extracurricular.
 export const calculateLeadershipTier = (
 leadershipTier: number,
 impactTier: number,
@@ -127,6 +143,11 @@ impactTier: number,
   return tier;
 };
 
+/**
+ * Calculates the student's overall extracurricular tier, given their extracurricular list
+ * @param tiers The individual extracurricular tiers of the student's activities
+ * @returns The student's overall extracurricular tier (int from 1-12)
+ */
 export const calculateOverallECTier = (tiers: number[]) => {
   let totalPoints = 0;
   let totalMultiplier = 0;
@@ -146,7 +167,7 @@ export const calculateOverallECTier = (tiers: number[]) => {
       totalMultiplier += 4;
     }
   });
-  let overallAverage = Math.trunc(totalPoints / totalMultiplier);
+  let overallAverage = Math.round(totalPoints / totalMultiplier);
   //Adjustment for number of ECs: <3 or >10 -> -/+2, 3-4 or 8-9 -> -/+ 1, 5-7 = no change
   if (tiers.length < 3) {
     overallAverage -= 2;
@@ -161,6 +182,7 @@ export const calculateOverallECTier = (tiers: number[]) => {
   return overallAverage;
 };
 
+//ToRemove
 export const calculateECTotalPoints = (tiers: number[]) => {
   let overallPoints = 0;
   tiers.forEach((tier) => {
@@ -176,6 +198,8 @@ export const calculateECTotalPoints = (tiers: number[]) => {
   });
   return overallPoints;
 };
+
+//ToRemove
 export const calculateECActivityPoints = (tier) => {
   let multiplier = 1;
   if (tier >= 4 && tier <= 6) {
@@ -187,6 +211,8 @@ export const calculateECActivityPoints = (tier) => {
   }
   return tier * 5 * multiplier;
 };
+
+//ToRemove
 export const calculateACActivityTier = (
   applicantLevel: number,
   gpa: number,
@@ -198,6 +224,8 @@ export const calculateACActivityTier = (
   tier = Math.round((classTier + gpaTier) / 2);
   return tier;
 };
+
+//ToRemove
 export const calculateClassTiers = (classTypes: string[]) => {
   let classTier = 0;
   classTypes.forEach((classType) => {
@@ -206,6 +234,8 @@ export const calculateClassTiers = (classTypes: string[]) => {
   classTier = Math.floor(classTier / classTypes.length);
   return classTier;
 };
+
+//ToRemove
 export const getAllClassesFormatted = (classTypes: any[]) => {
   return classTypes.map(({ courseName, courseLevel }, index) => {
     return {
@@ -215,6 +245,13 @@ export const getAllClassesFormatted = (classTypes: any[]) => {
     };
   });
 };
+
+/**
+ * Calculates the student's GPA tier
+ * @param applicantLevel What type of applicant the user is, from 0-2 (2 = competitive, 0 = leisurely)
+ * @param gpa The student's GPA on a 4-point scale
+ * @returns The student's overall GPA tier
+ */
 export const calculateGPATier = (applicantLevel: number, gpa: number) => {
   let gpaTier = 0;
   if (applicantLevel === 2) {
@@ -226,6 +263,23 @@ export const calculateGPATier = (applicantLevel: number, gpa: number) => {
   }
   return gpaTier;
 };
+
+/**
+ * Calculates the fit of the college for a specific student
+ * @param accRate Acceptance Rate (%)
+ * @param ECTier Student Extracurricular Tier
+ * @param courseworkTier Student Coursework Tier
+ * @param GPATier Student GPA Tier
+ * @param collegeGPAAvg Average GPA of an accepted applicant
+ * @param studFirstGen Whether or not the student is first gen (0 = no, 1 = yes)
+ * @param studSATScore Student SAT Score (can be super)
+ * @param studACTScore Student ACT Score
+ * @param collegeSATAvg Average Admitted Applicant SAT Score
+ * @param collegeACTAvg Average Admitted Applicant ACT Score
+ * @param studentType What type of applicant the user is, from 1-3 (3 = competitive, 1 = leisurely)
+ * @param importances The College's importances on each application aspect (detailed below)
+ * @returns What the fit of the college is (3 = reach, 2 = target, 1 = safety)
+ */
 export const calculateCollegeFit = (
   accRate: number,
   ECTier: number,
