@@ -1,4 +1,9 @@
 import classNames from "classnames";
+import Container from 'react-bootstrap/Container';
+import Card from 'react-bootstrap/Card';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import { Button } from "react-bootstrap";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
@@ -80,50 +85,141 @@ const DashboardPage = ({
     });
   }
   return (
-   <div className="d-flex flex-column" style={{ height: "100vh" }}>
-      <div className="border h-25">
-        <div className="py-3">
-          <div className="container display-4">
-            Hi, {accountInfo.name.split(" ")[0]}. Welcome to the Dashboard!
-          </div>
-          <div className="container h4">
-            Welcome to <span className="cl-blue">Cledge.</span>
+     <div className="d-flex flex-column">
+        <div className="border h-25">
+          <div className="py-3">
+            <div className="container display-4">
+              Hi, {accountInfo.name.split(" ")[0]}. Welcome to the Dashboard!
+            </div>
+            <div className="container h4">
+              Welcome to <span className="cl-blue">Cledge.</span>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="border bg-secondary h-75">
-        <div className="d-flex justify-content-center container h-100 w-100">
-          <div className="d-flex justify-content-between h-100 w-100 flex-wrap">
-            <div className="h-50 w-50 border">
-              <p>yo</p>
+        {/* <div className="border bg-secondary h-75">
+          <div className="d-flex justify-content-center container h-100 w-100">
+            <div className="d-flex justify-content-between h-100 w-100 flex-wrap">
+              <div className="h-50 w-50 border">
+                <p>yo</p>
+              </div>
+              <div className="h-50 w-50 border">
+                <p>yo</p>
+              </div>
+              <div className="h-50 w-50 border">
+                <p>yo</p>
+              </div>
+              <div className="h-50 w-50 border">
+                <p>yo</p>
+              </div>
             </div>
-
-            <div className="h-50 w-50 border">
-              <p>yo</p>
+            <div className="row">
+              <div className="col-lg-2 border">hello</div>
+              <div className="col-lg-2 border">hello</div>
             </div>
-
-            <div className="h-50 w-50 border">
-              <p>yo</p>
-            </div>
-
-            <div className="h-50 w-50 border">
-              <p>yo</p>
+            <div className="row">
+              <div className="col-lg-2 border">hello</div>
+              <div className="col-lg-2 border">hello</div>
             </div>
           </div>
-
-
-          {/* <div className="row">
-            <div className="col-lg-2 border">hello</div>
-            <div className="col-lg-2 border">hello</div>
-          </div>
-          <div className="row">
-            <div className="col-lg-2 border">hello</div>
-            <div className="col-lg-2 border">hello</div>
-          </div> */}
-        </div>
+        </div> */}
+        <Container className="mt-5">
+          <Row>
+            <Col>
+              <Card>
+                <Row>
+                  <Col lg={9}>
+                    <div className="ms-3">
+                      <div className="cl-dark-text h2 fw-bold">My Learning</div>
+                      <Row>
+                        <Col lg={7}>
+                          <div className="">Complete your weekly tasks and modules</div>
+                        </Col>
+                        <Col />
+                      </Row>
+                    </div>
+                  </Col>
+                  <Col lg={3}>
+                    <div className="">Placeholder</div>
+                  </Col>
+                </Row>
+                <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
+                  <div className="h5 mb-0">Go to my Learning</div>
+                </Button>
+              </Card>
+            </Col>
+            <Col>
+            <Card>
+                <Row>
+                  <Col lg={9}>
+                    <div className="ms-3">
+                      <div className="cl-dark-text h2 fw-bold">Ai Counselor</div>
+                      <Row>
+                        <Col lg={7}>
+                          <div className="">Cledge's most popular tool: an AI counselor that can help answer any questions you might have.</div>
+                        </Col>
+                        <Col />
+                      </Row>
+                    </div>
+                  </Col>
+                  <Col lg={3}>
+                    <div className=""></div>
+                  </Col>
+                </Row>
+                <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
+                  <div className="h5 mb-0">Try Now!</div>
+                </Button>
+              </Card>
+            </Col>
+          </Row>
+          <Row>
+          <Col>
+              <Card>
+                <div className="ms-3">
+                  <div className="cl-dark-text h2 fw-bold">Live Counseling</div>
+                  <div className="">Talk one-on-one with a professional counselor!</div>
+                </div>
+                <Row>
+                  <Col className="pe-0">
+                    <Button className="cl-btn-blue rounded-2 ms-3 mb-3 mt-3">
+                      <div className="h5 mb-0">Go to my Learning</div>
+                    </Button>
+                  </Col>
+                  <Col className="ps-0">
+                    <div className="d-flex justify-content-end">
+                      <Button className="cl-btn-blue rounded-2 mb-3 mt-3 me-3">
+                        <div className="h5 mb-0">Go to my Learning</div>
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+            <Col>
+            <Card>
+                <Row>
+                  <Col lg={9}>
+                    <div className="ms-3">
+                      <div className="cl-dark-text h2 fw-bold">My Learning</div>
+                      <Row>
+                        <Col lg={7}>
+                          <div className="">Complete your weekly tasks and modules</div>
+                        </Col>
+                        <Col />
+                      </Row>
+                    </div>
+                  </Col>
+                  <Col lg={3}>
+                    <div className="">Placeholder</div>
+                  </Col>
+                </Row>
+                <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
+                  <div className="h5 mb-0">Go to my Learning</div>
+                </Button>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
       </div>
-    </div>
   );
 };
 export default connect((state) => {
