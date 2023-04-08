@@ -63,7 +63,7 @@ export const calculateECTier = (
   awardQuality: number,
   leadershipTier: number,
   impactTier: number,
-) => {
+) => {  
   let timeTier = calculateTimeTier(hoursPerWeek, weeksPerYear, yearsSpent);
   let awardTier = calculateAwardTier(awardScale, awardQuality);
   let leadingTier = calculateLeadershipTier(leadershipTier, impactTier);
@@ -356,3 +356,38 @@ export const calculateCollegeFit = (
 };
 
 
+export const calculateCourseworkTier = (
+  gradeLevel: number,
+  courses: number,
+  intensity: number,
+  majorRelated: boolean
+) => {
+  let courseworkTier = 0;
+  if (gradeLevel == 9) {
+
+  }
+  if (gradeLevel == 10) {
+
+  }
+  if (gradeLevel == 11) {
+
+  }
+  if (gradeLevel == 12) {
+
+  }
+  return courseworkTier;
+};
+
+export const overallAcademicTier = (
+  gradeLevel: number,
+  courses: number,
+  intensity: number,
+  majorRelated: boolean,
+  applicantLevel: number, 
+  gpa: number
+) => {
+  let gpaTier = calculateGPATier(applicantLevel, gpa);
+  let courseworkTier = calculateCourseworkTier(gradeLevel, courses, intensity, majorRelated);
+  let academicTier = ((gpaTier * 1.5) + courseworkTier) / 2;
+  return Math.round(academicTier);
+};
