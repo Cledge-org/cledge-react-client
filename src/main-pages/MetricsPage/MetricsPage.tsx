@@ -214,7 +214,7 @@ const Metrics: NextApplicationPage<{
                   <strong className="cl-dark-text" style={{ fontSize: "1.6em" }}>Individual activity metrics</strong>
                 </div>
                 {activities?.activities?.map((activity) => {
-                  console.log(activity.tip);
+                  //console.log(activity.tip);
                   return (
                     <ActivityDropdown
                       updateChunk={"All Activities"}
