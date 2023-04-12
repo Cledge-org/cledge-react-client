@@ -25,7 +25,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     };
   } catch (err) {
-    ctx.res.end();
     return { props: {} as never };
   }
 };
