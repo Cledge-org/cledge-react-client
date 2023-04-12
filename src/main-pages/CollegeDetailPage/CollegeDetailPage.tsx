@@ -41,10 +41,7 @@ const CollegeDetailPage = ({
   const onList = collegeList[data.title] != false;
   const [accountInfo, setAccountInfo] = React.useState(null);
   const [addedToList, setAddedToList] = useState(onList);
-  // const hasUWAccess = accountInfo?.hasUWAccess;
   const [hasUWAccess, setHasUWAccess] = React.useState(false);
-
-  console.log(onList);
 
   React.useEffect(() => {
     if (session) {
@@ -59,7 +56,7 @@ const CollegeDetailPage = ({
     });
     const accountInfoJSON = await accountInfoResponse.json();
     setAccountInfo(accountInfoJSON);
-    setHasUWAccess(accountInfoJSON.hasUWAccess === false);
+    setHasUWAccess(accountInfoJSON.hasUWAccess === true);
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
