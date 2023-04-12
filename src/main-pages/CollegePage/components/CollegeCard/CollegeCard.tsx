@@ -71,16 +71,15 @@ function CollegeCard(props: CardProps) {
         >
           <CardActionArea
             onClick={() => {
-              // router.push(
-              //   {
-              //     pathname: URL,
-              //     query: {
-              //       onList: props.onList,
-              //     },
-              //   },
-              //   URL
-              // );
-              window.open(URL, '_blank');
+              router.push(
+                {
+                  pathname: URL,
+                  query: {
+                    onList: props.onList,
+                  },
+                },
+                URL
+              );
             }}
             className={
               "d-flex flex-column justify-content-start align-items-start"
