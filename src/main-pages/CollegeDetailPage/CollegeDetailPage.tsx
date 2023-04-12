@@ -24,20 +24,19 @@ import { useSession } from "next-auth/react";
 import { Button } from "@mui/material";
 
 const CollegeDetailPage = ({
-  questionResponses, collegeData
+  questionResponses, 
+  collegeData
 }: {
   questionResponses: UserResponse[];
   collegeData : any
 }) => {
 
   const [value, setValue] = React.useState(0);
-  const router = useRouter();
-  const data = collegeData;
-  const raw = router.query.onList;
-  const onList = JSON.parse(raw.toString());
+  const data = JSON.parse(collegeData);
+  const onList = data.onList;
   const { Panel } = Collapse;
-
   const { data: session } = useSession();
+  const router = useRouter();
   const [accountInfo, setAccountInfo] = React.useState(null);
   const [addedToList, setAddedToList] = useState(onList);
   // const hasUWAccess = accountInfo?.hasUWAccess;
