@@ -99,15 +99,15 @@ const DashboardPage = ({
             </div>
           </div>
         </div>
-        <Container className="mt-5">
-          <Row>
-            <Col>
+        <Container className="mt-5 mb-5">
+          <Row className="pb-4">
+            <Col className="">
               <Card className="h-100 d-flex flex-column justify-content-between">
                 <Row>
                   <Col lg={12}>
                     <div className="ms-3">
                       <div className="cl-dark-text h2 fw-bold pt-3  ">
-                        <Link href="/metrics">
+                        <Link href="/my-learning">
                             <a>
                               <img
                                 src="/images/header/icon-school.svg"
@@ -160,18 +160,20 @@ const DashboardPage = ({
                     </div>
                   </Col>
                 </Row>
-                  <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
-                    <div className="h5 mb-0">Go to my Learning</div>
-                  </Button>
+                  <Link href="my-learning">
+                    <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
+                      <div className="h5 mb-0">Go to my Learning</div>
+                    </Button>
+                  </Link>
               </Card>
             </Col>
-            <Col>
+            <Col className="">
             <Card className="h-100 d-flex flex-column justify-content-between">
                 <Row>
                   <Col lg={9}>
                     <div className="ms-3">
                       <div className="cl-dark-text h2 fw-bold pt-3 ">
-                      <Link href="/metrics">
+                      <Link href="/chatbot">
                           <a>
                             <img
                               src="/images/header/chatbot.svg"
@@ -191,7 +193,7 @@ const DashboardPage = ({
                           <div className="">Cledge's most popular tool: an AI counselor that can help answer any questions you might have.</div>
                         </Col>
                         <Col lg={2}>
-                          <Link href="/metrics">
+                          <Link href="/chatbot">
                             <a>
                               <img
                                 src="/images/header/ai-counselorimg.svg"
@@ -209,50 +211,58 @@ const DashboardPage = ({
                     <div className=""></div>
                   </Col>
                 </Row>
-                <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
-                  <div className="h5 mb-0">Try Now!</div>
-                </Button>
+                <Link href="/chatbot">
+                  <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
+                    <div className="h5 mb-0">Try Now!</div>
+                  </Button>
+                </Link>
               </Card>
             </Col>
           </Row>
           <Row>
-          <Col>
+            <Col>
               <Card className="h-100 d-flex flex-column justify-content-between">
                 <div className="ms-3 pt-3">
                   <div className="cl-dark-text h2 fw-bold">
-                  <Link href="https://calendly.com/ayan-college-counseling/cledge-uw-cs-advising-session">
-                          <a>
-                            <img
-                              src="/images/header/icon-people.svg"
-                              style={{
-                                padding: "10px",
-                                width: "50px",
-                                borderRadius: "10px",
-                                backgroundColor: "#DCE1FB",
-                              }}
-                              className="me-3"
-                            />
-                          </a>
+                    <Link href="https://calendly.com/ayan-college-counseling/cledge-uw-cs-advising-session">
+                            <a>
+                              <img
+                                src="/images/header/icon-people.svg"
+                                style={{
+                                  padding: "10px",
+                                  width: "50px",
+                                  borderRadius: "10px",
+                                  backgroundColor: "#DCE1FB",
+                                }}
+                                className="me-3"
+                              />
+                            </a>
                         </Link>
-                        Live Counseling</div>
-                  <div className="">Talk one-on-one with a professional counselor!</div>
-                </div>
-                <Row>
-                  <Col className="pe-0">
-                    <Button className="cl-btn-blue rounded-2 ms-3 mb-3 mt-3">
-                      <div className="h5 mb-0">Book Sessions</div>
-                    </Button>
-                  </Col>
-                  <Col className="ps-0">
-                    <div className="d-flex justify-content-end">
-                      <Button className="cl-btn-clear rounded-2 mb-3 mt-3 me-3">
-                        <div className="h5 mb-0">Purchase Hours</div>
-                      </Button>
-                    </div>
-                  </Col>
-                </Row>
-              </Card>
-            </Col>
+                        Live Counseling
+                  </div>
+                  <div className="">
+                      Talk one-on-one with a professional counselor!</div>
+                  </div>
+                  <Row>
+                    <Col className="pe-0">
+                      <Link href="">
+                        <Button className="cl-btn-clear rounded-2 ms-3 mb-3 mt-3">
+                          <div className="h5 mb-0">Purchase Hours</div>
+                        </Button>
+                      </Link>
+                    </Col>
+                    <Col className="ps-0">
+                      <div className="d-flex justify-content-end">
+                        <Link href="https://calendly.com/ayan-college-counseling/cledge-uw-cs-advising-session">
+                          <Button className="cl-btn-blue rounded-2 mb-3 mt-3 me-3">
+                            <div className="h5 mb-0">Book Sessions</div>
+                          </Button>
+                        </Link>
+                      </div>
+                    </Col>
+                  </Row>
+                </Card>
+              </Col>
             <Col>
             <Card className="h-100 d-flex flex-column justify-content-between">
                 <Row>
@@ -369,9 +379,11 @@ const DashboardPage = ({
                     <div className=""></div>
                   </Col>
                 </Row>
-                <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
-                  <div className="">Go to Metrics</div>
-                </Button>
+                <Link href="/metrics">
+                  <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
+                    <div className="">Go to Metrics</div>
+                  </Button>
+                </Link>
               </Card>
             </Col>
           </Row>
