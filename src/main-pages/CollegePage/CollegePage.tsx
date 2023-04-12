@@ -40,6 +40,8 @@ const College = ({
   collegeList: any
 }) => {
   const [collegeData, setData] = useState(null);
+  const [hasMoreData, setHasMore] = useState(true);
+  console.log(hasMoreData);
   const [filter, setFilter] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [currSort, setCurrSort] = useState("");
@@ -116,6 +118,14 @@ const College = ({
   useEffect(() => {
     async function fetchData() {
       let data = await getData();
+      // if no data, hasmore state to false
+      console.log(data);
+      if (!data || data.length == 0) {
+        setHasMore(false);
+        return;
+      } else {
+        setHasMore(true);
+      }
       if (requestData.skip - prevRequest.skip > 0) {
         setData((currData) => {
           if (currSort) {
@@ -234,7 +244,7 @@ const College = ({
                 skip: collegeData.length,
               });
             }}
-            hasMore={true}
+            hasMore={hasMoreData}
             loader={
               <div className="w-100 d-flex flex-row align-items-center justify-content-evenly flex-wrap">
                 {new Array(
