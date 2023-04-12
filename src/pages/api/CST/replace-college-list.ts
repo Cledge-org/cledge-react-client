@@ -21,9 +21,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         { firebaseId: user_id },
         { $set: { college_list: college_list } }
       )
-      .then(() => {
-        res.status(200).json({ message: "done changing" });
-      });
   } catch (e) {
     res.status(500).json({ message: "error occured", error: e });
   }

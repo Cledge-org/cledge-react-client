@@ -25,22 +25,26 @@ import { Button } from "@mui/material";
 
 const CollegeDetailPage = ({
   questionResponses, 
-  collegeData
+  collegeData,
+  collegeList
 }: {
   questionResponses: UserResponse[];
-  collegeData : any
+  collegeData : any;
+  collegeList : any;
 }) => {
 
   const [value, setValue] = React.useState(0);
   const data = JSON.parse(collegeData);
-  const onList = data.onList;
   const { Panel } = Collapse;
   const { data: session } = useSession();
   const router = useRouter();
+  const onList = collegeList[data.title] != false;
   const [accountInfo, setAccountInfo] = React.useState(null);
   const [addedToList, setAddedToList] = useState(onList);
   // const hasUWAccess = accountInfo?.hasUWAccess;
   const [hasUWAccess, setHasUWAccess] = React.useState(false);
+
+  console.log(onList);
 
   React.useEffect(() => {
     if (session) {
@@ -338,7 +342,7 @@ const CollegeDetailPage = ({
                 variant="contained"
                 style={{
                   textTransform: "none",
-                  background: addedToList ? "red" : "",
+                  background: addedToList ? "darkgray" : "",
                 }}
                 onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
               >

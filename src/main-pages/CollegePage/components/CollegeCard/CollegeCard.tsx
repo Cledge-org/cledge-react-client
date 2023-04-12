@@ -71,15 +71,16 @@ function CollegeCard(props: CardProps) {
         >
           <CardActionArea
             onClick={() => {
-              router.push(
-                {
-                  pathname: URL,
-                  query: {
-                    onList: props.onList,
-                  },
-                },
-                URL
-              );
+              // router.push(
+              //   {
+              //     pathname: URL,
+              //     query: {
+              //       onList: props.onList,
+              //     },
+              //   },
+              //   URL
+              // );
+              window.open(URL, '_blank');
             }}
             className={
               "d-flex flex-column justify-content-start align-items-start"
@@ -205,7 +206,7 @@ function InnerCard({
                 textTransform: "none",
                 width: "2rem",
                 height: "2rem",
-                background: addedToList ? "red" : "",
+                background: addedToList ? "darkgray" : "",
               }}
               onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
             >
