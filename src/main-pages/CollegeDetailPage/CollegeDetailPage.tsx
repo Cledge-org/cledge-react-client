@@ -38,8 +38,14 @@ const CollegeDetailPage = ({
   const { Panel } = Collapse;
   const { data: session } = useSession();
   const router = useRouter();
-  const onList = collegeList[data.title] != false;
   const [accountInfo, setAccountInfo] = React.useState(null);
+
+  let collegeListArray = [];
+  for (let i = 0; i < collegeList.length; i++) {
+    collegeListArray[i] = collegeList[i]?.college_name;
+  }
+  let onList = collegeListArray.includes(data.title);
+
   const [addedToList, setAddedToList] = useState(onList);
   const [hasUWAccess, setHasUWAccess] = React.useState(false);
 
