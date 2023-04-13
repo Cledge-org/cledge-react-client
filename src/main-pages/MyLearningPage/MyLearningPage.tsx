@@ -15,6 +15,8 @@ import PartDropDown from "./components/PartDropdown/PartDropdown";
 import DashboardTabButton from "./components/MyLearningTabButton/MyLearningTabButton";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import { useLocation } from "src/utils/hooks/useLocation";
+import { store } from "src/utils/redux/store";
+import { initialStateAction } from "src/utils/redux/actionFunctions";
 
 // logged in landing page
 const MyLearningPage: NextApplicationPage<{
@@ -314,6 +316,7 @@ const MyLearningPage: NextApplicationPage<{
       </div>
     );
   }
+
   return (
     <PageErrorBoundary>
       <div className="vh-100" style={{ backgroundColor: "#FAFCFF" }}>
@@ -437,5 +440,4 @@ const MyLearningPage: NextApplicationPage<{
 MyLearningPage.requireAuth = true;
 export default connect((state) => ({
   accountInfo: state.accountInfo,
-  pathwaysProgress: state.pathwaysProgress,
 }))(MyLearningPage);

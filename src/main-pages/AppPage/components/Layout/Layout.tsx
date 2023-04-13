@@ -29,23 +29,23 @@ export default function Layout({ children }) {
   }, [width, session]);
   const asyncUseEffect = async () => {
     if (session.data?.user?.uid && !store.getState()) {
-      const [accountInfoRes, pathwaysProgressRes, questionResponsesRes] =
+      const [accountInfoRes/*, pathwaysProgressRes, questionResponsesRes*/] =
         await Promise.all([
           callGetAccount(session.data.user.uid),
-          callGetAllPathwayProgress(session.data.user.uid),
-          callGetQuestionResponses(session.data.user.uid),
+          // callGetAllPathwayProgress(session.data.user.uid),
+          // callGetQuestionResponses(session.data.user.uid),
         ]);
-      const [accountInfoJSON, pathwaysProgressJSON, questionResponsesJSON] =
+      const [accountInfoJSON/*, pathwaysProgressJSON, questionResponsesJSON*/] =
         await Promise.all([
           accountInfoRes.json(),
-          pathwaysProgressRes.json(),
-          questionResponsesRes.json(),
+          // pathwaysProgressRes.json(),
+          // questionResponsesRes.json(),
         ]);
       await store.dispatch(
         initialStateAction({
           accountInfo: accountInfoJSON,
-          pathwaysProgress: pathwaysProgressJSON,
-          questionResponses: questionResponsesJSON,
+          // pathwaysProgress: pathwaysProgressJSON,
+          // questionResponses: questionResponsesJSON,
         })
       );
     }

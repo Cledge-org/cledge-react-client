@@ -426,3 +426,12 @@ interface QuickAccessLinkData{
   content: string;
   link: string;
 }
+
+interface UserMetaData {
+  _id: string,
+  firebaseId: string,
+  name: string,
+  pathwayPercentage: number,
+  acOverall: number,
+  ecOverall: number
+}

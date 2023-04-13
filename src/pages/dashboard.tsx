@@ -1,56 +1,34 @@
-import { useSession } from "next-auth/react";
+import { GetServerSidePropsContext } from "next";
+import { getSession, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import LoadingScreen from "src/common/components/Loading/Loading";
 import DashboardPage from "src/main-pages/DashboardPage/DashboardPage";
+import { getUserData } from "src/pages/api/user/get-meta-data";
 
-const Dashboard = () => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  try {
+    const session = getSession(ctx);
+    const userData = await getUserData((await session).user.uid);
+    const userJSON = await JSON.parse(JSON.stringify(userData.userData));
+    return {
+      props: {
+        userData: userJSON
+      },
+    };
+  } catch (err) {
+    //console.log(err);
+    ctx.res.end();
+    return { props: {} as never };
+  }
+};
+
+const Dashboard = ({ userData }) => {
   const { data: session } = useSession();
   const [dashboardData, setDashboardData] = useState(null);
-  useEffect(() => {
-    if (session) {
-      getDashboardData();
-    }
-  }, [session]);
-  async function getDashboardData() {
-    const [
-      recentBlogs,
-      ecMetricsResponse,
-      acMetricsResponse,
-      pathwaysResponse,
-    ] = await Promise.all([
-      await fetch(`/api/blogs/get-recent-blogs`),
-      fetch(`/api/metrics/get-activities`, {
-        method: "POST",
-        body: JSON.stringify({ userId: session.user.uid }),
-      }),
-      fetch(`/api/metrics/get-academics`, {
-        method: "POST",
-        body: JSON.stringify({ userId: session.user.uid }),
-      }),
-      fetch(`/api/user/get-dashboard-parts?userID=${session.user.uid}`),
-    ]);
-    const [recentBlogsJSON, ecMetricsJSON, acMetricsJSON, pathwaysJSON] =
-      await Promise.all([
-        recentBlogs.json(),
-        ecMetricsResponse.status === 200 && ecMetricsResponse.json(),
-        acMetricsResponse.status === 200 && acMetricsResponse.json(),
-        pathwaysResponse.json(),
-      ]);
-    setDashboardData({
-      ecMetricsJSON,
-      acMetricsJSON,
-      pathwaysJSON,
-      recentBlogsJSON,
-    });
-  }
-  if (dashboardData) {
+  
+  if (session) {
     return (
-      <DashboardPage
-        recentBlogs={dashboardData.recentBlogsJSON}
-        ecMetrics={dashboardData.ecMetricsJSON}
-        acMetrics={dashboardData.acMetricsJSON}
-        dashboardParts={dashboardData.pathwaysJSON}
-      />
+      <DashboardPage userData={userData} />
     );
   } else {
     return <LoadingScreen />;

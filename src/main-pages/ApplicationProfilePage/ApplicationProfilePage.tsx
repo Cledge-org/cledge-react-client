@@ -316,6 +316,6 @@ ApplicationProfilePage.requireAuth = true;
 export default connect((state) => {
   return {
     userTags: state.accountInfo.tags,
-    questionResponses: state.questionResponses,
+    // questionResponses: state.questionResponses,
   };
 })(ApplicationProfilePage);

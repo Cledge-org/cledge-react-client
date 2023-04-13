@@ -22,6 +22,7 @@ const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
 }> = ({ pathwayInfo, pathwaysProgress }) => {
+  console.log(pathwaysProgress);
   const addPathwayProgress = () => {
     pathwaysProgress.push({
       pathwayId: pathwayInfo._id,
@@ -373,7 +374,7 @@ const Pathways: NextApplicationPage<{
 
 Pathways.requireAuth = true;
 export default connect((state) => ({
-  pathwaysProgress: state.pathwaysProgress.slice(),
+  // pathwaysProgress: state.pathwaysProgress.slice(),
 }))(Pathways);
 
 function checkPathwayDiscrepancies(pathwayInfo: Pathway) {

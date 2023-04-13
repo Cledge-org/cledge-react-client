@@ -3,90 +3,25 @@ import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import React from "react";
+import React, { useMemo } from "react";
 import { Button } from "react-bootstrap";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { connect } from "react-redux";
-import QuickAccessLinks from "src/main-pages/DashboardPage/components/QuickAccessLinks/QuickAccessLinks";
-import BlogCarouselItem from "src/main-pages/WelcomePage/components/blogsCarousel/components/BlogCaroselItem";
-import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
-import { useWindowSize } from "src/utils/hooks/useWindowSize";
-import styles from "./dashboard-page.module.scss";
-import Footer from "src/common/components/Footer/Footer";
-import TierRange from "src/main-pages/MetricsPage/components/TierRange/TierRange";
-
+import { UserMetaData } from "src/@types/types";
 
 const DashboardPage = ({
   accountInfo,
-  dashboardParts,
-  pathwaysProgress,
-  ecMetrics,
-  recentBlogs,
-  acMetrics,
+  userData,
 }: {
   accountInfo: AccountInfo;
-  dashboardParts: PathwayPart[];
-  pathwaysProgress: PathwayProgress[];
-  ecMetrics: Activities;
-  acMetrics: Academics;
-  recentBlogs: any;
+  userData: UserMetaData;
 }) => {
-  const [percentage, setPercentage] = useState(0);
-  const router = useRouter();
-  const avgTier = useMemo(
-    () => (ecMetrics?.overallTier || 0 + acMetrics?.overallClassTier || 0) / 2,
-    [ecMetrics, acMetrics]
+  let avgTier = useMemo(
+    () => (userData.ecOverall || 0 + userData.acOverall || 0) / 2,
+    [userData.ecOverall, userData.acOverall]
   );
-  const { width, height } = useWindowSize();
-
-  const parseId = (objectId) => {
-    const objectIdStr = objectId.toString();
-    if (!objectIdStr.includes('"')) {
-      return objectIdStr;
-    }
-    return objectIdStr.substring(
-      objectIdStr.indexOf('"') + 1,
-      objectIdStr.length - 2
-    );
-  };
-
-  useEffect(() => {
-    let totalPathways = 0;
-    let finishedPathways = 0;
-    const allPathways: Pathway[] = dashboardParts
-      .map(({ dynamicRoutes }) => {
-        return dynamicRoutes.map(({ route }) => route);
-      })
-      .reduce((prev, curr) => {
-        return prev.concat(curr);
-      }, []);
-    allPathways?.forEach((pathway) => {
-      if (
-        !pathwaysProgress.find(({ pathwayId }) => {
-          return pathwayId === parseId(pathway._id);
-        })
-      ) {
-        totalPathways++;
-      }
-    });
-    pathwaysProgress.forEach(({ finished }) => {
-      if (finished) {
-        finishedPathways++;
-      }
-      totalPathways++;
-    });
-    setPercentage(Math.round((finishedPathways / totalPathways) * 100));
-  }, []);
-
-  if (accountInfo.checkIns.length > 0) {
-    router.push({
-      pathname: "/check-ins/[checkIn]",
-      query: { checkIn: accountInfo.checkIns },
-    });
-  }
+  console.log(userData);
   return (
      <div className="d-flex flex-column">
         <div className="border h-25" style={{ background: "linear-gradient(93.76deg, rgba(59, 104, 223, 0.65) -8.28%, rgba(141, 50, 213, 0.65) 103.54%)", }}>
@@ -135,7 +70,7 @@ const DashboardPage = ({
                                 children={
                                   <div
                                     style={{ fontWeight: "bold", fontSize: "1.1em" }}
-                                  >{`${percentage}%`}</div>
+                                  >{`${userData.pathwayPercentage}%`}</div>
                                 }
                                 className="center-child"
                                 styles={{
@@ -150,7 +85,7 @@ const DashboardPage = ({
                                     stroke: "#2651ed",
                                   },
                                 }}
-                                value={percentage}
+                                value={userData.pathwayPercentage}
                               />
                             </div>
                           </div>
