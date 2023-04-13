@@ -41,7 +41,6 @@ const College = ({
 }) => {
   const [collegeData, setData] = useState(null);
   const [hasMoreData, setHasMore] = useState(true);
-  console.log(hasMoreData);
   const [filter, setFilter] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [currSort, setCurrSort] = useState("");
@@ -51,6 +50,7 @@ const College = ({
   const userResponse = questionResponses.find(
     ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
   )?.response;
+  
   const [requestData, setRequest] = useState({
     searchText: "*",
     top: 10,
@@ -80,9 +80,12 @@ const College = ({
     e.preventDefault();
     e.stopPropagation();
     setPrevRequest(requestData);
+    
     setRequest({
       ...requestData,
       searchText: e.target.searchText.value ? e.target.searchText.value : "*",
+      top : 12,
+      skip: 0
     });
   }
 
@@ -119,12 +122,11 @@ const College = ({
     async function fetchData() {
       let data = await getData();
       // if no data, hasmore state to false
-      console.log(data);
       if (!data || data.length == 0) {
         setHasMore(false);
         return;
       } else {
-        setHasMore(true);
+        setHasMore(true);  
       }
       if (requestData.skip - prevRequest.skip > 0) {
         setData((currData) => {
