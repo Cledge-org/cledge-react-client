@@ -29,9 +29,22 @@ export const getUserData = (userId: string): Promise<any> => {
       const users_db = client.db("users");
       const user = (await users_db
         .collection("user-metadata")
-        .findOne({
-          firebaseId: userId,
-        }));
+        .findOneAndUpdate(
+            { firebaseId: userId },
+            {
+                $setOnInsert: { 
+                    firebaseId: userId, 
+                    name: "name",
+                    pathwayPercentage: 0,
+                    acOverall: 0,
+                    ecOverall: 0
+                }
+            },
+            {
+                upsert: true
+            }
+        )
+        );
 
       if (!user) {
         res(null);
