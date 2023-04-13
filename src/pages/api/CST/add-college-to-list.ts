@@ -34,7 +34,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       .collection("college-list")
       .updateOne(
         { firebaseId: user_id },
-        { $push: { college_list: personalize } }
+        { $push: { college_list: personalize } },
+        { upsert: true }
       )
       .then(() => {
         res.status(200).json({ message: "appended" });
