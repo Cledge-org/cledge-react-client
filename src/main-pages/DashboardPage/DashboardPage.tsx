@@ -124,8 +124,10 @@ const DashboardPage = ({
                           My Learning
                         </div>
                       <Row>
-                        <Col lg={6}>
-                          <div className="">Complete your weekly tasks and modules</div>
+                        <Col lg={6} className="pt-3">
+                          <div className="h5">
+                            Complete your weekly tasks and modules
+                          </div>
                         </Col>
                         <Col lg={6} className="pe-5 pb-3 ps-3">
                           <div className="d-flex flex-row-reverse">
@@ -189,8 +191,8 @@ const DashboardPage = ({
                         </Link>
                         AI Counselor</div>
                       <Row>
-                        <Col lg={10}>
-                          <div className="">Cledge's most popular tool: an AI counselor that can help answer any questions you might have.</div>
+                        <Col lg={10} className="pt-3">
+                          <div className="h5">Cledge's most popular tool: an AI counselor that can help answer any questions you might have.</div>
                         </Col>
                         <Col lg={2}>
                           <Link href="/chatbot">
@@ -240,7 +242,7 @@ const DashboardPage = ({
                         </Link>
                         Live Counseling
                   </div>
-                  <div className="">
+                  <div className="h5 pt-3">
                       Talk one-on-one with a professional counselor!</div>
                   </div>
                   <Row>
@@ -286,8 +288,8 @@ const DashboardPage = ({
                         Competitive Metrics
                       </div>
                       <Row>
-                        <Col lg={12}>
-                          <div className="">View tips to improve your profile competitiveness.</div>
+                        <Col lg={12} className="pt-3">
+                          <div className="h5">View tips to improve your profile competitiveness.</div>
                         </Col>
                           <div className="mt-3 pe-4">
                             <div className="d-flex flex-row align-items-center justify-content-between">
@@ -381,7 +383,7 @@ const DashboardPage = ({
                 </Row>
                 <Link href="/metrics">
                   <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
-                    <div className="">Go to Metrics</div>
+                    <div className="h5">Go to Metrics</div>
                   </Button>
                 </Link>
               </Card>
