@@ -23,7 +23,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     };
   } catch (err) {
     console.log(err);
-    ctx.res.end();
     return { props: {} as never };
   }
 };
@@ -31,5 +30,5 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const College = ({ collegeListData }) => {
   return <CollegePage collegeList={collegeListData} />;
 };
-College.requireAuth = true;
+// College.requireAuth = true;
 export default College;

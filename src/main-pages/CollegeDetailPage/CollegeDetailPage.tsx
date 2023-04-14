@@ -24,23 +24,29 @@ import { useSession } from "next-auth/react";
 import { Button } from "@mui/material";
 
 const CollegeDetailPage = ({
-  questionResponses, collegeData
+  questionResponses, 
+  collegeData,
+  collegeList
 }: {
   questionResponses: UserResponse[];
-  collegeData : any
+  collegeData : any;
+  collegeList : any;
 }) => {
 
   const [value, setValue] = React.useState(0);
-  const router = useRouter();
-  const data = collegeData;
-  const raw = router.query.onList;
-  const onList = JSON.parse(raw.toString());
+  const data = JSON.parse(collegeData);
   const { Panel } = Collapse;
-
   const { data: session } = useSession();
+  const router = useRouter();
   const [accountInfo, setAccountInfo] = React.useState(null);
+
+  let collegeListArray = [];
+  for (let i = 0; i < collegeList.length; i++) {
+    collegeListArray[i] = collegeList[i]?.college_name;
+  }
+  let onList = collegeListArray.includes(data.title);
+
   const [addedToList, setAddedToList] = useState(onList);
-  // const hasUWAccess = accountInfo?.hasUWAccess;
   const [hasUWAccess, setHasUWAccess] = React.useState(false);
 
   React.useEffect(() => {
@@ -56,7 +62,7 @@ const CollegeDetailPage = ({
     });
     const accountInfoJSON = await accountInfoResponse.json();
     setAccountInfo(accountInfoJSON);
-    setHasUWAccess(accountInfoJSON.hasUWAccess === false);
+    setHasUWAccess(accountInfoJSON.hasUWAccess === true);
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -339,7 +345,7 @@ const CollegeDetailPage = ({
                 variant="contained"
                 style={{
                   textTransform: "none",
-                  background: addedToList ? "red" : "",
+                  background: addedToList ? "darkgray" : "",
                 }}
                 onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
               >

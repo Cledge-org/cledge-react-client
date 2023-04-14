@@ -205,7 +205,7 @@ function InnerCard({
                 textTransform: "none",
                 width: "2rem",
                 height: "2rem",
-                background: addedToList ? "red" : "",
+                background: addedToList ? "darkgray" : "",
               }}
               onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
             >
