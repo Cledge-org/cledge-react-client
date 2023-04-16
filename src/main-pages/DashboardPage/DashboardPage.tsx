@@ -154,6 +154,7 @@ const DashboardPage = ({
                                 }}
                                 value={percentage}
                               />
+                              <br></br>
                             </div>
                           </div>
                         </Col>
@@ -163,7 +164,7 @@ const DashboardPage = ({
                   </Col>
                 </Row>
                   <Link href="my-learning">
-                    <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
+                    <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-2">
                       <div className="h5 mb-0">Go to my Learning</div>
                     </Button>
                   </Link>
@@ -201,7 +202,7 @@ const DashboardPage = ({
                                 src="/images/header/ai-counselorimg.svg"
                                 style={{
                                 }}
-                                className="ps-4"
+                                className="ms-2"
                               />
                             </a>
                           </Link>
@@ -246,18 +247,18 @@ const DashboardPage = ({
                       Talk one-on-one with a professional counselor!</div>
                   </div>
                   <Row>
-                    <Col className="pe-0">
+                    <Col className="pe-0" lg={6}>
                       <Link href="">
-                        <Button className="cl-btn-clear rounded-2 ms-3 mb-3 mt-3">
-                          <div className="h5 mb-0">Purchase Hours</div>
+                        <Button className="cl-btn-clear rounded-2 ms-3 mb-3 mt-3 w-85">
+                          <div className="h5">Purchase Hours</div>
                         </Button>
                       </Link>
                     </Col>
-                    <Col className="ps-0">
-                      <div className="d-flex justify-content-end">
+                    <Col className="ps-0" lg={6}>
+                      <div className="">
                         <Link href="https://calendly.com/ayan-college-counseling/cledge-uw-cs-advising-session">
-                          <Button className="cl-btn-blue rounded-2 mb-3 mt-3 me-3">
-                            <div className="h5 mb-0">Book Sessions</div>
+                          <Button className="cl-btn-blue rounded-2 ms-4 mb-3 mt-3 me-3 w-85">
+                            <div className="h5"> Book Sessions </div>
                           </Button>
                         </Link>
                       </div>
@@ -389,8 +390,10 @@ const DashboardPage = ({
               </Card>
             </Col>
           </Row>
+          
         </Container>
       </div>
+      
   );
 };
 export default connect((state) => {
