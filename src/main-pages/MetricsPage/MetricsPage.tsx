@@ -47,6 +47,14 @@ const Metrics: NextApplicationPage<{
           className="d-flex flex-column bg-extra-light-gray border-end"
           style={{ width: "23%" }}
         >
+          <button
+          type="button"
+          onClick={() => {
+            throw new Error("Sentry Frontend Error");
+          }}
+          >
+            Throw error
+          </button>
           <BorderDropdownTab
             isAll
             chunkList={[]}
