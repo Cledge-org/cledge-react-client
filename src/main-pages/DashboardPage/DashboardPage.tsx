@@ -101,7 +101,7 @@ const DashboardPage = ({
         </div>
         <Container className="mt-5 mb-5">
           <Row className="pb-4">
-            <Col className="">
+            <Col className="mt-sm-5 mt-md-0 mt-lg-0" md={6} sm={12}>
               <Card className="h-100 d-flex flex-column justify-content-between">
                 <Row>
                   <Col lg={12}>
@@ -170,8 +170,8 @@ const DashboardPage = ({
                   </Link>
               </Card>
             </Col>
-            <Col className="">
-            <Card className="h-100 d-flex flex-column justify-content-between">
+            <Col className="" >
+            <Card className="h-100 d-flex flex-column justify-content-between ">
                 <Row>
                   <Col lg={9}>
                     <div className="ms-3">
@@ -223,7 +223,7 @@ const DashboardPage = ({
             </Col>
           </Row>
           <Row>
-            <Col>
+            <Col md={6} sm={12}>
               <Card className="h-100 d-flex flex-column justify-content-between">
                 <div className="ms-3 pt-3">
                   <div className="cl-dark-text h2 fw-bold">
@@ -392,8 +392,7 @@ const DashboardPage = ({
           </Row>
           
         </Container>
-      </div>
-      
+      </div>   
   );
 };
 export default connect((state) => {
