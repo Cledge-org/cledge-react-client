@@ -203,11 +203,12 @@ function InnerCard({
             <div className="d-flex">
               <Button
                 className="ms-3"
-                variant="contained"
-                style={{ textTransform: "none", width: "2rem", height: "2rem", background: addedToList ? 'red' : ''}}
+                // variant=""
+                style={{ textTransform: "none", width: "2rem", height: "2rem", background: addedToList ? '' : ''}}
                 onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
               >
-                {addedToList ? "x" : "+"}
+
+                {addedToList ? <img src="/images/book_mark.svg"/>:<img src="/images/grey_book_mark.svg"/>}
               </Button>
             </div>
         </div>
