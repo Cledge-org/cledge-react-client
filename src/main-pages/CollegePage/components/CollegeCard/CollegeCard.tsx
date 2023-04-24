@@ -177,16 +177,32 @@ function InnerCard({
         />
       )}
       <CardContent style={{ minHeight: "fit-content", width: "100%" }}>
-        <h1
-          className="cl-blue"
-          style={{
-            fontSize: "1.5rem",
-            fontWeight: 700,
-            marginBottom: 5,
-          }}
-        >
-          {title}
-        </h1>
+        <div className="w-100 d-flex justify-content-between align-items-end">
+          <div>
+            <h1
+              className="cl-blue"
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: 700,
+                marginBottom: 5,
+              }}
+            >
+              {title}
+            </h1>
+          </div>
+          <div className="d-flex">
+              <Button
+                className="ms-3"
+                // variant=""
+                style={{ textTransform: "none", width: "2rem", height: "2rem", background: addedToList ? '' : ''}}
+                onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
+              >
+
+                {addedToList ? <img src="/images/book_mark.svg"/>:<img src="/images/grey_book_mark.svg"/>}
+              </Button>
+            </div> 
+        </div>
+        
         <h6 className="text-secondary" style={{ fontSize: "1.4em" }}>
           {schoolType == "Public"
             ? "Public School -"
@@ -200,17 +216,6 @@ function InnerCard({
           style={{ height: "4rem" }}
         >
           <div className={styles.collegeFitContainer}>{schoolFit}</div>
-            <div className="d-flex">
-              <Button
-                className="ms-3"
-                // variant=""
-                style={{ textTransform: "none", width: "2rem", height: "2rem", background: addedToList ? '' : ''}}
-                onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
-              >
-
-                {addedToList ? <img src="/images/book_mark.svg"/>:<img src="/images/grey_book_mark.svg"/>}
-              </Button>
-            </div>
         </div>
       </CardContent>
     </>
