@@ -20,6 +20,7 @@ import { calculateCollegeFit } from "src/utils/student-metrics/metricsCalculatio
         studSATScore: ,
         studACTScore: ,
         studentType: ,
+        userTier: ,
     }
 */
 
@@ -43,17 +44,17 @@ importances: admission/selection_of_students, [Class Rank, Academic GPA, Extracu
 */
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-    const { preferences, ECTier, courseworkTier, GPATier, studFirstGen, studSATScore, studACTScore, studentType } = req.body;
+    const { preferences, ECTier, courseworkTier, GPATier, studFirstGen, studSATScore, studACTScore, studentType, userTier } = req.body;
     try {
         const client = await MongoClient.connect(process.env.MONGO_URL);
-        const result = await getAllColleges(client, preferences, ECTier, courseworkTier, GPATier, studFirstGen, studSATScore, studACTScore, studentType);
+        const result = await getCollegeList(client, preferences, ECTier, courseworkTier, GPATier, studFirstGen, studSATScore, studACTScore, studentType, userTier);
         resolve.status(200).send(result);
     } catch (e) {
         resolve.status(500).send(e);
     }
 };
 
-const getAllColleges = (
+const getCollegeList = (
     client: MongoClient,
     preferences: any,
     ECTier: number,
@@ -63,6 +64,7 @@ const getAllColleges = (
     studSATScore: number,
     studACTScore: number,
     studentType: number,
+    userTier: number,
 ): Promise<Object> => {
     return new Promise(async(res, err) => {
         try {
@@ -76,25 +78,41 @@ const getAllColleges = (
             let target = [];
             let reach = [];
             collegesRes = collegesRes.sort(() => Math.random() - 0.5);
-            collegesRes.forEach((college) => {
-                let preferenceFit = calculatePreferenceFit(college, preferences);
-                let collegeFit = 0;
-                if (college["ADM_RATE"] != null && college["SAT_AVG"] && college["ACTCMMID"] && "admission" in college && "GPA" in college["admission"] && "selection_of_students" in college["admission"]) {
-                    let importances = selectionOfStudentsData(college["admission"]["selection_of_students"]);
-                    let collegeADMAvgGPA = ADMGPACalculation(college["admission"]["GPA"]);
-                    if (collegeADMAvgGPA != null) {
-                        collegeFit = calculateCollegeFit(college["ADM_RATE"] * 100, ECTier, courseworkTier, GPATier, collegeADMAvgGPA, studFirstGen, studSATScore, studACTScore, college["SAT_AVG"], college["ACTCMMID"], studentType, importances);
+            if (Object.keys(preferences).length === 0) {
+                collegesRes.forEach((college) => {
+                    if (college["TARGET_TIER"] != null && college["SAFETY_TIER"] != null) {
+                        let [targetTier, safetyTier] = [college["TARGET_TIER"], college["SAFETY_TIER"]];
+                        let collegeLabelForStudent = getCollegeTierLabel(userTier, targetTier, safetyTier);
+                        if (collegeLabelForStudent === 0) {
+                            safety.push([college["UNITID"], college["INSTNM"], 0]);
+                        } else if (collegeLabelForStudent === 2) {
+                            reach.push([college["UNITID"], college["INSTNM"], 0]);
+                        } else {
+                            target.push([college["UNITID"], college["INSTNM"], 0]);
+                        }
                     }
-                }
-                let collegeRankInfo = [college["UNITID"], college["INSTNM"], preferenceFit];
-                if (collegeFit === 1) {
-                    safety.push(collegeRankInfo);
-                } else if (collegeFit === 2) {
-                    target.push(collegeRankInfo);
-                } else if (collegeFit === 3) {
-                    reach.push(collegeRankInfo);
-                }
-            });
+                })
+            } else {
+                collegesRes.forEach((college) => {
+                    let preferenceFit = calculatePreferenceFit(college, preferences);
+                    let collegeFit = 0;
+                    if (college["ADM_RATE"] != null && college["SAT_AVG"] && college["ACTCMMID"] && "admission" in college && "GPA" in college["admission"] && "selection_of_students" in college["admission"]) {
+                        let importances = selectionOfStudentsData(college["admission"]["selection_of_students"]);
+                        let collegeADMAvgGPA = ADMGPACalculation(college["admission"]["GPA"]);
+                        if (collegeADMAvgGPA != null) {
+                            collegeFit = calculateCollegeFit(college["ADM_RATE"] * 100, ECTier, courseworkTier, GPATier, collegeADMAvgGPA, studFirstGen, studSATScore, studACTScore, college["SAT_AVG"], college["ACTCMMID"], studentType, importances);
+                        }
+                    }
+                    let collegeRankInfo = [college["UNITID"], college["INSTNM"], preferenceFit];
+                    if (collegeFit === 1) {
+                        safety.push(collegeRankInfo);
+                    } else if (collegeFit === 2) {
+                        target.push(collegeRankInfo);
+                    } else if (collegeFit === 3) {
+                        reach.push(collegeRankInfo);
+                    }
+                });
+            }
 
             let [reachCount, targetCount, safetyCount] = studentTypeData[studentType];
             // prevent missing college in one fit category
@@ -371,6 +389,16 @@ const selectionOfStudentsData = (selections) => {
     })
     return importances;
 }
+
+const getCollegeTierLabel = (userTier, targetTier, safetyTier) => {
+    if (userTier < targetTier) {
+      return 2;
+    } else if (userTier >= safetyTier) {
+      return 0;
+    } else {
+      return 1;
+    }
+  };
 
 const projection = {
     _id: 0,
