@@ -22,15 +22,14 @@ interface CardProps {
   outState: string;
   tabCallBack?: (e, newValue) => void;
   tabValue?: number;
-  data?: object;
+  college_id: string;
   schoolFit: string;
   onList: boolean;
 }
 
 function CollegeCard(props: CardProps) {
   const router = useRouter();
-  const URL = `/collegeDetail/`;
-
+  const URL = `/collegeDetail/${props.college_id}`;
   return (
     <CardWrapper style={{ marginBottom: "25px" }}>
       {(props.isLoading && (
@@ -76,8 +75,7 @@ function CollegeCard(props: CardProps) {
                 {
                   pathname: URL,
                   query: {
-                    data: JSON.stringify(props.data),
-                    onList: props.onList
+                    onList: props.onList,
                   },
                 },
                 URL
@@ -107,7 +105,7 @@ function InnerCard({
   inState,
   outState,
   schoolFit,
-  onList
+  onList,
 }: CardProps) {
   const [imageHasLoaded, setImageHasLoaded] = useState(false);
   const [addedToList, setAddedToList] = useState(onList);
@@ -127,7 +125,7 @@ function InnerCard({
       }),
     });
     const responseJson = await response.json();
-  }
+  };
 
   const handleRemoveCollege = async (event) => {
     event.stopPropagation();
@@ -144,9 +142,8 @@ function InnerCard({
       }),
     });
     const responseJson = await response.json();
-  }
+  };
 
-  
   return (
     <>
       {!img ? (
@@ -200,16 +197,21 @@ function InnerCard({
           style={{ height: "4rem" }}
         >
           <div className={styles.collegeFitContainer}>{schoolFit}</div>
-            <div className="d-flex">
-              <Button
-                className="ms-3"
-                variant="contained"
-                style={{ textTransform: "none", width: "2rem", height: "2rem", background: addedToList ? 'red' : ''}}
-                onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
-              >
-                {addedToList ? "x" : "+"}
-              </Button>
-            </div>
+          <div className="d-flex">
+            <Button
+              className="ms-3"
+              variant="contained"
+              style={{
+                textTransform: "none",
+                width: "2rem",
+                height: "2rem",
+                background: addedToList ? "darkgray" : "",
+              }}
+              onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
+            >
+              {addedToList ? "x" : "+"}
+            </Button>
+          </div>
         </div>
       </CardContent>
     </>
