@@ -415,7 +415,9 @@ const projection = {
     ACTCMMID: 1,
     academics: 1,
     admission: 1,
-    financials: 1
+    financials: 1,
+    TARGET_TIER: 1,
+    SAFETY_TIER: 1
 };
 
 const studentTypeData = {
