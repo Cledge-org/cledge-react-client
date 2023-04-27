@@ -19,8 +19,7 @@ import { calculateCollegeFit } from "src/utils/student-metrics/metricsCalculatio
         studFirstGen: ,
         studSATScore: ,
         studACTScore: ,
-        studentType: ,
-        userTier: ,
+        studentType: , (pass in 0 if users don't have a choice for this)
     }
 */
 
@@ -44,10 +43,10 @@ importances: admission/selection_of_students, [Class Rank, Academic GPA, Extracu
 */
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-    const { preferences, ECTier, courseworkTier, GPATier, studFirstGen, studSATScore, studACTScore, studentType, userTier } = req.body;
+    const { preferences, ECTier, courseworkTier, GPATier, studFirstGen, studSATScore, studACTScore, studentType } = req.body;
     try {
         const client = await MongoClient.connect(process.env.MONGO_URL);
-        const result = await getCollegeList(client, preferences, ECTier, courseworkTier, GPATier, studFirstGen, studSATScore, studACTScore, studentType, userTier);
+        const result = await getCollegeList(client, preferences, ECTier, courseworkTier, GPATier, studFirstGen, studSATScore, studACTScore, studentType);
         resolve.status(200).send(result);
     } catch (e) {
         resolve.status(500).send(e);
@@ -64,7 +63,6 @@ const getCollegeList = (
     studSATScore: number,
     studACTScore: number,
     studentType: number,
-    userTier: number,
 ): Promise<Object> => {
     return new Promise(async(res, err) => {
         try {
@@ -78,24 +76,16 @@ const getCollegeList = (
             let target = [];
             let reach = [];
             collegesRes = collegesRes.sort(() => Math.random() - 0.5);
-            if (Object.keys(preferences).length === 0) {
-                collegesRes.forEach((college) => {
+            collegesRes.forEach((college) => {
+                let preferenceFit = calculatePreferenceFit(college, preferences);
+                let collegeRankInfo = [college["UNITID"], college["INSTNM"], preferenceFit];
+                let collegeFit = 0;
+                if (ECTier === null && courseworkTier === null && GPATier === null && studFirstGen === null && studSATScore === null && studACTScore === null) {
                     if (college["TARGET_TIER"] != null && college["SAFETY_TIER"] != null) {
-                        let [targetTier, safetyTier] = [college["TARGET_TIER"], college["SAFETY_TIER"]];
-                        let collegeLabelForStudent = getCollegeTierLabel(userTier, targetTier, safetyTier);
-                        if (collegeLabelForStudent === 0) {
-                            safety.push([college["UNITID"], college["INSTNM"], 0]);
-                        } else if (collegeLabelForStudent === 2) {
-                            reach.push([college["UNITID"], college["INSTNM"], 0]);
-                        } else {
-                            target.push([college["UNITID"], college["INSTNM"], 0]);
-                        }
+                        let userTier = 6; // default for now
+                        collegeFit = getCollegeTierLabel(userTier, college["TARGET_TIER"], college["SAFETY_TIER"]);
                     }
-                })
-            } else {
-                collegesRes.forEach((college) => {
-                    let preferenceFit = calculatePreferenceFit(college, preferences);
-                    let collegeFit = 0;
+                } else {
                     if (college["ADM_RATE"] != null && college["SAT_AVG"] && college["ACTCMMID"] && "admission" in college && "GPA" in college["admission"] && "selection_of_students" in college["admission"]) {
                         let importances = selectionOfStudentsData(college["admission"]["selection_of_students"]);
                         let collegeADMAvgGPA = ADMGPACalculation(college["admission"]["GPA"]);
@@ -103,16 +93,16 @@ const getCollegeList = (
                             collegeFit = calculateCollegeFit(college["ADM_RATE"] * 100, ECTier, courseworkTier, GPATier, collegeADMAvgGPA, studFirstGen, studSATScore, studACTScore, college["SAT_AVG"], college["ACTCMMID"], studentType, importances);
                         }
                     }
-                    let collegeRankInfo = [college["UNITID"], college["INSTNM"], preferenceFit];
-                    if (collegeFit === 1) {
-                        safety.push(collegeRankInfo);
-                    } else if (collegeFit === 2) {
-                        target.push(collegeRankInfo);
-                    } else if (collegeFit === 3) {
-                        reach.push(collegeRankInfo);
-                    }
-                });
-            }
+                }
+
+                if (collegeFit === 1) {
+                    safety.push(collegeRankInfo);
+                } else if (collegeFit === 2) {
+                    target.push(collegeRankInfo);
+                } else if (collegeFit === 3) {
+                    reach.push(collegeRankInfo);
+                }
+            });
 
             let [reachCount, targetCount, safetyCount] = studentTypeData[studentType];
             // prevent missing college in one fit category
@@ -392,11 +382,11 @@ const selectionOfStudentsData = (selections) => {
 
 const getCollegeTierLabel = (userTier, targetTier, safetyTier) => {
     if (userTier < targetTier) {
-      return 2;
+      return 3;
     } else if (userTier >= safetyTier) {
-      return 0;
-    } else {
       return 1;
+    } else {
+      return 2;
     }
   };
 
@@ -421,9 +411,10 @@ const projection = {
 };
 
 const studentTypeData = {
+    0: [4, 6, 5],
     1: [6, 5, 4],
     2: [4, 6, 5],
-    3: [2, 5, 8]
+    3: [2, 5, 8],
 }
 
 const selectionOfStudentMapping = {
