@@ -94,7 +94,7 @@ const DashboardPage = ({
             <div className="container display-4 pt-4 pb-5 text-white fw-bold" style={{ fontSize: "80px", }}>
               Hi, {accountInfo.name.split(" ")[0]}.
             </div>
-            <div className="container h4 pt-5">
+            <div className="container h2 pt-5">
               <span className="text-white">Welcome to</span> <span className="cl-blue">Cledge.</span>
             </div>
           </div>

@@ -29,7 +29,7 @@ interface CardProps {
 
 function CollegeCard(props: CardProps) {
   const router = useRouter();
-  const URL = `/collegeDetail/${props.college_id}`;
+  const URL = `/college-detail/${props.college_id}`;
   return (
     <CardWrapper style={{ marginBottom: "25px" }}>
       {(props.isLoading && (

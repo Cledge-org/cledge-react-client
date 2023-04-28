@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from "next";
 import CollegeDetailPage from '../../main-pages/CollegeDetailPage/CollegeDetailPage';
 import { getSingleCollegeInfo } from '../api/CST/get-single-college';
-import { getCollegeList } from "../../pages/api/CST/get-college-list";
+import { getCollegeList } from "../api/CST/get-college-list";
 import { getSession } from "next-auth/react";
 import React from 'react';
 
