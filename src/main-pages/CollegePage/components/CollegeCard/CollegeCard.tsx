@@ -10,6 +10,8 @@ import styles from "./college-card.module.scss";
 import { CardActionArea, Tab, Tabs } from "@mui/material";
 import classNames from "classnames";
 import { useSession } from "next-auth/react";
+import { useMediaQuery } from "@mui/material"
+import { auto } from "@popperjs/core";
 
 interface CardProps {
   abbreviation?: string;
@@ -30,6 +32,8 @@ interface CardProps {
 function CollegeCard(props: CardProps) {
   const router = useRouter();
   const URL = `/collegeDetail/`;
+  const isMediumScreen = useMediaQuery('(max-width:992px)');
+  const isLargeScreen = useMediaQuery('(max-width:1600px)');
 
   return (
     <CardWrapper style={{ marginBottom: "25px" }}>
@@ -65,7 +69,10 @@ function CollegeCard(props: CardProps) {
       )) || (
         <Card
           sx={{
-            width: "40rem",
+            width: 
+              isMediumScreen ? "28rem":
+              isLargeScreen ? "30rem": 
+              "40rem",
             minHeight: "10rem",
             height: "fit-content",
           }}
@@ -185,6 +192,9 @@ function InnerCard({
                 fontSize: "1.5rem",
                 fontWeight: 700,
                 marginBottom: 5,
+                overflow:"hidden",
+                textOverflow:"ellipsis",
+                whiteSpace: "nowrap"
               }}
             >
               {title}
