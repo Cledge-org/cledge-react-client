@@ -6,7 +6,7 @@ import { BiTrash } from "react-icons/bi";
 interface Props {
   name: string;
   location: string;
-  type: "Public" | "Private";
+  type: string;
   college_id: string;
   college_title: string;
   img: string;
@@ -24,6 +24,8 @@ function CollegeListCard({
   RemoveCollegeFromListFunction,
 }: Props) {
     const [imageHasLoaded, setImageHasLoaded] = useState(false);
+    if (type == "Private for-profit" || type == "Private non-profit")
+      type = "Private";
   return (
     <Draggable key={college_id} draggableId={college_id} index={index}>
       {(provided) => {
