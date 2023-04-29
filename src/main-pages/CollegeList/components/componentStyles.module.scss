@@ -1,9 +1,9 @@
 @use "src/common/styles" as *;
 
 .mainTierContainer {
-  background: #eeeff0;
+  background: #fcfcfc;
   box-shadow: 0px 2px 22px 9px rgba(0, 0, 0, 0.03);
-  border-radius: 5px;
+  border-radius: 15px;
   min-width: 350px;
   padding: 30px;
 }
@@ -18,25 +18,15 @@
 }
 
 .cardContainer {
-  padding: 20px;
+  margin-top: 10px;
+  display: flex;
+  min-height: 100px;
+  min-width: 350px;
+  overflow: hidden;
   background: #ffffff;
   border-radius: 5px;
-  margin-bottom: 15px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
 
-  div {
-    display: flex;
-    flex-direction: row;
-    flex: 1;
-    justify-content: space-between;
-
-    div {
-      border: 1px solid rgba(0, 0, 0, 0.25);
-      border-radius: 5px;
-      display: flex;
-      max-width: max-content;
-      justify-content: center;
-      padding: 4px;
       span {
         font-weight: 400;
         font-size: 14px;
@@ -44,8 +34,6 @@
         color: #0b1142;
         text-align: center;
       }
-    }
-  }
 }
 .collegeName {
   font-family: "Montserrat";
@@ -68,9 +56,31 @@
   height: 100%;
 }
 
+.contentContainer {
+  width: 100%;
+  padding: 15px;
+}
+
 .titleContainer {
   display: flex;
-  flex-direction: column;
-  justify-items: flex-start;
-  align-items: flex-start;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.gradient {
+  animation-duration: 1.8s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: #f6f7f8;
+  background: linear-gradient(to right, #fafafa 8%, #f4f4f4 38%, #fafafa 54%);
+  background-size: 1000px 640px;
+  position: relative;
 }
