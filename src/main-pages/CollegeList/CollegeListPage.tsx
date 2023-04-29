@@ -55,7 +55,6 @@ const CollegeListPage: NextApplicationPage<{
         .filter((colleges) => colleges.fit_type == 2)
         .filter((colleges) => colleges.college_name != college_title)
     );
-    setReloadCounter(reloadCounter + 1);
     // remove from college list
     const response = await fetch(`/api/CST/remove-college-from-list`, {
       method: "PUT",
