@@ -188,7 +188,7 @@ function InnerCard({
       <CardContent style={{ minHeight: "fit-content", width: "100%" }}>
         <Row>
             <div className="w-100 d-flex justify-content-between align-items-end">
-              <Col lg={10} md={9}>
+              <Col lg={10} md={9} sm={3}>
                 <div>
                   <h1
                     className="cl-blue"
@@ -205,7 +205,7 @@ function InnerCard({
                   </h1>
                 </div>
               </Col>
-              <Col lg={2} md={3}>
+              <Col lg={2} md={3} sm={3}>
                 <div className="d-flex ps-3">
                     <Button
                       className="ms-3"
