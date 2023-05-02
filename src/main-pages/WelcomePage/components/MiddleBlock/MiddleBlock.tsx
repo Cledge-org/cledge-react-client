@@ -1,5 +1,6 @@
 import { Row, Col } from "antd";
 import { Fade } from "react-awesome-reveal";
+import { Button } from "../Button/Button";
 import {
   MiddleBlockSection,
   Content,
@@ -81,6 +82,28 @@ const MiddleBlockContent = ({
                 <img src="./images/school_icon/GT.png" alt="Georgia Tech"></img>
               </Card>
             </CardWrapper>
+          ) : id === "CST" ? (
+            <div>
+                <div >
+                    <img src="./images/CSTSnapshot.png" alt="Snapshot of College Search Tool" 
+                    style={{
+                    boxShadow: "2px 8px 44px rgba(0, 11, 67, 0.06)",
+                    borderRadius: "4px",
+                    margin: "5px 0"
+                    }}></img>
+                </div>
+                <Button
+                  key="subscribe-btn"
+                  color="#F7BC76"
+                  fixedWidth={false}
+                  className={"w-25 mb-3"}
+                  onClick={() => {
+                    window.open("https://cledge.org/", "_blank");
+                  }}
+                >
+                  Try Now!
+                </Button>
+            </div>
           ) : (
             <CardWrapper>
               <PartnerCard>

@@ -7,6 +7,7 @@ import ProductContent from "./content/ProductContent.json";
 import ContactContent from "./content/ContactContent.json";
 import MiddleBlockContent from "./content/MiddleBlockContent.json";
 import PartnerContent from "./content/PartnerContent.json";
+import CSTContent from "./content/CSTContent.json";
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import Footer from "./components/Footer/Footer";
 import styled from "styled-components";
@@ -339,6 +340,66 @@ const WelcomePage = ({ data }) => {
           content={MiddleBlockContent.text}
           width={width}
         />
+        <MiddleBlock
+          id="CST"
+          title={CSTContent.title}
+          content={CSTContent.text}
+          width={width}
+        />
+        <BlobBlock>
+          <Fade direction="right" className="center-child w-100">
+            <div className="BlobContainer flex-wrap">
+              <div
+                className="d-flex flex-column justify-content-end ps-5"
+                style={{
+                  color: "white",
+                  width: width < 800 ? "100%" : "50%",
+                  height: width < 800 ? "50%" : "75%",
+                }}
+              >
+                <div
+                  className="center-child px-3 fw-bold"
+                  style={{
+                    width: "fit-content",
+                    background:
+                      "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
+                    borderRadius: "13px",
+                  }}
+                >
+                  New
+                </div>
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: width < 800 ? "18px" : "52px",
+                  }}
+                >
+                  Cledge is now available for University of Washington CS
+                  Admissions
+                </div>
+              </div>
+              <div
+                className="d-flex flex-row-reverse align-items-end pe-5"
+                style={{
+                  width: width < 800 ? "100%" : "50%",
+                  height: width < 800 ? "50%" : "75%",
+                }}
+              >
+                <Button
+                  key="subscribe-btn"
+                  color="#F7BC76"
+                  fixedWidth={false}
+                  className={width < 800 ? "w-75 mb-3" : "w-25"}
+                  onClick={() => {
+                    window.open("https://uw.cledge.org", "_blank");
+                  }}
+                >
+                  Learn More
+                </Button>
+              </div>
+            </div>
+          </Fade>
+        </BlobBlock>
         <Metric id="metric" className="d-flex bg-dark-blue">
           <div>
             <h2 className="title ">100+ metrics</h2>
@@ -398,60 +459,6 @@ const WelcomePage = ({ data }) => {
             width={width}
           />
         </Partner>
-        <BlobBlock>
-          <Fade direction="right" className="center-child w-100">
-            <div className="BlobContainer flex-wrap">
-              <div
-                className="d-flex flex-column justify-content-end ps-5"
-                style={{
-                  color: "white",
-                  width: width < 800 ? "100%" : "50%",
-                  height: width < 800 ? "50%" : "75%",
-                }}
-              >
-                <div
-                  className="center-child px-3 fw-bold"
-                  style={{
-                    width: "fit-content",
-                    background:
-                      "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
-                    borderRadius: "13px",
-                  }}
-                >
-                  New
-                </div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: width < 800 ? "18px" : "52px",
-                  }}
-                >
-                  Cledge is now available for University of Washington CS
-                  Admissions
-                </div>
-              </div>
-              <div
-                className="d-flex flex-row-reverse align-items-end pe-5"
-                style={{
-                  width: width < 800 ? "100%" : "50%",
-                  height: width < 800 ? "50%" : "75%",
-                }}
-              >
-                <Button
-                  key="subscribe-btn"
-                  color="#F7BC76"
-                  fixedWidth={false}
-                  className={width < 800 ? "w-75 mb-3" : "w-25"}
-                  onClick={() => {
-                    window.open("https://uw.cledge.org", "_blank");
-                  }}
-                >
-                  Learn More
-                </Button>
-              </div>
-            </div>
-          </Fade>
-        </BlobBlock>
       </Container>
       <Footer
         onFeatureClick={(featureIndex) => {
