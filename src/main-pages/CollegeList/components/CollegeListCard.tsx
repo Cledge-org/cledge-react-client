@@ -45,7 +45,7 @@ function CollegeListCard({
               <div>
                 <span>{type}</span>
               </div>
-              <Link href="/my-learning">
+              <Link href={`/college-detail/${college_id}`}>
                 <u color="#0B1142">See details</u>
               </Link>
             </div>

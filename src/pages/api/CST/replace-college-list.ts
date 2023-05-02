@@ -10,8 +10,8 @@ interface props {
 }
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { user_id, college_list }: props = req.body;
-  console.log(user_id);
-  console.log(college_list);
+  // console.log(user_id);
+  // console.log(college_list);
   try {
     const client = await MongoClient.connect(process.env.MONGO_URL);
     const userDb = client.db("users");
@@ -21,9 +21,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         { firebaseId: user_id },
         { $set: { college_list: college_list } }
       )
-      .then(() => {
-        res.status(200).json({ message: "done changing" });
-      });
   } catch (e) {
     res.status(500).json({ message: "error occured", error: e });
   }

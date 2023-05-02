@@ -40,8 +40,8 @@ const College = ({
   collegeList: any
 }) => {
   const [collegeData, setData] = useState(null);
+  const [hasMoreData, setHasMore] = useState(true);
   const [filter, setFilter] = useState({});
-  const [searchText, setSearchText] = useState("*");
   const [isLoading, setIsLoading] = useState(true);
   const [currSort, setCurrSort] = useState("");
   let collegeListArray = [];
@@ -50,6 +50,7 @@ const College = ({
   const userResponse = questionResponses.find(
     ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
   )?.response;
+  
   const [requestData, setRequest] = useState({
     searchText: "*",
     top: 10,
@@ -79,9 +80,12 @@ const College = ({
     e.preventDefault();
     e.stopPropagation();
     setPrevRequest(requestData);
+    
     setRequest({
       ...requestData,
-      searchText: searchText ? searchText : "*",
+      searchText: e.target.searchText.value ? e.target.searchText.value : "*",
+      top : 12,
+      skip: 0
     });
   }
 
@@ -105,7 +109,7 @@ const College = ({
   }
   
   for (let i = 0; i < collegeList.length; i++) {
-    collegeListArray[i] = collegeList[i].college_name;
+    collegeListArray[i] = collegeList[i]?.college_name;
   }
 
 
@@ -117,6 +121,13 @@ const College = ({
   useEffect(() => {
     async function fetchData() {
       let data = await getData();
+      // if no data, hasmore state to false
+      if (!data || data.length == 0) {
+        setHasMore(false);
+        return;
+      } else {
+        setHasMore(true);  
+      }
       if (requestData.skip - prevRequest.skip > 0) {
         setData((currData) => {
           if (currSort) {
@@ -235,7 +246,7 @@ const College = ({
                 skip: collegeData.length,
               });
             }}
-            hasMore={true}
+            hasMore={hasMoreData}
             loader={
               <div className="w-100 d-flex flex-row align-items-center justify-content-evenly flex-wrap">
                 {new Array(
@@ -253,8 +264,8 @@ const College = ({
                         schoolType={""}
                         inState={""}
                         outState={""}
+                        college_id={""}
                         abbreviation={""}
-                        data={{}}
                         onList={false}
                       />
                     );
@@ -280,9 +291,7 @@ const College = ({
               >
                 <input
                   className={classNames(styles.searchInput, "py-3 px-3")}
-                  onChange={(e) => {
-                    setSearchText(e.target.value);
-                  }}
+                  name="searchText"
                   placeholder="Search College"
                 />
                 <button
@@ -341,8 +350,8 @@ const College = ({
                       inState={""}
                       outState={""}
                       abbreviation={""}
-                      data={{}}
                       schoolFit=""
+                      college_id=""
                       onList={false}
                     />
                   );
@@ -352,17 +361,19 @@ const College = ({
                   return (
                     <CollegeCard
                       key={data.title + data.location}
+                      college_id={data.college_id}
                       title={data.title}
                       location={data.location}
                       schoolFit={
                         requestData.userTier >=
-                        data["college_fit_metric"].safety
+                        data["college_fit_metric"]?.safety
                           ? "Safety School"
                           : requestData.userTier <
-                            data["college_fit_metric"].target
+                            data["college_fit_metric"]?.target
                           ? "Reach School"
                           : "Fit School"
                       }
+                      // TODO: what if college fit metric does not exist
                       img={
                         data["img_link"]
                           ? data["img_link"]
@@ -371,8 +382,7 @@ const College = ({
                       schoolType={data["college_type"]}
                       inState={data["in-state_tuition"]}
                       outState={data["out-state_tuition"]}
-                      abbreviation={"uw"}
-                      data={data}
+                      abbreviation={data["abbreviation"]}
                       onList={collegeListArray.includes(data["title"])}
                     />
                   );
