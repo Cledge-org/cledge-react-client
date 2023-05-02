@@ -2,7 +2,7 @@ import React from "react";
 import { collegeListIndividualInfo } from "src/@types/types";
 import CollegeListCard from "src/main-pages/CollegeList/components/CollegeListCard";
 import styles from "./componentStyles.module.scss";
-
+import { Divider } from "antd";
 import { Droppable } from "react-beautiful-dnd";
 interface props {
   name: string;
@@ -22,6 +22,7 @@ const TierCard = ({
             <p
               className={styles.tierHeader}
             >{`${name} (${collegeList.length})`}</p>
+            <Divider />
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
@@ -34,8 +35,10 @@ const TierCard = ({
                     <CollegeListCard
                       name={college.college_name}
                       location={college.location}
+                      img={college.img_url}
                       type={college.college_type}
                       college_id={college.college_id}
+                      college_title={college.college_name}
                       index={index}
                       RemoveCollegeFromListFunction={
                         RemoveCollegeFromListFunction

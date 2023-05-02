@@ -6,13 +6,20 @@
   font-weight: 700;
   font-size: 24px;
   color: #0b1142;
+  margin: 0;
 }
 
 .myFavDiv {
+  background-color: white;
+  padding: 30px 100px 30px 100px;
+  margin-bottom: 50px;
+  align-items: flex-start;
+}
+
+.myFavContent {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  align-items: flex-start;
+  max-width: 1400px;
+  margin: auto;
 }
