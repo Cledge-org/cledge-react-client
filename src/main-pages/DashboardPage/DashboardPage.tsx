@@ -101,7 +101,7 @@ const DashboardPage = ({
         </div>
         <Container className="mt-5 mb-5">
           <Row className="pb-4">
-            <Col className="">
+            <Col className="mt-sm-5 mt-md-0 mt-lg-0" md={6} sm={12}>
               <Card className="h-100 d-flex flex-column justify-content-between">
                 <Row>
                   <Col lg={12}>
@@ -380,8 +380,7 @@ const DashboardPage = ({
           </Row>
           
         </Container>
-      </div>
-      
+      </div>   
   );
 };
 export default connect((state) => {

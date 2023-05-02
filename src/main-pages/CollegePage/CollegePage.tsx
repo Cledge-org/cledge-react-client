@@ -229,7 +229,7 @@ const College = ({
           xxl={20}
           id="college-scroll"
           style={{
-            overflowY: "scroll",
+            overflow: "scroll",
             height: "calc(100vh - 59px)",
           }}
           className="d-flex flex-column align-items-center"
