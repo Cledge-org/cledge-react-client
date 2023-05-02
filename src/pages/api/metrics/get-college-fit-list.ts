@@ -75,18 +75,29 @@ const getAllColleges = (
             let safety = [];
             let target = [];
             let reach = [];
+            // database stores the college data in colleges' alphabetical order; randomize for more various results
             collegesRes = collegesRes.sort(() => Math.random() - 0.5);
             collegesRes.forEach((college) => {
                 let preferenceFit = calculatePreferenceFit(college, preferences);
                 let collegeFit = 0;
-                if (college["ADM_RATE"] != null && college["SAT_AVG"] && college["ACTCMMID"] && "admission" in college && "GPA" in college["admission"] && "selection_of_students" in college["admission"]) {
+                let collegeRankInfo = [college["UNITID"], college["INSTNM"], preferenceFit];
+                if (ECTier === null && courseworkTier === null && GPATier === null && studFirstGen === null && studSATScore === null && studACTScore === null) {
+                    if (college["ADM_RATE"] != null) {
+                        if (college["ADM_RATE"] <= 0.33) {
+                            collegeFit = 3;
+                        } else if (college["ADM_RATE"] < 0.8) {
+                            collegeFit = 2;
+                        } else {
+                            collegeFit = 1;
+                        }
+                    }
+                } else if (college["ADM_RATE"] != null && college["SAT_AVG"] && college["ACTCMMID"] && "admission" in college && "GPA" in college["admission"] && "selection_of_students" in college["admission"]) {
                     let importances = selectionOfStudentsData(college["admission"]["selection_of_students"]);
                     let collegeADMAvgGPA = ADMGPACalculation(college["admission"]["GPA"]);
                     if (collegeADMAvgGPA != null) {
                         collegeFit = calculateCollegeFit(college["ADM_RATE"] * 100, ECTier, courseworkTier, GPATier, collegeADMAvgGPA, studFirstGen, studSATScore, studACTScore, college["SAT_AVG"], college["ACTCMMID"], studentType, importances);
                     }
                 }
-                let collegeRankInfo = [college["UNITID"], college["INSTNM"], preferenceFit];
                 if (collegeFit === 1) {
                     safety.push(collegeRankInfo);
                 } else if (collegeFit === 2) {

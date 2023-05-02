@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import { useLocation } from "src/utils/hooks/useLocation";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import styles from "./header.module.scss";
+import collegeIcon from "src/public/images/header/college-search.svg"
 
 const Header = ({
   key_prop,
@@ -54,26 +55,36 @@ const Header = ({
       icon: "my-learning.svg?alt=media&token=4ccc96fe-3db9-45b9-849a-24fcac93367b",
       title: "My Learning",
     },
-    {
-      link: "/chatbot",
-      icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
-      title: "AI Chat",
-    },
+    // {
+    //   link: "/chatbot",
+    //   icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
+    //   title: "AI Chat",
+    // },
     {
       link: "/metrics",
       icon: "metrics.svg?alt=media&token=9eed7da0-8292-4847-9d73-a007d5850f0a",
       title: "Metrics",
     },
     {
-      link: "/application-profile",
-      icon: "application-profile.svg?alt=media&token=07dc1585-f1bd-4bee-804b-1db88296c62f",
-      title: "Application Profile",
+      link: "/college-list",
+      icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
+      title: "My List"
     },
     {
-      link: "/blogs",
-      icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
-      title: "Blogs",
+      link: "/college-search",
+      icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
+      title: "College Search"
     },
+    // {
+    //   link: "/application-profile",
+    //   icon: "application-profile.svg?alt=media&token=07dc1585-f1bd-4bee-804b-1db88296c62f",
+    //   title: "Application Profile",
+    // },
+    // {
+    //   link: "/blogs",
+    //   icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
+    //   title: "Blogs",
+    // },
   ];
   const onScroll = useCallback(() => {
     if (!location.includes("uw")) {
