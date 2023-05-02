@@ -231,21 +231,6 @@ function InnerCard({
           style={{ height: "4rem" }}
         >
           <div className={styles.collegeFitContainer}>{schoolFit}</div>
-          <div className="d-flex">
-            <Button
-              className="ms-3"
-              variant="contained"
-              style={{
-                textTransform: "none",
-                width: "2rem",
-                height: "2rem",
-                background: addedToList ? "darkgray" : "",
-              }}
-              onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
-            >
-              {addedToList ? "x" : "+"}
-            </Button>
-          </div>
         </div>
       </CardContent>
     </>
