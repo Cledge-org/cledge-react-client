@@ -44,8 +44,6 @@ const CheckIn: NextApplicationPage<{
   const session = useSession();
   const router = useRouter();
 
-  console.log(checkInData);
-
   const goBack = (e) => {
     e.preventDefault();
     changeProgress(progress - 100 / (checkInData.chunks.length - 1));
@@ -74,89 +72,7 @@ const CheckIn: NextApplicationPage<{
   }, [checkInData, page, newUserResponses]);
 
   const submitForm = async (e: { preventDefault: () => void }) => {
-    //REMOVE CHECK IN FROM LIST AND UPLOAD DATA
-    let checkInList = [];
-    let queriedList = new String(router.query.checkIn.slice());
-    //THESE WORK
-    while (queriedList.indexOf(",") !== -1) {
-      checkInList.push(queriedList.substring(0, queriedList.indexOf(",")));
-      queriedList = queriedList.substring(queriedList.indexOf(",") + 1);
-    }
-    checkInList.push(queriedList);
-    checkInList.splice(0, 1);
-    userTags.length === 0
-      ? (userTags = newTags)
-      : (userTags = userTags.concat(newTags));
-    const newGrade = newUserResponses.find(
-      ({ questionId }) => questionId === "61c6b6f2d3054b6dd0f1fc64"
-    )?.response;
-    const newAddress = newUserResponses.find(
-      ({ questionId }) => questionId === "631fc0482734f1eb370771cc"
-    )?.response;
-    const newName = newUserResponses.find(
-      ({ questionId }) => questionId === "6319632cd1e56282060ad38a"
-    )?.response;
-    await Promise.all([
-      fetch(`/api/user/update-user`, {
-        method: "POST",
-        body: JSON.stringify({
-          userInfo: {
-            checkIns: checkInList,
-            tags: userTags,
-            address: newAddress.reduce(
-              (prev, curr) =>
-                prev
-                  ? prev +
-                    ", " +
-                    (curr instanceof Array
-                      ? curr.reduce(
-                          (prev, curr) => (prev ? prev + ", " + curr : curr),
-                          ""
-                        )
-                      : curr)
-                  : curr,
-              ""
-            ),
-            name: newName.reduce(
-              (prev, curr) => (prev ? prev + " " + curr : curr),
-              ""
-            ),
-            grade: newGrade,
-          },
-          userId: session.data.user.uid,
-        }),
-      }),
-      callPutQuestionResponses(newUserResponses),
-    ]).then((values) => {
-      store.dispatch(
-        updateAccountAction({
-          ...store.getState().accountInfo,
-          address: newAddress.reduce(
-            (prev, curr) =>
-              prev
-                ? prev +
-                  ", " +
-                  (curr instanceof Array
-                    ? curr.reduce(
-                        (prev, curr) => (prev ? prev + ", " + curr : curr),
-                        ""
-                      )
-                    : curr)
-                : curr,
-            ""
-          ),
-          name: newName.reduce(
-            (prev, curr) => (prev ? prev + " " + curr : curr),
-            ""
-          ),
-          grade: newGrade,
-          _id: undefined,
-        })
-      );
-      store.dispatch(updateTagsAndCheckInsAction(userTags, checkInList));
-      store.dispatch(updateQuestionResponsesAction(newUserResponses));
-    });
-    router.push({ pathname: "/dashboard" });
+    console.log(newUserResponses);
   };
   const filterDuplicates = (toFilter: any[]) => {
     return toFilter.filter((element, index, self) => {
