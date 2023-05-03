@@ -74,13 +74,20 @@ const CollegeListPage: NextApplicationPage<{
 
   const handleOnDragEnd = (result) => {
     const temporaryList = collegeList;
-    if (result.destination.droppableId == result.source.droppableId) {
+    if (
+      result.destination &&
+      result.source && result.destination.droppableId == result.source.droppableId
+    ) {
       const temporaryElement = temporaryList[result.source.index];
       temporaryList.splice(result.source.index, 1);
       temporaryList.splice(result.destination.index, 0, temporaryElement);
       setReloadCounter(reloadCounter + 1);
     }
-    if (result.destination.droppableId != result.source.droppableId) {
+    if (
+      result.destination &&
+      result.source &&
+      result.destination.droppableId != result.source.droppableId
+    ) {
       if (result.destination.droppableId == "Target Schools") {
         temporaryList.map((college) => {
           if (college.college_id == result.draggableId) {
