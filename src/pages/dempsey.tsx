@@ -16,92 +16,88 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                         _id: "schoolSize",
                         data: [
                             {
-                                op: "Level 1: ...",
-                                tag: "leisure-applicant",
+                                op: "Less than 5,000 students",
+                                tag: "a",
                             },
                             {
-                                op: "Level 2: ...",
-                                tag: "average-applicant",
+                                op: "5,000 - 15,000 students",
+                                tag: "b",
                             },
                             {
-                                op: "Level 3: ...",
-                                tag: "competitive-applicant",
+                                op: "More than 15,000 students",
+                                tag: "c",
                             },
                         ],
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
                         isRequired: true,
-                        question: "How ambitious are you for college admissions?",
+                        question: "What is your preferred college size?",
                         type: "MCQ"
                     },
                     {
                         _id: "costOfAttendance",
                         data: [
                             {
-                                op: "Level 1: ...",
-                                tag: "leisure-applicant",
+                                op: "Less than $30,000/year",
+                                tag: "a",
                             },
                             {
-                                op: "Level 2: ...",
-                                tag: "average-applicant",
+                                op: "$30,000 - $50,000/year",
+                                tag: "b",
                             },
                             {
-                                op: "Level 3: ...",
-                                tag: "competitive-applicant",
+                                op: "Greater than $70,000/year",
+                                tag: "c",
                             },
                         ],
-                        helpText: "",
+                        helpText: "(including tuition fee and living cost)",
                         helpVid: "",
                         isConcatenable: false,
                         isRequired: true,
-                        question: "How ambitious are you for college admissions?",
+                        question: "What is your expected spending amount per year?",
                         type: "MCQ"
                     },
                     {
                         _id: "schoolPreference",
                         data: [
                             {
-                                op: "Level 1: ...",
-                                tag: "leisure-applicant",
+                                op: "Public",
+                                tag: "a",
                             },
                             {
-                                op: "Level 2: ...",
-                                tag: "average-applicant",
-                            },
-                            {
-                                op: "Level 3: ...",
-                                tag: "competitive-applicant",
+                                op: "Private",
+                                tag: "b",
                             },
                         ],
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
                         isRequired: true,
-                        question: "How ambitious are you for college admissions?",
+                        question: "What type of college do you want to get into",
                         type: "MCQ"
                     },
                     {
                         _id: "localePreference",
                         data: [
                             {
-                                op: "Level 1: ...",
-                                tag: "leisure-applicant",
+                                op: "Urban",
+                                tag: "a",
                             },
                             {
-                                op: "Level 2: ...",
-                                tag: "average-applicant",
+                                op: "Suburban",
+                                tag: "b",
                             },
                             {
-                                op: "Level 3: ...",
-                                tag: "competitive-applicant",
+                                op: "Rural",
+                                tag: "c",
                             },
                         ],
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
                         isRequired: true,
-                        question: "How ambitious are you for college admissions?",
+                        question: "What is your preference for the college's location in general?",
                         type: "MCQ"
                     },
                     {
@@ -111,20 +107,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                                 op: "Level 1: ...",
                                 tag: "leisure-applicant",
                             },
-                            {
-                                op: "Level 2: ...",
-                                tag: "average-applicant",
-                            },
-                            {
-                                op: "Level 3: ...",
-                                tag: "competitive-applicant",
-                            },
                         ],
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
                         isRequired: true,
-                        question: "How ambitious are you for college admissions?",
+                        question: "What state are you currently living in?",
                         type: "MCQ"
                     },
                     {
