@@ -1,24 +1,26 @@
-name: Build and deploy Node.js app to Azure Web App - cledge-dev-site
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy to Production
 
 on:
-  push:
-    branches:
-      - dempsey-demo
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    if: github.ref == 'refs/heads/production'
     steps:
       - uses: actions/checkout@v2
 
       - name: Set up Node.js version
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
-          node-version: '16.x'
+          node-version: "16"
+          cache: "npm"
 
-      - name: npm install, build, and test
+      - name: npm install, and build
         run: |
           npm install
           npm run build --if-present
@@ -56,6 +58,6 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'cledge-dev-site'
-          slot-name: 'Production'
+          slot-name: 'production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2425AC10720A4DB181246A1437D5037B }}
           package: .
