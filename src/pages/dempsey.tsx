@@ -31,7 +31,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: true,
+                        isRequired: false,
                         question: "What is your preferred college size?",
                         type: "MCQ"
                     },
@@ -54,7 +54,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                         helpText: "(including tuition fee and living cost)",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: true,
+                        isRequired: false,
                         question: "What is your expected spending amount per year?",
                         type: "MCQ"
                     },
@@ -73,7 +73,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: true,
+                        isRequired: false,
                         question: "What type of college do you want to get into",
                         type: "MCQ"
                     },
@@ -82,106 +82,96 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                         data: [
                             {
                                 op: "Urban",
-                                tag: "a",
+                                tag: 1,
                             },
                             {
                                 op: "Suburban",
-                                tag: "b",
+                                tag: 2,
                             },
                             {
                                 op: "Rural",
-                                tag: "c",
+                                tag: 3,
                             },
                         ],
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: true,
+                        isRequired: false,
                         question: "What is your preference for the college's location in general?",
                         type: "MCQ"
                     },
                     {
                         _id: "statePreference",
-                        data: [
-                            {
-                                op: "Level 1: ...",
-                                tag: "leisure-applicant",
-                            },
-                        ],
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: true,
+                        isRequired: false,
                         question: "What state are you currently living in?",
-                        type: "MCQ"
+                        type: "TextInput"
                     },
                     {
                         _id: "classSize",
                         data: [
                             {
-                                op: "Level 1: ...",
-                                tag: "leisure-applicant",
+                                op: "In-state",
+                                tag: "a",
                             },
                             {
-                                op: "Level 2: ...",
-                                tag: "average-applicant",
-                            },
-                            {
-                                op: "Level 3: ...",
-                                tag: "competitive-applicant",
+                                op: "Out-of-state",
+                                tag: "b",
                             },
                         ],
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: true,
-                        question: "How ambitious are you for college admissions?",
+                        isRequired: false,
+                        question: "Do you want to attend an in-state college or out-of-state college?",
                         type: "MCQ"
                     },
                     {
                         _id: "finAidNeed",
                         data: [
                             {
-                                op: "Level 1: ...",
-                                tag: "leisure-applicant",
+                                op: "Cover less than 30% of your annual cost of college attendance",
+                                tag: "a",
                             },
                             {
-                                op: "Level 2: ...",
-                                tag: "average-applicant",
+                                op: "Cover 30 - 60% of your annual cost of college attendance",
+                                tag: "b",
                             },
                             {
-                                op: "Level 3: ...",
-                                tag: "competitive-applicant",
+                                op: "Cover more than 60% of your annual cost of college attendance",
+                                tag: "c",
                             },
                         ],
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: true,
-                        question: "How ambitious are you for college admissions?",
+                        isRequired: false,
+                        question: "What is your expected amount of financial aid (need based)?",
                         type: "MCQ"
                     },
                     {
                         _id: "finAidMerit",
                         data: [
                             {
-                                op: "Level 1: ...",
-                                tag: "leisure-applicant",
+                                op: "Cover less than 10% of your annual cost of college attendance",
+                                tag: "a",
                             },
                             {
-                                op: "Level 2: ...",
-                                tag: "average-applicant",
+                                op: "Cover 10 - 20% of your annual cost of college attendance",
+                                tag: "b",
                             },
                             {
-                                op: "Level 3: ...",
-                                tag: "competitive-applicant",
+                                op: "Cover more than 20% of your annual cost of college attendance",
+                                tag: "c",
                             },
                         ],
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: true,
-                        question: "How ambitious are you for college admissions?",
+                        isRequired: false,
+                        question: "What is your expected amount of financial aid (merit-based)?",
                         type: "MCQ"
                     },
                 ]
