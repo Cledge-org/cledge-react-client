@@ -40,12 +40,12 @@ const Metrics: NextApplicationPage<{
   return (
     <PageErrorBoundary>
       <div
-        className="container-fluid d-flex flex-row px-0 border-top border-2"
+        className="container-fluid d-flex flex-row px-0"
         style={{ minHeight: "100vh" }}
       >
         <div
-          className="d-flex flex-column bg-extra-light-gray border-end"
-          style={{ width: "23%" }}
+          className="d-flex flex-column bg-extra-light-gray border-end border-2"
+          style={{ width: "20rem" }}
         >
           <BorderDropdownTab
             isAll
