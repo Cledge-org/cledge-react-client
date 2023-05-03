@@ -514,7 +514,7 @@ const CollegeDetailPage = ({
                 sub2="Calendar system"
                 sub2data={data["calendar_system"]}
                 sub3="Average GPA"
-                sub3data={data["applicants_per_year"]}
+                sub3data={data["avg_gpa"]}
                 sub4="Most popular Area of Study"
                 sub4data={(() => {
                   let d = data["study_disciplines"];
