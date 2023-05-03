@@ -104,7 +104,7 @@ const DashboardPage = ({
         <Container className="mt-5 mb-5">
           <Row className="pb-4">
             <Col className="mt-sm-5 mt-md-0 mt-lg-0" md={6} sm={12}>
-              <Card sx={{ minHeight:400}} className="h-100 d-flex flex-column justify-content-between">
+              <Card sx={{ minHeight: 375 }} className="h-100 d-flex flex-column justify-content-between">
                 <Row>
                   <Col lg={12}>
                     <div className="ms-3">
@@ -173,7 +173,7 @@ const DashboardPage = ({
               </Card>
             </Col>
             <Col>
-            <Card sx={{ minHeight:400}} className="h-100 d-flex flex-column justify-content-between">
+            <Card sx={{ minHeight: 375 }} className="h-100 d-flex flex-column justify-content-between">
                 <Row>
                   <Col lg={12}>
                     <div className="ms-3">
@@ -267,7 +267,7 @@ const DashboardPage = ({
                                     }}
                                   />
                                   <div
-                                    className="px-3 py-2 cl-dark-text fw-bold"
+                                    className="px-2 py-2 cl-dark-text fw-bold"
                                     style={{
                                       width: "fit-content",
                                       backgroundColor: "#F7BC76",
@@ -298,7 +298,7 @@ const DashboardPage = ({
           </Row>
           <Row>
           <Col>
-            <Card sx={{ minHeight:400}} className="h-100 d-flex flex-column justify-content-between">
+            <Card sx={{ minHeight: 375 }} className="h-100 d-flex flex-column justify-content-between">
                 <Row>
                   <Col lg={12}>
                     <div className="ms-3">
@@ -339,7 +339,7 @@ const DashboardPage = ({
               </Card>
             </Col>
             <Col>
-            <Card className="h-100 d-flex flex-column justify-content-between">
+            <Card  sx={{ minHeight: 375 }} className="h-100 d-flex flex-column justify-content-between">
                 <Row>
                   <Col lg={12}>
                     <div className="ms-3">

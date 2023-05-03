@@ -128,6 +128,7 @@ const Metrics: NextApplicationPage<{
                       </div>
                       <TierRange
                         tier={activities?.overallTier}
+                        average={56}
                         isOverall
                         isOverview
                       />
@@ -162,6 +163,7 @@ const Metrics: NextApplicationPage<{
                       </div>
                       <TierRange
                         tier={academics?.overallTier}
+                        average={70}
                         isOverall
                         isOverview
                       />

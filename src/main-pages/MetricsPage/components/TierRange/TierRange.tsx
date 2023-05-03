@@ -3,10 +3,12 @@ import React from "react";
 import styles from "./tier-range.module.scss";
 const TierRange = ({
   tier,
+  average,
   isOverall,
   isOverview,
 }: {
-  tier: number; 
+  tier: number;
+  average: number;
   isOverall?: boolean;
   isOverview?: boolean;
 }) => {
@@ -68,6 +70,7 @@ const TierRange = ({
             <text style={{ color: "#070452" }}>You are here</text>
           </div>
         </div>
+    
       </>
     );
   };
@@ -126,6 +129,7 @@ const TierRange = ({
             ? tierIndicator(tiers[0])
             : null}
         </div>
+        
       );
     }
     return tierRangeComponents;
@@ -143,7 +147,49 @@ const TierRange = ({
       }}
     >
       {tierRangeComponents()}
-    </div>
+
+      <div
+          style={{
+            backgroundColor: "#0000FF",
+            position: "absolute",
+            height: "100%",
+            width: "4%",
+            zIndex: 1,
+            left: `${average}%`,
+          }}
+      >
+        <div
+            style={{
+              width: 0,
+              height: 0,
+              borderLeft: "7px solid transparent",
+              borderRight: "7px solid transparent",
+              borderTop: "7px solid #f7bc76",
+              position: "relative",
+              bottom: "8px",
+            }}
+            className="mx-2"
+          ></div>
+          <div
+            className="px-2 py-2 "
+            style={{
+              backgroundColor: "#f7bc76",
+              width: "8rem",
+              border: "1px solid transparent",
+              borderRadius: "5px",
+              textAlign: "center",
+              position: "relative",
+              bottom: "54px",
+              right: "50px"
+            }}
+          >
+            <text style={{ color: "#070452" }}>Average</text>
+          </div>
+        </div>
+
+
+      </div>
+        
   );
 };
 export default TierRange;
