@@ -109,7 +109,7 @@ const CollegeDetailPage = ({
           textTransform: "none"
         }}
         onClick={() => {
-              router.push("/collegeList/");}}
+              router.push("/college-list/");}}
       >
         View here
       </Button>
