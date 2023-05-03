@@ -6,14 +6,14 @@ name: Build and deploy to Dev
 on:
   push:
     branches:
-      - master
+      - dempsey-demo
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/dempsey-demo'
     steps:
       - uses: actions/checkout@v2
 
