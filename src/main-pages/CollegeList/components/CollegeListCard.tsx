@@ -81,7 +81,7 @@ function CollegeListCard({
                   |  
                   <span>{" " + type}</span>
                 </div>
-                <Link href={`/collegeDetail/${college_id}`}>
+                <Link href={`/college-detail/${college_id}`}>
                   <u color="#0B1142" style={{ cursor: "pointer" }}>
                     See details
                   </u>
