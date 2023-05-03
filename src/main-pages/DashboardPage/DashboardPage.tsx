@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import Container from 'react-bootstrap/Container';
-import Card from 'react-bootstrap/Card';
+import Card from "@mui/material/Card";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import React from "react";
@@ -17,6 +17,8 @@ import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import styles from "./dashboard-page.module.scss";
 import Footer from "src/common/components/Footer/Footer";
 import TierRange from "src/main-pages/MetricsPage/components/TierRange/TierRange";
+
+
 
 
 const DashboardPage = ({
@@ -102,7 +104,7 @@ const DashboardPage = ({
         <Container className="mt-5 mb-5">
           <Row className="pb-4">
             <Col className="mt-sm-5 mt-md-0 mt-lg-0" md={6} sm={12}>
-              <Card className="h-100 d-flex flex-column justify-content-between">
+              <Card sx={{ minHeight:400}} className="h-100 d-flex flex-column justify-content-between">
                 <Row>
                   <Col lg={12}>
                     <div className="ms-3">
@@ -171,7 +173,7 @@ const DashboardPage = ({
               </Card>
             </Col>
             <Col>
-            <Card className="h-100 d-flex flex-column justify-content-between">
+            <Card sx={{ minHeight:400}} className="h-100 d-flex flex-column justify-content-between">
                 <Row>
                   <Col lg={12}>
                     <div className="ms-3">
@@ -296,7 +298,7 @@ const DashboardPage = ({
           </Row>
           <Row>
           <Col>
-            <Card className="h-100 d-flex flex-column justify-content-between">
+            <Card sx={{ minHeight:400}} className="h-100 d-flex flex-column justify-content-between">
                 <Row>
                   <Col lg={12}>
                     <div className="ms-3">
