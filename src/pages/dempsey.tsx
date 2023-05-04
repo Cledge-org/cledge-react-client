@@ -188,5 +188,4 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 const CheckIn = ({ data }) => {
   return <DempseyPage checkInData={data} grade={12} userResponses={[]} userTags={[]} />;
 };
-CheckIn.requireAuth = true;
 export default CheckIn;

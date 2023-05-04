@@ -359,7 +359,7 @@ export declare global {
 
 interface collegeListIndividualInfo {
   college_id: string;
-  fit_type: number
+  fit_type: -1 | 0 | 1 | 2 | 3;
   img_url: string;
   img_title?: string;
   college_name: string;

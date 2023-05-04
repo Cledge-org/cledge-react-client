@@ -267,7 +267,7 @@ const CheckIn: NextApplicationPage<{
           },
           body: JSON.stringify({
             user_id: session.data.user.uid,
-            generated_colleges: collegeResult
+            collegeList: collegeResult
           })
         });
         if (response.ok) {

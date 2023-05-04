@@ -1,13 +1,10 @@
 import { GetServerSidePropsContext } from "next";
-import { getSession } from "next-auth/react";
 import CollegeListDempseyPage from "src/main-pages/CollegeListDempsey/CollegeListDempseyPage";
 import { getCollegeList } from "src/main-pages/DempseyPage/get-college-list";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
-    const session = getSession(ctx);
-    const userId = (await session).user.uid;
-    const collegeList = await getCollegeList(userId);
+    const collegeList = await getCollegeList("0vKSdjmusWXBquxeYq25qEFMlCV2");
     let collegeListJSON = {};
     try {
       collegeListJSON = JSON.parse(JSON.stringify(collegeList)).list;
@@ -17,7 +14,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     return {
       props: {
-        firebaseId: userId,
         collegeListData: collegeListJSON
       },
     };
@@ -32,5 +28,4 @@ const CollegeList = ({ collegeListData }) => {
   return <CollegeListDempseyPage collegeList={collegeListData} />;
 };
 
-CollegeList.requireAuth = true;
 export default CollegeList;
