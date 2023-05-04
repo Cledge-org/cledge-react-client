@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-key */
 import React, { useEffect, useState } from "react";
 import "antd/dist/antd.css";
-import { Layout, Row, Col, Input } from "antd";
+import { useRouter } from "next/router";
+import { Layout, Row, Col, Input, notification } from "antd";
 import SideBar from "./components/SideBar/SideBar";
 import CollegeCard from "./components/CollegeCard/CollegeCard";
 import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
@@ -12,6 +13,7 @@ import styles from "./college-page.module.scss";
 import classNames from "classnames";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { connect } from "react-redux";
+
 
 const axios = require("axios").default;
 
@@ -44,6 +46,7 @@ const College = ({
   const [filter, setFilter] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [currSort, setCurrSort] = useState("");
+  const router = useRouter();
   let collegeListArray = [];
   const [currNumericalSortOrder, setCurrNumericalSortOrder] =
     useState("Least-Greatest");
@@ -75,6 +78,8 @@ const College = ({
       ? 2
       : 3,
   });
+
+
 
   function handleSearch(e) {
     e.preventDefault();
