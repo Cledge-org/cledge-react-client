@@ -250,8 +250,11 @@ const CheckIn: NextApplicationPage<{
       }
     };
     
+    console.log(JSON.stringify(requestFormat));
     const result = await fetchData(); // Store the result in a variable
     console.log(result); // Do something with the result    
+
+    //const result = await callGetCollegeListDempsey(requestFormat.preferences, requestFormat.ECTier, requestFormat.courseworkTier, requestFormat.GPATier, requestFormat.studFirstGen, requestFormat.studSATScore, requestFormat.studACTScore, requestFormat.studentType); // Store the result in a variable
   };
   const filterDuplicates = (toFilter: any[]) => {
     return toFilter.filter((element, index, self) => {
