@@ -183,5 +183,4 @@ const CollegeListPage: NextApplicationPage<{
 
 export default connect((state) => ({
   accountInfo: state.accountInfo,
-  collegeList: state.collegeListData
 }))(CollegeListPage);

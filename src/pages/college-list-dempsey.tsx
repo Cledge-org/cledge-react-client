@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import CollegeListDempseyPage from "src/main-pages/CollegeListDempsey/CollegeListDempseyPage";
-import { getCollegeList } from "./api/CST/get-college-list";
+import { getCollegeList } from "src/main-pages/DempseyPage/get-college-list";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -29,7 +29,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 
 const CollegeList = ({ collegeListData }) => {
-  return <CollegeListDempseyPage />;
+  return <CollegeListDempseyPage collegeList={collegeListData} />;
 };
 
 CollegeList.requireAuth = true;
