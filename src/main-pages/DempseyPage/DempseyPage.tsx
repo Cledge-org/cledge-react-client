@@ -481,7 +481,7 @@ const CheckIn: NextApplicationPage<{
     return (
       <div className="container-fluid d-flex flex-column justify-content-center align-items-center vh-100">
         <LoadingScreen />
-        <h2>Generating your college list...</h2>
+        <h2>Generating starter college list...</h2>
       </div>
     );
   }
