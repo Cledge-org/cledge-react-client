@@ -8,11 +8,14 @@ import CheckBoxQuestion from "../../common/components/Questions/CheckboxQuestion
 import MCQQuestion from "../../common/components/Questions/MCQQuestion/MCQQuestion";
 import RankingQuestion from "../../common/components/Questions/RankingQuestion/RankingQuestion";
 import TextInputQuestion from "../../common/components/Questions/TextInputQuestion/TextInputQuestion";
+import getCollegeFitList from "src/pages/api/metrics/get-college-fit-list";
+import { getCollege } from "src/pages/api/CST/get-college-info";
 
 import {
   updateAccountAction,
   updateTagsAndCheckInsAction,
   updateQuestionResponsesAction,
+  initialStateAction,
 } from "../../utils/redux/actionFunctions";
 import { store } from "../../utils/redux/store";
 import styles from "./check-in-page.module.scss";
@@ -24,6 +27,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import CompositeQuestion from "src/common/components/Questions/CompositeQuestion/CompositeQuestion";
 import DoubleTextInputQuestion from "src/common/components/Questions/DoubleTextInputQuestion/DoubleTextInputQuestion";
 import DoubleDropdownQuestion from "src/common/components/Questions/DoubleDropdownQuestion/DoubleDropdownQuestion";
+import { collegeListIndividualInfo } from "src/@types/types";
 
 const CheckIn: NextApplicationPage<{
   checkInData: QuestionList;
@@ -35,7 +39,7 @@ const CheckIn: NextApplicationPage<{
   const [progress, changeProgress] = useState(0);
   const [page, changePage] = useState(0);
   const [newTags, setNewTags] = useState([]);
-  const [newUserResponses, setNewUserResponses] = useState(userResponses);
+  const [newUserResponses, setNewUserResponses] = useState([]);
   const hiddenFileInput = React.useRef(null);
   const size = useWindowSize();
   const transcriptUpload = () => {
@@ -72,7 +76,215 @@ const CheckIn: NextApplicationPage<{
   }, [checkInData, page, newUserResponses]);
 
   const submitForm = async (e: { preventDefault: () => void }) => {
-    console.log(newUserResponses);
+
+    let res = newUserResponses;
+
+    let schoolSizeLow = null;
+    let schoolSizeHigh = null;
+    let costOfAttendanceLow = null;
+    let costOfAttendanceHigh = null;
+    let privatePublic = null;
+    let locale = null;
+    let state = null;
+    let classSize = null;
+    let finNeedLow = null;
+    let finNeedHigh = null;
+    let finMeritLow = null;
+    let finMeritHigh = null;
+
+    for (let i = 0; i < res.length; i++) {
+      if (res[i].questionId == "schoolSize") {
+        if (res[i].tag == "a") {
+          schoolSizeLow = 0;
+          schoolSizeHigh = 5000;
+        } else if (res[i].tag == "b") {
+          schoolSizeLow = 5000;
+          schoolSizeHigh = 15000;
+        } else if (res[i].tag == "c") {
+          schoolSizeLow = 15000;
+          schoolSizeHigh = null;
+        }
+      }
+
+      if (res[i].questionId == "costOfAttendance") {
+        if (res[i].tag == "a") {
+          costOfAttendanceLow = 0;
+          costOfAttendanceHigh = 30000;
+        } else if (res[i].tag == "b") {
+          costOfAttendanceLow = 30000;
+          costOfAttendanceHigh = 50000;
+        } else if (res[i].tag == "c") {
+          costOfAttendanceLow = 70000;
+          costOfAttendanceHigh = null;
+        }
+      }
+
+      if (res[i].questionId == "schoolPreference") {
+        if (res[i].tag == "a") {
+          privatePublic = 1;
+        } else if (res[i].tag == "b") {
+          privatePublic = 2;
+        }
+      }
+
+      if (res[i].questionId == "localePreference") {
+        if (res[i].tag == "a") {
+          locale = 1;
+        } else if (res[i].tag == "b") {
+          locale = 2;
+        } else if (res[i].tag == "c") {
+          locale = 3;
+        }
+      }
+
+      if (res[i].questionId == "finAidNeed") {
+        if (res[i].tag == "a") {
+          finNeedLow = 0;
+          finNeedHigh = 30000;
+        } else if (res[i].tag == "b") {
+          finNeedLow = 30000;
+          finNeedHigh = 60000;
+        } else if (res[i].tag == "c") {
+          finNeedLow = 60000;
+          finNeedHigh = null;
+        }
+      }
+
+      if (res[i].questionId == "finAidMerit") {
+        if (res[i].tag == "a") {
+          finMeritLow = 0;
+          finMeritHigh = 10000;
+        } else if (res[i].tag == "b") {
+          finMeritLow = 10000;
+          finMeritHigh = 20000;
+        } else if (res[i].tag == "c") {
+          finMeritLow = 20000;
+          finMeritHigh = null;
+        }
+      }
+
+      if (res[i].questionId == "statePreference") {
+        if (res[i].tag == "a") {
+          state = res[4].response;
+        } else if (res[i].tag == "b") {
+          state = null;
+        }
+      }
+    }
+
+    const requestFormat = {
+      preferences: {
+        schoolSize: {
+          low_val: schoolSizeLow,
+          high_val: schoolSizeHigh,
+          preferenceLevel: 1
+        },
+        costOfAttendance: {
+          low_val: costOfAttendanceLow,
+          high_val: costOfAttendanceHigh,
+          preferenceLevel: 1
+        },
+        schoolPreference: {
+          low_val: privatePublic,
+          high_val: privatePublic,
+          preferenceLevel: 1
+        },
+        localePreference: {
+          low_val: locale,
+          high_val: locale,
+          preferenceLevel: 1
+        },
+        statePreference: {
+          low_val: state,
+          high_val: state,
+          preferenceLevel: 1
+        },
+        classSize: {
+          low_val: classSize,
+          high_val: classSize,
+          preferenceLevel: 1,
+        },
+        finAidNeed: {
+          low_val: finNeedLow,
+          high_val: finNeedHigh,
+          preferenceLevel: 1,
+        },
+        finAidMerit: {
+          low_val: finMeritLow,
+          high_val: finMeritHigh,
+          preferenceLevel: 1,
+        }
+      },
+      ECTier: 0,
+      courseworkTier: 0,
+      GPATier: 0,
+      studFirstGen: 0,
+      studSATScore: 0,
+      studACTScore: 0,
+      studentType: 0
+    }
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/metrics/get-college-fit-list', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            preferences: requestFormat.preferences,
+            ECTier: requestFormat.ECTier,
+            courseworkTier: requestFormat.courseworkTier,
+            GPATier: requestFormat.GPATier,
+            studFirstGen: requestFormat.studFirstGen,
+            studSATScore: requestFormat.studSATScore,
+            studACTScore: requestFormat.studACTScore,
+            studentType: requestFormat.studentType
+          })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data); // Do something with the data
+          return data;
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+      }
+    };
+    
+    console.log(JSON.stringify(requestFormat));
+    const collegeResult = await fetchData(); // Store the result in a variable
+    console.log(collegeResult); // Do something with the result
+
+    const pushToDb = async () => {
+      try {
+        const response = await fetch('/api/dempsey/put-to-dempsey', {
+          method: 'POST',
+          headers: {
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_id: session.data.user.uid,
+            collegeList: collegeResult
+          })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data); // Do something with the data
+          return data;
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+      }
+    };
+
+    pushToDb();
+
+    //const result = await callGetCollegeListDempsey(requestFormat.preferences, requestFormat.ECTier, requestFormat.courseworkTier, requestFormat.GPATier, requestFormat.studFirstGen, requestFormat.studSATScore, requestFormat.studACTScore, requestFormat.studentType); // Store the result in a variable
   };
   const filterDuplicates = (toFilter: any[]) => {
     return toFilter.filter((element, index, self) => {
@@ -102,16 +314,21 @@ const CheckIn: NextApplicationPage<{
                 newQTags = undefined,
                 oldTags = undefined
               ) => {
+                let realTag;
+                if (newQTags) {
+                  realTag = newQTags[0];
+                }
                 currQuestionResponse
                   ? (newUserResponses[currQuestionResponseIndex]["response"] =
                       value)
                   : newUserResponses.push({
                       questionId: question?._id.toString(),
                       response: value,
+                      tag: realTag,
                     });
-                if (newQTags) {
-                  setNewTags(filterDuplicates(newTags.concat(newQTags)));
-                }
+                  // if (newQTags) {
+                  //   setNewTags(newTags.concat(newQTags));
+                  // }
                 setNewUserResponses([...newUserResponses]);
               };
               if (question?.type === "TextInput") {
@@ -128,20 +345,7 @@ const CheckIn: NextApplicationPage<{
                   />
                 );
               }
-              if (question?.type === "Ranking") {
-                return (
-                  <RankingQuestion
-                    question={question}
-                    key={question?._id.toString()}
-                    userAnswers={
-                      newUserResponses[currQuestionResponseIndex]?.response ||
-                      []
-                    }
-                    onChange={updateFunc}
-                    tags={userTags}
-                  />
-                );
-              }
+          
               if (question?.type === "MCQ") {
                 return (
                   <MCQQuestion
@@ -156,86 +360,8 @@ const CheckIn: NextApplicationPage<{
                     tags={userTags}
                   />
                 );
-              }
-              if (question?.type === "CheckBox") {
-                return (
-                  <CheckBoxQuestion
-                    key={question?._id.toString()}
-                    question={question}
-                    isCentered
-                    userAnswers={
-                      newUserResponses[currQuestionResponseIndex]?.response ||
-                      []
-                    }
-                    onChange={updateFunc}
-                    tags={userTags}
-                  />
-                );
-              }
-              if (question?.type === "CompositeQuestion") {
-                return (
-                  <CompositeQuestion
-                    question={question}
-                    responses={
-                      newUserResponses[currQuestionResponseIndex]?.response ||
-                      []
-                    }
-                    onChange={(value, index, questionId) => {
-                      let currRes = newUserResponses.find(
-                        (questionResponse) =>
-                          questionResponse.questionId ===
-                          question?._id.toString()
-                      );
-                      if (currRes) {
-                        newUserResponses[
-                          newUserResponses.findIndex(
-                            (questionResponse) =>
-                              questionResponse.questionId ===
-                              question?._id.toString()
-                          )
-                        ]["response"][index] = value;
-                      } else {
-                        let newResArr = [];
-                        newResArr[index] = value;
-                        newUserResponses.push({
-                          questionId: question?._id.toString(),
-                          response: newResArr,
-                        });
-                      }
-                    }}
-                    title={question.question}
-                    questions={question.data}
-                  />
-                );
-              }
-              if (question?.type === "DoubleTextInputQuestion") {
-                return (
-                  <DoubleTextInputQuestion
-                    userResponses={
-                      newUserResponses[currQuestionResponseIndex]?.response ||
-                      []
-                    }
-                    question={question}
-                    onChange={(value) => {
-                      updateFunc(value);
-                    }}
-                  />
-                );
-              }
-              if (question?.type === "DoubleTextInputQuestion") {
-                return (
-                  <DoubleDropdownQuestion
-                    userResponses={
-                      newUserResponses[currQuestionResponseIndex]?.response ||
-                      []
-                    }
-                    question={question}
-                    onChange={(value) => {
-                      updateFunc(value);
-                    }}
-                  />
-                );
-              }
+              }           
+    
               return (
                 <div className="container-fluid h-100 d-flex flex-column align-items-center justify-content-evenly w-100 cl-dark-text fw-bold">
                   <span className="pt-4 pb-2" style={{ fontSize: "1.4em" }}>
@@ -404,7 +530,7 @@ const CheckIn: NextApplicationPage<{
 };
 CheckIn.requireAuth = true;
 export default connect((state) => ({
-  userTags: state.accountInfo.tags,
-  grade: state.accountInfo.grade,
-  userResponses: state.questionResponses,
+  // userTags: state.accountInfo.tags,
+  // grade: state.accountInfo.grade,
+  // userResponses: state.questionResponses,
 }))(CheckIn);

@@ -89,6 +89,7 @@ export declare global {
   interface UserResponse {
     questionId: string;
     response: any;
+    tag?: any;
   }
   interface ProgressInfo {
     userTags: string[];

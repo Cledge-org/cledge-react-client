@@ -13,7 +13,6 @@ const CollegeListPage: NextApplicationPage<{
   accountInfo: AccountInfo;
   collegeList: collegeListIndividualInfo[];
 }> = ({ collegeList }) => {
-  console.log("COLLEGE LIST!!: " + collegeList);
   const [targetSchools, setTargetSchools] = useState([]);
   const [fitSchools, setFitSchools] = useState([]);
   const [reachSchools, setReachSchools] = useState([]);
@@ -89,7 +88,7 @@ const CollegeListPage: NextApplicationPage<{
       result.source &&
       result.destination.droppableId != result.source.droppableId
     ) {
-      if (result.destination.droppableId == "Safety Schools") {
+      if (result.destination.droppableId == "Target Schools") {
         temporaryList.map((college) => {
           if (college.college_id == result.draggableId) {
             college.fit_type = 0;
@@ -161,7 +160,7 @@ const CollegeListPage: NextApplicationPage<{
             }}
           >
             <TierCard
-              name="Safety Schools"
+              name="Target Schools"
               collegeList={targetSchools}
               RemoveCollegeFromListFunction={handleRemoveCollege}
             />

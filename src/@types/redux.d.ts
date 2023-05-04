@@ -5,6 +5,7 @@ declare module "react-redux" {
     pathwaysProgress: PathwayProgress[];
     questionResponses: UserResponse[];
     accountInfo: AccountInfo;
+    collegeListData: any;
   }
 }
 declare module "redux" {
