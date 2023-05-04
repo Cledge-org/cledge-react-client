@@ -173,43 +173,43 @@ const CheckIn: NextApplicationPage<{
     const requestFormat = {
       preferences: {
         schoolSize: {
-          low: schoolSizeLow,
-          high: schoolSizeHigh,
+          low_val: schoolSizeLow,
+          high_val: schoolSizeHigh,
           preferenceLevel: 0
         },
         costOfAttendance: {
-          low: costOfAttendanceLow,
-          high: costOfAttendanceHigh,
+          low_val: costOfAttendanceLow,
+          high_val: costOfAttendanceHigh,
           preferenceLevel: 0
         },
         schoolPreference: {
-          low: privatePublic,
-          high: privatePublic,
+          low_val: privatePublic,
+          high_val: privatePublic,
           preferenceLevel: 0
         },
         localePreference: {
-          low: locale,
-          high: locale,
+          low_val: locale,
+          high_val: locale,
           preferenceLevel: 0
         },
         statePreference: {
-          low: state,
-          high: state,
+          low_val: state,
+          high_val: state,
           preferenceLevel: 0
         },
         classSize: {
-          low: classSize,
-          high: classSize,
+          low_val: classSize,
+          high_val: classSize,
           preferenceLevel: 0,
         },
         finAidNeed: {
-          low: finNeedLow,
-          high: finNeedHigh,
+          low_val: finNeedLow,
+          high_val: finNeedHigh,
           preferenceLevel: 0,
         },
         finAidMerit: {
-          low: finMeritLow,
-          high: finMeritHigh,
+          low_val: finMeritLow,
+          high_val: finMeritHigh,
           preferenceLevel: 0,
         }
       },

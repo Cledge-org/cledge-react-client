@@ -13,6 +13,7 @@ const CollegeListPage: NextApplicationPage<{
   accountInfo: AccountInfo;
   collegeList: collegeListIndividualInfo[];
 }> = ({ collegeList }) => {
+  console.log("COLLEGE LIST!!: " + collegeList);
   const [targetSchools, setTargetSchools] = useState([]);
   const [fitSchools, setFitSchools] = useState([]);
   const [reachSchools, setReachSchools] = useState([]);
