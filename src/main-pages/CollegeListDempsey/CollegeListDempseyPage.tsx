@@ -181,6 +181,4 @@ const CollegeListPage: NextApplicationPage<{
   );
 };
 
-export default connect((state) => ({
-  accountInfo: state.accountInfo,
-}))(CollegeListPage);
+export default CollegeListPage;
