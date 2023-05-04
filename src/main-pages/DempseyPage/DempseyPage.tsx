@@ -9,6 +9,7 @@ import MCQQuestion from "../../common/components/Questions/MCQQuestion/MCQQuesti
 import RankingQuestion from "../../common/components/Questions/RankingQuestion/RankingQuestion";
 import TextInputQuestion from "../../common/components/Questions/TextInputQuestion/TextInputQuestion";
 import getCollegeFitList from "src/pages/api/metrics/get-college-fit-list";
+import { getCollege } from "src/pages/api/CST/get-college-info";
 
 import {
   updateAccountAction,
@@ -26,6 +27,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import CompositeQuestion from "src/common/components/Questions/CompositeQuestion/CompositeQuestion";
 import DoubleTextInputQuestion from "src/common/components/Questions/DoubleTextInputQuestion/DoubleTextInputQuestion";
 import DoubleDropdownQuestion from "src/common/components/Questions/DoubleDropdownQuestion/DoubleDropdownQuestion";
+import { collegeListIndividualInfo } from "src/@types/types";
 
 const CheckIn: NextApplicationPage<{
   checkInData: QuestionList;
@@ -252,12 +254,12 @@ const CheckIn: NextApplicationPage<{
     };
     
     console.log(JSON.stringify(requestFormat));
-    const result = await fetchData(); // Store the result in a variable
-    console.log(result); // Do something with the result    
+    const collegeResult = await fetchData(); // Store the result in a variable
+    console.log(collegeResult); // Do something with the result
 
     await store.dispatch(
       initialStateAction({
-        collegeListData: result,
+        collegeListData: collegeResult,
       })
     );
 
