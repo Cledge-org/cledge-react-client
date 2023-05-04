@@ -14,6 +14,7 @@ import {
   updateAccountAction,
   updateTagsAndCheckInsAction,
   updateQuestionResponsesAction,
+  initialStateAction,
 } from "../../utils/redux/actionFunctions";
 import { store } from "../../utils/redux/store";
 import styles from "./check-in-page.module.scss";
@@ -253,6 +254,12 @@ const CheckIn: NextApplicationPage<{
     console.log(JSON.stringify(requestFormat));
     const result = await fetchData(); // Store the result in a variable
     console.log(result); // Do something with the result    
+
+    await store.dispatch(
+      initialStateAction({
+        collegeListData: result,
+      })
+    );
 
     //const result = await callGetCollegeListDempsey(requestFormat.preferences, requestFormat.ECTier, requestFormat.courseworkTier, requestFormat.GPATier, requestFormat.studFirstGen, requestFormat.studSATScore, requestFormat.studACTScore, requestFormat.studentType); // Store the result in a variable
   };
