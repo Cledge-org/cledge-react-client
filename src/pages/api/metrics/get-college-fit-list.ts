@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { MongoClient } from "mongodb";
 import { calculateCollegeFit } from "src/utils/student-metrics/metricsCalculations";
+import { collegeListIndividualInfo } from "src/@types/types";
 
 
 /*
@@ -79,9 +80,8 @@ const getAllColleges = (
             // collegesRes = collegesRes.sort(() => Math.random() - 0.5);
             collegesRes.forEach((college) => {
                 let preferenceFit = calculatePreferenceFit(college, preferences);
-
                 let collegeFit = 0;
-                let collegeRankInfo = [college["UNITID"], college["INSTNM"], preferenceFit];
+                let collegeRankInfo = [college["UNITID"], preferenceFit];
                 if (ECTier === null && courseworkTier === null && GPATier === null && studFirstGen === null && studSATScore === null && studACTScore === null) {
                     if (college["ADM_RATE"] !== null) {
                         if (college["ADM_RATE"] <= 0.33) {
@@ -127,9 +127,9 @@ const getAllColleges = (
                 targetCount += reachDiff;
             }
             const output = {
-                safety: getRankByPreferenceFit(safety, safetyCount),
-                target: getRankByPreferenceFit(target, targetCount),
-                reach: getRankByPreferenceFit(reach, reachCount)
+                safety: await getRankByPreferenceFit(client, safety, safetyCount),
+                target: await getRankByPreferenceFit(client, target, targetCount),
+                reach: await getRankByPreferenceFit(client, reach, reachCount)
             }
             res(output);
         } catch (e) {
@@ -321,8 +321,33 @@ const calculatePreferenceFit = (
     return fitVal;
 }
 
-const getRankByPreferenceFit = (fit: any[], rank: number) => {
-    return fit.sort((first, second) => second[2] - first[2]).slice(0, rank);
+const getRankByPreferenceFit = async (client: MongoClient, fit: any[], rank: number) => {
+    let fit_sorted = fit.sort((first, second) => second[1] - first[1]).slice(0, rank);
+    let fit_sorted_ids = [];
+    fit_sorted.forEach((collegeFit) => {
+        fit_sorted_ids.push(collegeFit[0]);
+    });
+    let collegesListRes = await client
+                .db("colleges")
+                .collection("colleges")
+                .find({"college_id": {"$in": fit_sorted_ids}})
+                .toArray();
+    let result = [];
+    collegesListRes.forEach((eachResponse) => {
+        const eachFitCollege: collegeListIndividualInfo = {
+            college_id: eachResponse.college_id,
+            fit_type: 0,
+            img_url: eachResponse.img_url,
+            img_title: eachResponse.img_title,
+            college_name: eachResponse.college_name,
+            location: eachResponse.location,
+            in_state_tuition: eachResponse.in_state_tuition,
+            out_state_tuition: eachResponse.out_state_tuition,
+            college_type: eachResponse.college_type
+        };
+        result.push(eachFitCollege);
+    })
+    return result;
 }
 
 const avgClassSizeCalculation = (classSize: { [id: string] : string; }) => {
