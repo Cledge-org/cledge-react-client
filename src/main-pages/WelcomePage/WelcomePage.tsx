@@ -263,13 +263,36 @@ const WelcomePage = ({ data }) => {
       <Container>
         <Intro className="container-margin">
           <div className="w-100">
-            <ContentBlock
+
+            {/* ********************** */}
+            {/* Original Intro Content */}
+            {/* ********************** */}
+            {/*<ContentBlock
               type="right"
               title={IntroContent.title}
               content={IntroContent.text}
               button={IntroContent.button}
               video={<YoutubeEmbed videoId="Bly0QbY3fV4" />}
               id="intro"
+              width={width}
+            />*/}
+            {/* ********************** */}
+            {/* Original Intro Content */}
+            {/* ********************** */}
+
+            <ContentBlock
+              type="right"
+              title={CSTContent.title}
+              content={CSTContent.text}
+              button={CSTContent.button}
+              video={<img src="./images/CSTSnapshot.png" alt="Snapshot of College Search Tool" 
+              style={{
+              boxShadow: "2px 8px 44px rgba(0, 11, 67, 0.06)",
+              borderRadius: "10px",
+              width: "800px",
+            height: "500px"
+              }}></img>}
+              id="CST"
               width={width}
             />
           </div>
@@ -334,16 +357,11 @@ const WelcomePage = ({ data }) => {
             </MediaButton>
           </div>
         </Intro>
+
         <MiddleBlock
           id="goal"
           title={MiddleBlockContent.title}
           content={MiddleBlockContent.text}
-          width={width}
-        />
-        <MiddleBlock
-          id="CST"
-          title={CSTContent.title}
-          content={CSTContent.text}
           width={width}
         />
         <BlobBlock>

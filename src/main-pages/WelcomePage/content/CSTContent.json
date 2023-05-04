@@ -1,5 +1,11 @@
 {
-    "title": "Cledge's College Search Tool",
-    "text": "The College Search Tool is designed to help students explore the best college options that fit their unique academic profile. Use Cledge’s automatic college list creator to get a start on your college list and automatically see which colleges are fit, reach and safety schools. \n Our College Search Tool makes it easy to find the perfect college match for you. Don't waste time scrolling through endless college websites or trying to compare statistics on your own. Let our College Search Tool do the heavy lifting for you. Sign up today and take the first step towards a successful college journey."
-    }    
+    "title": "Cledge's Newest Feature: The College Search Tool",
+    "text": "The College Search Tool is designed to help students explore the best college options that fit their unique academic profile. Use Cledge’s automatic college list creator to get a start on your college list and automatically see which colleges are fit, reach and safety schools. \n Our College Search Tool makes it easy to find the perfect college match for you. Don't waste time scrolling through endless college websites or trying to compare statistics on your own. Let our College Search Tool do the heavy lifting for you. Sign up today and take the first step towards a successful college journey.",
+    "button": [
+        {
+          "title": "Try Now!",
+          "color": "#F7BC76"
+        }
+    ]
+}    
   
