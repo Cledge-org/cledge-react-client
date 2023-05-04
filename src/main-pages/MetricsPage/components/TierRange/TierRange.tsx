@@ -151,28 +151,6 @@ const TierRange = ({
           left: "calc(50% - 200px)",
         }}
       >
-        <div
-          style={{
-            width: 0,
-            height: 0,
-            borderLeft: "7px solid transparent",
-            borderRight: "7px solid transparent",
-            borderBottom: "7px solid #f7bc76",
-          }}
-          className="mx-2"
-        ></div>
-        <div
-          className="px-3 py-2"
-          style={{
-            backgroundColor: "#f7bc76",
-            width: "8rem",
-            border: "1px solid transparent",
-            borderRadius: "5px",
-            textAlign: "center",
-          }}
-        >
-          <text style={{ color: "#070452" }}>You are here</text>
-        </div>
       </div>
     </div>
   );
