@@ -10,7 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    if: github.ref == 'refs/heads/dempsey-demo'
     steps:
       - uses: actions/checkout@v2
 

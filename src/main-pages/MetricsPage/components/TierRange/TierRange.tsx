@@ -6,7 +6,7 @@ const TierRange = ({
   isOverall,
   isOverview,
 }: {
-  tier: number; 
+  tier: number;
   isOverall?: boolean;
   isOverview?: boolean;
 }) => {
@@ -30,19 +30,18 @@ const TierRange = ({
             position: "absolute",
             width: "130%",
             top: "100%",
-            left: `${
-              tier === 1
+            left: `${tier === 1
                 ? -48
                 : tier === 12
-                ? 18.25
-                : offSet * 100 -
+                  ? 18.25
+                  : offSet * 100 -
                   65 +
                   (tier - minTier === 0
                     ? 17.5
                     : tier - minTier === 2
-                    ? -17.5
-                    : 0)
-            }%`,
+                      ? -17.5
+                      : 0)
+              }%`,
           }}
         >
           <div
@@ -143,6 +142,38 @@ const TierRange = ({
       }}
     >
       {tierRangeComponents()}
+      <div
+        className="d-flex flex-column align-items-center justify-content-end"
+        style={{
+          position: "absolute",
+          width: "100%",
+          top: "100%",
+          left: "calc(50% - 200px)",
+        }}
+      >
+        <div
+          style={{
+            width: 0,
+            height: 0,
+            borderLeft: "7px solid transparent",
+            borderRight: "7px solid transparent",
+            borderBottom: "7px solid #f7bc76",
+          }}
+          className="mx-2"
+        ></div>
+        <div
+          className="px-3 py-2"
+          style={{
+            backgroundColor: "#f7bc76",
+            width: "8rem",
+            border: "1px solid transparent",
+            borderRadius: "5px",
+            textAlign: "center",
+          }}
+        >
+          <text style={{ color: "#070452" }}>You are here</text>
+        </div>
+      </div>
     </div>
   );
 };

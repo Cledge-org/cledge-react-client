@@ -110,7 +110,7 @@ const Metrics: NextApplicationPage<{
                     </strong>
                   </div>
                   <div
-                    className={`soft-gray-border d-flex pt-2 px-2 flex-row align-items-start justify-content-center mb-5 w-100`}
+                    className={`soft-gray-border d-flex pt-2 px-2 flex-row align-items-start justify-content-center pb-3`}
                     style={{
                       backgroundColor: "white",
                       borderTop: "none",
@@ -133,7 +133,30 @@ const Metrics: NextApplicationPage<{
                       />
                     </div>
                   </div>
+                  <div className="soft-gray-border mb-5" style={{ borderTop: "none" }}>
+                    <div className="d-flex flex-column py-3 px-3">
+                      <h5>Insights:</h5>
+                      <text className="pb-3">Based on the extracurricular activities you have shared,
+                        it is clear that you have already taken steps towards building a strong profile.
+                        However, there are some areas where you can still improve to make your application
+                        even more impressive.  </text>
+                      <ul className="list-group">
+                        <li className="list-group-item"><strong>Tip 1:</strong> Take on leadership roles in your clubs. By taking on leadership
+                          roles in your club you can display your willingness to go above and beyond. Additionally you will be able to
+                          develop valubale experince in managment and leading a team which are all qualities colleges look for.</li>
+                        <li className="list-group-item"><strong>Tip 2:</strong> Participate in community service activities to show your commitment to
+                          social responsibility. This involvement shows that you are not only dedicated to your personal growth and development but also
+                          have a sense of responsibility towards those around you. Volunteering can take many forms, such as tutoring, mentoring, fundraising,
+                          or organizing community events.</li>
+                        <li className="list-group-item"><strong>Tip 3:</strong> Attend summer programs that align with your career goals.These programs offer a
+                          chance to explore your interests further, gain practical skills, and network with professionals in your field. Attending a summer program can
+                          also demonstrate your dedication to pursuing your passions, showing that you are willing to invest your time and energy to achieve your goals.</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
+
+
                 <div className="mt-2 ms-5 w-50">
                   <div className="soft-gray-border d-flex flex-row justify-content-start py-3 px-3">
                     <strong
@@ -144,7 +167,7 @@ const Metrics: NextApplicationPage<{
                     </strong>
                   </div>
                   <div
-                    className={`soft-gray-border d-flex pt-2 px-2 flex-row align-items-start justify-content-center mb-5 w-100`}
+                    className={`soft-gray-border d-flex pt-2 px-2 flex-row align-items-start justify-content-center w-100`}
                     style={{
                       backgroundColor: "white",
                       borderTop: "none",
@@ -167,6 +190,22 @@ const Metrics: NextApplicationPage<{
                       />
                     </div>
                   </div>
+                  <div className="soft-gray-border mb-5" style={{ borderTop: "none" }}>
+                    <div className="d-flex flex-column py-3 px-3">
+                      <h5>Insights:</h5>
+                      <text className="pb-3">Based on the academic achievements you have shared,
+                        it is clear that you have already made strides towards building a strong profile.
+                        However, there are some areas where you can still improve to make your application
+                        even more impressive. </text>
+                      <ul className="list-group">
+                        <li className="list-group-item"><strong>Tip 1:</strong> Take on challenging courses in your curriculum. By enrolling in advanced
+                          courses like AP, IB, or honors classes, you can display your dedication to academic excellence. This also helps develop a deeper understanding of the subjects and showcases your ability to handle a rigorous workload.</li>
+                        <li className="list-group-item"><strong>Tip 2:</strong> Engage in academic extracurriculars to enhance your knowledge in specific subjects. Participating in clubs like the Math Team, Science Olympiad, or Debate Team allows you to hone your skills and interests while demonstrating your commitment to academic growth.</li>
+                        <li className="list-group-item"><strong>Tip 3:</strong> Seek out opportunities for academic research or internships in your field of interest. These experiences provide a deeper understanding of your chosen discipline and allow you to connect with professionals in the field. They also demonstrate your passion for learning and your ability to apply your knowledge in real-world situations.</li>
+                      </ul>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
