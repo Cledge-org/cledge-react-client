@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy to Dempsey Dev
+name: Build and deploy to Testing
 
 on:
   workflow_dispatch:
@@ -58,7 +58,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: "cledge-dev-site"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_66AFF99485A54F35920C202AF855FEA0 }}
-          package: ./dist/cledge-dev-site
-
+          app-name: "cledge-testing"
+          slot-name: "Production"
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AE95568371164A5C80A9DD69293F508E }}
+          package: .
