@@ -25,7 +25,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 
 const CollegeList = ({ collegeListData }) => {
-  return <CollegeListDempseyPage collegeList={collegeListData} />;
+  return <CollegeListDempseyPage collegeList={collegeListData} accountInfo={undefined} />;
 };
 
 export default CollegeList;
