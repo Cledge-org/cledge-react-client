@@ -379,13 +379,13 @@ const CollegeDetailPage = ({
             </div>
           </div>
           <Tabs value={value} onChange={handleChange}>
-            <Tab className="me-5" label="Overview" />
-            <Tab className="mx-5" label="Admission" />
-            <Tab className="mx-5" label="Academics" />
-            <Tab className="mx-5" label="Financials" />
-            <Tab className="mx-5" label="Student" />
-            <Tab className="ms-5" label="Campus Life" />
-            <Tab className="ms-5" label="Insights" />
+            <Tab className="me-4" label="Overview" />
+            <Tab className="mx-4" label="Admission" />
+            <Tab className="mx-4" label="Academics" />
+            <Tab className="mx-4" label="Financials" />
+            <Tab className="mx-4" label="Student" />
+            <Tab className="ms-4" label="Campus Life" />
+            <Tab className="ms-4" label="Insights" />
           </Tabs>
         </div>
       </div>
