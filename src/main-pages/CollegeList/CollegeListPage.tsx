@@ -88,7 +88,7 @@ const CollegeListPage: NextApplicationPage<{
       result.source &&
       result.destination.droppableId != result.source.droppableId
     ) {
-      if (result.destination.droppableId == "Target Schools") {
+      if (result.destination.droppableId == "Safety Schools") {
         temporaryList.map((college) => {
           if (college.college_id == result.draggableId) {
             college.fit_type = 0;
@@ -160,7 +160,7 @@ const CollegeListPage: NextApplicationPage<{
             }}
           >
             <TierCard
-              name="Target Schools"
+              name="Safety Schools"
               collegeList={targetSchools}
               RemoveCollegeFromListFunction={handleRemoveCollege}
             />
