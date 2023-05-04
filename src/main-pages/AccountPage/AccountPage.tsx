@@ -112,6 +112,7 @@ const AccountPage: NextApplicationPage<{
         newUserResponses.push({
           questionId: questionIdent,
           response: value,
+          tag: null
         });
       } else {
         newUserResponses[indexOfResponse].response = value;

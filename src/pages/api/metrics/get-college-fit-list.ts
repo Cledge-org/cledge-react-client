@@ -76,13 +76,14 @@ const getAllColleges = (
             let target = [];
             let reach = [];
             // database stores the college data in colleges' alphabetical order; randomize for more various results
-            collegesRes = collegesRes.sort(() => Math.random() - 0.5);
+            // collegesRes = collegesRes.sort(() => Math.random() - 0.5);
             collegesRes.forEach((college) => {
                 let preferenceFit = calculatePreferenceFit(college, preferences);
+
                 let collegeFit = 0;
                 let collegeRankInfo = [college["UNITID"], college["INSTNM"], preferenceFit];
                 if (ECTier === null && courseworkTier === null && GPATier === null && studFirstGen === null && studSATScore === null && studACTScore === null) {
-                    if (college["ADM_RATE"] != null) {
+                    if (college["ADM_RATE"] !== null) {
                         if (college["ADM_RATE"] <= 0.33) {
                             collegeFit = 3;
                         } else if (college["ADM_RATE"] < 0.8) {
@@ -91,10 +92,11 @@ const getAllColleges = (
                             collegeFit = 1;
                         }
                     }
-                } else if (college["ADM_RATE"] != null && college["SAT_AVG"] && college["ACTCMMID"] && "admission" in college && "GPA" in college["admission"] && "selection_of_students" in college["admission"]) {
+                } else if (college["ADM_RATE"] !== null && college["SAT_AVG"] !== null && college["ACTCMMID"] !== null && "admission" in college && "GPA" in college["admission"] && "selection_of_students" in college["admission"]) {
+
                     let importances = selectionOfStudentsData(college["admission"]["selection_of_students"]);
                     let collegeADMAvgGPA = ADMGPACalculation(college["admission"]["GPA"]);
-                    if (collegeADMAvgGPA != null) {
+                    if (collegeADMAvgGPA !== null) {
                         collegeFit = calculateCollegeFit(college["ADM_RATE"] * 100, ECTier, courseworkTier, GPATier, collegeADMAvgGPA, studFirstGen, studSATScore, studACTScore, college["SAT_AVG"], college["ACTCMMID"], studentType, importances);
                     }
                 }
@@ -155,69 +157,70 @@ const calculatePreferenceFit = (
     // in-state + public + low-cost of attendance
     let statePreferenceParam = 1;
     let schoolPreferenceParam = 1;
-    if ("statePreference" in preferences && "schoolPreference" in preferences && "costOfAttendance" in preferences) {
+    if ((preferences["statePreference"]["low_val"] !== null) && (preferences["schoolPreference"]["low_val"] !== null) && (preferences["costOfAttendance"]["low_val"] !== null)) {
         if (preferences["statePreference"]["low_val"].split(" ").length === 1 && preferences["schoolPreference"]["low_val"] === 1 && preferences["costOfAttendance"]["low_val"] === 0) {
             statePreferenceParam = 2;
             schoolPreferenceParam = 2;
         }
     }
+
     // preference for schoolSize
-    if ("schoolSize" in preferences) {
+    if (preferences["schoolSize"]["low_val"] !== null) {
         let schoolSizeInfo = preferences["schoolSize"];
-        if ("UGDS" in college && college["UGDS"] != null) {
+        if ("UGDS" in college && college["UGDS"] !== null) {
             if (college["UGDS"] >= schoolSizeInfo["low_val"] - 1000) {
-                if ("high_val" in schoolSizeInfo && college["UGDS"] <= schoolSizeInfo["high_val"] + 1000) {
+                if (schoolSizeInfo["high_val"] !== null && college["UGDS"] <= schoolSizeInfo["high_val"] + 1000) {
                     fitVal += schoolSizeInfo["preferenceLevel"];
-                } else if (!("high_val" in schoolSizeInfo)) {
+                } else if (!(schoolSizeInfo["high_val"] !== null)) {
                     fitVal += schoolSizeInfo["preferenceLevel"];
                 }
             }
             if (college["UGDS"] >= schoolSizeInfo["low_val"]) {
-                if ("high_val" in schoolSizeInfo && college["UGDS"] <= schoolSizeInfo["high_val"]) {
+                if (schoolSizeInfo["high_val"] !== null && college["UGDS"] <= schoolSizeInfo["high_val"]) {
                     fitVal += schoolSizeInfo["preferenceLevel"];
-                } else if (!("high_val" in schoolSizeInfo)) {
+                } else if (!(schoolSizeInfo["high_val"] !== null)) {
                     fitVal += schoolSizeInfo["preferenceLevel"];
                 }
             }
         }
     }
     // preference for costOfAttendance
-    if ("costOfAttendance" in preferences) {
+    if (preferences["costOfAttendance"]["low_val"] !== null) {
         let costOfAttendanceInfo = preferences["costOfAttendance"];
-        if (college["CINSOFF"] != null) {
+        if (college["CINSOFF"] !== null) {
             let collegeCostofAttendance = college["CINSOFF"];
             if (preferences["schoolPreference"] && preferences["schoolPreference"]["low_val"] === 1) {
                 collegeCostofAttendance = college["COTSOFF"] ? college["COTSOFF"] : collegeCostofAttendance;
             }
             if (collegeCostofAttendance >= costOfAttendanceInfo["low_val"] - 5000) {
-                if ("high_val" in costOfAttendanceInfo && collegeCostofAttendance <= costOfAttendanceInfo["high_val"] + 5000) {
+                if (costOfAttendanceInfo["high_val"] !== null && collegeCostofAttendance <= costOfAttendanceInfo["high_val"] + 5000) {
                     fitVal += costOfAttendanceInfo["preferenceLevel"];
-                } else if (!("high_val" in costOfAttendanceInfo)) {
+                } else if (!(costOfAttendanceInfo["high_val"] !== null)) {
                     fitVal += costOfAttendanceInfo["preferenceLevel"];
                 }
             }
             if (collegeCostofAttendance >= costOfAttendanceInfo["low_val"]) {
-                if ("high_val" in costOfAttendanceInfo && collegeCostofAttendance <= costOfAttendanceInfo["high_val"]) {
+                if (costOfAttendanceInfo["high_val"] !== null && collegeCostofAttendance <= costOfAttendanceInfo["high_val"]) {
                     fitVal += costOfAttendanceInfo["preferenceLevel"];
-                } else if (!("high_val" in costOfAttendanceInfo)) {
+                } else if (!(costOfAttendanceInfo["high_val"] !== null)) {
                     fitVal += costOfAttendanceInfo["preferenceLevel"];
                 }
             }
         }
     }
     // preference for schoolPreference
-    if ("schoolPreference" in preferences) {
+    if (preferences["schoolPreference"]["low_val"] !== null) {
         let schoolPreferenceInfo = preferences["schoolPreference"];
-        if (college["CONTROL"] != null) {
+        if (college["CONTROL"] !== null) {
             if (college["CONTROL"] === schoolPreferenceInfo["low_val"] || (college["CONTROL"] === 3 && schoolPreferenceInfo["low_val"] === 2)) {
                 fitVal += schoolPreferenceInfo["preferenceLevel"] * 2 * schoolPreferenceParam;
             }
         }
     }
     // preference for localePreference
-    if ("localePreference" in preferences) {
+    if (preferences["localePreference"]["low_val"] !== null) {
         let localePreferenceInfo = preferences["localePreference"];
-        if (college["LOCALE"] != null) {
+        if (college["LOCALE"] !== null) {
             let collegeLocaleVal = Math.floor(college["LOCALE"] / 10);
             if (localePreferenceInfo["low_val"] < 3) {
                 if (localePreferenceInfo["low_val"] === collegeLocaleVal) {
@@ -229,38 +232,38 @@ const calculatePreferenceFit = (
         }
     }
     // preference for statePreference
-    if ("statePreference" in preferences) {
+    if (preferences["statePreference"]["low_val"] !== null) {
         let statePreferenceInfo = preferences["statePreference"];
-        if (college["STABBR"] != null) {
+        if (college["STABBR"] !== null) {
             let state = statePreferenceInfo["low_val"].split(" ");
             if (state.length === 1) {
                 if (state[0] === college["STABBR"]) {
                     fitVal += statePreferenceInfo["preferenceLevel"] * 2 * statePreferenceParam;
                 }
             } else {
-                if (state[1] != college["STABBR"]) {
+                if (state[1] !== college["STABBR"]) {
                     fitVal += statePreferenceInfo["preferenceLevel"] * 2 * statePreferenceParam;
                 }
             }
         }
     }
     // preference for classSize
-    if ("classSize" in preferences) {
+    if (preferences["classSize"]["low_val"] !== null) {
         let classSizeInfo = preferences["classSize"];
-        if (college["academics"] != null && college["academics"]["Regular Class Size"] != null) {
+        if (college["academics"] !== null && college["academics"]["Regular Class Size"] !== null) {
             let collegeAvgClassSize = avgClassSizeCalculation(college["academics"]["Regular Class Size"]);
-            if (collegeAvgClassSize != null) {
+            if (collegeAvgClassSize !== null) {
                 if (collegeAvgClassSize >= classSizeInfo["low_val"] - 5) {
-                    if ("high_val" in classSizeInfo && collegeAvgClassSize <= classSizeInfo["high_val"] + 5) {
+                    if (classSizeInfo["high_val"] !== null && collegeAvgClassSize <= classSizeInfo["high_val"] + 5) {
                         fitVal += classSizeInfo["preferenceLevel"];
-                    } else if (!("high_val" in classSizeInfo)) {
+                    } else if (!(classSizeInfo["high_val"] !== null)) {
                         fitVal += classSizeInfo["preferenceLevel"];
                     }
                 }
                 if (collegeAvgClassSize >= classSizeInfo["low_val"]) {
-                    if ("high_val" in classSizeInfo && collegeAvgClassSize <= classSizeInfo["high_val"]) {
+                    if (classSizeInfo["high_val"] !== null && collegeAvgClassSize <= classSizeInfo["high_val"]) {
                         fitVal += classSizeInfo["preferenceLevel"];
-                    } else if (!("high_val" in classSizeInfo)) {
+                    } else if (!(classSizeInfo["high_val"] !== null)) {
                         fitVal += classSizeInfo["preferenceLevel"];
                     }
                 }
@@ -268,23 +271,23 @@ const calculatePreferenceFit = (
         }
     }
     // preference for finAidNeed
-    if ("finAidNeed" in preferences) {
+    if (preferences["finAidNeed"]["low_val"] !== null) {
         let finAidNeedInfo = preferences["finAidNeed"];
-        if (college["financials"] != null && college["financials"]["freshman_19_20_profile"] != null && college["COTSOFF"]) {
+        if (college["financials"] !== null && college["financials"]["freshman_19_20_profile"] !== null && college["COTSOFF"]) {
             let finAidProfile = college["financials"]["freshman_19_20_profile"];
-            if (finAidProfile["Average Award"] != null && finAidProfile["Average Award"]["overall"] != null) {
+            if (finAidProfile["Average Award"] !== null && finAidProfile["Average Award"]["overall"] !== null) {
                 let collegeAidCostCover = finAidParse(finAidProfile["Average Award"]["overall"]) / college["COTSOFF"] * 100;
                 if (collegeAidCostCover >= finAidNeedInfo["low_val"] - 5) {
-                    if ("high_val" in finAidNeedInfo && collegeAidCostCover <= finAidNeedInfo["high_val"] + 5) {
+                    if (finAidNeedInfo["high_val"] !== null && collegeAidCostCover <= finAidNeedInfo["high_val"] + 5) {
                         fitVal += finAidNeedInfo["preferenceLevel"];
-                    } else if (!("high_val" in finAidNeedInfo)) {
+                    } else if (finAidNeedInfo["high_val"] === null) {
                         fitVal += finAidNeedInfo["preferenceLevel"];
                     }
                 }
                 if (collegeAidCostCover >= finAidNeedInfo["low_val"]) {
-                    if ("high_val" in finAidNeedInfo && collegeAidCostCover <= finAidNeedInfo["high_val"]) {
+                    if (finAidNeedInfo["high_val"] !== null && collegeAidCostCover <= finAidNeedInfo["high_val"]) {
                         fitVal += finAidNeedInfo["preferenceLevel"];
-                    } else if (!("high_val" in finAidNeedInfo)) {
+                    } else if (!(finAidNeedInfo["high_val"] !== null)) {
                         fitVal += finAidNeedInfo["preferenceLevel"];
                     }
                 }
@@ -292,23 +295,23 @@ const calculatePreferenceFit = (
         }
     }
     // preference for finAidMerit
-    if ("finAidMerit" in preferences) {
+    if (preferences["finAidMerit"]["low_val"] !== null) {
         let finAidMeritInfo = preferences["finAidMerit"];
-        if (college["financials"] != null && college["financials"]["freshman_19_20_profile"] != null && college["COTSOFF"]) {
+        if (college["financials"] !== null && college["financials"]["freshman_19_20_profile"] !== null && college["COTSOFF"]) {
             let finAidProfile = college["financials"]["freshman_19_20_profile"];
-            if (finAidProfile["Merit-Based Gift"] != null) {
+            if (finAidProfile["Merit-Based Gift"] !== null) {
                 let collegeAidCostCover = finAidParse(finAidProfile["Merit-Based Gift"]) / college["COTSOFF"] * 100;
                 if (collegeAidCostCover >= finAidMeritInfo["low_val"] - 2) {
-                    if ("high_val" in finAidMeritInfo && collegeAidCostCover <= finAidMeritInfo["high_val"] + 2) {
+                    if (finAidMeritInfo["high_val"] !== null && collegeAidCostCover <= finAidMeritInfo["high_val"] + 2) {
                         fitVal += finAidMeritInfo["preferenceLevel"];
-                    } else if (!("high_val" in finAidMeritInfo)) {
+                    } else if (!(finAidMeritInfo["high_val"] !== null)) {
                         fitVal += finAidMeritInfo["preferenceLevel"];
                     }
                 }
                 if (collegeAidCostCover >= finAidMeritInfo["low_val"]) {
-                    if ("high_val" in finAidMeritInfo && collegeAidCostCover <= finAidMeritInfo["high_val"]) {
+                    if (finAidMeritInfo["high_val"] !== null && collegeAidCostCover <= finAidMeritInfo["high_val"]) {
                         fitVal += finAidMeritInfo["preferenceLevel"];
-                    } else if (!("high_val" in finAidMeritInfo)) {
+                    } else if (!(finAidMeritInfo["high_val"] !== null)) {
                         fitVal += finAidMeritInfo["preferenceLevel"];
                     }
                 }
@@ -328,7 +331,7 @@ const avgClassSizeCalculation = (classSize: { [id: string] : string; }) => {
         let keyInfo = key.split(" ");
         let studentNum = 0;
         let percent = 0;
-        if (value != null && value != "" && value != "Not Reported") {
+        if (value !== null && value !== "" && value !== "Not Reported") {
             percent = parseInt(value.slice(0, -1));
         } else {
             return null;
@@ -354,7 +357,7 @@ const ADMGPACalculation = (gpa: { [id: string] : string; }) => {
         const curGPARange = key.split(" ");
         let curGPARangeAvg = 0;
         let percent = 0;
-        if (value != null && value != "" && value != "Not Reported") {
+        if (value !== null && value !== "" && value !== "Not Reported") {
             percent = parseInt(value.slice(0, -1));
         } else {
             return null;
@@ -373,7 +376,7 @@ const selectionOfStudentsData = (selections) => {
     let importances = [];
     importancesAttributes.forEach((value) => {
         if (value in selections) {
-            if (selections[value] != null) {
+            if (selections[value] !== null) {
                 importances.push(selectionOfStudentMapping[selections[value]]);
             }
         } else {
@@ -402,6 +405,7 @@ const projection = {
 };
 
 const studentTypeData = {
+    0: [4, 6, 5],
     1: [6, 5, 4],
     2: [4, 6, 5],
     3: [2, 5, 8]

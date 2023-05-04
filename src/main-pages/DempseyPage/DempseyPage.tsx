@@ -9,11 +9,13 @@ import MCQQuestion from "../../common/components/Questions/MCQQuestion/MCQQuesti
 import RankingQuestion from "../../common/components/Questions/RankingQuestion/RankingQuestion";
 import TextInputQuestion from "../../common/components/Questions/TextInputQuestion/TextInputQuestion";
 import getCollegeFitList from "src/pages/api/metrics/get-college-fit-list";
+import { getCollege } from "src/pages/api/CST/get-college-info";
 
 import {
   updateAccountAction,
   updateTagsAndCheckInsAction,
   updateQuestionResponsesAction,
+  initialStateAction,
 } from "../../utils/redux/actionFunctions";
 import { store } from "../../utils/redux/store";
 import styles from "./check-in-page.module.scss";
@@ -25,6 +27,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import CompositeQuestion from "src/common/components/Questions/CompositeQuestion/CompositeQuestion";
 import DoubleTextInputQuestion from "src/common/components/Questions/DoubleTextInputQuestion/DoubleTextInputQuestion";
 import DoubleDropdownQuestion from "src/common/components/Questions/DoubleDropdownQuestion/DoubleDropdownQuestion";
+import { collegeListIndividualInfo } from "src/@types/types";
 
 const CheckIn: NextApplicationPage<{
   checkInData: QuestionList;
@@ -172,44 +175,44 @@ const CheckIn: NextApplicationPage<{
     const requestFormat = {
       preferences: {
         schoolSize: {
-          low: schoolSizeLow,
-          high: schoolSizeHigh,
-          preferenceLevel: 0
+          low_val: schoolSizeLow,
+          high_val: schoolSizeHigh,
+          preferenceLevel: 1
         },
         costOfAttendance: {
-          low: costOfAttendanceLow,
-          high: costOfAttendanceHigh,
-          preferenceLevel: 0
+          low_val: costOfAttendanceLow,
+          high_val: costOfAttendanceHigh,
+          preferenceLevel: 1
         },
         schoolPreference: {
-          low: privatePublic,
-          high: privatePublic,
-          preferenceLevel: 0
+          low_val: privatePublic,
+          high_val: privatePublic,
+          preferenceLevel: 1
         },
         localePreference: {
-          low: locale,
-          high: locale,
-          preferenceLevel: 0
+          low_val: locale,
+          high_val: locale,
+          preferenceLevel: 1
         },
         statePreference: {
-          low: state,
-          high: state,
-          preferenceLevel: 0
+          low_val: state,
+          high_val: state,
+          preferenceLevel: 1
         },
         classSize: {
-          low: classSize,
-          high: classSize,
-          preferenceLevel: 0,
+          low_val: classSize,
+          high_val: classSize,
+          preferenceLevel: 1,
         },
         finAidNeed: {
-          low: finNeedLow,
-          high: finNeedHigh,
-          preferenceLevel: 0,
+          low_val: finNeedLow,
+          high_val: finNeedHigh,
+          preferenceLevel: 1,
         },
         finAidMerit: {
-          low: finMeritLow,
-          high: finMeritHigh,
-          preferenceLevel: 0,
+          low_val: finMeritLow,
+          high_val: finMeritHigh,
+          preferenceLevel: 1,
         }
       },
       ECTier: 0,
@@ -250,8 +253,38 @@ const CheckIn: NextApplicationPage<{
       }
     };
     
-    const result = await fetchData(); // Store the result in a variable
-    console.log(result); // Do something with the result    
+    console.log(JSON.stringify(requestFormat));
+    const collegeResult = await fetchData(); // Store the result in a variable
+    console.log(collegeResult); // Do something with the result
+
+    const pushToDb = async () => {
+      try {
+        const response = await fetch('/api/dempsey/put-to-dempsey', {
+          method: 'POST',
+          headers: {
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_id: session.data.user.uid,
+            generated_colleges: collegeResult
+          })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data); // Do something with the data
+          return data;
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+      }
+    };
+
+    pushToDb();
+
+    //const result = await callGetCollegeListDempsey(requestFormat.preferences, requestFormat.ECTier, requestFormat.courseworkTier, requestFormat.GPATier, requestFormat.studFirstGen, requestFormat.studSATScore, requestFormat.studACTScore, requestFormat.studentType); // Store the result in a variable
   };
   const filterDuplicates = (toFilter: any[]) => {
     return toFilter.filter((element, index, self) => {
@@ -497,7 +530,7 @@ const CheckIn: NextApplicationPage<{
 };
 CheckIn.requireAuth = true;
 export default connect((state) => ({
-  userTags: state.accountInfo.tags,
-  grade: state.accountInfo.grade,
-  userResponses: state.questionResponses,
+  // userTags: state.accountInfo.tags,
+  // grade: state.accountInfo.grade,
+  // userResponses: state.questionResponses,
 }))(CheckIn);

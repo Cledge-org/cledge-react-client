@@ -359,3 +359,10 @@ export const redeemCode = async (userCode: string, email: string) => {
     method: "POST",
   });
 }
+
+export const callGetCollegeListDempsey = async (preferences: any, ECTier: number, courseworkTier: number, GPATier: number, studFirstGen: number, studSATScore: number, studACTScore: number, studentType: number) => {
+  return await fetch(`/api/metrics/get-college-fit-list`, {
+    body: JSON.stringify({ preferences, ECTier, courseworkTier, studFirstGen, studSATScore, studACTScore, studentType }),
+    method: "POST",
+  });
+}
