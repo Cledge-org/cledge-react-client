@@ -177,42 +177,42 @@ const CheckIn: NextApplicationPage<{
         schoolSize: {
           low_val: schoolSizeLow,
           high_val: schoolSizeHigh,
-          preferenceLevel: 0
+          preferenceLevel: 1
         },
         costOfAttendance: {
           low_val: costOfAttendanceLow,
           high_val: costOfAttendanceHigh,
-          preferenceLevel: 0
+          preferenceLevel: 1
         },
         schoolPreference: {
           low_val: privatePublic,
           high_val: privatePublic,
-          preferenceLevel: 0
+          preferenceLevel: 1
         },
         localePreference: {
           low_val: locale,
           high_val: locale,
-          preferenceLevel: 0
+          preferenceLevel: 1
         },
         statePreference: {
           low_val: state,
           high_val: state,
-          preferenceLevel: 0
+          preferenceLevel: 1
         },
         classSize: {
           low_val: classSize,
           high_val: classSize,
-          preferenceLevel: 0,
+          preferenceLevel: 1,
         },
         finAidNeed: {
           low_val: finNeedLow,
           high_val: finNeedHigh,
-          preferenceLevel: 0,
+          preferenceLevel: 1,
         },
         finAidMerit: {
           low_val: finMeritLow,
           high_val: finMeritHigh,
-          preferenceLevel: 0,
+          preferenceLevel: 1,
         }
       },
       ECTier: 0,
@@ -257,11 +257,32 @@ const CheckIn: NextApplicationPage<{
     const collegeResult = await fetchData(); // Store the result in a variable
     console.log(collegeResult); // Do something with the result
 
-    await store.dispatch(
-      initialStateAction({
-        collegeListData: collegeResult,
-      })
-    );
+    const pushToDb = async () => {
+      try {
+        const response = await fetch('/api/dempsey/put-to-dempsey', {
+          method: 'POST',
+          headers: {
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_id: session.data.user.uid,
+            generated_colleges: collegeResult
+          })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data); // Do something with the data
+          return data;
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+      }
+    };
+
+    pushToDb();
 
     //const result = await callGetCollegeListDempsey(requestFormat.preferences, requestFormat.ECTier, requestFormat.courseworkTier, requestFormat.GPATier, requestFormat.studFirstGen, requestFormat.studSATScore, requestFormat.studACTScore, requestFormat.studentType); // Store the result in a variable
   };
