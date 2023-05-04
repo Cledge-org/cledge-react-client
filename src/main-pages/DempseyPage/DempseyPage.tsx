@@ -76,7 +76,6 @@ const CheckIn: NextApplicationPage<{
   }, [checkInData, page, newUserResponses]);
 
   const submitForm = async (e: { preventDefault: () => void }) => {
-
     let res = newUserResponses;
 
     let schoolSizeLow = null;
@@ -253,9 +252,61 @@ const CheckIn: NextApplicationPage<{
       }
     };
     
-    console.log(JSON.stringify(requestFormat));
+    console.log(requestFormat);
     const collegeResult = await fetchData(); // Store the result in a variable
     console.log(collegeResult); // Do something with the result
+    let postArr = [];
+
+    let reach = collegeResult.reach;
+    let target = collegeResult.target;
+    let safety = collegeResult.safety;
+
+    for (let i = 0; i < reach.length; i++) {
+      const personalize: collegeListIndividualInfo = {
+        college_id: reach[i].college_id,
+        fit_type: 2,
+        img_url: reach[i].img_url,
+        img_title: reach[i].img_title,
+        college_name: reach[i].college_name,
+        location: reach[i].location,
+        in_state_tuition: reach[i].in_state_tuition,
+        out_state_tuition: reach[i].out_state_tuition,
+        college_type: reach[i].college_type
+      }
+      postArr.push(personalize);
+    }
+
+    for (let i = 0; i < target.length; i++) {
+      const personalize: collegeListIndividualInfo = {
+        college_id: target[i].college_id,
+        fit_type: 0,
+        img_url: target[i].img_url,
+        img_title: target[i].img_title,
+        college_name: target[i].college_name,
+        location: target[i].location,
+        in_state_tuition: target[i].in_state_tuition,
+        out_state_tuition: target[i].out_state_tuition,
+        college_type: target[i].college_type
+      }
+      postArr.push(personalize);
+    }
+
+    for (let i = 0; i < safety.length; i++) {
+      const personalize: collegeListIndividualInfo = {
+        college_id: safety[i].college_id,
+        fit_type: 1,
+        img_url: safety[i].img_url,
+        img_title: safety[i].img_title,
+        college_name: safety[i].college_name,
+        location: safety[i].location,
+        in_state_tuition: safety[i].in_state_tuition,
+        out_state_tuition: safety[i].out_state_tuition,
+        college_type: safety[i].college_type
+      }
+      postArr.push(personalize);
+    }
+
+    router.push({ pathname: "/college-list-dempsey" });
 
     const pushToDb = async () => {
       try {
@@ -266,8 +317,8 @@ const CheckIn: NextApplicationPage<{
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            user_id: session.data.user.uid,
-            collegeList: collegeResult
+            user_id: "0vKSdjmusWXBquxeYq25qEFMlCV2",
+            college_list: postArr
           })
         });
         if (response.ok) {
@@ -282,9 +333,9 @@ const CheckIn: NextApplicationPage<{
       }
     };
 
-    pushToDb();
-
-    //const result = await callGetCollegeListDempsey(requestFormat.preferences, requestFormat.ECTier, requestFormat.courseworkTier, requestFormat.GPATier, requestFormat.studFirstGen, requestFormat.studSATScore, requestFormat.studACTScore, requestFormat.studentType); // Store the result in a variable
+    const uploadRes = await pushToDb();
+    console.log(uploadRes);
+    router.push({ pathname: "/college-list-dempsey" });
   };
   const filterDuplicates = (toFilter: any[]) => {
     return toFilter.filter((element, index, self) => {

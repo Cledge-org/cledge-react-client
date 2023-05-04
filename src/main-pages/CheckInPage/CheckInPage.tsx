@@ -154,7 +154,7 @@ const CheckIn: NextApplicationPage<{
       store.dispatch(updateTagsAndCheckInsAction(userTags, checkInList));
       store.dispatch(updateQuestionResponsesAction(newUserResponses));
     });
-    router.push({ pathname: "/dashboard" });
+    ({ pathname: "/dashboard" });
   };
   const filterDuplicates = (toFilter: any[]) => {
     return toFilter.filter((element, index, self) => {

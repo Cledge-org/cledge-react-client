@@ -9,7 +9,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         chunks: [
             {
                 _id: "null",
-                name: "Test questions",
+                name: "College Fit",
                 questions: [
                     {
                         _id: "schoolSize",

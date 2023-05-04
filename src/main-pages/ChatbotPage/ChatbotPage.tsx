@@ -383,7 +383,7 @@ const Chatbot: NextApplicationPage<{
   }, [currWorkflow]);
 
   if (accountInfo.checkIns.length > 0) {
-    router.push({
+    ({
       pathname: "/check-ins/[checkIn]",
       query: { checkIn: accountInfo.checkIns },
     });
