@@ -28,6 +28,7 @@ import CompositeQuestion from "src/common/components/Questions/CompositeQuestion
 import DoubleTextInputQuestion from "src/common/components/Questions/DoubleTextInputQuestion/DoubleTextInputQuestion";
 import DoubleDropdownQuestion from "src/common/components/Questions/DoubleDropdownQuestion/DoubleDropdownQuestion";
 import { collegeListIndividualInfo } from "src/@types/types";
+import LoadingScreen from "src/common/components/Loading/Loading";
 
 const CheckIn: NextApplicationPage<{
   checkInData: QuestionList;
@@ -40,6 +41,7 @@ const CheckIn: NextApplicationPage<{
   const [page, changePage] = useState(0);
   const [newTags, setNewTags] = useState([]);
   const [newUserResponses, setNewUserResponses] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
   const hiddenFileInput = React.useRef(null);
   const size = useWindowSize();
   const transcriptUpload = () => {
@@ -77,6 +79,8 @@ const CheckIn: NextApplicationPage<{
 
   const submitForm = async (e: { preventDefault: () => void }) => {
     let res = newUserResponses;
+
+    setIsLoading(true);
 
     let schoolSizeLow = null;
     let schoolSizeHigh = null;
@@ -472,6 +476,16 @@ const CheckIn: NextApplicationPage<{
       </div>
     );
   }
+
+  if (isLoading) {
+    return (
+      <div className="container-fluid d-flex flex-column justify-content-center align-items-center vh-100">
+        <LoadingScreen />
+        <h2>Generating your college list...</h2>
+      </div>
+    );
+  }
+  
   return (
     <div className="w-100 d-flex flex-column">
       <div
