@@ -8,7 +8,6 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@mui/material";
 import { useSession } from "next-auth/react";
 
-
 const CollegeListPage: NextApplicationPage<{
   accountInfo: AccountInfo;
   collegeList: collegeListIndividualInfo[];

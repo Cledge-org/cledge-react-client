@@ -22,6 +22,7 @@ import classNames from "classnames";
 import { Map, Marker, ZoomControl } from "pigeon-maps";
 import { useSession } from "next-auth/react";
 import { Button } from "@mui/material";
+import { Helmet } from 'react-helmet';
 
 const CollegeDetailPage = ({
   questionResponses,
@@ -384,7 +385,7 @@ const CollegeDetailPage = ({
             <Tab className="mx-5" label="Financials" />
             <Tab className="mx-5" label="Student" />
             <Tab className="ms-5" label="Campus Life" />
-            {/* <Tab label="Insights" /> */}
+            <Tab className="ms-5" label="Insights" />
           </Tabs>
         </div>
       </div>
@@ -2024,7 +2025,15 @@ const CollegeDetailPage = ({
             </Col>
           </Row>
         ) : value == 6 ? (
-          <></>
+          <div>
+      <Helmet>
+        <script
+          type="module"
+          src="https://gradio.s3-us-west-2.amazonaws.com/3.24.1/gradio.js"
+        ></script>
+      </Helmet>
+      <gradio-app src="https://kunalsinha2024-cledgeessayideationtool.hf.space"></gradio-app>
+    </div>
         ) : (
           <></>
         )}
