@@ -3,7 +3,6 @@ import { GetServerSidePropsContext } from "next";
 import DempseyPage from "src/main-pages/DempseyPage/DempseyPage";
 import { getQuestionList } from "src/pages/api/questions/get-question-list";
 
-
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const data = {
         _id: "null",
@@ -31,7 +30,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: false,
+                        isRequired: true,
                         question: "What is your preferred college size?",
                         type: "MCQ"
                     },
@@ -54,7 +53,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                         helpText: "(including tuition fee and living cost)",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: false,
+                        isRequired: true,
                         question: "What is your expected spending amount per year?",
                         type: "MCQ"
                     },
@@ -73,7 +72,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: false,
+                        isRequired: true,
                         question: "What type of college do you want to get into",
                         type: "MCQ"
                     },
@@ -82,26 +81,26 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                         data: [
                             {
                                 op: "Urban",
-                                tag: 1,
+                                tag: "a",
                             },
                             {
                                 op: "Suburban",
-                                tag: 2,
+                                tag: "b",
                             },
                             {
                                 op: "Rural",
-                                tag: 3,
+                                tag: "c",
                             },
                         ],
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: false,
+                        isRequired: true,
                         question: "What is your preference for the college's location in general?",
                         type: "MCQ"
                     },
                     {
-                        _id: "statePreference",
+                        _id: "state",
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
@@ -110,7 +109,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                         type: "TextInput"
                     },
                     {
-                        _id: "classSize",
+                        _id: "statePreference",
                         data: [
                             {
                                 op: "In-state",
@@ -124,7 +123,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: false,
+                        isRequired: true,
                         question: "Do you want to attend an in-state college or out-of-state college?",
                         type: "MCQ"
                     },
@@ -147,7 +146,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: false,
+                        isRequired: true,
                         question: "What is your expected amount of financial aid (need based)?",
                         type: "MCQ"
                     },
@@ -170,7 +169,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                         helpText: "",
                         helpVid: "",
                         isConcatenable: false,
-                        isRequired: false,
+                        isRequired: true,
                         question: "What is your expected amount of financial aid (merit-based)?",
                         type: "MCQ"
                     },
