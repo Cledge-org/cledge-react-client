@@ -111,7 +111,7 @@ const formatOutput = async (college: any,  client: MongoClient, err: any) => {
         ncaa_baseball: dicts.binary_2[college["SPORT3"]],
         ncaa_cross_country_track: dicts.binary_2[college["SPORT4"]],
       },
-      applicants_per_year: null,
+      applicants_per_year: (college["APPLCNM"] && college["APPLCNW"]) ? (college["APPLCNW"] + college["APPLCNM"]) : null,
       matriculation_rate: null,
       student_faculty_ratio: college["STUFACR"],
       calendar_system: dicts.calendar_system[college["CALSYS"]],
