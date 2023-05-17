@@ -61,5 +61,5 @@ jobs:
         with:
           app-name: 'cledge-main-site'
           slot-name: 'production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_99FABEC3B5C046CB82D0BC71FC2B2C58 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_45FCAF6F299B4F4B8EFB6C207E764CE0 }}
           package: .
