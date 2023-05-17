@@ -287,7 +287,7 @@ const CollegeDetailPage = ({
       <div
         className="position-absolute"
         style={{ left: "8%", top: "10%" }}
-        onClick={() => router.push(`/college/`)}
+        onClick={() => router.push(`/college-search/`)}
       >
         <IconButton
           style={{ backgroundColor: "white" }}
