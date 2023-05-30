@@ -1,4 +1,10 @@
 import classNames from "classnames";
+import Container from 'react-bootstrap/Container';
+import Card from 'react-bootstrap/Card';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import React from "react";
+import { Button } from "react-bootstrap";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
@@ -10,6 +16,8 @@ import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarouse
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import styles from "./dashboard-page.module.scss";
 import Footer from "src/common/components/Footer/Footer";
+import TierRange from "src/main-pages/MetricsPage/components/TierRange/TierRange";
+
 
 const DashboardPage = ({
   accountInfo,
@@ -80,302 +88,299 @@ const DashboardPage = ({
     });
   }
   return (
-    <div>
-      <div
-        className="d-flex align-items-center justify-content-center w-100"
-        style={{ backgroundColor: "#F9FAFF", height: "70vh" }}
-      >
-        <div className="d-flex flex-column w-75" style={{ height: "90%" }}>
-          <div
-            className="cl-dark-text fw-bold mb-5"
-            style={{ fontSize: "28px" }}
-          >
-            Hi, {accountInfo.name}. Welcome to the Dashboard!
-          </div>
-          <div
-            className="cl-dark-text fw-bold pb-2"
-            style={{ fontSize: "18px" }}
-          >
-            Counselor booking
-          </div>
-          <div className="w-100 center-child">
-            <div
-              className="d-flex cl-dark-text flex-column justify-content-between w-100 p-3"
-              style={{
-                height: "100%",
-                borderRadius: "10px",
-                backgroundColor: "white",
-                border: "1px solid #E0DFE8",
-              }}
-            >
-              <div style={{ fontSize: "18px" }} className="fw-bold">
-                Sign up for your complementary 30 minute session on our{" "}
-                <a
-                  className="cl-blue"
-                  href="https://calendly.com/ayan-college-counseling/cledge-uw-cs-advising-session"
-                >
-                  Calendly.
-                </a>
-              </div>
+     <div className="d-flex flex-column">
+        <div className="border h-25" style={{ background: "linear-gradient(93.76deg, rgba(59, 104, 223, 0.65) -8.28%, rgba(141, 50, 213, 0.65) 103.54%)", }}>
+          <div className="py-3">
+            <div className="container display-4 pt-4 pb-5 text-white fw-bold" style={{ fontSize: "80px", }}>
+              Hi, {accountInfo.name.split(" ")[0]}.
+            </div>
+            <div className="container h2 pt-5">
+              <span className="text-white">Welcome to</span> <span className="cl-blue">Cledge.</span>
             </div>
           </div>
-          <div
-            className="cl-dark-text fw-bold pb-2 mt-2"
-            style={{ fontSize: "18px" }}
-          >
-            The essential assistance we provide
-          </div>
-          <div
-            className="d-flex flex-row align-items-center"
-            style={{ height: "60%" }}
-          >
-            <div
-              className="d-flex flex-column justify-content-between w-100 p-3"
-              style={{
-                height: "100%",
-                borderRadius: "10px",
-                backgroundColor: "white",
-                border: "1px solid #E0DFE8",
-              }}
-            >
-              <div className="d-flex flex-row w-100 justify-content-between">
-                <div className="cl-dark-text fw-bold">
-                  <Link href="/my-learning">
-                    <a>
-                      <img
-                        src="/images/header/my-learning.svg"
-                        style={{
-                          padding: "10px",
-                          width: "50px",
-                          borderRadius: "10px",
-                          backgroundColor: "#DCE1FB",
-                        }}
-                      />
-                    </a>
-                  </Link>
-                  <div className="mt-3" style={{ fontSize: "1vw" }}>My Learning</div>
-                </div>
-                <div>
-                  <div style={{ width: "4vw" }}>
-                    <CircularProgressbarWithChildren
-                      strokeWidth={10}
-                      children={
-                        <div
-                          style={{ fontWeight: "bold", fontSize: "1.1em" }}
-                        >{`${percentage}%`}</div>
-                      }
-                      className="center-child"
-                      styles={{
-                        text: {
-                          fontWeight: "bold",
-                        },
-                        trail: {
-                          stroke: "#d6d6d6",
-                        },
-                        path: {
-                          transition: "stroke-dashoffset 0.5s ease 0s",
-                          stroke: "#2651ed",
-                        },
-                      }}
-                      value={percentage}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="fw-bold">
-                {dashboardParts.map(({ name }) => (
-                  <Link href="/my-learning">
-                    <a>
-                      <div className="cl-dark-text py-2" style={{ fontSize: "0.7vw" }}>{name}</div>
-                    </a>
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <div style={{ width: "4%" }} />
-            <div
-              className="w-100 d-flex flex-column justify-content-between"
-              style={{
-                height: "100%",
-                borderRadius: "10px",
-                backgroundColor: "white",
-                border: "1px solid #E0DFE8",
-                overflow: "hidden",
-              }}
-            >
-              <div
-                className="d-flex justify-content-end w-100 py-3 cl-dark-text fw-bold px-3"
-                style={{ backgroundColor: "#A5A6F6", position: "relative", fontSize: "0.8vw" }}
-              >
-                Try it! Cledge's most popular feature
-                <Link href="/chatbot">
-                  <a>
-                    <img
-                      src="/images/header/chatbot.svg"
-                      style={{
-                        position: "absolute",
-                        bottom: "-40%",
-                        left: "3%",
-                        padding: "10px",
-                        width: "50px",
-                        borderRadius: "10px",
-                        backgroundColor: "#DCE1FB",
-                      }}
-                    />
-                  </a>
-                </Link>
-              </div>
-              <div
-                className="ps-3 pb-3 d-flex flex-column justify-content-end"
-                style={{ height: "100%" }}
-              >
-                <div
-                  className="cl-dark-text fw-bold mb-3"
-                  style={{ fontSize: "1.1vw" }}
-                >
-                  Chat with our AI counselor
-                </div>
-                <div
-                  className="cl-mid-gray"
-                  style={{ fontSize: "0.85vw" }}
-                >
-                  Anything you are not sure about?
-                  <br />
-                  Our AI counselor is here for you 24/7
-                </div>
-              </div>
-            </div>
-            <div style={{ width: "4%" }} />
-            <div
-              className="w-100 p-3"
-              style={{
-                height: "100%",
-                borderRadius: "10px",
-                backgroundColor: "white",
-                border: "1px solid #E0DFE8",
-              }}
-            >
-              <Link href="/metrics">
-                <a>
-                  <img
-                    src="/images/header/metrics.svg"
-                    style={{
-                      padding: "10px",
-                      width: "50px",
-                      borderRadius: "10px",
-                      backgroundColor: "#DCE1FB",
-                    }}
-                  />
-                </a>
-              </Link>
-              <div
-                className="cl-dark-text fw-bold mt-3"
-                style={{ fontSize: "1.1vw" }}
-              >
-                Competitive Metrics
-              </div>
-              <div className="cl-mid-gray" style={{ fontSize: "0.85vw" }}>
-                View tips to improve the competitiveness of your profile
-              </div>
-              <div className="w-100 mt-3">
-                <div className="w-100 d-flex flex-row align-items-center justify-content-between">
-                  <div>Less competitive</div>
-                  <div>More competitive</div>
-                </div>
-                <div>
-                  <div
-                    className="mt-1"
-                    style={{
-                      height: "36px",
-                      background:
-                        "linear-gradient(90deg, rgba(100, 47, 113, 0.1) 0%, rgba(248, 231, 76, 0.1) 100%)",
-                      borderLeft: "2px solid #506BED",
-                      borderRight: "2px solid #506BED",
-                      position: "relative",
-                    }}
-                  >
-                    <div
-                      className="d-flex flex-column position-absolute"
-                      style={{
-                        left: `calc(${
-                          avgTier === 0
-                            ? 0
-                            : avgTier === 12
-                            ? 100
-                            : (avgTier / 12) * 100
-                        }% - ${
-                          avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
-                        }px)`,
-                        top: "0",
-                        zIndex: 100,
-                        alignItems:
-                          avgTier === 0
-                            ? "start"
-                            : avgTier === 12
-                            ? "end"
-                            : "center",
-                        width: "fit-content",
-                      }}
-                    >
-                      <div
-                        style={{
-                          border: "2px solid #F7BC76",
-                          height: "36px",
-                          width: 0,
-                          borderRadius: "2px",
-                        }}
-                      />
-                      <div
-                        className="mt-1"
-                        style={{
-                          width: 0,
-                          height: 0,
-                          borderLeft: `${
-                            avgTier === 0 ? 3 : 7
-                          }px solid transparent`,
-                          borderRight: `${
-                            avgTier === 12 ? 3 : 7
-                          }px solid transparent`,
-                          borderBottom: "7px solid #F7BC76",
-                          alignSelf:
-                            avgTier === 0
-                              ? "start"
-                              : avgTier === 12
-                              ? "end"
-                              : "center",
-                        }}
-                      />
-                      <div
-                        className="px-3 py-2 cl-dark-text fw-bold"
-                        style={{
-                          width: "fit-content",
-                          backgroundColor: "#F7BC76",
-                          border: "1px solid transparent",
-                          textAlign: "center",
-                        }}
-                      >
-                        You are here
-                      </div>
+        </div>
+        <Container className="mt-5 mb-5">
+          <Row className="pb-4">
+            <Col className="mt-sm-5 mt-md-0 mt-lg-0" md={6} sm={12}>
+              <Card className="h-100 d-flex flex-column justify-content-between">
+                <Row>
+                  <Col lg={12}>
+                    <div className="ms-3">
+                      <div className="cl-dark-text h2 fw-bold pt-3  ">
+                        <Link href="/my-learning">
+                            <a>
+                              <img
+                                src="/images/header/icon-school.svg"
+                                style={{
+                                  padding: "10px",
+                                  width: "50px",
+                                  borderRadius: "10px",
+                                  backgroundColor: "#DCE1FB",
+                                }}
+                                className="me-3"
+                              />
+                            </a>
+                          </Link>
+                          My Learning
+                        </div>
+                      <Row>
+                        <Col lg={6} className="pt-3">
+                          <div className="h5">
+                            Complete your weekly tasks and modules
+                          </div>
+                        </Col>
+                        <Col lg={6} className="pe-5 pb-3 ps-3">
+                          <div className="d-flex flex-row-reverse">
+                            <div className="" style={{ width: "150px"}}>
+                              <CircularProgressbarWithChildren
+                                strokeWidth={10}
+                                children={
+                                  <div
+                                    style={{ fontWeight: "bold", fontSize: "1.1em" }}
+                                  >{`${percentage}%`}</div>
+                                }
+                                className="center-child"
+                                styles={{
+                                  text: {
+                                    fontWeight: "bold",
+                                  },
+                                  trail: {
+                                    stroke: "#d6d6d6",
+                                  },
+                                  path: {
+                                    transition: "stroke-dashoffset 0.5s ease 0s",
+                                    stroke: "#2651ed",
+                                  },
+                                }}
+                                value={percentage}
+                              />
+                              <br></br>
+                            </div>
+                          </div>
+                        </Col>
+                        <Col />
+                      </Row>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div style={{ backgroundColor: "rgb(249, 250, 255)" }} className="d-flex align-items-center justify-content-center w-100">
-        <div className="d-flex flex-column w-75">
-          <NewBlogsCarousel recentBlogs={recentBlogs} />
-        </div>
-      </div>
-      <div style={{ backgroundColor: "rgb(249, 250, 255)" }} className="d-flex align-items-center justify-content-center w-100">
-        <div className="d-flex flex-column w-75 pt-5">
-        <QuickAccessLinks />
-        </div>
-      </div>
-      <Footer />
-    </div>
+                  </Col>
+                </Row>
+                  <Link href="my-learning">
+                    <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-2">
+                      <div className="h5 mb-0">Go to my Learning</div>
+                    </Button>
+                  </Link>
+              </Card>
+            </Col>
+            <Col>
+            <Card className="h-100 d-flex flex-column justify-content-between">
+                <Row>
+                  <Col lg={12}>
+                    <div className="ms-3">
+                      <div className="cl-dark-text h2 fw-bold pt-3">
+                        <Link href="/metrics">
+                          <a>
+                            <img
+                              src="/images/header/metrics.svg"
+                              style={{
+                                padding: "10px",
+                                width: "50px",
+                                borderRadius: "10px",
+                                backgroundColor: "#DCE1FB",
+                              }}
+                              className="me-3"
+                            />
+                          </a>
+                        </Link>
+                        Competitive Metrics
+                      </div>
+                      <Row>
+                        <Col lg={12} className="pt-3">
+                          <div className="h5">View tips to improve your profile competitiveness.</div>
+                        </Col>
+                          <div className="mt-3 pe-4">
+                            <div className="d-flex flex-row align-items-center justify-content-between">
+                              <div>Less competitive</div>
+                              <div>More competitive</div>
+                            </div>
+                            <div>
+                              <div
+                                className="mt-1 mb-5"
+                                style={{
+                                  height: "36px",
+                                  background:
+                                    "linear-gradient(90deg, rgba(100, 47, 113, 0.1) 0%, rgba(248, 231, 76, 0.1) 100%)",
+                                  borderLeft: "2px solid #506BED",
+                                  borderRight: "2px solid #506BED",
+                                  position: "relative",
+                                }}
+                              >
+                                <div
+                                  className="d-flex flex-column position-absolute"
+                                  style={{
+                                    left: `calc(${
+                                      avgTier === 0
+                                        ? 0
+                                        : avgTier === 12
+                                        ? 100
+                                        : (avgTier / 12) * 100
+                                    }% - ${
+                                      avgTier === 0 ? 0 : avgTier === 12 ? 126.05 : 63.025
+                                    }px)`,
+                                    top: "0",
+                                    zIndex: 100,
+                                    alignItems:
+                                      avgTier === 0
+                                        ? "start"
+                                        : avgTier === 12
+                                        ? "end"
+                                        : "center",
+                                    width: "fit-content",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      border: "2px solid #F7BC76",
+                                      height: "36px",
+                                      width: 0,
+                                      borderRadius: "2px",
+                                    }}
+                                  />
+                                  <div
+                                    className="mt-1"
+                                    style={{
+                                      width: 0,
+                                      height: 0,
+                                      borderLeft: `${
+                                        avgTier === 0 ? 3 : 7
+                                      }px solid transparent`,
+                                      borderRight: `${
+                                        avgTier === 12 ? 3 : 7
+                                      }px solid transparent`,
+                                      borderBottom: "7px solid #F7BC76",
+                                      alignSelf:
+                                        avgTier === 0
+                                          ? "start"
+                                          : avgTier === 12
+                                          ? "end"
+                                          : "center",
+                                    }}
+                                  />
+                                  <div
+                                    className="px-3 py-2 cl-dark-text fw-bold"
+                                    style={{
+                                      width: "fit-content",
+                                      backgroundColor: "#F7BC76",
+                                      border: "1px solid transparent",
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    You are here
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                      </Row>
+                    </div>
+                  </Col>
+                  <Col lg={3}>
+                    <div className=""></div>
+                  </Col>
+                </Row>
+                <Link href="/metrics">
+                  <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
+                    <div className="h5">Go to Metrics</div>
+                  </Button>
+                </Link>
+              </Card>
+            </Col>
+          </Row>
+          <Row>
+          <Col>
+            <Card className="h-100 d-flex flex-column justify-content-between">
+                <Row>
+                  <Col lg={12}>
+                    <div className="ms-3">
+                      <div className="cl-dark-text h2 fw-bold pt-3">
+                        <Link href="/metrics">
+                          <a>
+                            <img
+                              src="/images/header/icon-school.svg"
+                              style={{
+                                padding: "10px",
+                                width: "50px",
+                                borderRadius: "10px",
+                                backgroundColor: "#DCE1FB",
+                              }}
+                              className="me-3"
+                            />
+                          </a>
+                        </Link>
+                        College Search Tool
+                      </div>
+                      <Row>
+                        <Col lg={12} className="pt-3">
+                          <div className="h5">Explore data on thousands of colleges cataloged by cledge - right at your fingertips.</div>
+                        </Col>
+                          
+                      </Row>
+                    </div>
+                  </Col>
+                  <Col lg={3}>
+                    <div className=""></div>
+                  </Col>
+                </Row>
+                <Link href="/college">
+                  <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
+                    <div className="h5">Go to College Finder</div>
+                  </Button>
+                </Link>
+              </Card>
+            </Col>
+            <Col>
+            <Card className="h-100 d-flex flex-column justify-content-between">
+                <Row>
+                  <Col lg={12}>
+                    <div className="ms-3">
+                      <div className="cl-dark-text h2 fw-bold pt-3">
+                        <Link href="/metrics">
+                          <a>
+                            <img
+                              src="/images/header/blogs.svg"
+                              style={{
+                                padding: "10px",
+                                width: "50px",
+                                borderRadius: "10px",
+                                backgroundColor: "#DCE1FB",
+                              }}
+                              className="me-3"
+                            />
+                          </a>
+                        </Link>
+                        College List
+                      </div>
+                      <Row>
+                        <Col lg={12} className="pt-3">
+                          <div className="h5">Explore the colleges that we think are a great fit for you based on your profile</div>
+                        </Col>
+                          
+                      </Row>
+                    </div>
+                  </Col>
+                  <Col lg={3}>
+                    <div className=""></div>
+                  </Col>
+                </Row>
+                <Link href="/collegeList">
+                  <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
+                    <div className="h5">Go to your list</div>
+                  </Button>
+                </Link>
+              </Card>
+            </Col>
+          </Row>
+          
+        </Container>
+      </div>   
   );
 };
 export default connect((state) => {

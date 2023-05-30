@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import CollegeListPage from "src/main-pages/CollegeList/CollegeListPage";
-import { getCollegeList } from "../pages/api/CST/get-college-list";
+import { getCollegeList } from "./api/CST/get-college-list";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {

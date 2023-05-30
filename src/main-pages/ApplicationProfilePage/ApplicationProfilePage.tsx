@@ -109,16 +109,9 @@ const ApplicationProfilePage: NextApplicationPage<{
         style={{ minHeight: "100vh" }}
       >
         <div
-          className="d-flex flex-column bg-extra-light-gray"
-          style={{ flex: 1 }}
+          className="d-flex flex-column bg-extra-light-gray border-end border-2"
+          style={{ width: "20rem" }} // flex: 1
         >
-          <DropdownTab
-            isAll
-            chunkList={[]}
-            onClick={() => setCurrPage({ page: "all", chunk: "" })}
-            title="All Sections"
-            percentComplete={undefined}
-          />
           {questionData.map((list, index) => {
             if (
               list.name === "Onboarding Questions" ||
@@ -126,18 +119,22 @@ const ApplicationProfilePage: NextApplicationPage<{
               list.name === "Academics"
             ) {
               return (
-                <DropdownTab
-                  isECAC={
-                    list.name === "Extracurriculars" ||
-                    list.name === "Academics"
-                  }
-                  chunkList={list.chunks.map((chunk) => chunk.name)}
-                  onClick={(chunk) =>
-                    setCurrPage({ page: list.name, chunk: chunk })
-                  }
-                  title={list.name}
-                  percentComplete={percentageData.lists[index]}
-                />
+                <div className="border-bottom border-2">
+                  <div className="mx-2">
+                    <DropdownTab
+                      isECAC={
+                        list.name === "Extracurriculars" ||
+                        list.name === "Academics"
+                      }
+                      chunkList={list.chunks.map((chunk) => chunk.name)}
+                      onClick={(chunk) =>
+                        setCurrPage({ page: list.name, chunk: chunk })
+                      }
+                      title={list.name}
+                      percentComplete={percentageData.lists[index]}
+                    />
+                  </div>
+                </div>
               );
             }
             return null;

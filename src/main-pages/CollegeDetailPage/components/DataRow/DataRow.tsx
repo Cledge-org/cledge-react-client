@@ -2,7 +2,8 @@ import React from "react";
 import { Row, Col, Divider } from "antd";
 
 function DataRow(props) {
-  return props.type === "content" ? (
+  if (props.type === "content") {
+    return (
     <Row gutter={[16, 16]}>
       {props.colNum === 3 ? (
         <>
@@ -33,7 +34,17 @@ function DataRow(props) {
         </>
       )}
     </Row>
-  ) : (
+  )} else if (props.type === "normal") {
+    return (
+      <>
+        <div className="inline">
+          <p className="cl-dark-text">{props.sub1}</p>
+          <h3 className="cl-dark-text">{props.sub2}</h3>
+        </div>
+        <Divider />
+      </>
+    );
+  } else return (
     <Row gutter={[16, 16]}>
       {props.colNum === 3 ? (
         <>
