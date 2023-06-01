@@ -90,13 +90,6 @@ const Header = ({
       links: [{}]
     },
     {
-      link: "/application-profile",
-      icon: "application-profile.svg?alt=media&token=07dc1585-f1bd-4bee-804b-1db88296c62f",
-      title: "Application Profile",
-      dropdown: false,
-      links: [{}]
-    },
-    {
       link: "/blogs",
       icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
       title: "Blogs",
@@ -200,26 +193,26 @@ const Header = ({
               {linkData.map(({ title, link, icon, dropdown, links}) => (
               dropdown ? (
                 <Dropdown as={ButtonGroup}>
-                  <Dropdown.Toggle variant="outline" className="dropdown-toggle">
-                  <a
-                      className=""
-                      style={{
-                        color: router.pathname === link || router.pathname === "/college-search"  ? "#506BED" : "#808099",
-                      }}
-                    >
-                      <img
+                  <Dropdown.Toggle variant="outline" className="dropdown-toggle btn-sm">
+                    <a
+                        className=""
                         style={{
-                          filter:
-                            router.pathname === link || router.pathname === "/college-search"
-                              ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
-                              : "",
+                          color: router.pathname === link || router.pathname === "/college-search"  ? "#506BED" : "#808099",
                         }}
-                        src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
-                      />
-                      <span className="ps-2">{title}</span>
-                    </a>
+                      >
+                        <img
+                          style={{
+                            filter:
+                              router.pathname === link || router.pathname === "/college-search"
+                                ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
+                                : "",
+                          }}
+                          src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
+                        />
+                        <span className="ps-1 pe-1">{title}</span>
+                      </a>
                   </Dropdown.Toggle>
-            
+          
                   <Dropdown.Menu align="right">
                     <Link href="/college-list">
                       <a className="dropdown-item">College List</a>
@@ -229,51 +222,29 @@ const Header = ({
                     </Link>
                   </Dropdown.Menu>
                 </Dropdown>
-
               ) : (
                 <Link href={link}>
-                  <Button variant="outline" className="clear-button">
-                  <a
-                    className="nav-link d-flex flex-row align-items-center"
-                    style={{
-                      color: router.pathname === link ? "#506BED" : "#808099",
-                    }}
-                  >
-                    <img
+                  <Button variant="outline" className="clear-button btn-sm">
+                    <a
+                      className=""
                       style={{
-                        filter:
-                          router.pathname === link
-                            ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
-                            : "",
+                        color: router.pathname === link ? "#506BED" : "#808099",
                       }}
-                      src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
-                    />
-                    <span className="ps-2">{title}</span>
-                  </a>
+                    >
+                      <img
+                        style={{
+                          filter:
+                            router.pathname === link
+                              ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
+                              : "",
+                        }}
+                        src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
+                      />
+                      <span className="ps-1 pe-1">{title}</span>
+                    </a>
                   </Button>
                 </Link>
               )
-                // <Link href={link}>
-                //   <a
-                //     className="nav-link d-flex flex-row align-items-center"
-                //     style={{
-                //       fontWeight: 500,
-                //       color: router.pathname === link ? "#506BED" : "#808099",
-                //     }}
-                //   >
-                    // <img
-                    //   style={{
-                    //     filter:
-                    //       router.pathname === link
-                    //         ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
-                    //         : "",
-                    //   }}
-                    //   src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
-                    // />
-                //     <div className="px-1" />
-                //     <span>{title}</span>
-                //   </a>
-                // </Link>
               ))}
             </div>
 
@@ -309,21 +280,32 @@ const Header = ({
           )}
         </div>
         {status === "authenticated" && (
-          <Link href="/account">
-            <a
-              style={{
-                background: "rgba(247, 188, 118, 0.5)",
-                paddingLeft: "15px",
-                paddingRight: "15px",
-                paddingTop: "12px",
-                paddingBottom: "12px",
-                borderRadius: "10px",
-                color: "black",
-              }}
-            >
-              {userInitials}
-            </a>
-          </Link>
+          <Dropdown>
+            <Dropdown.Toggle variant="" bsPrefix="p-0" className="">
+              <a
+                  style={{
+                    background: "rgba(247, 188, 118, 0.5)",
+                    paddingLeft: "15px",
+                    paddingRight: "15px",
+                    paddingTop: "12px",
+                    paddingBottom: "12px",
+                    borderRadius: "10px",
+                    color: "black",
+                  }}
+                >
+                  {userInitials}
+                </a>
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Link href="/application-profile">
+                <a className="dropdown-item">Application Profile</a>
+              </Link>
+              <Link href="account">
+                  <a className="dropdown-item">Account Settings</a>
+              </Link>
+            </Dropdown.Menu>
+          </Dropdown>
         )}
       </div>
     </nav>
