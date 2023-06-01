@@ -8,6 +8,10 @@ import { useLocation } from "src/utils/hooks/useLocation";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import styles from "./header.module.scss";
 import collegeIcon from "src/public/images/header/college-search.svg"
+import Dropdown from 'react-bootstrap/Dropdown';
+import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup"
+
 
 const Header = ({
   key_prop,
@@ -49,41 +53,55 @@ const Header = ({
       link: "/dashboard",
       icon: "dashboard.svg?alt=media&token=90850805-8011-45af-aab8-95cbc8d7eb95",
       title: "Dashboard",
+      dropdown: false,
+      links: [{}]
     },
     {
       link: "/my-learning",
       icon: "my-learning.svg?alt=media&token=4ccc96fe-3db9-45b9-849a-24fcac93367b",
       title: "My Learning",
+      dropdown: false,
+      links:[{}]
     },
     {
       link: "/chatbot",
       icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
       title: "AI Chat",
+      dropdown: false,
+      links: [{}]
+
+    },
+    {
+      link: "/college-list",
+      icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
+      title: "College",
+      dropdown: true,
+      links : [{
+        MyList : "/college-list",
+        Colleges : "/college-search",
+      }]
+
     },
     {
       link: "/metrics",
       icon: "metrics.svg?alt=media&token=9eed7da0-8292-4847-9d73-a007d5850f0a",
       title: "Metrics",
-    },
-    {
-      link: "/college-list",
-      icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
-      title: "My List"
-    },
-    {
-      link: "/college-search",
-      icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
-      title: "College Search"
+      dropdown: false,
+      links: [{}]
     },
     {
       link: "/application-profile",
       icon: "application-profile.svg?alt=media&token=07dc1585-f1bd-4bee-804b-1db88296c62f",
       title: "Application Profile",
+      dropdown: false,
+      links: [{}]
     },
     {
       link: "/blogs",
       icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
       title: "Blogs",
+      dropdown: false,
+      links: [{}]
     },
   ];
   const onScroll = useCallback(() => {
@@ -177,13 +195,47 @@ const Header = ({
           id="navbarNavAltMarkup"
         >
           {status === "authenticated" ? (
+            
             <div className="navbar-nav">
-              {linkData.map(({ title, link, icon }) => (
+              {linkData.map(({ title, link, icon, dropdown, links}) => (
+              dropdown ? (
+                <Dropdown as={ButtonGroup}>
+                  <Dropdown.Toggle variant="outline" className="dropdown-toggle">
+                  <a
+                      className=""
+                      style={{
+                        color: router.pathname === link || router.pathname === "/college-search"  ? "#506BED" : "#808099",
+                      }}
+                    >
+                      <img
+                        style={{
+                          filter:
+                            router.pathname === link || router.pathname === "/college-search"
+                              ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
+                              : "",
+                        }}
+                        src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
+                      />
+                      <span className="ps-2">{title}</span>
+                    </a>
+                  </Dropdown.Toggle>
+            
+                  <Dropdown.Menu align="right">
+                    <Link href="/college-list">
+                      <a className="dropdown-item">College List</a>
+                    </Link>
+                    <Link href="college-search">
+                      <a className="dropdown-item">College Search</a>
+                    </Link>
+                  </Dropdown.Menu>
+                </Dropdown>
+
+              ) : (
                 <Link href={link}>
+                  <Button variant="outline" className="clear-button">
                   <a
                     className="nav-link d-flex flex-row align-items-center"
                     style={{
-                      fontWeight: 500,
                       color: router.pathname === link ? "#506BED" : "#808099",
                     }}
                   >
@@ -196,12 +248,36 @@ const Header = ({
                       }}
                       src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
                     />
-                    <div className="px-1" />
-                    <span>{title}</span>
+                    <span className="ps-2">{title}</span>
                   </a>
+                  </Button>
                 </Link>
+              )
+                // <Link href={link}>
+                //   <a
+                //     className="nav-link d-flex flex-row align-items-center"
+                //     style={{
+                //       fontWeight: 500,
+                //       color: router.pathname === link ? "#506BED" : "#808099",
+                //     }}
+                //   >
+                    // <img
+                    //   style={{
+                    //     filter:
+                    //       router.pathname === link
+                    //         ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
+                    //         : "",
+                    //   }}
+                    //   src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
+                    // />
+                //     <div className="px-1" />
+                //     <span>{title}</span>
+                //   </a>
+                // </Link>
               ))}
             </div>
+
+ 
           ) : (
             <div className="navbar-nav">
               <Link href="/api/auth/signin">
