@@ -175,7 +175,6 @@ const College = ({
     };
     const copiedData = [...(data ? data : collegeData)];
     const isLeastGreatest = numericalSortOrder === "Least-Greatest";
-    console.log(copiedData);
     if (sortType === "A-Z") {
       copiedData.sort((a, b) =>
         isLeastGreatest
