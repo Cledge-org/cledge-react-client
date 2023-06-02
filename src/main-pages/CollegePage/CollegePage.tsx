@@ -156,6 +156,7 @@ const College = ({
     }
   }, [currSort, currNumericalSortOrder]);
 
+  
   const sortBy = (sortType: string, numericalSortOrder: string, data?) => {
     const parseInstSize = (inst_size: string) => {
       if (!inst_size) return 0;
