@@ -574,7 +574,6 @@ const WelcomePage = ({ data }) => {
           icon="sm-landing.svg"
           id="product"
         />
-        {/* <NewBlogsCarousel recentBlogs={data.recentBlogs} /> */}
         <Partner>
           <MiddleBlock
             id="partner"

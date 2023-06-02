@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import { useLocation } from "src/utils/hooks/useLocation";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import styles from "./header.module.scss";
+import collegeIcon from "src/public/images/header/college-search.svg"
 
 const Header = ({
   key_prop,
@@ -63,6 +64,16 @@ const Header = ({
       link: "/metrics",
       icon: "metrics.svg?alt=media&token=9eed7da0-8292-4847-9d73-a007d5850f0a",
       title: "Metrics",
+    },
+    {
+      link: "/college-list",
+      icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
+      title: "My List"
+    },
+    {
+      link: "/college-search",
+      icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
+      title: "College Search"
     },
     {
       link: "/application-profile",
