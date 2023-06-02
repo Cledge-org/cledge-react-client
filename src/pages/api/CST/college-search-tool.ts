@@ -168,6 +168,10 @@ const formatOutput = async (college: any, client: MongoClient, err: any) => {
       title: college["INSTNM"],
       location: college["CITY"] + ", " + college["STABBR"],
       college_type: dicts.college_type_dict[college["CONTROL"]],
+      inst_size: dicts.inst_size[college["INSTSIZE"]],
+      tuition_and_fee: college["TUFEYR3"],
+      student_faculty_ratio: college["STUFACR"],
+      acceptance_rate: college["ADM_RATE"]
     };
     return output;
   } catch (e) {
