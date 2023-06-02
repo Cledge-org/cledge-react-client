@@ -283,16 +283,18 @@ const WelcomePage = ({ data }) => {
                     style={{
                         fontWeight: "bold",
                         fontSize: width < 800 ? "24px" : "84px",
-                        paddingBottom: "10px"
+                        paddingBottom: "20px",
+                        width: "100"
                     }}
                 >
-                    Meet the Future of College Advising
+                    Meet the Future of College Advising.
                 </div>
                 <div 
                     style={{
                         fontWeight: "medium",
-                        fontSize: width < 800 ? "16px" : "22px",
-                        paddingBottom: "10px"
+                        fontSize: width < 800 ? "14px" : "20px",
+                        paddingBottom: "10px",
+                        width: "80%"
                     }}
                 >
                     Empower your future with data-driven tools to help you maximize your chances to get into your best-fit colleges while reducing stress in high school.
@@ -301,7 +303,7 @@ const WelcomePage = ({ data }) => {
                     key="subscribe-btn"
                     color="#F7BC76"
                     fixedWidth={false}
-                    className={"w-75 mb-3"}
+                    className={"w-50 mb-3"}
                     onClick={() => {
                     window.open("https://forms.gle/M1GxLK45Yi3Esfn5A", "_blank");
                     }}
