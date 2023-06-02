@@ -510,3 +510,13 @@ span[contenteditable]:empty:focus::before {
   content: "Ask something";
   color: $cl-mid-gray;
 }
+
+.no-aniamtion-button:active,
+.no-animation-button:focus {
+  /* Disable transition animation */
+  transition-property: none;
+  /* Modify other properties as needed */
+  color: #fff !important;
+  outline: none;
+
+}

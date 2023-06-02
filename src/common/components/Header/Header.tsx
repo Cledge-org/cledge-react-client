@@ -193,7 +193,7 @@ const Header = ({
               {linkData.map(({ title, link, icon, dropdown, links}) => (
               dropdown ? (
                 <Dropdown as={ButtonGroup}>
-                  <Dropdown.Toggle variant="outline" className="dropdown-toggle btn-sm">
+                  <Dropdown.Toggle variant="outline" className="dropdown-toggle btn-sm btn-sm no-animation-button">
                     <a
                         className=""
                         style={{
@@ -213,7 +213,7 @@ const Header = ({
                       </a>
                   </Dropdown.Toggle>
           
-                  <Dropdown.Menu align="right">
+                  <Dropdown.Menu align="left">
                     <Link href="/college-list">
                       <a className="dropdown-item">College List</a>
                     </Link>
@@ -224,7 +224,7 @@ const Header = ({
                 </Dropdown>
               ) : (
                 <Link href={link}>
-                  <Button variant="outline" className="clear-button btn-sm">
+                  <Button variant="outline" className="clear-button btn-sm no-animation-button">
                     <a
                       className=""
                       style={{
@@ -281,9 +281,9 @@ const Header = ({
         </div>
         {status === "authenticated" && (
           <Dropdown>
-            <Dropdown.Toggle variant="" bsPrefix="p-0" className="">
-              <a
-                  style={{
+            <Dropdown.Toggle variant="" bsPrefix="p-0" className="btn-sm no-animation-button">
+              <a                
+                style={{
                     background: "rgba(247, 188, 118, 0.5)",
                     paddingLeft: "15px",
                     paddingRight: "15px",
@@ -297,7 +297,7 @@ const Header = ({
                 </a>
             </Dropdown.Toggle>
 
-            <Dropdown.Menu>
+            <Dropdown.Menu align="right">
               <Link href="/application-profile">
                 <a className="dropdown-item">Application Profile</a>
               </Link>
@@ -306,6 +306,7 @@ const Header = ({
               </Link>
             </Dropdown.Menu>
           </Dropdown>
+          
         )}
       </div>
     </nav>
