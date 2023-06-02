@@ -104,6 +104,18 @@ const MiddleBlockContent = ({
                   Try Now!
                 </Button>
             </div>
+          ) : id === "intro" ? (
+            <Button
+                key="subscribe-btn"
+                color="#F7BC76"
+                fixedWidth={false}
+                className={"w-25 mb-3"}
+                onClick={() => {
+                window.open("https://forms.gle/M1GxLK45Yi3Esfn5A", "_blank");
+                }}
+            >
+                Join our insider program ➜
+            </Button>
           ) : (
             <CardWrapper>
               <PartnerCard>

@@ -7,6 +7,7 @@ import ProductContent from "./content/ProductContent.json";
 import ContactContent from "./content/ContactContent.json";
 import MiddleBlockContent from "./content/MiddleBlockContent.json";
 import PartnerContent from "./content/PartnerContent.json";
+import MetricsContent from "./content/MetricsContent.json";
 import CSTContent from "./content/CSTContent.json";
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import Footer from "./components/Footer/Footer";
@@ -262,25 +263,56 @@ const WelcomePage = ({ data }) => {
     <PageErrorBoundary>
       <Container>
         <Intro className="container-margin">
-          <div className="w-100">
+          <div className="w-100 align-items-center justify-content-center">
 
-            {/* ********************** */}
-            {/* Original Intro Content */}
-            {/* ********************** */}
-            {/*<ContentBlock
-              type="right"
+            {/* <MiddleBlock
+              id="intro"
               title={IntroContent.title}
               content={IntroContent.text}
-              button={IntroContent.button}
-              video={<YoutubeEmbed videoId="Bly0QbY3fV4" />}
-              id="intro"
               width={width}
-            />*/}
-            {/* ********************** */}
-            {/* Original Intro Content */}
-            {/* ********************** */}
+            /> */}
+            <div className="d-flex flex-column justify-content-center align-items-center ps-5"
+                style={{
+                    color: "white",
+                    width: width < 800 ? "100%" : "60%",
+                    height: width < 800 ? "50%" : "75%",
+                    textAlign: "center" // Added style to center the text
+                }}
+            >
+                <div
+                    style={{
+                        fontWeight: "bold",
+                        fontSize: width < 800 ? "24px" : "84px",
+                        paddingBottom: "10px"
+                    }}
+                >
+                    Meet the Future of College Advising
+                </div>
+                <div 
+                    style={{
+                        fontWeight: "medium",
+                        fontSize: width < 800 ? "16px" : "22px",
+                        paddingBottom: "10px"
+                    }}
+                >
+                    Empower your future with data-driven tools to help you maximize your chances to get into your best-fit colleges while reducing stress in high school.
+                </div>
+                <Button
+                    key="subscribe-btn"
+                    color="#F7BC76"
+                    fixedWidth={false}
+                    className={"w-75 mb-3"}
+                    onClick={() => {
+                    window.open("https://forms.gle/M1GxLK45Yi3Esfn5A", "_blank");
+                    }}
+                >
+                    Join our insider program ➜
+                </Button>
+            </div>
 
-            <ContentBlock
+
+
+            {/* <ContentBlock
               type="right"
               title={CSTContent.title}
               content={CSTContent.text}
@@ -294,7 +326,7 @@ const WelcomePage = ({ data }) => {
               }}></img>}
               id="CST"
               width={width}
-            />
+            /> */}
           </div>
           <SubscribeWrapper>
             <h2>Get started with our free resources</h2>
@@ -358,13 +390,13 @@ const WelcomePage = ({ data }) => {
           </div>
         </Intro>
 
-        <MiddleBlock
+        {/* <MiddleBlock
           id="goal"
           title={MiddleBlockContent.title}
           content={MiddleBlockContent.text}
           width={width}
-        />
-        <BlobBlock>
+        /> */}
+        {/* <BlobBlock>
           <Fade direction="right" className="center-child w-100">
             <div className="BlobContainer flex-wrap">
               <div
@@ -417,6 +449,78 @@ const WelcomePage = ({ data }) => {
               </div>
             </div>
           </Fade>
+        </BlobBlock> */}
+        <BlobBlock>
+          <Fade direction="right" className="center-child w-100">
+            <div className="BlobContainer flex-wrap"
+                style={{borderRadius: "20px",}}
+            >
+              <div
+                className="d-flex flex-column justify-content-end ps-5"
+                style={{
+                  color: "white",
+                  width: width < 800 ? "100%" : "50%",
+                  height: width < 800 ? "50%" : "75%",
+                }}
+              >
+                <div
+                  className="center-child px-3 fw-bold"
+                  style={{
+                    width: "fit-content",
+                    background:
+                      "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
+                    borderRadius: "13px",
+                  }}
+                >
+                  New
+                </div>
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: width < 800 ? "24px" : "60px",
+                  }}
+                >
+                    Get Your Personalized College List
+                </div>
+                <div 
+                    style={{
+                    fontWeight: "bold",
+                    fontSize: width < 800 ? "16px" : "28px",
+                  }}>
+                    Get a headstart this application season with a personalized college list to help you explore your best-fit safety, fit, and reach colleges.                </div>
+              </div>
+              <div
+                className="d-flex flex-column justify-content-center align-items-center pe-5"
+                style={{
+                  width: width < 800 ? "80%" : "40%",
+                  height: width < 800 ? "50%" : "75%",
+                }}
+              >
+                <div className="d-flex justify-content-center align-items-center">
+                    <img src="./images/CSTSnapshot.png" alt="Snapshot of College Search Tool" 
+                        style={{
+                        boxShadow: "2px 8px 44px rgba(0, 11, 67, 0.06)",
+                        borderRadius: "10px",
+                        width: width < 800 ? '25%': '75%' ,
+                        height: "auto"
+                        }}
+                    />
+                </div>
+                <Button
+                  key="subscribe-btn"
+                  color="#F7BC76"
+                  fixedWidth={false}
+                  className={width < 800 ? "w-25 mb-3" : "w-75"}
+                  onClick={() => {
+                    window.open("https://cledge.org/college", "_blank");
+                  }}
+                >
+                  Try Now
+                </Button>
+                
+              </div>
+            </div>
+          </Fade>
         </BlobBlock>
         <Metric id="metric" className="d-flex bg-dark-blue">
           <div>
@@ -463,12 +567,12 @@ const WelcomePage = ({ data }) => {
         )}
         <ContentBlock
           type="left"
-          title={ProductContent.title}
-          content={ProductContent.text}
-          icon="landing_3.svg"
+          title={MetricsContent.title}
+          content={MetricsContent.text}
+          icon="sm-landing.svg"
           id="product"
         />
-        <NewBlogsCarousel recentBlogs={data.recentBlogs} />
+        {/* <NewBlogsCarousel recentBlogs={data.recentBlogs} /> */}
         <Partner>
           <MiddleBlock
             id="partner"
