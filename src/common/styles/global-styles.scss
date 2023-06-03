@@ -193,6 +193,15 @@ a {
     filter: brightness(130%);
   }
 }
+
+.no-aniamtion-button:active,
+.no-animation-button:focus {
+  /* Disable transition animation */
+  transition-property: none;
+  /* Modify other properties as needed */
+  color: white !important;
+  outline: none;
+}
 .w-60 {
   width: 60%;
 }
@@ -511,12 +520,3 @@ span[contenteditable]:empty:focus::before {
   color: $cl-mid-gray;
 }
 
-.no-aniamtion-button:active,
-.no-animation-button:focus {
-  /* Disable transition animation */
-  transition-property: none;
-  /* Modify other properties as needed */
-  color: #fff !important;
-  outline: none;
-
-}
