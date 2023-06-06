@@ -61,7 +61,7 @@ const Header = ({
       icon: "my-learning.svg?alt=media&token=4ccc96fe-3db9-45b9-849a-24fcac93367b",
       title: "My Learning",
       dropdown: false,
-      links:[{}]
+      links: [{}]
     },
     {
       link: "/chatbot",
@@ -76,11 +76,16 @@ const Header = ({
       icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
       title: "College",
       dropdown: true,
-      links : [{
-        MyList : "/college-list",
-        Colleges : "/college-search",
-      }]
-
+      links : [
+        {
+          key: "My List", 
+          value: "/college-list"
+        },
+        {
+          key: "Colleges", 
+          value: "/college-search"
+        },
+      ]
     },
     {
       link: "/metrics",
@@ -126,6 +131,11 @@ const Header = ({
       document.removeEventListener("scroll", listener);
     };
   }, [scrollState, onScroll, isExpanded]);
+
+  const isActiveLink = (router, links) => {
+    return links.some(link => router.pathname === link.value);
+  };
+  
   return (
     <nav
       key={key_prop}
@@ -197,13 +207,13 @@ const Header = ({
                     <a
                         className=""
                         style={{
-                          color: router.pathname === link || router.pathname === "/college-search"  ? "#506BED" : "#808099",
+                          color: isActiveLink(router, links) ? "#506BED" : "#808099",
                         }}
                       >
                         <img
                           style={{
                             filter:
-                              router.pathname === link || router.pathname === "/college-search"
+                              isActiveLink(router, links)
                                 ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
                                 : "",
                           }}
@@ -214,12 +224,14 @@ const Header = ({
                   </Dropdown.Toggle>
           
                   <Dropdown.Menu align="left">
-                    <Link href="/college-list">
-                      <a className="dropdown-item">College List</a>
-                    </Link>
-                    <Link href="college-search">
-                      <a className="dropdown-item">College Search</a>
-                    </Link>
+                    {links.map((item) => {
+                      return (
+                        <Link href={item.value}>
+                          <a className="dropdown-item">{item.key}</a>
+                        </Link>
+                      )
+
+                    })}
                   </Dropdown.Menu>
                 </Dropdown>
               ) : (
