@@ -1,0 +1,816 @@
+#####################################################################################################################
+###                                                   File V1                                                     ###
+#####################################################################################################################
+
+import pandas as pd
+import json
+from pyspark import SparkContext
+from pyspark.sql import *
+import pyspark.sql.functions as F
+
+# Modified by Rithwick (for debugging)
+def stringifyTuple(tup):
+    str1 = "{" + ','.join(map(str,tup)) + "}"
+    return str1
+
+# Initialize SparkContext
+spark = SparkSession.builder.getOrCreate()
+sc = spark.sparkContext
+
+##################################
+### 1. Update necessary fields
+##################################
+
+# read the data
+data = pd.read_csv("./data/Most-Recent-Cohorts-Institution.csv", low_memory=False)
+shape = data.shape
+# Modified by Rithwick (for debugging)
+print("File V1 - Shape of data: " + stringifyTuple(shape))
+
+data_dict = pd.read_csv("./data/Institution_data_dictionary.csv")
+shape = data_dict.shape
+# Modified by Rithwick
+shape = data_dict.shape
+print("File V1 - Shape of data_dict: " + stringifyTuple(shape))
+
+# Commented by Rithwick as I am getting the following error
+# Traceback (most recent call last):
+#   File "/home/ubuntu/CledgePrograms/test.py", line 32, in <module>
+#     exec(code_obj, self.user_global_ns, self.user_ns)
+# NameError: name 'code_obj' is not defined
+#exec(code_obj, self.user_global_ns, self.user_ns)
+
+# read previous fields json file
+with open("./assets/fields.json") as prevFields:
+   prevfields_json = json.load(prevFields)
+
+# Select columns
+data_dict_name_map = data_dict[['VARIABLE NAME', 'developer-friendly name']]
+
+# re-insert all variable-name & developer-friendly name pairs
+for variable_name in prevfields_json.keys():
+   prevfields_json[variable_name] = data_dict_name_map.loc[data_dict_name_map["VARIABLE NAME"] == variable_name, "developer-friendly name"].values[0]
+
+# write the updated fields into fields.json
+# Modified by Rithwick (the fields.json file is not there on the GitHub project)  
+# Copied fields-v1.json from the GitHub project directory
+with open("./assets/fields.json", "w") as curFields:
+   curFields.write(json.dumps(prevfields_json, indent=4))
+
+# filter dataset with only fields in the fields.json
+with open("./assets/fields.json") as curFields:
+   dataFields = json.load(curFields)
+   data = data[list(dataFields.keys())]
+shape = data.shape
+# Modified by Rithwick (for debugging)
+print("File V1 - Shape of data from fields.json: " + stringifyTuple(shape))
+
+##################################
+### 2. Update and Check Data Types
+##################################
+
+# read previous datatypes.json file
+with open("./assets/datatypes.json") as prevDTypes:
+   prevDTypes_json = json.load(prevDTypes)
+
+# Select API data type and VARIABLE NAME from data_dict
+data_dict_data_type = data_dict[['VARIABLE NAME', 'API data type']]
+# Modified by Rithwick (for debugging)
+print (data_dict_data_type)
+
+for dtype_name in prevDTypes_json.keys():
+   # Modified by Rithwick (for handling missing data types in "Institution_data_dictionary.csv")
+   try:
+       prevDTypes_json[dtype_name] = data_dict_data_type.loc[data_dict_data_type["VARIABLE NAME"] == dtype_name, "API data type"].values[0]
+   except IndexError as ex:
+       print("Ignoring Error {0}: dtype_name = (".format(str(ex)) + dtype_name + ")")
+
+# write the updated fields into datatypes.json
+# Modified by Rithwick (for avoid touching original file)
+with open("./assets/datatypes-updated.json", "w") as curDTypes:
+   curDTypes.write(json.dumps(prevDTypes_json, indent=4))
+
+# manually edit "autocomplete" data type into "string" ("INSTNM" and "CITY")
+# manually edit UNITID data type into "string"
+
+# save current data into csv
+data.to_csv("./data/Necessary-Fields-Data.csv")
+
+# read dataset using PySpark
+df = spark.read.csv("./data/Necessary-Fields-Data.csv", header=True, inferSchema=True)
+
+# use PySpark to check and convert data types
+# Modified by Rithwick (for reading from modified file)
+with open('./assets/datatypes-updated.json') as f:
+   datatypes = json.load(f)
+
+# cast columns to correct datatypes
+for field, datatype in datatypes.items(): # takes a few mins to run
+    if field not in df.columns:
+       continue
+    curr_type = dict(df.dtypes)[field]
+    if curr_type != datatype and not datatype.startswith(curr_type):
+       df = df.withColumn(field, F.col(field).cast(datatype))
+print('Modified CSV (with correct datatypes): # of columns = ', len(df.columns))
+
+#################################
+### 3. Filter Empty (Null) Values
+#################################
+
+# Replace all \"NULL\" values in dataframe with literal null values so that isnull() can be used
+df = df.replace({'NULL': None, 'null': None})
+
+null_counts = df.select([F.count(F.when(F.isnull(c), c)).alias(c) for c in df.columns]).collect()[0].asDict()
+
+# Drop fields that are completely null
+num_rows = df.count()
+for field, null_count in null_counts.items():
+    if null_count >= num_rows: # all values of field are null, drop the field
+        df = df.drop(field)
+print('Modified CSV (with NULL columns removed): # of columns = ', len(df.columns)) # number of fields that are not completely null
+
+# Save dictionary of null value counts for reference
+with open('./assets/null_counts.json', 'w') as f:
+    json.dump(null_counts, f)
+
+# Test that casting worked: Howard University should be true for HBCU
+df.where(df.INSTNM.contains('Howard')).select(["INSTNM", "HBCU"]).show(truncate=False)
+
+# replace "CCBASIC" with any field name (or add other field names to the select list) from fields.json to print out specific fields for UW campuses
+df.where(df.INSTNM.contains('University of Washington')).select(["INSTNM", "CCBASIC"]).show(truncate=False)
+
+# drop "_c0" column
+df = df.drop("_c0")
+
+# Modified by Rithwick: save the dataframe (as college-search-data-v1.parquet)
+df_filename = './data/college-search-data-v1.parquet'
+print("File V1 - Writing Parquet File Dataset {0}: count = {1}, columns = {2}".format(df_filename, df.count(), len(df.columns)))
+df.write.mode('overwrite').save(df_filename)
+
+#sc.stop()
+
+
+#####################################################################################################################
+###                                                   File V2                                                     ###
+#####################################################################################################################
+
+
+#from pyspark import SparkContext
+#from pyspark.sql import *
+#import pyspark.sql.functions as F
+from pyspark.sql.functions import col
+#import json
+
+import pandas as pd
+
+# Modified by Rithwick (for debugging)
+def stringifyTuple(tup):
+    str1 = "{" + ','.join(map(str,tup)) + "}"
+    return str1
+
+datatypes_route = "./assets/datatypes.json"
+v2_additional_route = "./data/v2_additional_data/"
+
+# change ic2020mission.csv column name into uppercase
+ic2020mission_df = pd.read_csv("./data/v2_additional_data/IC2020Mission.csv")
+ic2020mission_df = ic2020mission_df.rename(columns={"unitid":"UNITID", "missionURL": "MISSIONURL", "mission": "MISSION"})
+
+shape = ic2020mission_df.shape
+# Modified by Rithwick (for debugging)
+print("File V2 - Shape of data(ic2020mission_df): " + stringifyTuple(shape))
+
+ic2020mission_df.to_csv("./data/v2_additional_data/IC2020Mission_updated.csv")
+
+# EF2020A only selecting EFALEVEL == 2
+ef2020a = pd.read_csv(v2_additional_route + "EF2020A.csv")
+ef2020a_update = ef2020a[ef2020a["EFALEVEL"] == 2]
+
+shape = ef2020a_update.shape
+# Modified by Rithwick (for debugging)
+print("File V2 - Shape of data(ef2020a_update): " + stringifyTuple(shape))
+
+ef2020a_update.to_csv(v2_additional_route + "EF2020A_updated.csv")
+
+# EF2019B only selecting EFBAGE == 1, LSTUDY == 2
+ef2019b = pd.read_csv(v2_additional_route + "EF2019B.csv")
+ef2019b_updated = ef2019b[(ef2019b["EFBAGE"] == 1) & (ef2019b["LSTUDY"] == 2)]
+
+shape = ef2019b_updated.shape
+# Modified by Rithwick (for debugging)
+print("File V2 - Shape of data (ef2019b_updated): " + stringifyTuple(shape))
+
+ef2019b_updated.to_csv(v2_additional_route + "EF2019B_updated.csv")
+
+# SAL2020_IS only selecting ARANK == 7
+sal2020_is = pd.read_csv(v2_additional_route + "SAL2020_IS.csv")
+sal2020_is_updated = sal2020_is[sal2020_is["ARANK"] == 7]
+
+shape = sal2020_is_updated.shape
+# Modified by Rithwick (for debugging)
+print("File V2 - Shape of data (sal2020_is_updated): " + stringifyTuple(shape))
+
+sal2020_is_updated.to_csv(v2_additional_route + "SAL2020_IS_updated.csv")
+
+# GR2020_PELL_SSL only selecting PSGRTYPE == 1
+gr2020_pell_ssl = pd.read_csv(v2_additional_route + "GR2020_PELL_SSL.csv")
+gr2020_pell_ssl_updated = gr2020_pell_ssl[gr2020_pell_ssl["PSGRTYPE"] == 1]
+
+shape = gr2020_pell_ssl_updated.shape
+# Modified by Rithwick (for debugging)
+print("File V2 - Shape of data (gr2020_pell_ssl_updated): " + stringifyTuple(shape))
+
+gr2020_pell_ssl_updated.to_csv(v2_additional_route + "GR2020_PELL_SSL_updated.csv")
+
+# Initialize SparkContext
+#spark = SparkSession.builder.getOrCreate()
+#sc = spark.sparkContext
+
+# import dataset
+#df_filename = './data/college-search-data.parquet'
+#df = spark.read.load(df_filename)
+
+#print((df.count(), len(df.columns)))
+
+# 10 columns
+hd2020_columns = {
+    "ADDR": "string",
+    "GENTELE": "string",
+    "INSTCAT": "integer",
+    "LANDGRNT": "integer",
+    "C18IPUG": "integer",
+    "C18UGPRF": "integer",
+    "C18ENPRF": "integer",
+    "C18SZSET": "integer",
+    "IALIAS": "string",
+    "INSTSIZE": "integer"
+}
+
+# 12 columns - 2 columns
+ic2020_columns = {
+    # "RELAFFIL": "integer",
+    # "OPENADMP": "integer",
+    "SLO5": "integer",
+    "ASSOC1": "integer",
+    "SPORT1": "integer",
+    "SPORT2": "integer",
+    "SPORT3": "integer",
+    "SPORT4": "integer",
+    "CALSYS": "integer",
+    "APPLFEEU": "integer",
+    "FT_UG": "integer",
+    "RMBRDAMT": "integer"
+}
+
+# 11 columns
+adm2020_columns = {
+    "ADMCON1": "integer",
+    "ADMCON2": "integer",
+    "ADMCON3": "integer",
+    "ADMCON4": "integer",
+    "ADMCON5": "integer",
+    "ADMCON6": "integer",
+    "ADMCON7": "integer",
+    "SATPCT": "integer",
+    "ACTPCT": "integer",
+    "ENRLM": "integer",
+    "ENRLW": "integer"
+}
+
+# 5 columns
+drvadm2020_columns = {
+    "DVADM02": "integer",
+    "DVADM03": "integer",
+    "DVADM08": "integer",
+    "DVADM09": "integer",
+    "DVADM04": "integer"
+}
+
+# 1 column
+ic2020mission_columns = {
+    "MISSION": "string"
+}
+
+# 5 columns
+drvic2020_columns = {
+    "CINSON": "integer",
+    "COTSON": "integer",
+    "CINSOFF": "integer",
+    "COTSOFF": "integer",
+    "TUFEYR3": "integer",
+}
+
+# 2 columns
+ic2020_ay_columns = {
+    "TUITION2": "integer",
+    "TUITION3": "integer"
+}
+
+# 1 column
+ef2020a_columns = {
+    "EFNRALT": "integer"
+}
+
+# 2 columns
+ef2020b_columns = {
+    "EFAGE07": "integer",
+    "EFAGE08": "integer"
+}
+
+# 13 columns
+drvef2020_columns = {
+    "ENRTOT": "integer",
+    "EFUG": "integer",
+    "EFGRAD": "integer",
+    "RMOUSTTP": "integer",
+    "RMINSTTP": "integer",
+    "RMUNKNWP": "integer",
+    "PCTENRWH": "integer",
+    "PCTENRBK": "integer",
+    "PCTENRHS": "integer",
+    "PCTENRAP": "integer",
+    "PCTENRAN": "integer",
+    "PCTENRUN": "integer",
+    "PCTENRNR": "integer",
+}
+
+# 1 column
+ef2020d_columns = {
+    "STUFACR": "integer"
+}
+
+# new dataset:
+# 3 columns
+sal2020_is_columns = {
+    "SAINSTT": "integer",
+    "SAINSTW": "integer",
+    "SAINSTM": "integer",
+}
+
+# 1 column
+sal2020_nis_columns = {
+    "SANIN02": "integer",
+}
+
+# 6 columns
+f1920_f2_columns = {
+    "F2C01": "integer",
+    "F2C02": "integer",
+    "F2C03": "integer",
+    "F2C04": "integer",
+    "F2C07": "integer",
+    "F2E081": "integer",
+}
+
+# 3 columns
+drvf2020_columns = {
+    "F1STSVFT": "integer",
+    "F1ACSPFT": "integer",
+    "F1OTEXFT": "integer",
+}
+
+# 15 columns
+sfa1920_p2_columns = {
+    "GIS4OF1": "integer",
+    "GIS4A41": "integer",
+    "GIS4T51": "integer",
+    "NPT430": "integer",
+    "NPT440": "integer",
+    "NPT450": "integer",
+    "GRN4G11": "integer",
+    "GRN4G21": "integer",
+    "GRN4G31": "integer",
+    "GIS4A12": "integer",
+    "GIS4A22": "integer",
+    "GIS4A32": "integer",
+    "GIS4A42": "integer",
+    "GIS4A52": "integer",
+    "NPIST2": "integer",
+}
+
+# 2 columns
+gr200_20_columns = {
+    "BAGR100": "integer",
+    "BAGR150": "integer",
+}
+
+# 2 columns
+gr2020_pell_ssl_columns = {
+    "NRCMOBA": "integer",
+    "NRCMTOT": "integer",
+}
+
+# 10 columns
+sfa1920_p1_columns = {
+    "SCFA2": "integer",
+    "ANYAIDP": "integer",
+    "PGRNT_P": "integer",
+    "OFGRT_P": "integer",
+    "FLOAN_P": "integer",
+    "OLOAN_P": "integer",
+    "UAGRNTP": "integer",
+    "UPGRNTP": "integer",
+    "UFLOANP": "integer",
+    "AGRNT_A": "integer",
+}
+
+# 105 - 2 columns overall
+
+def concatenate_new_data(datatype_dict, dataset_name, df):
+    colNames = list(datatype_dict.keys())
+    with open(datatypes_route) as f:
+        cur_datatypes = json.load(f)
+
+    # print(len(cur_datatypes))
+
+    for colName in colNames:
+        cur_datatypes[colName] = datatype_dict[colName]
+
+    # print(len(cur_datatypes))
+
+    with open(datatypes_route, 'w') as f:
+        f.write(json.dumps(cur_datatypes, indent=4))
+
+    colNames.append("UNITID")
+
+    v2df = spark.read.csv(v2_additional_route + dataset_name, header=True, inferSchema=True)
+    v2df = v2df.withColumn("UNITID", F.col("UNITID").cast("string"))
+    v2df = v2df.select(colNames)
+
+    df = df.join(v2df, "UNITID", "left")
+    print("File V2 - Dataset name = {0}, count = {1}, columns = {2}". format(dataset_name, df.count(), len(df.columns)))
+    #print((df.count(), len(df.columns)))
+    return df
+
+
+# Initialize SparkContext
+spark = SparkSession.builder.getOrCreate()
+sc = spark.sparkContext
+
+# import dataset
+df_filename = './data/college-search-data-v1.parquet'
+df = spark.read.load(df_filename)
+
+print("File V2 - Read Parquet File details: name = {0}, count = {1}, columns = {2}". format(df_filename, df.count(), len(df.columns)))
+#print("college-search-data.parquet (Count, Columns) = ", (df.count(), len(df.columns)))
+
+# Start merging the first run parquet file with additional data  
+df = concatenate_new_data(hd2020_columns, "HD2020.csv", df)
+df = concatenate_new_data(ic2020_columns, "IC2020.csv", df)
+df = concatenate_new_data(adm2020_columns, "ADM2020.csv", df)
+df = concatenate_new_data(drvadm2020_columns, "DRVADM2020.csv", df)
+df = concatenate_new_data(ic2020mission_columns, "IC2020Mission_updated.csv", df)
+df = concatenate_new_data(drvic2020_columns, "DRVIC2020.csv", df)
+df = concatenate_new_data(ic2020_ay_columns, "IC2020_AY.csv", df)
+df = concatenate_new_data(ef2020a_columns, "EF2020A_updated.csv", df)
+df = concatenate_new_data(ef2020b_columns, "EF2019B_updated.csv", df)
+df = concatenate_new_data(drvef2020_columns, "DRVEF2020.csv", df)
+df = concatenate_new_data(ef2020d_columns, "EF2020D.csv", df)
+df = concatenate_new_data(sal2020_is_columns, "SAL2020_IS_updated.csv", df)
+df = concatenate_new_data(sal2020_nis_columns, "SAL2020_NIS.csv", df)
+df = concatenate_new_data(f1920_f2_columns, "F1920_F2.csv", df)
+df = concatenate_new_data(drvf2020_columns, "DRVF2020.csv", df)
+df = concatenate_new_data(sfa1920_p2_columns, "SFA1920_P2.csv", df)
+df = concatenate_new_data(gr200_20_columns, "GR200_20.csv", df)
+df = concatenate_new_data(gr2020_pell_ssl_columns, "GR2020_PELL_SSL_updated.csv", df)
+df = concatenate_new_data(sfa1920_p1_columns, "SFA1920_P1.csv", df)
+
+from pyspark.sql.functions import udf
+from pyspark.sql.types import IntegerType
+def target_tier(adm_rate):
+    #print(adm_rate)
+    if adm_rate == None:
+        return None
+    if adm_rate < 0.1:
+        return 13
+    elif adm_rate < 0.14:
+        return 10
+    elif adm_rate < 0.17:
+        return 9
+    elif adm_rate < 0.21:
+        return 8
+    elif adm_rate < 0.26:
+        return 7
+    elif adm_rate < 0.33:
+        return 6
+    elif adm_rate < 0.42:
+        return 5
+    elif adm_rate < 0.55:
+        return 4
+    elif adm_rate < 0.75:
+        return 3
+    elif adm_rate < 0.85:
+        return 2
+    elif adm_rate < 0.90:
+        return 1
+    else:
+        return 0
+
+def safety_tier(adm_rate):
+    if adm_rate == None:
+        return None
+    if adm_rate < 0.1:
+        return 13
+    elif adm_rate < 0.14:
+        return 11
+    elif adm_rate < 0.18:
+        return 10
+    elif adm_rate < 0.23:
+        return 9
+    elif adm_rate < 0.31:
+        return 8
+    elif adm_rate < 0.45:
+        return 7
+    elif adm_rate < 0.6:
+        return 6
+    elif adm_rate < 0.75:
+        return 5
+    elif adm_rate < 0.9:
+        return 4
+    elif adm_rate < 0.95:
+        return 3
+    else:
+        return 0
+
+df = df.replace({'NULL': None, 'null': None})
+udf_target_tier = udf(target_tier, IntegerType())
+df_metric_1 = df.withColumn("TARGET_TIER", udf_target_tier("ADM_RATE"))
+udf_safety_tier = udf(safety_tier, IntegerType())
+df_metric_2 = df_metric_1.withColumn("SAFETY_TIER", udf_safety_tier("ADM_RATE"))
+print("File V2 - Dataset (after applying target/safety): count = {0}, columns = {1}". format(df_metric_2.count(), len(df_metric_2.columns)))
+#print((df_metric_2.count(), len(df_metric_2.columns)))
+
+with open(datatypes_route) as f:
+    curTypes = json.load(f)
+curTypes["TARGET_TIER"] = "integer"
+curTypes["SAFETY_TIER"] = "integer"
+
+with open(datatypes_route, 'w') as f:
+    f.write(json.dumps(curTypes, indent=4))
+
+
+# use PySpark to check and convert data types
+with open('./assets/datatypes.json') as f:
+    datatypes = json.load(f)
+
+# cast columns to correct datatypes
+for field, datatype in datatypes.items(): # takes a few mins to run
+    if field not in df_metric_2.columns:
+        continue
+    curr_type = dict(df_metric_2.dtypes)[field]
+    if curr_type != datatype and not datatype.startswith(curr_type):
+        df_metric_2 = df_metric_2.withColumn(field, F.col(field).cast(datatype))
+
+# Modified by Rithwick: Add "overwrite" mode to make the program run without removing the V2 Parquet directory
+print("File V2 - Writing Dataset `college-search-data-v2.parquet` (after `cast columns to correct datatypes`): count = {0}, columns = {1}".format(df_metric_2.count(), len(df_metric_2.columns)))
+df_metric_2.write.mode('overwrite').save('./data/college-search-data-v2.parquet')
+
+# Modified by Rithwick: Start/Stop only once
+#sc.stop()
+
+
+#####################################################################################################################
+###                                                   File V3                                                     ###
+#####################################################################################################################
+
+#from pyspark import SparkContext
+#from pyspark.sql import *
+#import pyspark.sql.functions as F
+#from pyspark.sql.functions import col
+
+#import json
+
+#from pyspark.sql.functions import udf
+#from pyspark.sql.types import IntegerType
+from pyspark.sql.types import FloatType
+from pyspark.sql.types import StringType
+
+#import pandas as pd
+
+# # Modified by Rithwick: Initialize SparkContext only oce
+#spark = SparkSession.builder.getOrCreate()
+#sc = spark.sparkContext
+
+SCORECARD_PATH = "./data/Most-Recent-Cohorts-Institution.csv"
+V2_PATH = "./data/college-search-data-v2.parquet"
+V3_PATH = "./data/college-search-data-v3.parquet"
+DATA_TYPES_PATH = "./assets/datatypes.json"
+
+def add_datatypes(data_columns):
+
+    with open(DATA_TYPES_PATH) as f:
+        cur_datatypes = json.load(f)
+
+    for variable, datatype in data_columns.items():
+        cur_datatypes[variable] = datatype
+    
+    with open(DATA_TYPES_PATH, 'w') as f:
+        f.write(json.dumps(cur_datatypes, indent=4))
+
+df = spark.read.load(V2_PATH)
+print("File V3 - Read Parquet File details: name = {0}, count = {1}, columns = {2}". format(V2_PATH, df.count(), len(df.columns)))
+#print("Read {0} (Count={1}, Columns={2})".format(V2_PATH, df.count(), len(df.columns)))
+
+percent_columns = [
+    "DVADM02",
+    "DVADM03",
+    "DVADM08",
+    "DVADM09",
+    "SATPCT",
+    "ACTPCT",
+    "DVADM04",
+    "RMOUSTTP",
+    "RMINSTTP",
+    "RMUNKNWP",
+    "BAGR100",
+    "BAGR150",
+    "ANYAIDP",
+    "PGRNT_P",
+    "OFGRT_P",
+    "FLOAN_P",
+    "OLOAN_P",
+    "UAGRNTP",
+    "UPGRNTP",
+    "UFLOANP",
+    "PCTENRBK",
+    "PCTENRHS",
+    "PCTENRAP",
+    "PCTENRAN",
+    "PCTENRNR",
+    "PCTENRUN"
+]
+
+with open(DATA_TYPES_PATH) as f:
+    cur_datatypes = json.load(f)
+
+for per_col in percent_columns:
+    df = df.withColumn(per_col, F.col(per_col).cast("float"))
+    df = df.withColumn(per_col, col(per_col) / 100)
+    cur_datatypes[per_col] = "float"
+
+with open(DATA_TYPES_PATH, 'w') as f:
+    f.write(json.dumps(cur_datatypes, indent=4))
+
+cur_columns = df.columns
+
+# add new columns for override
+hd2020_df = spark.read.csv("./data/v2_additional_data/HD2020.csv", header=True, inferSchema=True)
+drvef2020_df = spark.read.csv("./data/v2_additional_data/DRVEF2020.csv", header=True, inferSchema=True)
+
+override_nonexist_columns = {
+    "WEBADDR": "string",
+    "NPRICURL": "string",
+    "PCTENR2M": "float"
+}
+
+add_datatypes(override_nonexist_columns)
+
+override_hd = hd2020_df.select("UNITID", "WEBADDR", "NPRICURL")
+override_hd = override_hd.withColumn("UNITID", F.col("UNITID").cast("string"))
+override_drvef = drvef2020_df.select("UNITID", "PCTENR2M")
+override_drvef = override_drvef.withColumn("UNITID", F.col("UNITID").cast("string"))
+
+df = df.join(override_hd, "UNITID", "left")
+df = df.join(override_drvef, "UNITID", "left")
+df = df.withColumn("PCTENR2M", F.col("PCTENR2M").cast("float"))
+df = df.withColumn("PCTENR2M", col("PCTENR2M") / 100)
+df = df.replace({'NULL': None, 'null': None})
+null_counts = df.select([F.count(F.when(F.isnull(c), c)).alias(c) for c in df.columns]).collect()[0].asDict()
+
+# Save dictionary of null value counts for reference
+with open('./assets/null_counts.json', 'w') as f:
+    json.dump(null_counts, f)
+def column_override(first, second):
+    if first is None:
+        return second
+    return first
+
+udf_1 = udf(column_override, StringType())
+udf_2 = udf(column_override, FloatType())
+df = df.withColumn("INSTURL", udf_1("WEBADDR", "INSTURL"))
+df = df.withColumn("NPCURL", udf_1("NPRICURL", "NPCURL"))
+df = df.withColumn("UGDS_2MOR", udf_2("PCTENR2M", "UGDS_2MOR"))
+df = df.withColumn("UGDS_WHITE", udf_2("PCTENRWH", "UGDS_WHITE"))
+df = df.withColumn("UGDS_BLACK", udf_2("PCTENRBK", "UGDS_BLACK"))
+df = df.withColumn("UGDS_AIAN", udf_2("PCTENRAN", "UGDS_AIAN"))
+df = df.withColumn("UGDS_NRA", udf_2("PCTENRNR", "UGDS_NRA"))
+df = df.withColumn("UGDS_UNKN", udf_2("PCTENRUN", "UGDS_UNKN"))
+
+# check whether override is success
+null_counts_2 = df.select([F.count(F.when(F.isnull(c), c)).alias(c) for c in df.columns]).collect()[0].asDict()
+
+# Save dictionary of null value counts for reference
+with open('./assets/null_counts_v3.json', 'w') as f:
+    json.dump(null_counts_2, f)
+
+# use PySpark to check and convert data types
+with open('./assets/datatypes.json') as f:
+    datatypes = json.load(f)
+
+# cast columns to correct datatypes
+for field, datatype in datatypes.items(): # takes a few mins to run
+    if field not in df.columns:
+        continue
+    curr_type = dict(df.dtypes)[field]
+    if curr_type != datatype and not datatype.startswith(curr_type):
+        df = df.withColumn(field, F.col(field).cast(datatype))
+
+# Wrap up
+# Modified by Rithwick: Add "overwrite" mode to make the program run without removing the V3 Parquet directory
+df.write.mode('overwrite').save(V3_PATH)
+#df.write.save(V3_PATH)
+
+# Modified by Rithwick: Fixed bug by moving to the end because the latter part of the program is using Spark context
+# sc.stop()
+
+non_override_columns = {
+    "CIP01BACHL": "integer",
+    "CIP03BACHL": "integer",
+    "CIP04BACHL": "integer",
+    "CIP05BACHL": "integer",
+    "CIP09BACHL": "integer",
+    "CIP10BACHL": "integer",
+    "CIP11BACHL": "integer",
+    "CIP12BACHL": "integer",
+    "CIP13BACHL": "integer",
+    "CIP14BACHL": "integer",
+    "CIP15BACHL": "integer",
+    "CIP16BACHL": "integer",
+    "CIP19BACHL": "integer",
+    "CIP22BACHL": "integer",
+    "CIP23BACHL": "integer",
+    "CIP24BACHL": "integer",
+    "CIP25BACHL": "integer",
+    "CIP26BACHL": "integer",
+    "CIP27BACHL": "integer",
+    "CIP29BACHL": "integer",
+    "CIP30BACHL": "integer",
+    "CIP31BACHL": "integer",
+    "CIP38BACHL": "integer",
+    "CIP39BACHL": "integer",
+    "CIP40BACHL": "integer",
+    "CIP41BACHL": "integer",
+    "CIP42BACHL": "integer",
+    "CIP43BACHL": "integer",
+    "CIP44BACHL": "integer",
+    "CIP45BACHL": "integer",
+    "CIP46BACHL": "integer",
+    "CIP47BACHL": "integer",
+    "CIP48BACHL": "integer",
+    "CIP49BACHL": "integer",
+    "CIP50BACHL": "integer",
+    "CIP51BACHL": "integer",
+    "CIP52BACHL": "integer",
+    "CIP54BACHL": "integer",
+    "NPT41_PUB": "integer",
+    "NPT42_PUB": "integer",
+    "NPT43_PUB": "integer",
+    "NPT44_PUB": "integer",
+    "NPT45_PUB": "integer",
+    "NPT41_PRIV": "integer",
+    "NPT42_PRIV": "integer",
+    "NPT43_PRIV": "integer",
+    "NPT44_PRIV": "integer",
+    "NPT45_PRIV": "integer",
+    "GRAD_DEBT_MDN": "float",
+    "LO_INC_DEBT_MDN": "float",
+    "MD_INC_DEBT_MDN": "float",
+    "HI_INC_DEBT_MDN": "float",
+    "FIRSTGEN_DEBT_MDN": "float",
+    "NOTFIRSTGEN_DEBT_MDN": "float",
+    "FIRST_GEN": "float",
+    "UNEMP_RATE": "float",
+    "MN_EARN_WNE_P10": "integer",
+    "PCT10_EARN_WNE_P10": "integer",
+    "PCT25_EARN_WNE_P10": "integer",
+    "PCT75_EARN_WNE_P10": "integer",
+    "PCT90_EARN_WNE_P10": "integer",
+    "PCT10_EARN_WNE_P6": "integer",
+    "PCT25_EARN_WNE_P6": "integer",
+    "PCT75_EARN_WNE_P6": "integer",
+    "PCT90_EARN_WNE_P6": "integer",
+}
+
+# add datatypes
+add_datatypes(non_override_columns)
+scorecard_df = spark.read.csv(SCORECARD_PATH, header=True, inferSchema=True)
+print((scorecard_df.count(), len(scorecard_df.columns)))
+
+non_override_colnames = ["UNITID"]
+for colname, datatype in non_override_columns.items():
+    non_override_colnames.append(colname)
+non_override_df = scorecard_df.select(*non_override_colnames)
+non_override_df = non_override_df.withColumn("UNITID", F.col("UNITID").cast("string"))
+print("File V3 - Non-override: count = {0}, columns = {1}". format(non_override_df.count(), len(non_override_df.columns)))
+#print((non_override_df.count(), len(non_override_df.columns)))
+
+df = df.join(non_override_df, "UNITID", "left")
+col_set = set(df.columns)
+print("File V3 - Final Dataset (joined with UNITID), count = {0}, len of columns = {1}, # of columns = {2}". format(df.count(), len(col_set), len(df.columns)))
+#print((df.count(), len(df.columns)))
+
+#col_set = set(df.columns)
+#print(len(col_set))
+#print(len(df.columns))
+
+# Moved to the end
+sc.stop()
