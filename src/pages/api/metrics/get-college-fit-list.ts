@@ -53,7 +53,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     }
 };
 
-const getAllColleges = (
+export const getAllColleges = (
     client: MongoClient,
     preferences: any,
     ECTier: number,
