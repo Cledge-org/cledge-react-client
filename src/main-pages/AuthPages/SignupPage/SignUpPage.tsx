@@ -125,48 +125,49 @@ const SignUpPage = () => {
         checkCondition(true, err);
       });
   };
-  if (!hasAccess) {
-    return (
-      <div className="container">
-        <form
-          className="col col-md-5 d-flex mx-auto flex-column justify-content-center align-items-center"
-          style={{ height: "80vh" }}
-        >
-          <div className="fs-1 fw-bold cl-dark-text">Enter Access Code</div>
-          {isIncorrectAccessCode ? (
-            <div className="cl-red d-flex flex-column">
-              Incorrect Access Code
-            </div>
-          ) : null}
-          <div className="form-group mt-3 w-100">
-            <input
-              value={accessCode}
-              onChange={(e) => {
-                setAccessCode(e.target.value);
-              }}
-              type="text"
-              className="px-3 form-control"
-              id="email"
-              placeholder="Enter code"
-            />
-          </div>
-          <input
-            type="submit"
-            className="cl-btn-blue mt-4"
-            onClick={(e) => {
-              e.preventDefault();
-              if (accessCode === "596382") {
-                setHasAccess(true);
-              } else {
-                setIsIncorrectAccessCode(true);
-              }
-            }}
-            value="Access Signup"
-          />
-        </form>
-      </div>
-    );
-  }
+  // logic for access code if needed for the future.
+  // if (!hasAccess) {
+  //   return (
+  //     <div className="container">
+  //       <form
+  //         className="col col-md-5 d-flex mx-auto flex-column justify-content-center align-items-center"
+  //         style={{ height: "80vh" }}
+  //       >
+  //         <div className="fs-1 fw-bold cl-dark-text">Enter Access Code</div>
+  //         {isIncorrectAccessCode ? (
+  //           <div className="cl-red d-flex flex-column">
+  //             Incorrect Access Code
+  //           </div>
+  //         ) : null}
+  //         <div className="form-group mt-3 w-100">
+  //           <input
+  //             value={accessCode}
+  //             onChange={(e) => {
+  //               setAccessCode(e.target.value);
+  //             }}
+  //             type="text"
+  //             className="px-3 form-control"
+  //             id="email"
+  //             placeholder="Enter code"
+  //           />
+  //         </div>
+  //         <input
+  //           type="submit"
+  //           className="cl-btn-blue mt-4"
+  //           onClick={(e) => {
+  //             e.preventDefault();
+  //             if (accessCode === "596382") {
+  //               setHasAccess(true);
+  //             } else {
+  //               setIsIncorrectAccessCode(true);
+  //             }
+  //           }}
+  //           value="Access Signup"
+  //         />
+  //       </form>
+  //     </div>
+  //   );
+  // }
   return (
     <PageErrorBoundary>
       <div className="container">
