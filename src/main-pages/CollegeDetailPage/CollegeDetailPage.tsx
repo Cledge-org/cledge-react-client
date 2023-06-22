@@ -1978,7 +1978,7 @@ const CollegeDetailPage = ({
             </Col>
             <Col span={7}>
               <InfoContainer>
-                <h1>Atheletics</h1>
+                <h1>Athletics</h1>
                 <div>
                   <div>
                     <div className="inline">

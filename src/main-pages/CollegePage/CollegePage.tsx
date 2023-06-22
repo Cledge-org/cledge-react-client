@@ -37,7 +37,7 @@ const College = ({
   questionResponses,
 }: {
   questionResponses: UserResponse[];
-  collegeList: any
+  collegeList: any;
 }) => {
   const [collegeData, setData] = useState(null);
   const [hasMoreData, setHasMore] = useState(true);
@@ -50,7 +50,7 @@ const College = ({
   const userResponse = questionResponses.find(
     ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
   )?.response;
-  
+
   const [requestData, setRequest] = useState({
     searchText: "*",
     top: 10,
@@ -80,12 +80,12 @@ const College = ({
     e.preventDefault();
     e.stopPropagation();
     setPrevRequest(requestData);
-    
+
     setRequest({
       ...requestData,
       searchText: e.target.searchText.value ? e.target.searchText.value : "*",
-      top : 12,
-      skip: 0
+      top: 12,
+      skip: 0,
     });
   }
 
@@ -107,11 +107,10 @@ const College = ({
       });
     return data;
   }
-  
+
   for (let i = 0; i < collegeList.length; i++) {
     collegeListArray[i] = collegeList[i]?.college_name;
   }
-
 
   useEffect(() => {
     setPrevRequest(requestData);
@@ -126,7 +125,7 @@ const College = ({
         setHasMore(false);
         return;
       } else {
-        setHasMore(true);  
+        setHasMore(true);
       }
       if (requestData.skip - prevRequest.skip > 0) {
         setData((currData) => {
@@ -157,8 +156,10 @@ const College = ({
     }
   }, [currSort, currNumericalSortOrder]);
 
+  
   const sortBy = (sortType: string, numericalSortOrder: string, data?) => {
     const parseInstSize = (inst_size: string) => {
+      if (!inst_size) return 0;
       const indexOfNum = inst_size.includes("Under")
         ? 1
         : inst_size.includes("above")
@@ -184,8 +185,8 @@ const College = ({
     } else if (sortType === "Size") {
       copiedData.sort((a, b) =>
         isLeastGreatest
-          ? parseInstSize(b.inst_size) - parseInstSize(a.inst_size)
-          : parseInstSize(a.inst_size) - parseInstSize(b.inst_size)
+          ? parseInstSize(a.inst_size) - parseInstSize(b.inst_size)
+          : parseInstSize(b.inst_size) - parseInstSize(a.inst_size)
       );
     } else if (sortType === "Tuition") {
       copiedData.sort((a, b) =>
@@ -202,10 +203,8 @@ const College = ({
     } else if (sortType === "Acceptance Rate") {
       copiedData.sort((a, b) =>
         isLeastGreatest
-          ? a.acceptance_rate.acceptance_rate_total -
-            b.acceptance_rate.acceptance_rate_total
-          : b.acceptance_rate.acceptance_rate_total -
-            a.acceptance_rate.acceptance_rate_total
+          ? a.acceptance_rate - b.acceptance_rate
+          : b.acceptance_rate - a.acceptance_rate
       );
     }
     if (data) {
@@ -323,7 +322,7 @@ const College = ({
                     "Size",
                     "Tuition",
                     "Student-Faculty Ratio",
-                    "Acceptence Rate",
+                    "Acceptance Rate",
                   ]}
                 />
                 <div style={{ width: "20px" }} />
