@@ -10,11 +10,11 @@ interface props {
 }
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { user_id, college_title }: props = req.body;
-  console.log(user_id);
-  console.log(college_title);
+  // console.log(user_id);
+  // console.log(college_title);
   const pre_college_info = await getCollege(college_title);
   const college_info = pre_college_info["college"];
-  console.log(college_info);
+  //console.log(college_info);
   const personalize: collegeListIndividualInfo = {
     college_id: college_info.college_id,
     fit_type: 0,
@@ -26,7 +26,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     out_state_tuition: college_info.out_state_tuition,
     college_type: college_info.college_type
   }
-  console.log(JSON.stringify(college_info["college"]));
+  //console.log(JSON.stringify(college_info["college"]));
   try {
     const client = await MongoClient.connect(process.env.MONGO_URL);
     const userDb = client.db("users");
@@ -34,7 +34,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       .collection("college-list")
       .updateOne(
         { firebaseId: user_id },
-        { $push: { college_list: personalize } }
+        { $push: { college_list: personalize } },
+        { upsert: true }
       )
       .then(() => {
         res.status(200).json({ message: "appended" });

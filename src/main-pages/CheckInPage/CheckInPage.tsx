@@ -44,6 +44,8 @@ const CheckIn: NextApplicationPage<{
   const session = useSession();
   const router = useRouter();
 
+  console.log(checkInData);
+
   const goBack = (e) => {
     e.preventDefault();
     changeProgress(progress - 100 / (checkInData.chunks.length - 1));
