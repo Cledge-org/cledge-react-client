@@ -37,10 +37,11 @@ export const getUserData = (userId: string): Promise<any> => {
                     pathwayPercentage: 0,
                     acOverall: 0,
                     ecOverall: 0
-                }
+                },
             },
             {
-                upsert: true
+                upsert: true,
+                returnDocument: 'after'
             }
         )
         );
