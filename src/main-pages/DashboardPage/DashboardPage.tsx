@@ -17,10 +17,16 @@ const DashboardPage = ({
   accountInfo: AccountInfo;
   userData: UserMetaData;
 }) => {
-  let avgTier = useMemo(
-    () => (userData.ecOverall || 0 + userData.acOverall || 0) / 2,
-    [userData.ecOverall, userData.acOverall]
-  );
+  let avgTier;
+  if (userData) {
+    avgTier = useMemo(
+      () => (userData.ecOverall || 0 + userData.acOverall || 0) / 2,
+      [userData.ecOverall, userData.acOverall]
+    );
+  } else {
+    avgTier = 0;
+  }
+  
   console.log(userData);
   return (
      <div className="d-flex flex-column">

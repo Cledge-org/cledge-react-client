@@ -1,7 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { UserMetaData } from "src/@types/types";
 
 export const config = {
   api: {
@@ -34,7 +33,7 @@ export const getUserData = (userId: string): Promise<any> => {
             {
                 $setOnInsert: { 
                     firebaseId: userId, 
-                    name: "name",
+                    name: "",
                     pathwayPercentage: 0,
                     acOverall: 0,
                     ecOverall: 0
