@@ -32,8 +32,7 @@ export const getUserData = (userId: string): Promise<any> => {
             { firebaseId: userId },
             {
                 $setOnInsert: { 
-                    firebaseId: userId, 
-                    name: "",
+                    firebaseId: userId,
                     pathwayPercentage: 0,
                     acOverall: 0,
                     ecOverall: 0

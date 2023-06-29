@@ -397,8 +397,4 @@ const College = ({
   );
 };
 
-export default connect((state) => {
-  return {
-    questionResponses: state.questionResponses,
-  };
-})(College);
+export default College;
