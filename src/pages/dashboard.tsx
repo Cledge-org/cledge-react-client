@@ -9,7 +9,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = getSession(ctx);
     const userData = await getUserData((await session).user.uid);
-    const userJSON = await JSON.parse(JSON.stringify(userData.userData));
+    let userJSON = null;
+    if (userData) {
+      userJSON = await JSON.parse(JSON.stringify(userData.userData));
+    }
     return {
       props: {
         userData: userJSON.value
