@@ -72,7 +72,7 @@ const DashboardPage = ({
                                 children={
                                   <div
                                     style={{ fontWeight: "bold", fontSize: "1.1em" }}
-                                  >{`${userData.pathwayPercentage}%`}</div>
+                                  >{`${userData.pathwayPercentage ? userData.pathwayPercentage : 0}%`}</div>
                                 }
                                 className="center-child"
                                 styles={{

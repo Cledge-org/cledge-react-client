@@ -12,7 +12,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const userJSON = await JSON.parse(JSON.stringify(userData.userData));
     return {
       props: {
-        userData: userJSON
+        userData: userJSON.value
       },
     };
   } catch (err) {
