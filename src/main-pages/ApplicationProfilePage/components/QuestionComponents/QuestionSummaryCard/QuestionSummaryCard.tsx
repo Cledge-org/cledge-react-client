@@ -217,7 +217,7 @@ export default function QuestionSummaryCard({
     >
       <div
         className={classNames(
-          "d-flex justify-content-between align-items-center px-4 pt-3",
+          "d-flex justify-content-between align-items-center px-4 pt-3 border-bottom border-2",
           styles.questionText
         )}
       >
@@ -233,7 +233,7 @@ export default function QuestionSummaryCard({
           </div>
         </button>
       </div>
-      <span className="ps-4 pb-4">
+      <span className="ps-4 pb-4 pt-3">
         {userAnswer.response !== null
           ? userAnswer.response instanceof Array
             ? userAnswer.response.reduce((prev, curr) => {
@@ -259,7 +259,7 @@ export default function QuestionSummaryCard({
         isOpen={displayingQuestion}
       >
         {getQuestionType()}
-        <div className="center-child w-100">
+        <div className="center-child w-100 pt-2">
           <button
             disabled={!hasAnswerOrNotRequired}
             onClick={async () => {

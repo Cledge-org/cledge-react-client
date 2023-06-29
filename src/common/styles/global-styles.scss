@@ -193,6 +193,16 @@ a {
     filter: brightness(130%);
   }
 }
+
+.no-animation-button {
+  /* Disable transition animation */
+  transition-property: none !important;
+  /* Modify other properties as needed */
+  //color: white !important;
+  outline: none !important;
+  //border-color: white !important;
+  border: none !important;
+}
 .w-60 {
   width: 60%;
 }
@@ -510,3 +520,4 @@ span[contenteditable]:empty:focus::before {
   content: "Ask something";
   color: $cl-mid-gray;
 }
+

@@ -63,7 +63,7 @@ export const calculateECTier = (
   awardQuality: number,
   leadershipTier: number,
   impactTier: number,
-) => {
+) => {  
   let timeTier = calculateTimeTier(hoursPerWeek, weeksPerYear, yearsSpent);
   let awardTier = calculateAwardTier(awardScale, awardQuality);
   let leadingTier = calculateLeadershipTier(leadershipTier, impactTier);
@@ -356,3 +356,113 @@ export const calculateCollegeFit = (
 };
 
 
+// TODO: Scott does something magical with gradeLevel here
+export const calculateCourseworkTier = (
+  gradeLevel: number,
+  courses9: number,
+  courses10: number,
+  courses11: number,
+  courses12: number,
+  intensity9: boolean[],
+  intensity10: boolean[],
+  intensity11: boolean[],
+  intensity12: boolean[],
+  majorRelated9: boolean[],
+  majorRelated10: boolean[],
+  majorRelated11: boolean[],
+  majorRelated12: boolean[]
+) => {
+  // count number of intensive courses taken
+  let intense9 = booleanToInt(intensity9);
+  let intense10 = booleanToInt(intensity10);
+  let intense11 = booleanToInt(intensity11);
+  let intense12 = booleanToInt(intensity12);
+
+  // count number of major related courses taken
+  let isMajorRelated9 = booleanToInt(majorRelated9);
+  let isMajorRelated10 = booleanToInt(majorRelated10);
+  let isMajorRelated11 = booleanToInt(majorRelated11);
+  let isMajorRelated12 = booleanToInt(majorRelated12);
+
+  // calculate coursework tier for grade
+  let courseworkTier9 = courseworkTierGrade(9, courses9, intense9, isMajorRelated9);
+  let courseworkTier10 = courseworkTierGrade(10, courses10, intense10, isMajorRelated10);
+  let courseworkTier11 = courseworkTierGrade(11, courses11, intense11, isMajorRelated11);
+  let courseworkTier12 = courseworkTierGrade(12, courses12, intense12, isMajorRelated12);
+  
+  // calculate weighed average of tiers
+  let courseworkTier = Math.round((courseworkTier9 + courseworkTier10 * 1.5 + courseworkTier11 * 2 + courseworkTier12 * 1.5) / 6);
+
+  return courseworkTier;
+};
+
+
+export const courseworkTierGrade = (
+  gradeLevel: number,
+  courses: number,
+  intensity: number,
+  isMajorRelated: number
+) => {
+  var courseAvg:number[];
+  courseAvg = [7, 7, 6, 6];
+  var advanced:number[];
+  advanced = [0, 1, 2, 3];
+  var majorRelated:number[];
+  majorRelated = [1, 1, 2, 2];
+
+  var temp0 = Math.sqrt(Math.abs(courses - courseAvg[gradeLevel - 9]));
+  if (courseAvg[gradeLevel - 9] > courses) {
+    temp0 = temp0 * -1;
+  }
+
+  var temp1 = Math.sqrt(Math.abs(intensity - advanced[gradeLevel - 9]));
+  if (advanced[gradeLevel - 9] > intensity) {
+    temp1 = temp1 * -1;
+  }
+
+  var temp2 = Math.sqrt(Math.abs(isMajorRelated - majorRelated[gradeLevel - 9]));
+  if (majorRelated[gradeLevel - 9] > isMajorRelated) {
+    temp2 = temp2 * -1;
+  }
+
+  var tier = temp0 + temp1 + temp2 + 8;
+
+  return tier;
+};
+
+// helper method to count number of trues in boolean array
+export const booleanToInt = (array: boolean[]) => {
+  let count = 0;
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] == true) {
+      count++;
+    }
+  }
+
+  return count;
+};
+
+
+export const overallAcademicTier = (
+  gradeLevel: number,
+  applicantLevel: number, 
+  gpa: number,
+  courses9: number,
+  courses10: number,
+  courses11: number,
+  courses12: number,
+  intensity9: boolean[],
+  intensity10: boolean[],
+  intensity11: boolean[],
+  intensity12: boolean[],
+  majorRelated9: boolean[],
+  majorRelated10: boolean[],
+  majorRelated11: boolean[],
+  majorRelated12: boolean[]
+) => {
+  let gpaTier = calculateGPATier(applicantLevel, gpa);
+  let courseworkTier = calculateCourseworkTier(gradeLevel, courses9, courses10, courses11, courses12, intensity9, intensity10, intensity11, intensity12,
+    majorRelated9, majorRelated10, majorRelated11, majorRelated12);
+  let academicTier = ((gpaTier * 1.5) + courseworkTier) / 2;
+  return Math.round(academicTier);
+};

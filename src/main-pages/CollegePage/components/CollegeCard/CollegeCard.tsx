@@ -10,6 +10,10 @@ import styles from "./college-card.module.scss";
 import { CardActionArea, Tab, Tabs } from "@mui/material";
 import classNames from "classnames";
 import { useSession } from "next-auth/react";
+import { useMediaQuery } from "@mui/material"
+import { Row } from "react-bootstrap";
+import { Col } from "react-bootstrap";
+import { auto } from "@popperjs/core";
 
 interface CardProps {
   abbreviation?: string;
@@ -22,15 +26,16 @@ interface CardProps {
   outState: string;
   tabCallBack?: (e, newValue) => void;
   tabValue?: number;
-  data?: object;
+  college_id: string;
   schoolFit: string;
   onList: boolean;
 }
 
 function CollegeCard(props: CardProps) {
   const router = useRouter();
-  const URL = `/collegeDetail/`;
-
+  const URL = `/college-detail/${props.college_id}`;
+  const isMediumScreen = useMediaQuery('(max-width:992px)');
+  const isLargeScreen = useMediaQuery('(max-width:1600px)');
   return (
     <CardWrapper style={{ marginBottom: "25px" }}>
       {(props.isLoading && (
@@ -65,7 +70,10 @@ function CollegeCard(props: CardProps) {
       )) || (
         <Card
           sx={{
-            width: "40rem",
+            width: 
+              isMediumScreen ? "28rem":
+              isLargeScreen ? "30rem": 
+              "40rem",
             minHeight: "10rem",
             height: "fit-content",
           }}
@@ -76,8 +84,7 @@ function CollegeCard(props: CardProps) {
                 {
                   pathname: URL,
                   query: {
-                    data: JSON.stringify(props.data),
-                    onList: props.onList
+                    onList: props.onList,
                   },
                 },
                 URL
@@ -107,7 +114,7 @@ function InnerCard({
   inState,
   outState,
   schoolFit,
-  onList
+  onList,
 }: CardProps) {
   const [imageHasLoaded, setImageHasLoaded] = useState(false);
   const [addedToList, setAddedToList] = useState(onList);
@@ -127,7 +134,7 @@ function InnerCard({
       }),
     });
     const responseJson = await response.json();
-  }
+  };
 
   const handleRemoveCollege = async (event) => {
     event.stopPropagation();
@@ -144,9 +151,8 @@ function InnerCard({
       }),
     });
     const responseJson = await response.json();
-  }
+  };
 
-  
   return (
     <>
       {!img ? (
@@ -177,16 +183,41 @@ function InnerCard({
         />
       )}
       <CardContent style={{ minHeight: "fit-content", width: "100%" }}>
-        <h1
-          className="cl-blue"
-          style={{
-            fontSize: "1.5rem",
-            fontWeight: 700,
-            marginBottom: 5,
-          }}
-        >
-          {title}
-        </h1>
+        <Row>
+            <div className="w-100 d-flex justify-content-between align-items-end">
+              <Col lg={10} md={9} sm={3} xs={9} >
+                <div>
+                  <h1
+                    className="cl-blue"
+                    style={{
+                      fontSize: "1.5rem",
+                      fontWeight: 700,
+                      marginBottom: 5,
+                      overflow:"hidden",
+                      textOverflow:"ellipsis",
+                      whiteSpace: "nowrap"
+                    }}
+                  >
+                    {title}
+                  </h1>
+                </div>
+              </Col>
+              <Col lg={2} md={3} sm={3} xs={3}>
+                <div className="d-flex ps-3">
+                    <Button
+                      className="ms-3"
+                      // variant=""
+                      style={{ textTransform: "none", width: "2rem", height: "2rem", background: addedToList ? '' : ''}}
+                      onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
+                    >
+                      {addedToList ? <img src="/images/book_mark.svg"/>:<img src="/images/grey_book_mark.svg"/>}
+                    </Button>
+                </div>
+              </Col>
+            </div>
+
+        </Row>
+        
         <h6 className="text-secondary" style={{ fontSize: "1.4em" }}>
           {schoolType == "Public"
             ? "Public School -"
@@ -200,16 +231,6 @@ function InnerCard({
           style={{ height: "4rem" }}
         >
           <div className={styles.collegeFitContainer}>{schoolFit}</div>
-            <div className="d-flex">
-              <Button
-                className="ms-3"
-                variant="contained"
-                style={{ textTransform: "none", width: "2rem", height: "2rem", background: addedToList ? 'red' : ''}}
-                onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
-              >
-                {addedToList ? "x" : "+"}
-              </Button>
-            </div>
         </div>
       </CardContent>
     </>
