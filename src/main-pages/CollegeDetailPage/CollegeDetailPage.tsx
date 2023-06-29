@@ -2033,11 +2033,7 @@ const CollegeDetailPage = ({
   );
 };
 
-export default connect((state) => {
-  return {
-    questionResponses: state.questionResponses,
-  };
-})(CollegeDetailPage);
+export default CollegeDetailPage;
 
 const Wrapper = styled.div`
   & > * {

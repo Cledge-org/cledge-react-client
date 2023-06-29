@@ -4,6 +4,7 @@ import { getSingleCollegeInfo } from '../api/CST/get-single-college';
 import { getCollegeList } from "../api/CST/get-college-list";
 import { getSession } from "next-auth/react";
 import React from 'react';
+import { getQuestionResponses } from "src/pages/api/user/get-question-responses";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -12,16 +13,24 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const userId = (await session).user.uid;
     const college = await getSingleCollegeInfo(`${id}`);
     const collegeList = await getCollegeList(userId);
+    const questionRes = await getQuestionResponses(userId);
+
     let collegeListJSON = {};
+    let questionResJSON = {};
+
     try {
       collegeListJSON = JSON.parse(JSON.stringify(collegeList)).list;
+      questionResJSON = JSON.parse(JSON.stringify(questionRes));
+
     } catch (e) {
-      collegeListJSON = {}
+      collegeListJSON = {};
+      questionResJSON = {};
     }
     return {
       props: {
         collegeData: JSON.stringify(college),
-        collegeList: collegeListJSON
+        collegeList: collegeListJSON,
+        questionRes: questionResJSON,
       },
     };
   } catch (err) {
@@ -29,8 +38,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 };
 
-const CollegeDetail = ({ collegeData, collegeList }) => {
-  return <CollegeDetailPage collegeData={collegeData} collegeList={collegeList} />;
+const CollegeDetail = ({ collegeData, collegeList, questionRes}) => {
+  return <CollegeDetailPage collegeData={collegeData} collegeList={collegeList} questionResponses={questionRes} />;
 };
 CollegeDetail.requireAuth = true;
 export default CollegeDetail;
