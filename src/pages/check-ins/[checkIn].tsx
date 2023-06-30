@@ -9,7 +9,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = getSession(ctx);
     const questionResponses = await getQuestionResponses((await session).user.uid);
-    let questionResponsesRes = null;
+    let questionResponsesRes = ([]);
     if (questionResponses) {
       questionResponsesRes = JSON.parse(JSON.stringify(questionResponses));
     }
@@ -38,8 +38,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 
 const CheckIn = ({ checkInData, questionResponses }) => {
-  console.log("YOOO");
-  console.log(questionResponses);
   return <CheckInPage checkInData={checkInData} userResponses={questionResponses} />;
 };
 CheckIn.requireAuth = true;

@@ -22,6 +22,7 @@ const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
 }> = ({ pathwayInfo, pathwaysProgress }) => {
+  pathwaysProgress = pathwaysProgress.slice();
   console.log(pathwaysProgress);
   const addPathwayProgress = () => {
     pathwaysProgress.push({
