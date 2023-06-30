@@ -9,6 +9,7 @@ import Link from "next/link";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { connect } from "react-redux";
 import { UserMetaData } from "src/@types/types";
+import { useRouter } from "next/router";
 
 const DashboardPage = ({
   accountInfo,
@@ -30,7 +31,16 @@ const DashboardPage = ({
   } else {
     avgTier = 0;
   }
+
+  const router = useRouter();
   
+  if (accountInfo.checkIns.length > 0) {
+    router.push({
+      pathname: "/check-ins/[checkIn]",
+      query: { checkIn: accountInfo.checkIns },
+    });
+  }
+
   return (
      <div className="d-flex flex-column">
         <div className="border h-25" style={{ background: "linear-gradient(93.76deg, rgba(59, 104, 223, 0.65) -8.28%, rgba(141, 50, 213, 0.65) 103.54%)", }}>

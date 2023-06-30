@@ -490,5 +490,4 @@ CheckIn.requireAuth = true;
 export default connect((state) => ({
   userTags: state.accountInfo.tags,
   grade: state.accountInfo.grade,
-  userResponses: state.questionResponses,
 }))(CheckIn);

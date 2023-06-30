@@ -21,12 +21,16 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     if (dashboardParts) {
       dashboardJSON = await JSON.parse(JSON.stringify(dashboardParts));
     }
+    let pr = 0;
+    if (pathwayPercent) {
+      pr = pathwayPercent.userData
+    }
     
     return {
       props: {
         pathwaysProgress: pathwaysJSON,
         dashboardRet: dashboardJSON,
-        pathwayRet: pathwayPercent.userData,
+        pathwayRet: pr,
       },
     };
   } catch (err) {

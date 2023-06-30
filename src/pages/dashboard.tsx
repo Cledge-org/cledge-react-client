@@ -22,10 +22,14 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     if (acTier) {
       ac = acTier.overallTier
     }
+    let pr = 0;
+    if (pathwayPercent) {
+      pr = pathwayPercent.userData
+    }
 
     return {
       props: {
-        pathwayRet: pathwayPercent.userData,
+        pathwayRet: pr,
         ecRet: ec,
         acRet: ac
       },
