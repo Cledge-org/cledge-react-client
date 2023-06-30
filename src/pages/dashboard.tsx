@@ -4,18 +4,30 @@ import React, { useEffect, useState } from "react";
 import LoadingScreen from "src/common/components/Loading/Loading";
 import DashboardPage from "src/main-pages/DashboardPage/DashboardPage";
 import { getUserData } from "src/pages/api/user/get-meta-data";
+import { getPathwayPercent } from "./api/user/get-pathway-percent";
+import { getAcademics } from "./api/metrics/get-academics";
+import { getActivities } from "./api/metrics/get-activities";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const session = getSession(ctx);
-    const userData = await getUserData((await session).user.uid);
-    let userJSON = null;
-    if (userData) {
-      userJSON = await JSON.parse(JSON.stringify(userData.userData));
+    const pathwayPercent = await getPathwayPercent((await session).user.uid);
+    const ecTier = await getActivities((await session).user.uid);
+    const acTier = await getAcademics((await session).user.uid);
+    let ec = 0;
+    if (ecTier) {
+      ec = ecTier.overallTier
     }
+    let ac = 0;
+    if (acTier) {
+      ac = acTier.overallTier
+    }
+
     return {
       props: {
-        userData: userJSON.value
+        pathwayRet: pathwayPercent.userData,
+        ecRet: ec,
+        acRet: ac
       },
     };
   } catch (err) {
@@ -25,13 +37,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 };
 
-const Dashboard = ({ userData }) => {
+const Dashboard = ({ pathwayRet, ecRet, acRet }) => {
   const { data: session } = useSession();
-  const [dashboardData, setDashboardData] = useState(null);
-  
   if (session) {
     return (
-      <DashboardPage userData={userData} />
+      <DashboardPage pathwayPercentage={pathwayRet} ecOverall={ecRet} acOverall={acRet} />
     );
   } else {
     return <LoadingScreen />;

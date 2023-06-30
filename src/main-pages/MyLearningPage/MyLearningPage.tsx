@@ -23,12 +23,13 @@ const MyLearningPage: NextApplicationPage<{
   dashboardParts: PathwayPart[];
   accountInfo: AccountInfo;
   pathwaysProgress: PathwayProgress[];
-}> = ({ dashboardParts, accountInfo, pathwaysProgress }) => {
+  pathwaysPercent: number;
+}> = ({ dashboardParts, accountInfo, pathwaysProgress, pathwaysPercent }) => {
   const router = useRouter();
   const session = useSession();
   const [currTab, setCurrTab] = useState("all modules");
   const [isInUserView, setIsInUserView] = useState(false);
-  const [percentage, setPercentage] = useState(0);
+  const [percentage, setPercentage] = useState(pathwaysPercent);
   const parseId = (objectId) => {
     const objectIdStr = objectId.toString();
     if (!objectIdStr.includes('"')) {
@@ -39,33 +40,33 @@ const MyLearningPage: NextApplicationPage<{
       objectIdStr.length - 2
     );
   };
-  useEffect(() => {
-    let totalPathways = 0;
-    let finishedPathways = 0;
-    const allPathways: Pathway[] = dashboardParts
-      .map(({ dynamicRoutes }) => {
-        return dynamicRoutes.map(({ route }) => route);
-      })
-      .reduce((prev, curr) => {
-        return prev.concat(curr);
-      }, []);
-    allPathways?.forEach((pathway) => {
-      if (
-        !pathwaysProgress.find(({ pathwayId }) => {
-          return pathwayId === parseId(pathway._id);
-        })
-      ) {
-        totalPathways++;
-      }
-    });
-    pathwaysProgress.forEach(({ finished }) => {
-      if (finished) {
-        finishedPathways++;
-      }
-      totalPathways++;
-    });
-    setPercentage(Math.round((finishedPathways / totalPathways) * 100));
-  }, []);
+  // useEffect(() => {
+  //   let totalPathways = 0;
+  //   let finishedPathways = 0;
+  //   const allPathways: Pathway[] = dashboardParts
+  //     .map(({ dynamicRoutes }) => {
+  //       return dynamicRoutes.map(({ route }) => route);
+  //     })
+  //     .reduce((prev, curr) => {
+  //       return prev.concat(curr);
+  //     }, []);
+  //   allPathways?.forEach((pathway) => {
+  //     if (
+  //       !pathwaysProgress.find(({ pathwayId }) => {
+  //         return pathwayId === parseId(pathway._id);
+  //       })
+  //     ) {
+  //       totalPathways++;
+  //     }
+  //   });
+  //   pathwaysProgress.forEach(({ finished }) => {
+  //     if (finished) {
+  //       finishedPathways++;
+  //     }
+  //     totalPathways++;
+  //   });
+  //   setPercentage(Math.round((finishedPathways / totalPathways) * 100));
+  // }, []);
   const getCurrentTasks = (allPathways: Pathway[]) => {
     let noProgress = [];
     allPathways?.forEach((pathway) => {

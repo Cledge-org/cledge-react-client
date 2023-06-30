@@ -12,22 +12,25 @@ import { UserMetaData } from "src/@types/types";
 
 const DashboardPage = ({
   accountInfo,
-  userData,
+  pathwayPercentage,
+  acOverall,
+  ecOverall
 }: {
   accountInfo: AccountInfo;
-  userData: UserMetaData;
+  pathwayPercentage: number;
+  acOverall: number;
+  ecOverall: number;
 }) => {
   let avgTier;
-  if (userData) {
+  if (ecOverall && acOverall) {
     avgTier = useMemo(
-      () => (userData.ecOverall || 0 + userData.acOverall || 0) / 2,
-      [userData.ecOverall, userData.acOverall]
+      () => (ecOverall || 0 + acOverall || 0) / 2,
+      [ecOverall, acOverall]
     );
   } else {
     avgTier = 0;
   }
   
-  console.log(userData);
   return (
      <div className="d-flex flex-column">
         <div className="border h-25" style={{ background: "linear-gradient(93.76deg, rgba(59, 104, 223, 0.65) -8.28%, rgba(141, 50, 213, 0.65) 103.54%)", }}>
@@ -78,7 +81,7 @@ const DashboardPage = ({
                                 children={
                                   <div
                                     style={{ fontWeight: "bold", fontSize: "1.1em" }}
-                                  >{`${userData.pathwayPercentage ? userData.pathwayPercentage : 0}%`}</div>
+                                  >{`${pathwayPercentage ? pathwayPercentage : 0}%`}</div>
                                 }
                                 className="center-child"
                                 styles={{
@@ -93,7 +96,7 @@ const DashboardPage = ({
                                     stroke: "#2651ed",
                                   },
                                 }}
-                                value={userData.pathwayPercentage}
+                                value={pathwayPercentage}
                               />
                               <br></br>
                             </div>
