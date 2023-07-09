@@ -292,7 +292,7 @@ const Pathways: NextApplicationPage<{
         >
           <div
             className="d-flex flex-column border-end"
-            style={{ width: "23%", backgroundColor: "#EFEFF5" }}
+            style={{ width: "20rem", backgroundColor: "#EFEFF5" }}
           >
             {pathwayInfo.modules.map(
               ({ name, presetContent, personalizedContent, _id }) => {

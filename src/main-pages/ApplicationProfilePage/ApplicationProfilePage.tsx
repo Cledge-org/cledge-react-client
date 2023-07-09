@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import CardCheckIn from "../../common/components/Cards/CardCheckIn/CardCheckIn";
 import TabButton from "../../common/components/TabButton/TabButton";
 import Footer from "../../common/components/Footer/Footer";
+import cs from "classnames";
 
 import { NextApplicationPage } from "../AppPage/AppPage";
 import QuestionSubPageHeader from "../../common/components/SubpageHeader/SubpageHeader";
@@ -109,8 +110,8 @@ const ApplicationProfilePage: NextApplicationPage<{
         style={{ minHeight: "100vh" }}
       >
         <div
-          className="d-flex flex-column bg-extra-light-gray border-end border-2"
-          style={{ width: "20rem" }} // flex: 1
+          className="d-flex flex-column border-end"
+          style={{ width: "20rem", backgroundColor: "#EFEFF5" }}
         >
           {questionData.map((list, index) => {
             if (
@@ -119,22 +120,19 @@ const ApplicationProfilePage: NextApplicationPage<{
               list.name === "Academics"
             ) {
               return (
-                <div className="border-bottom border-2">
-                  <div className="mx-2">
-                    <DropdownTab
-                      isECAC={
-                        list.name === "Extracurriculars" ||
-                        list.name === "Academics"
-                      }
-                      chunkList={list.chunks.map((chunk) => chunk.name)}
-                      onClick={(chunk) =>
-                        setCurrPage({ page: list.name, chunk: chunk })
-                      }
-                      title={list.name}
-                      percentComplete={percentageData.lists[index]}
-                    />
-                  </div>
-                </div>
+                <DropdownTab
+                  key={index}
+                  isECAC={
+                    list.name === "Extracurriculars" ||
+                    list.name === "Academics"
+                  }
+                  chunkList={list.chunks.map((chunk) => chunk.name)}
+                  onClick={(chunk) =>
+                    setCurrPage({ page: list.name, chunk: chunk })
+                  }
+                  title={list.name}
+                  percentComplete={percentageData.lists[index]}
+                />
               );
             }
             return null;
@@ -170,13 +168,10 @@ const ApplicationProfilePage: NextApplicationPage<{
               </ul>
               <div className="tab-content h-100">
                 <div
-                  className={`default-tab-pane flex-row justify-content-start align-items-center
-                  ${
-                    currAllSectionTab === "upcoming"
-                      ? " tab-active  d-flex "
-                      : ""
-                  }
-                `}
+                  className={cs(
+                    "default-tab-pane flex-row justify-content-start align-items-center",
+                    currAllSectionTab === "upcoming" && "tab-active  d-flex"
+                  )}
                   id="upcoming"
                 >
                   {questionData
@@ -209,13 +204,10 @@ const ApplicationProfilePage: NextApplicationPage<{
                     )}
                 </div>
                 <div
-                  className={`default-tab-pane flex-row justify-content-start align-items-center
-                  ${
-                    currAllSectionTab === "finished"
-                      ? " tab-active  d-flex "
-                      : ""
-                  }
-                `}
+                  className={cs(
+                    "default-tab-pane flex-row justify-content-start align-items-center",
+                    currAllSectionTab === "finished" && "tab-active  d-flex"
+                  )}
                   id="finished"
                 >
                   {questionData

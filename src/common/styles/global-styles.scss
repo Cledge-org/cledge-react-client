@@ -328,6 +328,9 @@ a {
   //   $border-radius: 0
   // );
   position: relative;
+  &-selected{
+    background-color: $cl-light-blue;
+  }
   .text {
     font-weight: bold;
     font-size: 1.25em;
@@ -381,10 +384,12 @@ a {
   &:focus,
   &:checked {
     box-shadow: none;
+    background-color: #DCE1FB;
   }
   &:hover,
   &:active:hover {
     box-shadow: none;
+    background-color: #DCE1FB;
   }
 }
 .dropdown-menu-closed {
