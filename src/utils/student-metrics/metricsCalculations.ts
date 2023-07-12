@@ -442,7 +442,7 @@ export const booleanToInt = (array: boolean[]) => {
   return count;
 };
 
-
+// new method
 export const overallAcademicTier = (
   gradeLevel: number,
   applicantLevel: number, 
@@ -450,6 +450,31 @@ export const overallAcademicTier = (
   courseworkTier: number
 ) => {
   let gpaTier = calculateGPATier(applicantLevel, gpa);
+  let academicTier = ((gpaTier * 1.5) + courseworkTier) / 2;
+  return Math.round(academicTier);
+};
+
+// DEPRECATED METHOD
+export const overallAcademicTierOld = (
+  gradeLevel: number,
+  applicantLevel: number, 
+  gpa: number,
+  courses9: number,
+  courses10: number,
+  courses11: number,
+  courses12: number,
+  intensity9: boolean[],
+  intensity10: boolean[],
+  intensity11: boolean[],
+  intensity12: boolean[],
+  majorRelated9: boolean[],
+  majorRelated10: boolean[],
+  majorRelated11: boolean[],
+  majorRelated12: boolean[]
+) => {
+  let gpaTier = calculateGPATier(applicantLevel, gpa);
+  let courseworkTier = calculateCourseworkTier(gradeLevel, courses9, courses10, courses11, courses12, intensity9, intensity10, intensity11, intensity12,
+    majorRelated9, majorRelated10, majorRelated11, majorRelated12);
   let academicTier = ((gpaTier * 1.5) + courseworkTier) / 2;
   return Math.round(academicTier);
 };
