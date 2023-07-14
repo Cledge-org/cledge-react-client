@@ -375,8 +375,8 @@ const CollegeDetailPage = ({
                 }}
                 onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
               >
-                <FiBookmark></FiBookmark>
-                {addedToList ? "Remove From My List" : "Save to my list"}
+                {addedToList ? <></> : <FiBookmark>&nbsp;</FiBookmark>}
+                {addedToList ? "Remove From My List" : "Save to my list"}  
               </Button>
             </div>
           </div>
