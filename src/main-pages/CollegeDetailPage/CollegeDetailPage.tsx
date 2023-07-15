@@ -367,7 +367,7 @@ const CollegeDetailPage = ({
             </div>
             <div className="mt-5">
               <Button
-                variant="outlined"
+                variant={addedToList ? "contained" : "outlined"}
                 style={{
                   textTransform: "none",
                   background: addedToList ? "" : "",
