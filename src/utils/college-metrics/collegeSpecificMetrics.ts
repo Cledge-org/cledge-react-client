@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import dicts from "../..../../../../college-search-tool/assets/cst_result_parse.json";
 import { MongoClient } from "mongodb";
+import { CollegeDB } from 'src/@types/types';
 
 
 // TODO: Grab the selected college from the User somehow and also get college data given name of college
@@ -42,23 +43,6 @@ export const getCollegeList = (userId: string): Promise<any> => {
 }
 
 // need two api calls, keep them separate to make it easier, dont combine into one method for now
-export const getSingleCollegeInfo = (collegeId: String): Promise<Object> => {
-  return new Promise(async (res, err) => {
-    try {
-      const client = await MongoClient.connect(process.env.MONGO_URL);
-      const collegedata_db = await client.db("colleges");
-      const singleCollegeData = await collegedata_db
-        .collection("colleges-data")
-        .findOne({ college_id: collegeId });
-      let output = formatOutput(singleCollegeData, client, err);
-      res(output);
-    } catch (e) {
-      err(res);
-    }
-  });
-};
-
-// copied over from get-single-college.ts class for visualization
 export const getSingleCollegeInfo = (collegeId: String): Promise<Object> => {
   return new Promise(async (res, err) => {
     try {
