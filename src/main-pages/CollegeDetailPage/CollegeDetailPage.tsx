@@ -366,7 +366,6 @@ const CollegeDetailPage = ({
               </div>
             </div>
             <div className="mt-5">
-              
               <Button
                 variant="outlined"
                 style={{
@@ -375,8 +374,12 @@ const CollegeDetailPage = ({
                 }}
                 onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
               >
-                {addedToList ? <></> : <FiBookmark></FiBookmark>}
-                {addedToList ? "Remove From My List" : "Save to my list"}  
+                {addedToList ?
+                 "Remove From My List" :
+                  <div>
+                    <FiBookmark></FiBookmark>
+                    <text> Save to my list</text>
+                  </div>}  
               </Button>
             </div>
           </div>
