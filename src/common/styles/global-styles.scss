@@ -328,6 +328,9 @@ a {
   //   $border-radius: 0
   // );
   position: relative;
+  &-selected{
+    background-color: $cl-light-blue;
+  }
   .text {
     font-weight: bold;
     font-size: 1.25em;
@@ -451,10 +454,9 @@ a {
     padding-left: 1.5em;
     // @extend .ps-3;
   }
-}
-.dropdown-menu-btn-selected {
-  @extend .dropdown-menu-btn;
-  background-color: $cl-light-blue;
+  &-selected{
+    background-color: $cl-light-blue;
+  }
 }
 @mixin gradient-text($fromColor, $toColor) {
   background: -webkit-linear-gradient(left, $fromColor, $toColor);
