@@ -384,12 +384,10 @@ a {
   &:focus,
   &:checked {
     box-shadow: none;
-    background-color: #DCE1FB;
   }
   &:hover,
   &:active:hover {
     box-shadow: none;
-    background-color: #DCE1FB;
   }
 }
 .dropdown-menu-closed {
@@ -456,10 +454,9 @@ a {
     padding-left: 1.5em;
     // @extend .ps-3;
   }
-}
-.dropdown-menu-btn-selected {
-  @extend .dropdown-menu-btn;
-  background-color: $cl-light-blue;
+  &-selected{
+    background-color: $cl-light-blue;
+  }
 }
 @mixin gradient-text($fromColor, $toColor) {
   background: -webkit-linear-gradient(left, $fromColor, $toColor);

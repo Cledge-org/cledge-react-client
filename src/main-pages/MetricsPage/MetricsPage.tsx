@@ -52,6 +52,7 @@ const Metrics: NextApplicationPage<{
               }}
               title={data.title}
               percentComplete={undefined}
+              selected={currPage === data.page}
             />
           ))}
         </div>

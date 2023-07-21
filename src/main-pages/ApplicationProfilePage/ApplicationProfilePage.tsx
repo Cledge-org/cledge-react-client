@@ -49,7 +49,6 @@ const ApplicationProfilePage: NextApplicationPage<{
     ) {
       setCurrPage({ page: router.query.page, chunk: router.query.chunk });
     }
-    //console.log(router.query);
   }, []);
   const isNotEmpty = (element: any) => {
     return (
@@ -92,7 +91,6 @@ const ApplicationProfilePage: NextApplicationPage<{
     //!DONT FORGET TO REVERT THIS TO 100
     return Math.round((finished / 1) * 1);
   };
-  //console.log(percentageData.lists);
   const onboardingQuestionList = questionData.find(
     ({ name }) => name === "Onboarding Questions"
   );
@@ -131,7 +129,9 @@ const ApplicationProfilePage: NextApplicationPage<{
                     setCurrPage({ page: list.name, chunk: chunk })
                   }
                   title={list.name}
+                  currSelectedPath={currPage.chunk}
                   percentComplete={percentageData.lists[index]}
+                  selected={currPage.page === list.name}
                 />
               );
             }
@@ -195,7 +195,7 @@ const ApplicationProfilePage: NextApplicationPage<{
                           textGradient={"light"}
                           percentComplete={
                             percentageData.lists.filter((value) => value < 100)[
-                              index
+                            index
                             ]
                           }
                           isFinished={false}
@@ -264,33 +264,33 @@ const ApplicationProfilePage: NextApplicationPage<{
               .concat(
                 questionData.find(({ name }) => name === "Extracurriculars")
                   ? questionData
-                      .find(({ name }) => name === "Extracurriculars")
-                      .chunks.map((chunk) => {
-                        return (
-                          <QuestionECSubpage
-                            key={chunk.name}
-                            userResponses={questionResponses}
-                            chunk={chunk}
-                            isShowing={currPage.chunk === chunk.name}
-                          />
-                        );
-                      })
+                    .find(({ name }) => name === "Extracurriculars")
+                    .chunks.map((chunk) => {
+                      return (
+                        <QuestionECSubpage
+                          key={chunk.name}
+                          userResponses={questionResponses}
+                          chunk={chunk}
+                          isShowing={currPage.chunk === chunk.name}
+                        />
+                      );
+                    })
                   : []
               )
               .concat(
                 questionData.find(({ name }) => name === "Academics")
                   ? questionData
-                      .find(({ name }) => name === "Academics")
-                      .chunks.map((chunk) => {
-                        return (
-                          <QuestionACSubpage
-                            key={chunk.name}
-                            userResponses={questionResponses}
-                            chunk={chunk}
-                            isShowing={currPage.chunk === chunk.name}
-                          />
-                        );
-                      })
+                    .find(({ name }) => name === "Academics")
+                    .chunks.map((chunk) => {
+                      return (
+                        <QuestionACSubpage
+                          key={chunk.name}
+                          userResponses={questionResponses}
+                          chunk={chunk}
+                          isShowing={currPage.chunk === chunk.name}
+                        />
+                      );
+                    })
                   : []
               )
           )}

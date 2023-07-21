@@ -128,7 +128,7 @@ const Pathways: NextApplicationPage<{
         true
       ) &&
       currContentProgress.subContentProgress.length >=
-        currContent.content.length;
+      currContent.content.length;
     updateContentProgress(currContentProgress);
   };
   const currContentJSX = useMemo(() => {
@@ -229,7 +229,6 @@ const Pathways: NextApplicationPage<{
                 undefined
               }
               onUpdate={(answer) => {
-                //console.log("Whot is op");
                 updateSubContentProgress({
                   ...currSubContentProgress,
                   questionAnswer: answer,
@@ -341,6 +340,7 @@ const Pathways: NextApplicationPage<{
                     title={name}
                     isPathway
                     percentComplete={undefined}
+                    selected={currModuleId === _id}
                   />
                 );
               }
