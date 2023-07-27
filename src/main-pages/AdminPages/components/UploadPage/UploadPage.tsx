@@ -14,7 +14,8 @@ import { NextApplicationPage } from "src/main-pages/AppPage/AppPage";
 const UploadPage: NextApplicationPage<{
   children: JSX.Element | JSX.Element[];
   onUpload: Function;
-}> = ({ children, onUpload }) => {
+  onGenerate: Function;
+}> = ({ children, onUpload, onGenerate}) => {
   const router = useRouter();
   const session = useSession();
   if (session.data?.user?.email === "hello.cledge@outlook.com") {
@@ -30,6 +31,9 @@ const UploadPage: NextApplicationPage<{
               }}
             >
               Upload
+            </button>
+            <button className="mt-2" onClick={() => {onGenerate()}}>
+              Create Descriptions
             </button>
           </div>
         </div>

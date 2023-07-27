@@ -152,6 +152,33 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
           })
           .catch((err) => console.error(err));
       }}
+      onGenerate={() => {
+          function youtube_parser(url){
+              var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+              var match = url.match(regExp);
+              return (match&&match[7].length==11)? match[7] : false;
+          }
+          console.log(currPathwayData)
+          let course = currPathwayData;
+          for (let i = 0; i < course.modules.length; i++) {
+              let presetContent = course.modules[i].presetContent;
+            for (let j = 0; j < presetContent.length; j++) {
+                let content = presetContent[j].content;
+                for (let k = 0; k < content.length; k++) {
+                    let item = content[k];
+                    if (item.type == "video" && item.url != "" && (item.url.includes("youtube.com") || item.url.includes("youtu.be"))) {
+                        if (!youtube_parser(item.url)) {
+                            return alert("Invalid youtube link");
+                        }
+                        let videoId = youtube_parser(item.url);
+                        let description = generateDescription(videoId)
+                        course.modules[i].presetContent[j].content[k].description = description;
+                    }
+                }
+            }
+          }
+          setCurrPathwayData({...currPathwayData, modules: course.modules})
+      }}
     >
       <div className="mt-4 d-flex flex-column w-100">
         <div className="form-group">
