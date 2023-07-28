@@ -1,6 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {YoutubeTranscript} from "youtube-transcript"
 const { Configuration, OpenAIApi } = require("openai");
+require("dotenv").config();
 export const config = {
     api: {
         externalResolver: true,
@@ -8,10 +9,11 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-    const {videoId} = JSON.parse(req.body);
-    if (videoId) {
+    let {url} = JSON.parse(req.body);
+    console.log("Video Id Request: ", url)
+    if (url) {
         try {
-            let description = await getVideoDescription(videoId);
+            let description = await getVideoDescription(url);
             resolve.status(200).send(description);
         }
         catch (e) {
@@ -23,14 +25,24 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     }
 }
 
-export function getVideoDescription(videoId: string): Promise<String> {
+export function getVideoDescription(url: string): Promise<String> {
     return new Promise(async (res, err) => {
         try {
-            let transcript = YoutubeTranscript.fetchTranscript(videoId);
+            let transcript;
+            await YoutubeTranscript.fetchTranscript(url).then((transcript_response) => {
+                if (transcript_response) {
+                    // Take the "text" property of each transcript object and join them into a single string
+                    transcript = transcript_response.map((t) => t.text).join(" ");
+                }
+            });
+            transcript = transcript.replace("[Music]", "");
+            console.log("Transcript: ", transcript);
             const configuration = new Configuration({
                 apiKey: process.env.OPENAI_API_KEY,
             })
             const openai = new OpenAIApi(configuration);
+            console.log("Init OpenAI");
+            let description;
             const chat_completion = await openai.createChatCompletion({
                 model: "gpt-3.5-turbo",
                 messages: [
@@ -45,8 +57,10 @@ export function getVideoDescription(videoId: string): Promise<String> {
                 ],
                 n: 1,
                 temperature: 0.9,
+            }).then((response) => {
+                description = response.data.choices[0].message.content;;
             });
-            let description = chat_completion.choices[0].message.content;
+            console.log("Description inside: " + description)
             res(description);
         }
         catch (e) {

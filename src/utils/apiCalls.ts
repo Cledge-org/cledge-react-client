@@ -359,3 +359,10 @@ export const redeemCode = async (userCode: string, email: string) => {
     method: "POST",
   });
 }
+
+export const callGetVideoDescription = async (url: string) => {
+    return await fetch(`/api/admin/learning-pathway/get-video-description`, {
+        method: "POST",
+        body: JSON.stringify({ url }),
+    });
+}
