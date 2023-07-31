@@ -102,6 +102,7 @@ export const getCollegeInfo = (
         queryType: "full",
         filter: createFilterExpression(filters),
         searchFields: searchFields,
+        orderBy: ["ADM_RATE desc"],
       });
       let output = [];
       for await (const result of searchResults.results) {
@@ -148,6 +149,11 @@ const createFilterExpression = (filters) => {
 
   return filterExpressions.join(" and ");
 };
+
+const createSortExpression = (orders) => {
+  let sortExpression = "search.score() desc";
+  return sortExpression;
+}
 
 const formatOutput = async (college: any, client: MongoClient, err: any) => {
   try {
