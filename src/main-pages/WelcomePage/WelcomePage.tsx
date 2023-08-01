@@ -69,12 +69,17 @@ const Intro = styled(FullWidthContainer)`
   #intro h6,
   #intro p {
     color: white;
+    text-align:center;
   }
 
   #intro h6 {
-    font-weight: 800;
-    font-size: 48px;
+    font-size: 84px;
   }
+  #intro p {
+    padding: 0 20px;
+    font-size: 20px;
+  }
+
 `;
 
 const Metric = styled(FullWidthContainer)`
@@ -267,7 +272,6 @@ const WelcomePage = ({ data }) => {
               title={IntroContent.title}
               content={IntroContent.text}
               button={IntroContent.button}
-              video={<YoutubeEmbed videoId="Bly0QbY3fV4" />}
               id="intro"
               width={width}
             />

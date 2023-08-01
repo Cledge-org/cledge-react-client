@@ -28,6 +28,8 @@ export const IconWrapper = styled.div`
 export const RightBlockContainer = styled("section")`
   position: relative;
   width: 100%;
+  display:flex;
+  justify-content:center;
 
   @media only screen and (max-width: 768px) {
     padding: 4rem 0 0 0;
@@ -40,8 +42,8 @@ export const Content = styled("p")`
 
 export const ContentWrapper = styled("div")`
   position: relative;
-  max-width: 540px;
   margin: auto;
+  max-width: 70%;
 
   @media only screen and (max-width: 575px) {
     padding-bottom: ${(props) => (props.id ==="mission" ? "0" : "4rem")};

@@ -39,15 +39,14 @@ const Header = ({
       );
   }, [accountInfo]);
   const [colors, setColors] = useState(
-    router.pathname === "/" ? "cl-white" : "cl-blue"
+    router.pathname === "/welcome" ? "cl-white" : "cl-blue"
   );
-  var navclass = "";
+  var navclass = styles.navRegular + " shadow-sm ";
 
-  if (router.pathname === "/") {
-    navclass = styles.navRegular + " shadow-sm position-fixed fixed-top";
-  } else {
-    navclass = styles.navRegular + " shadow-sm";
+  if (router.pathname === "/welcome") {
+    navclass += " position-fixed fixed-top";
   }
+
   const linkData = [
     {
       link: "/dashboard",
@@ -76,13 +75,13 @@ const Header = ({
       icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
       title: "College",
       dropdown: true,
-      links : [
+      links: [
         {
-          key: "My List", 
+          key: "My List",
           value: "/college-list"
         },
         {
-          key: "Colleges", 
+          key: "Colleges",
           value: "/college-search"
         },
       ]
@@ -113,7 +112,7 @@ const Header = ({
       } else {
         if (scrollState !== "top") {
           setScrollState("top");
-          if (router.pathname === "/" && !isExpanded) {
+          if (router.pathname === "/welcome" && !isExpanded) {
             setColors("cl-white");
           }
         }
@@ -135,7 +134,7 @@ const Header = ({
   const isActiveLink = (router, links) => {
     return links.some(link => router.pathname === link.value);
   };
-  
+
   return (
     <nav
       key={key_prop}
@@ -144,8 +143,10 @@ const Header = ({
         scrollState !== "scrolling" && router.pathname === "/" && !isExpanded
           ? `position-fixed top-0 start-0 ${styles.navTransparent}`
           : "sticky-top",
+        //   `w-100 navbar cl-blue navbar-expand-md px-3 position-fixed pe-5`,
+        // scrollState !== "scrolling" && router.pathname === "/welcome" && !isExpanded && styles.navTransparent,
         {
-          [styles.navRegularNoShadow + " shadow-none"]:
+          [styles.navRegular + " shadow-none"]:
             scrollState !== "scrolling" && router.pathname !== "/",
           [navclass]: scrollState === "scrolling" || isExpanded,
         }
@@ -198,13 +199,13 @@ const Header = ({
           id="navbarNavAltMarkup"
         >
           {status === "authenticated" ? (
-            
+
             <div className="navbar-nav">
-              {linkData.map(({ title, link, icon, dropdown, links}) => (
-              dropdown ? (
-                <Dropdown as={ButtonGroup}>
-                  <Dropdown.Toggle variant="outline" className="dropdown-toggle btn-sm btn-sm no-animation-button">
-                    <a
+              {linkData.map(({ title, link, icon, dropdown, links }) => (
+                dropdown ? (
+                  <Dropdown as={ButtonGroup}>
+                    <Dropdown.Toggle variant="outline" className="dropdown-toggle btn-sm btn-sm no-animation-button">
+                      <a
                         className=""
                         style={{
                           color: isActiveLink(router, links) ? "#506BED" : "#808099",
@@ -221,72 +222,54 @@ const Header = ({
                         />
                         <span className="ps-1 pe-1">{title}</span>
                       </a>
-                  </Dropdown.Toggle>
-          
-                  <Dropdown.Menu align="left">
-                    {links.map((item) => {
-                      return (
-                        <Link href={item.value}>
-                          <a className="dropdown-item">{item.key}</a>
-                        </Link>
-                      )
+                    </Dropdown.Toggle>
 
-                    })}
-                  </Dropdown.Menu>
-                </Dropdown>
-              ) : (
-                <Link href={link}>
-                  <Button variant="outline" className="clear-button btn-sm no-animation-button">
-                    <a
-                      className=""
-                      style={{
-                        color: router.pathname === link ? "#506BED" : "#808099",
-                      }}
-                    >
-                      <img
+                    <Dropdown.Menu align="left">
+                      {links.map((item) => {
+                        return (
+                          <Link href={item.value}>
+                            <a className="dropdown-item">{item.key}</a>
+                          </Link>
+                        )
+
+                      })}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                ) : (
+                  <Link href={link}>
+                    <Button variant="outline" className="clear-button btn-sm no-animation-button">
+                      <a
+                        className=""
                         style={{
-                          filter:
-                            router.pathname === link
-                              ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
-                              : "",
+                          color: router.pathname === link ? "#506BED" : "#808099",
                         }}
-                        src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
-                      />
-                      <span className="ps-1 pe-1">{title}</span>
-                    </a>
-                  </Button>
-                </Link>
-              )
+                      >
+                        <img
+                          style={{
+                            filter:
+                              router.pathname === link
+                                ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
+                                : "",
+                          }}
+                          src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
+                        />
+                        <span className="ps-1 pe-1">{title}</span>
+                      </a>
+                    </Button>
+                  </Link>
+                )
               ))}
             </div>
-
- 
           ) : (
             <div className="navbar-nav">
               <Link href="/api/auth/signin">
                 <a
                   className="nav-link px-3"
-                  style={{ fontWeight: 600, color: "black" }}
+                  style={{ fontWeight: 600 }}
                   href=""
                 >
-                  <span>Log In</span>
+                  <span className={`${colors}`}>Log In</span>
                 </a>
-              </Link>
-              <Link
-                href={
-                  location.includes("uw") ? "/auth/uw-purchase" : "/auth/signup"
-                }
-              >
-                <div
-                  className={classNames("nav-link px-3", styles.signUpBtn)}
-                  style={{
-                    fontWeight: 600,
-                    borderRadius: "4px",
-                    color: "black",
-                  }}
-                >
-                  <span>Sign Up</span>
-                </div>
               </Link>
             </div>
           )}
@@ -294,19 +277,19 @@ const Header = ({
         {status === "authenticated" && (
           <Dropdown>
             <Dropdown.Toggle variant="" bsPrefix="p-0" className="btn-sm no-animation-button">
-              <a                
+              <a
                 style={{
-                    background: "rgba(247, 188, 118, 0.5)",
-                    paddingLeft: "15px",
-                    paddingRight: "15px",
-                    paddingTop: "12px",
-                    paddingBottom: "12px",
-                    borderRadius: "10px",
-                    color: "black",
-                  }}
-                >
-                  {userInitials}
-                </a>
+                  background: "rgba(247, 188, 118, 0.5)",
+                  paddingLeft: "15px",
+                  paddingRight: "15px",
+                  paddingTop: "12px",
+                  paddingBottom: "12px",
+                  borderRadius: "10px",
+                  color: "black",
+                }}
+              >
+                {userInitials}
+              </a>
             </Dropdown.Toggle>
 
             <Dropdown.Menu align="right">
@@ -314,11 +297,11 @@ const Header = ({
                 <a className="dropdown-item">Application Profile</a>
               </Link>
               <Link href="account">
-                  <a className="dropdown-item">Account Settings</a>
+                <a className="dropdown-item">Account Settings</a>
               </Link>
             </Dropdown.Menu>
           </Dropdown>
-          
+
         )}
       </div>
     </nav>

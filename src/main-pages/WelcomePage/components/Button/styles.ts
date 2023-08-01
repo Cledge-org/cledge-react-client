@@ -5,9 +5,10 @@ export const StyledButton = styled("button")<any>`
   color: ${(p) => (p.color ? "#2E186A" : "#fff")};
   font-size: 1rem;
   font-weight: 700;
+  max-width: fit-content;
   border: none;
   border-radius: 4px;
-  padding: 13px 0;
+  padding: 13px 20px;
   cursor: pointer;
   margin-top: 0.625rem;
   transition: all 0.3s ease-in-out;
