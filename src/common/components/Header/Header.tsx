@@ -39,15 +39,14 @@ const Header = ({
       );
   }, [accountInfo]);
   const [colors, setColors] = useState(
-    router.pathname === "/" ? "cl-white" : "cl-blue"
+    router.pathname === "/welcome" ? "cl-white" : "cl-blue"
   );
-  var navclass = "";
+  var navclass = styles.navRegular + " shadow-sm ";
 
-  if (router.pathname === "/") {
-    navclass = styles.navRegular + " shadow-sm position-fixed fixed-top";
-  } else {
-    navclass = styles.navRegular + " shadow-sm";
+  if (router.pathname === "/welcome") {
+    navclass += " position-fixed fixed-top";
   }
+  
   const linkData = [
     {
       link: "/dashboard",
@@ -113,7 +112,7 @@ const Header = ({
       } else {
         if (scrollState !== "top") {
           setScrollState("top");
-          if (router.pathname === "/" && !isExpanded) {
+          if (router.pathname === "/welcome" && !isExpanded) {
             setColors("cl-white");
           }
         }
@@ -140,12 +139,10 @@ const Header = ({
     <nav
       key={key_prop}
       className={classNames(
-        `w-100 navbar cl-blue navbar-expand-md px-3`,
-        scrollState !== "scrolling" && router.pathname === "/" && !isExpanded
-          ? `position-fixed top-0 start-0 ${styles.navTransparent}`
-          : "sticky-top",
+        `w-100 navbar cl-blue navbar-expand-md px-3 position-fixed pe-5`,
+        scrollState !== "scrolling" && router.pathname === "/welcome" && !isExpanded && styles.navTransparent,
         {
-          [styles.navRegularNoShadow + " shadow-none"]:
+          [styles.navRegular + " shadow-none"]:
             scrollState !== "scrolling" && router.pathname !== "/",
           [navclass]: scrollState === "scrolling" || isExpanded,
         }
@@ -259,34 +256,16 @@ const Header = ({
               )
               ))}
             </div>
-
- 
           ) : (
             <div className="navbar-nav">
               <Link href="/api/auth/signin">
                 <a
                   className="nav-link px-3"
-                  style={{ fontWeight: 600, color: "black" }}
+                  style={{ fontWeight: 600 }}
                   href=""
                 >
-                  <span>Log In</span>
+                  <span className={`${colors}`}>Log In</span>
                 </a>
-              </Link>
-              <Link
-                href={
-                  location.includes("uw") ? "/auth/uw-purchase" : "/auth/signup"
-                }
-              >
-                <div
-                  className={classNames("nav-link px-3", styles.signUpBtn)}
-                  style={{
-                    fontWeight: 600,
-                    borderRadius: "4px",
-                    color: "black",
-                  }}
-                >
-                  <span>Sign Up</span>
-                </div>
               </Link>
             </div>
           )}
