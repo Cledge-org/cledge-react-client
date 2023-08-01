@@ -79,6 +79,9 @@ const Intro = styled(FullWidthContainer)`
     padding: 0 20px;
     font-size: 20px;
   }
+  #intro button {
+    margin: 0 auto;
+  }
 
 `;
 
