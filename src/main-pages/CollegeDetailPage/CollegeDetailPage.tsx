@@ -9,6 +9,8 @@ import { Tabs, Tab } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import LockIcon from "@mui/icons-material/Lock";
+import { FiBookmark } from "react-icons/fi";
+import { FaBookmark } from "react-icons/fa";
 import OverviewCard from "src/main-pages/CollegeDetailPage/components/OverviewCard/OverviewCard";
 import Card from "src/main-pages/CollegeDetailPage/components/Card/Card";
 import DataRow from "./components/DataRow/DataRow";
@@ -367,14 +369,22 @@ const CollegeDetailPage = ({
             </div>
             <div className="mt-5">
               <Button
-                variant="contained"
+                variant={addedToList ? "contained" :"outlined"}
                 style={{
                   textTransform: "none",
                   background: addedToList ? "red" : "",
                 }}
                 onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
               >
-                {addedToList ? "Remove From My List" : "Add To My College List"}
+                {addedToList ?
+                  <div>
+                    <FaBookmark></FaBookmark>
+                    <text> Remove From My List</text>
+                  </div> :
+                  <div>
+                    <FiBookmark></FiBookmark>
+                    <text> Save to my list</text>
+                  </div>}  
               </Button>
             </div>
           </div>
