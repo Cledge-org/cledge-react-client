@@ -24,6 +24,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import CompositeQuestion from "src/common/components/Questions/CompositeQuestion/CompositeQuestion";
 import DoubleTextInputQuestion from "src/common/components/Questions/DoubleTextInputQuestion/DoubleTextInputQuestion";
 import DoubleDropdownQuestion from "src/common/components/Questions/DoubleDropdownQuestion/DoubleDropdownQuestion";
+import DropdownQuestion from "src/common/components/Questions/DropdownQuestion/DropdownQuestion";
 
 const CheckIn: NextApplicationPage<{
   checkInData: QuestionList;
@@ -317,6 +318,19 @@ const CheckIn: NextApplicationPage<{
                     onChange={(value) => {
                       updateFunc(value);
                     }}
+                  />
+                );
+              }
+              if (question?.type === "ECDropDown") {
+                return (
+                  <DropdownQuestion
+                    isConcatenable={question.isConcatenable}
+                    valuesList={question.data}
+                    onChange={(value) => {
+                      updateFunc(value)
+                    }}
+                    key={question._id.toString()}
+                    questionTitle={question.question}
                   />
                 );
               }

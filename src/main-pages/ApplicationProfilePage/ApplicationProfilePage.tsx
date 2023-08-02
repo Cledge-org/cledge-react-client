@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import CardCheckIn from "../../common/components/Cards/CardCheckIn/CardCheckIn";
 import TabButton from "../../common/components/TabButton/TabButton";
 import Footer from "../../common/components/Footer/Footer";
+import cs from "classnames";
 
 import { NextApplicationPage } from "../AppPage/AppPage";
 import QuestionSubPageHeader from "../../common/components/SubpageHeader/SubpageHeader";
@@ -48,7 +49,6 @@ const ApplicationProfilePage: NextApplicationPage<{
     ) {
       setCurrPage({ page: router.query.page, chunk: router.query.chunk });
     }
-    //console.log(router.query);
   }, []);
   const isNotEmpty = (element: any) => {
     return (
@@ -91,7 +91,6 @@ const ApplicationProfilePage: NextApplicationPage<{
     //!DONT FORGET TO REVERT THIS TO 100
     return Math.round((finished / 1) * 1);
   };
-  //console.log(percentageData.lists);
   const onboardingQuestionList = questionData.find(
     ({ name }) => name === "Onboarding Questions"
   );
@@ -109,8 +108,8 @@ const ApplicationProfilePage: NextApplicationPage<{
         style={{ minHeight: "100vh" }}
       >
         <div
-          className="d-flex flex-column bg-extra-light-gray border-end border-2"
-          style={{ width: "20rem" }} // flex: 1
+          className="d-flex flex-column border-end"
+          style={{ width: "20rem", backgroundColor: "#EFEFF5" }}
         >
           {questionData.map((list, index) => {
             if (
@@ -119,22 +118,21 @@ const ApplicationProfilePage: NextApplicationPage<{
               list.name === "Academics"
             ) {
               return (
-                <div className="border-bottom border-2">
-                  <div className="mx-2">
-                    <DropdownTab
-                      isECAC={
-                        list.name === "Extracurriculars" ||
-                        list.name === "Academics"
-                      }
-                      chunkList={list.chunks.map((chunk) => chunk.name)}
-                      onClick={(chunk) =>
-                        setCurrPage({ page: list.name, chunk: chunk })
-                      }
-                      title={list.name}
-                      percentComplete={percentageData.lists[index]}
-                    />
-                  </div>
-                </div>
+                <DropdownTab
+                  key={index}
+                  isECAC={
+                    list.name === "Extracurriculars" ||
+                    list.name === "Academics"
+                  }
+                  chunkList={list.chunks.map((chunk) => chunk.name)}
+                  onClick={(chunk) =>
+                    setCurrPage({ page: list.name, chunk: chunk })
+                  }
+                  title={list.name}
+                  currSelectedPath={currPage.chunk}
+                  percentComplete={percentageData.lists[index]}
+                  selected={currPage.page === list.name}
+                />
               );
             }
             return null;
@@ -170,13 +168,10 @@ const ApplicationProfilePage: NextApplicationPage<{
               </ul>
               <div className="tab-content h-100">
                 <div
-                  className={`default-tab-pane flex-row justify-content-start align-items-center
-                  ${
-                    currAllSectionTab === "upcoming"
-                      ? " tab-active  d-flex "
-                      : ""
-                  }
-                `}
+                  className={cs(
+                    "default-tab-pane flex-row justify-content-start align-items-center",
+                    currAllSectionTab === "upcoming" && "tab-active  d-flex"
+                  )}
                   id="upcoming"
                 >
                   {questionData
@@ -200,7 +195,7 @@ const ApplicationProfilePage: NextApplicationPage<{
                           textGradient={"light"}
                           percentComplete={
                             percentageData.lists.filter((value) => value < 100)[
-                              index
+                            index
                             ]
                           }
                           isFinished={false}
@@ -209,13 +204,10 @@ const ApplicationProfilePage: NextApplicationPage<{
                     )}
                 </div>
                 <div
-                  className={`default-tab-pane flex-row justify-content-start align-items-center
-                  ${
-                    currAllSectionTab === "finished"
-                      ? " tab-active  d-flex "
-                      : ""
-                  }
-                `}
+                  className={cs(
+                    "default-tab-pane flex-row justify-content-start align-items-center",
+                    currAllSectionTab === "finished" && "tab-active  d-flex"
+                  )}
                   id="finished"
                 >
                   {questionData
@@ -272,33 +264,33 @@ const ApplicationProfilePage: NextApplicationPage<{
               .concat(
                 questionData.find(({ name }) => name === "Extracurriculars")
                   ? questionData
-                      .find(({ name }) => name === "Extracurriculars")
-                      .chunks.map((chunk) => {
-                        return (
-                          <QuestionECSubpage
-                            key={chunk.name}
-                            userResponses={questionResponses}
-                            chunk={chunk}
-                            isShowing={currPage.chunk === chunk.name}
-                          />
-                        );
-                      })
+                    .find(({ name }) => name === "Extracurriculars")
+                    .chunks.map((chunk) => {
+                      return (
+                        <QuestionECSubpage
+                          key={chunk.name}
+                          userResponses={questionResponses}
+                          chunk={chunk}
+                          isShowing={currPage.chunk === chunk.name}
+                        />
+                      );
+                    })
                   : []
               )
               .concat(
                 questionData.find(({ name }) => name === "Academics")
                   ? questionData
-                      .find(({ name }) => name === "Academics")
-                      .chunks.map((chunk) => {
-                        return (
-                          <QuestionACSubpage
-                            key={chunk.name}
-                            userResponses={questionResponses}
-                            chunk={chunk}
-                            isShowing={currPage.chunk === chunk.name}
-                          />
-                        );
-                      })
+                    .find(({ name }) => name === "Academics")
+                    .chunks.map((chunk) => {
+                      return (
+                        <QuestionACSubpage
+                          key={chunk.name}
+                          userResponses={questionResponses}
+                          chunk={chunk}
+                          isShowing={currPage.chunk === chunk.name}
+                        />
+                      );
+                    })
                   : []
               )
           )}

@@ -216,15 +216,15 @@ const College = ({
   return (
     <Layout>
       <Row>
-        <Col xs={24} sm={24} md={6} lg={6} xl={5} xxl={4}>
+        <Col xs={24} sm={24} md={4} lg={4} xl={4} xxl={4}>
           <SideBar setFilter={setFilter} />
         </Col>
         <Col
           xs={24}
           sm={24}
-          md={18}
-          lg={18}
-          xl={19}
+          md={20}
+          lg={20}
+          xl={20}
           xxl={20}
           id="college-scroll"
           style={{
