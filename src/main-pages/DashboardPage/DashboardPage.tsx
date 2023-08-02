@@ -110,7 +110,7 @@ const DashboardPage = ({
                           <Link href="/metrics">
                             <a>
                               <img
-                                src="/images/header/icon-school.svg" alt="graduation hat"
+                                src="/images/header/college-finder.png" alt="graduation hat"
                                 style={{
                                   padding: "10px",
                                   width: "50px",
