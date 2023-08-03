@@ -94,6 +94,12 @@ export const getCollegeInfo = (
 
       let searchFuzzyText = toFuzzyString(searchRawText);
 
+      let orderExpression = [];
+
+      if (searchFuzzyText == "*") {
+        orderExpression = createOrderExpression("ADM_RATE", 1);
+      }
+
       const searchResults = await searchClient.search(searchFuzzyText, {
         top: top,
         skip: skip,
@@ -102,7 +108,7 @@ export const getCollegeInfo = (
         queryType: "full",
         filter: createFilterExpression(filters),
         searchFields: searchFields,
-        orderBy: ["ADM_RATE desc"],
+        orderBy: orderExpression,
       });
       let output = [];
       for await (const result of searchResults.results) {
@@ -123,7 +129,7 @@ export const getCollegeInfo = (
 // creates filters in odata syntax
 // <field> : <value>
 const createFilterExpression = (filters) => {
-  let filterExpressions = [];
+  let filterExpressions = ["ADM_RATE gt 0 and ADM_RATE_ALL gt 0"];
   Object.keys(filters).forEach(function (currentValue) {
     let curKey = currentValue.split(" ");
 
@@ -150,9 +156,12 @@ const createFilterExpression = (filters) => {
   return filterExpressions.join(" and ");
 };
 
-const createSortExpression = (orders) => {
-  let sortExpression = "search.score() desc";
-  return sortExpression;
+// simple function for turning input as order expression
+const createOrderExpression = (orderField, direction) => {
+  if (direction === -1) {
+    return [orderField + " desc"];
+  }
+  return [orderField];
 }
 
 const formatOutput = async (college: any, client: MongoClient, err: any) => {
