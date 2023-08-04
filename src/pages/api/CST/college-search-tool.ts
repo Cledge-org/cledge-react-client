@@ -95,9 +95,13 @@ export const getCollegeInfo = (
       let searchFuzzyText = toFuzzyString(searchRawText);
 
       let orderExpression = [];
+      let filterExpression = createFilterExpression(filters);
 
-      if (searchFuzzyText == "*") {
+      if (searchFuzzyText === "*") {
         orderExpression = createOrderExpression("ADM_RATE", 1);
+        if (Object.keys(filters).length === 0) {
+          filterExpression = "ADM_RATE gt 0 and ADM_RATE_ALL gt 0";
+        }
       }
 
       const searchResults = await searchClient.search(searchFuzzyText, {
@@ -106,7 +110,7 @@ export const getCollegeInfo = (
         includeTotalCount: true,
         searchMode: "all",
         queryType: "full",
-        filter: createFilterExpression(filters),
+        filter: filterExpression,
         searchFields: searchFields,
         orderBy: orderExpression,
       });
@@ -129,7 +133,7 @@ export const getCollegeInfo = (
 // creates filters in odata syntax
 // <field> : <value>
 const createFilterExpression = (filters) => {
-  let filterExpressions = ["ADM_RATE gt 0 and ADM_RATE_ALL gt 0"];
+  let filterExpressions = [];
   Object.keys(filters).forEach(function (currentValue) {
     let curKey = currentValue.split(" ");
 
