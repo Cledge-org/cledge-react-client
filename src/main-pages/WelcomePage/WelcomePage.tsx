@@ -18,6 +18,9 @@ import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageError
 import UWCSLandingPage from "src/main-pages/WelcomePage/components/UWCSLandingPage/UWCSLandingPage";
 import { useLocation } from "src/utils/hooks/useLocation";
 import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
+import BlogCarouselItem from "src/main-pages/WelcomePage/components/blogsCarousel/components/BlogCaroselItem";
+import FormCarousel from "src/main-pages/WelcomePage/components/FormCarousel/FormCarousel";
+import FluidText from "src/common/components/FluidText/FluidText";
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
 const MiddleBlock = dynamic(
@@ -69,7 +72,7 @@ const Intro = styled(FullWidthContainer)`
   #intro h6,
   #intro p {
     color: white;
-    text-align:center;
+    text-align: center;
   }
 
   #intro h6 {
@@ -82,7 +85,6 @@ const Intro = styled(FullWidthContainer)`
   #intro button {
     margin: 0 auto;
   }
-
 `;
 
 const Metric = styled(FullWidthContainer)`
@@ -243,6 +245,21 @@ export const MediaButton = styled("button")`
   }
 `;
 
+const CarouselDiv = styled.div`
+  background-color: #f9faff;
+  margin-bottom: 50px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  margin-top: 40px;
+`;
+
 function useWindowSize() {
   const [size, setSize] = useState([0, 0]);
   useLayoutEffect(() => {
@@ -261,7 +278,7 @@ const WelcomePage = ({ data }) => {
   const [currFeature, setCurrFeature] = useState(0);
   const [width, height] = useWindowSize();
   const windowOrigin = useLocation();
-
+  console.log(data);
   if (windowOrigin.includes("uw")) {
     return <UWCSLandingPage blogData={data} />;
   }
@@ -340,6 +357,12 @@ const WelcomePage = ({ data }) => {
             </MediaButton>
           </div>
         </Intro>
+        <CarouselDiv id="carouselDiv">
+          {/* <FormCarousel /> */}
+          <div style={{border:"solid 2px red",width:"500px", height:"100px"}}>
+            <FluidText text="Hello World" />
+          </div>
+        </CarouselDiv>
         <MiddleBlock
           id="goal"
           title={MiddleBlockContent.title}
