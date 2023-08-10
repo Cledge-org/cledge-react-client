@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getEnvVariable } from "src/config/getConfig";

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import {
   callPutActivities,
   callPutQuestionResponses,
+  callUpdateActivitiesLog
 } from "src/utils/apiCalls";
 import { updateQuestionResponsesAction } from "../../../../../utils/redux/actionFunctions";
 import { store } from "../../../../../utils/redux/store";
@@ -142,6 +143,10 @@ export default function QuestionECSubpage({
           getActivities(ECResponse.response[chunk.name]),
           activities
         );
+        callUpdateActivitiesLog(
+          getActivities(ECResponse.response[chunk.name]),
+          activities
+        )
         store.dispatch(updateQuestionResponsesAction(userResponses));
         setIsAdding(false);
         setIsEditing(false);

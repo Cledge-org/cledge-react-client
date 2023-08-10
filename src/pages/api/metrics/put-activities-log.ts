@@ -25,7 +25,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         );
       }
     }
-    const result = await putActivities(userId, activities, insertionId);
+    const result = await updateActivitiesLog(userId, activities, insertionId);
     resolve.status(200).send(result);
   } catch (e) {
     resolve.status(500).send(e);
@@ -36,7 +36,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 // create activity list. If activitiesID provided but no activities list, will
 // delete the document with the given activitiesID. If activitiesID and activities list
 // are provided, will update the activities list that corresponds to the given activitiesID.
-export const putActivities = (
+export const updateActivitiesLog = (
   userId: string,
   activities: Activities | undefined,
   insertionId: string
@@ -45,29 +45,40 @@ export const putActivities = (
     // Document should not have _id field when sent to database
     delete activities._id;
   }
+  const currDate = new Date().toLocaleDateString();
+  const extracurricularActivitiesObj = {
+    activities
+  };
   return new Promise(async (res, err) => {
     try {
       const client = await MongoClient.connect(process.env.MONGO_URL);
-      if (activities && insertionId) {
-        await client
-          .db("metrics")
-          .collection("extracurriculars")
-          .insertOne({
-            firebaseId: insertionId,
-            ...activities,
-          });
-      } else if (userId && !activities) {
-        await client.db("metrics").collection("extracurriculars").deleteOne({
-          firebaseId: userId,
-        });
-      } else if (userId && activities) {
-        await client.db("metrics").collection("extracurriculars").updateOne(
-          {
-            firebaseId: userId,
-          },
-          { $set: activities }
-        );
+      const db = client.db('metrics')
+      const collection = db.collection('extracurriculars-log')
+
+      const existingFbID = await collection.findOne({ firebaseId: insertionId })
+
+      if (existingFbID) {
+        const existingEntry = existingFbID.ecLog.find(entry => entry.hasOwnProperty(currDate));
+
+        if(existingEntry) {
+          existingEntry[currDate] = extracurricularActivitiesObj;
+          await collection.updateOne(
+            { firebaseId: insertionId },
+            { $set: { ecLog: existingFbID.ecLog } }
+          );
+        } else {
+          await collection.updateOne(
+            { firebaseId: insertionId },
+            { $push: { acLog: { [currDate]: extracurricularActivitiesObj } } }
+          );
+        } 
+      } else {
+        await collection.insertOne({ 
+          firebaseId: insertionId,
+          ecLog : [ { [currDate]: extracurricularActivitiesObj}]
+        })
       }
+
       res();
       client.close();
     } catch (e) {

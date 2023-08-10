@@ -12,7 +12,7 @@ import ACEditor from "../../QuestionComponents/ECEditor/ECEditor";
 import ACQuestionSummaryCard from "../../QuestionComponents/ECQuestionSummaryCard/ECQuestionSummaryCard";
 import QuestionSubPageHeader from "../../../../../common/components/SubpageHeader/SubpageHeader";
 import QuestionSummaryCard from "../../QuestionComponents/QuestionSummaryCard/QuestionSummaryCard";
-import { callPutAcademics, callPutQuestionResponses } from "src/utils/apiCalls";
+import { callPutAcademics, callPutQuestionResponses, callUpdateAcademicLog } from "src/utils/apiCalls";
 interface QuestionACSubpageProps {
   userResponses: UserResponse[];
   isShowing: boolean;
@@ -145,6 +145,10 @@ export default function QuestionACSubpage({
           academics = null;
         }
         callPutAcademics(
+          getAcademics(ACResponse.response[chunk.name]),
+          academics
+        );
+        callUpdateAcademicLog(
           getAcademics(ACResponse.response[chunk.name]),
           academics
         );
