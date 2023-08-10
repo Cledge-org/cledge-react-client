@@ -20,7 +20,7 @@ import { useLocation } from "src/utils/hooks/useLocation";
 import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
 import BlogCarouselItem from "src/main-pages/WelcomePage/components/blogsCarousel/components/BlogCaroselItem";
 import FormCarousel from "src/main-pages/WelcomePage/components/FormCarousel/FormCarousel";
-import FluidText from "src/common/components/FluidText/FluidText";
+
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
 const MiddleBlock = dynamic(
@@ -358,10 +358,7 @@ const WelcomePage = ({ data }) => {
           </div>
         </Intro>
         <CarouselDiv id="carouselDiv">
-          {/* <FormCarousel /> */}
-          <div style={{border:"solid 2px red",width:"500px", height:"100px"}}>
-            <FluidText text="Hello World" />
-          </div>
+          <FormCarousel questionData={data.checkinQuestions}/>
         </CarouselDiv>
         <MiddleBlock
           id="goal"

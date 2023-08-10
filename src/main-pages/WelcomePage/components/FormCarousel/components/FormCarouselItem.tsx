@@ -4,18 +4,10 @@ import styled from "styled-components";
 
 const MainContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
   padding: 20px;
   margin-right: 32px;
   gap: 10px;
-  min-width: 380px;
-  min-height: 183px;
-  max-width: 385px;
-  background: #ffffff;
-  @media screen and (max-width: 450px) {
-    min-width: 340px;
-  }
   /* Card boarder */
 
   border: 1px solid #dedeff;
@@ -26,68 +18,54 @@ const MainContainer = styled.div`
   box-shadow: 0px 2px 22px 9px rgba(0, 0, 0, 0.03);
   border-radius: 8px;
 `;
-const TopicDisplay = styled.div`
-  background-color: #e0dfe8;
-  border-radius: 20px;
-  color: #000000;
-  text-decoration: #000000;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  padding-right: 12px;
-  padding-left: 12px;
-  font-size: 16px;
-`;
-const AuthorName = styled.span`
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  /* identical to box height, or 143% */
-
-  /* Grey-purple */
-  color: #808099;
-`;
-const ArticleTitle = styled.h3`
+const Question = styled.p`
   font-style: normal;
   font-weight: 600;
   font-size: 18px;
   line-height: 22px;
   color: #000000;
 `;
-
-const Question = styled.div`
-  color: white;
-  
+const Option = styled.div`
+  width: 100%;
+  flex-basis: auto;
+  background-color: #F7BC76;
+  m  
 `;
 
-function BlogCarouselItem({
-  article,
-  className,
-}: {
-  article: any;
-  className?: string;
-}) {
+interface Props {
+  question: string;
+  answers?: string[];
+  children?: React.ReactNode | React.ReactNode[] | undefined;
+  classNames?: string;
+}
+
+function FormCarouselItem({
+  question,
+  answers: options,
+  children = undefined,
+  classNames,
+}: Props) {
   const router = useRouter();
   return (
     <MainContainer
       onClick={() => {
         // router.push(`/blog/${article._slug}`);
       }}
-      className={className}
+      className={classNames}
     >
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <Question></Question>
-        <img
-          src={article.image}
-          width={84}
-          height={84}
-          style={{ borderRadius: "5px" }}
-        />
-      </div>
+      <Question>{question}</Question>
+      {options.length > 0 && (
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          {options.map((option) => (
+            <Option>{option}</Option>
+          ))}
+        </div>
+      )}
+      {children}
     </MainContainer>
   );
 }
 
-// make a carousel component for a form with questions 
+// make a carousel component for a form with questions
 
-
-export default BlogCarouselItem;
+export default FormCarouselItem;
