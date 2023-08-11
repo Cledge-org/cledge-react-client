@@ -32,7 +32,7 @@ export const updateAcademicsLog = (
   }
   const currDate = new Date().toLocaleDateString();
   // const currDate = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
-  const timeStampObject = {
+  const accademicObj = {
     academics
   };
   return new Promise(async (res, err) => {
@@ -48,7 +48,7 @@ export const updateAcademicsLog = (
         
         if (existingEntry) {
           // Update the existing entry for the current date
-          existingEntry[currDate] = timeStampObject;
+          existingEntry[currDate] = accademicObj;
           await collection.updateOne(
             { firebaseId: insertionId },
             { $set: { acLog: existingFbID.acLog } }
@@ -57,18 +57,18 @@ export const updateAcademicsLog = (
           // Append a new entry for the current date if it doesn't exist
           await collection.updateOne(
             { firebaseId: insertionId },
-            { $push: { acLog: { [currDate]: timeStampObject } } }
+            { $push: { acLog: { [currDate]: accademicObj } } }
           );
         }
       } else {
         // Append a new firebase ID if it doesn't exist yet
         await collection.insertOne({
           firebaseId: insertionId,
-          acLog: [{ [currDate]: timeStampObject }]
+          acLog: [{ [currDate]: accademicObj }]
         });
       }
   
-      console.log("PUT ACADEMIC LOG : " + JSON.stringify(timeStampObject));
+      console.log("PUT ACADEMIC LOG : " + JSON.stringify(accademicObj));
       res();
       client.close();
     } catch (e) {
