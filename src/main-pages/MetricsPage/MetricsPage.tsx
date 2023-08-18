@@ -82,7 +82,7 @@ const Metrics: NextApplicationPage<{
   return (
     <PageErrorBoundary>
       <div
-        className="container-fluid d-flex flex-row px-0 border-top border-2"
+        className="container-fluid d-flex flex-row px-0"
         style={{ minHeight: "100vh" }}
       >
         <div
