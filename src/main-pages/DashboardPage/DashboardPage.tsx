@@ -136,8 +136,8 @@ const DashboardPage = ({
                     </Col>
                   </Row>
                   <Link href="/college">
-                    <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
-                      <div className="h5">Go to College Finder</div>
+                    <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-2">
+                      <div className="h5 mb-0">Go to College Finder</div>
                     </Button>
                   </Link>
                 </Card>
@@ -178,7 +178,7 @@ const DashboardPage = ({
                   </Row>
                   <Link href="/collegeList">
                     <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
-                      <div className="h5">Go to your list</div>
+                      <div className="h5 mb-0">Go to your list</div>
                     </Button>
                   </Link>
                 </Card>
@@ -373,7 +373,7 @@ const DashboardPage = ({
                 </Row>
                 <Link href="/metrics">
                   <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
-                    <div className="h5">Go to Metrics</div>
+                    <div className="h5 mb-0">Go to Metrics</div>
                   </Button>
                 </Link>
               </Card>
