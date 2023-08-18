@@ -7,21 +7,22 @@ import { collegeListIndividualInfo } from "src/@types/types";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@mui/material";
 import { useSession } from "next-auth/react";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
+import { useRouter } from "next/router";
 
 
 const CollegeListPage: NextApplicationPage<{
   accountInfo: AccountInfo;
   collegeList: collegeListIndividualInfo[];
 }> = ({ collegeList }) => {
+  const [showLoading, setShowLoading] = useState(false);
   const [targetSchools, setTargetSchools] = useState([]);
   const [fitSchools, setFitSchools] = useState([]);
   const [reachSchools, setReachSchools] = useState([]);
+  const size = useWindowSize();
+  const router = useRouter();
 
   const [reloadCounter, setReloadCounter] = useState(0);
-  console.log(reloadCounter);
-  console.log(targetSchools);
-  console.log(fitSchools);
-  console.log(reachSchools);
   const { data: session } = useSession();
   const handleSubmit = async () => {
     const response = await fetch(`/api/CST/replace-college-list`, {
@@ -127,6 +128,61 @@ const CollegeListPage: NextApplicationPage<{
       setReachSchools([]);
     }
   }, [collegeList, reloadCounter]);
+
+  if (collegeList == undefined || collegeList?.length == undefined) {
+    return (
+      <div className="container-fluid d-flex flex-column justify-content-center align-items-center vh-100">
+        <div
+          style={{ width: size.width < 800 ? "80%" : "70%" }}
+          className="vh-50 d-flex flex-row justify-content-between align-items-center flex-wrap"
+        >
+          <img
+            style={{ width: size.width < 800 ? "100%" : "60%" }}
+            src="../images/questionLandingGraphic.png"
+          />
+          <div
+            className="cl-dark-text d-flex flex-column"
+            style={{
+              fontSize: "1em",
+              width: size.width < 800 ? "100%" : "40%",
+            }}
+          >
+            <span className="fw-bold mb-3" style={{ fontSize: "2.4em" }}>
+              Welcome to your College List!
+            </span>
+            <p>By continuing, we will be generating your starter college list.
+            We will be using all of the data that you've provided for us so far.</p>
+            <br />
+            <br />
+            <p>Before moving on, make sure that you have filled out as much of your
+            application profile as you can. You will not be able to re-generate
+            this list in the future.</p>
+            <div className="d-flex">
+              <button
+                className="btn cl-btn-clear mt-3 me-3"
+                style={{ fontSize: "1.1em", width: "50%" }}
+                onClick={() => {
+                  router.push({ pathname: "/application-profile" });
+                }}
+              >
+                Go Back
+              </button>
+              <button
+                className="btn cl-btn-blue mt-3 ms-3"
+                style={{ fontSize: "1.1em", width: "50%" }}
+                onClick={() => {
+                  setShowLoading(true);
+                  router.push({ pathname: "/dashboard" });
+                }}
+              >
+              Generate your List
+            </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
   return (
     <div
       style={{

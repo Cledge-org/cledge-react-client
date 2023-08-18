@@ -10,6 +10,8 @@ import TierIndicatorAndTips from "./components/TierIndicatorAndTips/TierIndicato
 import TierRange from "./components/TierRange/TierRange";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import TipsCard from "src/main-pages/MetricsPage/components/TipsCard/TipsCard";
+import { useRouter } from "next/router";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 
 const Metrics: NextApplicationPage<{
   activities: Activities;
@@ -18,6 +20,8 @@ const Metrics: NextApplicationPage<{
   academics: Academics;
 }> = ({ activities, userTags, questionResponses, academics }) => {
   const [currPage, setCurrPage] = useState("all");
+  const size = useWindowSize();
+  const router = useRouter();
   const sideBarSectionData = [
     {
       title: "Metrics Overview",
@@ -32,6 +36,49 @@ const Metrics: NextApplicationPage<{
       page: "Academics",
     },
   ];
+  console.log("ACADEMICS: " + academics);
+  console.log("ACTIVITIES: " + activities);
+  if ((academics == undefined || academics?.overallTier == undefined) && (activities == undefined || activities?.overallTier == undefined)) {
+    return (
+      <div className="container-fluid d-flex flex-column justify-content-center align-items-center vh-100">
+        <div
+          style={{ width: size.width < 800 ? "80%" : "70%" }}
+          className="vh-50 d-flex flex-row justify-content-between align-items-center flex-wrap"
+        >
+          <img
+            style={{ width: size.width < 800 ? "100%" : "60%" }}
+            src="../images/questionLandingGraphic.png"
+          />
+          <div
+            className="cl-dark-text d-flex flex-column"
+            style={{
+              fontSize: "1em",
+              width: size.width < 800 ? "100%" : "40%",
+            }}
+          >
+            <span className="fw-bold mb-3" style={{ fontSize: "2.4em" }}>
+              Welcome to Student Metrics!
+            </span>
+            <p>It doesn't look like you have inputted your academics or extracurriculars yet.</p>
+            <br />
+            <br />
+            <p>Please revisit this page after you have provided us all of your information in Application Profile.</p>
+            <div className="d-flex">
+              <button
+                className="btn cl-btn-blue mt-3"
+                style={{ fontSize: "1.1em", width: "50%" }}
+                onClick={() => {
+                  router.push({ pathname: "/application-profile" });
+                }}
+              >
+              Application Profile
+            </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
   return (
     <PageErrorBoundary>
       <div
