@@ -39,11 +39,11 @@ const College = ({
   questionResponses: UserResponse[];
   collegeList: any;
 }) => {
-  const [collegeData, setData] = useState(null);
+  const [collegeData, setData] = useState([]);
   const [hasMoreData, setHasMore] = useState(true);
   const [filter, setFilter] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [currSort, setCurrSort] = useState("");
+  const [currSort, setCurrSort] = useState("Default");
   let collegeListArray = [];
   const [currNumericalSortOrder, setCurrNumericalSortOrder] =
     useState("Least-Greatest");
@@ -121,12 +121,11 @@ const College = ({
     async function fetchData() {
       let data = await getData();
       // if no data, hasmore state to false
-      if (!data || data.length == 0) {
+      if (!data || !data.length) {
         setHasMore(false);
         return;
-      } else {
-        setHasMore(true);
       }
+      setHasMore(true);
       if (requestData.skip - prevRequest.skip > 0) {
         setData((currData) => {
           if (currSort) {
@@ -138,26 +137,25 @@ const College = ({
           }
           return currData.concat(data);
         });
-      } else {
-        if (currSort) {
-          setData(sortBy(currSort, currNumericalSortOrder, data));
-        } else {
-          setData(data);
-        }
-        setIsLoading(false);
+        return;
       }
+      // TODO: there's a bug that causes the initial data fetch call to re-sort the data with the default sort even after the user has selected a different sort, this only happens at the initial page load if the user changes the sort before data loads
+      setData(sortBy(currSort, currNumericalSortOrder, data));
+      setIsLoading(false);
     }
     fetchData();
   }, [requestData]);
 
   useEffect(() => {
-    if (currSort) {
-      sortBy(currSort, currNumericalSortOrder);
-    }
-  }, [currSort, currNumericalSortOrder]);
+    if (isLoading) return;
+    setData(sortBy(currSort, currNumericalSortOrder));
+  }, [currSort, currNumericalSortOrder, isLoading]);
 
-  
-  const sortBy = (sortType: string, numericalSortOrder: string, data?) => {
+  const sortBy = (
+    sortType: string,
+    numericalSortOrder: string,
+    data: any[] = []
+  ) => {
     const parseInstSize = (inst_size: string) => {
       if (!inst_size) return 0;
       const indexOfNum = inst_size.includes("Under")
@@ -174,43 +172,35 @@ const College = ({
       }
       return parseInt(inst_size.split(" ")[indexOfNum]);
     };
-    const copiedData = [...(data ? data : collegeData)];
+    const copiedData = data && data.length ? [...data] : [...collegeData];
     const isLeastGreatest = numericalSortOrder === "Least-Greatest";
-    if (sortType === "A-Z") {
-      copiedData.sort((a, b) =>
+    const sortFunctions = {
+      "A-Z": (a: any, b: any) =>
         isLeastGreatest
           ? a.title.localeCompare(b.title)
-          : b.title.localeCompare(a.title)
-      );
-    } else if (sortType === "Size") {
-      copiedData.sort((a, b) =>
+          : b.title.localeCompare(a.title),
+      Size: (a: any, b: any) =>
         isLeastGreatest
           ? parseInstSize(a.inst_size) - parseInstSize(b.inst_size)
-          : parseInstSize(b.inst_size) - parseInstSize(a.inst_size)
-      );
-    } else if (sortType === "Tuition") {
-      copiedData.sort((a, b) =>
+          : parseInstSize(b.inst_size) - parseInstSize(a.inst_size),
+      Tuition: (a: any, b: any) =>
         isLeastGreatest
           ? a.tuition_and_fee - b.tuition_and_fee
-          : b.tuition_and_fee - a.tuition_and_fee
-      );
-    } else if (sortType === "Student-Faculty Ratio") {
-      copiedData.sort((a, b) =>
+          : b.tuition_and_fee - a.tuition_and_fee,
+      "Student-Faculty Ratio": (a: any, b: any) =>
         isLeastGreatest
           ? a.student_faculty_ratio - b.student_faculty_ratio
-          : b.student_faculty_ratio - a.student_faculty_ratio
-      );
-    } else if (sortType === "Acceptance Rate") {
-      copiedData.sort((a, b) =>
+          : b.student_faculty_ratio - a.student_faculty_ratio,
+      "Acceptance Rate": (a: any, b: any) =>
         isLeastGreatest
           ? a.acceptance_rate - b.acceptance_rate
-          : b.acceptance_rate - a.acceptance_rate
-      );
+          : b.acceptance_rate - a.acceptance_rate,
+      Default: (a: any, b: any) => 0,
+    };
+    if (sortType && sortType in sortFunctions) {
+      copiedData.sort(sortFunctions[sortType]);
     }
-    if (data) {
-      return copiedData;
-    }
-    setData(copiedData);
+    return copiedData;
   };
 
   return (
