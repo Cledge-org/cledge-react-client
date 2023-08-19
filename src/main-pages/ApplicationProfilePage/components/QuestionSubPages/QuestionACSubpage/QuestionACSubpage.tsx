@@ -51,6 +51,7 @@ export default function QuestionACSubpage({
       },
       []
     );
+    console.log("CLASS TYPES: " + classTypes)
     let applicantLevel = userResponses.find(
       ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
     )?.response;
@@ -123,16 +124,18 @@ export default function QuestionACSubpage({
         setIsEditing(false);
       }}
       onSave={async (newAnswers) => {
-        const ACResponse = userResponses?.find(({ questionId }) => {
+        let ACResponse = userResponses?.find(({ questionId }) => {
           return questionId === "Academics";
         });
         if (ACResponse === undefined) {
-          userResponses.push({
+          const ACRes = {
             questionId: "Academics",
             response: {
               [chunk.name]: { semesterQuestions: [], generalQuestions: [] },
             },
-          });
+          }
+          userResponses.push(ACRes);
+          ACResponse = ACRes;
         }
         if (ACResponse?.response[chunk.name] === undefined) {
           ACResponse.response[chunk.name].semesterQuestions = [];
