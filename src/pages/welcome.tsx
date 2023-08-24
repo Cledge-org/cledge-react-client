@@ -8,7 +8,28 @@ import { getQuestionList } from "src/pages/api/questions/get-question-list";
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const recentBlogs = JSON.parse(JSON.stringify(await getRecentBlogs()));
   // const questionAndAnswers = JSON.parse(JSON.stringify(await getQuestionList("College Fit")));
-  const checkinQuestions = {
+  type checkinQuestionsType = {
+    _id: string;
+    chunks: {
+      _id: string;
+      name: string;
+      questions: {
+        _id: string;
+        data: {
+          op: string;
+          tag: string;
+        }[];
+        helpText: string;
+        helpVid: string;
+        isConcatenable: boolean;
+        isRequired: boolean;
+        question: string;
+        type: string;
+      }[];
+    }[];
+    name: string;
+  };
+  const checkinQuestions: checkinQuestionsType = {
     _id: "null",
     chunks: [
       {
@@ -161,6 +182,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     ],
     name: "Checkin",
   };
+  
   return {
     props: {
       data: {

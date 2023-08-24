@@ -278,7 +278,7 @@ const WelcomePage = ({ data }) => {
   const [currFeature, setCurrFeature] = useState(0);
   const [width, height] = useWindowSize();
   const windowOrigin = useLocation();
-  console.log(data);
+  console.log();
   if (windowOrigin.includes("uw")) {
     return <UWCSLandingPage blogData={data} />;
   }
@@ -358,7 +358,7 @@ const WelcomePage = ({ data }) => {
           </div>
         </Intro>
         <CarouselDiv id="carouselDiv">
-          <FormCarousel questionData={data.checkinQuestions}/>
+          <FormCarousel questionData={data.checkinQuestions.chunks[0].questions}/>
         </CarouselDiv>
         <MiddleBlock
           id="goal"

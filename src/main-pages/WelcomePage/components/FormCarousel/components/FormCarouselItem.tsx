@@ -34,7 +34,10 @@ const Option = styled.div`
 
 interface Props {
   question: string;
-  answers?: string[];
+  answers?: {
+    op: string;
+    tag: string;
+  }[];
   children?: React.ReactNode | React.ReactNode[] | undefined;
   classNames?: string;
 }
@@ -55,9 +58,9 @@ function FormCarouselItem({
     >
       <Question>{question}</Question>
       {options.length > 0 && (
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap:'20px' }}>
           {options.map((option) => (
-            <Option>{option}</Option>
+            <Option>{option.op}</Option>
           ))}
         </div>
       )}
