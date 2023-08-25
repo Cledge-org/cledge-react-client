@@ -26,19 +26,33 @@ const FormCarousel = ({ questionData }: Props) => {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+
+  const [currentIndex, setCurrentIndex] = React.useState(0);
+  const numSlides = questionData.length;
+  const nextSlide = () => {
+
+    setCurrentIndex((currentIndex + 1) % numSlides);
+  }
+  const prevSlide = () => {
+    setCurrentIndex((currentIndex - 1 + numSlides) % numSlides);
+  }
+
   return (
-    <div className="carousel">
-      <div className="slides">
+    <div className="carousel-container">
+      <div className="carousel">
+        <div className="slides" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
           {questionData.map((data) => (
             <FormCarouselItem question={data.question} answers={data.data} />
           ))}
-        {/* <Slider {...settings}>
-          {/* <div>
-            <h3>6</h3>
-          </div> 
-        </Slider> */}
+        </div>
       </div>
-  </div>
+      <button disabled={currentIndex === 0} className="prev-button" onClick={prevSlide}>
+        Previous
+      </button>
+      <button disabled={currentIndex === numSlides-1} className="next-button" onClick={nextSlide}>
+        Next
+      </button>
+    </div>
   );
 };
 
