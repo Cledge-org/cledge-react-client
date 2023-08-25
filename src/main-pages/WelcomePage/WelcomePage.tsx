@@ -247,17 +247,10 @@ export const MediaButton = styled("button")`
 
 const CarouselDiv = styled.div`
   background-color: #f9faff;
-  margin-bottom: 50px;
+  padding: 40px 50px;
+  margin: auto;
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  overflow-x: scroll;
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  margin-top: 40px;
+  height: 300px;
 `;
 
 function useWindowSize() {
