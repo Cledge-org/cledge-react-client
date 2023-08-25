@@ -1,6 +1,6 @@
 import React from "react";
-import Slider from "react-slick";
 import FormCarouselItem from "src/main-pages/WelcomePage/components/FormCarousel/components/FormCarouselItem";
+import styles from "FormCarousel.module.scss";
 
 interface Props {
   questionData: {
@@ -26,18 +26,19 @@ const FormCarousel = ({ questionData }: Props) => {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
-  console.log(questionData);
   return (
-    <div>
-      <Slider {...settings}>
-        {questionData.map((data) => (
-          <FormCarouselItem question={data.question} answers={data.data} />
-        ))}
-        {/* <div>
-          <h3>6</h3>
-        </div> */}
-      </Slider>
-    </div>
+    <div className="carousel">
+      <div className="slides">
+          {questionData.map((data) => (
+            <FormCarouselItem question={data.question} answers={data.data} />
+          ))}
+        {/* <Slider {...settings}>
+          {/* <div>
+            <h3>6</h3>
+          </div> 
+        </Slider> */}
+      </div>
+  </div>
   );
 };
 

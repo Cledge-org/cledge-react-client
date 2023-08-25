@@ -1,0 +1,96 @@
+.slides {
+  transform: translateX(-)
+}
+
+/*
+.carousel-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+
+.slides {
+  display: flex;
+  width: 100%;
+}
+
+.slide {
+  flex: 0 0 100%;
+  /* Add your slide styling here 
+}
+
+.prev-button,
+.next-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.prev-button {
+  left: 10px;
+}
+
+.next-button {
+  right: 10px;
+}
+
+import React, { Component } from 'react';
+import './Carousel.css'; // Import your CSS for styling
+
+class Carousel extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentIndex: 0,
+    };
+  }
+
+  nextSlide = () => {
+    const { currentIndex } = this.state;
+    const numSlides = this.props.children.length;
+    this.setState({
+      currentIndex: (currentIndex + 1) % numSlides,
+    });
+  };
+
+  prevSlide = () => {
+    const { currentIndex } = this.state;
+    const numSlides = this.props.children.length;
+    this.setState({
+      currentIndex: (currentIndex - 1 + numSlides) % numSlides,
+    });
+  };
+
+  render() {
+    const { children } = this.props;
+    const { currentIndex } = this.state;
+
+    return (
+      <div className="carousel-container">
+        <div className="carousel">
+          <div className="slides" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+            {children}
+          </div>
+        </div>
+        <button className="prev-button" onClick={this.prevSlide}>
+          Previous
+        </button>
+        <button className="next-button" onClick={this.nextSlide}>
+          Next
+        </button>
+      </div>
+    );
+  }
+}
+
+export default Carousel;
+
+*/
