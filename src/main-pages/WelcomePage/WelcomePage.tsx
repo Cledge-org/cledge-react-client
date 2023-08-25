@@ -271,7 +271,6 @@ const WelcomePage = ({ data }) => {
   const [currFeature, setCurrFeature] = useState(0);
   const [width, height] = useWindowSize();
   const windowOrigin = useLocation();
-  console.log();
   if (windowOrigin.includes("uw")) {
     return <UWCSLandingPage blogData={data} />;
   }
@@ -289,40 +288,6 @@ const WelcomePage = ({ data }) => {
               width={width}
             />
           </div>
-          <SubscribeWrapper>
-            <h2>Get started with our free resources</h2>
-            <p>
-              Get monthly access to free live webinars & tips from college
-              advisors!
-            </p>
-            <div className="input d-flex flex-row flex-wrap align-items-end justify-content-evenly">
-              <div className="flex-fill">
-                <label>I am a</label>
-                <DropDownQuestion
-                  isForWaitlist
-                  valuesList={["Parent", "Student"]}
-                />
-              </div>
-              <div className="flex-fill">
-                <label>Email</label>
-                <input
-                  type="text"
-                  style={{ color: "black" }}
-                  placeholder="Your email"
-                />
-              </div>
-              <Button
-                key="subscribe-btn"
-                color="#F7BC76"
-                fixedWidth={true}
-                onClick={() => {
-                  window.open("https://forms.gle/M1GxLK45Yi3Esfn5A", "_blank");
-                }}
-              >
-                Subscribe to our monthly tips
-              </Button>
-            </div>
-          </SubscribeWrapper>
           <div
             style={{
               bottom: "5vh",
@@ -332,22 +297,6 @@ const WelcomePage = ({ data }) => {
             }}
             className="d-flex flex-row flex-wrap justify-content-center align-items-center"
           >
-            <MediaButton
-              onClick={() =>
-                window.open("https://rebrand.ly/c1f9dl6", "_blank")
-              }
-            >
-              <img src="images/whatsapp.svg" />
-              WhatsApp Community
-            </MediaButton>
-            <MediaButton
-              onClick={() =>
-                window.open("https://discord.gg/CnJcZeb3", "_blank")
-              }
-            >
-              <img src="images/discord.svg" />
-              Discord Community
-            </MediaButton>
           </div>
         </Intro>
         <CarouselDiv id="carouselDiv">
@@ -385,23 +334,13 @@ const WelcomePage = ({ data }) => {
           icon="landing_1.svg"
           id="about"
         />
-        {width < 576 ? (
-          <ContentBlock
-            type="left"
-            title={MissionContent.title}
-            content={MissionContent.text}
-            icon="landing_2.svg"
-            id="mission"
-          />
-        ) : (
-          <ContentBlock
-            type="right"
-            title={MissionContent.title}
-            content={MissionContent.text}
-            icon="landing_2.svg"
-            id="mission"
-          />
-        )}
+        <ContentBlock
+          type="left"
+          title={MissionContent.title}
+          content={AboutContent.text}
+          icon="landing_1.svg"
+          id="about"
+        />
         <ContentBlock
           type="left"
           title={ProductContent.title}
@@ -472,6 +411,40 @@ const WelcomePage = ({ data }) => {
           </Fade>
         </BlobBlock>
       </Container>
+      <SubscribeWrapper>
+            <h2>Get started with our free resources</h2>
+            <p>
+              Get monthly access to free live webinars & tips from college
+              advisors!
+            </p>
+            <div className="input d-flex flex-row flex-wrap align-items-end justify-content-evenly">
+              <div className="flex-fill">
+                <label>I am a</label>
+                <DropDownQuestion
+                  isForWaitlist
+                  valuesList={["Parent", "Student"]}
+                />
+              </div>
+              <div className="flex-fill">
+                <label>Email</label>
+                <input
+                  type="text"
+                  style={{ color: "black" }}
+                  placeholder="Your email"
+                />
+              </div>
+              <Button
+                key="subscribe-btn"
+                color="#F7BC76"
+                fixedWidth={true}
+                onClick={() => {
+                  window.open("https://forms.gle/M1GxLK45Yi3Esfn5A", "_blank");
+                }}
+              >
+                Subscribe to our monthly tips
+              </Button>
+            </div>
+        </SubscribeWrapper>
       <Footer
         onFeatureClick={(featureIndex) => {
           setCurrFeature(featureIndex);

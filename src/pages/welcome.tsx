@@ -6,7 +6,7 @@ import UWCSLandingPage from "src/main-pages/WelcomePage/components/UWCSLandingPa
 import { getQuestionList } from "src/pages/api/questions/get-question-list";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const recentBlogs = JSON.parse(JSON.stringify(await getRecentBlogs()));
+  //const recentBlogs = JSON.parse(JSON.stringify(await getRecentBlogs()));
   // const questionAndAnswers = JSON.parse(JSON.stringify(await getQuestionList("College Fit")));
   type checkinQuestionsType = {
     _id: string;
@@ -186,7 +186,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   return {
     props: {
       data: {
-        recentBlogs,
+        //recentBlogs,
         checkinQuestions,
       },
     },
