@@ -1,6 +1,6 @@
 import React from "react";
 import FormCarouselItem from "src/main-pages/WelcomePage/components/FormCarousel/components/FormCarouselItem";
-import styles from "FormCarousel.module.scss";
+import styles from "./FormCarousel.module.scss";
 
 interface Props {
   questionData: {
@@ -36,20 +36,19 @@ const FormCarousel = ({ questionData }: Props) => {
   const prevSlide = () => {
     setCurrentIndex((currentIndex - 1 + numSlides) % numSlides);
   }
-
   return (
-    <div className="carousel-container">
-      <div className="carousel">
-        <div className="slides" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+    <div className={styles.carouselContainer}>
+      <div className={styles.carousel}>
+        <div className={styles.slides} style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
           {questionData.map((data) => (
-            <FormCarouselItem question={data.question} answers={data.data} />
+            <FormCarouselItem classNames={styles.slide} question={data.question} answers={data.data} />
           ))}
         </div>
       </div>
-      <button disabled={currentIndex === 0} className="prev-button" onClick={prevSlide}>
+      <button disabled={currentIndex === 0} className={styles.prevButton} onClick={prevSlide}>
         Previous
       </button>
-      <button disabled={currentIndex === numSlides-1} className="next-button" onClick={nextSlide}>
+      <button disabled={currentIndex === numSlides-1} className={styles.nextButton} onClick={nextSlide}>
         Next
       </button>
     </div>
