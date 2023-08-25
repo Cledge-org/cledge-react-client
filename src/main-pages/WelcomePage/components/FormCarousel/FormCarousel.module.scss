@@ -6,12 +6,12 @@
 
 .carousel {
   display: flex;
-  transition: transform 0.3s ease-in-out;
 }
 
 .slides {
   display: flex;
   width: 100%;
+  transition: transform 0.3s ease-in-out;
 }
 
 .slide {
@@ -23,6 +23,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  align-self: center;
   background-color: transparent;
   border: none;
   cursor: pointer;
