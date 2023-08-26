@@ -72,6 +72,9 @@ a {
 .bg-cl-orange-red {
   background-color: $cl-orange-red;
 }
+.bg-cl-orange {
+  background-color: $cl-orange;
+}
 .bg-cl-light-yellow {
   background-color: $cl-light-yellow;
 }
@@ -469,6 +472,9 @@ a {
 }
 .blue-purple-text-gradient {
   @include gradient-text($fromColor: #3b68df, $toColor: #8d32d4);
+}
+.blue-purple-bg-gradient{
+  background: linear-gradient(90deg, $cl-cool-blue 0%, $cl-cool-purple 100%);
 }
 .page-container-100 {
   height: 100vh;
