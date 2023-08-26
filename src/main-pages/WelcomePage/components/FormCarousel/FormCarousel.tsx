@@ -1,5 +1,5 @@
 import React from "react";
-import FormCarouselItem from "src/main-pages/WelcomePage/components/FormCarousel/components/FormCarouselItem";
+import FormCarouselItem from "src/main-pages/WelcomePage/components/FormCarousel/components/FormCarouselItem/FormCarouselItem";
 import styles from "./FormCarousel.module.scss";
 
 interface Props {
@@ -38,12 +38,10 @@ const FormCarousel = ({ questionData }: Props) => {
   }
   return (
     <div className={styles.carouselContainer}>
-      <div className={styles.carousel}>
-        <div className={styles.slides} style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+        <div className={styles.carousel} style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
           {questionData.map((data) => (
             <FormCarouselItem classNames={styles.slide} question={data.question} answers={data.data} />
           ))}
-        </div>
       </div>
       <button disabled={currentIndex === 0} className={styles.prevButton} onClick={prevSlide}>
         Previous

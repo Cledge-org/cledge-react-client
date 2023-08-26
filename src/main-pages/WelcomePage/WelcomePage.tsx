@@ -15,11 +15,11 @@ import { Button } from "./components/Button/Button";
 import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
 import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
-import UWCSLandingPage from "src/main-pages/WelcomePage/components/UWCSLandingPage/UWCSLandingPage";
+import UWCSLandingPage from "./components/UWCSLandingPage/UWCSLandingPage";
 import { useLocation } from "src/utils/hooks/useLocation";
-import NewBlogsCarousel from "src/main-pages/WelcomePage/components/blogsCarousel/NewBlogsCarousel";
-import BlogCarouselItem from "src/main-pages/WelcomePage/components/blogsCarousel/components/BlogCaroselItem";
-import FormCarousel from "src/main-pages/WelcomePage/components/FormCarousel/FormCarousel";
+import NewBlogsCarousel from "./components/blogsCarousel/NewBlogsCarousel";
+import BlogCarouselItem from "./components/blogsCarousel/components/BlogCaroselItem";
+import FormCarousel from "./components/FormCarousel/FormCarousel";
 
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
@@ -250,7 +250,7 @@ const CarouselDiv = styled.div`
   padding: 40px 50px;
   margin: auto;
   width: 100%;
-  height: 300px;
+  height: fit-content;
 `;
 
 function useWindowSize() {
