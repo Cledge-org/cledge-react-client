@@ -1,4 +1,4 @@
-.carousel-container {
+.carouselContainer {
   position: relative;
   width: 100%;
   overflow: hidden;
@@ -6,20 +6,17 @@
 
 .carousel {
   display: flex;
-}
-
-.slides {
-  display: flex;
   width: 100%;
   transition: transform 0.3s ease-in-out;
 }
 
 .slide {
   flex: 0 0 100%;
+  margin: 0;
 }
 
-.prev-button,
-.next-button {
+.prevButton,
+.nextButton {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -29,10 +26,10 @@
   cursor: pointer;
 }
 
-.prev-button {
+.prevButton {
   left: 10px;
 }
 
-.next-button {
+.nextButton {
   right: 10px;
 }
