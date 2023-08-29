@@ -48,17 +48,17 @@ export function getVideoDescription(url: string): Promise<String> {
                 messages: [
                     {
                         "role": "system",
-                        "content": "You are a helpful assistant that creates descriptions for YouTube videos based on their transcripts.",
+                        "content": "You are a helpful assistant that creates engaging 100-word descriptions for YouTube videos based on their transcripts.",
                     },
                     {
                         "role": "user",
-                        "content": `Make an engaging description for this video: ${transcript}`,
+                        "content": `Make an engaging description for this video, and don't add a title to the description: ${transcript}`,
                     },
                 ],
                 n: 1,
                 temperature: 0.9,
             }).then((response) => {
-                description = response.data.choices[0].message.content;;
+                description = response.data.choices[0].message.content;
             });
             console.log("Description inside: " + description)
             res(description);

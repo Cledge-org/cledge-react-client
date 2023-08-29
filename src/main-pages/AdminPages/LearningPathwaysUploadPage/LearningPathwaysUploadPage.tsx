@@ -164,14 +164,16 @@ const LearningPathwaysUploadPage: NextApplicationPage<{
                             let item = content[k];
                             if (item.type == "video" && item.url != "" && (item.url.includes("youtube.com") || item.url.includes("youtu.be"))) {
                                 let response = await callGetVideoDescription(item.url)
-                                let description = (await response.json()).description;
-                                console.log("DESCRIPTION: " + description)
+                                if (response.status != 200) {
+                                    console.log("Error getting video description")
+                                    continue;
+                                }
+                                let description = await response.text();
                                 course.modules[i].presetContent[j].content[k].description = description;
                             }
                         }
                     }
                 }
-                console.log(course)
                 setCurrPathwayData({...currPathwayData, modules: course.modules})
             }}
         >

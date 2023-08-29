@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="40f7eb0e-d1e5-4568-9ae4-89ae123a59ba" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.env.local" beforeDir="false" afterPath="$PROJECT_DIR$/.env.local" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main-pages/AdminPages/LearningPathwaysUploadPage/LearningPathwaysUploadPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/main-pages/AdminPages/LearningPathwaysUploadPage/LearningPathwaysUploadPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/api/admin/learning-pathway/get-video-description.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/api/admin/learning-pathway/get-video-description.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/apiCalls.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/apiCalls.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +20,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
+  </component>
   <component name="ProjectId" id="2CBWD5ScBlzgxgVqy9z0oUQkgrk" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -33,16 +34,35 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "pathway-upload-automation",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "prettier.import.notification.dismissed": "true",
     "show.migrate.to.gradle.popup": "false",
-    "ts.external.directory.path": "/Users/aryankarani/Documents/GitHub/cledge-react-client/node_modules/typescript/lib",
+    "ts.external.directory.path": "D:\\Documents\\Other GitHub Repos\\cledge-react-client\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.dev" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
@@ -57,6 +77,7 @@
       <workItem from="1663290759828" duration="192000" />
       <workItem from="1690444846430" duration="1000" />
       <workItem from="1690444940550" duration="13370000" />
+      <workItem from="1693170109054" duration="4695000" />
     </task>
     <servers />
   </component>
