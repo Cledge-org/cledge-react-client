@@ -247,7 +247,6 @@ export const MediaButton = styled("button")`
 
 const CarouselDiv = styled.div`
   background-color: #f9faff;
-  padding: 40px 50px;
   margin: auto;
   width: 100%;
   height: fit-content;

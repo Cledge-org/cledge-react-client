@@ -2,7 +2,8 @@ import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
 import cs from 'classnames';
-import styles from "./FormCarouselItem.module.scss";
+import styles from "./MultipleChoiceQuestion.module.scss";
+import Image from "next/image";
 
 const MainContainer = styled.div`
   display: flex;
@@ -51,9 +52,6 @@ const OptionLabel = styled.label`
   cursor: pointer;
 `;
 const Question = styled.h1`
-  flex: 0 1 auto;
-  flex-basis: 50%;
-  padding: 0 20px;
   line-height:1.4;
 `;
 
@@ -63,26 +61,36 @@ interface Props {
     op: string;
     tag: string;
   }[];
+  inputHandler?: (e: string) => void;
   children?: React.ReactNode | React.ReactNode[] | undefined;
   classNames?: string;
 }
 
-function FormCarouselItem({
+function MultipleChoiceQuestion({
   question,
   answers: options,
   children = undefined,
   classNames,
+  inputHandler = () => { },
 }: Props) {
   const router = useRouter();
   const [selected, setSelected] = React.useState(options[0].tag);
+  const handleInput = (value: string) => {
+    setSelected(value);
+    inputHandler(value);
+  }
   return (
-    <MainContainer
-      onClick={() => {
-        // router.push(`/blog/${article._slug}`);
-      }}
-      className={cs(classNames,"blue-purple-bg-gradient")}
-    >
-      <Question className="cl-white">{question}</Question>
+    <MainContainer className={cs(classNames)}>
+      <div className={styles.gridContainer}>
+        <div className={styles.gridItem}>
+          <Question className="cl-white">{question}</Question>
+        </div>
+        <div className={styles.gridItem}>
+          <button className={styles.infoButton}>
+            <Image layout="fill" src="/icons/info.svg" alt="more info" />
+          </button>
+        </div>
+      </div>
       {options.length > 0 && (
         <OptionsContainer>
           {options.map((option) => (
@@ -91,7 +99,7 @@ function FormCarouselItem({
                 selected === option.tag ? "bg-cl-orange" : "bg-cl-white"
               }
               onClick={() => {
-                setSelected(option.tag);
+                handleInput(option.tag);
               }}
             >
               <OptionRadio
@@ -100,7 +108,7 @@ function FormCarouselItem({
                 key={option.tag}
                 checked={selected === option.tag}
                 onChange={(e) => {
-                  setSelected(e.target.value);
+                  handleInput(e.target.value);
                 }}
               />
               <OptionLabel>{option.op}</OptionLabel>
@@ -113,6 +121,4 @@ function FormCarouselItem({
   );
 }
 
-// make a carousel component for a form with questions
-
-export default FormCarouselItem;
+export default MultipleChoiceQuestion;
