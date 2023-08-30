@@ -11,7 +11,8 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "files.watcherExclude": {
-    "**/*":true
+    "**/*":true,
+    "**/node_modules/**":true,
   },
   "files.watcherInclude": ["/src/"]
 }
