@@ -4,7 +4,7 @@ import styles from "./FormCarousel.module.scss";
 import cs from "classnames";
 import styled from "styled-components";
 import Image from "next/image";
-import Splash from "src/main-pages/WelcomePage/components/FormCarousel/components/Splash/Splash";
+import Splash from "./components/Splash/Splash";
 
 interface Props {
   questionData: {
@@ -33,11 +33,13 @@ const FormCarousel = ({ questionData }: Props) => {
 
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const numSlides = questionData.length;
-  const nextSlide = () => {
+  const nextSlide = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if (currentSlide === numSlides ) return;
     setCurrentSlide((currentSlide + 1));
   }
-  const prevSlide = () => {
+  const prevSlide = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if(currentSlide === -1) return;
     setCurrentSlide((currentSlide - 1));
   }
@@ -47,14 +49,14 @@ const FormCarousel = ({ questionData }: Props) => {
   return (
     <div className={cs(styles.carouselContainer)}>
       <div className={cs(styles.carousel)}>
-          <form onSubmit={currentSlide === numSlides - 1 ? handleSubmit : () => {}}>
-        <div className={styles.slides} style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
-          <Splash classNames={styles.slide} buttonHandler={nextSlide}/>
-          {questionData.map((data) => (
-            <MultipleChoiceQuestion classNames={styles.slide} question={data.question} answers={data.data} />
-          ))}
-        </div>
-          </form>
+        <form onSubmit={currentSlide === numSlides - 1 ? handleSubmit : () => {}}>
+          <div className={styles.slides} style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+            <Splash classNames={styles.slide} buttonHandler={nextSlide}/>
+            {questionData.map((data) => (
+              <MultipleChoiceQuestion classNames={styles.slide} question={data.question} answers={data.data} />
+            ))}
+          </div>
+        </form>
       </div>
       <button disabled={currentSlide === 0} className={styles.prevButton} onClick={prevSlide}>
         <Image width={60} height={60} src="/icons/arrow.svg" alt="previous slide" />

@@ -1,27 +1,10 @@
 import React from "react";
-import styled from "styled-components";
 import cs from 'classnames';
 import styles from './Splash.module.scss';
-
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  padding: 60px;
-  gap: 70px;
-  justify-content: space-between;
-  align-items: center;
-  /* Card boarder */
-  /* Shadow large */
-  :hover {
-    cursor: pointer;
-  }
-  box-shadow: 0px 2px 22px 9px rgba(0, 0, 0, 0.03);
-  border-radius: 8px;
-  `;
-
+import {MainContainer,Heading} from '../styles';
 
 interface Props {
-  buttonHandler?: () => void;
+  buttonHandler?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   children?: React.ReactNode | React.ReactNode[] | undefined;
   classNames?: string;
 }
@@ -39,7 +22,7 @@ function Splash({
     <MainContainer className={cs(classNames)}>
       <div className={styles.gridContainer}>
         <div className={styles.gridItem}>
-          <h1 className={cs(styles.heading,"cl-white")}>{content.heading}</h1>
+          <Heading className={cs("cl-white")}>{content.heading}</Heading>
           <p className={styles.subHeading}>{content.subHeading}</p>
         </div>
         <div className={styles.gridItem}>
@@ -48,7 +31,7 @@ function Splash({
       </div>
       <div className={styles.flexContainer}>
           <img src="/images/landing_search_tool.png" alt="more info" />
-        <button className={cs(styles.signUpButton, "bg-cl-orange")} color="orange" onClick={buttonHandler}>Try Now</button>
+        <button className={cs(styles.signUpButton, "bg-cl-orange")} onClick={buttonHandler}>Try Now</button>
       </div>
       {children}
     </MainContainer>
@@ -56,3 +39,4 @@ function Splash({
 }
 
 export default Splash;
+
