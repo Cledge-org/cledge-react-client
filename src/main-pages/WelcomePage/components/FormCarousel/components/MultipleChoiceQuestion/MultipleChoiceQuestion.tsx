@@ -4,22 +4,8 @@ import styled from "styled-components";
 import cs from 'classnames';
 import styles from "./MultipleChoiceQuestion.module.scss";
 import Image from "next/image";
+import { MainContainer,Heading } from "../styles";
 
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  padding: 60px;
-  gap: 70px;
-  justify-content: space-between;
-  align-items: center;
-  /* Card boarder */
-  /* Shadow large */
-  :hover {
-    cursor: pointer;
-  }
-  box-shadow: 0px 2px 22px 9px rgba(0, 0, 0, 0.03);
-  border-radius: 8px;
-`;
 const OptionsContainer = styled.div`
   display: flex;
   flex: 1 1 auto;
@@ -51,9 +37,6 @@ const OptionLabel = styled.label`
   align-items: center;
   cursor: pointer;
 `;
-const Question = styled.h1`
-  line-height:1.4;
-`;
 
 interface Props {
   question: string;
@@ -83,7 +66,7 @@ function MultipleChoiceQuestion({
     <MainContainer className={cs(classNames)}>
       <div className={styles.gridContainer}>
         <div className={styles.gridItem}>
-          <Question className="cl-white">{question}</Question>
+          <Heading className="cl-white">{question}</Heading>
         </div>
         <div className={styles.gridItem}>
           <button className={styles.infoButton}>
