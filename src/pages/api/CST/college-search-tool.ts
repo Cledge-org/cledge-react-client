@@ -94,14 +94,25 @@ export const getCollegeInfo = (
 
       let searchFuzzyText = toFuzzyString(searchRawText);
 
+      let orderExpression = [];
+      let filterExpression = createFilterExpression(filters);
+
+      if (searchFuzzyText === "*") {
+        orderExpression = createOrderExpression("ADM_RATE", 1);
+        if (Object.keys(filters).length === 0) {
+          filterExpression = "ADM_RATE gt 0 and ADM_RATE_ALL gt 0";
+        }
+      }
+
       const searchResults = await searchClient.search(searchFuzzyText, {
         top: top,
         skip: skip,
         includeTotalCount: true,
         searchMode: "all",
         queryType: "full",
-        filter: createFilterExpression(filters),
+        filter: filterExpression,
         searchFields: searchFields,
+        orderBy: orderExpression,
       });
       let output = [];
       for await (const result of searchResults.results) {
@@ -148,6 +159,14 @@ const createFilterExpression = (filters) => {
 
   return filterExpressions.join(" and ");
 };
+
+// simple function for turning input as order expression
+const createOrderExpression = (orderField, direction) => {
+  if (direction === -1) {
+    return [orderField + " desc"];
+  }
+  return [orderField];
+}
 
 const formatOutput = async (college: any, client: MongoClient, err: any) => {
   try {
