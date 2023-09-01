@@ -299,7 +299,7 @@ export declare global {
     className?: string;
     name?: string;
     children: React.ReactNode;
-    onClick?: () => void;
+    onClick?: (e?: React.MouseEvent<HTMLButtonElement,MouseEvent> | React.TouchEvent<HTMLButtonElement>) => void;
   }
 
   interface SvgIconProps {

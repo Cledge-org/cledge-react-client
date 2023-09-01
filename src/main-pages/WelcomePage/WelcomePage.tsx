@@ -20,6 +20,7 @@ import { useLocation } from "src/utils/hooks/useLocation";
 import NewBlogsCarousel from "./components/blogsCarousel/NewBlogsCarousel";
 import BlogCarouselItem from "./components/blogsCarousel/components/BlogCaroselItem";
 import FormCarousel from "./components/FormCarousel/FormCarousel";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
@@ -247,28 +248,16 @@ export const MediaButton = styled("button")`
 
 const CarouselDiv = styled.div`
   background-color: #f9faff;
+  padding: 40px 50px;
   margin: auto;
   width: 100%;
   height: fit-content;
 `;
 
-function useWindowSize() {
-  const [size, setSize] = useState([0, 0]);
-  useLayoutEffect(() => {
-    function updateSize() {
-      setSize([window.innerWidth, window.innerHeight]);
-    }
-    window.addEventListener("resize", updateSize);
-    updateSize();
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
-  return size;
-}
-
 const WelcomePage = ({ data }) => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
-  const [width, height] = useWindowSize();
+  const {width, height} = useWindowSize();
   const windowOrigin = useLocation();
   if (windowOrigin.includes("uw")) {
     return <UWCSLandingPage blogData={data} />;

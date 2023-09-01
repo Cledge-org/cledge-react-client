@@ -1,7 +1,8 @@
 import React from "react";
-import cs from 'classnames';
-import styles from './Splash.module.scss';
-import {MainContainer,Heading} from '../styles';
+import cs from "classnames";
+import styles from "./Splash.module.scss";
+import { MainContainer, Heading } from "../styles";
+import { Button } from "src/main-pages/WelcomePage/components/Button/Button";
 
 interface Props {
   buttonHandler?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -11,13 +12,14 @@ interface Props {
 
 function Splash({
   children = undefined,
-  buttonHandler = () => { },
+  buttonHandler = () => {},
   classNames,
 }: Props) {
   const content = {
     heading: "Get Your Personalized College List",
-    subHeading: "Get a headstart this application season with a personalized college list to help you explore your best-fit, safety, fit, and reach colleges."
-  }
+    subHeading:
+      "Get a headstart this application season with a personalized college list to help you explore your best-fit, safety, fit, and reach colleges.",
+  };
   return (
     <MainContainer className={cs(classNames)}>
       <div className={styles.gridContainer}>
@@ -30,8 +32,16 @@ function Splash({
         </div>
       </div>
       <div className={styles.flexContainer}>
-          <img src="/images/landing_search_tool.png" alt="more info" />
-        <button className={cs(styles.signUpButton, "bg-cl-orange")} onClick={buttonHandler}>Try Now</button>
+        <img src="/images/landing_search_tool.png" alt="more info" />
+        {/* <button className={cs(styles.signUpButton, "bg-cl-orange")} onClick={buttonHandler}>Try Now</button> */}
+        <Button
+          color="#F7BC76"
+          fixedWidth={false}
+          className={cs(styles.signUpButton)}
+          onClick={buttonHandler}
+        >
+          Try Now
+        </Button>
       </div>
       {children}
     </MainContainer>
@@ -39,4 +49,3 @@ function Splash({
 }
 
 export default Splash;
-
