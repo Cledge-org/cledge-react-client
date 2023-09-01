@@ -1,8 +1,12 @@
 import styled from "styled-components";
 
-export const MainContainer = styled.div`
+interface MainContainerProps {
+  flexDirection?: "row" | "column";
+}
+
+export const MainContainer = styled.div<MainContainerProps>`
   display: flex;
-  flex-direction: row;
+  flex-direction: ${(props) => props.flexDirection || "row"};
   padding: 60px;
   gap: 70px;
   justify-content: space-between;
@@ -19,4 +23,5 @@ export const MainContainer = styled.div`
   export const Heading = styled.h1`
   line-height: 1.4 !important;
   font-weight: bold !important;
+  color: white;
   `;

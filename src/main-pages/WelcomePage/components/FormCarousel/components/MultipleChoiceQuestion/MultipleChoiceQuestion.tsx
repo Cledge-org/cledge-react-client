@@ -5,6 +5,7 @@ import cs from 'classnames';
 import styles from "./MultipleChoiceQuestion.module.scss";
 import Image from "next/image";
 import { MainContainer,Heading } from "../styles";
+import preventDefault from "src/utils/js/preventDefault";
 
 const OptionsContainer = styled.div`
   display: flex;
@@ -19,6 +20,10 @@ const OptionContainer = styled.div`
   flex-direction: row;
   border-radius: 8px;
   padding: 10px;
+  cursor: pointer !important;
+  & * {
+    cursor: pointer !important;
+  }
   input[type="radio"] {
     width: auto;
   }
@@ -69,7 +74,7 @@ function MultipleChoiceQuestion({
           <Heading className="cl-white">{question}</Heading>
         </div>
         <div className={styles.gridItem}>
-          <button className={styles.infoButton}>
+          <button onClick={preventDefault} className={styles.infoButton}>
             <Image layout="fill" src="/icons/info.svg" alt="more info" />
           </button>
         </div>
