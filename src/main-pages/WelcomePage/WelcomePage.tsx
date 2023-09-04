@@ -21,7 +21,6 @@ import NewBlogsCarousel from "./components/blogsCarousel/NewBlogsCarousel";
 import BlogCarouselItem from "./components/blogsCarousel/components/BlogCaroselItem";
 import FormCarousel from "./components/FormCarousel/FormCarousel";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
-import UWRightContentBlock from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWRightContentBlock/UWRightContentBlock";
 
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
@@ -260,7 +259,7 @@ const CarouselDiv = styled.div`
 const WelcomePage = ({ data }) => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
-  const {width, height} = useWindowSize();
+  const { width, height } = useWindowSize();
   const windowOrigin = useLocation();
   if (windowOrigin.includes("uw")) {
     return <UWCSLandingPage blogData={data} />;
@@ -292,13 +291,13 @@ const WelcomePage = ({ data }) => {
           </div>
         </Intro>
         <CarouselDiv id="carouselDiv">
-          <FormCarousel questionData={data.checkinQuestions.chunks[0].questions}/>
+          <FormCarousel questionData={data.checkinQuestions.chunks[0].questions} />
         </CarouselDiv>
-        
-        
+
+
         <div style={{ background: "#DCE1FB" }}>
           <Fade triggerOnce={true} direction="right">
-            <div style={{background: "#DCE1FB"}}>
+            <div style={{ background: "#DCE1FB" }}>
               <div className="pt-5 pb-5">
                 <UWRightContentBlock
                   type={"right"}
@@ -321,7 +320,7 @@ const WelcomePage = ({ data }) => {
             </div>
           </Fade>
           <Fade triggerOnce={true} direction="left">
-            <div style={{background: "#DCE1FB"}}>
+            <div style={{ background: "#DCE1FB" }}>
               <div className="pt-5 pb-5">
                 <UWRightContentBlock
                   type={"right"}
@@ -344,7 +343,7 @@ const WelcomePage = ({ data }) => {
             </div>
           </Fade>
           <Fade triggerOnce={true} direction="right">
-            <div style={{background: "#DCE1FB"}}>
+            <div style={{ background: "#DCE1FB" }}>
               <div className="pt-5 pb-5">
                 <UWRightContentBlock
                   type={"right"}
@@ -367,7 +366,7 @@ const WelcomePage = ({ data }) => {
             </div>
           </Fade>
           <Fade triggerOnce={true} direction="left">
-            <div style={{background: "#DCE1FB"}}>
+            <div style={{ background: "#DCE1FB" }}>
               <div className="pt-5 pb-5">
                 <UWRightContentBlock
                   type={"right"}
@@ -377,8 +376,8 @@ const WelcomePage = ({ data }) => {
                         <img src={`images/uw_4.svg`} alt="4" />
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get guidance from Cledge councilers on how you can apply for 
-                      financial aid and make use of other opportunities such as early action and summer internships</div>
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get guidance from Cledge councilers on how you can apply for
+                        financial aid and make use of other opportunities such as early action and summer internships</div>
                     </div>
                   }
                   content={
@@ -391,7 +390,7 @@ const WelcomePage = ({ data }) => {
             </div>
           </Fade>
           <Fade triggerOnce={true} direction="right">
-            <div style={{background: "#DCE1FB"}}>
+            <div style={{ background: "#DCE1FB" }}>
               <div className="pt-5 pb-5">
                 <UWRightContentBlock
                   type={"right"}
@@ -414,7 +413,7 @@ const WelcomePage = ({ data }) => {
             </div>
           </Fade>
           <Fade triggerOnce={true} direction="left">
-            <div style={{background: "#DCE1FB"}}>
+            <div style={{ background: "#DCE1FB" }}>
               <div className="pt-5 pb-5">
                 <UWRightContentBlock
                   type={"right"}

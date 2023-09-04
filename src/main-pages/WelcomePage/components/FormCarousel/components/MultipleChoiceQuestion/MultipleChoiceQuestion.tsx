@@ -4,8 +4,9 @@ import styled from "styled-components";
 import cs from 'classnames';
 import styles from "./MultipleChoiceQuestion.module.scss";
 import Image from "next/image";
-import { MainContainer,Heading } from "../styles";
+import { MainContainer, Heading } from "../styles";
 import preventDefault from "src/utils/js/preventDefault";
+import { UnMappedValues } from "src/ClientSideFunctions/getQuestionMappings";
 
 const OptionsContainer = styled.div`
   display: flex;
@@ -45,11 +46,12 @@ const OptionLabel = styled.label`
 
 interface Props {
   question: string;
+  _id: string;
   answers?: {
     op: string;
     tag: string;
   }[];
-  inputHandler?: (e: string) => void;
+  handler?: (e: UnMappedValues) => void;
   children?: React.ReactNode | React.ReactNode[] | undefined;
   classNames?: string;
 }
@@ -59,13 +61,14 @@ function MultipleChoiceQuestion({
   answers: options,
   children = undefined,
   classNames,
-  inputHandler = () => { },
+  _id,
+  handler: handler = () => { },
 }: Props) {
   const router = useRouter();
   const [selected, setSelected] = React.useState(options[0].tag);
   const handleInput = (value: string) => {
     setSelected(value);
-    inputHandler(value);
+    handler({ [_id]: value });
   }
   return (
     <MainContainer className={cs(classNames)}>
@@ -83,6 +86,7 @@ function MultipleChoiceQuestion({
         <OptionsContainer>
           {options.map((option) => (
             <OptionContainer
+              key={option.tag}
               className={
                 selected === option.tag ? "bg-cl-orange" : "bg-cl-white"
               }
