@@ -8,6 +8,7 @@ import Splash from "./components/Splash/Splash";
 import Results from "./components/Results/Results";
 import getQuestionMappings, { MappedValues, UnMappedValues } from '../../../../ClientSideFunctions/getQuestionMappings';
 import CheckinQuestions from '../../content/CheckinQuestions';
+import { useRouter } from "next/router";
 
 interface Props {
   questionData: {
@@ -23,21 +24,26 @@ interface Props {
     question: string;
     type: string;
   }[];
+  collegeData: (string | number)[][];
 }
 
-const FormCarousel = ({ questionData }: Props) => {
+const FormCarousel = ({ questionData,collegeData }: Props) => {
   const initialFormData: UnMappedValues = {};
   questionData.map((data) => (
     initialFormData[data._id] = data.data[0].tag
   ));
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [formData, setFormData] = React.useState<UnMappedValues>(initialFormData);
+  const router = useRouter();
   const numSlides = questionData.length + 2;
   const addSlide = () => setCurrentSlide(currentSlide + 1);
   const subtractSlide = () => setCurrentSlide(currentSlide - 1);
   const nextSlide = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (currentSlide === numSlides) return;
+    if (currentSlide === numSlides - 2) {
+      // handleSubmit().then().catch(err => console.log('There was an error', err));
+    }
     addSlide();
   }
   const prevSlide = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -46,53 +52,11 @@ const FormCarousel = ({ questionData }: Props) => {
     subtractSlide();
   }
   const handleSubmit = async () => {
-    console.log('init call');
+
     let preferences = addPreferenceLevel(getQuestionMappings(formData, CheckinQuestions));
-    delete preferences['schoolType'];
-    const fakePreferences = {
-        schoolSize: {
-          low_val: 0,
-          high_val: 5000,
-          preferenceLevel: 1
-        },
-        costOfAttendance: {
-          low_val: 0,
-          high_val: 30000,
-          preferenceLevel: 1
-        },
-        schoolPreference: {
-          low_val: 1,
-          high_val: 1,
-          preferenceLevel: 1
-        },
-        localePreference: {
-          low_val: 1,
-          high_val: 1,
-          preferenceLevel: 1
-        },
-        statePreference: {
-          low_val: "WA",
-          high_val: "WA",
-          preferenceLevel: 1
-        },
-        classSize: {
-          low_val: null,
-          high_val: null,
-          preferenceLevel: 1,
-        },
-        finAidNeed: {
-          low_val: 0,
-          high_val: 30000,
-          preferenceLevel: 1,
-        },
-        finAidMerit: {
-          low_val: 0,
-          high_val: 10000,
-          preferenceLevel: 1,
-        }
-      }
+    
       const requestBody = {
-        preferences: fakePreferences,
+        preferences: preferences,
         ECTier: 0,
         courseworkTier: 0,
         GPATier: 0,
@@ -101,7 +65,6 @@ const FormCarousel = ({ questionData }: Props) => {
         studACTScore: 0,
         studentType: 0
       }
-      console.log(requestBody.preferences);
 
     const fetchData = async () => {
       try {
@@ -125,7 +88,6 @@ const FormCarousel = ({ questionData }: Props) => {
         });
         
           const data = await response.json();
-          console.log(data);
           return data;
         
         
@@ -135,16 +97,13 @@ const FormCarousel = ({ questionData }: Props) => {
       }
     };
 
-    const collegeResults = await fetchData();
-    console.log(collegeResults);
-
   };
 
   const handleFormData = (data: UnMappedValues) => {
     const questionId = Object.keys(data)[0];
     setFormData(p => ({ ...p, [questionId]: data[questionId] }));
     if (currentSlide === numSlides - 2) {
-      handleSubmit().then().catch(err => console.log('There was an error', err));
+      // handleSubmit().then().catch(err => console.log('There was an error', err));
     }
     addSlide();
   }
@@ -160,29 +119,40 @@ const FormCarousel = ({ questionData }: Props) => {
     return newResults;
   }
 
-  const handleSignUp = () => {
-    return;
+  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push({ pathname: "/auth/signup" });
   }
 
+  
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
+  }
+  
+  shuffleArray(collegeData);
+  const selectedSchools = collegeData.slice(0, 2);
 
   return (
     <div className={cs(styles.carouselContainer)}>
       <div className={cs(styles.carousel)}>
-        <form onSubmit={currentSlide === numSlides - 1 ? handleSignUp : (e) => e.preventDefault()}>
+        <form onSubmit={(e) => (currentSlide === numSlides - 1 ? handleSignUp(e) : e.preventDefault())}>
           <div className={styles.slides} style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
             <Splash classNames={styles.slide} buttonHandler={nextSlide} />
             {questionData.map((data) => (
               <MultipleChoiceQuestion key={data._id} classNames={styles.slide} _id={data._id} question={data.question} answers={data.data} handler={handleFormData} />
             ))}
-            <Results classNames={styles.slide} />
+            <Results schools={selectedSchools} classNames={styles.slide} />
           </div>
         </form>
       </div>
-      {/*  || currentSlide === numSlides - 1 */}
-      <button disabled={currentSlide === 0} className={styles.prevButton} onClick={prevSlide}>
+       
+      <button disabled={currentSlide === 0 || currentSlide === numSlides - 1} className={styles.prevButton} onClick={prevSlide}>
         <Image width={60} height={60} src="/icons/arrow.svg" alt="previous slide" />
       </button>
-      <button disabled={currentSlide === numSlides - 1} className={styles.nextButton} onClick={nextSlide}>
+      <button disabled={currentSlide === numSlides - 1} className={styles.nextButton} onClick={(e) =>  nextSlide}>
         <Image width={60} height={60} src="/icons/arrow.svg" alt="next slide" />
       </button>
       {<Dots>
