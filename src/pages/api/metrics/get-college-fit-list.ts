@@ -48,6 +48,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         console.log('we here ');
         const client = await MongoClient.connect(process.env.MONGO_URL);
         const result = await getAllColleges(client, preferences, ECTier, courseworkTier, GPATier, studFirstGen, studSATScore, studACTScore, studentType);
+        console.log(result);
         resolve.status(200).send(result);
     } catch (e) {
         resolve.status(500).send(e);
@@ -130,9 +131,12 @@ export const getAllColleges = (
             let [reachCount, targetCount, safetyCount] = studentTypeData[studentType];
             // prevent missing college in one fit category
             if (safety.length < safetyCount) {
+                console.log('safety', safety.length, safetyCount);
                 let safetyDiff = safetyCount - safety.length;
                 safetyCount -= safetyDiff;
                 targetCount += safetyDiff;
+                console.log('safety diff, count', safetyDiff, safetyCount);
+                console.log('target count', targetCount);
             }
             if (target.length < targetCount) {
                 let targetDiff = targetCount - target.length;
@@ -144,13 +148,22 @@ export const getAllColleges = (
                 reachCount -= reachDiff;
                 targetCount += reachDiff;
             }
+
+            const X_safety = getRankByPreferenceFit(safety, safetyCount);
+            const X_target = getRankByPreferenceFit(target, targetCount);
+            const X_reach = getRankByPreferenceFit(reach, reachCount);
+            console.log('safety', X_safety);
+            console.log('target', X_target);
+            console.log('reach', X_reach);
             const output = {
                 safety: getRankByPreferenceFit(safety, safetyCount),
                 target: getRankByPreferenceFit(target, targetCount),
                 reach: getRankByPreferenceFit(reach, reachCount)
             }
             res(output);
+            
         } catch (e) {
+            console.log('errorssss');
             err(res);
         }
     })
@@ -353,6 +366,8 @@ const calculatePreferenceFit = (
 }
 
 const getRankByPreferenceFit = (fit: any[], rank: number) => {
+    console.log('fit', fit);
+    console.log('rank', rank);
     return fit.sort((first, second) => second[2] - first[2]).slice(0, rank);
 }
 

@@ -292,7 +292,7 @@ const WelcomePage = ({ data }) => {
           </div>
         </Intro>
         <CarouselDiv id="carouselDiv">
-          <FormCarousel questionData={data.checkinQuestions.chunks[0].questions} />
+          <FormCarousel collegeData={data.collegeData} questionData={data.checkinQuestions.chunks[0].questions} />
         </CarouselDiv>
 
 

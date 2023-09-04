@@ -9,14 +9,49 @@
 
    & .flexItem{
       min-width: 0;
-      aspect-ratio: 3/2;
       width:100%;
       border-radius: 10px;
    }
 }
 
+.schoolCard{
+   display:flex;
+   flex-direction:column;
+   gap:5px;
+   width: 100%;
+   background-color: $cl-white;
+   border-radius: 15px;
+   overflow:hidden;
+   padding-bottom: 10px;
+
+   & span {
+      margin: 0 10px;
+   }
+
+   & img{
+      min-width: 0;
+      width:100%;
+      aspect-ratio: 3/2;
+      transform: scale(1.1);
+      transform-origin: bottom center;
+   }
+
+   & .title{
+      font-size: 20px;
+      font-weight: bold;
+      color: $cl-dark-text;
+   }
+
+   & .subtitle{
+      font-size: 16px;
+      color: $cl-secondary-text;
+   }
+
+}
+
 .signUpButton{
-   flex: 1 0 20%;
+   flex: 0 0 20%;
+   max-height: 18%;
    border: unset;
    font-size: large;
    border-radius: 4px;
