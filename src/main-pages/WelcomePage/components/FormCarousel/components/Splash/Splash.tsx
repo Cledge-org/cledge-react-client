@@ -2,7 +2,7 @@ import React from "react";
 import cs from "classnames";
 import styles from "./Splash.module.scss";
 import { MainContainer, Heading } from "../styles";
-import { Button } from "src/main-pages/WelcomePage/components/Button/Button";
+import { Button } from "../../../../components/Button/Button";
 
 interface Props {
   buttonHandler?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -12,7 +12,7 @@ interface Props {
 
 function Splash({
   children = undefined,
-  buttonHandler = () => {},
+  buttonHandler = () => { },
   classNames,
 }: Props) {
   const content = {
@@ -33,11 +33,10 @@ function Splash({
       </div>
       <div className={styles.flexContainer}>
         <img src="/images/landing_search_tool.png" alt="more info" />
-        {/* <button className={cs(styles.signUpButton, "bg-cl-orange")} onClick={buttonHandler}>Try Now</button> */}
         <Button
           color="#F7BC76"
           fixedWidth={false}
-          className={cs(styles.signUpButton)}
+          className={cs(styles.tryNow)}
           onClick={buttonHandler}
         >
           Try Now

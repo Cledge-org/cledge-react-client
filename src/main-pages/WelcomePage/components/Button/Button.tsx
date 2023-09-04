@@ -1,5 +1,13 @@
 import { StyledButton } from "./styles";
 
+interface Props {
+  color?: string;
+  fixedWidth?: boolean;
+  children: React.ReactNode;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  className?: string;
+}
+
 export const Button = ({
   color,
   fixedWidth,

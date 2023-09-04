@@ -1,0 +1,24 @@
+@use "../../../../../../common/styles/palette.module.scss" as *;
+
+.flexContainer{
+   display:flex;
+   flex-direction:row;
+   justify-content:space-between;
+   flex: 0 0 80%;
+   gap: 10px;
+
+   & .flexItem{
+      min-width: 0;
+      aspect-ratio: 3/2;
+      width:100%;
+      border-radius: 10px;
+   }
+}
+
+.signUpButton{
+   flex: 1 0 20%;
+   border: unset;
+   font-size: large;
+   border-radius: 4px;
+   font-weight: bold;
+}
