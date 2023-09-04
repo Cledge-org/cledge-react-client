@@ -22,10 +22,10 @@ export default function getQuestionMappings(data: UnMappedValues, questionMappin
    for (const [questionId, tag] of Object.entries(data)) {
       if (questionMappings[questionId]) {
          mappedValues[questionId] = questionMappings[questionId][tag];
-      } else {
+      }else {
          mappedValues[questionId] = {
-            low_val: null,
-            high_val: null,
+            low_val: 0,
+            high_val: 30000,
             preferenceLevel: 1,
          };
       }

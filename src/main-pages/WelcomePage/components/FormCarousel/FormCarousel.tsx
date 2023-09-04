@@ -46,17 +46,62 @@ const FormCarousel = ({ questionData }: Props) => {
     subtractSlide();
   }
   const handleSubmit = async () => {
+    console.log('init call');
     let preferences = addPreferenceLevel(getQuestionMappings(formData, CheckinQuestions));
-    const requestBody = {
-      preferences: preferences,
-      ECTier: 0,
-      courseworkTier: 0,
-      GPATier: 0,
-      studFirstGen: 0,
-      studSATScore: 0,
-      studACTScore: 0,
-      studentType: 0
-    }
+    delete preferences['schoolType'];
+    const fakePreferences = {
+        schoolSize: {
+          low_val: 0,
+          high_val: 5000,
+          preferenceLevel: 1
+        },
+        costOfAttendance: {
+          low_val: 0,
+          high_val: 30000,
+          preferenceLevel: 1
+        },
+        schoolPreference: {
+          low_val: 1,
+          high_val: 1,
+          preferenceLevel: 1
+        },
+        localePreference: {
+          low_val: 1,
+          high_val: 1,
+          preferenceLevel: 1
+        },
+        statePreference: {
+          low_val: "WA",
+          high_val: "WA",
+          preferenceLevel: 1
+        },
+        classSize: {
+          low_val: null,
+          high_val: null,
+          preferenceLevel: 1,
+        },
+        finAidNeed: {
+          low_val: 0,
+          high_val: 30000,
+          preferenceLevel: 1,
+        },
+        finAidMerit: {
+          low_val: 0,
+          high_val: 10000,
+          preferenceLevel: 1,
+        }
+      }
+      const requestBody = {
+        preferences: fakePreferences,
+        ECTier: 0,
+        courseworkTier: 0,
+        GPATier: 0,
+        studFirstGen: 0,
+        studSATScore: 0,
+        studACTScore: 0,
+        studentType: 0
+      }
+      console.log(requestBody.preferences);
 
     const fetchData = async () => {
       try {
@@ -65,15 +110,26 @@ const FormCarousel = ({ questionData }: Props) => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(requestBody)
+          body: JSON.stringify(
+            {
+            preferences: requestBody.preferences,
+            ECTier: requestBody.ECTier,
+            courseworkTier: requestBody.courseworkTier,
+            GPATier: requestBody.GPATier,
+            studFirstGen: requestBody.studFirstGen,
+            studSATScore: requestBody.studSATScore,
+            studACTScore: requestBody.studACTScore,
+            studentType: requestBody.studentType
+            }
+          )
         });
-        if (response.ok) {
+        
           const data = await response.json();
           console.log(data);
           return data;
-        } else {
-          throw new Error('Network response was not ok.');
-        }
+        
+        
+        
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
       }
@@ -122,7 +178,8 @@ const FormCarousel = ({ questionData }: Props) => {
           </div>
         </form>
       </div>
-      <button disabled={currentSlide === 0 || currentSlide === numSlides - 1} className={styles.prevButton} onClick={prevSlide}>
+      {/*  || currentSlide === numSlides - 1 */}
+      <button disabled={currentSlide === 0} className={styles.prevButton} onClick={prevSlide}>
         <Image width={60} height={60} src="/icons/arrow.svg" alt="previous slide" />
       </button>
       <button disabled={currentSlide === numSlides - 1} className={styles.nextButton} onClick={nextSlide}>

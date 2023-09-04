@@ -21,6 +21,7 @@ import NewBlogsCarousel from "./components/blogsCarousel/NewBlogsCarousel";
 import BlogCarouselItem from "./components/blogsCarousel/components/BlogCaroselItem";
 import FormCarousel from "./components/FormCarousel/FormCarousel";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
+import UWRightContentBlock from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWRightContentBlock/UWRightContentBlock";
 
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));

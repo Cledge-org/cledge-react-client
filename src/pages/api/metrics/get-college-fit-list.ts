@@ -45,6 +45,7 @@ importances: admission/selection_of_students, [Class Rank, Academic GPA, Extracu
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
     const { preferences, ECTier, courseworkTier, GPATier, studFirstGen, studSATScore, studACTScore, studentType } = req.body;
     try {
+        console.log('we here ');
         const client = await MongoClient.connect(process.env.MONGO_URL);
         const result = await getAllColleges(client, preferences, ECTier, courseworkTier, GPATier, studFirstGen, studSATScore, studACTScore, studentType);
         resolve.status(200).send(result);
