@@ -21,6 +21,7 @@ import NewBlogsCarousel from "./components/blogsCarousel/NewBlogsCarousel";
 import BlogCarouselItem from "./components/blogsCarousel/components/BlogCaroselItem";
 import FormCarousel from "./components/FormCarousel/FormCarousel";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
+import UWRightContentBlock from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWRightContentBlock/UWRightContentBlock";
 
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
@@ -31,6 +32,8 @@ const Container = dynamic(() => import("./components/Container/Container"));
 const ContentBlock = dynamic(
   () => import("./components/ContentBlock/ContentBlock")
 );
+
+const UWLandingFooter = dynamic(() => import("./components/UWCSLandingPage/components/footer/UWLandingFooter"));
 
 const FullWidthContainer = styled("div")`
   position: relative;
@@ -262,6 +265,7 @@ const WelcomePage = ({ data }) => {
   if (windowOrigin.includes("uw")) {
     return <UWCSLandingPage blogData={data} />;
   }
+  const isMobile = width <= 810;
   return (
     <PageErrorBoundary>
       <Container>
@@ -290,61 +294,150 @@ const WelcomePage = ({ data }) => {
         <CarouselDiv id="carouselDiv">
           <FormCarousel questionData={data.checkinQuestions.chunks[0].questions}/>
         </CarouselDiv>
-        <MiddleBlock
-          id="goal"
-          title={MiddleBlockContent.title}
-          content={MiddleBlockContent.text}
-          width={width}
-        />
-        <Metric id="metric" className="d-flex bg-dark-blue">
-          <div>
-            <h2 className="title ">100+ metrics</h2>
-            <p>used to give you personalized feedback</p>
-          </div>
-          <div>
-            <h2 className="title">50+ hours of content</h2>
-            <p>
-              at your disposal to help you navigate all all parts of the
-              application and preparation process
-            </p>
-          </div>
-          <div>
-            <h2 className="title">90% of users</h2>
-            <p>
-              increased confidence in college related decisions using Cledge
-            </p>
-          </div>
-        </Metric>
-        <ContentBlock
-          type="left"
-          title={AboutContent.title}
-          content={AboutContent.text}
-          icon="landing_1.svg"
-          id="about"
-        />
-        <ContentBlock
-          type="left"
-          title={MissionContent.title}
-          content={AboutContent.text}
-          icon="landing_1.svg"
-          id="about"
-        />
-        <ContentBlock
-          type="left"
-          title={ProductContent.title}
-          content={ProductContent.text}
-          icon="landing_3.svg"
-          id="product"
-        />
-        <Partner>
-          <MiddleBlock
-            id="partner"
-            title={PartnerContent.title}
-            content={PartnerContent.text}
-            width={width}
-          />
-        </Partner>
-        <BlobBlock>
+        
+        
+        <div style={{ background: "#DCE1FB" }}>
+          <Fade triggerOnce={true} direction="right">
+            <div style={{background: "#DCE1FB"}}>
+              <div className="pt-5 pb-5">
+                <UWRightContentBlock
+                  type={"right"}
+                  title={
+                    <div>
+                      <div>
+                        <img src={`images/uw_1.svg`} alt="1" />
+                      </div>
+                      <br />
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Create Your Profile with Cledge</div>
+                    </div>
+                  }
+                  content={
+                    ""
+                  }
+                  icon="images/Step 1 Landing.svg"
+                  id="mission2"
+                />
+              </div>
+            </div>
+          </Fade>
+          <Fade triggerOnce={true} direction="left">
+            <div style={{background: "#DCE1FB"}}>
+              <div className="pt-5 pb-5">
+                <UWRightContentBlock
+                  type={"right"}
+                  title={
+                    <div>
+                      <div>
+                        <img src={`images/uw_2.svg`} alt="2" />
+                      </div>
+                      <br />
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get Personalized College Recommendations</div>
+                    </div>
+                  }
+                  content={
+                    ""
+                  }
+                  icon="images/Step 2 Landing.svg"
+                  id="mission2"
+                />
+              </div>
+            </div>
+          </Fade>
+          <Fade triggerOnce={true} direction="right">
+            <div style={{background: "#DCE1FB"}}>
+              <div className="pt-5 pb-5">
+                <UWRightContentBlock
+                  type={"right"}
+                  title={
+                    <div>
+                      <div>
+                        <img src={`images/uw_3.svg`} alt="3" />
+                      </div>
+                      <br />
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Go above and beyond and find more college that fit your needs</div>
+                    </div>
+                  }
+                  content={
+                    ""
+                  }
+                  icon="images/Step 3 Landing.svg"
+                  id="mission2"
+                />
+              </div>
+            </div>
+          </Fade>
+          <Fade triggerOnce={true} direction="left">
+            <div style={{background: "#DCE1FB"}}>
+              <div className="pt-5 pb-5">
+                <UWRightContentBlock
+                  type={"right"}
+                  title={
+                    <div>
+                      <div>
+                        <img src={`images/uw_4.svg`} alt="4" />
+                      </div>
+                      <br />
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get guidance from Cledge councilers on how you can apply for 
+                      financial aid and make use of other opportunities such as early action and summer internships</div>
+                    </div>
+                  }
+                  content={
+                    ""
+                  }
+                  icon="images/Step 4 Landing.svg"
+                  id="mission2"
+                />
+              </div>
+            </div>
+          </Fade>
+          <Fade triggerOnce={true} direction="right">
+            <div style={{background: "#DCE1FB"}}>
+              <div className="pt-5 pb-5">
+                <UWRightContentBlock
+                  type={"right"}
+                  title={
+                    <div>
+                      <div>
+                        <img src={`images/uw_4.svg`} alt="4" />
+                      </div>
+                      <br />
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Write essays for colleges with the help of Cledge which takes into account your profile and the college you are applying to for better feedback.</div>
+                    </div>
+                  }
+                  content={
+                    ""
+                  }
+                  icon="images/Step 5 Landing.svg"
+                  id="mission2"
+                />
+              </div>
+            </div>
+          </Fade>
+          <Fade triggerOnce={true} direction="left">
+            <div style={{background: "#DCE1FB"}}>
+              <div className="pt-5 pb-5">
+                <UWRightContentBlock
+                  type={"right"}
+                  title={
+                    <div>
+                      <div>
+                        <img src={`images/uw_4.svg`} alt="4" />
+                      </div>
+                      <br />
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get into the college that is the best fit for you!</div>
+                    </div>
+                  }
+                  content={
+                    ""
+                  }
+                  icon="images/Step 6 Landing.svg"
+                  id="mission2"
+                />
+              </div>
+            </div>
+          </Fade>
+        </div>
+        {/* <BlobBlock>
           <Fade direction="right" className="center-child w-100">
             <div className="BlobContainer flex-wrap">
               <div
@@ -397,52 +490,34 @@ const WelcomePage = ({ data }) => {
               </div>
             </div>
           </Fade>
-        </BlobBlock>
-      </Container>
-      <SubscribeWrapper>
-            <h2>Get started with our free resources</h2>
+        </BlobBlock> */}
+        <Metric id="metric" className="d-flex bg-dark-blue">
+          <div>
+            <h2 className="title ">100+ metrics</h2>
+            <p>used to give you personalized feedback</p>
+          </div>
+          <div>
+            <h2 className="title">50+ hours of content</h2>
             <p>
-              Get monthly access to free live webinars & tips from college
-              advisors!
+              at your disposal to help you navigate all all parts of the
+              application and preparation process
             </p>
-            <div className="input d-flex flex-row flex-wrap align-items-end justify-content-evenly">
-              <div className="flex-fill">
-                <label>I am a</label>
-                <DropDownQuestion
-                  isForWaitlist
-                  valuesList={["Parent", "Student"]}
-                />
-              </div>
-              <div className="flex-fill">
-                <label>Email</label>
-                <input
-                  type="text"
-                  style={{ color: "black" }}
-                  placeholder="Your email"
-                />
-              </div>
-              <Button
-                key="subscribe-btn"
-                color="#F7BC76"
-                fixedWidth={true}
-                onClick={() => {
-                  window.open("https://forms.gle/M1GxLK45Yi3Esfn5A", "_blank");
-                }}
-              >
-                Subscribe to our monthly tips
-              </Button>
-            </div>
-        </SubscribeWrapper>
-      <Footer
-        onFeatureClick={(featureIndex) => {
-          setCurrFeature(featureIndex);
-          //console.log(slideShowRef.current.offsetTop);
-          document.body.scrollTo({
-            top: slideShowRef.current.offsetTop,
-            behavior: "smooth",
-          });
-        }}
-      />
+          </div>
+          <div>
+            <h2 className="title">90% of users</h2>
+            <p>
+              increased confidence in college related decisions using Cledge
+            </p>
+          </div>
+        </Metric>
+        <MiddleBlock
+          id="goal"
+          title={MiddleBlockContent.title}
+          content={MiddleBlockContent.text}
+          width={width}
+        />
+      </Container>
+      <UWLandingFooter />
     </PageErrorBoundary>
   );
 };
