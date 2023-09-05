@@ -9,6 +9,8 @@ import { Tabs, Tab } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import LockIcon from "@mui/icons-material/Lock";
+import { FiBookmark } from "react-icons/fi";
+import { FaBookmark } from "react-icons/fa";
 import OverviewCard from "src/main-pages/CollegeDetailPage/components/OverviewCard/OverviewCard";
 import Card from "src/main-pages/CollegeDetailPage/components/Card/Card";
 import DataRow from "./components/DataRow/DataRow";
@@ -22,6 +24,7 @@ import classNames from "classnames";
 import { Map, Marker, ZoomControl } from "pigeon-maps";
 import { useSession } from "next-auth/react";
 import { Button } from "@mui/material";
+import { Container } from 'react-bootstrap';
 
 const CollegeDetailPage = ({
   questionResponses,
@@ -111,7 +114,7 @@ const CollegeDetailPage = ({
         onClick={() => {
               router.push("/college-list/");}}
       >
-        View here
+        View My List
       </Button>
     );
 
@@ -366,24 +369,33 @@ const CollegeDetailPage = ({
             </div>
             <div className="mt-5">
               <Button
-                variant="contained"
+                variant={addedToList ? "contained" :"outlined"}
                 style={{
                   textTransform: "none",
-                  background: addedToList ? "darkgray" : "",
+                  background: addedToList ? "red" : "",
                 }}
                 onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
               >
-                {addedToList ? "Remove From My List" : "Add To My College List"}
+                {addedToList ?
+                  <div>
+                    <FaBookmark></FaBookmark>
+                    <text> Remove From My List</text>
+                  </div> :
+                  <div>
+                    <FiBookmark></FiBookmark>
+                    <text> Save to my list</text>
+                  </div>}  
               </Button>
             </div>
           </div>
           <Tabs value={value} onChange={handleChange}>
-            <Tab className="me-5" label="Overview" />
-            <Tab className="mx-5" label="Admission" />
-            <Tab className="mx-5" label="Academics" />
-            <Tab className="mx-5" label="Financials" />
-            <Tab className="mx-5" label="Student" />
-            <Tab className="ms-5" label="Campus Life" />
+            <Tab className="me-4" label="Overview" />
+            <Tab className="mx-4" label="Admission" />
+            <Tab className="mx-4" label="Academics" />
+            <Tab className="mx-4" label="Financials" />
+            <Tab className="mx-4" label="Student" />
+            <Tab className="mx-4" label="Campus Life" />
+            <Tab className="ms-4" label="Insights"/>
             {/* <Tab label="Insights" /> */}
           </Tabs>
         </div>
@@ -445,7 +457,7 @@ const CollegeDetailPage = ({
                     <h3>
                       {data?.["religious_affiliation"]
                         ? data?.["religious_affiliation"]
-                        : "No Data"}
+                        : "Coming Soon!"}
                     </h3>
                   </div>
                 </div>
@@ -514,17 +526,18 @@ const CollegeDetailPage = ({
                 sub2="Calendar system"
                 sub2data={data["calendar_system"]}
                 sub3="Average GPA"
-                sub3data={data["avg_gpa"]}
+                // sub3data={data["avg_gpa"]}
+                sub3data={data["avg_gpa"] === undefined ? "Coming Soon!" : data["avg_gpa"]}
                 sub4="Most popular Area of Study"
                 sub4data={(() => {
                   let d = data["study_disciplines"];
                   if (!d) {
-                    return "No Data";
+                    return "Coming Soon!";
                   }
                   let mostPopularArea = Object.keys(d).reduce(function (a, b) {
                     return d[a] > d[b] ? a : b;
                   });
-                  return mostPopularArea ? mostPopularArea : "No Data";
+                  return mostPopularArea ? mostPopularArea : "Coming Soon!";
                 })()}
               />
               <OverviewCard
@@ -552,7 +565,7 @@ const CollegeDetailPage = ({
                 sub1data={
                   data["student_faculty_ratio"]
                     ? data["student_faculty_ratio"] + " : 1"
-                    : "No Data"
+                    : "Coming Soon!"
                 }
                 sub2="4 year graduation rate"
                 sub2data={parsePercent(data["4_year_graduation_rate"])}
@@ -702,14 +715,14 @@ const CollegeDetailPage = ({
                       data["sat/act_score"]?.["sat_math_25"]
                         ? data["sat/act_score"]?.["sat_critical_reading_25"] +
                           data["sat/act_score"]?.["sat_math_25"]
-                        : "No Data"
+                        : "Coming Soon!"
                     }
                     sub3={
                       data["sat/act_score"]?.["sat_critical_reading_75"] &&
                       data["sat/act_score"]?.["sat_math_75"]
                         ? data["sat/act_score"]?.["sat_critical_reading_75"] +
                           data["sat/act_score"]?.["sat_math_75"]
-                        : "No Data"
+                        : "Coming Soon!"
                     }
                     type="content"
                   />
@@ -1174,13 +1187,13 @@ const CollegeDetailPage = ({
                                 majorList.push(<p>{k}</p>);
                               }
                             });
-                            if (majorList.length === 0) return "No Data";
+                            if (majorList.length === 0) return "Coming Soon!";
                             return majorList;
                           })()}
                         </Panel>
                       </Collapse>
                     ) : (
-                      "No Data"
+                      "Coming Soon!"
                     )}
                   </div>
                   <Divider />
@@ -1206,7 +1219,7 @@ const CollegeDetailPage = ({
                           data["academics"]?.["Most Popular Disciplines"]?.[1] +
                           ", " +
                           data["academics"]?.["Most Popular Disciplines"]?.[2]
-                        : "No Data"}
+                        : "Coming Soon!"}
                     </h3>
                   </div>
                   <Divider />
@@ -1215,7 +1228,7 @@ const CollegeDetailPage = ({
                     <h3 className="cl-dark-text">
                       {data["student_faculty_ratio"]
                         ? data["student_faculty_ratio"] + " : 1"
-                        : "No Data"}
+                        : "Coming Soon!"}
                     </h3>
                   </div>
                   <Divider />
@@ -1330,7 +1343,7 @@ const CollegeDetailPage = ({
                       {data["academics"]?.["Computers Available on Campus"]
                         ? data["academics"]?.["Computers Available on Campus"] +
                           "+"
-                        : "No Data"}
+                        : "Coming Soon!"}
                     </h3>
                   </div>
                   <Divider />
@@ -1867,7 +1880,7 @@ const CollegeDetailPage = ({
                       : data["admission policy"]?.["women_only"]
                       ? "Women Only"
                       : "Co-Ed"
-                    : "No Data"
+                    : "Coming Soon!"
                 }
                 sub11="Admission Yield"
                 sub11data={parsePercent(
@@ -2024,6 +2037,13 @@ const CollegeDetailPage = ({
             </Col>
           </Row>
         ) : value == 6 ? (
+          <Row>
+            <Container className="d-flex flex-column align-items-center justify-content-center" style={{ height: '100vh' }}>
+              <h1 className="display-4 mb-4">Coming Soon!</h1>
+              <Button>Join Waitlist</Button>
+            </Container>
+          </Row>
+        ) : value == 7 ?(
           <></>
         ) : (
           <></>

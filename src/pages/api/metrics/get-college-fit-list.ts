@@ -68,6 +68,7 @@ export const getAllColleges = (
 ): Promise<Object> => {
     return new Promise(async(res, err) => {
         try {
+
             let collegesRes = await client
                 .db("colleges")
                 .collection("colleges-data")
@@ -80,6 +81,20 @@ export const getAllColleges = (
             // database stores the college data in colleges' alphabetical order; randomize for more various results
             collegesRes = collegesRes.sort(() => Math.random() - 0.5);
             collegesRes.forEach((college) => {
+                // in/out state check
+                if ("statePreference" in preferences) {
+                    const curCollegeState = college["STABBR"];
+                    let userPreferenceState = preferences["statePreference"]["low_val"].split(" ");
+                    if (userPreferenceState.length === 1) {
+                        if (curCollegeState !== userPreferenceState[0]) {
+                            return;
+                        }
+                    } else {
+                        if (curCollegeState === userPreferenceState[0]) {
+                            return;
+                        }
+                    }
+                }
                 let preferenceFit = calculatePreferenceFit(college, preferences);
                 let collegeFit = 0;
                 let collegeRankInfo = [college["UNITID"], college["INSTNM"], preferenceFit];
@@ -108,6 +123,10 @@ export const getAllColleges = (
                     reach.push(collegeRankInfo);
                 }
             });
+
+            if (studentType === 0) {
+                studentType = 1;
+            }
 
             let [reachCount, targetCount, safetyCount] = studentTypeData[studentType];
             // prevent missing college in one fit category
@@ -288,20 +307,27 @@ const calculatePreferenceFit = (
             let finAidProfile = college["financials"]["freshman_19_20_profile"];
             if (finAidProfile["Average Award"] != null && finAidProfile["Average Award"]["overall"] != null) {
                 let collegeAidCostCover = finAidParse(finAidProfile["Average Award"]["overall"]) / college["COTSOFF"] * 100;
+                // add weight to colleges that provide low_val or more percentage on financial aid needed basis
                 if (collegeAidCostCover >= finAidNeedInfo["low_val"] - 5) {
-                    if ("high_val" in finAidNeedInfo && collegeAidCostCover <= finAidNeedInfo["high_val"] + 5) {
-                        fitVal += finAidNeedInfo["preferenceLevel"];
-                    } else if (!("high_val" in finAidNeedInfo)) {
-                        fitVal += finAidNeedInfo["preferenceLevel"];
-                    }
+                    fitVal += finAidNeedInfo["preferenceLevel"];
                 }
                 if (collegeAidCostCover >= finAidNeedInfo["low_val"]) {
-                    if ("high_val" in finAidNeedInfo && collegeAidCostCover <= finAidNeedInfo["high_val"]) {
-                        fitVal += finAidNeedInfo["preferenceLevel"];
-                    } else if (!("high_val" in finAidNeedInfo)) {
-                        fitVal += finAidNeedInfo["preferenceLevel"];
-                    }
+                    fitVal += finAidNeedInfo["preferenceLevel"];
                 }
+                // if (collegeAidCostCover >= finAidNeedInfo["low_val"] - 5) {
+                //     if ("high_val" in finAidNeedInfo && collegeAidCostCover <= finAidNeedInfo["high_val"] + 5) {
+                //         fitVal += finAidNeedInfo["preferenceLevel"];
+                //     } else if (!("high_val" in finAidNeedInfo)) {
+                //         fitVal += finAidNeedInfo["preferenceLevel"];
+                //     }
+                // }
+                // if (collegeAidCostCover >= finAidNeedInfo["low_val"]) {
+                //     if ("high_val" in finAidNeedInfo && collegeAidCostCover <= finAidNeedInfo["high_val"]) {
+                //         fitVal += finAidNeedInfo["preferenceLevel"];
+                //     } else if (!("high_val" in finAidNeedInfo)) {
+                //         fitVal += finAidNeedInfo["preferenceLevel"];
+                //     }
+                // }
             }
         }
     }
@@ -312,20 +338,27 @@ const calculatePreferenceFit = (
             let finAidProfile = college["financials"]["freshman_19_20_profile"];
             if (finAidProfile["Merit-Based Gift"] != null) {
                 let collegeAidCostCover = finAidParse(finAidProfile["Merit-Based Gift"]) / college["COTSOFF"] * 100;
+                // add weight to colleges that provide low_val or more percentage on financial aid merit basis
                 if (collegeAidCostCover >= finAidMeritInfo["low_val"] - 2) {
-                    if ("high_val" in finAidMeritInfo && collegeAidCostCover <= finAidMeritInfo["high_val"] + 2) {
-                        fitVal += finAidMeritInfo["preferenceLevel"];
-                    } else if (!("high_val" in finAidMeritInfo)) {
-                        fitVal += finAidMeritInfo["preferenceLevel"];
-                    }
+                    fitVal += finAidMeritInfo["preferenceLevel"];
                 }
                 if (collegeAidCostCover >= finAidMeritInfo["low_val"]) {
-                    if ("high_val" in finAidMeritInfo && collegeAidCostCover <= finAidMeritInfo["high_val"]) {
-                        fitVal += finAidMeritInfo["preferenceLevel"];
-                    } else if (!("high_val" in finAidMeritInfo)) {
-                        fitVal += finAidMeritInfo["preferenceLevel"];
-                    }
+                    fitVal += finAidMeritInfo["preferenceLevel"];
                 }
+                // if (collegeAidCostCover >= finAidMeritInfo["low_val"] - 2) {
+                //     if ("high_val" in finAidMeritInfo && collegeAidCostCover <= finAidMeritInfo["high_val"] + 2) {
+                //         fitVal += finAidMeritInfo["preferenceLevel"];
+                //     } else if (!("high_val" in finAidMeritInfo)) {
+                //         fitVal += finAidMeritInfo["preferenceLevel"];
+                //     }
+                // }
+                // if (collegeAidCostCover >= finAidMeritInfo["low_val"]) {
+                //     if ("high_val" in finAidMeritInfo && collegeAidCostCover <= finAidMeritInfo["high_val"]) {
+                //         fitVal += finAidMeritInfo["preferenceLevel"];
+                //     } else if (!("high_val" in finAidMeritInfo)) {
+                //         fitVal += finAidMeritInfo["preferenceLevel"];
+                //     }
+                // }
             }
         }
     }

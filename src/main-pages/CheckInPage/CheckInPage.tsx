@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from "react";
+/* eslint-disable react/jsx-key */
+import React, { useMemo, useState} from "react";
 import { NextApplicationPage } from "../AppPage/AppPage";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
@@ -45,16 +46,24 @@ const CheckIn: NextApplicationPage<{
   const session = useSession();
   const router = useRouter();
 
+
+  const scrollToTop = () => {
+    document.body.scrollTo({ top: 0 })
+  };
+
+
   console.log(checkInData);
 
   const goBack = (e) => {
     e.preventDefault();
+    scrollToTop();
     changeProgress(progress - 100 / (checkInData.chunks.length - 1));
     if (page > 0) changePage(page - 1);
   };
 
   const goForward = (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    scrollToTop();
     changeProgress(progress + 100 / (checkInData.chunks.length - 1));
     if (page < checkInData.chunks.length - 1) changePage(page + 1);
   };
