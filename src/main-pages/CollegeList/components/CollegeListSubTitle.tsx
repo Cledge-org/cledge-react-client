@@ -16,26 +16,25 @@ const CollegeListSubTitle = ({
   return (
     <div className="">
       {isExpanded && (
-        <div className="py-3  mb-5">
-          <div className="container pt-4 pb-5 fw-bold " style={{ fontSize: "20px", }}>
+        <div className=" container py-3 mb-5 border border-3 border-info rounded">
+          <div className="container pt-4 pb-3 fw-bold h3" >
             <div style={{ position: "relative" }}>
               <button
                   style={{
                     position: "absolute",
-                    top: "0px",
-                    right: "0px",
+                    top: "-1rem",
+                    right: "-0.5rem",
                     background: "transparent",
                     border: "none",
-                    fontSize: "20px",
+                    fontSize: "1rem",
                     cursor: "pointer",
                   }}
                   onClick={handleCloseClick}
                 >
                   X
                 </button>
-                Hey {accountInfo.name.split(" ")[0]}, here is your preliminary college list. Checkout your 
-                <Link href="/dashboard" passHref legacyBehavior
-                style={{ textDecoration: "underline !important" }}> dashboard</Link> to further explore next steps!
+                <div className="h-50">Hey {accountInfo.name.split(" ")[0]}! Here is your preliminary college list. Checkout your 
+                <Link href="/dashboard" className="cl-blue"> dashboard</Link> to further explore next steps!</div>
             </div>
           </div>
         </div>
