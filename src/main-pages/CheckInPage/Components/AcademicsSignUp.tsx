@@ -4,11 +4,13 @@ import { number } from "prop-types";
 import React, { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { BiTrash } from "react-icons/bi";
+import SignUpText from "src/main-pages/CheckInPage/Components/SignUpText";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 
 
 export interface AcademicsProps {
   years: GradeBlockProps[]
+  submitData?: Function
 }
 
 interface GradeBlockProps {
@@ -65,31 +67,45 @@ function AcademicsSignUp(props: AcademicsProps) {
       grade: 0,
       tag: ""
     })
-    console.log("AFTER ADD " + JSON.stringify(userResponses));
     setUserResponses(userResponses);
+    props.submitData(userResponses);
     setIsAddingCourse(false);
   }
 
   const deleteCourse = (grade: number, term: number, courseName: string) => {
-    setCurrGrade(grade);
-    setCurrTerm(term);
-    const courseToDelete = userResponses.years.find(e => e.grade == grade)
-    .terms.find(e => e.id == term).courses.find(e => e.courseName == courseName);
-    // userResponses.years.find(e => e.grade == grade)
-    // .terms.find(e => e.id == term).courses
-    // .splice(userResponses.years.find(e => e.grade == grade)
-    // .terms.find(e => e.id == term).courses.indexOf(courseToDelete), 1);
-    const newUserResponses = userResponses;
-    newUserResponses.years.find(e => e.grade == grade)
-    .terms.find(e => e.id == term).courses = newUserResponses.years.find(e => e.grade == grade)
-    .terms.find(e => e.id == term).courses
-    .filter((course) => course.courseName != courseName);
-    console.log(newUserResponses.years.find(e => e.grade == grade)
-    .terms.find(e => e.id == term).courses);
-    console.log(courseName);
-    setUserResponses(newUserResponses);
+    try {
+      setCurrGrade(grade);
+      setCurrTerm(term);
+      const courseToDelete = userResponses.years.find(e => e.grade == grade)
+      .terms.find(e => e.id == term).courses.find(e => e.courseName == courseName);
+      const newUserResponses = Object.assign({}, userResponses);
+      newUserResponses.years.find(e => e.grade == grade)
+      .terms.find(e => e.id == term).courses = newUserResponses.years.find(e => e.grade == grade)
+      .terms.find(e => e.id == term).courses
+      .filter((course) => course.courseName != courseName);
+
+      let totalGradePoint = 0;
+      newUserResponses.years?.find(e => e.grade == currGrade)
+      .terms.find(e => e.id == currTerm)
+      .courses.forEach(course => {
+        totalGradePoint += course.grade;
+      })
+      userResponses.years.find(e => e.grade == currGrade)
+      .terms.find(e => e.id == currTerm).gpa = (totalGradePoint / 
+      newUserResponses.years.find(e => e.grade == currGrade)
+      .terms.find(e => e.id == currTerm).courses.length);
+
+      if (Number.isNaN(userResponses.years.find(e => e.grade == currGrade)
+        .terms.find(e => e.id == currTerm).gpa)) {
+          userResponses.years.find(e => e.grade == currGrade)
+        .terms.find(e => e.id == currTerm).gpa = 0;
+        }
+      setUserResponses(newUserResponses);
+      props.submitData(userResponses);
+    } catch (e) {
+      console.log(e);
+    }
     
-    console.log("AFTER DELETE " + JSON.stringify(userResponses));
   }
 
   const addCourse = (grade: number, term: number) => {
@@ -102,8 +118,7 @@ function AcademicsSignUp(props: AcademicsProps) {
     return (
       <div>
         <div>
-          <input
-            defaultValue={""}
+          <SignUpText
             placeholder="Course Name"
             onChange={(e) => {
               setTempCourse({
@@ -112,7 +127,6 @@ function AcademicsSignUp(props: AcademicsProps) {
                 grade: tempCourse.grade,
                 tag: tempCourse.tag
               })
-              console.log(tempCourse);
             }}
             value={tempCourse.courseName}
           />
@@ -126,7 +140,6 @@ function AcademicsSignUp(props: AcademicsProps) {
                   grade: tempCourse.grade,
                   tag: tempCourse.tag
                 })
-                console.log(tempCourse);
               }}
             >
               <option selected value="Math">Math</option>
@@ -134,9 +147,8 @@ function AcademicsSignUp(props: AcademicsProps) {
               <option value="Other">Other</option>
             </select>
           </div>
-          <input
+          <SignUpText
             type="number"
-            defaultValue={""}
             placeholder="Grade (unweighted)"
             onChange={(e) => {
                 setTempCourse({
@@ -145,7 +157,6 @@ function AcademicsSignUp(props: AcademicsProps) {
                   grade: Number.parseFloat(e.target.value),
                   tag: tempCourse.tag
                 })         
-                console.log(tempCourse);
             }}
             value={tempCourse.grade}
           />
@@ -159,7 +170,6 @@ function AcademicsSignUp(props: AcademicsProps) {
                   grade: tempCourse.grade,
                   tag: e.target.value
                 })
-                console.log(tempCourse);
               }}
             >
               <option selected value="Regular/Standard">Regular/Standard</option>
@@ -286,8 +296,8 @@ function GradeBlock(props: GradeBlockProps) {
                   </a>
                 </div>
               </div>
-              
             </div>
+            <hr />
             {isQuarter ? (
             <div className="row mt-5 mb-2">
               <div className="col-md">
