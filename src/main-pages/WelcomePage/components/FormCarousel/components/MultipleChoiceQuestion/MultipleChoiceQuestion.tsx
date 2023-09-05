@@ -71,7 +71,7 @@ function MultipleChoiceQuestion({
     handler({ [_id]: value });
   }
   return (
-    <MainContainer className={cs(classNames)}>
+    <MainContainer className={cs(classNames)} alignItems="start">
       <div className={styles.gridContainer}>
         <div className={styles.gridItem}>
           <Heading className="cl-white">{question}</Heading>

@@ -3,15 +3,16 @@ import styled from "styled-components";
 interface MainContainerProps {
   flexDirection?: "row" | "column";
   gap?: string;
+  alignItems?: "center" | "start" | "end" | "flex-start" | "flex-end";
 }
 
 export const MainContainer = styled.div<MainContainerProps>`
   display: flex;
   flex-direction: ${(props) => props.flexDirection || "row"};
-  padding: 60px;
+  padding: 20px 30px;
   gap: ${(p) => p.gap || "70px"};
   justify-content: space-between;
-  align-items: center;
+  align-items: ${props => props.alignItems || "center"};
   /* Card boarder */
   /* Shadow large */
   :hover {

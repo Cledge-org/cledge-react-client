@@ -32,15 +32,19 @@ function Splash({
         </div>
       </div>
       <div className={styles.flexContainer}>
-        <img src="/images/landing_search_tool.png" alt="more info" />
+        <div className={styles.flexItem}>
+          <img src="/images/landing_search_tool.png" alt="more info" />
+        </div>
+        <div className={styles.flexItem}>
         <Button
           color="#F7BC76"
           fixedWidth={false}
           className={cs(styles.tryNow)}
           onClick={buttonHandler}
-        >
+          >
           Try Now
         </Button>
+          </div>
       </div>
       {children}
     </MainContainer>

@@ -3,76 +3,79 @@
 .carouselContainer {
   position: relative;
   width: 100%;
-  background-color: $cl-white;
-  padding: 50px 0px;
+  padding: 0;
   display: grid;
-  grid-template: 99fr 1fr / 1fr 10fr 1fr;
-  justify-items: center;
+  grid-template: 12fr 1fr / 1fr;
+  background: linear-gradient(90deg, $cl-cool-blue 0%, $cl-cool-purple 100%);
+  
   & * {
     cursor: default !important;
+    box-shadow:unset !important;
   }
 
-  & button, & button *{
+  & button,
+  & button * {
     cursor: pointer !important;
   }
-  
 }
 
 .carousel {
-  grid-area: 1 / 2 / 3 / 3;
+  grid-area: 1 / 1 / 2 / 1;
   height: fit-content;
   width: 100%;
-  background: linear-gradient(90deg, $cl-cool-blue 0%, $cl-cool-purple 100%);
-  overflow: hidden;
-  border-radius: 15px;
+  overflow:hidden;
 }
 
 .slides {
   display: flex;
   width: 100%;
   transition: transform 0.3s ease-in-out;
-
 }
 
 .slide {
   flex: 0 0 100%;
   margin: 0;
+  padding: 0 30px;
 }
 
 .prevButton,
 .nextButton {
-  position: absolute;
-  align-self: center;
+  position:relative;
   border-radius: 50%;
-  $button-size: 60px;
+  $button-size: 25px;
   width: $button-size;
   height: $button-size;
   border: none;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow:hidden;
-  
+  background-color: $cl-white;
+
+  & img{
+    filter: invert(36%) sepia(80%) saturate(5656%) hue-rotate(258deg) brightness(86%) contrast(93%);
+  }
+
   &.prevButton {
-    grid-column: 1/2;
-    background-color: $cl-cool-blue;
     & img {
-      transform: rotateZ(-90deg);
+    transform: rotateZ(-90deg);
     }
   }
-  
-  
   &.nextButton {
-    grid-column: 3/4;
-    background-color: $cl-cool-purple;
-    
     & img{
-      transform: rotateZ(90deg);
+    transform: rotateZ(90deg);
     }
   }
 
   &[disabled] {
     background-color: $cl-light-gray;
     cursor: not-allowed;
+    
+    &::after{
+      content:"";
+      position:absolute;
+      inset: 0;
+      background-color:$cl-light-gray;
+      border-radius: 50%;
+    }
   }
 }
