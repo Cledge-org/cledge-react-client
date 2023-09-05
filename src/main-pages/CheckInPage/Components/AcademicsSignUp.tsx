@@ -213,7 +213,7 @@ function GradeBlock(props: GradeBlockProps) {
     const term4 = props.terms.find(e => e.id == 4);
     return (
       <div 
-        className="d-flex flex-column w-100 my-4 p-5" 
+        className="d-flex flex-column w-100 my-4 p-5 border rounded" 
         style={{ backgroundColor: "#FAFAFC" }}
       >
         <div className="">
