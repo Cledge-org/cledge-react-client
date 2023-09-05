@@ -9,5 +9,10 @@
   "debug.internalConsoleOptions": "neverOpen",
   "azureFunctions.preDeployTask": "npm prune (functions)",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.preferences.importModuleSpecifier": "non-relative"
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "files.watcherExclude": {
+    "**/*":true,
+    "**/node_modules/**":true,
+  },
+  "files.watcherInclude": ["/src/"]
 }
