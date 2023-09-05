@@ -26,6 +26,8 @@ import CompositeQuestion from "src/common/components/Questions/CompositeQuestion
 import DoubleTextInputQuestion from "src/common/components/Questions/DoubleTextInputQuestion/DoubleTextInputQuestion";
 import DoubleDropdownQuestion from "src/common/components/Questions/DoubleDropdownQuestion/DoubleDropdownQuestion";
 import DropdownQuestion from "src/common/components/Questions/DropdownQuestion/DropdownQuestion";
+import AcademicsSignUp, { AcademicsProps } from "src/main-pages/CheckInPage/Components/AcademicsSignUp";
+import ActivitiesSignUp from "src/main-pages/CheckInPage/Components/ActivitiesSignUp";
 
 const CheckIn: NextApplicationPage<{
   checkInData: QuestionList;
@@ -34,10 +36,15 @@ const CheckIn: NextApplicationPage<{
   grade: number;
 }> = ({ checkInData, userResponses, userTags, grade }) => {
   const [isShowingStart, setIsShowingStart] = useState(true);
+  const [isShowingCollegeListGeneration, setIsShowingCollegeListGeneration] = useState(false);
+  const [isEditingACEC, setIsEditingACEC] = useState(false);
   const [progress, changeProgress] = useState(0);
   const [page, changePage] = useState(0);
+  const [ACECPage, setACECPage] = useState(0);
   const [newTags, setNewTags] = useState([]);
   const [newUserResponses, setNewUserResponses] = useState(userResponses);
+  const [academicsResponses, setAcademicsResponses] = useState({});
+  const [activitesResponses, setActivitiesResponses] = useState({});
   const hiddenFileInput = React.useRef(null);
   const size = useWindowSize();
   const transcriptUpload = () => {
@@ -84,90 +91,96 @@ const CheckIn: NextApplicationPage<{
   }, [checkInData, page, newUserResponses]);
 
   const submitForm = async (e: { preventDefault: () => void }) => {
-    //REMOVE CHECK IN FROM LIST AND UPLOAD DATA
-    let checkInList = [];
-    let queriedList = new String(router.query.checkIn.slice());
-    //THESE WORK
-    while (queriedList.indexOf(",") !== -1) {
-      checkInList.push(queriedList.substring(0, queriedList.indexOf(",")));
-      queriedList = queriedList.substring(queriedList.indexOf(",") + 1);
-    }
-    checkInList.push(queriedList);
-    checkInList.splice(0, 1);
-    userTags.length === 0
-      ? (userTags = newTags)
-      : (userTags = userTags.concat(newTags));
-    const newGrade = newUserResponses.find(
-      ({ questionId }) => questionId === "61c6b6f2d3054b6dd0f1fc64"
-    )?.response;
-    const newAddress = newUserResponses.find(
-      ({ questionId }) => questionId === "631fc0482734f1eb370771cc"
-    )?.response;
-    const newName = newUserResponses.find(
-      ({ questionId }) => questionId === "6319632cd1e56282060ad38a"
-    )?.response;
-    await Promise.all([
-      fetch(`/api/user/update-user`, {
-        method: "POST",
-        body: JSON.stringify({
-          userInfo: {
-            checkIns: checkInList,
-            tags: userTags,
-            address: newAddress.reduce(
-              (prev, curr) =>
-                prev
-                  ? prev +
-                    ", " +
-                    (curr instanceof Array
-                      ? curr.reduce(
-                          (prev, curr) => (prev ? prev + ", " + curr : curr),
-                          ""
-                        )
-                      : curr)
-                  : curr,
-              ""
-            ),
-            name: newName.reduce(
-              (prev, curr) => (prev ? prev + " " + curr : curr),
-              ""
-            ),
-            grade: newGrade,
-          },
-          userId: session.data.user.uid,
-        }),
-      }),
-      callPutQuestionResponses(newUserResponses),
-    ]).then((values) => {
-      store.dispatch(
-        updateAccountAction({
-          ...store.getState().accountInfo,
-          address: newAddress.reduce(
-            (prev, curr) =>
-              prev
-                ? prev +
-                  ", " +
-                  (curr instanceof Array
-                    ? curr.reduce(
-                        (prev, curr) => (prev ? prev + ", " + curr : curr),
-                        ""
-                      )
-                    : curr)
-                : curr,
-            ""
-          ),
-          name: newName.reduce(
-            (prev, curr) => (prev ? prev + " " + curr : curr),
-            ""
-          ),
-          grade: newGrade,
-          _id: undefined,
-        })
-      );
-      store.dispatch(updateTagsAndCheckInsAction(userTags, checkInList));
-      store.dispatch(updateQuestionResponsesAction(newUserResponses));
-    });
-    router.push({ pathname: "/dashboard" });
+    // //REMOVE CHECK IN FROM LIST AND UPLOAD DATA
+    // let checkInList = [];
+    // let queriedList = new String(router.query.checkIn.slice());
+    // //THESE WORK
+    // while (queriedList.indexOf(",") !== -1) {
+    //   checkInList.push(queriedList.substring(0, queriedList.indexOf(",")));
+    //   queriedList = queriedList.substring(queriedList.indexOf(",") + 1);
+    // }
+    // checkInList.push(queriedList);
+    // checkInList.splice(0, 1);
+    // userTags.length === 0
+    //   ? (userTags = newTags)
+    //   : (userTags = userTags.concat(newTags));
+    // const newGrade = newUserResponses.find(
+    //   ({ questionId }) => questionId === "61c6b6f2d3054b6dd0f1fc64"
+    // )?.response;
+    // const newAddress = newUserResponses.find(
+    //   ({ questionId }) => questionId === "631fc0482734f1eb370771cc"
+    // )?.response;
+    // const newName = newUserResponses.find(
+    //   ({ questionId }) => questionId === "6319632cd1e56282060ad38a"
+    // )?.response;
+    console.log("newUserResponses = " + JSON.stringify(newUserResponses));
+    console.log("academics = " + JSON.stringify(academicsResponses));
+    console.log("activities = " + JSON.stringify(activitesResponses));
+
+    // setIsShowingCollegeListGeneration(true);
+    // await Promise.all([
+    //   fetch(`/api/user/update-user`, {
+    //     method: "POST",
+    //     body: JSON.stringify({
+    //       userInfo: {
+    //         checkIns: checkInList,
+    //         tags: userTags,
+    //         address: newAddress.reduce(
+    //           (prev, curr) =>
+    //             prev
+    //               ? prev +
+    //                 ", " +
+    //                 (curr instanceof Array
+    //                   ? curr.reduce(
+    //                       (prev, curr) => (prev ? prev + ", " + curr : curr),
+    //                       ""
+    //                     )
+    //                   : curr)
+    //               : curr,
+    //           ""
+    //         ),
+    //         name: newName.reduce(
+    //           (prev, curr) => (prev ? prev + " " + curr : curr),
+    //           ""
+    //         ),
+    //         grade: newGrade,
+    //       },
+    //       userId: session.data.user.uid,
+    //     }),
+    //   }),
+    //   callPutQuestionResponses(newUserResponses),
+    // ]).then((values) => {
+    //   store.dispatch(
+    //     updateAccountAction({
+    //       ...store.getState().accountInfo,
+    //       address: newAddress.reduce(
+    //         (prev, curr) =>
+    //           prev
+    //             ? prev +
+    //               ", " +
+    //               (curr instanceof Array
+    //                 ? curr.reduce(
+    //                     (prev, curr) => (prev ? prev + ", " + curr : curr),
+    //                     ""
+    //                   )
+    //                 : curr)
+    //             : curr,
+    //         ""
+    //       ),
+    //       name: newName.reduce(
+    //         (prev, curr) => (prev ? prev + " " + curr : curr),
+    //         ""
+    //       ),
+    //       grade: newGrade,
+    //       _id: undefined,
+    //     })
+    //   );
+    //   store.dispatch(updateTagsAndCheckInsAction(userTags, checkInList));
+    //   store.dispatch(updateQuestionResponsesAction(newUserResponses));
+    // });
+    // router.push({ pathname: "/college-list" });
   };
+
   const filterDuplicates = (toFilter: any[]) => {
     return toFilter.filter((element, index, self) => {
       let indexOfDuplicate = self.findIndex((value) => value === element);
@@ -361,6 +374,269 @@ const CheckIn: NextApplicationPage<{
       }),
     [newUserResponses, checkInData]
   );
+  if (isShowingCollegeListGeneration) {
+    return (
+      <div className="w-100 h-100">
+        GENERATING COLLEGE LIST
+      </div>
+    )
+  }
+  if (isEditingACEC) {
+    const tabs = [
+      {
+        name: "Academics"
+      },
+      {
+        name: "Extracurriculars"
+      },
+    ]
+
+    const data: AcademicsProps = {
+      years: [
+      {
+        title: "9th Grade",
+        grade: 9,
+        terms: [
+          {
+            title: "Term 1",
+            id: 1,
+            courses: [
+              {
+                courseName: "Algebra 1",
+                subject: "Math",
+                grade: 3.5,
+                tag: "AP"
+              },
+              {
+                courseName: "AP Computer Science",
+                subject: "CS",
+                grade: 4.0,
+                tag: "AP"
+              },
+            ]
+          },
+          {
+            title: "Term 2",
+            id: 2,
+            courses: [
+              {
+                courseName: "AP Biology",
+                subject: "Science",
+                grade: 3.9,
+                tag: "AP"
+              },
+            ]
+          },
+          {
+            title: "Term 3",
+            id: 3,
+            courses: []
+          },
+          {
+            title: "Term 4",
+            id: 4,
+            courses: []
+          },
+        ]
+      },
+      {
+        title: "10th Grade",
+        grade: 10,
+        terms: [
+          {
+            title: "Term 1",
+            id: 1,
+            courses: []
+          },
+          {
+            title: "Term 2",
+            id: 2,
+            courses: []
+          },
+          {
+            title: "Term 3",
+            id: 3,
+            courses: []
+          },
+          {
+            title: "Term 4",
+            id: 4,
+            courses: []
+          }
+        ]
+      },
+      {
+        title: "11th Grade",
+        grade: 11,
+        terms: [
+          {
+            title: "Term 1",
+            id: 1,
+            courses: []
+          },
+          {
+            title: "Term 2",
+            id: 2,
+            courses: []
+          },
+          {
+            title: "Term 3",
+            id: 3,
+            courses: []
+          },
+          {
+            title: "Term 4",
+            id: 4,
+            courses: []
+          }
+        ]
+      },
+      {
+        title: "12th Grade",
+        grade: 12,
+        terms: [
+          {
+            title: "Term 1",
+            id: 1,
+            courses: []
+          },
+          {
+            title: "Term 2",
+            id: 2,
+            courses: []
+          },
+          {
+            title: "Term 3",
+            id: 3,
+            courses: []
+          },
+          {
+            title: "Term 4",
+            id: 4,
+            courses: []
+          }
+        ]
+      },
+    ]
+  }
+    return (
+      <div className="w-100 d-flex flex-column">
+      <div
+        className="d-flex flex-row w-100 px-3 py-2 position-fixed"
+        style={{
+          borderBottom: "2px solid #E0DFE8",
+          backgroundColor: "white",
+          zIndex: 1000,
+        }}
+      >
+        <div
+          className={`navbar-brand mx-4`}
+          style={{ fontSize: "1.5em", fontWeight: 600 }}
+        >
+          <span className={`cl-blue`}>cledge.</span>
+        </div>
+        <div
+          className="d-flex flex-row align-items-center justify-content-center"
+          style={{ flex: 1 }}
+        >
+          {tabs.map(({ name }, index) => (
+            <div
+              style={{ color: page === index ? "#506BED" : "#808099" }}
+              className="d-flex flex-row align-items-center ms-3"
+            >
+              <div
+                style={{
+                  width: "35px",
+                  height: "35px",
+                  borderRadius: "17.5px",
+                  backgroundColor: page === index ? "#506BED" : "#808099",
+                  color: "white",
+                }}
+                className="center-child me-3"
+              >
+                {index + 1}
+              </div>
+              <div>{name}</div>
+              {!(index + 1 === tabs.length) && (
+                <div
+                  className="ms-3"
+                  style={{
+                    backgroundColor: page === index ? "#506BED" : "#808099",
+                    height: "1px",
+                    width: "180px",
+                  }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div
+        style={{
+          width: size.width < 800 ? "100%" : size.width < 1400 ? "60%" : "40%",
+        }}
+        className="align-self-center row col-md-5 w-50 d-md-flex mx-auto mt-5 pt-5 flex-column justify-content-center text-center checkIn-question"
+      >
+        {ACECPage == 0 ? 
+        (
+          <AcademicsSignUp years={data.years} />
+        ) : (
+          <ActivitiesSignUp />
+        )}
+      </div>
+      <div
+        className={classNames(
+          styles.authBottomNav,
+          "align-self-center my-3 pt-4"
+        )}
+        style={{
+          bottom: "16vh",
+          width: size.width < 800 ? "100%" : size.width < 1400 ? "60%" : "40%",
+          borderTop: "1px solid #C1C0CE",
+        }}
+      >
+        <div className="px-0">
+          <button
+            type="button"
+            disabled={page === 0}
+            className="btn cl-btn-clear"
+            onClick={() => {
+              if (ACECPage > 0) {
+                setACECPage(ACECPage - 1);
+              } else {
+                setIsEditingACEC(false);
+              }
+            }}
+          >
+            Back
+          </button>
+        </div>
+        <div className="px-0">
+          {ACECPage < tabs.length - 1 && (
+            <button
+              type="button"
+              disabled={!canGoForward}
+              className="btn cl-btn-blue"
+              onClick={() => setACECPage(ACECPage + 1)}
+            >
+              Next
+            </button>
+          )}
+          {ACECPage === tabs.length - 1 && (
+            <button
+              type="button"
+              disabled={!canGoForward}
+              className="btn cl-btn-blue"
+              onClick={submitForm}
+            >
+              Submit
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+    )
+  }
   if (isShowingStart) {
     return (
       <div className="container-fluid d-flex flex-column justify-content-center align-items-center vh-100">
@@ -499,9 +775,9 @@ const CheckIn: NextApplicationPage<{
               type="button"
               disabled={!canGoForward}
               className="btn cl-btn-blue"
-              onClick={submitForm}
+              onClick={() => setIsEditingACEC(true)}
             >
-              Submit
+              Next
             </button>
           )}
         </div>
