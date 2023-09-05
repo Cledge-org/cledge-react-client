@@ -16,7 +16,7 @@ const CollegeListSubTitle = ({
   return (
     <div className="">
       {isExpanded && (
-        <div className=" container py-3 mb-5 border border-3 border-info rounded">
+        <div className=" container py-3 mb-5 border rounded " style={{ background: "linear-gradient(93deg, rgba(231,230,251,1) 0%, rgba(135,171,213,1) 83%)", }}>
           <div className="container pt-4 pb-3 fw-bold h3" >
             <div style={{ position: "relative" }}>
               <button
@@ -33,8 +33,10 @@ const CollegeListSubTitle = ({
                 >
                   X
                 </button>
-                <div className="h-50">Hey {accountInfo.name.split(" ")[0]}! Here is your preliminary college list. Checkout your 
-                <Link href="/dashboard" className="cl-blue"> dashboard</Link> to further explore next steps!</div>
+                <div className="h-50 ">Hey {accountInfo.name.split(" ")[0]}! Here is your preliminary college list. Checkout the&nbsp; 
+                <span className="cl-blue text-decoration-underline">
+                  <Link href="/dashboard" className="text-blue">dashboard</Link>
+                </span> to further explore next steps!</div>
             </div>
           </div>
         </div>
