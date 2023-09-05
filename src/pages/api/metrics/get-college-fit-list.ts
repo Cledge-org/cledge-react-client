@@ -66,6 +66,7 @@ export const getAllColleges = (
 ): Promise<Object> => {
     return new Promise(async(res, err) => {
         try {
+
             let collegesRes = await client
                 .db("colleges")
                 .collection("colleges-data")
@@ -78,6 +79,20 @@ export const getAllColleges = (
             // database stores the college data in colleges' alphabetical order; randomize for more various results
             collegesRes = collegesRes.sort(() => Math.random() - 0.5);
             collegesRes.forEach((college) => {
+                // in/out state check
+                if ("statePreference" in preferences) {
+                    const curCollegeState = college["STABBR"];
+                    let userPreferenceState = preferences["statePreference"]["low_val"].split(" ");
+                    if (userPreferenceState.length === 1) {
+                        if (curCollegeState !== userPreferenceState[0]) {
+                            return;
+                        }
+                    } else {
+                        if (curCollegeState === userPreferenceState[0]) {
+                            return;
+                        }
+                    }
+                }
                 let preferenceFit = calculatePreferenceFit(college, preferences);
                 let collegeFit = 0;
                 let collegeRankInfo = [college["UNITID"], college["INSTNM"], preferenceFit];
@@ -106,6 +121,10 @@ export const getAllColleges = (
                     reach.push(collegeRankInfo);
                 }
             });
+
+            if (studentType === 0) {
+                studentType = 1;
+            }
 
             let [reachCount, targetCount, safetyCount] = studentTypeData[studentType];
             // prevent missing college in one fit category
