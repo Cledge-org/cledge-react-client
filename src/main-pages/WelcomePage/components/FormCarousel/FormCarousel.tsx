@@ -148,22 +148,26 @@ const FormCarousel = ({ questionData,collegeData }: Props) => {
           </div>
         </form>
       </div>
-       
+      <Dots>         
+      {/* <button className={styles.prevButton} onClick={prevSlide}> */}
       <button disabled={currentSlide === 0 || currentSlide === numSlides - 1} className={styles.prevButton} onClick={prevSlide}>
-        <Image width={60} height={60} src="/icons/arrow.svg" alt="previous slide" />
+        <Image width={100} height={100} src="/icons/arrow.svg" alt="previous slide" />
       </button>
-      <button disabled={currentSlide === numSlides - 1} className={styles.nextButton} onClick={(e) =>  nextSlide}>
-        <Image width={60} height={60} src="/icons/arrow.svg" alt="next slide" />
-      </button>
-      {<Dots>
+      
         {[... new Array(numSlides)].map((d, _i) =>
           <Dot
             key={_i}
+            // () => (currentSlide !== numSlides - 1 && setCurrentSlide(_i))
             onClick={
-              () => (currentSlide !== numSlides - 1 && setCurrentSlide(_i))
+              () => ( setCurrentSlide(_i))
             } className={cs(styles.dot, _i === currentSlide ? "bg-cl-orange" : "bg-cl-white")} />
         )}
-      </Dots>}
+        {/* <button className={styles.nextButton} onClick={nextSlide}> */}
+        <button disabled={currentSlide === numSlides - 1} className={styles.nextButton} onClick={nextSlide}>
+        <Image width={100} height={100} src="/icons/arrow.svg" alt="next slide" />
+      </button>
+      </Dots>
+      
     </div>
   );
 };
@@ -174,12 +178,10 @@ const Dots = styled.div`
   display: flex;
   gap:10px;
   justify-content: center;
+  align-items:center;
   width: fit-content;
-  grid-row: 2/3;
-  position:absolute;
-  justify-self:center;
-  align-self:end;
-  bottom:15px;
+  grid-area: 2/1;
+  justify-self: center;
 `;
 
 const Dot = styled.button`

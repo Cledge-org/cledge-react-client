@@ -29,26 +29,33 @@
 .flexContainer{
    display:flex;
    flex-direction:column;
-   justify-content:space-between;
+   justify-content:center;
    height:100%;
    flex: 0 1 auto;
-   flex-basis: 40%;
+   flex-basis: 60%;
    gap: 10px;
+
+   & .flexItem:first-child {
+      flex: 0 1 auto;
+   }
+   
+   & .flexItem:last-child {
+      flex: 0 1 20%;
+      height: 100%;
+   }
+
 
    & img{
       min-width: 0;
-      height:auto;
+      aspect-ratio: 3/2;
       width:100%;
-      flex: 0 1 auto;
-      flex-basis: 80%;
       border-radius: 10px;
    }
    
    & .tryNow{
-      flex: 0 1 20%;
       border: unset;
-      height: 100%;
       font-size: large;
+      width: 100%;
       border-radius: 4px;
       font-weight: bold;
    }

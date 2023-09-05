@@ -4,10 +4,10 @@
    padding:0;
    padding-left:20px;
    display: grid;
-   grid-template-columns: 99fr 1fr;
+   grid-template-columns: 25fr 1fr;
    grid-template-rows: 1fr 99fr;
    position:relative;
-   height: 100%;
+   height: fit-content;
    width: 100%;
 }
 

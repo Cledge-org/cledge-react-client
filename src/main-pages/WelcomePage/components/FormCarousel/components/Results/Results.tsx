@@ -13,7 +13,6 @@ function Results({ classNames, schools }: Props) {
   const content = {
     heading: "Here are some schools that fit your needs:",
   };
-  console.log(schools);
   return (
     <MainContainer
       flexDirection={"column"}
