@@ -6,7 +6,7 @@ import { Button } from "../../../Button/Button";
 
 interface Props {
   classNames?: string;
-  schools: (string | number)[][];
+  schools: string[][];
 }
 
 function Results({ classNames, schools }: Props) {
@@ -26,10 +26,10 @@ function Results({ classNames, schools }: Props) {
         {schools.map((school) => (
           <div className={styles.flexItem}>
             <div className={styles.schoolCard}>
-              <img src={school[3] as unknown as string} alt="school" />
-              <span className={styles.title}>{school[1]}</span>
+              <img src={school[1]} alt="school" />
+              <span className={styles.title}>{school[0]}</span>
               <span className={styles.subtitle}>
-                {school[4]} School | {school[5]}
+                {school[2]} School | {school[3]}
               </span>
             </div>
           </div>

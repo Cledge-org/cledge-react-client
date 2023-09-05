@@ -183,14 +183,16 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     name: "Checkin",
   };
   const collegeData = [
-    ['174525', 'Oak Hills Christian College', 5, 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Pontcysyllte_Aqueduct_and_Cefn_Mawr_viaduct.jpg', 'Private', 'Bemidji, Minnesota'],
-    ['151263', 'University of Indianapolis', 8, 'https://upload.wikimedia.org/wikipedia/commons/d/d8/IU_Art_Museum.jpg', 'Private', 'Indianapolis, Indiana'],
-    ['262165', 'Montana Bible College', 4, 'https://upload.wikimedia.org/wikipedia/commons/d/d3/Montana_State_University_Bozeman%2C_Romney_Gym.jpg', 'Private', 'Bozeman, Montana'],
-    ['127185', 'Fort Lewis College', 7, 'https://upload.wikimedia.org/wikipedia/commons/9/99/Pierce_County_Washington_Incorporated_and_Unincorporated_areas_Fort_Lewis_Highlighted.svg', 'Public', 'Durango, Colorado'],
-    ['172440', 'Finlandia University', 2, 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Finlandia_hall.jpg', 'Private', 'Hancock, Michigan'],
-    ['147369', 'Moody Bible Institute', 9, 'https://upload.wikimedia.org/wikipedia/commons/1/12/Campus_North_Residential_Commons.jpg', 'Private', 'Chicago, Illinois'],
-    ['144005', 'Chicago State University', 12, 'https://upload.wikimedia.org/wikipedia/commons/7/77/Rosenwald-Hall-Szmurlo.jpg', 'Public', 'Chicago, Illinois'],
-    ['177986', 'Logan University', 8, 'https://upload.wikimedia.org/wikipedia/commons/2/20/Logan_Institute.jpg', 'Private', 'Chesterfield, Missouri']
+    ["Yale University", "https://upload.wikimedia.org/wikipedia/commons/e/e6/Yale4912.JPG", "Private", "New Haven, CT"],
+    ["Boston University", "https://upload.wikimedia.org/wikipedia/commons/4/4b/BC_Campus_Green.jpg", "Private", "Boston, MA"],
+    ["Tufts University", "https://upload.wikimedia.org/wikipedia/commons/1/1d/Tufts_Bendetson_hall.JPG", "Private", "Medford, MA"],
+    ["Brown University", "https://upload.wikimedia.org/wikipedia/commons/3/34/Brown_University_Pembroke_campus_%28Andrews%29.jpg", "Private", "Providence, RI"],
+    ["Rice University", "https://upload.wikimedia.org/wikipedia/commons/1/1a/Rice_University.jpg", "Private", "Houston, TX"],
+    ["UC Berkeley", "https://upload.wikimedia.org/wikipedia/commons/e/e9/UC-Berkeley-campus-overview-from-hills.h.jpg", "Public", "Berkeley, CA"],
+    ["University of Washington", "https://upload.wikimedia.org/wikipedia/commons/b/b0/University_of_Washington_.jpg", "Public", "Seattle, WA"],
+    ["Georgia Tech University", "https://upload.wikimedia.org/wikipedia/commons/8/8e/Georgia_Tech_Student_Center_Commons_2.jpg", "Public", "Atlanta, GA"],
+    ["University of Michigan", "https://upload.wikimedia.org/wikipedia/commons/0/0d/A_picture_of_the_University_of_Michigan_campus_in_Ann_Arbor%2C_Michigan%2C_USA.jpg", "Public", "Ann Arbor, MI"],
+    ["University of Chicago", "https://de.wikipedia.org/wiki/University_of_Chicago#/media/Datei:Campus_Spring.jpg", "Private", "Chicago, IL"]
   ];
 
   return {
