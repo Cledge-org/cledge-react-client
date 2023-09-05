@@ -149,7 +149,6 @@ const FormCarousel = ({ questionData,collegeData }: Props) => {
         </form>
       </div>
       <Dots>         
-      {/* <button className={styles.prevButton} onClick={prevSlide}> */}
       <button disabled={currentSlide === 0 || currentSlide === numSlides - 1} className={styles.prevButton} onClick={prevSlide}>
         <Image width={100} height={100} src="/icons/arrow.svg" alt="previous slide" />
       </button>
@@ -157,12 +156,10 @@ const FormCarousel = ({ questionData,collegeData }: Props) => {
         {[... new Array(numSlides)].map((d, _i) =>
           <Dot
             key={_i}
-            // () => (currentSlide !== numSlides - 1 && setCurrentSlide(_i))
             onClick={
-              () => ( setCurrentSlide(_i))
+              () => (currentSlide !== numSlides - 1 && setCurrentSlide(_i))
             } className={cs(styles.dot, _i === currentSlide ? "bg-cl-orange" : "bg-cl-white")} />
         )}
-        {/* <button className={styles.nextButton} onClick={nextSlide}> */}
         <button disabled={currentSlide === numSlides - 1} className={styles.nextButton} onClick={nextSlide}>
         <Image width={100} height={100} src="/icons/arrow.svg" alt="next slide" />
       </button>
