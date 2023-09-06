@@ -46,7 +46,7 @@ const Header = ({
   if (router.pathname === "/welcome") {
     navclass += " position-fixed fixed-top";
   }
-
+  
   const linkData = [
     {
       link: "/dashboard",
@@ -139,12 +139,8 @@ const Header = ({
     <nav
       key={key_prop}
       className={classNames(
-        `w-100 navbar cl-blue navbar-expand-md px-3 border-bottom border-2`,
-        scrollState !== "scrolling" && router.pathname === "/" && !isExpanded
-          ? `position-fixed top-0 start-0 ${styles.navTransparent}`
-          : "sticky-top",
-        //   `w-100 navbar cl-blue navbar-expand-md px-3 position-fixed pe-5`,
-        // scrollState !== "scrolling" && router.pathname === "/welcome" && !isExpanded && styles.navTransparent,
+        `w-100 navbar cl-blue navbar-expand-md px-3 position-fixed pe-5`,
+        scrollState !== "scrolling" && router.pathname === "/welcome" && !isExpanded && styles.navTransparent,
         {
           [styles.navRegular + " shadow-none"]:
             scrollState !== "scrolling" && router.pathname !== "/",
