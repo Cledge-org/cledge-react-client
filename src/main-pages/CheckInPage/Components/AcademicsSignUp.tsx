@@ -2,15 +2,18 @@
 import { borderRadius } from "@mui/system";
 import { number } from "prop-types";
 import React, { useEffect, useState } from "react";
-import { Dropdown } from "react-bootstrap";
+import { Button, Dropdown } from "react-bootstrap";
 import { BiTrash } from "react-icons/bi";
-import SignUpText from "src/main-pages/CheckInPage/Components/SignUpText";
+import SignUpDropdown from "src/main-pages/CheckInPage/Components/SignUpDropdown";
+import SignUpText from "src/main-pages/CheckInPage/Components/SignUpLongText";
+import SignUpShortText from "src/main-pages/CheckInPage/Components/SignUpShortText";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 
 
 export interface AcademicsProps {
   years: GradeBlockProps[]
   submitData?: Function
+  noRenderButtons?: Function
 }
 
 interface GradeBlockProps {
@@ -50,6 +53,11 @@ function AcademicsSignUp(props: AcademicsProps) {
   const [currGrade, setCurrGrade] = useState(0);
   const [currTerm, setCurrTerm] = useState(0);
 
+  const toggleEditing = () => {
+    setIsAddingCourse(!isAddingCourse);
+    props.noRenderButtons();
+  }
+
   const handleSubmit = () => {
     const yearObject = userResponses.years.find(e => e.grade == currGrade);
     const termObject = yearObject.terms.find(e => e.id == currTerm);
@@ -69,8 +77,9 @@ function AcademicsSignUp(props: AcademicsProps) {
     })
     setUserResponses(userResponses);
     props.submitData(userResponses);
-    setIsAddingCourse(false);
+    toggleEditing();
   }
+
 
   const deleteCourse = (grade: number, term: number, courseName: string) => {
     try {
@@ -111,77 +120,77 @@ function AcademicsSignUp(props: AcademicsProps) {
   const addCourse = (grade: number, term: number) => {
     setCurrGrade(grade);
     setCurrTerm(term);
-    setIsAddingCourse(true);
+    toggleEditing();;
   }
 
   if (isAddingCourse) {
     return (
       <div>
         <div>
-          <SignUpText
-            placeholder="Course Name"
+          <SignUpShortText
+            placeholder=""
             onChange={(e) => {
               setTempCourse({
-                courseName: e.target.value,
+                courseName: e,
                 subject: tempCourse.subject,
                 grade: tempCourse.grade,
                 tag: tempCourse.tag
-              })
-            }}
-            value={tempCourse.courseName}
-          />
+              });
+            } }
+            value={tempCourse.courseName} 
+            question={"Course Name"}          
+            />
           <div>
-            <select 
-              id="dropdown"
+            <SignUpDropdown 
+              title="" 
+              key={undefined} 
+              placeholder={"Subject Tag"} 
+              valuesList={["Math", "Science", "Other"]} 
+              questionTitle={""} 
               onChange={(e) => {
                 setTempCourse({
                   courseName: tempCourse.courseName,
-                  subject: e.target.value,
+                  subject: e,
                   grade: tempCourse.grade,
                   tag: tempCourse.tag
                 })
               }}
-            >
-              <option selected value="Math">Math</option>
-              <option value="Science">Science</option>
-              <option value="Other">Other</option>
-            </select>
+            />
           </div>
-          <SignUpText
+          <SignUpShortText
             type="number"
-            placeholder="Grade (unweighted)"
+            placeholder=""
             onChange={(e) => {
-                setTempCourse({
-                  courseName: tempCourse.courseName,
-                  subject: tempCourse.subject,
-                  grade: Number.parseFloat(e.target.value),
-                  tag: tempCourse.tag
-                })         
-            }}
-            value={tempCourse.grade}
-          />
+              setTempCourse({
+                courseName: tempCourse.courseName,
+                subject: tempCourse.subject,
+                grade: Number.parseFloat(e),
+                tag: tempCourse.tag
+              });
+            } }
+            value={tempCourse.grade} 
+            question={"Grade (unweighted GPA 4.0 scale)"}          />
           <div>
-            <select 
-              id="dropdown"
+          <SignUpDropdown 
+              title="" 
+              key={undefined} 
+              placeholder={"Course Tag"} 
+              valuesList={["Regular/Standard", "Honors/Accelerated", "AP", "IB", "Other"]} 
+              questionTitle={""} 
               onChange={(e) => {
                 setTempCourse({
                   courseName: tempCourse.courseName,
                   subject: tempCourse.subject,
                   grade: tempCourse.grade,
-                  tag: e.target.value
+                  tag: e
                 })
               }}
-            >
-              <option selected value="Regular/Standard">Regular/Standard</option>
-              <option value="Honors/Accelerated">Honors/Accelerated</option>
-              <option value="AP">AP</option>
-              <option value="IB">IB</option>
-              <option value="College">College</option>
-            </select>
+            />
+        
           </div>
         </div>
-        <button onClick={() => setIsAddingCourse(false)}>BACK</button>
-        <button onClick={() => handleSubmit()}>ADD COURSE</button>
+        <button className="btn cl-btn-clear mx-1" onClick={() => toggleEditing()}>BACK</button>
+        <button className="btn cl-btn-blue mx-1" onClick={() => handleSubmit()}>ADD COURSE</button>
       </div>
     )
   }
@@ -227,18 +236,9 @@ function GradeBlock(props: GradeBlockProps) {
         style={{ backgroundColor: "#FAFAFC" }}
       >
         <div className="">
-          <div className="d-flex justify-content-between w-90 mx-1 my-1">
+          <div className="d-flex justify-content-between w-90 mx-1 my-1 pb-4">
             <h4 style={{ color: "#506BED" }}>{props.title}</h4>
-            <select onChange={(e) => {
-              if (e.target.value === "quarter") {
-                setIsQuarter(true);
-              } else {
-                setIsQuarter(false);
-              }
-            }}>
-              <option selected value="quarter">Quarter</option>
-              <option value="semester">Semester</option>
-            </select>
+              <Button variant="primary" onClick={() => setIsQuarter(!isQuarter)}>{isQuarter ? <text>Quarter</text> : <text>Semester</text>}</Button>
           </div>
           <div>
             <div className="row">

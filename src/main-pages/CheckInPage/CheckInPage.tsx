@@ -43,6 +43,7 @@ const CheckIn: NextApplicationPage<{
   const [ACECPage, setACECPage] = useState(0);
   const [newTags, setNewTags] = useState([]);
   const [newUserResponses, setNewUserResponses] = useState(userResponses);
+  const [noRenderButtons, setNoRenderButtons] = useState(false);
   const data: AcademicsProps = {
     years: [
     {
@@ -167,7 +168,9 @@ const CheckIn: NextApplicationPage<{
   };
 
 
-  console.log(checkInData);
+  const toggleButtons = () => {
+    setNoRenderButtons(!noRenderButtons);
+  }
 
   const goBack = (e) => {
     e.preventDefault();
@@ -558,15 +561,15 @@ const CheckIn: NextApplicationPage<{
       >
         {ACECPage == 0 ? 
         (
-          <AcademicsSignUp years={academicsResponses.years} submitData={(e) => {
+          <AcademicsSignUp noRenderButtons={() => toggleButtons()} years={academicsResponses.years} submitData={(e) => {
             console.log("E : " + JSON.stringify(e) );
             setAcademicsResponses(e);
           }} />
         ) : (
-          <ActivitiesSignUp submitData={(e) => setActivitiesResponses(e)} activities={activitiesResponses} />
+          <ActivitiesSignUp noRenderButtons={() => toggleButtons()}  submitData={(e) => setActivitiesResponses(e)} activities={activitiesResponses} />
         )}
       </div>
-      <div
+      {noRenderButtons ? null : (<div
         className={classNames(
           styles.authBottomNav,
           "align-self-center my-3 pt-4"
@@ -615,7 +618,7 @@ const CheckIn: NextApplicationPage<{
             </button>
           )}
         </div>
-      </div>
+      </div>)}
     </div>
     )
   }
