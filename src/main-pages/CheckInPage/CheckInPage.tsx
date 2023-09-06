@@ -43,8 +43,117 @@ const CheckIn: NextApplicationPage<{
   const [ACECPage, setACECPage] = useState(0);
   const [newTags, setNewTags] = useState([]);
   const [newUserResponses, setNewUserResponses] = useState(userResponses);
-  const [academicsResponses, setAcademicsResponses] = useState({});
-  const [activitesResponses, setActivitiesResponses] = useState({});
+  const [noRenderButtons, setNoRenderButtons] = useState(false);
+  const data: AcademicsProps = {
+    years: [
+    {
+      title: "9th Grade",
+      grade: 9,
+      terms: [
+        {
+          title: "Term 1",
+          id: 1,
+          courses: []
+        },
+        {
+          title: "Term 2",
+          id: 2,
+          courses: []
+        },
+        {
+          title: "Term 3",
+          id: 3,
+          courses: []
+        },
+        {
+          title: "Term 4",
+          id: 4,
+          courses: []
+        },
+      ]
+    },
+    {
+      title: "10th Grade",
+      grade: 10,
+      terms: [
+        {
+          title: "Term 1",
+          id: 1,
+          courses: []
+        },
+        {
+          title: "Term 2",
+          id: 2,
+          courses: []
+        },
+        {
+          title: "Term 3",
+          id: 3,
+          courses: []
+        },
+        {
+          title: "Term 4",
+          id: 4,
+          courses: []
+        }
+      ]
+    },
+    {
+      title: "11th Grade",
+      grade: 11,
+      terms: [
+        {
+          title: "Term 1",
+          id: 1,
+          courses: []
+        },
+        {
+          title: "Term 2",
+          id: 2,
+          courses: []
+        },
+        {
+          title: "Term 3",
+          id: 3,
+          courses: []
+        },
+        {
+          title: "Term 4",
+          id: 4,
+          courses: []
+        }
+      ]
+    },
+    {
+      title: "12th Grade",
+      grade: 12,
+      terms: [
+        {
+          title: "Term 1",
+          id: 1,
+          courses: []
+        },
+        {
+          title: "Term 2",
+          id: 2,
+          courses: []
+        },
+        {
+          title: "Term 3",
+          id: 3,
+          courses: []
+        },
+        {
+          title: "Term 4",
+          id: 4,
+          courses: []
+        }
+      ]
+    },
+  ]
+}
+  const [academicsResponses, setAcademicsResponses] = useState(data);
+  const [activitiesResponses, setActivitiesResponses] = useState([]);
   const hiddenFileInput = React.useRef(null);
   const size = useWindowSize();
   const transcriptUpload = () => {
@@ -59,7 +168,9 @@ const CheckIn: NextApplicationPage<{
   };
 
 
-  console.log(checkInData);
+  const toggleButtons = () => {
+    setNoRenderButtons(!noRenderButtons);
+  }
 
   const goBack = (e) => {
     e.preventDefault();
@@ -115,7 +226,7 @@ const CheckIn: NextApplicationPage<{
     // )?.response;
     console.log("newUserResponses = " + JSON.stringify(newUserResponses));
     console.log("academics = " + JSON.stringify(academicsResponses));
-    console.log("activities = " + JSON.stringify(activitesResponses));
+    console.log("activities = " + JSON.stringify(activitiesResponses));
 
     // setIsShowingCollegeListGeneration(true);
     // await Promise.all([
@@ -390,135 +501,6 @@ const CheckIn: NextApplicationPage<{
         name: "Extracurriculars"
       },
     ]
-
-    const data: AcademicsProps = {
-      years: [
-      {
-        title: "9th Grade",
-        grade: 9,
-        terms: [
-          {
-            title: "Term 1",
-            id: 1,
-            courses: [
-              {
-                courseName: "Algebra 1",
-                subject: "Math",
-                grade: 3.5,
-                tag: "AP"
-              },
-              {
-                courseName: "AP Computer Science",
-                subject: "CS",
-                grade: 4.0,
-                tag: "AP"
-              },
-            ]
-          },
-          {
-            title: "Term 2",
-            id: 2,
-            courses: [
-              {
-                courseName: "AP Biology",
-                subject: "Science",
-                grade: 3.9,
-                tag: "AP"
-              },
-            ]
-          },
-          {
-            title: "Term 3",
-            id: 3,
-            courses: []
-          },
-          {
-            title: "Term 4",
-            id: 4,
-            courses: []
-          },
-        ]
-      },
-      {
-        title: "10th Grade",
-        grade: 10,
-        terms: [
-          {
-            title: "Term 1",
-            id: 1,
-            courses: []
-          },
-          {
-            title: "Term 2",
-            id: 2,
-            courses: []
-          },
-          {
-            title: "Term 3",
-            id: 3,
-            courses: []
-          },
-          {
-            title: "Term 4",
-            id: 4,
-            courses: []
-          }
-        ]
-      },
-      {
-        title: "11th Grade",
-        grade: 11,
-        terms: [
-          {
-            title: "Term 1",
-            id: 1,
-            courses: []
-          },
-          {
-            title: "Term 2",
-            id: 2,
-            courses: []
-          },
-          {
-            title: "Term 3",
-            id: 3,
-            courses: []
-          },
-          {
-            title: "Term 4",
-            id: 4,
-            courses: []
-          }
-        ]
-      },
-      {
-        title: "12th Grade",
-        grade: 12,
-        terms: [
-          {
-            title: "Term 1",
-            id: 1,
-            courses: []
-          },
-          {
-            title: "Term 2",
-            id: 2,
-            courses: []
-          },
-          {
-            title: "Term 3",
-            id: 3,
-            courses: []
-          },
-          {
-            title: "Term 4",
-            id: 4,
-            courses: []
-          }
-        ]
-      },
-    ]
-  }
     return (
       <div className="w-100 d-flex flex-column">
       <div
@@ -579,12 +561,15 @@ const CheckIn: NextApplicationPage<{
       >
         {ACECPage == 0 ? 
         (
-          <AcademicsSignUp years={data.years} />
+          <AcademicsSignUp noRenderButtons={() => toggleButtons()} years={academicsResponses.years} submitData={(e) => {
+            console.log("E : " + JSON.stringify(e) );
+            setAcademicsResponses(e);
+          }} />
         ) : (
-          <ActivitiesSignUp />
+          <ActivitiesSignUp noRenderButtons={() => toggleButtons()}  submitData={(e) => setActivitiesResponses(e)} activities={activitiesResponses} />
         )}
       </div>
-      <div
+      {noRenderButtons ? null : (<div
         className={classNames(
           styles.authBottomNav,
           "align-self-center my-3 pt-4"
@@ -633,7 +618,7 @@ const CheckIn: NextApplicationPage<{
             </button>
           )}
         </div>
-      </div>
+      </div>)}
     </div>
     )
   }
