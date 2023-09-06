@@ -24,6 +24,7 @@ const SignUpPage = () => {
     password1: "",
     isOnMailingList: true,
     password2: "",
+    referralName: "",
   });
   const [errorMessages, setErrorMessages] = useState([]);
   const [accessCode, setAccessCode] = useState("");
@@ -111,6 +112,7 @@ const SignUpPage = () => {
       email: formData.email,
       tags: [],
       checkIns: ["Onboarding Questions"],
+      referralName: formData.referralName,
     })
       .then(async (res) => {
         alertSlackNewUser(parseInt(await getNumUsers()) - 36);
@@ -236,6 +238,25 @@ const SignUpPage = () => {
               className="px-3 form-control"
               id="confirmpassword"
               placeholder="Confirm Password"
+            />
+          </div>
+          <div className="form-group mt-3 w-100">
+            <label
+              style={{ fontSize: "0.9em" }}
+              className="text-muted"
+              htmlFor="text"
+            >
+              Referral Name
+            </label>
+            <input
+              value={formData.referralName}
+              onChange={(e) =>
+                setFormData({ ...formData, referralName: e.target.value })
+              }
+              type="text"
+              className="px-3 form-control"
+              id="text"
+              placeholder="John Doe"
             />
           </div>
           <div className="mt-3 mb-4">
