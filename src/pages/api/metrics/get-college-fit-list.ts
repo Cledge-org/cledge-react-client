@@ -161,7 +161,7 @@ export const getAllColleges = (
                 reach: getRankByPreferenceFit(reach, reachCount)
             }
             res(output);
-            
+
         } catch (e) {
             console.log('errorssss');
             err(res);
@@ -397,7 +397,7 @@ const finAidParse = (finAidStr: string) => {
     return parseInt(finAidStrSplit[finAidStrSplit.length - 1].replace(/,/g, ''));
 }
 
-const ADMGPACalculation = (gpa: { [id: string] : string; }) => {
+export const ADMGPACalculation = (gpa: { [id: string] : string; }) => {
     let overallgpa = 0;
     Object.entries(gpa).forEach(([key, value], index) => {
         const curGPARange = key.split(" ");
@@ -418,7 +418,7 @@ const ADMGPACalculation = (gpa: { [id: string] : string; }) => {
     return overallgpa;
 }
 
-const selectionOfStudentsData = (selections) => {
+export const selectionOfStudentsData = (selections) => {
     let importances = [];
     importancesAttributes.forEach((value) => {
         if (value in selections) {
@@ -432,7 +432,7 @@ const selectionOfStudentsData = (selections) => {
     return importances;
 }
 
-const projection = {
+export const projection = {
     _id: 0,
     UNITID: 1,
     INSTNM: 1,
@@ -464,4 +464,4 @@ const selectionOfStudentMapping = {
     "Not Reported": 0
 }
 
-const importancesAttributes = ["Class Rank", "Academic GPA", "Extracurricular Activities", "First Generation to Attend College", "Standardized Tests"];
+export const importancesAttributes = ["Class Rank", "Academic GPA", "Extracurricular Activities", "First Generation to Attend College", "Standardized Tests"];
