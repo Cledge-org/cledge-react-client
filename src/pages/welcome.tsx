@@ -192,7 +192,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     ["University of Washington", "https://upload.wikimedia.org/wikipedia/commons/b/b0/University_of_Washington_.jpg", "Public", "Seattle, WA"],
     ["Georgia Tech University", "https://upload.wikimedia.org/wikipedia/commons/8/8e/Georgia_Tech_Student_Center_Commons_2.jpg", "Public", "Atlanta, GA"],
     ["University of Michigan", "https://upload.wikimedia.org/wikipedia/commons/0/0d/A_picture_of_the_University_of_Michigan_campus_in_Ann_Arbor%2C_Michigan%2C_USA.jpg", "Public", "Ann Arbor, MI"],
-    ["University of Chicago", "https://de.wikipedia.org/wiki/University_of_Chicago#/media/Datei:Campus_Spring.jpg", "Private", "Chicago, IL"]
+    ["University of Chicago", "https://upload.wikimedia.org/wikipedia/commons/b/b4/Campus_Spring.jpg", "Private", "Chicago, IL"]
   ];
 
   return {
