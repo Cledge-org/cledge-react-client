@@ -24,7 +24,7 @@ interface Props {
     question: string;
     type: string;
   }[];
-  collegeData: (string | number)[][];
+  collegeData: string[][];
 }
 
 const FormCarousel = ({ questionData,collegeData }: Props) => {
