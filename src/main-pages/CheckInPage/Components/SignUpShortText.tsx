@@ -12,7 +12,7 @@ export interface SignUpShortText {
 }
 
 export default function SignUpShortText(props: SignUpShortText) {
-  const [currValue, setCurrValue] = useState("");
+  const [currValue, setCurrValue] = useState(props.value);
 
   return (
     <div

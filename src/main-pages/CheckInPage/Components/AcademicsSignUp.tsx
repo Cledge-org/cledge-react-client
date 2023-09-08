@@ -14,6 +14,8 @@ export interface AcademicsProps {
   years: GradeBlockProps[]
   submitData?: Function
   noRenderButtons?: Function
+  satScore?: number
+  actScore?: number
 }
 
 interface GradeBlockProps {
@@ -57,6 +59,24 @@ function AcademicsSignUp(props: AcademicsProps) {
     setIsAddingCourse(!isAddingCourse);
     props.noRenderButtons();
   }
+
+  const handleACTInputChange = async function (value: number) {
+    setUserResponses({
+      ...userResponses,
+      actScore: value
+    });
+  }
+
+  const handleSATInputChange = async function (value: number) {
+    setUserResponses({
+      ...userResponses,
+      satScore: value
+    });
+  }
+
+  useEffect(()=> {
+    props.submitData(userResponses);
+}, [handleACTInputChange, handleSATInputChange, setUserResponses])
 
   const handleSubmit = () => {
     const yearObject = userResponses.years.find(e => e.grade == currGrade);
@@ -220,6 +240,33 @@ function AcademicsSignUp(props: AcademicsProps) {
         terms={userResponses.years.find(el => el.title === "12th Grade").terms} 
         addCourse={(grade, number) => addCourse(grade, number)} 
         deleteCourse={(grade, number, courseName) => deleteCourse(grade, number, courseName)}/>
+        <div className="d-flex flex-row justify-content-center">
+          <div className="mx-3">
+            <SignUpShortText 
+              type="number"
+              onChange={(e) => {
+                if (/[0-9]/.test(e) && e <= 1600 || e == '') {
+                  handleSATInputChange(e);
+                }
+              }} 
+              question={"SAT Score"} 
+              value={userResponses.satScore} 
+              />
+              
+          </div>
+          <div className="mx-3">
+            <SignUpShortText 
+              type="number"
+              onChange={(e) => {
+                if (/[0-9]/.test(e) && e <= 40 || e == '') {
+                  handleACTInputChange(e);
+                }
+              }}
+              question={"ACT Score"} 
+              value={userResponses.actScore} />
+          </div>
+        </div>
+                
     </div>
   );
 }
@@ -361,6 +408,7 @@ function GradeBlock(props: GradeBlockProps) {
         </div>
       </div>
     )
+    
 }
 
 function CourseCard(props: CourseProps) {

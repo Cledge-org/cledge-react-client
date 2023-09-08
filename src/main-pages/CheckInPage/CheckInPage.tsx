@@ -9,6 +9,7 @@ import CheckBoxQuestion from "../../common/components/Questions/CheckboxQuestion
 import MCQQuestion from "../../common/components/Questions/MCQQuestion/MCQQuestion";
 import RankingQuestion from "../../common/components/Questions/RankingQuestion/RankingQuestion";
 import TextInputQuestion from "../../common/components/Questions/TextInputQuestion/TextInputQuestion";
+import LinearProgress from '@mui/material/LinearProgress';
 
 import {
   updateAccountAction,
@@ -17,7 +18,7 @@ import {
 } from "../../utils/redux/actionFunctions";
 import { store } from "../../utils/redux/store";
 import styles from "./check-in-page.module.scss";
-import { callPutQuestionResponses } from "src/utils/apiCalls";
+import { callPutAcademics, callPutQuestionResponses } from "src/utils/apiCalls";
 import classNames from "classnames";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,6 +29,21 @@ import DoubleDropdownQuestion from "src/common/components/Questions/DoubleDropdo
 import DropdownQuestion from "src/common/components/Questions/DropdownQuestion/DropdownQuestion";
 import AcademicsSignUp, { AcademicsProps } from "src/main-pages/CheckInPage/Components/AcademicsSignUp";
 import ActivitiesSignUp from "src/main-pages/CheckInPage/Components/ActivitiesSignUp";
+import { calculateECTier, calculateGPATier, calculateOverallECTier } from "src/utils/student-metrics/metricsCalculations";
+import { collegeListIndividualInfo } from "src/@types/types";
+
+interface Activity {
+  activityName: string;
+  activityType: string;
+  description: string;
+  hoursPerWeek: number;
+  weeksPerYear: number;
+  numberOfYears: number;
+  awardLevel: string;
+  awardQuality: number;
+  leadership: number;
+  impact: number;
+}
 
 const CheckIn: NextApplicationPage<{
   checkInData: QuestionList;
@@ -150,10 +166,173 @@ const CheckIn: NextApplicationPage<{
         }
       ]
     },
-  ]
+  ],
+  satScore: 0,
+  actScore: 0
 }
+  const preferenceQuestions: QuestionChunk = 
+    {
+        _id: null,
+        name: "College Fit",
+        questions: [
+            {
+                _id: "schoolSize",
+                data: [
+                    {
+                        op: "Less than 5,000 students",
+                        tag: "a",
+                    },
+                    {
+                        op: "5,000 - 15,000 students",
+                        tag: "b",
+                    },
+                    {
+                        op: "More than 15,000 students",
+                        tag: "c",
+                    },
+                ],
+                isConcatenable: false,
+                isRequired: true,
+                question: "What is your preferred college size?",
+                type: "MCQ"
+            },
+            {
+                _id: "costOfAttendance",
+                data: [
+                    {
+                        op: "Less than $30,000/year",
+                        tag: "a",
+                    },
+                    {
+                        op: "$30,000 - $50,000/year",
+                        tag: "b",
+                    },
+                    {
+                        op: "Greater than $70,000/year",
+                        tag: "c",
+                    },
+                ],
+                isConcatenable: false,
+                isRequired: true,
+                question: "What is your expected spending amount per year?",
+                type: "MCQ"
+            },
+            {
+                _id: "schoolPreference",
+                data: [
+                    {
+                        op: "Public",
+                        tag: "a",
+                    },
+                    {
+                        op: "Private",
+                        tag: "b",
+                    },
+                ],
+                isConcatenable: false,
+                isRequired: true,
+                question: "What type of college do you want to get into",
+                type: "MCQ"
+            },
+            {
+                _id: "localePreference",
+                data: [
+                    {
+                        op: "Urban",
+                        tag: "a",
+                    },
+                    {
+                        op: "Suburban",
+                        tag: "b",
+                    },
+                    {
+                        op: "Rural",
+                        tag: "c",
+                    },
+                ],
+                isConcatenable: false,
+                isRequired: true,
+                question: "What is your preference for the college's location in general?",
+                type: "MCQ"
+            },
+            // {
+            //     _id: "state",
+            //     isConcatenable: false,
+            //     isRequired: false,
+            //     question: "What state are you currently living in?",
+            //     type: "TextInput"
+            // },
+            // {
+            //     _id: "statePreference",
+            //     data: [
+            //         {
+            //             op: "In-state",
+            //             tag: "a",
+            //         },
+            //         {
+            //             op: "Out-of-state",
+            //             tag: "b",
+            //         },
+            //     ],
+            //     isConcatenable: false,
+            //     isRequired: true,
+            //     question: "Do you want to attend an in-state college or out-of-state college?",
+            //     type: "MCQ"
+            // },
+            {
+                _id: "finAidNeed",
+                data: [
+                    {
+                        op: "Cover less than 30% of your annual cost of college attendance",
+                        tag: "a",
+                    },
+                    {
+                        op: "Cover 30 - 60% of your annual cost of college attendance",
+                        tag: "b",
+                    },
+                    {
+                        op: "Cover more than 60% of your annual cost of college attendance",
+                        tag: "c",
+                    },
+                ],
+                isConcatenable: false,
+                isRequired: true,
+                question: "What is your expected amount of financial aid (need based)?",
+                type: "MCQ"
+            },
+            {
+                _id: "finAidMerit",
+                data: [
+                    {
+                        op: "Cover less than 10% of your annual cost of college attendance",
+                        tag: "a",
+                    },
+                    {
+                        op: "Cover 10 - 20% of your annual cost of college attendance",
+                        tag: "b",
+                    },
+                    {
+                        op: "Cover more than 20% of your annual cost of college attendance",
+                        tag: "c",
+                    },
+                ],
+                isConcatenable: false,
+                isRequired: true,
+                question: "What is your expected amount of financial aid (merit-based)?",
+                type: "MCQ"
+            },
+        ]
+    };
+
+  if (!checkInData.chunks.includes(preferenceQuestions)) {
+    checkInData.chunks.push(preferenceQuestions);
+  }
+
+  checkInData.chunks = checkInData.chunks.slice(0, 4);
+
+  const initialActivitiesArray: Activity[] = []
   const [academicsResponses, setAcademicsResponses] = useState(data);
-  const [activitiesResponses, setActivitiesResponses] = useState([]);
+  const [activitiesResponses, setActivitiesResponses] = useState(initialActivitiesArray);
   const hiddenFileInput = React.useRef(null);
   const size = useWindowSize();
   const transcriptUpload = () => {
@@ -202,95 +381,398 @@ const CheckIn: NextApplicationPage<{
   }, [checkInData, page, newUserResponses]);
 
   const submitForm = async (e: { preventDefault: () => void }) => {
-    // //REMOVE CHECK IN FROM LIST AND UPLOAD DATA
-    // let checkInList = [];
-    // let queriedList = new String(router.query.checkIn.slice());
-    // //THESE WORK
-    // while (queriedList.indexOf(",") !== -1) {
-    //   checkInList.push(queriedList.substring(0, queriedList.indexOf(",")));
-    //   queriedList = queriedList.substring(queriedList.indexOf(",") + 1);
-    // }
-    // checkInList.push(queriedList);
-    // checkInList.splice(0, 1);
-    // userTags.length === 0
-    //   ? (userTags = newTags)
-    //   : (userTags = userTags.concat(newTags));
-    // const newGrade = newUserResponses.find(
-    //   ({ questionId }) => questionId === "61c6b6f2d3054b6dd0f1fc64"
-    // )?.response;
-    // const newAddress = newUserResponses.find(
-    //   ({ questionId }) => questionId === "631fc0482734f1eb370771cc"
-    // )?.response;
-    // const newName = newUserResponses.find(
-    //   ({ questionId }) => questionId === "6319632cd1e56282060ad38a"
-    // )?.response;
+    //REMOVE CHECK IN FROM LIST AND UPLOAD DATA
+    setIsShowingCollegeListGeneration(true);
+    let checkInList = [];
+    let queriedList = new String(router.query.checkIn.slice());
+    //THESE WORK
+    while (queriedList.indexOf(",") !== -1) {
+      checkInList.push(queriedList.substring(0, queriedList.indexOf(",")));
+      queriedList = queriedList.substring(queriedList.indexOf(",") + 1);
+    }
+    checkInList.push(queriedList);
+    checkInList.splice(0, 1);
+    userTags.length === 0
+      ? (userTags = newTags)
+      : (userTags = userTags.concat(newTags));
+    const newGrade = newUserResponses.find(
+      ({ questionId }) => questionId === "61c6b6f2d3054b6dd0f1fc64"
+    )?.response;
+    const newAddress = newUserResponses.find(
+      ({ questionId }) => questionId === "631fc0482734f1eb370771cc"
+    )?.response;
+    const newName = newUserResponses.find(
+      ({ questionId }) => questionId === "6319632cd1e56282060ad38a"
+    )?.response;
     console.log("newUserResponses = " + JSON.stringify(newUserResponses));
     console.log("academics = " + JSON.stringify(academicsResponses));
     console.log("activities = " + JSON.stringify(activitiesResponses));
 
-    // setIsShowingCollegeListGeneration(true);
-    // await Promise.all([
-    //   fetch(`/api/user/update-user`, {
-    //     method: "POST",
-    //     body: JSON.stringify({
-    //       userInfo: {
-    //         checkIns: checkInList,
-    //         tags: userTags,
-    //         address: newAddress.reduce(
-    //           (prev, curr) =>
-    //             prev
-    //               ? prev +
-    //                 ", " +
-    //                 (curr instanceof Array
-    //                   ? curr.reduce(
-    //                       (prev, curr) => (prev ? prev + ", " + curr : curr),
-    //                       ""
-    //                     )
-    //                   : curr)
-    //               : curr,
-    //           ""
-    //         ),
-    //         name: newName.reduce(
-    //           (prev, curr) => (prev ? prev + " " + curr : curr),
-    //           ""
-    //         ),
-    //         grade: newGrade,
-    //       },
-    //       userId: session.data.user.uid,
-    //     }),
-    //   }),
-    //   callPutQuestionResponses(newUserResponses),
-    // ]).then((values) => {
-    //   store.dispatch(
-    //     updateAccountAction({
-    //       ...store.getState().accountInfo,
-    //       address: newAddress.reduce(
-    //         (prev, curr) =>
-    //           prev
-    //             ? prev +
-    //               ", " +
-    //               (curr instanceof Array
-    //                 ? curr.reduce(
-    //                     (prev, curr) => (prev ? prev + ", " + curr : curr),
-    //                     ""
-    //                   )
-    //                 : curr)
-    //             : curr,
-    //         ""
-    //       ),
-    //       name: newName.reduce(
-    //         (prev, curr) => (prev ? prev + " " + curr : curr),
-    //         ""
-    //       ),
-    //       grade: newGrade,
-    //       _id: undefined,
-    //     })
-    //   );
-    //   store.dispatch(updateTagsAndCheckInsAction(userTags, checkInList));
-    //   store.dispatch(updateQuestionResponsesAction(newUserResponses));
-    // });
-    // router.push({ pathname: "/college-list" });
-  };
+
+    let res = newUserResponses;
+
+    let schoolSizeLow = null;
+    let schoolSizeHigh = null;
+    let costOfAttendanceLow = null;
+    let costOfAttendanceHigh = null;
+    let privatePublic = null;
+    let locale = null;
+    let state = null;
+    let classSize = null;
+    let finNeedLow = null;
+    let finNeedHigh = null;
+    let finMeritLow = null;
+    let finMeritHigh = null;
+
+    console.log(res);
+    console.log(checkInData.chunks);
+
+    for (let i = 0; i < res.length; i++) {
+      if (res[i].questionId == "schoolSize") {
+        if (res[i].response == "Less than 5,000 students") {
+          schoolSizeLow = 0;
+          schoolSizeHigh = 5000;
+        } else if (res[i].response == "5,000 - 15,000 students") {
+          schoolSizeLow = 5000;
+          schoolSizeHigh = 15000;
+        } else if (res[i].response == "More than 15,000 students") {
+          schoolSizeLow = 15000;
+          schoolSizeHigh = null;
+        }
+      }
+
+      if (res[i].questionId == "costOfAttendance") {
+        if (res[i].response == "Less than $30,000/year") {
+          costOfAttendanceLow = 0;
+          costOfAttendanceHigh = 30000;
+        } else if (res[i].response == "$30,000 - $50,000/year") {
+          costOfAttendanceLow = 30000;
+          costOfAttendanceHigh = 50000;
+        } else if (res[i].response == "Greater than $70,000/year") {
+          costOfAttendanceLow = 70000;
+          costOfAttendanceHigh = null;
+        }
+      }
+
+      if (res[i].questionId == "schoolPreference") {
+        if (res[i].response == "Public") {
+          privatePublic = 1;
+        } else if (res[i].response == "Private") {
+          privatePublic = 2;
+        }
+      }
+
+      if (res[i].questionId == "localePreference") {
+        if (res[i].response == "Urban") {
+          locale = 1;
+        } else if (res[i].response == "Suburban") {
+          locale = 2;
+        } else if (res[i].response == "Rural") {
+          locale = 3;
+        }
+      }
+
+      if (res[i].questionId == "finAidNeed") {
+        if (res[i].response == "Cover less than 30% of your annual cost of college attendance") {
+          finNeedLow = 0;
+          finNeedHigh = 30000;
+        } else if (res[i].response == "Cover 30 - 60% of your annual cost of college attendance") {
+          finNeedLow = 30000;
+          finNeedHigh = 60000;
+        } else if (res[i].response == "Cover more than 60% of your annual cost of college attendance") {
+          finNeedLow = 60000;
+          finNeedHigh = null;
+        }
+      }
+
+      if (res[i].questionId == "finAidMerit") {
+        if (res[i].response == "Cover less than 10% of your annual cost of college attendance") {
+          finMeritLow = 0;
+          finMeritHigh = 10000;
+        } else if (res[i].response == "Cover 10 - 20% of your annual cost of college attendance") {
+          finMeritLow = 10000;
+          finMeritHigh = 20000;
+        } else if (res[i].response == "Cover more than 20% of your annual cost of college attendance") {
+          finMeritLow = 20000;
+          finMeritHigh = null;
+        }
+      }
+
+      if (res[i].questionId == "statePreference") {
+        if (res[i].response == "In-State") {
+          state = res[4].response;
+        } else if (res[i].response == "Out-of-State") {
+          state = null;
+        }
+      }
+    }
+
+
+    let allECTierArray = [];
+    for (let i = 0; i < activitiesResponses.length; i++) {
+      const singleECTier = await calculateECTier(
+        activitiesResponses[i].hoursPerWeek,
+        activitiesResponses[i].weeksPerYear,
+        activitiesResponses[i].numberOfYears,
+        4,
+        activitiesResponses[i].awardQuality,
+        activitiesResponses[i].leadership,
+        activitiesResponses[i].impact
+        )
+      allECTierArray.push(singleECTier);
+    }
+    let userECTier = 0;
+    if (allECTierArray.length != 0) {
+      userECTier = await calculateOverallECTier(allECTierArray);
+    }
+
+    console.log(activitiesResponses)
+
+    console.log(allECTierArray)
+    console.log("OVERALL EC TIER " + await userECTier);
+
+    // gpa tier
+    let totalGPA = 0;
+    let totalTerms = 0;
+    academicsResponses.years.forEach((year) => {
+      year.terms.forEach((term) => {
+        if (term.courses.length > 0 && term.gpa != null) {
+          totalGPA += term.gpa;
+          totalTerms++;
+        }
+      })
+    })
+
+    let userGPA = totalGPA / totalTerms;
+
+    let userGPATier = await calculateGPATier(2, userGPA);
+
+    if (Number.isNaN(userGPATier)) {
+      userGPATier = 0;
+    }
+
+    console.log("USER GPA TIER: " + userGPATier)
+
+    let studentAppLevel = 3;
+    newUserResponses.forEach((res) => {
+      if (res.questionId == "627e8fe7e97c3c14537dc7f5") {
+        studentAppLevel = Number.parseInt(res.response.charAt(6));
+      }
+    })
+
+    const requestFormat = {
+      preferences: {
+        schoolSize: {
+          low_val: schoolSizeLow,
+          high_val: schoolSizeHigh,
+          preferenceLevel: 1
+        },
+        costOfAttendance: {
+          low_val: costOfAttendanceLow,
+          high_val: costOfAttendanceHigh,
+          preferenceLevel: 1
+        },
+        schoolPreference: {
+          low_val: privatePublic,
+          high_val: privatePublic,
+          preferenceLevel: 1
+        },
+        localePreference: {
+          low_val: locale,
+          high_val: locale,
+          preferenceLevel: 1
+        },
+        statePreference: {
+          low_val: state,
+          high_val: state,
+          preferenceLevel: 1
+        },
+        classSize: {
+          low_val: classSize,
+          high_val: classSize,
+          preferenceLevel: 1,
+        },
+        finAidNeed: {
+          low_val: finNeedLow,
+          high_val: finNeedHigh,
+          preferenceLevel: 1,
+        },
+        finAidMerit: {
+          low_val: finMeritLow,
+          high_val: finMeritHigh,
+          preferenceLevel: 1,
+        }
+      },
+      ECTier: userECTier,
+      courseworkTier: 5,
+      GPATier: userGPATier,
+      studFirstGen: 0,
+      studSATScore: academicsResponses.satScore == undefined ? 0 : Number.parseInt(academicsResponses.satScore + ""),
+      studACTScore: academicsResponses.actScore == undefined ? 0 : Number.parseInt(academicsResponses.actScore + ""),
+      studentType: studentAppLevel
+    }
+
+    console.log(userResponses);
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/metrics/get-college-fit-list-old', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            preferences: requestFormat.preferences,
+            ECTier: requestFormat.ECTier,
+            courseworkTier: requestFormat.courseworkTier,
+            GPATier: requestFormat.GPATier,
+            studFirstGen: requestFormat.studFirstGen,
+            studSATScore: requestFormat.studSATScore,
+            studACTScore: requestFormat.studACTScore,
+            studentType: requestFormat.studentType
+          })
+        });
+        const data = await response.json();
+        console.log(data); // Do something with the data
+        return data;
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+      }
+    };
+    
+    console.log(requestFormat);
+    const collegeResult = await fetchData(); // Store the result in a variable
+    console.log(collegeResult); // Do something with the result
+
+    let postArr = [];
+
+    let reach = collegeResult.reach;
+    let target = collegeResult.target;
+    let safety = collegeResult.safety;
+
+    for (let i = 0; i < reach.length; i++) {
+      const personalize: collegeListIndividualInfo = {
+        college_id: reach[i].college_id,
+        fit_type: 2,
+        img_url: reach[i].img_url,
+        img_title: reach[i].img_title,
+        college_name: reach[i].college_name,
+        location: reach[i].location,
+        in_state_tuition: reach[i].in_state_tuition,
+        out_state_tuition: reach[i].out_state_tuition,
+        college_type: reach[i].college_type
+      }
+      postArr.push(personalize);
+    }
+
+    for (let i = 0; i < target.length; i++) {
+      const personalize: collegeListIndividualInfo = {
+        college_id: target[i].college_id,
+        fit_type: 0,
+        img_url: target[i].img_url,
+        img_title: target[i].img_title,
+        college_name: target[i].college_name,
+        location: target[i].location,
+        in_state_tuition: target[i].in_state_tuition,
+        out_state_tuition: target[i].out_state_tuition,
+        college_type: target[i].college_type
+      }
+      postArr.push(personalize);
+    }
+
+    for (let i = 0; i < safety.length; i++) {
+      const personalize: collegeListIndividualInfo = {
+        college_id: safety[i].college_id,
+        fit_type: 1,
+        img_url: safety[i].img_url,
+        img_title: safety[i].img_title,
+        college_name: safety[i].college_name,
+        location: safety[i].location,
+        in_state_tuition: safety[i].in_state_tuition,
+        out_state_tuition: safety[i].out_state_tuition,
+        college_type: safety[i].college_type
+      }
+      postArr.push(personalize);
+    }
+
+    console.log(postArr);
+
+   await Promise.all([
+     fetch(`/api/user/update-user`, {
+       method: "POST",
+       body: JSON.stringify({
+         userInfo: {
+           checkIns: checkInList,
+           tags: userTags,
+           address: newAddress.reduce(
+             (prev, curr) =>
+               prev
+                 ? prev +
+                   ", " +
+                   (curr instanceof Array
+                     ? curr.reduce(
+                         (prev, curr) => (prev ? prev + ", " + curr : curr),
+                         ""
+                       )
+                     : curr)
+                 : curr,
+             ""
+           ),
+           name: newName.reduce(
+             (prev, curr) => (prev ? prev + " " + curr : curr),
+             ""
+           ),
+           grade: newGrade,
+         },
+         userId: session.data.user.uid,
+       }),
+     }),
+     callPutQuestionResponses(newUserResponses),
+     fetch('/api/user/put-college-list', {
+       method: 'POST',
+         headers: {
+           'Accept' : 'application/json',
+           'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({
+           user_id: session.data.user.uid,
+           college_list: postArr
+         })
+     })
+   ]).then((values) => {
+     store.dispatch(
+       updateAccountAction({
+         ...store.getState().accountInfo,
+         address: newAddress.reduce(
+           (prev, curr) =>
+             prev
+               ? prev +
+                 ", " +
+                 (curr instanceof Array
+                   ? curr.reduce(
+                       (prev, curr) => (prev ? prev + ", " + curr : curr),
+                       ""
+                     )
+                   : curr)
+               : curr,
+           ""
+         ),
+         name: newName.reduce(
+           (prev, curr) => (prev ? prev + " " + curr : curr),
+           ""
+         ),
+         grade: newGrade,
+         _id: undefined,
+       })
+     );
+     store.dispatch(updateTagsAndCheckInsAction(userTags, checkInList));
+     store.dispatch(updateQuestionResponsesAction(newUserResponses));
+   }).catch((error) => {
+    console.log(error);
+   });
+   setIsShowingCollegeListGeneration(false);
+   router.push({ pathname: "/college-list" });
+};
 
   const filterDuplicates = (toFilter: any[]) => {
     return toFilter.filter((element, index, self) => {
@@ -487,8 +969,11 @@ const CheckIn: NextApplicationPage<{
   );
   if (isShowingCollegeListGeneration) {
     return (
-      <div className="w-100 h-100">
-        GENERATING COLLEGE LIST
+      <div className="w-100 h-100 d-flex flex-column justify-content-center align-items-center" style={{ height: size.height }}>
+        <div>
+          <LinearProgress />
+        </div>
+        
       </div>
     )
   }

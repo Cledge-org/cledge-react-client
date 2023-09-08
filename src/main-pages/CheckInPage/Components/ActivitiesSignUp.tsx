@@ -37,7 +37,7 @@ function ActivitiesSignUp(props: ActivitiesProps) {
     description: "",
     hoursPerWeek: 0,
     weeksPerYear: 0,
-    numberOfYears: 0,
+    numberOfYears: 2,
     awardLevel: "",
     awardQuality: 0,
     leadership: 0,

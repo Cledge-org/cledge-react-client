@@ -126,7 +126,7 @@ export declare global {
     questions: ObjectId[]; // Document IDs of question data
   }
   interface Question extends WithId<Document> {
-    _id?: ObjectId;
+    _id?: ObjectId | any;
     question: string;
     type: string;
     placeholder?: string;
