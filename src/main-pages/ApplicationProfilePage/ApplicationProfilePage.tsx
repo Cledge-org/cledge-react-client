@@ -15,16 +15,23 @@ import QuestionSummarySubpage from "./components/QuestionSubPages/QuestionSummar
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import DropdownTab from "src/common/components/DropdownTab/DropdownTab";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
+import AcademicsSignUp, { AcademicsProps } from "src/main-pages/CheckInPage/Components/AcademicsSignUp";
+import ActivitiesSignUp from "src/main-pages/CheckInPage/Components/ActivitiesSignUp";
 
 const ApplicationProfilePage: NextApplicationPage<{
   questionData: QuestionList[];
   userTags: string[];
   questionResponses: UserResponse[];
-}> = ({ questionData, userTags, questionResponses }) => {
+  academicData: any;
+  activityData: any;
+}> = ({ questionData, userTags, questionResponses, academicData, activityData }) => {
   const session = useSession();
   const router = useRouter();
   const [currPage, setCurrPage] = useState({ page: "all", chunk: "" });
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
+  const [academicResponses, setAcademicsResponses] = useState(academicData.responses)
+  const [activityResponses, setActivityResponses] = useState(activityData.activities);
+  const [noRenderButtons, setNoRenderButtons] = useState(false);
   const [percentageData, setPercentageData] = useState({
     allLists: 0,
     lists: [],
@@ -100,6 +107,21 @@ const ApplicationProfilePage: NextApplicationPage<{
         Update your progress on the desktop app
       </div>
     );
+  }
+  const handleSubmitAcademics = async () => {
+    try {
+      await fetch('/api/metrics/put-academics', {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: session.data.user.uid,
+          insertionId: session.data.user.uid,
+          academics: academicData.academics,
+          responses: academicResponses
+        }),
+      })
+    } catch (e) {
+      console.log(e);
+    }
   }
   return (
     <PageErrorBoundary>
@@ -261,37 +283,73 @@ const ApplicationProfilePage: NextApplicationPage<{
                   );
                 }
               })
+              // .concat(
+              //   questionData.find(({ name }) => name === "Extracurriculars")
+              //     ? questionData
+              //       .find(({ name }) => name === "Extracurriculars")
+              //       .chunks.map((chunk) => {
+              //         return (
+              //           <QuestionECSubpage
+              //             key={chunk.name}
+              //             userResponses={questionResponses}
+              //             chunk={chunk}
+              //             isShowing={currPage.chunk === chunk.name}
+              //           />
+              //         );
+              //       })
+              //     : []
+              // )
+              // .concat(
+              //   questionData.find(({ name }) => name === "Academics")
+              //     ? questionData
+              //       .find(({ name }) => name === "Academics")
+              //       .chunks.map((chunk) => {
+              //         return (
+              //           <QuestionACSubpage
+              //             key={chunk.name}
+              //             userResponses={questionResponses}
+              //             chunk={chunk}
+              //             isShowing={currPage.chunk === chunk.name}
+              //           />
+              //         );
+              //       })
+              //     : []
+              // )
               .concat(
-                questionData.find(({ name }) => name === "Extracurriculars")
-                  ? questionData
-                    .find(({ name }) => name === "Extracurriculars")
-                    .chunks.map((chunk) => {
-                      return (
-                        <QuestionECSubpage
-                          key={chunk.name}
-                          userResponses={questionResponses}
-                          chunk={chunk}
-                          isShowing={currPage.chunk === chunk.name}
-                        />
-                      );
-                    })
-                  : []
+                currPage.page === "Extracurriculars" ? 
+                  <div className="d-flex justify-content-center w-100">
+                    <div className="my-5" style={{ width: "50vw" }}>
+                      <ActivitiesSignUp 
+                        activities={activityResponses}
+                        submitData={(e) => setActivityResponses(e)} 
+                        noRenderButtons={() => setNoRenderButtons(!noRenderButtons)}
+                      />
+                      {noRenderButtons ? null : (
+                        <div className="d-flex justify-content-center mt-5">
+                          <button className="btn cl-btn-blue" onClick={(e) => {handleSubmitAcademics()}}>Save</button>
+                        </div>
+                      )}
+                      
+                    </div>
+                  </div> : null
               )
               .concat(
-                questionData.find(({ name }) => name === "Academics")
-                  ? questionData
-                    .find(({ name }) => name === "Academics")
-                    .chunks.map((chunk) => {
-                      return (
-                        <QuestionACSubpage
-                          key={chunk.name}
-                          userResponses={questionResponses}
-                          chunk={chunk}
-                          isShowing={currPage.chunk === chunk.name}
-                        />
-                      );
-                    })
-                  : []
+                currPage.page === "Academics" ? 
+                  <div className="d-flex justify-content-center w-100">
+                    <div className=" my-5" style={{ width: "50vw" }}>
+                      <AcademicsSignUp 
+                        years={academicResponses.years} 
+                        submitData={(e) => setAcademicsResponses(e)} 
+                        noRenderButtons={() => setNoRenderButtons(!noRenderButtons)}
+                      />
+                      {noRenderButtons ? null : (
+                        <div className="d-flex justify-content-center mt-5">
+                          <button className="btn cl-btn-blue" onClick={(e) => {handleSubmitAcademics()}}>Save</button>
+                        </div>
+                      )}
+                      
+                    </div>
+                  </div> : null
               )
           )}
         </div>
