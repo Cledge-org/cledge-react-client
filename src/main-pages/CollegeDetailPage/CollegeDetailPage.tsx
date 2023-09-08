@@ -2038,9 +2038,8 @@ const CollegeDetailPage = ({
           </Row>
         ) : value == 6 ? (
           <Row>
-            <Container className="d-flex flex-column align-items-center justify-content-center" style={{ height: '100vh' }}>
+            <Container className="d-flex flex-column align-items-center justify-content-center" style={{ height: '75vh' }}>
               <h1 className="display-4 mb-4">Coming Soon!</h1>
-              <Button>Join Waitlist</Button>
             </Container>
           </Row>
         ) : value == 7 ?(
