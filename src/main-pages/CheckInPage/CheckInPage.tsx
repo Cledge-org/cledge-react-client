@@ -69,24 +69,29 @@ const CheckIn: NextApplicationPage<{
         {
           title: "Term 1",
           id: 1,
-          courses: []
+          courses: [],
+          gpa: 0
         },
         {
           title: "Term 2",
           id: 2,
-          courses: []
+          courses: [],
+          gpa: 0
         },
         {
           title: "Term 3",
           id: 3,
-          courses: []
+          courses: [],
+          gpa: 0
         },
         {
           title: "Term 4",
           id: 4,
-          courses: []
+          courses: [],
+          gpa: 0
         },
-      ]
+      ],
+      isQuarter: false
     },
     {
       title: "10th Grade",
@@ -95,24 +100,29 @@ const CheckIn: NextApplicationPage<{
         {
           title: "Term 1",
           id: 1,
-          courses: []
+          courses: [],
+          gpa: 0
         },
         {
           title: "Term 2",
           id: 2,
-          courses: []
+          courses: [],
+          gpa: 0
         },
         {
           title: "Term 3",
           id: 3,
-          courses: []
+          courses: [],
+          gpa: 0
         },
         {
           title: "Term 4",
           id: 4,
-          courses: []
+          courses: [],
+          gpa: 0
         }
-      ]
+      ],
+      isQuarter: false
     },
     {
       title: "11th Grade",
@@ -121,24 +131,29 @@ const CheckIn: NextApplicationPage<{
         {
           title: "Term 1",
           id: 1,
-          courses: []
+          courses: [],
+          gpa: 0
         },
         {
           title: "Term 2",
           id: 2,
-          courses: []
+          courses: [],
+          gpa: 0
         },
         {
           title: "Term 3",
           id: 3,
-          courses: []
+          courses: [],
+          gpa: 0
         },
         {
           title: "Term 4",
           id: 4,
-          courses: []
+          courses: [],
+          gpa: 0
         }
-      ]
+      ],
+      isQuarter: false
     },
     {
       title: "12th Grade",
@@ -147,24 +162,29 @@ const CheckIn: NextApplicationPage<{
         {
           title: "Term 1",
           id: 1,
-          courses: []
+          courses: [],
+          gpa: 0
         },
         {
           title: "Term 2",
           id: 2,
-          courses: []
+          courses: [],
+          gpa: 0
         },
         {
           title: "Term 3",
           id: 3,
-          courses: []
+          courses: [],
+          gpa: 0
         },
         {
           title: "Term 4",
           id: 4,
-          courses: []
+          courses: [],
+          gpa: 0
         }
-      ]
+      ],
+      isQuarter: false
     },
   ],
   satScore: 0,
@@ -1019,8 +1039,9 @@ const CheckIn: NextApplicationPage<{
   );
   if (isShowingCollegeListGeneration) {
     return (
-      <div className="w-100 h-100 d-flex flex-column justify-content-center align-items-center" style={{ height: size.height }}>
+      <div className="w-100 d-flex flex-column justify-content-center align-items-center" style={{ height: size.height }}>
         <div>
+          <h2>Generating your college list...</h2>
           <LinearProgress />
         </div>
         
@@ -1028,6 +1049,7 @@ const CheckIn: NextApplicationPage<{
     )
   }
   if (isEditingACEC) {
+    scrollToTop();
     const tabs = [
       {
         name: "Academics"
@@ -1122,6 +1144,7 @@ const CheckIn: NextApplicationPage<{
             onClick={() => {
               if (ACECPage > 0) {
                 setACECPage(ACECPage - 1);
+                scrollToTop();
               } else {
                 setIsEditingACEC(false);
               }
@@ -1136,7 +1159,10 @@ const CheckIn: NextApplicationPage<{
               type="button"
               disabled={!canGoForward}
               className="btn cl-btn-blue"
-              onClick={() => setACECPage(ACECPage + 1)}
+              onClick={() => {
+                setACECPage(ACECPage + 1);
+                scrollToTop();
+              }}
             >
               Next
             </button>

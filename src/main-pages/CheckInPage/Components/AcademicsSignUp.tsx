@@ -22,6 +22,8 @@ interface GradeBlockProps {
   title: string
   grade: number
   terms: Term[]
+  isQuarter: boolean
+  toggleIsQuarter?: Function;
   addCourse?: Function;
   deleteCourse?: Function;
 }
@@ -55,9 +57,23 @@ function AcademicsSignUp(props: AcademicsProps) {
   const [currGrade, setCurrGrade] = useState(0);
   const [currTerm, setCurrTerm] = useState(0);
 
+
   const toggleEditing = () => {
     setIsAddingCourse(!isAddingCourse);
-    props.noRenderButtons();
+    if (props.noRenderButtons) {
+      props.noRenderButtons();
+    }
+  }
+
+  const toggleIsQuarter = (grade: number) => {
+    const newUserResponses = userResponses;
+    newUserResponses.years.forEach((year) => {
+      if (year.grade == grade) {
+        year.isQuarter = !year.isQuarter;
+      }
+    })
+    console.log(newUserResponses);
+    setUserResponses(newUserResponses);
   }
 
   const handleACTInputChange = async function (value: number) {
@@ -75,29 +91,39 @@ function AcademicsSignUp(props: AcademicsProps) {
   }
 
   useEffect(()=> {
-    props.submitData(userResponses);
+    if (props.submitData) {
+      props.submitData(userResponses);
+    }
 }, [handleACTInputChange, handleSATInputChange, setUserResponses])
 
   const handleSubmit = () => {
-    const yearObject = userResponses.years.find(e => e.grade == currGrade);
-    const termObject = yearObject.terms.find(e => e.id == currTerm);
-    userResponses.years.find(e => e.grade == currGrade)
-    .terms.find(e => e.id == currTerm)
-    .courses.push(tempCourse);
-    let totalGradePoint = 0;
-    termObject.courses.forEach(course => {
-      totalGradePoint += course.grade;
-    })
-    termObject.gpa = totalGradePoint / termObject.courses.length;
-    setTempCourse({
-      courseName: "",
-      subject: "",
-      grade: 0,
-      tag: ""
-    })
-    setUserResponses(userResponses);
-    props.submitData(userResponses);
-    toggleEditing();
+    if (tempCourse.courseName.length > 0 && tempCourse.grade > 0 &&
+      tempCourse.subject.length > 0 && tempCourse.tag.length > 0) {
+        
+      const yearObject = userResponses.years.find(e => e.grade == currGrade);
+      const termObject = yearObject.terms.find(e => e.id == currTerm);
+      userResponses.years.find(e => e.grade == currGrade)
+      .terms.find(e => e.id == currTerm)
+      .courses.push(tempCourse);
+      let totalGradePoint = 0;
+      termObject.courses.forEach(course => {
+        totalGradePoint += course.grade;
+      })
+      termObject.gpa = totalGradePoint / termObject.courses.length;
+      setTempCourse({
+        courseName: "",
+        subject: "",
+        grade: 0,
+        tag: ""
+      })
+      setUserResponses(userResponses);
+      if (props.submitData) {
+        props.submitData(userResponses);
+      }
+
+      toggleEditing();
+
+    }
   }
 
 
@@ -114,23 +140,28 @@ function AcademicsSignUp(props: AcademicsProps) {
       .filter((course) => course.courseName != courseName);
 
       let totalGradePoint = 0;
-      newUserResponses.years?.find(e => e.grade == currGrade)
-      .terms.find(e => e.id == currTerm)
+      console.log(grade);
+      console.log(term);
+      newUserResponses.years?.find(e => e.grade == grade)
+      .terms.find(e => e.id == term)
       .courses.forEach(course => {
         totalGradePoint += course.grade;
       })
-      userResponses.years.find(e => e.grade == currGrade)
-      .terms.find(e => e.id == currTerm).gpa = (totalGradePoint / 
-      newUserResponses.years.find(e => e.grade == currGrade)
-      .terms.find(e => e.id == currTerm).courses.length);
+      userResponses.years.find(e => e.grade == grade)
+      .terms.find(e => e.id == term).gpa = (totalGradePoint / 
+      newUserResponses.years.find(e => e.grade == grade)
+      .terms.find(e => e.id == term).courses.length);
 
-      if (Number.isNaN(userResponses.years.find(e => e.grade == currGrade)
-        .terms.find(e => e.id == currTerm).gpa)) {
-          userResponses.years.find(e => e.grade == currGrade)
-        .terms.find(e => e.id == currTerm).gpa = 0;
+      if (Number.isNaN(userResponses.years.find(e => e.grade == grade)
+        .terms.find(e => e.id == term).gpa)) {
+          userResponses.years.find(e => e.grade == grade)
+        .terms.find(e => e.id == term).gpa = 0;
         }
       setUserResponses(newUserResponses);
-      props.submitData(userResponses);
+      if (props.submitData) {
+        props.submitData(userResponses);
+      }
+
     } catch (e) {
       console.log(e);
     }
@@ -160,7 +191,7 @@ function AcademicsSignUp(props: AcademicsProps) {
             value={tempCourse.courseName} 
             question={"Course Name"}          
             />
-          <div>
+          <div className="d-flex justify-content-center">
             <SignUpDropdown 
               title="" 
               key={undefined} 
@@ -177,20 +208,23 @@ function AcademicsSignUp(props: AcademicsProps) {
               }}
             />
           </div>
-          <SignUpShortText
-            type="number"
-            placeholder=""
-            onChange={(e) => {
-              setTempCourse({
-                courseName: tempCourse.courseName,
-                subject: tempCourse.subject,
-                grade: Number.parseFloat(e),
-                tag: tempCourse.tag
-              });
-            } }
-            value={tempCourse.grade} 
-            question={"Grade (unweighted GPA 4.0 scale)"}          />
           <div>
+            <SignUpShortText
+              type="number"
+              placeholder=""
+              onChange={(e) => {
+                setTempCourse({
+                  courseName: tempCourse.courseName,
+                  subject: tempCourse.subject,
+                  grade: Number.parseFloat(e),
+                  tag: tempCourse.tag
+                });
+              } }
+              value={tempCourse.grade} 
+              question={"Grade (unweighted GPA 4.0 scale)"}          
+            />
+          </div>
+          <div className="d-flex justify-content-center">
           <SignUpDropdown 
               title="" 
               key={undefined} 
@@ -206,38 +240,47 @@ function AcademicsSignUp(props: AcademicsProps) {
                 })
               }}
             />
-        
           </div>
         </div>
-        <button className="btn cl-btn-clear mx-1" onClick={() => toggleEditing()}>BACK</button>
-        <button className="btn cl-btn-blue mx-1" onClick={() => handleSubmit()}>ADD COURSE</button>
+        <div className="d-flex justify-content-center">
+          <button className="btn cl-btn-clear mx-2" onClick={() => toggleEditing()}>BACK</button>
+          <button className="btn cl-btn-blue mx-2" onClick={() => handleSubmit()}>ADD COURSE</button>
+        </div>
       </div>
     )
   }
   return (
-    <div>
+    <div className="w-100">
       <h2>Academics</h2>
       <GradeBlock 
         title="9th Grade" 
         grade={9} 
-        terms={userResponses.years.find(el => el.title === "9th Grade").terms} 
+        terms={userResponses.years.find(el => el.grade === 9).terms} 
+        isQuarter={userResponses.years.find(el => el.grade === 9).isQuarter}
+        toggleIsQuarter={(year) => toggleIsQuarter(year)}
         addCourse={(grade, number) => addCourse(grade, number)} 
         deleteCourse={(grade, number, courseName) => deleteCourse(grade, number, courseName)}/>
       <GradeBlock
         title="10th Grade" 
         grade={10} 
-        terms={userResponses.years.find(el => el.title === "10th Grade").terms} 
+        terms={userResponses.years.find(el => el.grade === 10).terms} 
+        isQuarter={userResponses.years.find(el => el.grade === 10).isQuarter}
+        toggleIsQuarter={(year) => toggleIsQuarter(year)}
         addCourse={(grade, number) => addCourse(grade, number)} 
         deleteCourse={(grade, number, courseName) => deleteCourse(grade, number, courseName)}/>
       <GradeBlock 
         title="11th Grade" 
         grade={11} 
-        terms={userResponses.years.find(el => el.title === "11th Grade").terms}
+        terms={userResponses.years.find(el => el.grade === 11).terms}
+        isQuarter={userResponses.years.find(el => el.grade === 11).isQuarter}
+        toggleIsQuarter={(year) => toggleIsQuarter(year)}
         addCourse={(grade, number) => addCourse(grade, number)} deleteCourse={(grade, number, courseName) => deleteCourse(grade, number, courseName)}/>
       <GradeBlock 
         title="12th Grade" 
         grade={12} 
-        terms={userResponses.years.find(el => el.title === "12th Grade").terms} 
+        terms={userResponses.years.find(el => el.grade === 12).terms} 
+        isQuarter={userResponses.years.find(el => el.grade === 12).isQuarter}
+        toggleIsQuarter={(year) => toggleIsQuarter(year)}
         addCourse={(grade, number) => addCourse(grade, number)} 
         deleteCourse={(grade, number, courseName) => deleteCourse(grade, number, courseName)}/>
         <div className="d-flex flex-row justify-content-center">
@@ -251,7 +294,7 @@ function AcademicsSignUp(props: AcademicsProps) {
               }} 
               question={"SAT Score"} 
               value={userResponses.satScore} 
-              />
+            />
               
           </div>
           <div className="mx-3">
@@ -272,7 +315,7 @@ function AcademicsSignUp(props: AcademicsProps) {
 }
 
 function GradeBlock(props: GradeBlockProps) {
-    const [isQuarter, setIsQuarter] = useState(true);
+    const [isQuarter, setIsQuarter] = useState(props.isQuarter);
     const term1 = props.terms.find(e => e.id == 1);
     const term2 = props.terms.find(e => e.id == 2);
     const term3 = props.terms.find(e => e.id == 3);
@@ -285,7 +328,15 @@ function GradeBlock(props: GradeBlockProps) {
         <div className="">
           <div className="d-flex justify-content-between w-90 mx-1 my-1 pb-4">
             <h4 style={{ color: "#506BED" }}>{props.title}</h4>
-              <Button variant="primary" onClick={() => setIsQuarter(!isQuarter)}>{isQuarter ? <text>Quarter</text> : <text>Semester</text>}</Button>
+              <Button
+                variant="primary" 
+                onClick={() => {
+                  setIsQuarter(!isQuarter);
+                  props.toggleIsQuarter(props.grade)
+                }}
+              >
+                {isQuarter ? <text>Quarter</text> : <text>Semester</text>}
+              </Button>
           </div>
           <div>
             <div className="row">

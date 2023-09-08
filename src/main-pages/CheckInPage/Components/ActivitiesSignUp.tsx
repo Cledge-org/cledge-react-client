@@ -200,22 +200,27 @@ function ActivitiesSignUp(props: ActivitiesProps) {
   ]
 
   const handleSubmit = () => {
-    if (tempActivity.activityName != "") {
+    console.log(tempActivity);
+    if (tempActivity.activityName.length > 0 && tempActivity.activityType.length > 0 &&
+        tempActivity.awardLevel.length > 0 && tempActivity.awardQuality > 0 &&
+        tempActivity.description.length > 0 && tempActivity.hoursPerWeek > 0 &&
+        tempActivity.impact > 0 && tempActivity.leadership > 0 && 
+        tempActivity.numberOfYears > 0 && tempActivity.weeksPerYear > 0) {
       userResponses.activities.push(tempActivity);
       toggleEditing();
+      setTempActivity({
+        activityName: "",
+        activityType: "",
+        description: "",
+        hoursPerWeek: 0,
+        weeksPerYear: 0,
+        numberOfYears: 2,
+        awardLevel: "",
+        awardQuality: 0,
+        leadership: 0,
+        impact: 0
+      })
     }
-    setTempActivity({
-      activityName: "",
-      activityType: "",
-      description: "",
-      hoursPerWeek: 0,
-      weeksPerYear: 0,
-      numberOfYears: 0,
-      awardLevel: "",
-      awardQuality: 0,
-      leadership: 0,
-      impact: 0
-    })
   }
   
   const handleOnDelete = (activityName) => {
@@ -230,7 +235,7 @@ function ActivitiesSignUp(props: ActivitiesProps) {
   
   if (isAddingActivity) {
     return (
-      <div>
+      <div className="mb-5">
         <div>
           <div>
             <SignUpShortText
@@ -409,19 +414,20 @@ function ActivitiesSignUp(props: ActivitiesProps) {
             />
           </div>
         </div>
-        
-        <button className="btn cl-btn-clear mx-1" onClick={() => toggleEditing()}>BACK</button>
-        <button className="btn cl-btn-blue mx-1" onClick={() => handleSubmit()}>Add Activity</button>
+        <div className="d-flex justify-content-center">
+          <button className="btn cl-btn-clear mx-2" onClick={() => toggleEditing()}>BACK</button>
+          <button className="btn cl-btn-blue mx-2" onClick={() => handleSubmit()}>Add Activity</button>
+        </div>
       </div>
     )
   }
   return (
-    <div>
+    <div className="">
       <div className="d-flex flex-row justify-content-between">
         <h3>All Activities</h3>
-        <button onClick={() => toggleEditing()}>Add New</button>
+        <button className="btn cl-btn-blue" onClick={() => toggleEditing()}>Add New</button>
       </div>
-      <div className="d-flex justify-content-center">
+      <div className="d-flex center-child flex-column">
         {userResponses.activities.map((activity) => {
           return (
             <ActivitySummaryCard 

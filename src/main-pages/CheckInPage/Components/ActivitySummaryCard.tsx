@@ -37,7 +37,7 @@ export default function ECQuestionSummaryCard({
   return (
     <div
       className={classNames(
-        "w-100 d-flex flex-column justify-content-evenly",
+        "w-100 d-flex flex-column justify-content-center",
         styles.qsummaryCardContainer,
         "mt-3"
       )}

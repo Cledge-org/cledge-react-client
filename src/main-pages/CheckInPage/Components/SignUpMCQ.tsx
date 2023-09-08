@@ -30,9 +30,9 @@ export default function SignUpMCQ(props: SignUpMCQProps) {
   return (
     <div
     >
-      <span className="cl-dark-text fw-bold my-3" style={{ fontSize: "1.4em" }}>{props.questionData.question}</span>
       <div className="w-100 my-2">
         <div className="d-flex flex-column justify-content-center align-items-center">
+        <span className="cl-dark-text fw-bold my-3" style={{ fontSize: "1.4em" }}>{props.questionData.question}</span>
           {props.questionData.options.map((option, index) => (
             <button 
               key={index} 

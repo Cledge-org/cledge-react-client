@@ -46,6 +46,7 @@ export function getAcademics(userId: string): Promise<Academics> {
           actScore: academics.actScore,
           testTip: academics.testTip,
           overallTier: academics.overallTier,
+          responses: academics.responses
         });
       }
       client.close();

@@ -17,13 +17,15 @@ export default function SignUpShortText(props: SignUpShortText) {
   return (
     <div
     >
-      <span className="cl-dark-text fw-bold my-3" style={{ fontSize: "1.4em" }}>{props.question}</span>
       <div className="w-100 my-2">
         <div className="d-flex flex-column justify-content-center align-items-center">
+          <div className="d-flex justify-content-start w-100" style={{ maxWidth: "40rem" }}>
+            <span className="cl-dark-text fw-bold my-3" style={{ fontSize: "1.4em" }}>{props.question}</span>
+          </div>
           <input 
             className="form-control cl-dark-text fw-bold"
             type={props.type ? props.type : "text"} 
-            style={{ width: "100%", margin: "5px", height: "3.5rem", maxWidth: "40rem", borderRadius: "10px" }}
+            style={{ width: "100%", marginBottom: "5px", height: "3.5rem", maxWidth: "40rem", borderRadius: "10px" }}
             onChange={
               (e) => {
                 setCurrValue(e.target.value);

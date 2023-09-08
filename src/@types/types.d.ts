@@ -279,6 +279,7 @@ export declare global {
     actScore: number;
     testTip: string;
     overallTier: number;
+    responses?: any[];
   }
 
   interface Class {
