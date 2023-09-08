@@ -404,10 +404,6 @@ const CheckIn: NextApplicationPage<{
     const newName = newUserResponses.find(
       ({ questionId }) => questionId === "6319632cd1e56282060ad38a"
     )?.response;
-    console.log("newUserResponses = " + JSON.stringify(newUserResponses));
-    console.log("academics = " + JSON.stringify(academicsResponses));
-    console.log("activities = " + JSON.stringify(activitiesResponses));
-
 
     let res = newUserResponses;
 
@@ -423,9 +419,6 @@ const CheckIn: NextApplicationPage<{
     let finNeedHigh = null;
     let finMeritLow = null;
     let finMeritHigh = null;
-
-    console.log(res);
-    console.log(checkInData.chunks);
 
     for (let i = 0; i < res.length; i++) {
       if (res[i].questionId == "schoolSize") {
@@ -526,11 +519,6 @@ const CheckIn: NextApplicationPage<{
       userECTier = await calculateOverallECTier(allECTierArray);
     }
 
-    console.log(activitiesResponses)
-
-    console.log(allECTierArray)
-    console.log("OVERALL EC TIER " + await userECTier);
-
     // gpa tier
     let totalGPA = 0;
     let totalTerms = 0;
@@ -550,8 +538,6 @@ const CheckIn: NextApplicationPage<{
     if (Number.isNaN(userGPATier)) {
       userGPATier = 0;
     }
-
-    console.log("USER GPA TIER: " + userGPATier)
 
     let studentAppLevel = 3;
     newUserResponses.forEach((res) => {
@@ -584,7 +570,6 @@ const CheckIn: NextApplicationPage<{
     const newActivitiesArr = [];
     let tiersArr = [];
     let totalECPoints = 0;
-    console.log(activitiesResponses);
     activitiesResponses.forEach((activity) => {
       const tier = calculateECActivityTier(activity.hoursPerWeek, activity.weeksPerYear, activity.numberOfYears, activity.awardLevel);
       const points = calculateECActivityPoints(tier);
@@ -614,9 +599,6 @@ const CheckIn: NextApplicationPage<{
       overallTier: overallECTier,
       totalPoints: totalECPoints
     }
-
-    console.log(userAcademics);
-    console.log(userActivities);
 
     const requestFormat = {
       preferences: {
@@ -670,8 +652,6 @@ const CheckIn: NextApplicationPage<{
       studentType: studentAppLevel
     }
 
-    console.log(userResponses);
-
     const fetchData = async () => {
       try {
         const response = await fetch('/api/metrics/get-college-fit-list-old', {
@@ -691,16 +671,13 @@ const CheckIn: NextApplicationPage<{
           })
         });
         const data = await response.json();
-        console.log(data); // Do something with the data
         return data;
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
       }
     };
     
-    console.log(requestFormat);
     const collegeResult = await fetchData(); // Store the result in a variable
-    console.log(collegeResult); // Do something with the result
 
     let postArr = [];
 
@@ -753,8 +730,6 @@ const CheckIn: NextApplicationPage<{
       postArr.push(personalize);
     }
 
-    console.log(postArr);
-
    await Promise.all([
      fetch(`/api/user/update-user`, {
        method: "POST",
@@ -786,8 +761,23 @@ const CheckIn: NextApplicationPage<{
        }),
      }),
      callPutQuestionResponses(newUserResponses),
-     console.log(callPutActivities(userActivities, true)),
-     console.log(callPutAcademics(userAcademics, academicsResponses, true)),
+     fetch('/api/metrics/put-activities', {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: session.data.user.uid,
+          activities: userActivities,
+          insertionId: session.data.user.uid
+        }),
+      }),
+      fetch('/api/metrics/put-academics', {
+          method: 'POST',
+          body: JSON.stringify({
+            userId: session.data.user.uid,
+            insertionId: session.data.user.uid,
+            academics: userAcademics,
+            responses: academicsResponses
+          }),
+        }),
      fetch('/api/user/put-college-list', {
        method: 'POST',
          headers: {
@@ -1107,7 +1097,6 @@ const CheckIn: NextApplicationPage<{
         {ACECPage == 0 ? 
         (
           <AcademicsSignUp noRenderButtons={() => toggleButtons()} years={academicsResponses.years} submitData={(e) => {
-            console.log("E : " + JSON.stringify(e) );
             setAcademicsResponses(e);
           }} />
         ) : (
