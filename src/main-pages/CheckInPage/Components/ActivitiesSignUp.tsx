@@ -105,23 +105,23 @@ function ActivitiesSignUp(props: ActivitiesProps) {
       options: [
         {
           optionText: "Non-Applicable",
-          optionValue: 1
+          optionValue: "NA"
         },
         {
           optionText: "School / Local",
-          optionValue: 2
+          optionValue: "school"
         },
         {
           optionText: "State",
-          optionValue: 3 
+          optionValue: "state/regional"
         },
         {
           optionText: "National",
-          optionValue: 4
+          optionValue: "national"
         },
         {
           optionText: "International",
-          optionValue: 5
+          optionValue: "international"
         }
       ]
     },

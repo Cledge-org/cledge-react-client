@@ -18,7 +18,7 @@ import {
 } from "../../utils/redux/actionFunctions";
 import { store } from "../../utils/redux/store";
 import styles from "./check-in-page.module.scss";
-import { callPutAcademics, callPutQuestionResponses } from "src/utils/apiCalls";
+import { callPutAcademics, callPutActivities, callPutQuestionResponses } from "src/utils/apiCalls";
 import classNames from "classnames";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -29,10 +29,10 @@ import DoubleDropdownQuestion from "src/common/components/Questions/DoubleDropdo
 import DropdownQuestion from "src/common/components/Questions/DropdownQuestion/DropdownQuestion";
 import AcademicsSignUp, { AcademicsProps } from "src/main-pages/CheckInPage/Components/AcademicsSignUp";
 import ActivitiesSignUp from "src/main-pages/CheckInPage/Components/ActivitiesSignUp";
-import { calculateECTier, calculateGPATier, calculateOverallECTier } from "src/utils/student-metrics/metricsCalculations";
+import { calculateECActivityPoints, calculateECActivityTier, calculateECTier, calculateECTotalPoints, calculateGPATier, calculateOverallECTier, overallAcademicTier } from "src/utils/student-metrics/metricsCalculations";
 import { collegeListIndividualInfo } from "src/@types/types";
 
-interface Activity {
+interface ActivityNew {
   activityName: string;
   activityType: string;
   description: string;
@@ -330,7 +330,7 @@ const CheckIn: NextApplicationPage<{
 
   checkInData.chunks = checkInData.chunks.slice(0, 4);
 
-  const initialActivitiesArray: Activity[] = []
+  const initialActivitiesArray: ActivityNew[] = []
   const [academicsResponses, setAcademicsResponses] = useState(data);
   const [activitiesResponses, setActivitiesResponses] = useState(initialActivitiesArray);
   const hiddenFileInput = React.useRef(null);
@@ -559,6 +559,64 @@ const CheckIn: NextApplicationPage<{
         studentAppLevel = Number.parseInt(res.response.charAt(6));
       }
     })
+    let gradeLevel = 9;
+    academicsResponses.years.forEach((year) => {
+      if (year.terms[0].courses.length > 0) {
+        gradeLevel++;
+      }
+    })
+
+    const userOverallAcadmicTier = await overallAcademicTier(gradeLevel, studentAppLevel, totalGPA, 5)
+
+    let userAcademics: Academics = {
+      classes: [],
+      overallClassTier: 3,
+      gpa: totalGPA,
+      gpaTier: userGPATier,
+      satScore: academicsResponses.satScore ? academicsResponses.satScore : 0,
+      actScore: academicsResponses.actScore ? academicsResponses.actScore : 0,
+      overallTier: userOverallAcadmicTier,
+      classTip: "",
+      gpaTip: "",
+      testTip: ""
+    }
+
+    const newActivitiesArr = [];
+    let tiersArr = [];
+    let totalECPoints = 0;
+    console.log(activitiesResponses);
+    activitiesResponses.forEach((activity) => {
+      const tier = calculateECActivityTier(activity.hoursPerWeek, activity.weeksPerYear, activity.numberOfYears, activity.awardLevel);
+      const points = calculateECActivityPoints(tier);
+      const otherActivity: Activity = {
+        activityID: 0,
+        actTitle: activity.activityName,
+        actType: activity.activityType,
+        hoursYear: activity.hoursPerWeek,
+        yearsSpent: activity.numberOfYears,
+        recogLevel: activity.awardQuality,
+        description: activity.description,
+        points: points,
+        tier: tier,
+        category: 0,
+        tip: ""
+      }
+      totalECPoints += points;
+      tiersArr.push(tier);
+      newActivitiesArr.push(otherActivity);
+    })
+
+    const overallECTier = await calculateOverallECTier(tiersArr);
+
+
+    let userActivities: Activities = {
+      activities: newActivitiesArr,
+      overallTier: overallECTier,
+      totalPoints: totalECPoints
+    }
+
+    console.log(userAcademics);
+    console.log(userActivities);
 
     const requestFormat = {
       preferences: {
@@ -728,6 +786,8 @@ const CheckIn: NextApplicationPage<{
        }),
      }),
      callPutQuestionResponses(newUserResponses),
+     console.log(callPutActivities(userActivities, true)),
+     console.log(callPutAcademics(userAcademics, academicsResponses, true)),
      fetch('/api/user/put-college-list', {
        method: 'POST',
          headers: {
@@ -738,7 +798,7 @@ const CheckIn: NextApplicationPage<{
            user_id: session.data.user.uid,
            college_list: postArr
          })
-     })
+     }),
    ]).then((values) => {
      store.dispatch(
        updateAccountAction({
