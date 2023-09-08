@@ -110,7 +110,7 @@ const DashboardPage = ({
                           <Link href="/metrics">
                             <a>
                               <img
-                                src="/images/header/icon-school.svg" alt="graduation hat"
+                                src="/images/college-finder.png" alt="graduation hat"
                                 style={{
                                   padding: "10px",
                                   width: "50px",
@@ -176,7 +176,7 @@ const DashboardPage = ({
                       <div className=""></div>
                     </Col>
                   </Row>
-                  <Link href="/collegeList">
+                  <Link href="/college-list">
                     <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
                       <div className="h5 mb-0">Go to your list</div>
                     </Button>
