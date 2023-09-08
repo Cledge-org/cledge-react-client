@@ -39,6 +39,7 @@ export function getActivities(userId: string): Promise<Activities> {
           activities: extracurriculars.activities,
           overallTier: extracurriculars.overallTier,
           totalPoints: extracurriculars.totalPoints,
+          responses: extracurriculars.responses
         });
       }
       client.close();

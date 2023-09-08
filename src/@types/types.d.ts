@@ -251,6 +251,7 @@ export declare global {
     activities: Activity[];
     overallTier: number;
     totalPoints: number;
+    responses?: ActivityNew[];
   }
 
   interface Activity {

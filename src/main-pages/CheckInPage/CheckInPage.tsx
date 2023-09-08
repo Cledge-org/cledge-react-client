@@ -32,7 +32,7 @@ import ActivitiesSignUp from "src/main-pages/CheckInPage/Components/ActivitiesSi
 import { calculateECActivityPoints, calculateECActivityTier, calculateECTier, calculateECTotalPoints, calculateGPATier, calculateOverallECTier, overallAcademicTier } from "src/utils/student-metrics/metricsCalculations";
 import { collegeListIndividualInfo } from "src/@types/types";
 
-interface ActivityNew {
+export interface ActivityNew {
   activityName: string;
   activityType: string;
   description: string;
@@ -785,7 +785,8 @@ const CheckIn: NextApplicationPage<{
         method: 'POST',
         body: JSON.stringify({
           userId: session.data.user.uid,
-          activities: activitiesResponses,
+          activities: userActivities,
+          responses: activitiesResponses,
           insertionId: session.data.user.uid
         }),
       }),

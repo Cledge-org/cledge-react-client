@@ -17,6 +17,7 @@ import DropdownTab from "src/common/components/DropdownTab/DropdownTab";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import AcademicsSignUp, { AcademicsProps } from "src/main-pages/CheckInPage/Components/AcademicsSignUp";
 import ActivitiesSignUp from "src/main-pages/CheckInPage/Components/ActivitiesSignUp";
+import { calculateECActivityPoints, calculateECActivityTier, calculateGPATier, overallAcademicTier } from "src/utils/student-metrics/metricsCalculations";
 
 const ApplicationProfilePage: NextApplicationPage<{
   questionData: QuestionList[];
@@ -30,7 +31,7 @@ const ApplicationProfilePage: NextApplicationPage<{
   const [currPage, setCurrPage] = useState({ page: "all", chunk: "" });
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
   const [academicResponses, setAcademicsResponses] = useState(academicData.responses)
-  const [activityResponses, setActivityResponses] = useState(activityData.activities);
+  const [activityResponses, setActivityResponses] = useState(activityData.responses);
   const [noRenderButtons, setNoRenderButtons] = useState(false);
   const [percentageData, setPercentageData] = useState({
     allLists: 0,
@@ -109,14 +110,100 @@ const ApplicationProfilePage: NextApplicationPage<{
     );
   }
   const handleSubmitAcademics = async () => {
+    // gpa tier
+    let totalGPA = 0;
+    let totalTerms = 0;
+    academicResponses.years.forEach((year) => {
+      year.terms.forEach((term) => {
+        if (term.courses.length > 0 && term.gpa != null) {
+          totalGPA += term.gpa;
+          totalTerms++;
+        }
+      })
+    })
+
+    let userGPA = totalGPA / totalTerms;
+
+    let userGPATier = await calculateGPATier(2, userGPA);
+
+    if (Number.isNaN(userGPATier)) {
+      userGPATier = 0;
+    }
+
+    let studentAppLevel = 3;
+    questionResponses.forEach((res) => {
+      if (res.questionId == "627e8fe7e97c3c14537dc7f5") {
+        studentAppLevel = Number.parseInt(res.response.charAt(6));
+      }
+    })
+    let gradeLevel = 9;
+    academicResponses.years.forEach((year) => {
+      if (year.terms[0].courses.length > 0) {
+        gradeLevel++;
+      }
+    })
+
+    const userOverallAcadmicTier = await overallAcademicTier(gradeLevel, studentAppLevel, totalGPA, 5)
+
+    let userAcademics: Academics = {
+      classes: [],
+      overallClassTier: 3,
+      gpa: totalGPA,
+      gpaTier: userGPATier,
+      satScore: academicResponses.satScore ? academicResponses.satScore : 0,
+      actScore: academicResponses.actScore ? academicResponses.actScore : 0,
+      overallTier: userOverallAcadmicTier,
+      classTip: "",
+      gpaTip: "",
+      testTip: ""
+    }
     try {
       await fetch('/api/metrics/put-academics', {
         method: 'POST',
         body: JSON.stringify({
           userId: session.data.user.uid,
           insertionId: session.data.user.uid,
-          academics: academicData.academics,
+          academics: userAcademics,
           responses: academicResponses
+        }),
+      })
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const handleSubmitActivities = async () => {
+    const newActivitiesArr = [];
+    let tiersArr = [];
+    let totalECPoints = 0;
+    activityResponses.forEach((activity) => {
+      const tier = calculateECActivityTier(activity.hoursPerWeek, activity.weeksPerYear, activity.numberOfYears, activity.awardLevel);
+      const points = calculateECActivityPoints(tier);
+      const otherActivity: Activity = {
+        activityID: 0,
+        actTitle: activity.activityName,
+        actType: activity.activityType,
+        hoursYear: activity.hoursPerWeek,
+        yearsSpent: activity.numberOfYears,
+        recogLevel: activity.awardQuality,
+        description: activity.description,
+        points: points,
+        tier: tier,
+        category: 0,
+        tip: ""
+      }
+      totalECPoints += points;
+      tiersArr.push(tier);
+      newActivitiesArr.push(otherActivity);
+    })
+    try {
+      await fetch('/api/metrics/put-activities', {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: session.data.user.uid,
+          activities: activityData.activities,
+          responses: activityResponses,
+          insertionId: session.data.user.uid
         }),
       })
     } catch (e) {
@@ -326,7 +413,7 @@ const ApplicationProfilePage: NextApplicationPage<{
                       />
                       {noRenderButtons ? null : (
                         <div className="d-flex justify-content-center mt-5">
-                          <button className="btn cl-btn-blue" onClick={(e) => {handleSubmitAcademics()}}>Save</button>
+                          <button className="btn cl-btn-blue" onClick={(e) => {handleSubmitActivities()}}>Save</button>
                         </div>
                       )}
                       
