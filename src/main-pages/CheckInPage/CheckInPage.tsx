@@ -785,7 +785,7 @@ const CheckIn: NextApplicationPage<{
         method: 'POST',
         body: JSON.stringify({
           userId: session.data.user.uid,
-          activities: userActivities,
+          activities: activitiesResponses,
           insertionId: session.data.user.uid
         }),
       }),
@@ -1049,7 +1049,6 @@ const CheckIn: NextApplicationPage<{
     )
   }
   if (isEditingACEC) {
-    scrollToTop();
     const tabs = [
       {
         name: "Academics"

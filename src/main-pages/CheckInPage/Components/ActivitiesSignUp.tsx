@@ -432,7 +432,7 @@ function ActivitiesSignUp(props: ActivitiesProps) {
           return (
             <ActivitySummaryCard 
                 activity={activity} 
-                question={"test"} 
+                question={""} 
                 onClick={() => {
                   setTempActivity(activity)
                   toggleEditing();
