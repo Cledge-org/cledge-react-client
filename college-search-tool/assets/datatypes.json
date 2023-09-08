@@ -578,5 +578,6 @@
     "SAFETY_TIER": "integer",
     "WEBADDR": "string",
     "NPRICURL": "string",
-    "PCTENR2M": "float"
+    "PCTENR2M": "float",
+    "APPLCN": "integer"
 }

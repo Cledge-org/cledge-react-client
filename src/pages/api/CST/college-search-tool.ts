@@ -100,7 +100,7 @@ export const getCollegeInfo = (
       if (searchFuzzyText === "*") {
         orderExpression = createOrderExpression("ADM_RATE", 1);
         if (Object.keys(filters).length === 0) {
-          filterExpression = "ADM_RATE gt 0 and ADM_RATE_ALL gt 0";
+          filterExpression = "ADM_RATE gt 0 and ADM_RATE_ALL gt 0 and APPLCN gt 8000";
         }
       }
 
@@ -157,6 +157,9 @@ const createFilterExpression = (filters) => {
     }
   });
 
+  //default filter for application count > 8000 (also need to change in default search text case)
+  filterExpressions.push("APPLCN gt 8000");
+
   return filterExpressions.join(" and ");
 };
 
@@ -190,7 +193,7 @@ const formatOutput = async (college: any, client: MongoClient, err: any) => {
       inst_size: dicts.inst_size[college["INSTSIZE"]],
       tuition_and_fee: college["TUFEYR3"],
       student_faculty_ratio: college["STUFACR"],
-      acceptance_rate: college["ADM_RATE"]
+      acceptance_rate: college["ADM_RATE"],
     };
     return output;
   } catch (e) {
