@@ -67,7 +67,7 @@ export default function QuestionECSubpage({
         ).response,
         hoursYear: hoursPerWeek * weeksPerYear,
         yearsSpent: responses.find(
-          ({ questionId }) => questionId === "623dfe875e2b2cf43e1b86d9"
+          ({ questionId }) => questionId === "62546c01f993412f5c26c772"
         ).response,
         recogLevel: responses.find(
           ({ questionId }) => questionId === "623e0e025e2b2cf43e1b86e1"

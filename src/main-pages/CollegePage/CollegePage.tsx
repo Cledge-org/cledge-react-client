@@ -37,20 +37,20 @@ const College = ({
   questionResponses,
 }: {
   questionResponses: UserResponse[];
-  collegeList: any;
+  collegeList: any
 }) => {
-  const [collegeData, setData] = useState([]);
+  const [collegeData, setData] = useState(null);
   const [hasMoreData, setHasMore] = useState(true);
   const [filter, setFilter] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [currSort, setCurrSort] = useState("Default");
+  const [currSort, setCurrSort] = useState("");
   let collegeListArray = [];
   const [currNumericalSortOrder, setCurrNumericalSortOrder] =
     useState("Least-Greatest");
   const userResponse = questionResponses.find(
     ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
   )?.response;
-
+  
   const [requestData, setRequest] = useState({
     searchText: "*",
     top: 10,
@@ -80,12 +80,12 @@ const College = ({
     e.preventDefault();
     e.stopPropagation();
     setPrevRequest(requestData);
-
+    
     setRequest({
       ...requestData,
       searchText: e.target.searchText.value ? e.target.searchText.value : "*",
-      top: 12,
-      skip: 0,
+      top : 12,
+      skip: 0
     });
   }
 
@@ -107,10 +107,11 @@ const College = ({
       });
     return data;
   }
-
+  
   for (let i = 0; i < collegeList.length; i++) {
     collegeListArray[i] = collegeList[i]?.college_name;
   }
+
 
   useEffect(() => {
     setPrevRequest(requestData);
@@ -121,11 +122,12 @@ const College = ({
     async function fetchData() {
       let data = await getData();
       // if no data, hasmore state to false
-      if (!data || !data.length) {
+      if (!data || data.length == 0) {
         setHasMore(false);
         return;
+      } else {
+        setHasMore(true);  
       }
-      setHasMore(true);
       if (requestData.skip - prevRequest.skip > 0) {
         setData((currData) => {
           if (currSort) {
@@ -137,27 +139,26 @@ const College = ({
           }
           return currData.concat(data);
         });
-        return;
+      } else {
+        if (currSort) {
+          setData(sortBy(currSort, currNumericalSortOrder, data));
+        } else {
+          setData(data);
+        }
+        setIsLoading(false);
       }
-      // TODO: there's a bug that causes the initial data fetch call to re-sort the data with the default sort even after the user has selected a different sort, this only happens at the initial page load if the user changes the sort before data loads
-      setData(sortBy(currSort, currNumericalSortOrder, data));
-      setIsLoading(false);
     }
     fetchData();
   }, [requestData]);
 
   useEffect(() => {
-    if (isLoading) return;
-    setData(sortBy(currSort, currNumericalSortOrder));
-  }, [currSort, currNumericalSortOrder, isLoading]);
+    if (currSort) {
+      sortBy(currSort, currNumericalSortOrder);
+    }
+  }, [currSort, currNumericalSortOrder]);
 
-  const sortBy = (
-    sortType: string,
-    numericalSortOrder: string,
-    data: any[] = []
-  ) => {
+  const sortBy = (sortType: string, numericalSortOrder: string, data?) => {
     const parseInstSize = (inst_size: string) => {
-      if (!inst_size) return 0;
       const indexOfNum = inst_size.includes("Under")
         ? 1
         : inst_size.includes("above")
@@ -172,49 +173,59 @@ const College = ({
       }
       return parseInt(inst_size.split(" ")[indexOfNum]);
     };
-    const copiedData = data && data.length ? [...data] : [...collegeData];
+    const copiedData = [...(data ? data : collegeData)];
     const isLeastGreatest = numericalSortOrder === "Least-Greatest";
-    const sortFunctions = {
-      "A-Z": (a: any, b: any) =>
+    if (sortType === "A-Z") {
+      copiedData.sort((a, b) =>
         isLeastGreatest
           ? a.title.localeCompare(b.title)
-          : b.title.localeCompare(a.title),
-      Size: (a: any, b: any) =>
+          : b.title.localeCompare(a.title)
+      );
+    } else if (sortType === "Size") {
+      copiedData.sort((a, b) =>
         isLeastGreatest
-          ? parseInstSize(a.inst_size) - parseInstSize(b.inst_size)
-          : parseInstSize(b.inst_size) - parseInstSize(a.inst_size),
-      Tuition: (a: any, b: any) =>
+          ? parseInstSize(b.inst_size) - parseInstSize(a.inst_size)
+          : parseInstSize(a.inst_size) - parseInstSize(b.inst_size)
+      );
+    } else if (sortType === "Tuition") {
+      copiedData.sort((a, b) =>
         isLeastGreatest
           ? a.tuition_and_fee - b.tuition_and_fee
-          : b.tuition_and_fee - a.tuition_and_fee,
-      "Student-Faculty Ratio": (a: any, b: any) =>
+          : b.tuition_and_fee - a.tuition_and_fee
+      );
+    } else if (sortType === "Student-Faculty Ratio") {
+      copiedData.sort((a, b) =>
         isLeastGreatest
           ? a.student_faculty_ratio - b.student_faculty_ratio
-          : b.student_faculty_ratio - a.student_faculty_ratio,
-      "Acceptance Rate": (a: any, b: any) =>
+          : b.student_faculty_ratio - a.student_faculty_ratio
+      );
+    } else if (sortType === "Acceptance Rate") {
+      copiedData.sort((a, b) =>
         isLeastGreatest
-          ? a.acceptance_rate - b.acceptance_rate
-          : b.acceptance_rate - a.acceptance_rate,
-      Default: (a: any, b: any) => 0,
-    };
-    if (sortType && sortType in sortFunctions) {
-      copiedData.sort(sortFunctions[sortType]);
+          ? a.acceptance_rate.acceptance_rate_total -
+            b.acceptance_rate.acceptance_rate_total
+          : b.acceptance_rate.acceptance_rate_total -
+            a.acceptance_rate.acceptance_rate_total
+      );
     }
-    return copiedData;
+    if (data) {
+      return copiedData;
+    }
+    setData(copiedData);
   };
 
   return (
     <Layout>
       <Row>
-        <Col xs={24} sm={24} md={4} lg={4} xl={4} xxl={4}>
+        <Col xs={24} sm={24} md={6} lg={6} xl={5} xxl={4}>
           <SideBar setFilter={setFilter} />
         </Col>
         <Col
           xs={24}
           sm={24}
-          md={20}
-          lg={20}
-          xl={20}
+          md={18}
+          lg={18}
+          xl={19}
           xxl={20}
           id="college-scroll"
           style={{
@@ -312,7 +323,7 @@ const College = ({
                     "Size",
                     "Tuition",
                     "Student-Faculty Ratio",
-                    "Acceptance Rate",
+                    "Acceptence Rate",
                   ]}
                 />
                 <div style={{ width: "20px" }} />

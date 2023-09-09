@@ -1,7 +1,6 @@
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getEnvVariable } from "src/config/getConfig";
-import { AcademicsProps } from "src/main-pages/CheckInPage/Components/AcademicsSignUp";
 
 export const config = {
   api: {
@@ -10,7 +9,7 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId, academics, applicantType, insertionId, responses } = JSON.parse(
+  const { userId, academics, applicantType, insertionId } = JSON.parse(
     req.body
   );
   try {
@@ -26,7 +25,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         applicantType
       );
     }
-    const result = await putAcademics(userId, academics, responses, insertionId);
+    const result = await putAcademics(userId, academics, insertionId);
     resolve.status(200).send(result);
   } catch (e) {
     resolve.status(500).send(e);
@@ -40,7 +39,6 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putAcademics = (
   userId: string,
   academics: Academics | undefined,
-  responses: AcademicsProps | undefined,
   insertionId: string
 ): Promise<void> => {
   if (academics !== undefined && academics._id && userId) {
@@ -57,7 +55,6 @@ export const putAcademics = (
           .insertOne({
             firebaseId: insertionId,
             ...academics,
-            responses
           });
       } else if (userId && !academics) {
         await client.db("metrics").collection("academics").deleteOne({

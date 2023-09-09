@@ -7,20 +7,13 @@ import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import styles from "./college-card.module.scss";
-import { CardActionArea, Tab, Tabs, duration } from "@mui/material";
+import { CardActionArea, Tab, Tabs } from "@mui/material";
 import classNames from "classnames";
 import { useSession } from "next-auth/react";
 import { useMediaQuery } from "@mui/material"
 import { Row } from "react-bootstrap";
 import { Col } from "react-bootstrap";
 import { auto } from "@popperjs/core";
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import { notification } from "antd";
-
-
 
 interface CardProps {
   abbreviation?: string;
@@ -37,7 +30,6 @@ interface CardProps {
   schoolFit: string;
   onList: boolean;
 }
-
 
 function CollegeCard(props: CardProps) {
   const router = useRouter();
@@ -79,9 +71,9 @@ function CollegeCard(props: CardProps) {
         <Card
           sx={{
             width: 
-              isMediumScreen ? "25rem":
-              isLargeScreen ? "26rem": 
-              "35rem",
+              isMediumScreen ? "28rem":
+              isLargeScreen ? "30rem": 
+              "40rem",
             minHeight: "10rem",
             height: "fit-content",
           }}
@@ -124,56 +116,11 @@ function InnerCard({
   schoolFit,
   onList,
 }: CardProps) {
-  const router = useRouter();
-  const openAddNotification = () => {
-    const btn = (
-      <Button
-        variant="contained"
-        style={{
-          textTransform: "none"
-        }}
-        onClick={() => {
-              router.push("/college-list/");}}
-      >
-        View My List
-      </Button>
-    );
-
-    notification.open({
-      message: "",
-      description: "Successfully added this college to your list", btn,
-      duration: 2,
-      placement: "bottomRight"
-    });
-  };
-
-  const openRemovedNotification = () => {
-    const btn = (
-      <Button
-        variant="contained"
-        style={{
-          textTransform: "none"
-        }}
-        onClick={() => {
-              router.push("/college-list/");}}
-      >
-        View My List
-      </Button>
-    );
-
-    notification.open({
-      message: "",
-      description: "Removed this college to your list", btn,
-      duration: 2,
-      placement: "bottomRight"
-    });
-  };
   const [imageHasLoaded, setImageHasLoaded] = useState(false);
   const [addedToList, setAddedToList] = useState(onList);
   const { data: session } = useSession();
   const handleAddCollege = async (event) => {
     event.stopPropagation();
-    openAddNotification();
     setAddedToList(!addedToList);
     // add to college list
     const response = await fetch(`/api/CST/add-college-to-list`, {
@@ -191,7 +138,6 @@ function InnerCard({
 
   const handleRemoveCollege = async (event) => {
     event.stopPropagation();
-    openRemovedNotification();
     setAddedToList(!addedToList);
     // remove from college list
     const response = await fetch(`/api/CST/remove-college-from-list`, {

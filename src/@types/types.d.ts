@@ -126,7 +126,7 @@ export declare global {
     questions: ObjectId[]; // Document IDs of question data
   }
   interface Question extends WithId<Document> {
-    _id?: ObjectId | any;
+    _id?: ObjectId;
     question: string;
     type: string;
     placeholder?: string;
@@ -251,7 +251,6 @@ export declare global {
     activities: Activity[];
     overallTier: number;
     totalPoints: number;
-    responses?: ActivityNew[];
   }
 
   interface Activity {
@@ -280,7 +279,6 @@ export declare global {
     actScore: number;
     testTip: string;
     overallTier: number;
-    responses?: any[];
   }
 
   interface Class {
@@ -301,7 +299,7 @@ export declare global {
     className?: string;
     name?: string;
     children: React.ReactNode;
-    onClick?: (e?: React.MouseEvent<HTMLButtonElement,MouseEvent> | React.TouchEvent<HTMLButtonElement>) => void;
+    onClick?: () => void;
   }
 
   interface SvgIconProps {

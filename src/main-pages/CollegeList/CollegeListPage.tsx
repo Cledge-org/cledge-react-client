@@ -7,12 +7,11 @@ import { collegeListIndividualInfo } from "src/@types/types";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@mui/material";
 import { useSession } from "next-auth/react";
-import CollegeListSubTitle from "src/main-pages/CollegeList/components/CollegeListSubTitle";
 
 
 const CollegeListPage: NextApplicationPage<{
   accountInfo: AccountInfo;
-  collegeList: collegeListIndividualInfo[]
+  collegeList: collegeListIndividualInfo[];
 }> = ({ collegeList }) => {
   const [targetSchools, setTargetSchools] = useState([]);
   const [fitSchools, setFitSchools] = useState([]);
@@ -150,11 +149,6 @@ const CollegeListPage: NextApplicationPage<{
               </Button>
             </div>
           </div>
-          
-          <div>
-            <CollegeListSubTitle/>
-          </div>
-          
           <div
             style={{
               display: "flex",

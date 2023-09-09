@@ -1,6 +1,5 @@
 import { ObjectId } from "mongodb";
 import { getSession } from "next-auth/react";
-import { AcademicsProps } from "src/main-pages/CheckInPage/Components/AcademicsSignUp";
 
 export const callPutQuestionResponses = async (
   newUserResponses: UserResponse[]
@@ -118,7 +117,6 @@ export const callPutActivities = async (
 };
 export const callPutAcademics = async (
   academics: Academics,
-  responses: AcademicsProps,
   hasAcademics: boolean
 ) => {
   const session = await getSession();
@@ -128,7 +126,6 @@ export const callPutAcademics = async (
       userId: academics ? session.user.uid : null,
       insertionId: hasAcademics ? undefined : session.user.uid,
       academics,
-      responses
     }),
   });
 };

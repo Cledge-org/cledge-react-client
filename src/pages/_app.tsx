@@ -1,7 +1,7 @@
 import "node_modules/bootstrap/dist/css/bootstrap.css";
 import "src/common/styles/global-styles.scss";
 import "antd/dist/antd.css";
-// import "material-design-icons/iconfont/material-icons.css";
+import "material-design-icons/iconfont/material-icons.css";
 import MyAppPage from "../main-pages/AppPage/AppPage";
 
 const MyApp = ({ Component, pageProps }) => {
