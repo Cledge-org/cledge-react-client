@@ -8,10 +8,6 @@ import { useLocation } from "src/utils/hooks/useLocation";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import styles from "./header.module.scss";
 import collegeIcon from "src/public/images/header/college-search.svg"
-import Dropdown from 'react-bootstrap/Dropdown';
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup"
-
 
 const Header = ({
   key_prop,
@@ -53,53 +49,41 @@ const Header = ({
       link: "/dashboard",
       icon: "dashboard.svg?alt=media&token=90850805-8011-45af-aab8-95cbc8d7eb95",
       title: "Dashboard",
-      dropdown: false,
-      links: [{}]
     },
     {
       link: "/my-learning",
       icon: "my-learning.svg?alt=media&token=4ccc96fe-3db9-45b9-849a-24fcac93367b",
       title: "My Learning",
-      dropdown: false,
-      links: [{}]
     },
     {
       link: "/chatbot",
       icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
       title: "AI Chat",
-      dropdown: false,
-      links: [{}]
-
-    },
-    {
-      link: "/college-list",
-      icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
-      title: "College",
-      dropdown: true,
-      links : [
-        {
-          key: "My List", 
-          value: "/college-list"
-        },
-        {
-          key: "Colleges", 
-          value: "/college-search"
-        },
-      ]
     },
     {
       link: "/metrics",
       icon: "metrics.svg?alt=media&token=9eed7da0-8292-4847-9d73-a007d5850f0a",
       title: "Metrics",
-      dropdown: false,
-      links: [{}]
+    },
+    {
+      link: "/college-list",
+      icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
+      title: "My List"
+    },
+    {
+      link: "/college-search",
+      icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
+      title: "College Search"
+    },
+    {
+      link: "/application-profile",
+      icon: "application-profile.svg?alt=media&token=07dc1585-f1bd-4bee-804b-1db88296c62f",
+      title: "Application Profile",
     },
     {
       link: "/blogs",
       icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
       title: "Blogs",
-      dropdown: false,
-      links: [{}]
     },
   ];
   const onScroll = useCallback(() => {
@@ -131,16 +115,11 @@ const Header = ({
       document.removeEventListener("scroll", listener);
     };
   }, [scrollState, onScroll, isExpanded]);
-
-  const isActiveLink = (router, links) => {
-    return links.some(link => router.pathname === link.value);
-  };
-  
   return (
     <nav
       key={key_prop}
       className={classNames(
-        `w-100 navbar cl-blue navbar-expand-md px-3 border-bottom border-2`,
+        `w-100 navbar cl-blue navbar-expand-md px-3`,
         scrollState !== "scrolling" && router.pathname === "/" && !isExpanded
           ? `position-fixed top-0 start-0 ${styles.navTransparent}`
           : "sticky-top",
@@ -198,69 +177,31 @@ const Header = ({
           id="navbarNavAltMarkup"
         >
           {status === "authenticated" ? (
-            
             <div className="navbar-nav">
-              {linkData.map(({ title, link, icon, dropdown, links}) => (
-              dropdown ? (
-                <Dropdown as={ButtonGroup}>
-                  <Dropdown.Toggle variant="outline" className="dropdown-toggle btn-sm btn-sm no-animation-button">
-                    <a
-                        className=""
-                        style={{
-                          color: isActiveLink(router, links) ? "#506BED" : "#808099",
-                        }}
-                      >
-                        <img
-                          style={{
-                            filter:
-                              isActiveLink(router, links)
-                                ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
-                                : "",
-                          }}
-                          src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
-                        />
-                        <span className="ps-1 pe-1">{title}</span>
-                      </a>
-                  </Dropdown.Toggle>
-          
-                  <Dropdown.Menu align="left">
-                    {links.map((item) => {
-                      return (
-                        <Link href={item.value}>
-                          <a className="dropdown-item">{item.key}</a>
-                        </Link>
-                      )
-
-                    })}
-                  </Dropdown.Menu>
-                </Dropdown>
-              ) : (
+              {linkData.map(({ title, link, icon }) => (
                 <Link href={link}>
-                  <Button variant="outline" className="clear-button btn-sm no-animation-button">
-                    <a
-                      className=""
+                  <a
+                    className="nav-link d-flex flex-row align-items-center"
+                    style={{
+                      fontWeight: 500,
+                      color: router.pathname === link ? "#506BED" : "#808099",
+                    }}
+                  >
+                    <img
                       style={{
-                        color: router.pathname === link ? "#506BED" : "#808099",
+                        filter:
+                          router.pathname === link
+                            ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
+                            : "",
                       }}
-                    >
-                      <img
-                        style={{
-                          filter:
-                            router.pathname === link
-                              ? "invert(37%) sepia(32%) saturate(3369%) hue-rotate(215deg) brightness(98%) contrast(90%)"
-                              : "",
-                        }}
-                        src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
-                      />
-                      <span className="ps-1 pe-1">{title}</span>
-                    </a>
-                  </Button>
+                      src={`https://firebasestorage.googleapis.com/v0/b/cledge-dev.appspot.com/o/header%2F${icon}`}
+                    />
+                    <div className="px-1" />
+                    <span>{title}</span>
+                  </a>
                 </Link>
-              )
               ))}
             </div>
-
- 
           ) : (
             <div className="navbar-nav">
               <Link href="/api/auth/signin">
@@ -292,33 +233,21 @@ const Header = ({
           )}
         </div>
         {status === "authenticated" && (
-          <Dropdown>
-            <Dropdown.Toggle variant="" bsPrefix="p-0" className="btn-sm no-animation-button">
-              <a                
-                style={{
-                    background: "rgba(247, 188, 118, 0.5)",
-                    paddingLeft: "15px",
-                    paddingRight: "15px",
-                    paddingTop: "12px",
-                    paddingBottom: "12px",
-                    borderRadius: "10px",
-                    color: "black",
-                  }}
-                >
-                  {userInitials}
-                </a>
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu align="right">
-              <Link href="/application-profile">
-                <a className="dropdown-item">Application Profile</a>
-              </Link>
-              <Link href="account">
-                  <a className="dropdown-item">Account Settings</a>
-              </Link>
-            </Dropdown.Menu>
-          </Dropdown>
-          
+          <Link href="/account">
+            <a
+              style={{
+                background: "rgba(247, 188, 118, 0.5)",
+                paddingLeft: "15px",
+                paddingRight: "15px",
+                paddingTop: "12px",
+                paddingBottom: "12px",
+                borderRadius: "10px",
+                color: "black",
+              }}
+            >
+              {userInitials}
+            </a>
+          </Link>
         )}
       </div>
     </nav>

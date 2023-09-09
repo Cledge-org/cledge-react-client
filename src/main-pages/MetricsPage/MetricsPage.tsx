@@ -18,43 +18,69 @@ const Metrics: NextApplicationPage<{
   academics: Academics;
 }> = ({ activities, userTags, questionResponses, academics }) => {
   const [currPage, setCurrPage] = useState("all");
-  const sideBarSectionData = [
-    {
-      title: "Metrics Overview",
-      page: "all",
-    },
-    {
-      title: "Extracurricular Metrics",
-      page: "Extracurriculars",
-    },
-    {
-      title: "Academics Metrics",
-      page: "Academics",
-    },
-  ];
+  function BorderDropdownTab({
+    isAll,
+    chunkList,
+    onClick,
+    title,
+    percentComplete,
+  }) {
+    return (
+      <div className="border-bottom border-2">
+        <DropdownTab
+          isAll={isAll}
+          chunkList={chunkList}
+          onClick={onClick}
+          title={title}
+          percentComplete={percentComplete}
+        />
+      </div>
+    );
+  }
   return (
     <PageErrorBoundary>
       <div
-        className="container-fluid d-flex flex-row px-0"
+        className="container-fluid d-flex flex-row px-0 border-top border-2"
         style={{ minHeight: "100vh" }}
       >
         <div
-          className="d-flex flex-column border-end"
-          style={{ width: "20rem", backgroundColor: "#EFEFF5" }}
+          className="d-flex flex-column bg-extra-light-gray border-end"
+          style={{ width: "23%" }}
         >
-          {sideBarSectionData.map((data, _index) => (
-            <DropdownTab
-              key={_index}
-              isAll
-              chunkList={[]}
-              onClick={() => {
-                setCurrPage(data.page);
-              }}
-              title={data.title}
-              percentComplete={undefined}
-              selected={currPage === data.page}
-            />
-          ))}
+          <BorderDropdownTab
+            isAll
+            chunkList={[]}
+            onClick={() => setCurrPage("all")}
+            title="Metrics Overview"
+            percentComplete={undefined}
+          />
+          {/* {questionData.map((list, index) => {
+          if (list.name === "Extracurriculars" || list.name === "Academics") {
+            return (
+              <DropdownTab
+                isExtracurricular={list.name === "Extracurriculars"}
+                chunkList={list.chunks.map((chunk) => chunk.name)}
+                onClick={(chunk) => setCurrPage(list.name)}
+                title={list.name}
+                percentComplete={percentageData.lists[index]}
+              />
+            );
+          }
+        })} */}
+          <BorderDropdownTab
+            isAll
+            chunkList={[]}
+            onClick={(chunk) => setCurrPage("Extracurriculars")}
+            title={"Extracurricular Metrics"}
+            percentComplete={undefined}
+          />
+          <BorderDropdownTab
+            isAll
+            chunkList={[]}
+            onClick={(chunk) => setCurrPage("Academics")}
+            title={"Academics Metrics"}
+            percentComplete={undefined}
+          />
         </div>
         <div
           className="d-flex"
@@ -161,12 +187,7 @@ const Metrics: NextApplicationPage<{
                   className="pb-5"
                 >
                   <div className="d-flex flex-row justify-content-between mb-5">
-                    <strong
-                      className="cl-dark-text"
-                      style={{ fontSize: "1.6em" }}
-                    >
-                      Overall Tier
-                    </strong>
+                    <strong className="cl-dark-text" style={{ fontSize: "1.6em" }}>Overall Tier</strong>
                     <div className="w-50 cl-dark-text">
                       <div className="d-flex justify-content-between mb-2">
                         <div>
@@ -190,24 +211,21 @@ const Metrics: NextApplicationPage<{
                   </div>
                 </div>
                 <div className="pt-3 pb-5">
-                  <strong
-                    className="cl-dark-text"
-                    style={{ fontSize: "1.6em" }}
-                  >
-                    Individual activity metrics
-                  </strong>
+                  <strong className="cl-dark-text" style={{ fontSize: "1.6em" }}>Individual activity metrics</strong>
                 </div>
-                {activities?.activities?.map((activity, _index) => (
-                  <ActivityDropdown
-                    updateChunk={"All Activities"}
-                    updatePage={"Extracurriculars"}
-                    title={activity.actTitle}
-                    content={activity.description}
-                    tier={activity.tier}
-                    tip={activity.tip}
-                    key={_index}
-                  />
-                ))}
+                {activities?.activities?.map((activity) => {
+                  //console.log(activity.tip);
+                  return (
+                    <ActivityDropdown
+                      updateChunk={"All Activities"}
+                      updatePage={"Extracurriculars"}
+                      title={activity.actTitle}
+                      content={activity.description}
+                      tier={activity.tier}
+                      tip={activity.tip}
+                    />
+                  );
+                })}
               </div>
             </div>
           ) : (

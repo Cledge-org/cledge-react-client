@@ -51,26 +51,18 @@ export default function QuestionACSubpage({
       },
       []
     );
-    console.log("CLASS TYPES: " + classTypes)
     let applicantLevel = userResponses.find(
       ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
     )?.response;
     if (!applicantLevel) {
       applicantLevel = "Average";
     }
-    console.log(chunkResponses);
-    let gpa;
-    if (chunkResponses.generalQuestions.length > 0) {
-      gpa = parseFloat(
-        chunkResponses.generalQuestions.find(
-          ({ questionId }) => questionId === "62435e6620b74f4eb00ac8f5"
-        ).response
-      );
-    } else {
-      gpa = 0;
-    }
-   
-    if (gpa == 0) {
+    const gpa = parseFloat(
+      chunkResponses.generalQuestions.find(
+        ({ questionId }) => questionId === "62435e6620b74f4eb00ac8f5"
+      ).response
+    );
+    if (!gpa) {
       return null;
     }
     const applicantLevelNum =
@@ -124,18 +116,16 @@ export default function QuestionACSubpage({
         setIsEditing(false);
       }}
       onSave={async (newAnswers) => {
-        let ACResponse = userResponses?.find(({ questionId }) => {
+        const ACResponse = userResponses?.find(({ questionId }) => {
           return questionId === "Academics";
         });
         if (ACResponse === undefined) {
-          const ACRes = {
+          userResponses.push({
             questionId: "Academics",
             response: {
               [chunk.name]: { semesterQuestions: [], generalQuestions: [] },
             },
-          }
-          userResponses.push(ACRes);
-          ACResponse = ACRes;
+          });
         }
         if (ACResponse?.response[chunk.name] === undefined) {
           ACResponse.response[chunk.name].semesterQuestions = [];
@@ -156,8 +146,7 @@ export default function QuestionACSubpage({
         }
         callPutAcademics(
           getAcademics(ACResponse.response[chunk.name]),
-          academics,
-          null
+          academics
         );
         store.dispatch(updateQuestionResponsesAction(userResponses));
         if (isAdding) {

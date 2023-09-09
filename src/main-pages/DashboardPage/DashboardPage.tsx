@@ -100,101 +100,17 @@ const DashboardPage = ({
           </div>
         </div>
         <Container className="mt-5 mb-5">
-          <Row>
-            <Col sm={6}>
-            <Card style={{ height : '350px' }}className="d-flex flex-column justify-content-between">
-                  <Row>
-                    <Col lg={12}>
-                      <div className="ms-3">
-                        <div className="cl-dark-text h2 fw-bold pt-3">
-                          <Link href="/metrics">
-                            <a>
-                              <img
-                                src="/images/college-finder.png" alt="graduation hat"
-                                style={{
-                                  padding: "10px",
-                                  width: "50px",
-                                  borderRadius: "10px",
-                                  backgroundColor: "#DCE1FB",
-                                }}
-                                className="me-3"
-                              />
-                            </a>
-                          </Link>
-                          College Finder
-                        </div>
-                        <Row>
-                          <Col lg={12} className="pt-3">
-                            <div className="h5">Explore data on thousands of colleges cataloged by cledge - right at your fingertips.</div>
-                          </Col>
-                            
-                        </Row>
-                      </div>
-                    </Col>
-                    <Col lg={3}>
-                      <div className=""></div>
-                    </Col>
-                  </Row>
-                  <Link href="/college">
-                    <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-2">
-                      <div className="h5 mb-0">Go to College Finder</div>
-                    </Button>
-                  </Link>
-                </Card>
-              </Col>
-              <Col sm={6}>
-              <Card style={{ height : '350px' }}className="d-flex flex-column justify-content-between">
-                  <Row>
-                    <Col lg={12}>
-                      <div className="ms-3">
-                        <div className="cl-dark-text h2 fw-bold pt-3">
-                          <Link href="/metrics">
-                            <a>
-                              <img
-                                src="/images/header/blogs.svg" alt="pencil and paper icon"
-                                style={{
-                                  padding: "10px",
-                                  width: "50px",
-                                  borderRadius: "10px",
-                                  backgroundColor: "#DCE1FB",
-                                }}
-                                className="me-3"
-                              />
-                            </a>
-                          </Link>
-                          College List
-                        </div>
-                        <Row>
-                          <Col lg={12} className="pt-3">
-                            <div className="h5">Explore the colleges that we think are a great fit for you based on your profile</div>
-                          </Col>
-                            
-                        </Row>
-                      </div>
-                    </Col>
-                    <Col lg={3}>
-                      <div className=""></div>
-                    </Col>
-                  </Row>
-                  <Link href="/college-list">
-                    <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
-                      <div className="h5 mb-0">Go to your list</div>
-                    </Button>
-                  </Link>
-                </Card>
-              </Col>
-            </Row>
-            <Row className="pt-4">
+          <Row className="pb-4">
             <Col className="mt-sm-5 mt-md-0 mt-lg-0" md={6} sm={12}>
-            <Card style={{ height : '375px' }}className="d-flex flex-column justify-content-between">                
-            <Row>
+              <Card className="h-100 d-flex flex-column justify-content-between">
+                <Row>
                   <Col lg={12}>
                     <div className="ms-3">
                       <div className="cl-dark-text h2 fw-bold pt-3  ">
                         <Link href="/my-learning">
                             <a>
                               <img
-                                src="/images/header/icon-school.svg" alt="icon of graduation hat"
+                                src="/images/header/icon-school.svg"
                                 style={{
                                   padding: "10px",
                                   width: "50px",
@@ -264,7 +180,6 @@ const DashboardPage = ({
                           <a>
                             <img
                               src="/images/header/metrics.svg"
-                              alt="pie graph icon"
                               style={{
                                 padding: "10px",
                                 width: "50px",
@@ -373,7 +288,91 @@ const DashboardPage = ({
                 </Row>
                 <Link href="/metrics">
                   <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
-                    <div className="h5 mb-0">Go to Metrics</div>
+                    <div className="h5">Go to Metrics</div>
+                  </Button>
+                </Link>
+              </Card>
+            </Col>
+          </Row>
+          <Row>
+          <Col>
+            <Card className="h-100 d-flex flex-column justify-content-between">
+                <Row>
+                  <Col lg={12}>
+                    <div className="ms-3">
+                      <div className="cl-dark-text h2 fw-bold pt-3">
+                        <Link href="/metrics">
+                          <a>
+                            <img
+                              src="/images/header/icon-school.svg"
+                              style={{
+                                padding: "10px",
+                                width: "50px",
+                                borderRadius: "10px",
+                                backgroundColor: "#DCE1FB",
+                              }}
+                              className="me-3"
+                            />
+                          </a>
+                        </Link>
+                        College Search Tool
+                      </div>
+                      <Row>
+                        <Col lg={12} className="pt-3">
+                          <div className="h5">Explore data on thousands of colleges cataloged by cledge - right at your fingertips.</div>
+                        </Col>
+                          
+                      </Row>
+                    </div>
+                  </Col>
+                  <Col lg={3}>
+                    <div className=""></div>
+                  </Col>
+                </Row>
+                <Link href="/college">
+                  <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
+                    <div className="h5">Go to College Finder</div>
+                  </Button>
+                </Link>
+              </Card>
+            </Col>
+            <Col>
+            <Card className="h-100 d-flex flex-column justify-content-between">
+                <Row>
+                  <Col lg={12}>
+                    <div className="ms-3">
+                      <div className="cl-dark-text h2 fw-bold pt-3">
+                        <Link href="/metrics">
+                          <a>
+                            <img
+                              src="/images/header/blogs.svg"
+                              style={{
+                                padding: "10px",
+                                width: "50px",
+                                borderRadius: "10px",
+                                backgroundColor: "#DCE1FB",
+                              }}
+                              className="me-3"
+                            />
+                          </a>
+                        </Link>
+                        College List
+                      </div>
+                      <Row>
+                        <Col lg={12} className="pt-3">
+                          <div className="h5">Explore the colleges that we think are a great fit for you based on your profile</div>
+                        </Col>
+                          
+                      </Row>
+                    </div>
+                  </Col>
+                  <Col lg={3}>
+                    <div className=""></div>
+                  </Col>
+                </Row>
+                <Link href="/collegeList">
+                  <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
+                    <div className="h5">Go to your list</div>
                   </Button>
                 </Link>
               </Card>
