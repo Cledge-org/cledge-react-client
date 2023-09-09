@@ -63,6 +63,7 @@ const College = ({
       ? 2
       : 3,
   });
+  console.log(requestData);
   const [prevRequest, setPrevRequest] = useState({
     searchText: "*",
     top: 10,

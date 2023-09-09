@@ -178,7 +178,7 @@ const DashboardPage = ({
                   </Row>
                   <Link href="/college-list">
                     <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
-                      <div className="h5 mb-0">Go to your list</div>
+                      <div className="h5 mb-0">Go to My Colleges</div>
                     </Button>
                   </Link>
                 </Card>
@@ -249,7 +249,7 @@ const DashboardPage = ({
                 </Row>
                   <Link href="my-learning">
                     <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-2">
-                      <div className="h5 mb-0">Go to my Learning</div>
+                      <div className="h5 mb-0">Go to My Learning</div>
                     </Button>
                   </Link>
               </Card>
