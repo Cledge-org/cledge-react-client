@@ -17,13 +17,14 @@ const SignUpPage = () => {
   const incorrectPassStr =
     "Password must contain at least one uppercase letter, one lowercase letter, and one number";
   const mismatchPasswords = "Passwords are not matching";
-  const allFieldsNotFilled = "Make sure to fill in all fields";
+  const allFieldsNotFilled = "Make sure to fill in all required * fields";
   const regExp = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/;
   var [formData, setFormData] = useState({
     email: "",
     password1: "",
     isOnMailingList: true,
     password2: "",
+    referralName: "",
   });
   const [errorMessages, setErrorMessages] = useState([]);
   const [accessCode, setAccessCode] = useState("");
@@ -111,6 +112,7 @@ const SignUpPage = () => {
       email: formData.email,
       tags: [],
       checkIns: ["Onboarding Questions"],
+      referralName: formData.referralName,
     })
       .then(async (res) => {
         alertSlackNewUser(parseInt(await getNumUsers()) - 36);
@@ -125,48 +127,49 @@ const SignUpPage = () => {
         checkCondition(true, err);
       });
   };
-  if (!hasAccess) {
-    return (
-      <div className="container">
-        <form
-          className="col col-md-5 d-flex mx-auto flex-column justify-content-center align-items-center"
-          style={{ height: "80vh" }}
-        >
-          <div className="fs-1 fw-bold cl-dark-text">Enter Access Code</div>
-          {isIncorrectAccessCode ? (
-            <div className="cl-red d-flex flex-column">
-              Incorrect Access Code
-            </div>
-          ) : null}
-          <div className="form-group mt-3 w-100">
-            <input
-              value={accessCode}
-              onChange={(e) => {
-                setAccessCode(e.target.value);
-              }}
-              type="text"
-              className="px-3 form-control"
-              id="email"
-              placeholder="Enter code"
-            />
-          </div>
-          <input
-            type="submit"
-            className="cl-btn-blue mt-4"
-            onClick={(e) => {
-              e.preventDefault();
-              if (accessCode === "596382") {
-                setHasAccess(true);
-              } else {
-                setIsIncorrectAccessCode(true);
-              }
-            }}
-            value="Access Signup"
-          />
-        </form>
-      </div>
-    );
-  }
+  // logic for access code if needed for the future.
+  // if (!hasAccess) {
+  //   return (
+  //     <div className="container">
+  //       <form
+  //         className="col col-md-5 d-flex mx-auto flex-column justify-content-center align-items-center"
+  //         style={{ height: "80vh" }}
+  //       >
+  //         <div className="fs-1 fw-bold cl-dark-text">Enter Access Code</div>
+  //         {isIncorrectAccessCode ? (
+  //           <div className="cl-red d-flex flex-column">
+  //             Incorrect Access Code
+  //           </div>
+  //         ) : null}
+  //         <div className="form-group mt-3 w-100">
+  //           <input
+  //             value={accessCode}
+  //             onChange={(e) => {
+  //               setAccessCode(e.target.value);
+  //             }}
+  //             type="text"
+  //             className="px-3 form-control"
+  //             id="email"
+  //             placeholder="Enter code"
+  //           />
+  //         </div>
+  //         <input
+  //           type="submit"
+  //           className="cl-btn-blue mt-4"
+  //           onClick={(e) => {
+  //             e.preventDefault();
+  //             if (accessCode === "596382") {
+  //               setHasAccess(true);
+  //             } else {
+  //               setIsIncorrectAccessCode(true);
+  //             }
+  //           }}
+  //           value="Access Signup"
+  //         />
+  //       </form>
+  //     </div>
+  //   );
+  // }
   return (
     <PageErrorBoundary>
       <div className="container">
@@ -185,7 +188,7 @@ const SignUpPage = () => {
               className="text-muted"
               htmlFor="email"
             >
-              Email Address
+              Email Address *
             </label>
             <input
               value={formData.email}
@@ -205,7 +208,7 @@ const SignUpPage = () => {
               className="text-muted"
               htmlFor="password"
             >
-              Password
+              Password *
             </label>
             <input
               value={formData.password1}
@@ -224,7 +227,7 @@ const SignUpPage = () => {
               className="text-muted"
               htmlFor="password"
             >
-              Confirm Password
+              Confirm Password *
             </label>
             <input
               value={formData.password2}
@@ -235,6 +238,28 @@ const SignUpPage = () => {
               className="px-3 form-control"
               id="confirmpassword"
               placeholder="Confirm Password"
+            />
+          </div>
+          <div className="mt-4">
+            <h6 className="text-muted">Came from a referral? If so, please fill in the name of the person who invited you to Cledge.</h6>
+          </div>
+          <div className="form-group w-100">
+            <label
+              style={{ fontSize: "0.9em" }}
+              className="text-muted"
+              htmlFor="text"
+            >
+              Referral Name
+            </label>
+            <input
+              value={formData.referralName}
+              onChange={(e) =>
+                setFormData({ ...formData, referralName: e.target.value })
+              }
+              type="text"
+              className="px-3 form-control"
+              id="text"
+              placeholder=""
             />
           </div>
           <div className="mt-3 mb-4">

@@ -83,7 +83,7 @@ export default function Layout({ children }) {
 
   return (
     <div>
-      {router.pathname === "/check-ins/[checkIn]" ? null : router.pathname === "/dempsey" ? null : header}
+      {["/check-ins/[checkIn]","/dempsey"].includes(router.pathname) ? null : header}
       {loading ? (
         <LoadingScreen />
       ) : (

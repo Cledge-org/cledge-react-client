@@ -128,7 +128,7 @@ const Pathways: NextApplicationPage<{
         true
       ) &&
       currContentProgress.subContentProgress.length >=
-        currContent.content.length;
+      currContent.content.length;
     updateContentProgress(currContentProgress);
   };
   const currContentJSX = useMemo(() => {
@@ -229,7 +229,6 @@ const Pathways: NextApplicationPage<{
                 undefined
               }
               onUpdate={(answer) => {
-                //console.log("Whot is op");
                 updateSubContentProgress({
                   ...currSubContentProgress,
                   questionAnswer: answer,
@@ -292,7 +291,7 @@ const Pathways: NextApplicationPage<{
         >
           <div
             className="d-flex flex-column border-end"
-            style={{ width: "23%", backgroundColor: "#EFEFF5" }}
+            style={{ width: "20rem", backgroundColor: "#EFEFF5" }}
           >
             {pathwayInfo.modules.map(
               ({ name, presetContent, personalizedContent, _id }) => {
@@ -341,6 +340,7 @@ const Pathways: NextApplicationPage<{
                     title={name}
                     isPathway
                     percentComplete={undefined}
+                    selected={currModuleId === _id}
                   />
                 );
               }

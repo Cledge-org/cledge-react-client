@@ -13,6 +13,22 @@ import { BsPencilSquare } from "react-icons/bs";
 import { RiFileTextFill } from "react-icons/ri";
 import styles from "./dropdown-tab.module.scss";
 import { purple } from "@mui/material/colors";
+import cs from "classnames";
+
+interface Props {
+  chunkList: Array<any>;
+  title: string;
+  isAll?: boolean;
+  percentComplete: number;
+  onClick: Function;
+  isECAC?: boolean;
+  isPathway?: boolean;
+  isFinishedContent?: boolean[];
+  isFinishedModule?: boolean;
+  currSelectedPath?: string;
+  icons?: IconProp[];
+  selected?: boolean;
+}
 
 export default function DropdownTab({
   chunkList,
@@ -26,19 +42,8 @@ export default function DropdownTab({
   currSelectedPath,
   isFinishedModule,
   isFinishedContent,
-}: {
-  chunkList: Array<any>;
-  title: string;
-  isAll?: boolean;
-  percentComplete: number;
-  onClick: Function;
-  isECAC?: boolean;
-  isPathway?: boolean;
-  isFinishedContent?: boolean[];
-  isFinishedModule?: boolean;
-  currSelectedPath?: string;
-  icons?: IconProp[];
-}) {
+  selected
+}: Props) {
   const [isExpanded, setIsExpanded] = useState(true);
   const ShownIcon = ({ className, style, icon }) => {
     return icon === "video" ? (
@@ -54,10 +59,13 @@ export default function DropdownTab({
     );
   };
   return (
-    <div className="dropdown-container">
+    <div
+      className={cs(
+        "dropdown-container border-bottom border-2")}
+    >
       <button
-        className="dropdown-btn"
-        style={{ border: "0px", fontWeight: "bold"}}
+        className={cs("dropdown-btn", selected && "dropdown-btn-selected")}
+        style={{ border: "0px", fontWeight: "bold" }}
         onClick={() => {
           if (isAll) {
             onClick();
@@ -87,55 +95,55 @@ export default function DropdownTab({
           isExpanded ? "dropdown-menu-expanded" : "dropdown-menu-closed"
         }
       >
-        {chunkList.map((chunkTitle, index) => (
-          <button
-            onClick={() => {
-              // if (isExtracurricular || isPathway) {
-              //   onClick(chunkTitle);
-              //   return;
-              // }
-              onClick(isPathway ? chunkTitle.name : chunkTitle);
-            }}
-            className={
-              currSelectedPath ===
-              title + (isPathway ? chunkTitle.name : chunkTitle)
-                ? "dropdown-menu-btn-selected"
-                : "dropdown-menu-btn"
-            }
-            key={index.toString()}
-          >
-            <div className="center-child icon me-3" style={{ alignSelf: "start", paddingTop: "3px"  }}>
-              <ShownIcon
-                className={`${
-                  isPathway
+        {chunkList.map((chunkTitle, index) => {
+          return (
+            <button
+              onClick={() => {
+                // if (isExtracurricular || isPathway) {
+                //   onClick(chunkTitle);
+                //   return;
+                // }
+                onClick(isPathway ? chunkTitle.name : chunkTitle);
+              }}
+              className={cs(currSelectedPath === (isPathway ? chunkTitle.name : chunkTitle) && "dropdown-menu-btn-selected", "dropdown-menu-btn")}
+              key={index.toString()}
+            >
+              <div
+                className="center-child icon me-3"
+                style={{ alignSelf: "start", paddingTop: "3px" }}
+              >
+                <ShownIcon
+                  className={`${isPathway
                     ? isFinishedModule || isFinishedContent[index]
                       ? "cl-blue"
                       : "cl-dark-text"
                     : ""
-                }`}
-                style={
-                  isPathway
-                    ? isFinishedModule || isFinishedContent[index]
-                      ? { fontSize: "1.3em" }
+                    }`}
+                  style={
+                    isPathway
+                      ? isFinishedModule || isFinishedContent[index]
+                        ? { fontSize: "1.3em" }
+                        : {}
                       : {}
-                    : {}
-                }
-                icon={
-                  icons && icons[index]
-                    ? isFinishedModule || isFinishedContent[index]
-                      ? "check"
-                      : icons[index]
-                    : "normal"
-                }
-              />
-            </div>
-            <div className="cl-dark-text" style={{ textAlign: "left", maxWidth: "75%" }}>
-              <text>
-                {isPathway ? chunkTitle.name : chunkTitle}
-              </text>
-            </div>
-          </button>
-        ))}
+                  }
+                  icon={
+                    icons && icons[index]
+                      ? isFinishedModule || isFinishedContent[index]
+                        ? "check"
+                        : icons[index]
+                      : "normal"
+                  }
+                />
+              </div>
+              <div
+                className="cl-dark-text"
+                style={{ textAlign: "left", maxWidth: "75%" }}
+              >
+                <text>{isPathway ? chunkTitle.name : chunkTitle}</text>
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

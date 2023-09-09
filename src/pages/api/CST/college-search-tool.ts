@@ -94,14 +94,25 @@ export const getCollegeInfo = (
 
       let searchFuzzyText = toFuzzyString(searchRawText);
 
+      let orderExpression = [];
+      let filterExpression = createFilterExpression(filters);
+
+      if (searchFuzzyText === "*") {
+        orderExpression = createOrderExpression("ADM_RATE", 1);
+        if (Object.keys(filters).length === 0) {
+          filterExpression = "ADM_RATE gt 0 and ADM_RATE_ALL gt 0 and APPLCN gt 8000";
+        }
+      }
+
       const searchResults = await searchClient.search(searchFuzzyText, {
         top: top,
         skip: skip,
         includeTotalCount: true,
         searchMode: "all",
         queryType: "full",
-        filter: createFilterExpression(filters),
+        filter: filterExpression,
         searchFields: searchFields,
+        orderBy: orderExpression,
       });
       let output = [];
       for await (const result of searchResults.results) {
@@ -146,8 +157,19 @@ const createFilterExpression = (filters) => {
     }
   });
 
+  //default filter for application count > 8000 (also need to change in default search text case)
+  filterExpressions.push("APPLCN gt 8000");
+
   return filterExpressions.join(" and ");
 };
+
+// simple function for turning input as order expression
+const createOrderExpression = (orderField, direction) => {
+  if (direction === -1) {
+    return [orderField + " desc"];
+  }
+  return [orderField];
+}
 
 const formatOutput = async (college: any, client: MongoClient, err: any) => {
   try {
@@ -168,6 +190,10 @@ const formatOutput = async (college: any, client: MongoClient, err: any) => {
       title: college["INSTNM"],
       location: college["CITY"] + ", " + college["STABBR"],
       college_type: dicts.college_type_dict[college["CONTROL"]],
+      inst_size: dicts.inst_size[college["INSTSIZE"]],
+      tuition_and_fee: college["TUFEYR3"],
+      student_faculty_ratio: college["STUFACR"],
+      acceptance_rate: college["ADM_RATE"],
     };
     return output;
   } catch (e) {

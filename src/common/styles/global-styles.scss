@@ -72,8 +72,14 @@ a {
 .bg-cl-orange-red {
   background-color: $cl-orange-red;
 }
+.bg-cl-orange {
+  background-color: $cl-orange;
+}
 .bg-cl-light-yellow {
   background-color: $cl-light-yellow;
+}
+.bg-cl-translucent-white {
+  background-color: $cl-translucent-white;
 }
 .cl-white {
   color: $cl-white;
@@ -192,6 +198,16 @@ a {
     box-shadow: none;
     filter: brightness(130%);
   }
+}
+
+.no-animation-button {
+  /* Disable transition animation */
+  transition-property: none !important;
+  /* Modify other properties as needed */
+  //color: white !important;
+  outline: none !important;
+  //border-color: white !important;
+  border: none !important;
 }
 .w-60 {
   width: 60%;
@@ -318,6 +334,9 @@ a {
   //   $border-radius: 0
   // );
   position: relative;
+  &-selected{
+    background-color: $cl-light-blue;
+  }
   .text {
     font-weight: bold;
     font-size: 1.25em;
@@ -441,10 +460,9 @@ a {
     padding-left: 1.5em;
     // @extend .ps-3;
   }
-}
-.dropdown-menu-btn-selected {
-  @extend .dropdown-menu-btn;
-  background-color: $cl-light-blue;
+  &-selected{
+    background-color: $cl-light-blue;
+  }
 }
 @mixin gradient-text($fromColor, $toColor) {
   background: -webkit-linear-gradient(left, $fromColor, $toColor);
@@ -457,6 +475,9 @@ a {
 }
 .blue-purple-text-gradient {
   @include gradient-text($fromColor: #3b68df, $toColor: #8d32d4);
+}
+.blue-purple-bg-gradient{
+  background: linear-gradient(90deg, $cl-cool-blue 0%, $cl-cool-purple 100%);
 }
 .page-container-100 {
   height: 100vh;
@@ -510,3 +531,4 @@ span[contenteditable]:empty:focus::before {
   content: "Ask something";
   color: $cl-mid-gray;
 }
+

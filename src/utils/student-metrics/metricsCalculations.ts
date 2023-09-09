@@ -442,8 +442,20 @@ export const booleanToInt = (array: boolean[]) => {
   return count;
 };
 
-
+// new method
 export const overallAcademicTier = (
+  gradeLevel: number,
+  applicantLevel: number, 
+  gpa: number,
+  courseworkTier: number
+) => {
+  let gpaTier = calculateGPATier(applicantLevel, gpa);
+  let academicTier = ((gpaTier * 1.5) + courseworkTier) / 2;
+  return Math.round(academicTier);
+};
+
+// DEPRECATED METHOD
+export const overallAcademicTierOld = (
   gradeLevel: number,
   applicantLevel: number, 
   gpa: number,

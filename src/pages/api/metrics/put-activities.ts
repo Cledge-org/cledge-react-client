@@ -1,6 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getEnvVariable } from "src/config/getConfig";
+import { ActivityNew } from "src/main-pages/CheckInPage/CheckInPage";
 
 export const config = {
   api: {
@@ -12,8 +13,9 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const {
     userId,
     activities,
+    responses,
     insertionId,
-  }: { userId: string; activities: Activities; insertionId: string } =
+  }: { userId: string; activities: Activities; insertionId: string; responses: ActivityNew[] } =
     JSON.parse(req.body);
   try {
     if (activities) {
@@ -24,7 +26,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         );
       }
     }
-    const result = await putActivities(userId, activities, insertionId);
+    const result = await putActivities(userId, activities, responses, insertionId);
     resolve.status(200).send(result);
   } catch (e) {
     resolve.status(500).send(e);
@@ -38,6 +40,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const putActivities = (
   userId: string,
   activities: Activities | undefined,
+  responses: ActivityNew[],
   insertionId: string
 ): Promise<void> => {
   if (activities !== undefined && activities._id && userId) {
@@ -54,6 +57,7 @@ export const putActivities = (
           .insertOne({
             firebaseId: insertionId,
             ...activities,
+            responses: responses
           });
       } else if (userId && !activities) {
         await client.db("metrics").collection("extracurriculars").deleteOne({

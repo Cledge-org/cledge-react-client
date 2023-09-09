@@ -18,7 +18,6 @@ const RightBlock = ({
   content,
   button,
   icon,
-  video,
   id,
 }: ContentBlockProps) => {
   const scrollTo = (id: string) => {
@@ -28,22 +27,16 @@ const RightBlock = ({
     });
   };
   const windowSize = useWindowSize();
+  const introStyles = id === "intro"
+  ? {
+      paddingLeft: `${(windowSize.width - 1920) / 2}px`,
+      paddingRight: `${(windowSize.width - 1920) / 2}px`,
+    }
+  : {};
   return (
     <RightBlockContainer style={{ maxWidth: "none" }}>
-      <Row
-        justify={id === "intro" ? "space-around" : "space-between"}
-        align="middle"
-        id={id}
-        style={
-          id === "intro"
-            ? {
-                paddingLeft: `${(windowSize.width - 1920) / 2}px`,
-                paddingRight: `${(windowSize.width - 1920) / 2}px`,
-              }
-            : {}
-        }
-      >
-        <Col lg={11} md={11} sm={11} xs={24}>
+      
+        
           <ContentWrapper
             id={id}
             className={id === "intro" ? "" : "container-margin"}
@@ -66,9 +59,6 @@ const RightBlock = ({
                             "_blank"
                           );
                         }
-                        if (id === 1) {
-                          scrollTo("about");
-                        }
                       }}
                     >
                       {item.title}
@@ -77,15 +67,6 @@ const RightBlock = ({
                 })}
             </ButtonWrapper>
           </ContentWrapper>
-        </Col>
-        <Col lg={11} md={11} sm={11} xs={24}>
-          {id === "intro" ? (
-            <VideoWrapper id="videoWrapper">{video}</VideoWrapper>
-          ) : (
-            <SvgIcon src={icon} width="100%" height="100%" />
-          )}
-        </Col>
-      </Row>
     </RightBlockContainer>
   );
 };

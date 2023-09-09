@@ -1,12 +1,7 @@
 @use "src/common/styles" as *;
 
 .nav-regular {
-  color: $cl-blue !important;
-  background-color: white;
-}
-
-.nav-regular-no-shadow {
-  color: $cl-blue !important;
+  color: $cl-blue;
   background-color: white;
 }
 
@@ -25,3 +20,4 @@
     background-color: rgb(255, 130, 92);
   }
 }
+

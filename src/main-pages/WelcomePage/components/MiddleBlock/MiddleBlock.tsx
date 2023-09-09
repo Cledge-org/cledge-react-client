@@ -55,6 +55,7 @@ const MiddleBlockContent = ({
         </Row>
         <div>
           {id === "goal" ? (
+            
             <CardWrapper>
               <Card>
                 <img src="./images/school_icon/HV.png" alt="Havard"></img>
