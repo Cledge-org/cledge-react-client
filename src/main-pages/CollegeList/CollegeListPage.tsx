@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NextApplicationPage } from "src/main-pages/AppPage/AppPage";
 import styles from "./college-list-page.module.scss";
 import TierCard from "src/main-pages/CollegeList/components/TierCard";
@@ -8,40 +8,50 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@mui/material";
 import { useSession } from "next-auth/react";
 import CollegeListSubTitle from "src/main-pages/CollegeList/components/CollegeListSubTitle";
+import { notification } from "antd";
 
 
 const CollegeListPage: NextApplicationPage<{
   accountInfo: AccountInfo;
   collegeList: collegeListIndividualInfo[]
 }> = ({ collegeList }) => {
-  const [targetSchools, setTargetSchools] = useState([]);
+  const [safetySchools, setSafetySchools] = useState([]);
   const [fitSchools, setFitSchools] = useState([]);
   const [reachSchools, setReachSchools] = useState([]);
-
   const [reloadCounter, setReloadCounter] = useState(0);
-  console.log(reloadCounter);
-  console.log(targetSchools);
-  console.log(fitSchools);
-  console.log(reachSchools);
+  const [changesMade, setChangesMade] = useState(false);
+  const firstRender = useRef(false);
   const { data: session } = useSession();
-  const handleSubmit = async () => {
-    const response = await fetch(`/api/CST/replace-college-list`, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id: session.user.uid,
-        college_list: targetSchools.concat(fitSchools).concat(reachSchools),
-      }),
+  const openNotification = () => {
+    notification.open({
+      message: "Success",
+      description: "Successfully saved changes to your list",
+      duration: 4,
+      placement: "bottomRight"
     });
-    const responseJson = await response.json();
-    alert(responseJson.message);
   };
+  const handleSubmit = async () => {
+    if (changesMade) {
+      openNotification();
+      setChangesMade(false);
+      const response = await fetch(`/api/CST/replace-college-list`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: session.user.uid,
+          college_list: safetySchools.concat(fitSchools).concat(reachSchools),
+        }),
+      });
+      const responseJson = await response.json();
+    }
+  };
+
 
   const handleRemoveCollege = async (college_title: string) => {
     console.log(college_title);
-    setTargetSchools(
+    setSafetySchools(
       collegeList
         .filter((colleges) => colleges.fit_type == 0)
         .filter((colleges) => colleges.college_name != college_title)    
@@ -117,13 +127,15 @@ const CollegeListPage: NextApplicationPage<{
 
   useEffect(() => {
     if (collegeList?.length > 0) {
-      setTargetSchools(
-        collegeList.filter((colleges) => colleges.fit_type == 0)
-      );
+      setSafetySchools(collegeList.filter((colleges) => colleges.fit_type == 0));
       setFitSchools(collegeList.filter((colleges) => colleges.fit_type == 1));
       setReachSchools(collegeList.filter((colleges) => colleges.fit_type == 2));
+      if (firstRender.current === true) {
+        setChangesMade(true);
+      }
+      firstRender.current = true;
     } else {
-      setTargetSchools([]);
+      setSafetySchools([]);
       setFitSchools([]);
       setReachSchools([]);
     }
@@ -142,7 +154,7 @@ const CollegeListPage: NextApplicationPage<{
             <div className={styles.myFavContent}>
               <p className={styles.myFavHeader}>My College List</p>
               <Button
-                variant="contained"
+                variant={changesMade ? "contained" : "outlined"}
                 style={{ textTransform: "none" }}
                 onClick={handleSubmit}
               >
@@ -166,8 +178,8 @@ const CollegeListPage: NextApplicationPage<{
             }}
           >
             <TierCard
-              name="Target Schools"
-              collegeList={targetSchools}
+              name="Safety Schools"
+              collegeList={safetySchools}
               RemoveCollegeFromListFunction={handleRemoveCollege}
             />
             <TierCard

@@ -280,12 +280,12 @@ function InnerCard({
             : ""}
           <span style={{ marginLeft: 5 }}>{location}</span>
         </h6>
-        <div
+        {/* <div
           className="w-100 d-flex justify-content-between align-items-end"
           style={{ height: "4rem" }}
         >
           <div className={styles.collegeFitContainer}>{schoolFit}</div>
-        </div>
+        </div> */}
       </CardContent>
     </>
   );
