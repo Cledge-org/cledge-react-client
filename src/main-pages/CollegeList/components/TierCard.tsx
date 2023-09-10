@@ -41,7 +41,7 @@ const TierCard = ({
                       college_title={college.college_name}
                       index={index}
                       RemoveCollegeFromListFunction={
-                        RemoveCollegeFromListFunction
+                        (college_title) => RemoveCollegeFromListFunction(college_title)
                       }
                     />
                   );
