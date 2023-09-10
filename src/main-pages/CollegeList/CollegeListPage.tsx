@@ -49,34 +49,65 @@ const CollegeListPage: NextApplicationPage<{
   };
 
 
-  const handleRemoveCollege = async (college_title: string) => {
-    console.log(college_title);
-    setSafetySchools(
-      collegeList
-        .filter((colleges) => colleges.fit_type == 0)
-        .filter((colleges) => colleges.college_name != college_title)    
-    );
-    setFitSchools(
-      collegeList
-        .filter((colleges) => colleges.fit_type == 1)
-        .filter((colleges) => colleges.college_name != college_title)
-    );
-    setReachSchools(
-      collegeList
-        .filter((colleges) => colleges.fit_type == 2)
-        .filter((colleges) => colleges.college_name != college_title)
-    );
+  const handleRemoveCollege = async (college_title: string, fit_type) => {
+    if (fit_type == 0) {
+      const collegeToDelete = safetySchools.find((college) => {
+        return college.college_name == college_title;
+      })
+  
+      if (collegeToDelete != null) {
+        safetySchools.splice(safetySchools.indexOf(collegeToDelete), 1);
+        const newSchools = Object.assign([], safetySchools);
+        setSafetySchools(newSchools);
+      }
+    } else if (fit_type == 1) {
+      const collegeToDelete = fitSchools.find((college) => {
+        return college.college_name == college_title;
+      })
+  
+      if (collegeToDelete != null) {
+        fitSchools.splice(fitSchools.indexOf(collegeToDelete), 1);
+        const newSchools = Object.assign([], fitSchools);
+        setFitSchools(newSchools);
+      }
+    } else {
+      const collegeToDelete = reachSchools.find((college) => {
+        return college.college_name == college_title;
+      })
+      if (collegeToDelete != null) {
+        reachSchools.splice(reachSchools.indexOf(collegeToDelete), 1);
+        const newSchools = Object.assign([], reachSchools);
+        setReachSchools(newSchools);
+      }
+    }
+
+    // setSafetySchools(
+    //   collegeList
+    //     .filter((colleges) => colleges.fit_type == 0)
+    //     .filter((colleges) => colleges.college_name != college_title)    
+    // );
+    // setFitSchools(
+    //   collegeList
+    //     .filter((colleges) => colleges.fit_type == 1)
+    //     .filter((colleges) => colleges.college_name != college_title)
+    // );
+    // setReachSchools(
+    //   collegeList
+    //     .filter((colleges) => colleges.fit_type == 2)
+    //     .filter((colleges) => colleges.college_name != college_title)
+    // );
+    
     // remove from college list
-    const response = await fetch(`/api/CST/remove-college-from-list`, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id: session.user.uid,
-        college_title: college_title,
-      }),
-    });
+    // const response = await fetch(`/api/CST/remove-college-from-list`, {
+    //   method: "PUT",
+    //   headers: {
+    //     "content-type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     user_id: session.user.uid,
+    //     college_title: college_title,
+    //   }),
+    // });
     // const responseJson = await response.json();
     // const temporaryList = collegeList.filter(
     //   (college) => college.college_name != college_title
@@ -180,17 +211,17 @@ const CollegeListPage: NextApplicationPage<{
             <TierCard
               name="Safety Schools"
               collegeList={safetySchools}
-              RemoveCollegeFromListFunction={handleRemoveCollege}
+              RemoveCollegeFromListFunction={(title) => handleRemoveCollege(title, 0)}
             />
             <TierCard
               name="Fit Schools"
               collegeList={fitSchools}
-              RemoveCollegeFromListFunction={handleRemoveCollege}
+              RemoveCollegeFromListFunction={(title) => handleRemoveCollege(title, 1)}
             />
             <TierCard
               name="Reach Schools"
               collegeList={reachSchools}
-              RemoveCollegeFromListFunction={handleRemoveCollege}
+              RemoveCollegeFromListFunction={(title) => handleRemoveCollege(title, 2)}
             />
           </div>
         </DragDropContext>
