@@ -8,12 +8,14 @@ import Footer from "../../common/components/Footer/Footer";
 
 import { NextApplicationPage } from "../AppPage/AppPage";
 import QuestionSubPageHeader from "../../common/components/SubpageHeader/SubpageHeader";
-import QuestionECSubpage from "./components/QuestionSubPages/QuestionECSubpage/QuestionECSubpage";
-import QuestionACSubpage from "./components/QuestionSubPages/QuestionACSubpage/QuestionACSubpage";
 import QuestionSummarySubpage from "./components/QuestionSubPages/QuestionSummarySubpage/QuestionSummarySubpage";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import DropdownTab from "src/common/components/DropdownTab/DropdownTab";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
+import AcademicsSignUp, { AcademicsProps } from "src/main-pages/CheckInPage/Components/AcademicsSignUp";
+import ActivitiesSignUp from "src/main-pages/CheckInPage/Components/ActivitiesSignUp";
+import { calculateECActivityPoints, calculateECActivityTier, calculateGPATier, calculateOverallECTier, overallAcademicTier } from "src/utils/student-metrics/metricsCalculations";
+import { notification } from "antd";
 
 const ApplicationProfilePage: NextApplicationPage<{
   questionData: QuestionList[];
@@ -24,6 +26,9 @@ const ApplicationProfilePage: NextApplicationPage<{
   const router = useRouter();
   const [currPage, setCurrPage] = useState({ page: "all", chunk: "" });
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
+  const [academicResponses, setAcademicsResponses] = useState(localStorage.getItem("academicCache") != null ? JSON.parse(localStorage.getItem("academicCache")) : academicData.responses);
+  const [activityResponses, setActivityResponses] = useState(localStorage.getItem("activityCache") != null ? JSON.parse(localStorage.getItem("activityCache")) : activityData.responses);
+  const [noRenderButtons, setNoRenderButtons] = useState(false);
   const [percentageData, setPercentageData] = useState({
     allLists: 0,
     lists: [],
@@ -38,6 +43,16 @@ const ApplicationProfilePage: NextApplicationPage<{
       }),
     });
   };
+
+  const openNotification = (message: string) => {
+    notification.open({
+      message: "Success",
+      description: message,
+      duration: 1,
+      placement: "bottomRight"
+    });
+  };
+
   useEffect(() => {
     //resetResponses();
     onPercentageUpdate();
@@ -101,6 +116,117 @@ const ApplicationProfilePage: NextApplicationPage<{
         Update your progress on the desktop app
       </div>
     );
+  }
+  const handleSubmitAcademics = async () => {
+    // gpa tier
+    localStorage.setItem("academicCache", JSON.stringify(academicResponses));
+    openNotification("Successfully saved your academics!");
+    let totalGPA = 0;
+    let totalTerms = 0;
+    academicResponses.years.forEach((year) => {
+      year.terms.forEach((term) => {
+        if (term.courses.length > 0 && term.gpa != null) {
+          totalGPA += term.gpa;
+          totalTerms++;
+        }
+      })
+    })
+
+    let userGPA = totalGPA / totalTerms;
+
+    let userGPATier = await calculateGPATier(2, userGPA);
+
+    if (Number.isNaN(userGPATier)) {
+      userGPATier = 0;
+    }
+
+    let studentAppLevel = 3;
+    questionResponses.forEach((res) => {
+      if (res.questionId == "627e8fe7e97c3c14537dc7f5") {
+        studentAppLevel = Number.parseInt(res.response.charAt(6));
+      }
+    })
+    let gradeLevel = 9;
+    academicResponses.years.forEach((year) => {
+      if (year.terms[0].courses.length > 0) {
+        gradeLevel++;
+      }
+    })
+
+    const userOverallAcadmicTier = await overallAcademicTier(gradeLevel, studentAppLevel, totalGPA, 5)
+
+    let userAcademics: Academics = {
+      classes: [],
+      overallClassTier: 3,
+      gpa: totalGPA,
+      gpaTier: userGPATier,
+      satScore: academicResponses.satScore ? Number.parseFloat(academicResponses.satScore) : 0,
+      actScore: academicResponses.actScore ? Number.parseFloat(academicResponses.actScore) : 0,
+      overallTier: userOverallAcadmicTier,
+      classTip: "",
+      gpaTip: "",
+      testTip: ""
+    }
+    try {
+      await fetch('/api/metrics/put-academics', {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: session.data.user.uid,
+          insertionId: session.data.user.uid,
+          academics: userAcademics,
+          responses: academicResponses
+        }),
+      })
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const handleSubmitActivities = async () => {
+    localStorage.setItem("activityCache", JSON.stringify(activityResponses));
+    openNotification("Successfully saved your activities!");
+    const newActivitiesArr = [];
+    let tiersArr = [];
+    let totalECPoints = 0;
+    activityResponses.forEach((activity) => {
+      const tier = calculateECActivityTier(activity.hoursPerWeek, activity.weeksPerYear, activity.numberOfYears, activity.awardLevel);
+      const points = calculateECActivityPoints(tier);
+      const otherActivity: Activity = {
+        activityID: 0,
+        actTitle: activity.activityName,
+        actType: activity.activityType,
+        hoursYear: activity.hoursPerWeek,
+        yearsSpent: activity.numberOfYears,
+        recogLevel: activity.awardQuality,
+        description: activity.description,
+        points: points,
+        tier: tier,
+        category: 0,
+        tip: ""
+      }
+      totalECPoints += points;
+      tiersArr.push(tier);
+      newActivitiesArr.push(otherActivity);
+    })
+    const overallECTier = await calculateOverallECTier(tiersArr);
+    let userActivities: Activities = {
+      activities: newActivitiesArr,
+      overallTier: overallECTier,
+      totalPoints: totalECPoints
+    }
+    try {
+      await fetch('/api/metrics/put-activities', {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: session.data.user.uid,
+          activities: userActivities,
+          responses: activityResponses,
+          insertionId: session.data.user.uid
+        }),
+      })
+    } catch (e) {
+      console.log(e);
+    }
   }
   return (
     <PageErrorBoundary>
@@ -286,20 +412,24 @@ const ApplicationProfilePage: NextApplicationPage<{
                   : []
               )
               .concat(
-                questionData.find(({ name }) => name === "Academics")
-                  ? questionData
-                      .find(({ name }) => name === "Academics")
-                      .chunks.map((chunk) => {
-                        return (
-                          <QuestionACSubpage
-                            key={chunk.name}
-                            userResponses={questionResponses}
-                            chunk={chunk}
-                            isShowing={currPage.chunk === chunk.name}
-                          />
-                        );
-                      })
-                  : []
+                currPage.page === "Academics" ? 
+                  <div className="d-flex justify-content-center w-100">
+                    <div className=" my-5" style={{ width: "50vw" }}>
+                      <AcademicsSignUp 
+                        years={academicResponses.years} 
+                        submitData={(e) => setAcademicsResponses(e)} 
+                        noRenderButtons={() => setNoRenderButtons(!noRenderButtons)}
+                        satScore={academicResponses.satScore}
+                        actScore={academicResponses.actScore}
+                      />
+                      {noRenderButtons ? null : (
+                        <div className="d-flex justify-content-center mt-5">
+                          <button className="btn cl-btn-blue" onClick={(e) => {handleSubmitAcademics()}}>Save</button>
+                        </div>
+                      )}
+                      
+                    </div>
+                  </div> : null
               )
           )}
         </div>

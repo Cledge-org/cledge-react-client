@@ -55,25 +55,29 @@ const Header = ({
       icon: "my-learning.svg?alt=media&token=4ccc96fe-3db9-45b9-849a-24fcac93367b",
       title: "My Learning",
     },
-    {
-      link: "/chatbot",
-      icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
-      title: "AI Chat",
-    },
-    {
-      link: "/metrics",
-      icon: "metrics.svg?alt=media&token=9eed7da0-8292-4847-9d73-a007d5850f0a",
-      title: "Metrics",
-    },
+    // {
+    //   link: "/chatbot",
+    //   icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
+    //   title: "AI Chat",
+    //   dropdown: false,
+    //   links: [{}]
+
+    // },
     {
       link: "/college-list",
-      icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
-      title: "My List"
-    },
-    {
-      link: "/college-search",
       icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
-      title: "College Search"
+      title: "College",
+      dropdown: true,
+      links : [
+        {
+          key: "College Finder", 
+          value: "/college-search"
+        },
+        {
+          key: "My Colleges", 
+          value: "/college-list"
+        }
+      ]
     },
     {
       link: "/application-profile",

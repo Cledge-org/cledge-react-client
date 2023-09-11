@@ -10,6 +10,7 @@ import TierIndicatorAndTips from "./components/TierIndicatorAndTips/TierIndicato
 import TierRange from "./components/TierRange/TierRange";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import TipsCard from "src/main-pages/MetricsPage/components/TipsCard/TipsCard";
+import SMFutureTitle from "src/main-pages/MetricsPage/components/SMFutureTitle";
 
 const Metrics: NextApplicationPage<{
   activities: Activities;
@@ -93,6 +94,8 @@ const Metrics: NextApplicationPage<{
               className="container-fluid d-flex flex-column"
               style={{ flex: 1 }}
             >
+              <div><SMFutureTitle/></div>
+              
               <QuestionSubPageHeader
                 title="My Application Metrics"
                 percentage={undefined}

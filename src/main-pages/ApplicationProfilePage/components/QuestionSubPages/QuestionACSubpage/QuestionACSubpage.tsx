@@ -57,12 +57,18 @@ export default function QuestionACSubpage({
     if (!applicantLevel) {
       applicantLevel = "Average";
     }
-    const gpa = parseFloat(
-      chunkResponses.generalQuestions.find(
-        ({ questionId }) => questionId === "62435e6620b74f4eb00ac8f5"
-      ).response
-    );
-    if (!gpa) {
+    let gpa;
+    if (chunkResponses.generalQuestions.length > 0) {
+      gpa = parseFloat(
+        chunkResponses.generalQuestions.find(
+          ({ questionId }) => questionId === "62435e6620b74f4eb00ac8f5"
+        ).response
+      );
+    } else {
+      gpa = 0;
+    }
+   
+    if (gpa == 0) {
       return null;
     }
     const applicantLevelNum =

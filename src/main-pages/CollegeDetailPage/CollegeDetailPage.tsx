@@ -46,7 +46,7 @@ const CollegeDetailPage = ({
   let onList = collegeListArray.includes(data.title);
 
   const [addedToList, setAddedToList] = useState(onList);
-  const [hasUWAccess, setHasUWAccess] = React.useState(false);
+  const [hasUWAccess, setHasUWAccess] = React.useState(true);
 
   React.useEffect(() => {
     if (session) {
@@ -66,22 +66,6 @@ const CollegeDetailPage = ({
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-  };
-  const handleAddCollege = async () => {
-    // add to college list
-    openNotification();
-    const response = await fetch(`/api/CST/add-college-to-list`, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id: session.user.uid,
-        college_title: data.title,
-      }),
-    });
-    const responseJson = await response.json();
-    setAddedToList(!addedToList);
   };
 
   const handleRemoveCollege = async (event) => {
@@ -132,6 +116,39 @@ const CollegeDetailPage = ({
     : userResponse.includes("Level 2")
     ? 2
     : 3;
+
+    {userTier >= data?.["college_fit_metric"]?.safety
+                    ? "Safety School"
+                    : userTier < data?.["college_fit_metric"]?.target
+                    ? "Reach School"
+                    : "Fit School"}
+
+    let collegeTier = 0;
+    if (userTier >= data?.["college_fit_metric"]?.safety) {
+      collegeTier = 0;
+    } else if (userTier < data?.["college_fit_metric"]?.target) {
+      collegeTier = 2;
+    } else {
+      collegeTier = 1;
+    }
+
+    const handleAddCollege = async () => {
+      // add to college list
+      openNotification();
+      const response = await fetch(`/api/CST/add-college-to-list`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: session.user.uid,
+          college_title: data.title,
+          tier: collegeTier
+        }),
+      });
+      const responseJson = await response.json();
+      setAddedToList(!addedToList);
+    };
 
   // *********************Data Parsing Functions*******************
   function parsePercent(data) {

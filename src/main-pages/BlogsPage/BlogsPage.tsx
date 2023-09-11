@@ -149,7 +149,7 @@ const BlogsPage = ({ blogInfo }) => {
                                 filter="Scholarships"
                             />
                         </div>
-                        {(!accountInfo?.hasUWAccess ?? true) && (
+                        {/* {(!accountInfo?.hasUWAccess ?? true) && (
                             <div
                                 className="alert alert-primary w-75 mt-3"
                                 style={{ maxWidth: "450px" }}
@@ -178,7 +178,7 @@ const BlogsPage = ({ blogInfo }) => {
                                     </Button>
                                 </div>
                             </div>
-                        )}
+                        )} */}
                         <div
                             className="alert alert-primary w-75"
                             style={{ maxWidth: "450px" }}
@@ -205,15 +205,6 @@ const BlogsPage = ({ blogInfo }) => {
                                     className="alert-link"
                                     rel="noreferrer">
                                     Join WhatsApp community ➜
-                                </a>
-                            </div>
-                            <div>
-                                <a
-                                    href="https://discord.gg/TYTfXGNh"
-                                    target="_blank"
-                                    className="alert-link"
-                                    rel="noreferrer">
-                                    Join Discord community ➜
                                 </a>
                             </div>
                         </div>

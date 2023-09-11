@@ -21,20 +21,22 @@ import TierRange from "src/main-pages/MetricsPage/components/TierRange/TierRange
 
 const DashboardPage = ({
   accountInfo,
-  dashboardParts,
+  // dashboardParts,
   pathwaysProgress,
   ecMetrics,
   recentBlogs,
   acMetrics,
+  percentageObject
 }: {
   accountInfo: AccountInfo;
-  dashboardParts: PathwayPart[];
+  // dashboardParts: PathwayPart[];
   pathwaysProgress: PathwayProgress[];
   ecMetrics: Activities;
   acMetrics: Academics;
   recentBlogs: any;
+  percentageObject: any;
 }) => {
-  const [percentage, setPercentage] = useState(0);
+  const [percentage, setPercentage] = useState(percentageObject.percentage.percentage);
   const router = useRouter();
   const avgTier = useMemo(
     () => (ecMetrics?.overallTier || 0 + acMetrics?.overallClassTier || 0) / 2,
@@ -53,33 +55,33 @@ const DashboardPage = ({
     );
   };
 
-  useEffect(() => {
-    let totalPathways = 0;
-    let finishedPathways = 0;
-    const allPathways: Pathway[] = dashboardParts
-      .map(({ dynamicRoutes }) => {
-        return dynamicRoutes.map(({ route }) => route);
-      })
-      .reduce((prev, curr) => {
-        return prev.concat(curr);
-      }, []);
-    allPathways?.forEach((pathway) => {
-      if (
-        !pathwaysProgress.find(({ pathwayId }) => {
-          return pathwayId === parseId(pathway._id);
-        })
-      ) {
-        totalPathways++;
-      }
-    });
-    pathwaysProgress.forEach(({ finished }) => {
-      if (finished) {
-        finishedPathways++;
-      }
-      totalPathways++;
-    });
-    setPercentage(Math.round((finishedPathways / totalPathways) * 100));
-  }, []);
+  // useEffect(() => {
+  //   let totalPathways = 0;
+  //   let finishedPathways = 0;
+  //   const allPathways: Pathway[] = dashboardParts
+  //     .map(({ dynamicRoutes }) => {
+  //       return dynamicRoutes.map(({ route }) => route);
+  //     })
+  //     .reduce((prev, curr) => {
+  //       return prev.concat(curr);
+  //     }, []);
+  //   allPathways?.forEach((pathway) => {
+  //     if (
+  //       !pathwaysProgress.find(({ pathwayId }) => {
+  //         return pathwayId === parseId(pathway._id);
+  //       })
+  //     ) {
+  //       totalPathways++;
+  //     }
+  //   });
+  //   pathwaysProgress.forEach(({ finished }) => {
+  //     if (finished) {
+  //       finishedPathways++;
+  //     }
+  //     totalPathways++;
+  //   });
+  //   setPercentage(Math.round((finishedPathways / totalPathways) * 100));
+  // }, []);
 
   if (accountInfo.checkIns.length > 0) {
     router.push({
@@ -100,7 +102,91 @@ const DashboardPage = ({
           </div>
         </div>
         <Container className="mt-5 mb-5">
-          <Row className="pb-4">
+          <Row>
+            <Col sm={6}>
+            <Card style={{ height : '350px' }}className="d-flex flex-column justify-content-between">
+                  <Row>
+                    <Col lg={12}>
+                      <div className="ms-3">
+                        <div className="cl-dark-text h2 fw-bold pt-3">
+                          <Link href="/metrics">
+                            <a>
+                              <img
+                                src="/images/college-finder.png" alt="graduation hat"
+                                style={{
+                                  padding: "10px",
+                                  width: "50px",
+                                  borderRadius: "10px",
+                                  backgroundColor: "#DCE1FB",
+                                }}
+                                className="me-3"
+                              />
+                            </a>
+                          </Link>
+                          College Finder
+                        </div>
+                        <Row>
+                          <Col lg={12} className="pt-3">
+                            <div className="h5">Explore data on thousands of colleges cataloged by cledge - right at your fingertips.</div>
+                          </Col>
+                            
+                        </Row>
+                      </div>
+                    </Col>
+                    <Col lg={3}>
+                      <div className=""></div>
+                    </Col>
+                  </Row>
+                  <Link href="/college">
+                    <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-2">
+                      <div className="h5 mb-0">Go to College Finder</div>
+                    </Button>
+                  </Link>
+                </Card>
+              </Col>
+              <Col sm={6}>
+              <Card style={{ height : '350px' }}className="d-flex flex-column justify-content-between">
+                  <Row>
+                    <Col lg={12}>
+                      <div className="ms-3">
+                        <div className="cl-dark-text h2 fw-bold pt-3">
+                          <Link href="/metrics">
+                            <a>
+                              <img
+                                src="/images/header/blogs.svg" alt="pencil and paper icon"
+                                style={{
+                                  padding: "10px",
+                                  width: "50px",
+                                  borderRadius: "10px",
+                                  backgroundColor: "#DCE1FB",
+                                }}
+                                className="me-3"
+                              />
+                            </a>
+                          </Link>
+                          College List
+                        </div>
+                        <Row>
+                          <Col lg={12} className="pt-3">
+                            <div className="h5">Explore the colleges that we think are a great fit for you based on your profile</div>
+                          </Col>
+                            
+                        </Row>
+                      </div>
+                    </Col>
+                    <Col lg={3}>
+                      <div className=""></div>
+                    </Col>
+                  </Row>
+                  <Link href="/college-list">
+                    <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
+                      <div className="h5 mb-0">Go to My Colleges</div>
+                    </Button>
+                  </Link>
+                </Card>
+              </Col>
+            </Row>
+            <Row className="pt-4">
             <Col className="mt-sm-5 mt-md-0 mt-lg-0" md={6} sm={12}>
               <Card className="h-100 d-flex flex-column justify-content-between">
                 <Row>
@@ -165,7 +251,7 @@ const DashboardPage = ({
                 </Row>
                   <Link href="my-learning">
                     <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-2">
-                      <div className="h5 mb-0">Go to my Learning</div>
+                      <div className="h5 mb-0">Go to My Learning</div>
                     </Button>
                   </Link>
               </Card>

@@ -11,9 +11,10 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const {
     userId,
-    activities,
     insertionId,
-  }: { userId: string; activities: Activities; insertionId: string } =
+    activities,
+    responses,
+  }: { userId: string; activities: Activities; insertionId: string; responses: ActivityNew[] } =
     JSON.parse(req.body);
   try {
     if (activities) {
