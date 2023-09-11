@@ -24,6 +24,7 @@ import FormCarouselMobile from "./components/FormCarousel/FormCarouselMobile";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import UWRightContentBlock from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWRightContentBlock/UWRightContentBlock";
 import classNames from "classnames";
+import { useRouter } from "next/router";
 
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
@@ -266,6 +267,8 @@ const WelcomePage = ({ data }) => {
   }
   const { width, height } = useWindowSize();
   const isMobile = width <= 810;
+
+  const router = useRouter();
   
   return (
     <PageErrorBoundary>
@@ -337,6 +340,7 @@ const WelcomePage = ({ data }) => {
                     fixedWidth={true}
                     className={classNames(`${ isMobile ? "w-50" : "w-25 mt-4" }`)}
                     onClick={() => {
+                      router.push("/auth/signup")
                     }}
                   >
                       Sign Up Free
