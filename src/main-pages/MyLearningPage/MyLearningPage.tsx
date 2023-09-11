@@ -15,6 +15,7 @@ import PartDropDown from "./components/PartDropdown/PartDropdown";
 import DashboardTabButton from "./components/MyLearningTabButton/MyLearningTabButton";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import { useLocation } from "src/utils/hooks/useLocation";
+import putPathway from "src/pages/api/admin/learning-pathway/put-pathway";
 
 // logged in landing page
 const MyLearningPage: NextApplicationPage<{
@@ -64,6 +65,28 @@ const MyLearningPage: NextApplicationPage<{
     });
     setPercentage(Math.round((finishedPathways / totalPathways) * 100));
   }, []);
+
+  const putPathwayPercent = async () => {
+    try {
+      const response = await fetch('/api/learning-pathway/put-pathway-percentage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user_id: session.data.user.uid,
+          percentage: percentage
+        })
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("putPathwayPercent", error);
+    }
+  }
+
+  const pathwayPercentRes = putPathwayPercent();
+
   const getCurrentTasks = (allPathways: Pathway[]) => {
     let noProgress = [];
     allPathways?.forEach((pathway) => {
@@ -437,5 +460,4 @@ const MyLearningPage: NextApplicationPage<{
 MyLearningPage.requireAuth = true;
 export default connect((state) => ({
   accountInfo: state.accountInfo,
-  pathwaysProgress: state.pathwaysProgress,
 }))(MyLearningPage);

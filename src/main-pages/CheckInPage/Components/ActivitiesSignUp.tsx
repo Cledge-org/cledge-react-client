@@ -200,7 +200,6 @@ function ActivitiesSignUp(props: ActivitiesProps) {
   ]
 
   const handleSubmit = () => {
-    console.log(tempActivity);
     if (tempActivity.activityName.length > 0 && tempActivity.activityType.length > 0 &&
         tempActivity.awardLevel.length > 0 && tempActivity.awardQuality > 0 &&
         tempActivity.description.length > 0 && tempActivity.hoursPerWeek > 0 &&
