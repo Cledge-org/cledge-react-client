@@ -24,7 +24,10 @@ function Splash({
       isMobile ? "" : "Get a headstart this application season with a personalized college list to help you explore your best-fit, safety, fit, and reach colleges.",
   };
   return (
-    <MainContainer className={cs(classNames)}>
+    <MainContainer className={cs(classNames)} 
+      style={{
+        maxHeight: "10rem"
+      }}>
       <div className={styles.gridContainer}>
         <div className={styles.gridItem}>
           <Heading className={cs("cl-white")}>{content.heading}</Heading>

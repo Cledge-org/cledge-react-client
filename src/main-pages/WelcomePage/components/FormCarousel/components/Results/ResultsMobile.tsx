@@ -23,17 +23,18 @@ function Results({ classNames, schools }: Props) {
         <div className={styles.flexItem}>
           <Heading>{content.heading}</Heading>
         </div>
+        <div className="d-flex flex-row" style={{ overflow: "hidden" }}>
         {schools.map((school) => (
           <div className={styles.flexItem}>
+            <div className="mx-1" style={{ height: "13rem" }}>
             <div className={styles.schoolCard}>
               <img src={school[1]} alt="school" />
               <span className={styles.title}>{school[0]}</span>
-              <span className={styles.subtitle}>
-                {school[2]} School | {school[3]}
-              </span>
+            </div>
             </div>
           </div>
         ))}
+        </div>
       </div>
       <Button
         color="#F7BC76"
