@@ -170,6 +170,21 @@ const ApplicationProfilePage: NextApplicationPage<{
     } catch (e) {
       console.log(e);
     }
+    try {
+      await fetch('/api/metrics/put-academics-logs', {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: session.data.user.uid,
+          insertionId: session.data.user.uid,
+          academics: userAcademics,
+          responses: academicResponses
+        }),
+      })
+    } catch (e) {
+      console.log(e);
+    }
+
+
   }
 
   const handleSubmitActivities = async () => {

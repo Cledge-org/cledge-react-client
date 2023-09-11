@@ -1,6 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { AnyAction } from "redux";
 import { getEnvVariable } from "src/config/getConfig";
 
 export const config = {
@@ -10,11 +11,11 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId, academics, applicantType, insertionId } = JSON.parse(
+  const { userId, academics, applicantType, insertionId, responses} = JSON.parse(
     req.body
   );
   try {
-    const result = await updateAcademicsLog(userId, academics, insertionId);
+    const result = await updateAcademicsLog(userId, academics, insertionId, responses);
     resolve.status(200).send(result);
   } catch (e) {
     resolve.status(500).send(e);
@@ -24,16 +25,17 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
 export const updateAcademicsLog = (
   userId: string,
   academics: Academics | undefined,
-  insertionId: string
+  insertionId: string,
+  responses: any
 ): Promise<void> => {
   if (academics !== undefined && academics._id && userId) {
     // Document should not have _id field when sent to database
     delete academics._id;
   }
   const currDate = new Date().toLocaleDateString();
-  // const currDate = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
-  const accademicObj = {
-    academics
+    const accademicObj = {
+    ...academics,
+    responses
   };
   return new Promise(async (res, err) => {
     try {
