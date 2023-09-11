@@ -57,8 +57,6 @@ function AcademicsSignUp(props: AcademicsProps) {
   const [currGrade, setCurrGrade] = useState(0);
   const [currTerm, setCurrTerm] = useState(0);
 
-  console.log(userResponses);
-
   const toggleEditing = () => {
     setIsAddingCourse(!isAddingCourse);
     if (props.noRenderButtons) {
@@ -73,7 +71,6 @@ function AcademicsSignUp(props: AcademicsProps) {
         year.isQuarter = !year.isQuarter;
       }
     })
-    console.log(newUserResponses);
     setUserResponses(newUserResponses);
   }
 
@@ -141,8 +138,6 @@ function AcademicsSignUp(props: AcademicsProps) {
       .filter((course) => course.courseName != courseName);
 
       let totalGradePoint = 0;
-      console.log(grade);
-      console.log(term);
       newUserResponses.years?.find(e => e.grade == grade)
       .terms.find(e => e.id == term)
       .courses.forEach(course => {

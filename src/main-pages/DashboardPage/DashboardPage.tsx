@@ -21,20 +21,22 @@ import TierRange from "src/main-pages/MetricsPage/components/TierRange/TierRange
 
 const DashboardPage = ({
   accountInfo,
-  dashboardParts,
+  // dashboardParts,
   pathwaysProgress,
   ecMetrics,
   recentBlogs,
   acMetrics,
+  percentageObject
 }: {
   accountInfo: AccountInfo;
-  dashboardParts: PathwayPart[];
+  // dashboardParts: PathwayPart[];
   pathwaysProgress: PathwayProgress[];
   ecMetrics: Activities;
   acMetrics: Academics;
   recentBlogs: any;
+  percentageObject: any;
 }) => {
-  const [percentage, setPercentage] = useState(0);
+  const [percentage, setPercentage] = useState(percentageObject.percentage.percentage);
   const router = useRouter();
   const avgTier = useMemo(
     () => (ecMetrics?.overallTier || 0 + acMetrics?.overallClassTier || 0) / 2,
@@ -53,33 +55,33 @@ const DashboardPage = ({
     );
   };
 
-  useEffect(() => {
-    let totalPathways = 0;
-    let finishedPathways = 0;
-    const allPathways: Pathway[] = dashboardParts
-      .map(({ dynamicRoutes }) => {
-        return dynamicRoutes.map(({ route }) => route);
-      })
-      .reduce((prev, curr) => {
-        return prev.concat(curr);
-      }, []);
-    allPathways?.forEach((pathway) => {
-      if (
-        !pathwaysProgress.find(({ pathwayId }) => {
-          return pathwayId === parseId(pathway._id);
-        })
-      ) {
-        totalPathways++;
-      }
-    });
-    pathwaysProgress.forEach(({ finished }) => {
-      if (finished) {
-        finishedPathways++;
-      }
-      totalPathways++;
-    });
-    setPercentage(Math.round((finishedPathways / totalPathways) * 100));
-  }, []);
+  // useEffect(() => {
+  //   let totalPathways = 0;
+  //   let finishedPathways = 0;
+  //   const allPathways: Pathway[] = dashboardParts
+  //     .map(({ dynamicRoutes }) => {
+  //       return dynamicRoutes.map(({ route }) => route);
+  //     })
+  //     .reduce((prev, curr) => {
+  //       return prev.concat(curr);
+  //     }, []);
+  //   allPathways?.forEach((pathway) => {
+  //     if (
+  //       !pathwaysProgress.find(({ pathwayId }) => {
+  //         return pathwayId === parseId(pathway._id);
+  //       })
+  //     ) {
+  //       totalPathways++;
+  //     }
+  //   });
+  //   pathwaysProgress.forEach(({ finished }) => {
+  //     if (finished) {
+  //       finishedPathways++;
+  //     }
+  //     totalPathways++;
+  //   });
+  //   setPercentage(Math.round((finishedPathways / totalPathways) * 100));
+  // }, []);
 
   if (accountInfo.checkIns.length > 0) {
     router.push({

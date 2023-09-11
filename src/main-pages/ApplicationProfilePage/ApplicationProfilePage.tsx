@@ -185,8 +185,6 @@ const ApplicationProfilePage: NextApplicationPage<{
 
   const handleSubmitActivities = async () => {
     localStorage.setItem("activityCache", JSON.stringify(activityResponses));
-    console.log(JSON.parse(localStorage.getItem("activityCache")));
-    console.log(activityResponses);
     openNotification("Successfully saved your activities!");
     const newActivitiesArr = [];
     let tiersArr = [];
