@@ -15,7 +15,7 @@ import DropdownTab from "src/common/components/DropdownTab/DropdownTab";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import AcademicsSignUp, { AcademicsProps } from "src/main-pages/CheckInPage/Components/AcademicsSignUp";
 import ActivitiesSignUp from "src/main-pages/CheckInPage/Components/ActivitiesSignUp";
-import { calculateECActivityPoints, calculateECActivityTier, calculateGPATier, overallAcademicTier } from "src/utils/student-metrics/metricsCalculations";
+import { calculateECActivityPoints, calculateECActivityTier, calculateGPATier, calculateOverallECTier, overallAcademicTier } from "src/utils/student-metrics/metricsCalculations";
 import { notification } from "antd";
 
 const ApplicationProfilePage: NextApplicationPage<{
@@ -185,6 +185,8 @@ const ApplicationProfilePage: NextApplicationPage<{
 
   const handleSubmitActivities = async () => {
     localStorage.setItem("activityCache", JSON.stringify(activityResponses));
+    console.log(JSON.parse(localStorage.getItem("activityCache")));
+    console.log(activityResponses);
     openNotification("Successfully saved your activities!");
     const newActivitiesArr = [];
     let tiersArr = [];
@@ -209,12 +211,18 @@ const ApplicationProfilePage: NextApplicationPage<{
       tiersArr.push(tier);
       newActivitiesArr.push(otherActivity);
     })
+    const overallECTier = await calculateOverallECTier(tiersArr);
+    let userActivities: Activities = {
+      activities: newActivitiesArr,
+      overallTier: overallECTier,
+      totalPoints: totalECPoints
+    }
     try {
       await fetch('/api/metrics/put-activities', {
         method: 'POST',
         body: JSON.stringify({
           userId: session.data.user.uid,
-          activities: activityData.activities,
+          activities: userActivities,
           responses: activityResponses,
           insertionId: session.data.user.uid
         }),
