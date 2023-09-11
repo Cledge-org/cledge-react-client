@@ -9,6 +9,8 @@
   background: linear-gradient(90deg, $cl-cool-blue 0%, $cl-cool-purple 100%);
   border: 1px;
   border-radius: 25px;
+
+  max-height: 35rem;
   
   & * {
     cursor: default !important;
