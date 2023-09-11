@@ -224,6 +224,20 @@ const ApplicationProfilePage: NextApplicationPage<{
     } catch (e) {
       console.log(e);
     }
+    try {
+      await fetch('/api/metrics/put-activities-logs', {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: session.data.user.uid,
+          activities: activityData.activities,
+          responses: activityResponses,
+          insertionId: session.data.user.uid
+        }),
+      })
+    } catch (e) {
+      console.log(e);
+    }
+
   }
   return (
     <PageErrorBoundary>
