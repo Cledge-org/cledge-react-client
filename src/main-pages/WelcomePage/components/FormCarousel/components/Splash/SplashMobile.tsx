@@ -1,6 +1,6 @@
 import React from "react";
 import cs from "classnames";
-import styles from "./Splash.module.scss";
+import styles from "./SplashMobile.module.scss";
 import { MainContainer, Heading } from "../styles";
 import { Button } from "../../../Button/Button";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
@@ -30,24 +30,28 @@ function Splash({
           <Heading className={cs("cl-white")}>{content.heading}</Heading>
           <p className={styles.subHeading}>{content.subHeading}</p>
         </div>
+        <div className="d-flex">
         <div className={styles.gridItem}>
           <div className={styles.newIcon}>New</div>
         </div>
       </div>
-      <div className={styles.flexContainer}>
-        <div className={styles.flexItem}>
-          <img src="/images/landing_search_tool.png" alt="more info" />
-        </div>
-        <div className={styles.flexItem}>
-        <Button
-          color="#F7BC76"
-          fixedWidth={false}
-          className={cs(styles.tryNow)}
-          onClick={buttonHandler}
-          >
-          Try Now
-        </Button>
+      <div className="mb-5 me-3">
+        <div className={styles.flexContainer}>
+          <div className={styles.flexItem}>
+            <img src="/images/landing_search_tool.png" alt="more info" />
           </div>
+          <div className={styles.flexItem}>
+          <Button
+            color="#F7BC76"
+            fixedWidth={false}
+            className={cs(styles.tryNow)}
+            onClick={buttonHandler}
+            >
+            Try Now
+          </Button>
+          </div>
+            </div>
+        </div>
       </div>
       {children}
     </MainContainer>
