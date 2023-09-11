@@ -94,9 +94,7 @@ const Metrics: NextApplicationPage<{
               className="container-fluid d-flex flex-column"
               style={{ flex: 1 }}
             >
-              <div className="mt-2">
-                <SMFutureTitle/>
-              </div>
+              <div><SMFutureTitle/></div>
               
               <QuestionSubPageHeader
                 title="My Application Metrics"

@@ -16,16 +16,13 @@ import DashboardTabButton from "./components/MyLearningTabButton/MyLearningTabBu
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import { useLocation } from "src/utils/hooks/useLocation";
 import putPathway from "src/pages/api/admin/learning-pathway/put-pathway";
-import { store } from "src/utils/redux/store";
-import { initialStateAction } from "src/utils/redux/actionFunctions";
 
 // logged in landing page
 const MyLearningPage: NextApplicationPage<{
   dashboardParts: PathwayPart[];
   accountInfo: AccountInfo;
   pathwaysProgress: PathwayProgress[];
-  questionResponses;
-}> = ({ dashboardParts, accountInfo, pathwaysProgress, questionResponses }) => {
+}> = ({ dashboardParts, accountInfo, pathwaysProgress }) => {
   const router = useRouter();
   const session = useSession();
   const [currTab, setCurrTab] = useState("all modules");
@@ -41,16 +38,6 @@ const MyLearningPage: NextApplicationPage<{
       objectIdStr.length - 2
     );
   };
-  const dispatchPathwayProgress = async () => {
-    await store.dispatch(
-      initialStateAction({
-        accountInfo: accountInfo,
-        pathwaysProgress: pathwaysProgress,
-        questionResponses: questionResponses,
-      })
-    );
-  }
-  dispatchPathwayProgress();
   useEffect(() => {
     let totalPathways = 0;
     let finishedPathways = 0;
@@ -473,5 +460,4 @@ const MyLearningPage: NextApplicationPage<{
 MyLearningPage.requireAuth = true;
 export default connect((state) => ({
   accountInfo: state.accountInfo,
-  questionResponses: state.questionResponses
 }))(MyLearningPage);
