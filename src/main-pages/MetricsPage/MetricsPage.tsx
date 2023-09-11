@@ -69,6 +69,7 @@ const Metrics: NextApplicationPage<{
               style={{ flex: 1 }}
             >
               <div><SMFutureTitle/></div>
+              
               <QuestionSubPageHeader
                 title="My Application Metrics"
                 percentage={undefined}

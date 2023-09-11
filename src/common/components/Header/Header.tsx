@@ -73,7 +73,7 @@ const Header = ({
     // },
     {
       link: "/college-list",
-      icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
+      icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
       title: "College",
       dropdown: true,
       links : [
