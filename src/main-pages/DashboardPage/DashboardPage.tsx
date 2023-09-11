@@ -36,7 +36,8 @@ const DashboardPage = ({
   recentBlogs: any;
   percentageObject: any;
 }) => {
-  const [percentage, setPercentage] = useState(percentageObject.percentage.percentage);
+  console.log(percentageObject);
+  const [percentage, setPercentage] = useState(percentageObject != null && percentageObject != 0 ? percentageObject.percentage.percentage : 0);
   const router = useRouter();
   const avgTier = useMemo(
     () => (ecMetrics?.overallTier || 0 + acMetrics?.overallClassTier || 0) / 2,

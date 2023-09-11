@@ -1,0 +1,35 @@
+.gridContainer {
+   flex: 0 1 auto;
+   flex-basis: 50%;
+   padding:0;
+   padding-left:20px;
+   display: grid;
+   grid-template-columns: 25fr 1fr;
+   grid-template-rows: 1fr 99fr;
+   position:relative;
+   height: fit-content;
+   width: 100%;
+   margin-top: 2.5rem;
+}
+
+.gridItem {
+   &:first-child {
+      grid-area: 2 / 1 / 3 / 2;
+      align-self:center;
+   }
+   &:nth-child(2) {
+      grid-area: 1 / 2 / 2 / 3;
+      position:relative;
+   }
+}
+
+.infoButton{
+   background:none;
+   border:none;
+   width:20px;
+   height:20px;
+   position: absolute;
+   z-index: 2;
+   top: 0;
+   right: 0;
+}
