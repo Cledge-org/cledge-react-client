@@ -7,36 +7,31 @@ import ProductContent from "./content/ProductContent.json";
 import ContactContent from "./content/ContactContent.json";
 import MiddleBlockContent from "./content/MiddleBlockContent.json";
 import PartnerContent from "./content/PartnerContent.json";
-import { useEffect, useRef, useState, useLayoutEffect } from "react";
+import {  useRef, useState } from "react";
 import Footer from "./components/Footer/Footer";
 import styled from "styled-components";
-import { Fade } from "react-awesome-reveal";
+import { Fade, FadeProps } from "react-awesome-reveal";
 import { Button } from "./components/Button/Button";
-import DropDownQuestion from "../../common/components/Questions/DropdownQuestion/DropdownQuestion";
-import YoutubeEmbed from "../../common/components/YoutubeEmbed/YoutubeEmbed";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import UWCSLandingPage from "./components/UWCSLandingPage/UWCSLandingPage";
 import { useLocation } from "src/utils/hooks/useLocation";
-import NewBlogsCarousel from "./components/blogsCarousel/NewBlogsCarousel";
-import BlogCarouselItem from "./components/blogsCarousel/components/BlogCaroselItem";
 import FormCarousel from "./components/FormCarousel/FormCarousel";
 import FormCarouselMobile from "./components/FormCarousel/FormCarouselMobile";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import UWRightContentBlock from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWRightContentBlock/UWRightContentBlock";
 import classNames from "classnames";
 import { useRouter } from "next/router";
+import LeftContentBlock from "src/main-pages/WelcomePage/components/ContentBlock/components/LeftContentBlock/LeftContentBlock";
+import { GettingStartedSteps } from "src/main-pages/WelcomePage/content/GettingStartedSteps";
 
-
-const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
 const MiddleBlock = dynamic(
   () => import("./components/MiddleBlock/MiddleBlock")
 );
 const Container = dynamic(() => import("./components/Container/Container"));
-const ContentBlock = dynamic(
-  () => import("./components/ContentBlock/ContentBlock")
-);
 
-const UWLandingFooter = dynamic(() => import("./components/UWCSLandingPage/components/footer/UWLandingFooter"));
+const UWLandingFooter = dynamic(
+  () => import("./components/UWCSLandingPage/components/footer/UWLandingFooter")
+);
 
 const FullWidthContainer = styled("div")`
   position: relative;
@@ -94,7 +89,6 @@ const Intro = styled(FullWidthContainer)`
 `;
 
 const Metric = styled(FullWidthContainer)`
-  margin-top: 100px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -121,11 +115,6 @@ const Metric = styled(FullWidthContainer)`
   p {
     font-size: 14px;
   }
-`;
-
-const Partner = styled(FullWidthContainer)`
-  background: #f9faff;
-  margin-top: 4rem;
 `;
 
 export const SubscribeWrapper = styled("div")`
@@ -252,7 +241,6 @@ export const MediaButton = styled("button")`
 `;
 
 const CarouselDiv = styled.div`
-  background-color: #f9faff;
   margin: auto;
   width: 100%;
   height: fit-content;
@@ -269,15 +257,15 @@ const WelcomePage = ({ data }) => {
   const isMobile = width <= 810;
 
   const router = useRouter();
-  
   return (
     <PageErrorBoundary>
-      <Container>
-        <Intro 
-          className="container-margin" 
+      <Container className="bg-light-blue">
+        <Intro
+          className="container-margin"
           style={{
             backgroundSize: "cover",
-          }}>
+          }}
+        >
           <Fade triggerOnce={true} className="w-100" direction="right">
             <div
               style={{
@@ -288,13 +276,13 @@ const WelcomePage = ({ data }) => {
               className={classNames(
                 `d-flex flex-column justify-content-center ${
                   isMobile ? "px-3" : "px-5"
-                }`,
+                }`
               )}
             >
-              <div 
+              <div
                 className="w-100 d-flex flex-column justify-content-center align-items-center"
                 style={{
-                  marginTop: isMobile ? "6rem" : null
+                  marginTop: isMobile ? "6rem" : null,
                 }}
               >
                 <div
@@ -306,7 +294,6 @@ const WelcomePage = ({ data }) => {
                   }}
                 >
                   Meet the Future of
-  
                 </div>
                 <div
                   style={{
@@ -318,190 +305,79 @@ const WelcomePage = ({ data }) => {
                   className="mb-4"
                 >
                   College Advising.
-  
                 </div>
-                {isMobile ? null : (<div
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: isMobile ? "15px" : "25px",
-                    textAlign: "center",
-                    lineHeight: "1.6em"
-                  }}
-                  className="my-3"
-                >
-                  Maximize your chances to get into your best-fit colleges. We use AI 
-                  <br />
-                 and data driven tools to give you an edge on your application.
-  
-                </div>)}
-                <Button
-                    key="buy-now-btn"
-                    color="#F7BC76"
-                    fixedWidth={true}
-                    className={classNames(`${ isMobile ? "w-50" : "w-25 mt-4" }`)}
-                    onClick={() => {
-                      router.push("/auth/signup")
+                {isMobile ? null : (
+                  <div
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: isMobile ? "15px" : "25px",
+                      textAlign: "center",
+                      lineHeight: "1.6em",
                     }}
+                    className="my-3"
                   >
-                      Sign Up Free
-                  </Button>
+                    Maximize your chances to get into your best-fit colleges. We
+                    use AI
+                    <br />
+                    and data driven tools to give you an edge on your
+                    application.
+                  </div>
+                )}
+                <Button
+                  key="buy-now-btn"
+                  color="#F7BC76"
+                  fixedWidth={true}
+                  className={classNames(`${isMobile ? "w-50" : "w-25 mt-4"}`)}
+                  onClick={() => {
+                    router.push("/auth/signup");
+                  }}
+                >
+                  Sign Up Free
+                </Button>
               </div>
             </div>
           </Fade>
         </Intro>
-        <div className="d-flex center-child">
-          <div className="w-100 px-5 py-5">
+        <div className="d-flex center-child w-100 px-5 py-5">
             <Fade triggerOnce={true} direction="right">
               <CarouselDiv>
-                {isMobile ? <FormCarouselMobile collegeData={data.collegeData} questionData={data.checkinQuestions.chunks[0].questions} /> :
-                (
-                  <FormCarousel collegeData={data.collegeData} questionData={data.checkinQuestions.chunks[0].questions} />
+                {isMobile ? (
+                  <FormCarouselMobile
+                    collegeData={data.collegeData}
+                    questionData={data.checkinQuestions.chunks[0].questions}
+                  />
+                ) : (
+                  <FormCarousel
+                    collegeData={data.collegeData}
+                    questionData={data.checkinQuestions.chunks[0].questions}
+                  />
                 )}
               </CarouselDiv>
             </Fade>
-          </div>
         </div>
 
-
-        <div style={{ background: "#DCE1FB" }}>
-          <Fade triggerOnce={true} direction="right">
-            <div style={{ background: "#DCE1FB" }}>
-              <div className="pt-5 pb-5">
-                <UWRightContentBlock
-                  type={"right"}
-                  title={
-                    <div>
+        <div className="pb-5">
+          {GettingStartedSteps.map((block, _i) => (
+            <Fade
+              triggerOnce={true}
+              direction={block.fadeDirection as FadeProps["direction"]}
+            >
+                  <LeftContentBlock
+                    title={
                       <div>
-                        <img src={`images/uw_1.svg`} alt="1" />
+                        <StepNumber isMobile={isMobile} step={(_i + 1)+""} />
+                        <br />
+                        <div style={{ fontSize: isMobile ? 22 : 32 }}>
+                          {block.title}
+                        </div>
                       </div>
-                      <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Create your profile with <span className="cl-blue">Cledge</span>.</div>
-                    </div>
-                  }
-                  content={
-                    ""
-                  }
-                  icon="images/Step 1 Landing.svg"
-                  id="mission2"
-                />
-              </div>
-            </div>
-          </Fade>
-          <Fade triggerOnce={true} direction="left">
-            <div style={{ background: "#DCE1FB" }}>
-              <div className="pt-5 pb-5">
-                <UWRightContentBlock
-                  type={"right"}
-                  title={
-                    <div>
-                      <div>
-                        <img src={`images/uw_2.svg`} alt="2" />
-                      </div>
-                      <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get personalized help based off what you tell us and what type of applicant <span className="cl-yellow">you are</span>.</div>
-                    </div>
-                  }
-                  content={
-                    ""
-                  }
-                  icon="images/Step 2 Landing.svg"
-                  id="mission2"
-                />
-              </div>
-            </div>
-          </Fade>
-          <Fade triggerOnce={true} direction="right">
-            <div style={{ background: "#DCE1FB" }}>
-              <div className="pt-5 pb-5">
-                <UWRightContentBlock
-                  type={"right"}
-                  title={
-                    <div>
-                      <div>
-                        <img src={`images/uw_3.svg`} alt="3" />
-                      </div>
-                      <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Go above and beyond and find more <span className="cl-blue">colleges that fit your needs</span>.</div>
-                    </div>
-                  }
-                  content={
-                    ""
-                  }
-                  icon="images/Step 3 Landing.svg"
-                  id="mission2"
-                />
-              </div>
-            </div>
-          </Fade>
-          <Fade triggerOnce={true} direction="left">
-            <div style={{ background: "#DCE1FB" }}>
-              <div className="pt-5 pb-5">
-                <UWRightContentBlock
-                  type={"right"}
-                  title={
-                    <div>
-                      <div>
-                        <img src={`images/uw_4.svg`} alt="4" />
-                      </div>
-                      <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get questions answered by <span className="cl-yellow">your</span> assigned <span className="cl-yellow">college counselor</span> and <span className="cl-yellow">AI</span> advisor.</div>
-                    </div>
-                  }
-                  content={
-                    ""
-                  }
-                  icon="images/Step 4 Landing.svg"
-                  id="mission2"
-                />
-              </div>
-            </div>
-          </Fade>
-          <Fade triggerOnce={true} direction="right">
-            <div style={{ background: "#DCE1FB" }}>
-              <div className="pt-5 pb-5">
-                <UWRightContentBlock
-                  type={"right"}
-                  title={
-                    <div>
-                      <div>
-                        <img src={`images/uw_4.svg`} alt="4" />
-                      </div>
-                      <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get <span className="cl-blue">specific</span> metrics on how to improve <span className="cl-blue">your applicaiton</span>.</div>
-                    </div>
-                  }
-                  content={
-                    ""
-                  }
-                  icon="images/Step 5 Landing.svg"
-                  id="mission2"
-                />
-              </div>
-            </div>
-          </Fade>
-          <Fade triggerOnce={true} direction="left">
-            <div style={{ background: "#DCE1FB" }}>
-              <div className="pt-5 pb-5">
-                <UWRightContentBlock
-                  type={"right"}
-                  title={
-                    <div>
-                      <div>
-                        <img src={`images/uw_4.svg`} alt="4" />
-                      </div>
-                      <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get into the college that is the best fit for <span className="cl-blue">you</span>!</div>
-                    </div>
-                  }
-                  content={
-                    ""
-                  }
-                  icon="images/Step 6 Landing.svg"
-                  id="mission2"
-                />
-              </div>
-            </div>
-          </Fade>
+                    }
+                    content={""}
+                    icon={block.icon}
+                    id={block.id}
+                  />
+            </Fade>
+          ))}
         </div>
         {/* <BlobBlock>
           <Fade direction="right" className="center-child w-100">
@@ -589,3 +465,21 @@ const WelcomePage = ({ data }) => {
 };
 
 export default WelcomePage;
+
+const StepNumber = styled.div.attrs({ className: "bg-cl-blue cl-white" })<{
+  step: string;
+  isMobile: boolean;
+}>`
+  width: ${props => props.isMobile ? 70 : 100}px;
+  height: ${props => props.isMobile ? 70 : 100}px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size:46px;
+  font-family: Pragati Narrow;
+  font-weight:400;
+  &::before {
+    content: "${(props) => props.step}";
+  }
+`;

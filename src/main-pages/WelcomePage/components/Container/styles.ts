@@ -1,6 +1,12 @@
 import styled from "styled-components";
 
-export const StyledContainer = styled("div")<any>`
+export type StyledContainerProps = {
+  border?: boolean;
+  className?: string;
+}
+
+export const StyledContainer = styled.div.attrs((p) => ({
+  className: p.className}))<StyledContainerProps>`
   position: relative;
   width: 100%;
   border-top: ${(p) => (p.border ? "1px solid #CDD1D4" : "")};

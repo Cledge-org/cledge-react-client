@@ -1,6 +1,6 @@
 export interface ContentBlockProps {
   icon?: string;
-  title: string;
+  title: React.ReactNode;
   content: string;
   section?: any;
   button?: any;
