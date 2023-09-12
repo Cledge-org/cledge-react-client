@@ -26,6 +26,13 @@ const UWPurchase = () => {
     setClientSecret(clientSecret);
   };
 
+  const handlePromoCode = async (discountedPrice: number) => {
+    const { clientSecret } = await (
+      await callCreatePaymentIntent(discountedPrice + "")
+    ).json();
+    setClientSecret(clientSecret);
+  }
+
   useEffect(() => {
     asyncUseEffect();
   }, []);
@@ -35,7 +42,7 @@ const UWPurchase = () => {
   }
   return (
     <Elements stripe={stripePromise} options={{ clientSecret }}>
-      <PremiumPurchasePage />
+      <PremiumPurchasePage handlePromo={(e) => handlePromoCode(e)} />
     </Elements>
   );
 };

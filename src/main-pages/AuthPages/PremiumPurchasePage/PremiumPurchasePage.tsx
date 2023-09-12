@@ -4,6 +4,7 @@ import PurchasePageInput from "src/main-pages/AuthPages/PremiumPurchasePage/comp
 import {
   alertSlackNewUser,
   callCreateUser,
+  callRedeemPromoCode,
   callUpdateUser,
   getNumUsers,
   redeemCode
@@ -21,8 +22,9 @@ import { store } from "src/utils/redux/store";
 import { connect } from "react-redux";
 import { updateAccountAction } from "src/utils/redux/actionFunctions";
 import { useRouter } from "next/router";
+import { redeemPromoCode } from "src/pages/api/auth/redeemPromoCode";
 
-const PremiumPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
+const PremiumPurchasePage = ({ accountInfo, handlePromo }: { accountInfo: AccountInfo, handlePromo: Function }) => {
   const [issues, setIssues] = useState([]);
   const [signUpDetails, setSignUpDetails] = useState({
     email: "",
@@ -35,7 +37,9 @@ const PremiumPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   const [understands, setUnderstands] = useState(false);
   const [promotionCode, setPromotionCode] = useState("");
   const [validCode, setValidCode] = useState(false);
-  const [price, setPrice] = useState(5);
+  const [showCodeAccepted, setShowCodeAccepted] = useState(false);
+  const [showInvalidCode, setShowInvalidCode] = useState(false);
+  const [price, setPrice] = useState(49.99);
   const stripe = useStripe();
   const elements = useElements();
   const session = useSession();
@@ -52,12 +56,21 @@ const PremiumPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   };
 
   const handlePromotionCode = async () => {
-    let res = await redeemCode(promotionCode, signUpDetails.email);
-    let data = await res.json();
-    let nest = data.post[0];
-    if (promotionCode == nest.code && nest.redeemed == 0 && nest.redeemedBy == '') {
-      setValidCode(true);
-      setPrice(0);
+    if (showCodeAccepted == false) {
+      const res = await callRedeemPromoCode(promotionCode, session.data.user.uid);
+      let codeObject = null;
+      try {
+        codeObject = await res.json();
+      } catch (e) {}
+      if (codeObject != null && codeObject.discountedPrice != null) {
+        setShowCodeAccepted(true);
+        setShowInvalidCode(false);
+        setPrice(codeObject.discountedPrice);
+        handlePromo(codeObject.discountedPrice);
+      } else {
+        setShowCodeAccepted(false);
+        setShowInvalidCode(true);
+      }
     }
   }
 
@@ -375,7 +388,8 @@ const PremiumPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
               </button>
 
             </div>
-            {validCode ? (<text>CODE ACCEPTED</text>) : ""}
+            {showCodeAccepted ? (<text style={{ color: "green" }}>Promotion code applied!</text>) : ""}
+            {showInvalidCode ? (<text style={{ color: "red" }}>Invalid promotion code.</text>) : ""}
           </div>
           {!validCode ? (<PaymentElement />) : ""}
         </div>
@@ -396,7 +410,7 @@ const PremiumPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
         </div>
         <div className={styles.blobContainer}>
           <div
-            className="d-flex flex-row align-items-center justify-content-between fw-bold cl-dark-text py-3"
+            className="d-flex flex-row align-items-center justify-content-between fw-bold cl-dark-text pb-3"
             style={{ fontSize: "24px" }}
           >
             <div>Cledge Premium Account Tier</div>
