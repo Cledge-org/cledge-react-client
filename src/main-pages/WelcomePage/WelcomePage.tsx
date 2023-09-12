@@ -25,6 +25,7 @@ import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import UWRightContentBlock from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWRightContentBlock/UWRightContentBlock";
 import classNames from "classnames";
 import { useRouter } from "next/router";
+import LeftContentBlock from "src/main-pages/WelcomePage/components/ContentBlock/components/LeftContentBlock/LeftContentBlock";
 
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
@@ -349,10 +350,10 @@ const WelcomePage = ({ data }) => {
             </div>
           </Fade>
         </Intro>
-        <div className="d-flex center-child">
-          <div className="w-100 px-5 py-5">
+        <div className="d-flex center-child" style={{ background: "#DCE1FB" }}>
+          <div className="w-100 px-5 py-5" >
             <Fade triggerOnce={true} direction="right">
-              <CarouselDiv>
+              <CarouselDiv style={{ background: "#DCE1FB" }}>
                 {isMobile ? <FormCarouselMobile collegeData={data.collegeData} questionData={data.checkinQuestions.chunks[0].questions} /> :
                 (
                   <FormCarousel collegeData={data.collegeData} questionData={data.checkinQuestions.chunks[0].questions} />
@@ -367,21 +368,21 @@ const WelcomePage = ({ data }) => {
           <Fade triggerOnce={true} direction="right">
             <div style={{ background: "#DCE1FB" }}>
               <div className="pt-5 pb-5">
-                <UWRightContentBlock
-                  type={"right"}
+                <LeftContentBlock
+                  icon="Step 1 Landing.svg"
                   title={
                     <div>
-                      <div>
+                      <div style={{ fontSize: isMobile ? 22 : 36 }}>
                         <img src={`images/uw_1.svg`} alt="1" />
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Create your profile with <span className="cl-blue">Cledge</span>.</div>
+                      <div style={{ fontSize: isMobile ? 22 : 36 }}>Create your profile with <span className="cl-blue">Cledge</span>.</div>
                     </div>
                   }
                   content={
                     ""
                   }
-                  icon="images/Step 1 Landing.svg"
+                  
                   id="mission2"
                 />
               </div>
@@ -390,21 +391,20 @@ const WelcomePage = ({ data }) => {
           <Fade triggerOnce={true} direction="left">
             <div style={{ background: "#DCE1FB" }}>
               <div className="pt-5 pb-5">
-                <UWRightContentBlock
-                  type={"right"}
+                <LeftContentBlock
                   title={
                     <div>
-                      <div>
-                        <img src={`images/uw_2.svg`} alt="2" />
+                      <div style={{ fontSize: isMobile ? 22 : 36 }}>
+                        2. {/* <img src={`images/uw_2.svg`} alt="2" /> */}
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get personalized help based off what you tell us and what type of applicant <span className="cl-yellow">you are</span>.</div>
+                      <div style={{ fontSize: isMobile ? 22 : 36 }}>Get personalized help based off what you tell us and what type of applicant <span className="cl-blue">you are</span>.</div>
                     </div>
                   }
                   content={
                     ""
                   }
-                  icon="images/Step 2 Landing.svg"
+                  icon="Step 2 Landing.svg"
                   id="mission2"
                 />
               </div>
@@ -413,21 +413,20 @@ const WelcomePage = ({ data }) => {
           <Fade triggerOnce={true} direction="right">
             <div style={{ background: "#DCE1FB" }}>
               <div className="pt-5 pb-5">
-                <UWRightContentBlock
-                  type={"right"}
+                <LeftContentBlock
                   title={
                     <div>
-                      <div>
-                        <img src={`images/uw_3.svg`} alt="3" />
+                      <div style={{ fontSize: isMobile ? 22 : 36 }}>
+                        3. {/* <img src={`images/uw_3.svg`} alt="3" /> */}
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Go above and beyond and find more <span className="cl-blue">colleges that fit your needs</span>.</div>
+                      <div style={{ fontSize: isMobile ? 22 : 36 }}>Go above and beyond and find more <span className="cl-blue">colleges that fit your needs</span>.</div>
                     </div>
                   }
                   content={
                     ""
                   }
-                  icon="images/Step 3 Landing.svg"
+                  icon="Step 3 Landing.svg"
                   id="mission2"
                 />
               </div>
@@ -436,21 +435,20 @@ const WelcomePage = ({ data }) => {
           <Fade triggerOnce={true} direction="left">
             <div style={{ background: "#DCE1FB" }}>
               <div className="pt-5 pb-5">
-                <UWRightContentBlock
-                  type={"right"}
+                <LeftContentBlock
                   title={
                     <div>
-                      <div>
-                        <img src={`images/uw_4.svg`} alt="4" />
+                      <div style={{ fontSize: isMobile ? 22 : 36 }}>
+                        4. {/* <img src={`images/uw_4.svg`} alt="4" /> */}
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get questions answered by <span className="cl-yellow">your</span> assigned <span className="cl-yellow">college counselor</span> and <span className="cl-yellow">AI</span> advisor.</div>
+                      <div style={{ fontSize: isMobile ? 22 : 36 }}>Get questions answered by <span className="cl-blue">your</span> assigned <span className="cl-blue">college counselor</span> and <span className="cl-blue">AI</span> advisor.</div>
                     </div>
                   }
                   content={
                     ""
                   }
-                  icon="images/Step 4 Landing.svg"
+                  icon="Step 4 Landing.svg"
                   id="mission2"
                 />
               </div>
@@ -459,21 +457,20 @@ const WelcomePage = ({ data }) => {
           <Fade triggerOnce={true} direction="right">
             <div style={{ background: "#DCE1FB" }}>
               <div className="pt-5 pb-5">
-                <UWRightContentBlock
-                  type={"right"}
+                <LeftContentBlock
                   title={
                     <div>
-                      <div>
-                        <img src={`images/uw_4.svg`} alt="4" />
+                      <div style={{ fontSize: isMobile ? 22 : 36 }}>
+                        5. {/* <img src={`images/uw_5.svg`} alt="4" /> */}
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get <span className="cl-blue">specific</span> metrics on how to improve <span className="cl-blue">your applicaiton</span>.</div>
+                      <div style={{ fontSize: isMobile ? 22 : 36 }}>Get <span className="cl-blue">specific</span> metrics on how to improve <span className="cl-blue">your applicaiton</span>.</div>
                     </div>
                   }
                   content={
                     ""
                   }
-                  icon="images/Step 5 Landing.svg"
+                  icon="Step 5 Landing.svg"
                   id="mission2"
                 />
               </div>
@@ -482,21 +479,20 @@ const WelcomePage = ({ data }) => {
           <Fade triggerOnce={true} direction="left">
             <div style={{ background: "#DCE1FB" }}>
               <div className="pt-5 pb-5">
-                <UWRightContentBlock
-                  type={"right"}
+                <LeftContentBlock
                   title={
                     <div>
-                      <div>
-                        <img src={`images/uw_4.svg`} alt="4" />
+                      <div style={{ fontSize: isMobile ? 22 : 36 }}>
+                        6. {/* <img src={`images/uw_6.svg`} alt="4" /> */}
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get into the college that is the best fit for <span className="cl-blue">you</span>!</div>
+                      <div style={{ fontSize: isMobile ? 22 : 36 }}>Get into the college that is the best fit for <span className="cl-blue">you</span>!</div>
                     </div>
                   }
                   content={
                     ""
                   }
-                  icon="images/Step 6 Landing.svg"
+                  icon="Step 6 Landing.svg"
                   id="mission2"
                 />
               </div>
