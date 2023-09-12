@@ -799,6 +799,15 @@ const CheckIn: NextApplicationPage<{
             responses: academicsResponses
           }),
         }),
+        fetch('/api/metrics/put-academics-logs', {
+          method: 'POST',
+          body: JSON.stringify({
+            userId: session.data.user.uid,
+            insertionId: session.data.user.uid,
+            academics: userAcademics,
+            responses: academicsResponses
+          }),
+        }),
      fetch('/api/user/put-college-list', {
        method: 'POST',
          headers: {
