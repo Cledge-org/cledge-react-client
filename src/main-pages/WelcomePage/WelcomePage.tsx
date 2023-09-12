@@ -12,7 +12,6 @@ import Footer from "./components/Footer/Footer";
 import styled from "styled-components";
 import { Fade, FadeProps } from "react-awesome-reveal";
 import { Button } from "./components/Button/Button";
-
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import UWCSLandingPage from "./components/UWCSLandingPage/UWCSLandingPage";
 import { useLocation } from "src/utils/hooks/useLocation";
@@ -22,13 +21,13 @@ import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import UWRightContentBlock from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWRightContentBlock/UWRightContentBlock";
 import classNames from "classnames";
 import { useRouter } from "next/router";
+import LeftContentBlock from "src/main-pages/WelcomePage/components/ContentBlock/components/LeftContentBlock/LeftContentBlock";
 import { GettingStartedSteps } from "src/main-pages/WelcomePage/content/GettingStartedSteps";
 
 const MiddleBlock = dynamic(
   () => import("./components/MiddleBlock/MiddleBlock")
 );
 const Container = dynamic(() => import("./components/Container/Container"));
-
 
 const UWLandingFooter = dynamic(
   () => import("./components/UWCSLandingPage/components/footer/UWLandingFooter")
@@ -260,7 +259,6 @@ const WelcomePage = ({ data }) => {
   const isMobile = width <= 810;
 
   const router = useRouter();
-  console.log(isMobile);
   return (
     <PageErrorBoundary>
       <Container>
@@ -342,8 +340,8 @@ const WelcomePage = ({ data }) => {
             </div>
           </Fade>
         </Intro>
-        <div className="d-flex center-child">
-          <div className="w-100 px-5 py-5">
+        <div className="d-flex center-child" style={{ background: "#DCE1FB" }}>
+          <div className="w-100 px-5 py-5" >
             <Fade triggerOnce={true} direction="right">
               <CarouselDiv>
                 {isMobile ? (
@@ -369,9 +367,7 @@ const WelcomePage = ({ data }) => {
               direction={block.fadeDirection as FadeProps["direction"]}
             >
               <div style={{ background: "#DCE1FB" }}>
-                <div className="pt-5 pb-5">
-                  <UWRightContentBlock
-                    type={"right"}
+                  <LeftContentBlock
                     title={
                       <div>
                         <StepNumber isMobile={isMobile} step={(_i + 1)+""} />
@@ -385,7 +381,6 @@ const WelcomePage = ({ data }) => {
                     icon={block.icon}
                     id={block.id}
                   />
-                </div>
               </div>
             </Fade>
           ))}
