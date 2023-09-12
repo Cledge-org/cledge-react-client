@@ -89,7 +89,6 @@ const Intro = styled(FullWidthContainer)`
 `;
 
 const Metric = styled(FullWidthContainer)`
-  margin-top: 100px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -242,7 +241,6 @@ export const MediaButton = styled("button")`
 `;
 
 const CarouselDiv = styled.div`
-  background-color: #f9faff;
   margin: auto;
   width: 100%;
   height: fit-content;
@@ -261,7 +259,7 @@ const WelcomePage = ({ data }) => {
   const router = useRouter();
   return (
     <PageErrorBoundary>
-      <Container>
+      <Container className="bg-light-blue">
         <Intro
           className="container-margin"
           style={{
@@ -340,8 +338,7 @@ const WelcomePage = ({ data }) => {
             </div>
           </Fade>
         </Intro>
-        <div className="d-flex center-child" style={{ background: "#DCE1FB" }}>
-          <div className="w-100 px-5 py-5" >
+        <div className="d-flex center-child w-100 px-5 py-5">
             <Fade triggerOnce={true} direction="right">
               <CarouselDiv>
                 {isMobile ? (
@@ -357,16 +354,14 @@ const WelcomePage = ({ data }) => {
                 )}
               </CarouselDiv>
             </Fade>
-          </div>
         </div>
 
-        <div style={{ background: "#DCE1FB" }}>
+        <div className="pb-5">
           {GettingStartedSteps.map((block, _i) => (
             <Fade
               triggerOnce={true}
               direction={block.fadeDirection as FadeProps["direction"]}
             >
-              <div style={{ background: "#DCE1FB" }}>
                   <LeftContentBlock
                     title={
                       <div>
@@ -381,7 +376,6 @@ const WelcomePage = ({ data }) => {
                     icon={block.icon}
                     id={block.id}
                   />
-              </div>
             </Fade>
           ))}
         </div>
@@ -484,6 +478,7 @@ const StepNumber = styled.div.attrs({ className: "bg-cl-blue cl-white" })<{
   align-items: center;
   font-size:46px;
   font-family: Pragati Narrow;
+  font-weight:400;
   &::before {
     content: "${(props) => props.step}";
   }

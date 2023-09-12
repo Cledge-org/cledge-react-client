@@ -1,7 +1,7 @@
-import { StyledContainer } from "./styles";
+import { StyledContainer, StyledContainerProps } from "./styles";
 
-const Container = ({ border, children }: ContainerProps) => (
-  <StyledContainer border={border}>{children}</StyledContainer>
+const Container = (props: ContainerProps & StyledContainerProps) => (
+  <StyledContainer {...props} >{props.children}</StyledContainer>
 );
 
 export default Container;
