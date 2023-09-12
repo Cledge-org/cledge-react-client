@@ -57,7 +57,6 @@ function AcademicsSignUp(props: AcademicsProps) {
   const [currGrade, setCurrGrade] = useState(0);
   const [currTerm, setCurrTerm] = useState(0);
 
-
   const toggleEditing = () => {
     setIsAddingCourse(!isAddingCourse);
     if (props.noRenderButtons) {
@@ -72,7 +71,6 @@ function AcademicsSignUp(props: AcademicsProps) {
         year.isQuarter = !year.isQuarter;
       }
     })
-    console.log(newUserResponses);
     setUserResponses(newUserResponses);
   }
 
@@ -140,8 +138,6 @@ function AcademicsSignUp(props: AcademicsProps) {
       .filter((course) => course.courseName != courseName);
 
       let totalGradePoint = 0;
-      console.log(grade);
-      console.log(term);
       newUserResponses.years?.find(e => e.grade == grade)
       .terms.find(e => e.id == term)
       .courses.forEach(course => {
@@ -196,7 +192,7 @@ function AcademicsSignUp(props: AcademicsProps) {
               title="" 
               key={undefined} 
               placeholder={"Subject Tag"} 
-              valuesList={["Math", "Science", "Other"]} 
+              valuesList={["Math", "Science", "English", "World Language", "History/Social Studies", "Arts", "Other"]} 
               questionTitle={""} 
               onChange={(e) => {
                 setTempCourse({
@@ -213,13 +209,15 @@ function AcademicsSignUp(props: AcademicsProps) {
               type="number"
               placeholder=""
               onChange={(e) => {
-                setTempCourse({
-                  courseName: tempCourse.courseName,
-                  subject: tempCourse.subject,
-                  grade: Number.parseFloat(e),
-                  tag: tempCourse.tag
-                });
-              } }
+                if (/^[1-4]{0,1}(?:[.]\d{1,2})?$/.test(e) || e == '') {
+                  setTempCourse({
+                    courseName: tempCourse.courseName,
+                    subject: tempCourse.subject,
+                    grade: Number.parseFloat(e),
+                    tag: tempCourse.tag
+                  });
+                }
+              }}
               value={tempCourse.grade} 
               question={"Grade (unweighted GPA 4.0 scale)"}          
             />
@@ -429,7 +427,7 @@ function GradeBlock(props: GradeBlockProps) {
               <div className="col-md">
                 <div className="d-flex justify-content-between mx-2">
                   <p style={{color: "#070452"}}>Quarter 4</p>
-                  <p style={{ color: "#808099" }}>Term GPA:{term4.gpa}</p>
+                  <p style={{ color: "#808099" }}>Term GPA: {term4.gpa}</p>
                 </div>
                 <div>
                 {term4?.courses?.map((course) => {

@@ -63,28 +63,28 @@ const Header = ({
       dropdown: false,
       links: [{}]
     },
-    {
-      link: "/chatbot",
-      icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
-      title: "AI Chat",
-      dropdown: false,
-      links: [{}]
+    // {
+    //   link: "/chatbot",
+    //   icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
+    //   title: "AI Chat",
+    //   dropdown: false,
+    //   links: [{}]
 
-    },
+    // },
     {
       link: "/college-list",
-      icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
+      icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
       title: "College",
       dropdown: true,
       links : [
         {
-          key: "My List", 
-          value: "/college-list"
-        },
-        {
-          key: "Colleges", 
+          key: "College Finder", 
           value: "/college-search"
         },
+        {
+          key: "My Colleges", 
+          value: "/college-list"
+        }
       ]
     },
     {

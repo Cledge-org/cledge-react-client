@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
 import cs from 'classnames';
-import styles from "./MultipleChoiceQuestion.module.scss";
+import styles from "./MultipleChoiceQuestionMobile.module.scss";
 import Image from "next/image";
 import { MainContainer, Heading } from "../styles";
 import preventDefault from "src/utils/js/preventDefault";
@@ -15,7 +15,6 @@ const OptionsContainer = styled.div`
   flex-direction: column;
   justify-content:center;
   gap: 20px;
-  margin-top: 2.5rem;
 `;
 const OptionContainer = styled.div`
   display: flex;
@@ -73,9 +72,10 @@ function MultipleChoiceQuestion({
   }
   return (
     <MainContainer className={cs(classNames)} alignItems="start">
+      <div className="d-flex flex-column">
       <div className={styles.gridContainer}>
         <div className={styles.gridItem}>
-          <Heading className="cl-white">{question}</Heading>
+          <Heading className="cl-white mb-5">{question}</Heading>
         </div>
         <div className={styles.gridItem}>
           <button onClick={preventDefault} className={styles.infoButton}>
@@ -110,6 +110,7 @@ function MultipleChoiceQuestion({
         </OptionsContainer>
       )}
       {children}
+      </div>
     </MainContainer>
   );
 }

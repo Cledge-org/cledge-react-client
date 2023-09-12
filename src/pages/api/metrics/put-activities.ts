@@ -12,9 +12,9 @@ export const config = {
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
   const {
     userId,
+    insertionId,
     activities,
     responses,
-    insertionId,
   }: { userId: string; activities: Activities; insertionId: string; responses: ActivityNew[] } =
     JSON.parse(req.body);
   try {

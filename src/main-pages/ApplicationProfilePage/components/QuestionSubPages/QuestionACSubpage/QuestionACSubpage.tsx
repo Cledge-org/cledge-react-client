@@ -51,14 +51,12 @@ export default function QuestionACSubpage({
       },
       []
     );
-    console.log("CLASS TYPES: " + classTypes)
     let applicantLevel = userResponses.find(
       ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
     )?.response;
     if (!applicantLevel) {
       applicantLevel = "Average";
     }
-    console.log(chunkResponses);
     let gpa;
     if (chunkResponses.generalQuestions.length > 0) {
       gpa = parseFloat(

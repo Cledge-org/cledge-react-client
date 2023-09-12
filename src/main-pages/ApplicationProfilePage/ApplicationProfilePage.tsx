@@ -9,15 +9,14 @@ import cs from "classnames";
 
 import { NextApplicationPage } from "../AppPage/AppPage";
 import QuestionSubPageHeader from "../../common/components/SubpageHeader/SubpageHeader";
-import QuestionECSubpage from "./components/QuestionSubPages/QuestionECSubpage/QuestionECSubpage";
-import QuestionACSubpage from "./components/QuestionSubPages/QuestionACSubpage/QuestionACSubpage";
 import QuestionSummarySubpage from "./components/QuestionSubPages/QuestionSummarySubpage/QuestionSummarySubpage";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import DropdownTab from "src/common/components/DropdownTab/DropdownTab";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import AcademicsSignUp, { AcademicsProps } from "src/main-pages/CheckInPage/Components/AcademicsSignUp";
 import ActivitiesSignUp from "src/main-pages/CheckInPage/Components/ActivitiesSignUp";
-import { calculateECActivityPoints, calculateECActivityTier, calculateGPATier, overallAcademicTier } from "src/utils/student-metrics/metricsCalculations";
+import { calculateECActivityPoints, calculateECActivityTier, calculateGPATier, calculateOverallECTier, overallAcademicTier } from "src/utils/student-metrics/metricsCalculations";
+import { notification } from "antd";
 
 const ApplicationProfilePage: NextApplicationPage<{
   questionData: QuestionList[];
@@ -30,8 +29,8 @@ const ApplicationProfilePage: NextApplicationPage<{
   const router = useRouter();
   const [currPage, setCurrPage] = useState({ page: "all", chunk: "" });
   const [currAllSectionTab, setCurrAllSectionTab] = useState("upcoming");
-  const [academicResponses, setAcademicsResponses] = useState(academicData.responses)
-  const [activityResponses, setActivityResponses] = useState(activityData.responses);
+  const [academicResponses, setAcademicsResponses] = useState(localStorage.getItem("academicCache") != null ? JSON.parse(localStorage.getItem("academicCache")) : academicData.responses);
+  const [activityResponses, setActivityResponses] = useState(localStorage.getItem("activityCache") != null ? JSON.parse(localStorage.getItem("activityCache")) : activityData.responses);
   const [noRenderButtons, setNoRenderButtons] = useState(false);
   const [percentageData, setPercentageData] = useState({
     allLists: 0,
@@ -47,6 +46,16 @@ const ApplicationProfilePage: NextApplicationPage<{
       }),
     });
   };
+
+  const openNotification = (message: string) => {
+    notification.open({
+      message: "Success",
+      description: message,
+      duration: 1,
+      placement: "bottomRight"
+    });
+  };
+
   useEffect(() => {
     //resetResponses();
     onPercentageUpdate();
@@ -111,6 +120,8 @@ const ApplicationProfilePage: NextApplicationPage<{
   }
   const handleSubmitAcademics = async () => {
     // gpa tier
+    localStorage.setItem("academicCache", JSON.stringify(academicResponses));
+    openNotification("Successfully saved your academics!");
     let totalGPA = 0;
     let totalTerms = 0;
     academicResponses.years.forEach((year) => {
@@ -150,8 +161,8 @@ const ApplicationProfilePage: NextApplicationPage<{
       overallClassTier: 3,
       gpa: totalGPA,
       gpaTier: userGPATier,
-      satScore: academicResponses.satScore ? academicResponses.satScore : 0,
-      actScore: academicResponses.actScore ? academicResponses.actScore : 0,
+      satScore: academicResponses.satScore ? Number.parseFloat(academicResponses.satScore) : 0,
+      actScore: academicResponses.actScore ? Number.parseFloat(academicResponses.actScore) : 0,
       overallTier: userOverallAcadmicTier,
       classTip: "",
       gpaTip: "",
@@ -188,6 +199,8 @@ const ApplicationProfilePage: NextApplicationPage<{
   }
 
   const handleSubmitActivities = async () => {
+    localStorage.setItem("activityCache", JSON.stringify(activityResponses));
+    openNotification("Successfully saved your activities!");
     const newActivitiesArr = [];
     let tiersArr = [];
     let totalECPoints = 0;
@@ -211,12 +224,18 @@ const ApplicationProfilePage: NextApplicationPage<{
       tiersArr.push(tier);
       newActivitiesArr.push(otherActivity);
     })
+    const overallECTier = await calculateOverallECTier(tiersArr);
+    let userActivities: Activities = {
+      activities: newActivitiesArr,
+      overallTier: overallECTier,
+      totalPoints: totalECPoints
+    }
     try {
       await fetch('/api/metrics/put-activities', {
         method: 'POST',
         body: JSON.stringify({
           userId: session.data.user.uid,
-          activities: activityData.activities,
+          activities: userActivities,
           responses: activityResponses,
           insertionId: session.data.user.uid
         }),
@@ -457,6 +476,8 @@ const ApplicationProfilePage: NextApplicationPage<{
                         years={academicResponses.years} 
                         submitData={(e) => setAcademicsResponses(e)} 
                         noRenderButtons={() => setNoRenderButtons(!noRenderButtons)}
+                        satScore={academicResponses.satScore}
+                        actScore={academicResponses.actScore}
                       />
                       {noRenderButtons ? null : (
                         <div className="d-flex justify-content-center mt-5">

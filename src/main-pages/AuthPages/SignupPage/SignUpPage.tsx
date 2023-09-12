@@ -17,7 +17,7 @@ const SignUpPage = () => {
   const incorrectPassStr =
     "Password must contain at least one uppercase letter, one lowercase letter, and one number";
   const mismatchPasswords = "Passwords are not matching";
-  const allFieldsNotFilled = "Make sure to fill in all fields";
+  const allFieldsNotFilled = "Make sure to fill in all required * fields";
   const regExp = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/;
   var [formData, setFormData] = useState({
     email: "",
@@ -188,7 +188,7 @@ const SignUpPage = () => {
               className="text-muted"
               htmlFor="email"
             >
-              Email Address
+              Email Address *
             </label>
             <input
               value={formData.email}
@@ -208,7 +208,7 @@ const SignUpPage = () => {
               className="text-muted"
               htmlFor="password"
             >
-              Password
+              Password *
             </label>
             <input
               value={formData.password1}
@@ -227,7 +227,7 @@ const SignUpPage = () => {
               className="text-muted"
               htmlFor="password"
             >
-              Confirm Password
+              Confirm Password *
             </label>
             <input
               value={formData.password2}
@@ -240,7 +240,10 @@ const SignUpPage = () => {
               placeholder="Confirm Password"
             />
           </div>
-          <div className="form-group mt-3 w-100">
+          <div className="mt-4">
+            <h6 className="text-muted">Came from a referral? If so, please fill in the name of the person who invited you to Cledge.</h6>
+          </div>
+          <div className="form-group w-100">
             <label
               style={{ fontSize: "0.9em" }}
               className="text-muted"
@@ -256,7 +259,7 @@ const SignUpPage = () => {
               type="text"
               className="px-3 form-control"
               id="text"
-              placeholder="John Doe"
+              placeholder=""
             />
           </div>
           <div className="mt-3 mb-4">

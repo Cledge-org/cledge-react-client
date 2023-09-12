@@ -20,8 +20,11 @@ import { useLocation } from "src/utils/hooks/useLocation";
 import NewBlogsCarousel from "./components/blogsCarousel/NewBlogsCarousel";
 import BlogCarouselItem from "./components/blogsCarousel/components/BlogCaroselItem";
 import FormCarousel from "./components/FormCarousel/FormCarousel";
+import FormCarouselMobile from "./components/FormCarousel/FormCarouselMobile";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import UWRightContentBlock from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWRightContentBlock/UWRightContentBlock";
+import classNames from "classnames";
+import { useRouter } from "next/router";
 
 
 const Contact = dynamic(() => import("./components/ContactForm/ContactForm"));
@@ -42,7 +45,6 @@ const FullWidthContainer = styled("div")`
 
 const Intro = styled(FullWidthContainer)`
   background: center / cover url("images/landing_bg.svg") no-repeat;
-  min-height: 110vh;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -259,40 +261,106 @@ const CarouselDiv = styled.div`
 const WelcomePage = ({ data }) => {
   const slideShowRef = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
-  const { width, height } = useWindowSize();
   const windowOrigin = useLocation();
   if (windowOrigin.includes("uw")) {
     return <UWCSLandingPage blogData={data} />;
   }
+  const { width, height } = useWindowSize();
   const isMobile = width <= 810;
+
+  const router = useRouter();
+  
   return (
     <PageErrorBoundary>
       <Container>
-        <Intro className="container-margin">
-          <div className="w-100">
-            <ContentBlock
-              type="right"
-              title={IntroContent.title}
-              content={IntroContent.text}
-              button={IntroContent.button}
-              id="intro"
-              width={width}
-            />
-          </div>
-          <div
-            style={{
-              bottom: "5vh",
-              left: 0,
-              width: "100%",
-              margin: "30px 0",
-            }}
-            className="d-flex flex-row flex-wrap justify-content-center align-items-center"
-          >
-          </div>
+        <Intro 
+          className="container-margin" 
+          style={{
+            backgroundSize: "cover",
+          }}>
+          <Fade triggerOnce={true} className="w-100" direction="right">
+            <div
+              style={{
+                color: "white",
+                width: "100%",
+                marginBottom: "10vh",
+              }}
+              className={classNames(
+                `d-flex flex-column justify-content-center ${
+                  isMobile ? "px-3" : "px-5"
+                }`,
+              )}
+            >
+              <div 
+                className="w-100 d-flex flex-column justify-content-center align-items-center"
+                style={{
+                  marginTop: isMobile ? "6rem" : null
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: isMobile ? "48px" : "96px",
+                    textAlign: "center",
+                    lineHeight: "1.25em",
+                  }}
+                >
+                  Meet the Future of
+  
+                </div>
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: isMobile ? "48px" : "96px",
+                    textAlign: "center",
+                    lineHeight: "1.25em",
+                  }}
+                  className="mb-4"
+                >
+                  College Advising.
+  
+                </div>
+                {isMobile ? null : (<div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: isMobile ? "15px" : "25px",
+                    textAlign: "center",
+                    lineHeight: "1.6em"
+                  }}
+                  className="my-3"
+                >
+                  Maximize your chances to get into your best-fit colleges. We use AI 
+                  <br />
+                 and data driven tools to give you an edge on your application.
+  
+                </div>)}
+                <Button
+                    key="buy-now-btn"
+                    color="#F7BC76"
+                    fixedWidth={true}
+                    className={classNames(`${ isMobile ? "w-50" : "w-25 mt-4" }`)}
+                    onClick={() => {
+                      router.push("/auth/signup")
+                    }}
+                  >
+                      Sign Up Free
+                  </Button>
+              </div>
+            </div>
+          </Fade>
         </Intro>
-        <CarouselDiv>
-          <FormCarousel collegeData={data.collegeData} questionData={data.checkinQuestions.chunks[0].questions} />
-        </CarouselDiv>
+        <div className="d-flex center-child">
+          <div className="w-100 px-5 py-5">
+            <Fade triggerOnce={true} direction="right">
+              <CarouselDiv>
+                {isMobile ? <FormCarouselMobile collegeData={data.collegeData} questionData={data.checkinQuestions.chunks[0].questions} /> :
+                (
+                  <FormCarousel collegeData={data.collegeData} questionData={data.checkinQuestions.chunks[0].questions} />
+                )}
+              </CarouselDiv>
+            </Fade>
+          </div>
+        </div>
 
 
         <div style={{ background: "#DCE1FB" }}>
@@ -307,7 +375,7 @@ const WelcomePage = ({ data }) => {
                         <img src={`images/uw_1.svg`} alt="1" />
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Create Your Profile with Cledge</div>
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Create your profile with Cledge.</div>
                     </div>
                   }
                   content={
@@ -330,7 +398,7 @@ const WelcomePage = ({ data }) => {
                         <img src={`images/uw_2.svg`} alt="2" />
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get Personalized College Recommendations</div>
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get personalized help based off what you tell us and what type of applicant you are.</div>
                     </div>
                   }
                   content={
@@ -353,7 +421,7 @@ const WelcomePage = ({ data }) => {
                         <img src={`images/uw_3.svg`} alt="3" />
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Go above and beyond and find more college that fit your needs</div>
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Go above and beyond and find more colleges that fit your needs.</div>
                     </div>
                   }
                   content={
@@ -376,8 +444,7 @@ const WelcomePage = ({ data }) => {
                         <img src={`images/uw_4.svg`} alt="4" />
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get guidance from Cledge councilers on how you can apply for
-                        financial aid and make use of other opportunities such as early action and summer internships</div>
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get questions answered by your assigned college counselor and AI advisor.</div>
                     </div>
                   }
                   content={
@@ -400,7 +467,7 @@ const WelcomePage = ({ data }) => {
                         <img src={`images/uw_4.svg`} alt="4" />
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Write essays for colleges with the help of Cledge which takes into account your profile and the college you are applying to for better feedback.</div>
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get specific metrics on how to improve your application.</div>
                     </div>
                   }
                   content={

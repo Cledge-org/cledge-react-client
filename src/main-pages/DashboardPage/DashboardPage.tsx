@@ -21,20 +21,23 @@ import TierRange from "src/main-pages/MetricsPage/components/TierRange/TierRange
 
 const DashboardPage = ({
   accountInfo,
-  dashboardParts,
+  // dashboardParts,
   pathwaysProgress,
   ecMetrics,
   recentBlogs,
   acMetrics,
+  percentageObject
 }: {
   accountInfo: AccountInfo;
-  dashboardParts: PathwayPart[];
+  // dashboardParts: PathwayPart[];
   pathwaysProgress: PathwayProgress[];
   ecMetrics: Activities;
   acMetrics: Academics;
   recentBlogs: any;
+  percentageObject: any;
 }) => {
-  const [percentage, setPercentage] = useState(0);
+  console.log(percentageObject);
+  const [percentage, setPercentage] = useState(percentageObject != null && percentageObject != 0 ? percentageObject.percentage.percentage : 0);
   const router = useRouter();
   const avgTier = useMemo(
     () => (ecMetrics?.overallTier || 0 + acMetrics?.overallClassTier || 0) / 2,
@@ -53,33 +56,33 @@ const DashboardPage = ({
     );
   };
 
-  useEffect(() => {
-    let totalPathways = 0;
-    let finishedPathways = 0;
-    const allPathways: Pathway[] = dashboardParts
-      .map(({ dynamicRoutes }) => {
-        return dynamicRoutes.map(({ route }) => route);
-      })
-      .reduce((prev, curr) => {
-        return prev.concat(curr);
-      }, []);
-    allPathways?.forEach((pathway) => {
-      if (
-        !pathwaysProgress.find(({ pathwayId }) => {
-          return pathwayId === parseId(pathway._id);
-        })
-      ) {
-        totalPathways++;
-      }
-    });
-    pathwaysProgress.forEach(({ finished }) => {
-      if (finished) {
-        finishedPathways++;
-      }
-      totalPathways++;
-    });
-    setPercentage(Math.round((finishedPathways / totalPathways) * 100));
-  }, []);
+  // useEffect(() => {
+  //   let totalPathways = 0;
+  //   let finishedPathways = 0;
+  //   const allPathways: Pathway[] = dashboardParts
+  //     .map(({ dynamicRoutes }) => {
+  //       return dynamicRoutes.map(({ route }) => route);
+  //     })
+  //     .reduce((prev, curr) => {
+  //       return prev.concat(curr);
+  //     }, []);
+  //   allPathways?.forEach((pathway) => {
+  //     if (
+  //       !pathwaysProgress.find(({ pathwayId }) => {
+  //         return pathwayId === parseId(pathway._id);
+  //       })
+  //     ) {
+  //       totalPathways++;
+  //     }
+  //   });
+  //   pathwaysProgress.forEach(({ finished }) => {
+  //     if (finished) {
+  //       finishedPathways++;
+  //     }
+  //     totalPathways++;
+  //   });
+  //   setPercentage(Math.round((finishedPathways / totalPathways) * 100));
+  // }, []);
 
   if (accountInfo.checkIns.length > 0) {
     router.push({
@@ -178,7 +181,7 @@ const DashboardPage = ({
                   </Row>
                   <Link href="/college-list">
                     <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-3">
-                      <div className="h5 mb-0">Go to your list</div>
+                      <div className="h5 mb-0">Go to My Colleges</div>
                     </Button>
                   </Link>
                 </Card>
@@ -249,7 +252,7 @@ const DashboardPage = ({
                 </Row>
                   <Link href="my-learning">
                     <Button className="cl-btn-blue rounded-2 mx-3 mb-3 mt-2">
-                      <div className="h5 mb-0">Go to my Learning</div>
+                      <div className="h5 mb-0">Go to My Learning</div>
                     </Button>
                   </Link>
               </Card>

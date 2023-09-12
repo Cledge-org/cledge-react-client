@@ -190,14 +190,6 @@ const Pathways: NextApplicationPage<{
                   {content.title}
                 </span>
               </div>
-              <div className={classNames(styles.pathwayDescription, "pb-2")}>
-                <span
-                  className="fw-bold cl-dark-text"
-                  style={{ fontSize: "1.3em" }}
-                >
-                  Video Source: {content.videoSource}
-                </span>
-              </div>
               <div className="mt-3 w-100">
                 <div className="text-start">{content.description}</div>
               </div>

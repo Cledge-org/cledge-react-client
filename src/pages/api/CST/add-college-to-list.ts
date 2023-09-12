@@ -6,10 +6,11 @@ import { CollegeDB, collegeListElementRaw, collegeListIndividualInfo } from "src
 
 interface props {
   user_id: string,
-  college_title: string;
+  college_title: string
+  tier?: -1 | 0 | 1 | 2 | 3;
 }
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { user_id, college_title }: props = req.body;
+  const { user_id, college_title, tier }: props = req.body;
   // console.log(user_id);
   // console.log(college_title);
   const pre_college_info = await getCollege(college_title);
@@ -17,7 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   //console.log(college_info);
   const personalize: collegeListIndividualInfo = {
     college_id: college_info.college_id,
-    fit_type: 0,
+    fit_type: tier ? tier : 0,
     img_url: college_info.img_url,
     img_title: college_info.img_title,
     college_name: college_info.college_name,

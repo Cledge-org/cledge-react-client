@@ -15,13 +15,17 @@ import PartDropDown from "./components/PartDropdown/PartDropdown";
 import DashboardTabButton from "./components/MyLearningTabButton/MyLearningTabButton";
 import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageErrorBoundary";
 import { useLocation } from "src/utils/hooks/useLocation";
+import putPathway from "src/pages/api/admin/learning-pathway/put-pathway";
+import { store } from "src/utils/redux/store";
+import { initialStateAction } from "src/utils/redux/actionFunctions";
 
 // logged in landing page
 const MyLearningPage: NextApplicationPage<{
   dashboardParts: PathwayPart[];
   accountInfo: AccountInfo;
   pathwaysProgress: PathwayProgress[];
-}> = ({ dashboardParts, accountInfo, pathwaysProgress }) => {
+  questionResponses;
+}> = ({ dashboardParts, accountInfo, pathwaysProgress, questionResponses }) => {
   const router = useRouter();
   const session = useSession();
   const [currTab, setCurrTab] = useState("all modules");
@@ -37,6 +41,16 @@ const MyLearningPage: NextApplicationPage<{
       objectIdStr.length - 2
     );
   };
+  const dispatchPathwayProgress = async () => {
+    await store.dispatch(
+      initialStateAction({
+        accountInfo: accountInfo,
+        pathwaysProgress: pathwaysProgress,
+        questionResponses: questionResponses,
+      })
+    );
+  }
+  dispatchPathwayProgress();
   useEffect(() => {
     let totalPathways = 0;
     let finishedPathways = 0;
@@ -64,6 +78,28 @@ const MyLearningPage: NextApplicationPage<{
     });
     setPercentage(Math.round((finishedPathways / totalPathways) * 100));
   }, []);
+
+  const putPathwayPercent = async () => {
+    try {
+      const response = await fetch('/api/learning-pathway/put-pathway-percentage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user_id: session.data.user.uid,
+          percentage: percentage
+        })
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("putPathwayPercent", error);
+    }
+  }
+
+  const pathwayPercentRes = putPathwayPercent();
+
   const getCurrentTasks = (allPathways: Pathway[]) => {
     let noProgress = [];
     allPathways?.forEach((pathway) => {
@@ -437,5 +473,5 @@ const MyLearningPage: NextApplicationPage<{
 MyLearningPage.requireAuth = true;
 export default connect((state) => ({
   accountInfo: state.accountInfo,
-  pathwaysProgress: state.pathwaysProgress,
+  questionResponses: state.questionResponses
 }))(MyLearningPage);
