@@ -416,7 +416,13 @@ const PremiumPurchasePage = ({ accountInfo, handlePromo }: { accountInfo: Accoun
             <div>Cledge Premium Account Tier</div>
             <div className="ms-3">${price}</div>
           </div>
-          <div className="d-flex flex-row mt-3 mb-2">
+          <h6 className="mt-4 mb-4">This data package includes but is not limited to:</h6>
+          <ul>
+            <li className="my-3">An in-depth University of Washington Computer Science analysis package.</li>
+            <li className="my-3">Unique college specific data points such as high school admission requirements, salary/jobs after graduation, and detailed admission rates.</li>
+            <li className="my-3">Student profile analysis tool to understand how competitive of applicant you are compared to others and how you can improve.</li>
+          </ul>
+          <div className="d-flex flex-row mt-5 mb-2">
             <CheckBox
               selected={acceptedTOSPP}
               setSelected={(value) => {
