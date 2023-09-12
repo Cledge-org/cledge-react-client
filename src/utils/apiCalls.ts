@@ -392,3 +392,10 @@ export const redeemCode = async (userCode: string, email: string) => {
     method: "POST",
   });
 }
+
+export const callRedeemPromoCode = async (userCode: string, userId: string) => {
+  return await fetch(`/api/auth/redeemPromoCode`, {
+    body: JSON.stringify({ userCode, userId }),
+    method: "POST",
+  });
+}
