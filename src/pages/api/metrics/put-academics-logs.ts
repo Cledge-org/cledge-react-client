@@ -33,7 +33,7 @@ export const updateAcademicsLog = (
     delete academics._id;
   }
   const currDate = new Date().toLocaleDateString();
-    const accademicObj = {
+  const accademicObj = {
     ...academics,
     responses
   };
