@@ -73,7 +73,7 @@ const Header = ({
     // },
     {
       link: "/college-list",
-      icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
+      icon: "college-finder.svg?alt=media&token=3b0b7b9e-7b9a-4b9e-9b0a-9b0b9b0b9b0b",
       title: "College",
       dropdown: true,
       links : [
@@ -96,8 +96,15 @@ const Header = ({
     },
     {
       link: "/blogs",
-      icon: "blogs.svg?alt=media&token=b2e3d45f-a9ad-4ac0-9296-ecd2e0cafa85",
+      icon: "blogs.svg?alt=media&token=8c4b8b1e-7b0a-4b0a-8b0a-8b0a8b0a8b0a",
       title: "Blogs",
+      dropdown: false,
+      links: [{}]
+    },
+    {
+      link: "https://forms.gle/chLdxJTm5xHXGTfh6",
+      icon: "chatbot.svg?alt=media&token=8ec93219-de3f-45f0-8ee0-33aa8aa4b9a9",
+      title: "Contact Us",
       dropdown: false,
       links: [{}]
     },
@@ -210,7 +217,7 @@ const Header = ({
                           color: isActiveLink(router, links) ? "#506BED" : "#808099",
                         }}
                       >
-                        <img
+                        <img 
                           style={{
                             filter:
                               isActiveLink(router, links)
@@ -255,7 +262,7 @@ const Header = ({
                       <span className="ps-1 pe-1">{title}</span>
                     </a>
                   </Button>
-                </Link>
+                </Link>             
               )
               ))}
             </div>

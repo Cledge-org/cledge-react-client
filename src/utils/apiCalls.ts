@@ -116,6 +116,20 @@ export const callPutActivities = async (
     }),
   });
 };
+export const callPutActivitiesLogs = async (
+  activities: Activities,
+  hasActivities: boolean
+) => {
+  const session = await getSession();
+  return await fetch(`/api/metrics/put-activities-logs`, {
+    method: "POST",
+    body: JSON.stringify({
+      userId: activities ? session.user.uid : null,
+      activities,
+      insertionId: hasActivities ? undefined : session.user.uid,
+    }),
+  });
+};
 export const callPutAcademics = async (
   academics: Academics,
   responses: AcademicsProps,
@@ -123,6 +137,22 @@ export const callPutAcademics = async (
 ) => {
   const session = await getSession();
   return await fetch(`/api/metrics/put-academics`, {
+    method: "POST",
+    body: JSON.stringify({
+      userId: academics ? session.user.uid : null,
+      insertionId: hasAcademics ? undefined : session.user.uid,
+      academics,
+      responses
+    }),
+  });
+};
+export const callPutAcademicsLogs = async (
+  academics: Academics,
+  responses: AcademicsProps,
+  hasAcademics: boolean
+) => {
+  const session = await getSession();
+  return await fetch(`/api/metrics/put-academics-logs`, {
     method: "POST",
     body: JSON.stringify({
       userId: academics ? session.user.uid : null,
@@ -359,6 +389,13 @@ export const callCreatePaymentIntent = async (product_id: string) => {
 export const redeemCode = async (userCode: string, email: string) => {
   return await fetch(`/api/auth/redeemCode`, {
     body: JSON.stringify({ userCode, email }),
+    method: "POST",
+  });
+}
+
+export const callRedeemPromoCode = async (userCode: string, userId: string) => {
+  return await fetch(`/api/auth/redeemPromoCode`, {
+    body: JSON.stringify({ userCode, userId }),
     method: "POST",
   });
 }

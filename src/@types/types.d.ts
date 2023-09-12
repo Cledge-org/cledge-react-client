@@ -21,7 +21,7 @@ export declare global {
     checkIns: string[];
     introducedToChatbot: boolean;
     chatbotHistoryLength: number;
-    hasUWAccess: boolean;
+    premium: boolean;
   }
 
   //Account Page Types -->

@@ -25,7 +25,7 @@ const ProtectedComponent = ({
   if (session.status === "loading") {
     return <LoadingScreen />;
   }
-  if (accountInfo && location.includes("uw") && !accountInfo.hasUWAccess) {
+  if (accountInfo && location.includes("uw") && !accountInfo.premium) {
     return (
       <div className="vw-100 vh-100 center-child">
         Please go to:
