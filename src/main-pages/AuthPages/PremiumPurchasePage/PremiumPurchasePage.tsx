@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { useState } from "react";
-import PurchasePageInput from "src/main-pages/AuthPages/UWPurchasePage/components/PurchasePageInput/PurchasePageInput";
+import PurchasePageInput from "src/main-pages/AuthPages/PremiumPurchasePage/components/PurchasePageInput/PurchasePageInput";
 import {
   alertSlackNewUser,
   callCreateUser,
@@ -8,7 +8,7 @@ import {
   getNumUsers,
   redeemCode
 } from "src/utils/apiCalls";
-import styles from "./uw-purchase-page.module.scss";
+import styles from "./premium-purchase-page.module.scss";
 import {
   PaymentElement,
   useElements,
@@ -22,7 +22,7 @@ import { connect } from "react-redux";
 import { updateAccountAction } from "src/utils/redux/actionFunctions";
 import { useRouter } from "next/router";
 
-const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
+const PremiumPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   const [issues, setIssues] = useState([]);
   const [signUpDetails, setSignUpDetails] = useState({
     email: "",
@@ -35,7 +35,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   const [understands, setUnderstands] = useState(false);
   const [promotionCode, setPromotionCode] = useState("");
   const [validCode, setValidCode] = useState(false);
-  const [price, setPrice] = useState(99);
+  const [price, setPrice] = useState(5);
   const stripe = useStripe();
   const elements = useElements();
   const session = useSession();
@@ -97,7 +97,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             premium: true,
           })
         );
-        router.push("/my-learning");
+        router.push("/dashboard");
       }
     } else {
       if (
@@ -253,7 +253,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
     accountInfo &&
     accountInfo.premium
   ) {
-    router.replace("/");
+    router.replace("/account");
   }
   return (
     <div
@@ -273,6 +273,28 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             <div>{issue}</div>
           ))}
         </div>
+        {session.status === "authenticated" && (
+          <div
+            className={classNames(styles.blobContainer, {
+              ["mt-3"]: issues.length > 0,
+            })}
+          >
+            <div className="cl-dark-text fw-bold" style={{ fontSize: "28px" }}>
+              Hi, {accountInfo.name}.
+            </div>
+            <div className="cl-dark-gray" style={{ fontSize: "14px" }}>
+              <text>You are currently logged in with: </text>
+              <text className="cl-dark-text fw-bold"> {accountInfo.email}</text>
+            </div>
+            <div className="cl-dark-gray mt-4" style={{ fontSize: "14px" }}>
+              <text>If this is incorrect, please log out </text>
+              <a onClick={() => {
+                router.push("/account")
+              }} className="cl-dark-text fw-bold">here</a>
+              <text>.</text>
+            </div>
+          </div>
+        )}
         {session.status === "unauthenticated" && (
           <div
             className={classNames(styles.blobContainer, {
@@ -283,8 +305,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
               Create an account
             </div>
             <div className="cl-dark-text fw-bold" style={{ fontSize: "14px" }}>
-              You’ll use this account to log in and access Cledge’s UW CS
-              package
+              You’ll use this account to log in and access Cledge with premium tier.
             </div>
             <PurchasePageInput
               heading={"Email*"}
@@ -326,6 +347,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
         <div
           id="payment-container"
           className={classNames(styles.blobContainer, "mt-4")}
+          style={{  }}
         >
           <div
             className="cl-dark-text fw-bold pb-2"
@@ -377,7 +399,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             className="d-flex flex-row align-items-center justify-content-between fw-bold cl-dark-text py-3"
             style={{ fontSize: "24px" }}
           >
-            <div>University of Washington Computer Science Package</div>
+            <div>Cledge Premium Account Tier</div>
             <div className="ms-3">${price}</div>
           </div>
           <div className="d-flex flex-row mt-3 mb-2">
@@ -436,7 +458,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             {processingSignUpPayment ? (
               <CircularProgress style={{ color: "white" }} />
             ) : (
-              "Pay now"
+              "Purchase"
             )}
           </button>) :
           (<button
@@ -464,4 +486,4 @@ export default connect((state) => {
   return {
     accountInfo: state?.accountInfo,
   };
-})(UWPurchasePage);
+})(PremiumPurchasePage);

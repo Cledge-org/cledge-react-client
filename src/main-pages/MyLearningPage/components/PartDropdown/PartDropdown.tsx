@@ -4,15 +4,18 @@ import router from "next/router";
 import React, { useState, useEffect } from "react";
 import CardTask from "src/common/components/Cards/CardTask/CardTask";
 import styles from "./part-dropdown.module.scss";
+import LockIcon from "@mui/icons-material/Lock";
 
 function PartDropDown({
   pathwayCheckinList,
   title,
   progressRatio,
+  isPremium
 }: {
   pathwayCheckinList: Array<any>;
   title: string;
   progressRatio: number;
+  isPremium?: boolean
 }) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [initialized, setInitialized] = useState(false);
@@ -72,6 +75,7 @@ function PartDropDown({
           <div className="text ms-3 cl-dark-text" style={{ fontSize: "1.3em" }}>
             {title}
           </div>
+          {!isPremium ? <LockIcon /> : null}
           <div
             className={`${
               isExpanded ? "center-child icon-open" : "center-child icon-close"
@@ -116,6 +120,7 @@ function PartDropDown({
                   title={name}
                   subtasks={subtasks}
                   coverImage={coverImage}
+                  isPremium={isPremium}
                 />
               )
           )}
