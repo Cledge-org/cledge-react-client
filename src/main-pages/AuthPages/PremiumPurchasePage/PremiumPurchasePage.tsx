@@ -1,14 +1,15 @@
 import classNames from "classnames";
 import { useState } from "react";
-import PurchasePageInput from "src/main-pages/AuthPages/UWPurchasePage/components/PurchasePageInput/PurchasePageInput";
+import PurchasePageInput from "src/main-pages/AuthPages/PremiumPurchasePage/components/PurchasePageInput/PurchasePageInput";
 import {
   alertSlackNewUser,
   callCreateUser,
+  callRedeemPromoCode,
   callUpdateUser,
   getNumUsers,
   redeemCode
 } from "src/utils/apiCalls";
-import styles from "./uw-purchase-page.module.scss";
+import styles from "./premium-purchase-page.module.scss";
 import {
   PaymentElement,
   useElements,
@@ -21,8 +22,9 @@ import { store } from "src/utils/redux/store";
 import { connect } from "react-redux";
 import { updateAccountAction } from "src/utils/redux/actionFunctions";
 import { useRouter } from "next/router";
+import { redeemPromoCode } from "src/pages/api/auth/redeemPromoCode";
 
-const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
+const PremiumPurchasePage = ({ accountInfo, handlePromo }: { accountInfo: AccountInfo, handlePromo: Function }) => {
   const [issues, setIssues] = useState([]);
   const [signUpDetails, setSignUpDetails] = useState({
     email: "",
@@ -35,7 +37,9 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   const [understands, setUnderstands] = useState(false);
   const [promotionCode, setPromotionCode] = useState("");
   const [validCode, setValidCode] = useState(false);
-  const [price, setPrice] = useState(99);
+  const [showCodeAccepted, setShowCodeAccepted] = useState(false);
+  const [showInvalidCode, setShowInvalidCode] = useState(false);
+  const [price, setPrice] = useState(49.99);
   const stripe = useStripe();
   const elements = useElements();
   const session = useSession();
@@ -52,12 +56,21 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
   };
 
   const handlePromotionCode = async () => {
-    let res = await redeemCode(promotionCode, signUpDetails.email);
-    let data = await res.json();
-    let nest = data.post[0];
-    if (promotionCode == nest.code && nest.redeemed == 0 && nest.redeemedBy == '') {
-      setValidCode(true);
-      setPrice(0);
+    if (showCodeAccepted == false) {
+      const res = await callRedeemPromoCode(promotionCode, session.data.user.uid);
+      let codeObject = null;
+      try {
+        codeObject = await res.json();
+      } catch (e) {}
+      if (codeObject != null && codeObject.discountedPrice != null) {
+        setShowCodeAccepted(true);
+        setShowInvalidCode(false);
+        setPrice(codeObject.discountedPrice);
+        handlePromo(codeObject.discountedPrice);
+      } else {
+        setShowCodeAccepted(false);
+        setShowInvalidCode(true);
+      }
     }
   }
 
@@ -97,7 +110,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             premium: true,
           })
         );
-        router.push("/my-learning");
+        router.push("/dashboard");
       }
     } else {
       if (
@@ -253,7 +266,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
     accountInfo &&
     accountInfo.premium
   ) {
-    router.replace("/");
+    router.replace("/account");
   }
   return (
     <div
@@ -273,6 +286,28 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             <div>{issue}</div>
           ))}
         </div>
+        {session.status === "authenticated" && (
+          <div
+            className={classNames(styles.blobContainer, {
+              ["mt-3"]: issues.length > 0,
+            })}
+          >
+            <div className="cl-dark-text fw-bold" style={{ fontSize: "28px" }}>
+              Hi, {accountInfo.name}.
+            </div>
+            <div className="cl-dark-gray" style={{ fontSize: "14px" }}>
+              <text>You are currently logged in with: </text>
+              <text className="cl-dark-text fw-bold"> {accountInfo.email}</text>
+            </div>
+            <div className="cl-dark-gray mt-4" style={{ fontSize: "14px" }}>
+              <text>If this is incorrect, please log out </text>
+              <a onClick={() => {
+                router.push("/account")
+              }} className="cl-dark-text fw-bold">here</a>
+              <text>.</text>
+            </div>
+          </div>
+        )}
         {session.status === "unauthenticated" && (
           <div
             className={classNames(styles.blobContainer, {
@@ -283,8 +318,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
               Create an account
             </div>
             <div className="cl-dark-text fw-bold" style={{ fontSize: "14px" }}>
-              You’ll use this account to log in and access Cledge’s UW CS
-              package
+              You’ll use this account to log in and access Cledge with premium tier.
             </div>
             <PurchasePageInput
               heading={"Email*"}
@@ -326,6 +360,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
         <div
           id="payment-container"
           className={classNames(styles.blobContainer, "mt-4")}
+          style={{  }}
         >
           <div
             className="cl-dark-text fw-bold pb-2"
@@ -353,7 +388,8 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
               </button>
 
             </div>
-            {validCode ? (<text>CODE ACCEPTED</text>) : ""}
+            {showCodeAccepted ? (<text style={{ color: "green" }}>Promotion code applied!</text>) : ""}
+            {showInvalidCode ? (<text style={{ color: "red" }}>Invalid promotion code.</text>) : ""}
           </div>
           {!validCode ? (<PaymentElement />) : ""}
         </div>
@@ -374,13 +410,19 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
         </div>
         <div className={styles.blobContainer}>
           <div
-            className="d-flex flex-row align-items-center justify-content-between fw-bold cl-dark-text py-3"
+            className="d-flex flex-row align-items-center justify-content-between fw-bold cl-dark-text pb-3"
             style={{ fontSize: "24px" }}
           >
-            <div>University of Washington Computer Science Package</div>
+            <div>Cledge Premium Account Tier</div>
             <div className="ms-3">${price}</div>
           </div>
-          <div className="d-flex flex-row mt-3 mb-2">
+          <h6 className="mt-4 mb-4">This data package includes but is not limited to:</h6>
+          <ul>
+            <li className="my-3">An in-depth University of Washington Computer Science analysis package.</li>
+            <li className="my-3">Unique college specific data points such as high school admission requirements, salary/jobs after graduation, and detailed admission rates.</li>
+            <li className="my-3">Student profile analysis tool to understand how competitive of applicant you are compared to others and how you can improve.</li>
+          </ul>
+          <div className="d-flex flex-row mt-5 mb-2">
             <CheckBox
               selected={acceptedTOSPP}
               setSelected={(value) => {
@@ -436,7 +478,7 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
             {processingSignUpPayment ? (
               <CircularProgress style={{ color: "white" }} />
             ) : (
-              "Pay now"
+              "Purchase"
             )}
           </button>) :
           (<button
@@ -464,4 +506,4 @@ export default connect((state) => {
   return {
     accountInfo: state?.accountInfo,
   };
-})(UWPurchasePage);
+})(PremiumPurchasePage);

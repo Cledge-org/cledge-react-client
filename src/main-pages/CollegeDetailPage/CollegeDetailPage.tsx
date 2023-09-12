@@ -49,7 +49,7 @@ const CollegeDetailPage = ({
   let onList = collegeListArray.includes(data.title);
 
   const [addedToList, setAddedToList] = useState(onList);
-  const [hasUWAccess, setHasUWAccess] = React.useState(true);
+  const [premium, setPremium] = React.useState(true);
 
   React.useEffect(() => {
     if (session) {
@@ -64,7 +64,7 @@ const CollegeDetailPage = ({
     });
     const accountInfoJSON = await accountInfoResponse.json();
     setAccountInfo(accountInfoJSON);
-    setHasUWAccess(accountInfoJSON.hasUWAccess === true);
+    setPremium(accountInfoJSON.premium === true);
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -193,9 +193,14 @@ const CollegeDetailPage = ({
   }
 
   function singlePaywall(data) {
-    if (!hasUWAccess)
+    if (!premium)
       return (
-        <div>
+        <div 
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            router.push("/auth/premium")
+          }}
+        >
           <LockIcon style={{ color: "#070452" }} />
         </div>
       );
@@ -203,14 +208,20 @@ const CollegeDetailPage = ({
   }
 
   function dummyDataPaywall(data) {
-    if (!hasUWAccess) return "00000";
+    if (!premium) return "00000";
     return data;
   }
 
   const BlockPaywallCover = () => {
-    if (!hasUWAccess)
+    if (!premium)
       return (
-        <div className={styles.paywallBlock}>
+        <div 
+          className={styles.paywallBlock}
+          onClick={() => {
+            router.push("/auth/premium")
+          }}
+          style={{ cursor: "pointer" }}
+        >
           <LockIcon style={{ color: "#070452" }} />
         </div>
       );

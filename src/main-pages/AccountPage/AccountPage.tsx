@@ -37,6 +37,7 @@ import MCQQuestion from "src/common/components/Questions/MCQQuestion/MCQQuestion
 import DoubleTextInputQuestion from "src/common/components/Questions/DoubleTextInputQuestion/DoubleTextInputQuestion";
 import CompositeQuestion from "src/common/components/Questions/CompositeQuestion/CompositeQuestion";
 import { accountQuestions } from "src/main-pages/AccountPage/questions";
+import Router, { useRouter } from "next/router";
 // account page
 
 const AccountPage: NextApplicationPage<{
@@ -61,6 +62,7 @@ const AccountPage: NextApplicationPage<{
   const [currUserAnswer, setCurrUserAnswer] = useState<string | any[]>("");
   const [iteratedFirst, setIteratedFirst] = useState(false);
   const size = useWindowSize();
+  const router = useRouter();
   const updateUserData = async () => {
     await Promise.all([
       callUpdateUser({ ...currUserData, _id: undefined }),
@@ -184,6 +186,15 @@ const AccountPage: NextApplicationPage<{
                 }).then((res) => {
                   //console.log(res.status);
                 });
+              }}
+            />
+            <InfoSection
+              name="Account Status"
+              isPremium
+              premiumStatus={accountInfo.premium}
+              value={accountInfo.premium ? "Premium" : "Free"}
+              onEdit={() => {
+                router.push("/auth/premium")
               }}
             />
           </div>

@@ -38,7 +38,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         checkIns: ["Onboarding Questions"],
         introducedToChatbot: false,
         isOnMailingList: false,
-        hasUWAccess: false,
+        premium: false,
         chatbotHistoryLength: 0,
       });
       resolve.status(200).send("Success");

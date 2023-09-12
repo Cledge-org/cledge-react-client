@@ -252,6 +252,7 @@ const MyLearningPage: NextApplicationPage<{
               }
               pathwayCheckinList={sortedRoutes}
               title={`${part.order}. ${part.name}`}
+              isPremium={accountInfo.premium}
             />
           )
         );
