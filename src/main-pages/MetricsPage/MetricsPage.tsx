@@ -17,7 +17,8 @@ const Metrics: NextApplicationPage<{
   userTags: string[];
   questionResponses: UserResponse[];
   academics: Academics;
-}> = ({ activities, userTags, questionResponses, academics }) => {
+  accountInfo: AccountInfo
+}> = ({ activities, userTags, questionResponses, academics, accountInfo }) => {
   const [currPage, setCurrPage] = useState("all");
   const sideBarSectionData = [
     {
@@ -190,6 +191,7 @@ const Metrics: NextApplicationPage<{
                         tip={""}
                         noTip
                         tipTitle={""}
+                        isPremium={accountInfo.premium}
                       />
                     </div>
                   </div>
@@ -256,6 +258,7 @@ const Metrics: NextApplicationPage<{
                         tipTitle=""
                         tier={academics?.overallTier}
                         isOverall
+                        isPremium={accountInfo.premium}
                       />
                     </div>
                   </div>
@@ -347,6 +350,7 @@ const Metrics: NextApplicationPage<{
                           tips={[academics?.testTip]}
                           updatePage={"Academics"}
                           updateChunk={"All Academics"}
+                          isPremium={accountInfo.premium}
                         />
                       </div>
                     </>
@@ -368,5 +372,6 @@ export default connect((state) => {
   return {
     userTags: state.accountInfo.tags,
     questionResponses: state.questionResponses,
+    accountInfo: state.accountInfo
   };
 })(Metrics);

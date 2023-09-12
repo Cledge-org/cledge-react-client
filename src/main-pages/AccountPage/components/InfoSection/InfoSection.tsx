@@ -9,15 +9,20 @@ interface InfoSectionProps {
   value: any;
   onEdit: Function;
   isPasswordEdit?: boolean;
+  isPremium?: boolean;
+  premiumStatus?: boolean;
 }
 function InfoSection({
   name,
   value,
   onEdit,
   isPasswordEdit,
+  isPremium,
+  premiumStatus,
 }: InfoSectionProps) {
   const [hasSubmittedPasswordReset, setHasSubmittedPasswordReset] =
     useState(false);
+  const [premium, setPremium] = useState(premiumStatus);
   return (
     <div className={classNames(styles.myaccountInfoSection, "pt-1 pb-3")}>
       <span className={styles.name}>{name.toUpperCase()}</span>
@@ -43,9 +48,10 @@ function InfoSection({
             </button>
           )
         ) : (
+          isPremium ? (!premium ? <button className={styles.sendEmailBtn} onClick={() => onEdit()}>Upgrade</button> : null) : (
           <button className={styles.iconBtn} onClick={() => onEdit()}>
             <FontAwesomeIcon icon={faPencilAlt} style={{ width: "20px" }} />
-          </button>
+          </button>)
         )}
       </div>
     </div>

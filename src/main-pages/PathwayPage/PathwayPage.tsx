@@ -18,10 +18,16 @@ import RichText from "src/common/components/RichText/RichText";
 import SubPageHeader from "src/common/components/SubpageHeader/SubpageHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowAltCircleDown } from "@fortawesome/free-regular-svg-icons";
+
 const Pathways: NextApplicationPage<{
   pathwayInfo: Pathway;
   pathwaysProgress: PathwayProgress[];
-}> = ({ pathwayInfo, pathwaysProgress }) => {
+  accountInfo: AccountInfo
+}> = ({ pathwayInfo, pathwaysProgress, accountInfo }) => {
+  const router = useRouter();
+  if (!accountInfo.premium) {
+    router.push("/auth/premium");
+  }
   const addPathwayProgress = () => {
     pathwaysProgress.push({
       pathwayId: pathwayInfo._id,
@@ -366,6 +372,7 @@ const Pathways: NextApplicationPage<{
 Pathways.requireAuth = true;
 export default connect((state) => ({
   pathwaysProgress: state.pathwaysProgress.slice(),
+  accountInfo: state.accountInfo
 }))(Pathways);
 
 function checkPathwayDiscrepancies(pathwayInfo: Pathway) {

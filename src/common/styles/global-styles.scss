@@ -1,6 +1,7 @@
 @use "./palette.module.scss" as *;
 @use "./typography.module.scss" as *;
 // @use "node_modules/bootstrap/scss/bootstrap" as *;
+@import url('https://fonts.googleapis.com/css2?family=Pragati+Narrow:wght@400&display=swap');
 
 .container-margin {
   @media only screen and (max-width: 767px) {

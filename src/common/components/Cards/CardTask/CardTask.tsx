@@ -9,6 +9,7 @@ interface CardTaskProps {
   coverImage: string;
   title: string;
   url: string;
+  isPremium: boolean
 }
 
 export default function CardTask({
@@ -17,13 +18,14 @@ export default function CardTask({
   subtasks,
   coverImage,
   correctUrl,
+  isPremium
 }: CardTaskProps) {
   useEffect(() => {}, []);
   const [isHovering, setIsHovering] = useState(false);
   useEffect(() => {}, [isHovering]);
   let numSubtasks = Object.keys(subtasks).length;
   return (
-    <Link href={url} as={correctUrl}>
+    <Link href={isPremium ? url : "/auth/premium"} as={isPremium ? correctUrl : "/auth/premium"}>
       <div
         key={title}
         onMouseOver={() => {
@@ -43,8 +45,9 @@ export default function CardTask({
             border: "thin solid #d3d3d3",
             borderRadius: "15px",
             width: "18rem",
+            opacity: isPremium ? "100%" : "50%"
           }}
-        >
+        > 
           <div
             className="position-relative"
             style={{ aspectRatio: "16/9", width: "100%", borderRadius: "15px" }}

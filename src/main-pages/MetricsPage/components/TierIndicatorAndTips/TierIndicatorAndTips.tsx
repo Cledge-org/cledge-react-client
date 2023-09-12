@@ -9,6 +9,7 @@ const TierIndicatorAndTips = ({
   updateChunk,
   updatePage,
   noTip,
+  isPremium
 }: {
   tier: number;
   isOverall?: boolean;
@@ -17,6 +18,7 @@ const TierIndicatorAndTips = ({
   updatePage: string;
   updateChunk: string;
   noTip?: boolean;
+  isPremium?: boolean
 }) => {
   return (
     <>
@@ -32,6 +34,7 @@ const TierIndicatorAndTips = ({
               isOverall={isOverall}
               title={tipTitle}
               tips={[tip]}
+              isPremium={isPremium}
             />
         </div>
       )}
