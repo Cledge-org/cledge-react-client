@@ -375,7 +375,7 @@ const WelcomePage = ({ data }) => {
                         <img src={`images/uw_1.svg`} alt="1" />
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Create your profile with Cledge.</div>
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Create your profile with <span className="cl-blue">Cledge</span>.</div>
                     </div>
                   }
                   content={
@@ -398,7 +398,7 @@ const WelcomePage = ({ data }) => {
                         <img src={`images/uw_2.svg`} alt="2" />
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get personalized help based off what you tell us and what type of applicant you are.</div>
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get personalized help based off what you tell us and what type of applicant <span className="cl-yellow">you are</span>.</div>
                     </div>
                   }
                   content={
@@ -421,7 +421,7 @@ const WelcomePage = ({ data }) => {
                         <img src={`images/uw_3.svg`} alt="3" />
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Go above and beyond and find more colleges that fit your needs.</div>
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Go above and beyond and find more <span className="cl-blue">colleges that fit your needs</span>.</div>
                     </div>
                   }
                   content={
@@ -444,7 +444,7 @@ const WelcomePage = ({ data }) => {
                         <img src={`images/uw_4.svg`} alt="4" />
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get questions answered by your assigned college counselor and AI advisor.</div>
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get questions answered by <span className="cl-yellow">your</span> assigned <span className="cl-yellow">college counselor</span> and <span className="cl-yellow">AI</span> advisor.</div>
                     </div>
                   }
                   content={
@@ -467,7 +467,7 @@ const WelcomePage = ({ data }) => {
                         <img src={`images/uw_4.svg`} alt="4" />
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get specific metrics on how to improve your application.</div>
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get <span className="cl-blue">specific</span> metrics on how to improve <span className="cl-blue">your applicaiton</span>.</div>
                     </div>
                   }
                   content={
@@ -490,7 +490,7 @@ const WelcomePage = ({ data }) => {
                         <img src={`images/uw_4.svg`} alt="4" />
                       </div>
                       <br />
-                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get into the college that is the best fit for you!</div>
+                      <div style={{ fontSize: isMobile ? 22 : 32 }}>Get into the college that is the best fit for <span className="cl-blue">you</span>!</div>
                     </div>
                   }
                   content={
