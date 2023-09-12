@@ -66,7 +66,7 @@ function MultipleChoiceQuestion({
   handler: handler = () => { },
 }: Props) {
   const router = useRouter();
-  const [selected, setSelected] = React.useState(options[0].tag);
+  const [selected, setSelected] = React.useState('');
   const handleInput = (value: string) => {
     setSelected(value);
     handler({ [_id]: value });
