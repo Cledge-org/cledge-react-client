@@ -4,6 +4,7 @@ import styles from "./Results.module.scss";
 import { MainContainer, Heading } from "../styles";
 import { Button } from "../../../Button/Button";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
+import { useRouter } from "next/router";
 
 interface Props {
   classNames?: string;
@@ -16,6 +17,7 @@ function Results({ classNames, schools }: Props) {
   };
   const { width, height } = useWindowSize();
   const isMobile = width <= 810;
+  const router = useRouter();
   return (
     <MainContainer
       flexDirection={"column"}
@@ -43,7 +45,9 @@ function Results({ classNames, schools }: Props) {
         color="#F7BC76"
         fixedWidth={false}
         className={cs(styles.signUpButton, "bg-cl-orange")}
-        onClick={() => {}}
+        onClick={() => {
+          router.push("/auth/signup");
+        }}
       >
         Sign Up to View More!
       </Button>
