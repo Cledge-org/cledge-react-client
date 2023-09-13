@@ -3,6 +3,7 @@ import cs from "classnames";
 import styles from "./Results.module.scss";
 import { MainContainer, Heading } from "../styles";
 import { Button } from "../../../Button/Button";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 
 interface Props {
   classNames?: string;
@@ -13,11 +14,14 @@ function Results({ classNames, schools }: Props) {
   const content = {
     heading: "Here are some schools that fit your needs:",
   };
+  const { width, height } = useWindowSize();
+  const isMobile = width <= 810;
   return (
     <MainContainer
       flexDirection={"column"}
-      gap={"20px"}
+      gap={isMobile ? "0px" : "20px"}
       className={cs(classNames)}
+      // justifyContent="start"
     >
       <div className={styles.flexContainer}>
         <div className={styles.flexItem}>
@@ -28,9 +32,9 @@ function Results({ classNames, schools }: Props) {
             <div className={styles.schoolCard}>
               <img src={school[1]} alt="school" />
               <span className={styles.title}>{school[0]}</span>
-              <span className={styles.subtitle}>
+              {!isMobile && <span className={styles.subtitle}>
                 {school[2]} School | {school[3]}
-              </span>
+              </span>}
             </div>
           </div>
         ))}

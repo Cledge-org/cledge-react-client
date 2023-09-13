@@ -7,6 +7,22 @@
    flex: 0 0 80%;
    gap: 10px;
 
+   @media screen and (max-width: 810px) {
+      flex: 0 1 auto;
+      flex-direction:row;
+      flex-wrap: wrap;
+      justify-content: center;
+      & .flexItem{
+         flex-basis:100%;
+         margin-bottom:1.5rem;
+      }
+      & .flexItem:nth-child(2),
+      & .flexItem:nth-child(3){
+         flex-basis: 48%;
+         height: auto;
+      }
+   }
+
    & .flexItem{
       min-width: 0;
       width:100%;
@@ -38,7 +54,7 @@
    }
 
    & .title{
-      font-size: 20px;
+      font-size: clamp(14px, 2.5vw, 20px);
       font-weight: bold;
       color: $cl-dark-text;
    }
@@ -58,4 +74,8 @@
    font-size: large;
    border-radius: 4px;
    font-weight: bold;
+
+   @media screen and (max-width: 810px) {
+      width:100%;
+   }
 }

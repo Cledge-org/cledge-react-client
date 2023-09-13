@@ -1,6 +1,5 @@
 .gridContainer {
-   flex: 0 1 auto;
-   flex-basis: 50%;
+   flex: 0 1 50%;
    padding:0;
    padding-left:20px;
    display: grid;
@@ -9,7 +8,12 @@
    position:relative;
    height: fit-content;
    width: 100%;
-   margin-top: 2.5rem;
+
+   @media screen and (max-width: 810px) {
+      padding:0;
+      grid-template-columns: 15fr 1fr;
+      flex: 1 1 auto;
+   }
 }
 
 .gridItem {
