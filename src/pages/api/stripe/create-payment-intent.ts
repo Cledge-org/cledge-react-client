@@ -7,17 +7,21 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 });
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { product_id } = JSON.parse(req.body);
-  let newPrice = 4999;
-  try {
-    newPrice = Number.parseInt(product_id) * 100;
-  } catch (e) {
-    newPrice = 4999;
-  }
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: product_id === "uw-package" ? 10000 : product_id === "premium" ? 4999 : newPrice,
+    confirm: true,
+    amount: req.body.newAmount,
     currency: "usd",
-    payment_method_types: ["card"],
+    automatic_payment_methods: {
+      enabled: false
+    },
+    payment_method: req.body.paymentMethodId,
+    return_url: "https://cledge.org/account",
+    use_stripe_sdk: true,
+
   });
+  res.json({
+    client_secret: paymentIntent.client_secret,
+    status: paymentIntent.status
+  })
   res.status(200).json({ clientSecret: paymentIntent.client_secret });
 };

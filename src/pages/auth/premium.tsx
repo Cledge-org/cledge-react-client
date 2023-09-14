@@ -1,5 +1,5 @@
 import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import { StripeElementsOptionsMode, loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 import LoadingScreen from "src/common/components/Loading/Loading";
 import { getEnvVariable } from "src/config/getConfig";
@@ -10,39 +10,28 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 const UWPurchase = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [clientSecret, setClientSecret] = useState(null);
-
-  useEffect(() => {
-    if (clientSecret) {
-      setIsLoading(false);
-    }
-  }, [clientSecret]);
-
-  const asyncUseEffect = async () => {
-    const { clientSecret } = await (
-      await callCreatePaymentIntent("premium")
-    ).json();
-    setClientSecret(clientSecret);
+  const [isLoading, setIsLoading] = useState(false);
+  const [amount, setAmount] = useState(4999);
+  
+  const options: StripeElementsOptionsMode = {
+    mode: 'payment',
+    amount: amount,
+    currency: 'usd',
+    paymentMethodCreation: 'manual',
+    // Fully customizable with appearance API.
+    appearance: {/*...*/},
   };
 
-  const handlePromoCode = async (discountedPrice: number) => {
-    const { clientSecret } = await (
-      await callCreatePaymentIntent(discountedPrice + "")
-    ).json();
-    setClientSecret(clientSecret);
+  const handleDiscountCode = (newAmount: number) => {
+    setAmount(newAmount * 100);
   }
-
-  useEffect(() => {
-    asyncUseEffect();
-  }, []);
 
   if (isLoading) {
     return <LoadingScreen />;
   }
   return (
-    <Elements stripe={stripePromise} options={{ clientSecret }}>
-      <PremiumPurchasePage handlePromo={(e) => handlePromoCode(e)} />
+    <Elements stripe={stripePromise} options={options}>
+      <PremiumPurchasePage handleDiscountCode={(e) => handleDiscountCode(e)} />
     </Elements>
   );
 };
