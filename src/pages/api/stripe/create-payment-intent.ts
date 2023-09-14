@@ -12,7 +12,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     amount: req.body.newAmount,
     currency: "usd",
     automatic_payment_methods: {
-      enabled: false
+      enabled: true
     },
     payment_method: req.body.paymentMethodId,
     return_url: "https://cledge.org/account",
