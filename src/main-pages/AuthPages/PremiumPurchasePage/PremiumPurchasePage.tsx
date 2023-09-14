@@ -78,7 +78,7 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
   const handleStripePaymentNextActions: any = async (response) => {
     if (response.error) {
       // Show error from server on payment form
-      alert("ERRORR");
+      alert("PAYMENT ERROR");
     } else if (response.status === "requires_action") {
       // Use Stripe.js to handle the required next action
       const res = await stripe.handleNextAction({
@@ -88,7 +88,6 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
       return res;
     } else {
       // No actions needed, show success message
-      alert("SUCCESS");
     }
   }
 
@@ -120,7 +119,6 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
         }
       });
       if (paymentMethodRes.error) {
-        console.log("ERROR WITH PAYMENT RES");
         return;
       }
       const paymentIntentResult = await fetch(`/api/stripe/create-payment-intent`, {
@@ -193,7 +191,6 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
             }
           });
           if (paymentMethodRes.error) {
-            console.log("ERROR WITH PAYMENT RES");
             return;
           }
           const paymentIntentResult = await fetch(`/api/stripe/create-payment-intent`, {
