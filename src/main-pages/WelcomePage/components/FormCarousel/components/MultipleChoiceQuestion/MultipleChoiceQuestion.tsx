@@ -7,15 +7,20 @@ import Image from "next/image";
 import { MainContainer, Heading } from "../styles";
 import preventDefault from "src/utils/js/preventDefault";
 import { UnMappedValues } from "src/ClientSideFunctions/getQuestionMappings";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 
 const OptionsContainer = styled.div`
   display: flex;
   flex: 1 1 auto;
-  flex-basis: 50%;
+  flex-basis: 80%;
   flex-direction: column;
-  justify-content:center;
+  justify-content: center;
   gap: 20px;
-  margin-top: 2.5rem;
+
+  @media screen and (max-width: 810px) {
+    justify-content:start;
+    width: 100%;
+  }
 `;
 const OptionContainer = styled.div`
   display: flex;
@@ -53,14 +58,12 @@ interface Props {
     tag: string;
   }[];
   handler?: (e: UnMappedValues) => void;
-  children?: React.ReactNode | React.ReactNode[] | undefined;
   classNames?: string;
 }
 
 function MultipleChoiceQuestion({
   question,
   answers: options,
-  children = undefined,
   classNames,
   _id,
   handler: handler = () => { },
@@ -71,8 +74,10 @@ function MultipleChoiceQuestion({
     setSelected(value);
     handler({ [_id]: value });
   }
+  const { width, height } = useWindowSize();
+  const isMobile = width <= 810;
   return (
-    <MainContainer className={cs(classNames)} alignItems="start">
+    <MainContainer className={cs(classNames)} flexDirection={isMobile ? "column" : "row"} alignItems={isMobile ? "center" : "start"}>
       <div className={styles.gridContainer}>
         <div className={styles.gridItem}>
           <Heading className="cl-white">{question}</Heading>
@@ -109,7 +114,6 @@ function MultipleChoiceQuestion({
           ))}
         </OptionsContainer>
       )}
-      {children}
     </MainContainer>
   );
 }

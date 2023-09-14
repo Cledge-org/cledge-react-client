@@ -16,7 +16,6 @@ import PageErrorBoundary from "src/common/components/PageErrorBoundary/PageError
 import UWCSLandingPage from "./components/UWCSLandingPage/UWCSLandingPage";
 import { useLocation } from "src/utils/hooks/useLocation";
 import FormCarousel from "./components/FormCarousel/FormCarousel";
-import FormCarouselMobile from "./components/FormCarousel/FormCarouselMobile";
 import { useWindowSize } from "src/utils/hooks/useWindowSize";
 import UWRightContentBlock from "src/main-pages/WelcomePage/components/UWCSLandingPage/components/UWRightContentBlock/UWRightContentBlock";
 import classNames from "classnames";
@@ -338,25 +337,19 @@ const WelcomePage = ({ data }) => {
             </div>
           </Fade>
         </Intro>
-        <div className="d-flex center-child w-100 px-5 py-5">
+        <div className="d-flex center-child w-100 px-5 py-5 bg-dark-blue">
             <Fade triggerOnce={true} direction="right">
               <CarouselDiv>
-                {isMobile ? (
-                  <FormCarouselMobile
-                    collegeData={data.collegeData}
-                    questionData={data.checkinQuestions.chunks[0].questions}
-                  />
-                ) : (
                   <FormCarousel
                     collegeData={data.collegeData}
                     questionData={data.checkinQuestions.chunks[0].questions}
                   />
-                )}
               </CarouselDiv>
             </Fade>
         </div>
 
-        <div className="pb-5">
+        <div className="pb-5 pt-5">
+          <h6 className="text-center py-2 pt-4 mt-4">How it Works:</h6>
           {GettingStartedSteps.map((block, _i) => (
             <Fade
               triggerOnce={true}

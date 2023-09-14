@@ -4,15 +4,21 @@
   position: relative;
   width: 100%;
   padding: 0;
+  padding-top: 2.5rem;
   display: grid;
   grid-template: 12fr 1fr / 1fr;
   background: linear-gradient(90deg, $cl-cool-blue 0%, $cl-cool-purple 100%);
   border: 1px;
   border-radius: 25px;
-  
+
+  @media screen and (max-width: 810px) {
+    padding-top: 0;
+    padding-bottom: 5px;
+  }
+
   & * {
     cursor: default !important;
-    box-shadow:unset !important;
+    box-shadow: unset !important;
   }
 
   & button,
@@ -22,10 +28,14 @@
 }
 
 .carousel {
-  grid-area: 1 / 1 / 2 / 1;
+  grid-area: 1 / 1 / 3 / 1;
   height: fit-content;
   width: 100%;
-  overflow:hidden;
+  overflow: hidden;
+
+  &.hasDots {
+    grid-area: 1 / 1 / 2 / 1;
+  }
 }
 
 .slides {
@@ -42,7 +52,7 @@
 
 .prevButton,
 .nextButton {
-  position:relative;
+  position: relative;
   border-radius: 50%;
   $button-size: 25px;
   width: $button-size;
@@ -53,30 +63,32 @@
   align-items: center;
   background-color: $cl-white;
 
-  & img{
-    filter: invert(36%) sepia(80%) saturate(5656%) hue-rotate(258deg) brightness(86%) contrast(93%);
+  & img {
+    filter: invert(36%) sepia(80%) saturate(5656%) hue-rotate(258deg)
+      brightness(86%) contrast(93%);
   }
 
   &.prevButton {
     & img {
-    transform: rotateZ(-90deg);
+      transform: rotateZ(-90deg);
     }
   }
+
   &.nextButton {
-    & img{
-    transform: rotateZ(90deg);
+    & img {
+      transform: rotateZ(90deg);
     }
   }
 
   &[disabled] {
     background-color: $cl-light-gray;
     cursor: not-allowed;
-    
-    &::after{
-      content:"";
-      position:absolute;
+
+    &::after {
+      content: "";
+      position: absolute;
       inset: 0;
-      background-color:$cl-light-gray;
+      background-color: $cl-light-gray;
       border-radius: 50%;
     }
   }

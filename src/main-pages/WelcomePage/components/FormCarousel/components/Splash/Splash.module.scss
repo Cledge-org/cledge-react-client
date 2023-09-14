@@ -1,75 +1,101 @@
 @use "../../../../../../common/styles/palette.module.scss" as *;
 
-.gridContainer {
-   flex: 1 1 auto;
-   padding: 0;
-   padding-left: 20px;
-   display: grid;
-   grid-template-columns: 1fr;
-   grid-template-rows: 30px 1fr;
-   width:100%;
-   height:100%;
-   margin-top: 2.5rem;
-   margin-right: 2.5rem;
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  height: 100%;
 
-   & .subHeading{
-      font-size:22px;
-      color:white;
-      font-weight:bold;
-   }
+  @media screen and (max-width: 810px) {
+    gap: 10px;
+  }
 }
 
-.gridItem {
-   &:first-child {
-      grid-area: 2 / 1 / 3 / 2;   
-   }
-   &:nth-child(2) {
-      grid-area: 1 / 1 / 2 / 2;
-   }
-}
+.left {
+  flex: 1 1 auto;
+  padding: 0;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding-left: 1rem;
 
-.flexContainer{
-   display:flex;
-   flex-direction:column;
-   justify-content:center;
-   height:100%;
-   flex: 0 1 auto;
-   flex-basis: 60%;
-   gap: 10px;
+  @media screen and (max-width: 810px) {
+    padding: 0;
+    padding-top: 10px;
+  }
 
-   & .flexItem:first-child {
-      flex: 0 1 auto;
-   }
-   
-   & .flexItem:last-child {
-      flex: 0 1 20%;
-      height: 100%;
-   }
+  & .subHeading {
+    font-size: 1rem;
+    color: $cl-white;
+    font-weight: bold;
 
+    @media screen and (min-width: 1441px) {
+      font-size: 1.4rem;
+    }
+  }
 
-   & img{
-      min-width: 0;
-      aspect-ratio: 3/2;
-      width:100%;
-      border-radius: 10px;
-   }
-   
-   & .tryNow{
-      border: unset;
-      font-size: large;
+  & .tryNow {
+    border: unset;
+    font-size: large;
+    width: 50%;
+    height: fit-content;
+    max-height: 100%;
+    border-radius: 4px;
+    font-weight: bold;
+
+    @media screen and (max-width: 810px) {
       width: 100%;
-      border-radius: 4px;
-      font-weight: bold;
-   }
+    }
+  }
+
+  & .icon {
+    flex: 0 1 5%;
+  }
+
+  & .newIcon {
+    color: $cl-white;
+    background: $cl-orange;
+    width: fit-content;
+    padding: 0 15px;
+    border-radius: 15px;
+    font-size: 15px;
+    display: block;
+    font-weight: bold;
+  }
 }
 
-.newIcon{
-   color: white;
-   background:linear-gradient(90deg, $cl-blue 0%, $cl-orange 100%);
-   width:fit-content;
-   padding: 0 15px;
-   border-radius:15px;
-   font-size:15px;
-   display: block;
-   font-weight:bold;
+.right {
+  flex: 0 1 60%;
+
+  @media screen and (max-width: 810px) {
+    flex: 1 1 auto;
+    padding-bottom: 10px;
+    padding: 0;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap:20px;
+  }
+
+  & img {
+    min-width: 0;
+    aspect-ratio: 3/2;
+    width: 100%;
+    border-radius: 10px;
+  }
+}
+
+.right,
+.left {
+  & .button {
+    flex: 1 1 15%;
+    padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+  }
+
+  @media screen and (max-width: 810px) {
+    width:80%;
+  }
 }

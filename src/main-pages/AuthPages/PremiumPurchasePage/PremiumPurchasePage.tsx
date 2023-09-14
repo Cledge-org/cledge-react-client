@@ -3,6 +3,7 @@ import { useState } from "react";
 import PurchasePageInput from "src/main-pages/AuthPages/PremiumPurchasePage/components/PurchasePageInput/PurchasePageInput";
 import {
   alertSlackNewUser,
+  callCreatePaymentIntent,
   callCreateUser,
   callRedeemPromoCode,
   callUpdateUser,
@@ -24,7 +25,7 @@ import { updateAccountAction } from "src/utils/redux/actionFunctions";
 import { useRouter } from "next/router";
 import { redeemPromoCode } from "src/pages/api/auth/redeemPromoCode";
 
-const PremiumPurchasePage = ({ accountInfo, handlePromo }: { accountInfo: AccountInfo, handlePromo: Function }) => {
+const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo: AccountInfo, handleDiscountCode: Function }) => {
   const [issues, setIssues] = useState([]);
   const [signUpDetails, setSignUpDetails] = useState({
     email: "",
@@ -57,7 +58,7 @@ const PremiumPurchasePage = ({ accountInfo, handlePromo }: { accountInfo: Accoun
 
   const handlePromotionCode = async () => {
     if (showCodeAccepted == false) {
-      const res = await callRedeemPromoCode(promotionCode, session.data.user.uid);
+      const res = await callRedeemPromoCode(promotionCode, session.data?.user.uid ? session.data.user.uid : null);
       let codeObject = null;
       try {
         codeObject = await res.json();
@@ -66,11 +67,28 @@ const PremiumPurchasePage = ({ accountInfo, handlePromo }: { accountInfo: Accoun
         setShowCodeAccepted(true);
         setShowInvalidCode(false);
         setPrice(codeObject.discountedPrice);
-        handlePromo(codeObject.discountedPrice);
+        handleDiscountCode(codeObject.discountedPrice);
       } else {
         setShowCodeAccepted(false);
         setShowInvalidCode(true);
       }
+    }
+  }
+
+  const handleStripePaymentNextActions: any = async (response) => {
+    if (response.error) {
+      // Show error from server on payment form
+      alert("ERRORR");
+    } else if (response.status === "requires_action") {
+      // Use Stripe.js to handle the required next action
+      const res = await stripe.handleNextAction({
+        clientSecret: response.clientSecret,
+      });
+  
+      return res;
+    } else {
+      // No actions needed, show success message
+      alert("SUCCESS");
     }
   }
 
@@ -92,13 +110,29 @@ const PremiumPurchasePage = ({ accountInfo, handlePromo }: { accountInfo: Accoun
       return;
     }
     if (session.status === "authenticated") {
-      const result = await stripe.confirmPayment({
+      elements.submit();
+      const paymentMethodRes = await stripe.createPaymentMethod({
         elements,
-        redirect: "if_required",
-        confirmParams: {
-          return_url: "",
-        },
+        params: {
+          billing_details: {
+            name: signUpDetails.email == "" ? signUpDetails.email : accountInfo.email,
+          }
+        }
       });
+      if (paymentMethodRes.error) {
+        console.log("ERROR WITH PAYMENT RES");
+        return;
+      }
+      const paymentIntentResult = await fetch(`/api/stripe/create-payment-intent`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          paymentMethodId: paymentMethodRes.paymentMethod.id,
+          newAmount: price * 100
+        }),
+      });
+      const data = await paymentIntentResult.json();
+      const result = handleStripePaymentNextActions(data);
       if (result.error) {
         setIssues((issues) => [...issues, result.error.message]);
         setProcessingSignUpPayment(false);
@@ -110,7 +144,7 @@ const PremiumPurchasePage = ({ accountInfo, handlePromo }: { accountInfo: Accoun
             premium: true,
           })
         );
-        router.push("/dashboard");
+        router.push("/account");
       }
     } else {
       if (
@@ -149,13 +183,29 @@ const PremiumPurchasePage = ({ accountInfo, handlePromo }: { accountInfo: Accoun
         .then(async (res) => {
           alertSlackNewUser(parseInt(await getNumUsers()) - 36);
           const user = await res.json();
-          const result = await stripe.confirmPayment({
+          elements.submit();
+          const paymentMethodRes = await stripe.createPaymentMethod({
             elements,
-            redirect: "if_required",
-            confirmParams: {
-              return_url: "",
-            },
+            params: {
+              billing_details: {
+                name: signUpDetails.email != "" ? signUpDetails.email : accountInfo.email,
+              }
+            }
           });
+          if (paymentMethodRes.error) {
+            console.log("ERROR WITH PAYMENT RES");
+            return;
+          }
+          const paymentIntentResult = await fetch(`/api/stripe/create-payment-intent`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+              paymentMethodId: paymentMethodRes.paymentMethod.id,
+              newAmount: price * 100
+            }),
+          });
+          const data = await paymentIntentResult.json();
+          const result = handleStripePaymentNextActions(data);
           if (result.error) {
             setIssues((issues) => [...issues, result.error.message]);
             await callUpdateUser(
@@ -175,7 +225,7 @@ const PremiumPurchasePage = ({ accountInfo, handlePromo }: { accountInfo: Accoun
             email: signUpDetails.email,
             redirect: false,
           }).then(async () => {
-            router.push("/my-learning");
+            router.push("/dashboard");
           });
         })
         .catch((err) => {
