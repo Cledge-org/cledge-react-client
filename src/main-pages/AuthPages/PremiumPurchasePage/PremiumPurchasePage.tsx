@@ -6,6 +6,7 @@ import {
   callCreatePaymentIntent,
   callCreateUser,
   callRedeemPromoCode,
+  callUpdateReferrals,
   callUpdateUser,
   getNumUsers,
   redeemCode
@@ -75,7 +76,6 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
       }
     }
   }
-
   const handleSubmit = async () => {
     if (!understands) {
       setIssues((issues) => [
@@ -122,6 +122,10 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
           setProcessingSignUpPayment(false);
         } else {
           callUpdateUser({ ...accountInfo, premium: true });
+          
+          if (accountInfo.referredBy && accountInfo.referredBy != "") {
+            callUpdateReferrals(accountInfo.referredBy, accountInfo.firebaseId)
+          }
           store.dispatch(
             updateAccountAction({
               ...accountInfo,

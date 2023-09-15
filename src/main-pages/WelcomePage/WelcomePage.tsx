@@ -331,7 +331,7 @@ const WelcomePage = ({ data }) => {
                     router.push("/auth/signup");
                   }}
                 >
-                  Sign Up Free
+                  Sign Up For Free
                 </Button>
               </div>
             </div>

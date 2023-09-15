@@ -12,6 +12,7 @@ import {
 } from "src/utils/apiCalls";
 import { useLocation } from "src/utils/hooks/useLocation";
 import CheckBox from "src/common/components/CheckBox/CheckBox";
+import { useRouter } from "next/router";
 
 const SignUpPage = () => {
   const incorrectPassStr =
@@ -19,17 +20,20 @@ const SignUpPage = () => {
   const mismatchPasswords = "Passwords are not matching";
   const allFieldsNotFilled = "Make sure to fill in all required * fields";
   const regExp = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/;
+  const router = useRouter();
+  const { referral } = router.query;
   var [formData, setFormData] = useState({
     email: "",
     password1: "",
     isOnMailingList: true,
     password2: "",
-    referralName: "",
+    referredBy: referral,
   });
   const [errorMessages, setErrorMessages] = useState([]);
   const [accessCode, setAccessCode] = useState("");
   const [hasAccess, setHasAccess] = useState(false);
   const [isIncorrectAccessCode, setIsIncorrectAccessCode] = useState(false);
+  const [addReferral, setAddReferral] = useState(formData.referredBy ? true : false);
   const windowLocation = useLocation();
   useEffect(() => {
     if (
@@ -112,7 +116,7 @@ const SignUpPage = () => {
       email: formData.email,
       tags: [],
       checkIns: ["Onboarding Questions"],
-      referralName: formData.referralName,
+      referredBy: formData.referredBy,
     })
       .then(async (res) => {
         alertSlackNewUser(parseInt(await getNumUsers()) - 36);
@@ -240,28 +244,35 @@ const SignUpPage = () => {
               placeholder="Confirm Password"
             />
           </div>
-          <div className="mt-4">
-            <h6 className="text-muted">Came from a referral? If so, please fill in the name of the person who invited you to Cledge.</h6>
+          {!addReferral ? 
+          <div className="mt-3">
+            <p 
+              className="text-muted"
+              onClick={() => setAddReferral(true)}
+            >
+              + Add Referral Code
+            </p>
           </div>
-          <div className="form-group w-100">
+            :
+          (<div className="form-group w-100 mt-3">
             <label
               style={{ fontSize: "0.9em" }}
               className="text-muted"
               htmlFor="text"
             >
-              Referral Name
+              Referral Code
             </label>
             <input
-              value={formData.referralName}
+              value={formData.referredBy}
               onChange={(e) =>
-                setFormData({ ...formData, referralName: e.target.value })
+                setFormData({ ...formData, referredBy: e.target.value })
               }
               type="text"
               className="px-3 form-control"
               id="text"
               placeholder=""
             />
-          </div>
+          </div>)}
           <div className="mt-3 mb-4">
             <div className="d-flex flex-row mb-3">
               <CheckBox

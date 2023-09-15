@@ -45,6 +45,7 @@ const AccountPage: NextApplicationPage<{
   questionResponses: UserResponse[];
 }> = ({ accountInfo, questionResponses }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [copyURLButton, setCopyURLButton] = useState("Copy URL");
   const [currUserData, setCurrUserData]: [
     AccountInfo,
     Dispatch<SetStateAction<AccountInfo>>
@@ -190,11 +191,20 @@ const AccountPage: NextApplicationPage<{
             />
             <InfoSection
               name="Account Status"
-              isPremium
+              isPremium={"Upgrade"}
               premiumStatus={accountInfo.premium}
               value={accountInfo.premium ? "Premium" : "Free"}
               onEdit={() => {
                 router.push("/auth/premium")
+              }}
+            />
+            <InfoSection
+              name="Referral Code"
+              isPremium={copyURLButton}
+              value={accountInfo.referralCode ? accountInfo.referralCode : null}
+              onEdit={() => {
+                setCopyURLButton("URL copied to clipboard!")
+                navigator.clipboard.writeText(`https://cledge.org/auth/signup?referral=${accountInfo.referralCode}`);
               }}
             />
           </div>
