@@ -6,6 +6,7 @@ import {
   callCreatePaymentIntent,
   callCreateUser,
   callRedeemPromoCode,
+  callUpdateReferrals,
   callUpdateUser,
   getNumUsers,
   redeemCode
@@ -24,6 +25,7 @@ import { connect } from "react-redux";
 import { updateAccountAction } from "src/utils/redux/actionFunctions";
 import { useRouter } from "next/router";
 import { redeemPromoCode } from "src/pages/api/auth/redeemPromoCode";
+import { useWindowSize } from "src/utils/hooks/useWindowSize";
 
 const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo: AccountInfo, handleDiscountCode: Function }) => {
   const [issues, setIssues] = useState([]);
@@ -74,7 +76,6 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
       }
     }
   }
-
   const handleSubmit = async () => {
     if (!understands) {
       setIssues((issues) => [
@@ -121,6 +122,10 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
           setProcessingSignUpPayment(false);
         } else {
           callUpdateUser({ ...accountInfo, premium: true });
+          
+          if (accountInfo.referredBy && accountInfo.referredBy != "") {
+            callUpdateReferrals(accountInfo.referredBy, accountInfo.firebaseId)
+          }
           store.dispatch(
             updateAccountAction({
               ...accountInfo,
@@ -313,18 +318,47 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
   ) {
     router.replace("/account");
   }
+
+  const AccountInfoBox = () => {
+    return (
+      <div
+        className={classNames(styles.blobContainer, {
+          ["mt-3"]: issues.length > 0,
+        })}
+      >
+        <div className="cl-dark-text fw-bold" style={{ fontSize: "28px" }}>
+          Hi, {accountInfo.name}.
+        </div>
+        <div className="cl-dark-gray" style={{ fontSize: "14px" }}>
+          <text>You are currently logged in with: </text>
+          <text className="cl-dark-text fw-bold"> {accountInfo.email}</text>
+        </div>
+        <div className="cl-dark-gray mt-4" style={{ fontSize: "14px" }}>
+          <text>If this is incorrect, please log out </text>
+          <a onClick={() => {
+            router.push("/account")
+          }} className="cl-dark-text fw-bold">here</a>
+          <text>.</text>
+        </div>
+      </div>
+    )
+  }
+
+  const size = useWindowSize();
+
   return (
     <div
-      className="d-flex flex-row justify-content-evenly w-100 py-4"
+      className="d-flex justify-content-evenly w-100 py-4"
       style={{
         backgroundColor: "#F9FAFF",
         height: "fit-content",
         minHeight: "100vh",
+        flexDirection: size.width <= 810 ? "column" : "row"
       }}
     >
       <div
         className="d-flex flex-column align-items-center"
-        style={{ width: "40%" }}
+        style={{ width: size.width <= 810 ? "100%" : "40%" }}
       >
         <div className="cl-red d-flex flex-column" style={{ width: "80%" }}>
           {issues.map((issue) => (
@@ -332,26 +366,7 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
           ))}
         </div>
         {session.status === "authenticated" && (
-          <div
-            className={classNames(styles.blobContainer, {
-              ["mt-3"]: issues.length > 0,
-            })}
-          >
-            <div className="cl-dark-text fw-bold" style={{ fontSize: "28px" }}>
-              Hi, {accountInfo.name}.
-            </div>
-            <div className="cl-dark-gray" style={{ fontSize: "14px" }}>
-              <text>You are currently logged in with: </text>
-              <text className="cl-dark-text fw-bold"> {accountInfo.email}</text>
-            </div>
-            <div className="cl-dark-gray mt-4" style={{ fontSize: "14px" }}>
-              <text>If this is incorrect, please log out </text>
-              <a onClick={() => {
-                router.push("/account")
-              }} className="cl-dark-text fw-bold">here</a>
-              <text>.</text>
-            </div>
-          </div>
+          <AccountInfoBox />
         )}
         {session.status === "unauthenticated" && (
           <div
@@ -441,7 +456,7 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
       </div>
       <div
         className="d-flex flex-column align-items-center"
-        style={{ width: "40%" }}
+        style={{ width: size.width <= 810 ? "100%" : "40%" }}
       >
         <div
           className="ps-4 py-3 cl-dark-text fw-bold"

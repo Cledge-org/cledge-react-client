@@ -4,6 +4,10 @@
   @extend .center-child;
   width: 2vw;
   height: 2vw;
+  @media (max-width: 810px) {
+    width: 7vw;
+    height: 7vw;
+  }
   border: 1px solid transparent;
   background-color: transparent;
   border-radius: 1vw;
@@ -16,6 +20,10 @@
     background-color: transparent;
     height: 1vw;
     width: 1vw;
+    @media (max-width: 810px) {
+      width: 3vw;
+      height: 3vw;
+    }
   }
   .checkbox-true {
     @extend .checkbox;

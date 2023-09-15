@@ -22,6 +22,8 @@ export declare global {
     introducedToChatbot: boolean;
     chatbotHistoryLength: number;
     premium: boolean;
+    referralCode?: string; 
+    referredBy?: string;
   }
 
   //Account Page Types -->

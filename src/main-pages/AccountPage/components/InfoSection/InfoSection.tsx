@@ -9,7 +9,7 @@ interface InfoSectionProps {
   value: any;
   onEdit: Function;
   isPasswordEdit?: boolean;
-  isPremium?: boolean;
+  isPremium?: string;
   premiumStatus?: boolean;
 }
 function InfoSection({
@@ -48,7 +48,7 @@ function InfoSection({
             </button>
           )
         ) : (
-          isPremium ? (!premium ? <button className={styles.sendEmailBtn} onClick={() => onEdit()}>Upgrade</button> : null) : (
+          isPremium ? (!premium ? <button className={styles.sendEmailBtn} onClick={() => onEdit()}>{isPremium}</button> : null) : (
           <button className={styles.iconBtn} onClick={() => onEdit()}>
             <FontAwesomeIcon icon={faPencilAlt} style={{ width: "20px" }} />
           </button>)
