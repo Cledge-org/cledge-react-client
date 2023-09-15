@@ -70,7 +70,6 @@ export const updateAcademicsLog = (
         });
       }
   
-      console.log("PUT ACADEMIC LOG : " + JSON.stringify(accademicObj));
       res();
       client.close();
     } catch (e) {
