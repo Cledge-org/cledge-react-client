@@ -9,7 +9,7 @@ import { callCreatePaymentIntent } from "src/utils/apiCalls";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
-const UWPurchase = () => {
+const PremiumPurchase = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState(4999);
   
@@ -35,4 +35,4 @@ const UWPurchase = () => {
     </Elements>
   );
 };
-export default UWPurchase;
+export default PremiumPurchase;
