@@ -56,6 +56,7 @@ function AcademicsSignUp(props: AcademicsProps) {
   });
   const [currGrade, setCurrGrade] = useState(0);
   const [currTerm, setCurrTerm] = useState(0);
+  const size = useWindowSize();
 
   const toggleEditing = () => {
     setIsAddingCourse(!isAddingCourse);
@@ -281,7 +282,10 @@ function AcademicsSignUp(props: AcademicsProps) {
         toggleIsQuarter={(year) => toggleIsQuarter(year)}
         addCourse={(grade, number) => addCourse(grade, number)} 
         deleteCourse={(grade, number, courseName) => deleteCourse(grade, number, courseName)}/>
-        <div className="d-flex flex-row justify-content-center">
+        <div 
+          className="d-flex justify-content-center"
+          style={{ flexDirection: size.width <= 810 ? "column" : "row" }}
+        >
           <div className="mx-3">
             <SignUpShortText 
               type="number"
