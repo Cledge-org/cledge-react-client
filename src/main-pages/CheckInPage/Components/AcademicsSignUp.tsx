@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { red } from "@mui/material/colors";
 import { borderRadius } from "@mui/system";
 import { number } from "prop-types";
 import React, { useEffect, useState } from "react";
@@ -54,8 +55,10 @@ function AcademicsSignUp(props: AcademicsProps) {
     grade: 0,
     tag: ""
   });
+  const [issues, setIssues] = useState("");
   const [currGrade, setCurrGrade] = useState(0);
   const [currTerm, setCurrTerm] = useState(0);
+  const [gpaString, setGpaString] = useState("");
   const size = useWindowSize();
 
   const toggleEditing = () => {
@@ -95,10 +98,29 @@ function AcademicsSignUp(props: AcademicsProps) {
     }
 }, [handleACTInputChange, handleSATInputChange, setUserResponses])
 
+  const validateGPA = () => {
+    try {
+      const gpaGrade = Number.parseFloat(gpaString);
+      if (Number.isNaN(gpaGrade) || gpaGrade < 0 || gpaGrade > 4.0) {
+        setIssues("Please validate that your unweighted GPA is correctly formatted.");
+        return;
+      }
+      setTempCourse({
+        courseName: tempCourse.courseName,
+        subject: tempCourse.subject,
+        grade: Number.parseFloat(gpaString),
+        tag: tempCourse.tag
+      });
+    } catch (e) {
+      setIssues("Please validate that your unweighted GPA is correctly formatted.");
+      return
+    }
+  }
+
   const handleSubmit = () => {
+    validateGPA();
     if (tempCourse.courseName.length > 0 && tempCourse.grade > 0 &&
       tempCourse.subject.length > 0 && tempCourse.tag.length > 0) {
-        
       const yearObject = userResponses.years.find(e => e.grade == currGrade);
       const termObject = yearObject.terms.find(e => e.id == currTerm);
       userResponses.years.find(e => e.grade == currGrade)
@@ -115,6 +137,7 @@ function AcademicsSignUp(props: AcademicsProps) {
         grade: 0,
         tag: ""
       })
+      setGpaString("");
       setUserResponses(userResponses);
       if (props.submitData) {
         props.submitData(userResponses);
@@ -174,6 +197,7 @@ function AcademicsSignUp(props: AcademicsProps) {
   if (isAddingCourse) {
     return (
       <div>
+        <p style={{ color: "red" }}>{issues}</p>
         <div>
           <SignUpShortText
             placeholder=""
@@ -207,19 +231,20 @@ function AcademicsSignUp(props: AcademicsProps) {
           </div>
           <div>
             <SignUpShortText
-              type="number"
+              type="any"
               placeholder=""
               onChange={(e) => {
-                if (/^[1-4]{0,1}(?:[.]\d{1,2})?$/.test(e) || e == '') {
-                  setTempCourse({
-                    courseName: tempCourse.courseName,
-                    subject: tempCourse.subject,
-                    grade: Number.parseFloat(e),
-                    tag: tempCourse.tag
-                  });
-                }
+                // if (/^[1-4]{0,1}(?:[.]\d{1,2})?$/.test(e) || e == '') {
+                //   setTempCourse({
+                //     courseName: tempCourse.courseName,
+                //     subject: tempCourse.subject,
+                //     grade: Number.parseFloat(e),
+                //     tag: tempCourse.tag
+                //   });
+                // }
+                setGpaString(e);
               }}
-              value={tempCourse.grade} 
+              value={gpaString} 
               question={"Grade (unweighted GPA 4.0 scale)"}          
             />
           </div>
