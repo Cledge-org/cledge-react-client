@@ -75,22 +75,6 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
     }
   }
 
-  const handleStripePaymentNextActions: any = async (response) => {
-    if (response.error) {
-      // Show error from server on payment form
-      alert("PAYMENT ERROR");
-    } else if (response.status === "requires_action") {
-      // Use Stripe.js to handle the required next action
-      const res = await stripe.handleNextAction({
-        clientSecret: response.clientSecret,
-      });
-  
-      return res;
-    } else {
-      // No actions needed, show success message
-    }
-  }
-
   const handleSubmit = async () => {
     if (!understands) {
       setIssues((issues) => [
@@ -109,40 +93,46 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
       return;
     }
     if (session.status === "authenticated") {
-      elements.submit();
-      const paymentMethodRes = await stripe.createPaymentMethod({
-        elements,
-        params: {
-          billing_details: {
-            name: signUpDetails.email == "" ? signUpDetails.email : accountInfo.email,
-          }
-        }
-      });
-      if (paymentMethodRes.error) {
+      const {error: submitError} = await elements.submit();
+      if (submitError) {
+        setIssues((issues) => [...issues, submitError.message]);
+        setProcessingSignUpPayment(false);
         return;
       }
-      const paymentIntentResult = await fetch(`/api/stripe/create-payment-intent`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-          paymentMethodId: paymentMethodRes.paymentMethod.id,
-          newAmount: price * 100
-        }),
-      });
-      const data = await paymentIntentResult.json();
-      const result = handleStripePaymentNextActions(data);
-      if (result.error) {
-        setIssues((issues) => [...issues, result.error.message]);
+      try {
+        const paymentIntentResult = await fetch(`/api/stripe/create-payment-intent`, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            newAmount: price * 100
+          }),
+        });
+        const { clientSecret: clientSecret } = await paymentIntentResult.json();
+        const result = await stripe.confirmPayment({
+          elements,
+          clientSecret,
+          redirect: "if_required",
+          confirmParams: {
+            return_url: `${window.location.origin}/account`
+          }
+        })
+        if (result.error) {
+          setIssues((issues) => [...issues, result.error.message]);
+          setProcessingSignUpPayment(false);
+        } else {
+          callUpdateUser({ ...accountInfo, premium: true });
+          store.dispatch(
+            updateAccountAction({
+              ...accountInfo,
+              premium: true,
+            })
+          );
+          router.push("/account");
+        }
+      } catch (e) {
+        console.log(e);
+        setIssues((issues) => [...issues, "An error has occured. Please verify your payment details and try again."]);
         setProcessingSignUpPayment(false);
-      } else {
-        callUpdateUser({ ...accountInfo, premium: true });
-        store.dispatch(
-          updateAccountAction({
-            ...accountInfo,
-            premium: true,
-          })
-        );
-        router.push("/account");
       }
     } else {
       if (
@@ -179,51 +169,59 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
         checkIns: ["Onboarding Questions"],
       })
         .then(async (res) => {
-          alertSlackNewUser(parseInt(await getNumUsers()) - 36);
+          if (process.env.NODE_ENV == "production") {
+            alertSlackNewUser(parseInt(await getNumUsers()));
+          }
           const user = await res.json();
-          elements.submit();
-          const paymentMethodRes = await stripe.createPaymentMethod({
-            elements,
-            params: {
-              billing_details: {
-                name: signUpDetails.email != "" ? signUpDetails.email : accountInfo.email,
-              }
-            }
-          });
-          if (paymentMethodRes.error) {
+          const {error: submitError} = await elements.submit();
+          if (submitError) {
+            setIssues((issues) => [...issues, submitError.message]);
+            setProcessingSignUpPayment(false);
             return;
           }
-          const paymentIntentResult = await fetch(`/api/stripe/create-payment-intent`, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-              paymentMethodId: paymentMethodRes.paymentMethod.id,
-              newAmount: price * 100
-            }),
-          });
-          const data = await paymentIntentResult.json();
-          const result = handleStripePaymentNextActions(data);
-          if (result.error) {
-            setIssues((issues) => [...issues, result.error.message]);
-            await callUpdateUser(
-              { ...accountInfo, premium: false },
-              user.user.uid
-            );
+          try {
+            const paymentIntentResult = await fetch(`/api/stripe/create-payment-intent`, {
+              method: "POST",
+              headers: {"Content-Type": "application/json"},
+              body: JSON.stringify({
+                newAmount: price * 100
+              }),
+            });
+            const { clientSecret: clientSecret } = await paymentIntentResult.json();
+            const result = await stripe.confirmPayment({
+              elements,
+              clientSecret,
+              redirect: "if_required",
+              confirmParams: {
+                return_url: `${window.location.origin}/account`
+              }
+            })
+            if (result.error) {
+              setIssues((issues) => [...issues, result.error.message]);
+              await callUpdateUser(
+                { ...accountInfo, premium: false },
+                user.user.uid
+              );
+              signIn("credentials", {
+                password: signUpDetails.password,
+                email: signUpDetails.email,
+                redirect: false,
+              });
+              setProcessingSignUpPayment(false);
+              return;
+            } 
             signIn("credentials", {
               password: signUpDetails.password,
               email: signUpDetails.email,
               redirect: false,
+            }).then(async () => {
+              router.push("/dashboard");
             });
+          } catch (e) {
+            console.error(e);
+            setIssues((issues) => [...issues, "An error has occured. Please verify your payment details and try again."]);
             setProcessingSignUpPayment(false);
-            return;
           }
-          signIn("credentials", {
-            password: signUpDetails.password,
-            email: signUpDetails.email,
-            redirect: false,
-          }).then(async () => {
-            router.push("/dashboard");
-          });
         })
         .catch((err) => {
           console.error(err);
