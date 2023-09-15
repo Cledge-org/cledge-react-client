@@ -47,6 +47,160 @@ const ApplicationProfilePage: NextApplicationPage<{
     });
   };
 
+  const preferenceQuestions: QuestionChunk = 
+    {
+        _id: null,
+        name: "College Fit",
+        questions: [
+            {
+                _id: "schoolSize",
+                data: [
+                    {
+                        op: "Less than 5,000 students",
+                        tag: "a",
+                    },
+                    {
+                        op: "5,000 - 15,000 students",
+                        tag: "b",
+                    },
+                    {
+                        op: "More than 15,000 students",
+                        tag: "c",
+                    },
+                ],
+                isConcatenable: false,
+                isRequired: true,
+                question: "What is your preferred college size?",
+                type: "MCQ"
+            },
+            {
+                _id: "costOfAttendance",
+                data: [
+                    {
+                        op: "Less than $30,000/year",
+                        tag: "a",
+                    },
+                    {
+                        op: "$30,000 - $50,000/year",
+                        tag: "b",
+                    },
+                    {
+                        op: "Greater than $70,000/year",
+                        tag: "c",
+                    },
+                ],
+                isConcatenable: false,
+                isRequired: true,
+                question: "What is your expected spending amount per year?",
+                type: "MCQ"
+            },
+            {
+                _id: "schoolPreference",
+                data: [
+                    {
+                        op: "Public",
+                        tag: "a",
+                    },
+                    {
+                        op: "Private",
+                        tag: "b",
+                    },
+                ],
+                isConcatenable: false,
+                isRequired: true,
+                question: "What type of college do you want to get into",
+                type: "MCQ"
+            },
+            {
+                _id: "localePreference",
+                data: [
+                    {
+                        op: "Urban",
+                        tag: "a",
+                    },
+                    {
+                        op: "Suburban",
+                        tag: "b",
+                    },
+                    {
+                        op: "Rural",
+                        tag: "c",
+                    },
+                ],
+                isConcatenable: false,
+                isRequired: true,
+                question: "What is your preference for the college's location in general?",
+                type: "MCQ"
+            },
+            // {
+            //     _id: "state",
+            //     isConcatenable: false,
+            //     isRequired: false,
+            //     question: "What state are you currently living in?",
+            //     type: "TextInput"
+            // },
+            // {
+            //     _id: "statePreference",
+            //     data: [
+            //         {
+            //             op: "In-state",
+            //             tag: "a",
+            //         },
+            //         {
+            //             op: "Out-of-state",
+            //             tag: "b",
+            //         },
+            //     ],
+            //     isConcatenable: false,
+            //     isRequired: true,
+            //     question: "Do you want to attend an in-state college or out-of-state college?",
+            //     type: "MCQ"
+            // },
+            {
+                _id: "finAidNeed",
+                data: [
+                    {
+                        op: "Cover less than 30% of your annual cost of college attendance",
+                        tag: "a",
+                    },
+                    {
+                        op: "Cover 30 - 60% of your annual cost of college attendance",
+                        tag: "b",
+                    },
+                    {
+                        op: "Cover more than 60% of your annual cost of college attendance",
+                        tag: "c",
+                    },
+                ],
+                isConcatenable: false,
+                isRequired: true,
+                question: "What is your expected amount of financial aid (need based)?",
+                type: "MCQ"
+            },
+            {
+                _id: "finAidMerit",
+                data: [
+                    {
+                        op: "Cover less than 10% of your annual cost of college attendance",
+                        tag: "a",
+                    },
+                    {
+                        op: "Cover 10 - 20% of your annual cost of college attendance",
+                        tag: "b",
+                    },
+                    {
+                        op: "Cover more than 20% of your annual cost of college attendance",
+                        tag: "c",
+                    },
+                ],
+                isConcatenable: false,
+                isRequired: true,
+                question: "What is your expected amount of financial aid (merit-based)?",
+                type: "MCQ"
+            },
+        ]
+    };
+
   const openNotification = (message: string) => {
     notification.open({
       message: "Success",
@@ -258,6 +412,7 @@ const ApplicationProfilePage: NextApplicationPage<{
     }
 
   }
+
   return (
     <PageErrorBoundary>
       <div
@@ -401,6 +556,12 @@ const ApplicationProfilePage: NextApplicationPage<{
                   list.name !== "Extracurriculars" &&
                   list.name !== "Academics"
                 ) {
+                  const onboarding = list;
+                  if (!onboarding.chunks.includes(preferenceQuestions)) {
+                    onboarding.chunks.push(preferenceQuestions);
+                  }
+                
+                  onboarding.chunks = onboarding.chunks.slice(0, 4);
                   return (
                     <QuestionSummarySubpage
                       userTags={currUserTags}
@@ -411,7 +572,7 @@ const ApplicationProfilePage: NextApplicationPage<{
                         onPercentageUpdate();
                         setCurrUserTags(newTags);
                       }}
-                      chunks={list.chunks}
+                      chunks={onboarding.chunks}
                       userAnswers={{ responses: questionResponses }}
                       percentComplete={calculatePercentComplete(list.chunks)}
                     />

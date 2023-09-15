@@ -1121,9 +1121,9 @@ const CheckIn: NextApplicationPage<{
       </div>
       <div
         style={{
-          width: size.width < 800 ? "100%" : size.width < 1400 ? "60%" : "40%",
+          width: size.width < 800 ? "100%" : size.width < 1400 ? "60%" : "50%",
         }}
-        className="align-self-center row col-md-5 w-50 d-md-flex mx-auto mt-5 pt-5 flex-column justify-content-center text-center checkIn-question"
+        className="align-self-center row col-md-5 d-md-flex mx-auto mt-5 pt-5 flex-column justify-content-center text-center checkIn-question"
       >
         {ACECPage == 0 ? 
         (
