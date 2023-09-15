@@ -399,3 +399,13 @@ export const callRedeemPromoCode = async (userCode: string, userId: string) => {
     method: "POST",
   });
 }
+
+export const callUpdateReferrals = async (referral_code: string, userId: string) => {
+  return await fetch(`/api/user/update-referrals`, {
+    body: JSON.stringify({ 
+      referral_code: referral_code,
+      userId: userId 
+    }),
+    method: "POST",
+  });
+}

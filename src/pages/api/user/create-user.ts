@@ -40,6 +40,7 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         isOnMailingList: false,
         premium: false,
         chatbotHistoryLength: 0,
+        referralCode: userId.substring(0, 6).toUpperCase() + userId.at(userId.length - 1)
       });
       resolve.status(200).send("Success");
     } catch (e) {

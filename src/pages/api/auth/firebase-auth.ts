@@ -56,6 +56,7 @@ class AuthFunctions {
           ...initUserObj,
           firebaseId: user.uid,
           email: email,
+          referralCode: user.uid.substring(0, 6).toUpperCase() + user.uid.at(user.uid.length - 1)
         }).catch((err) => {
           console.error(err);
         });
