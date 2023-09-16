@@ -134,7 +134,9 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
         checkIns: ["Onboarding Questions"],
       })
         .then(async (res) => {
-          alertSlackNewUser(parseInt(await getNumUsers()) - 36);
+          if (process.env.NODE_ENV == "production") {
+            alertSlackNewUser(parseInt(await getNumUsers()));
+          }
           const user = await res.json();
           const result = await stripe.confirmPayment({
             elements,
@@ -232,7 +234,9 @@ const UWPurchasePage = ({ accountInfo }: { accountInfo: AccountInfo }) => {
         checkIns: ["Onboarding Questions"],
       })
         .then(async (res) => {
-          alertSlackNewUser(parseInt(await getNumUsers()) - 36);
+          if (process.env.NODE_ENV == "production") {
+            alertSlackNewUser(parseInt(await getNumUsers()));
+          }
           const user = await res.json();
           signIn("credentials", {
             password: signUpDetails.password,
