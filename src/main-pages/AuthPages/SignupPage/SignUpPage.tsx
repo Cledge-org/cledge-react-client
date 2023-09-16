@@ -119,7 +119,9 @@ const SignUpPage = () => {
       referredBy: formData.referredBy,
     })
       .then(async (res) => {
-        alertSlackNewUser(parseInt(await getNumUsers()) - 36);
+        if (process.env.NODE_ENV == "production") {
+          alertSlackNewUser(parseInt(await getNumUsers()));
+        }
         signIn("credentials", {
           password: formData.password1,
           email: formData.email,

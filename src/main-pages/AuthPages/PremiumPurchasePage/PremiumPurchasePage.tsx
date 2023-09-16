@@ -295,7 +295,9 @@ const PremiumPurchasePage = ({ accountInfo, handleDiscountCode }: { accountInfo:
         checkIns: ["Onboarding Questions"],
       })
         .then(async (res) => {
-          alertSlackNewUser(parseInt(await getNumUsers()) - 36);
+          if (process.env.NODE_ENV == "production") {
+            alertSlackNewUser(parseInt(await getNumUsers()));
+          }
           const user = await res.json();
           signIn("credentials", {
             password: signUpDetails.password,
