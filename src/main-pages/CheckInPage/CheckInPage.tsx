@@ -52,6 +52,7 @@ const CheckIn: NextApplicationPage<{
   grade: number;
 }> = ({ checkInData, userResponses, userTags, grade }) => {
   const [isShowingStart, setIsShowingStart] = useState(true);
+  const [isShowingACECStart, setIsShowingACECStart] = useState(false);
   const [isShowingCollegeListGeneration, setIsShowingCollegeListGeneration] = useState(false);
   const [isEditingACEC, setIsEditingACEC] = useState(false);
   const [progress, changeProgress] = useState(0);
@@ -400,7 +401,7 @@ const CheckIn: NextApplicationPage<{
     return true;
   }, [checkInData, page, newUserResponses]);
 
-  const submitForm = async (e: { preventDefault: () => void }) => {
+  const submitForm = async () => {
     //REMOVE CHECK IN FROM LIST AND UPLOAD DATA
     setIsShowingCollegeListGeneration(true);
     let checkInList = [];
@@ -1232,6 +1233,60 @@ const CheckIn: NextApplicationPage<{
       </div>
     );
   }
+
+  if (isShowingACECStart) {
+    return (
+      <div className="container-fluid d-flex flex-column justify-content-center align-items-center vh-100">
+        <div
+          style={{ width: size.width < 800 ? "80%" : "70%" }}
+          className="vh-50 d-flex flex-row justify-content-between align-items-center flex-wrap"
+        >
+          <img
+            style={{ width: size.width < 800 ? "100%" : "60%" }}
+            src="../images/questionLandingGraphic.png"
+          />
+          <div
+            className="cl-dark-text d-flex flex-column"
+            style={{
+              fontSize: "1em",
+              width: size.width < 800 ? "100%" : "40%",
+            }}
+          >
+            <span className="fw-bold mb-3" style={{ fontSize: "2.4em" }}>
+              OPTIONAL
+            </span>
+            The following pages will ask you to input your academic and extracurricular data up to your current grade.
+            <br />
+            <br />
+            Fill out this section to the best of your ability to get the most accurate starter college list.
+            However, you can always access this section again later to make changes.
+            <div className="d-flex flex-row">
+            <button
+                className="btn cl-btn-clear mt-3 me-3"
+                style={{ fontSize: "1.1em" }}
+                onClick={() => {
+                  submitForm();
+                  setIsShowingACECStart(false);
+                }}
+              >
+                Skip for now
+              </button>
+              <button
+                className="btn cl-btn-blue mt-3 ms-3"
+                style={{ fontSize: "1.1em" }}
+                onClick={() => {
+                  setIsShowingACECStart(false);
+                  setIsEditingACEC(true);
+                }}
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="w-100 d-flex flex-column">
       <div
@@ -1329,7 +1384,9 @@ const CheckIn: NextApplicationPage<{
               type="button"
               disabled={!canGoForward}
               className="btn cl-btn-blue"
-              onClick={() => setIsEditingACEC(true)}
+              onClick={() => {
+                setIsShowingACECStart(true);
+              }}
             >
               Next
             </button>
