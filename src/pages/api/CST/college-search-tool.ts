@@ -29,7 +29,9 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
       );
       resolve.status(200).send(collegeMetricResult);
     } else {
-      const { searchText, top, skip, filters, searchFields } = req.body;
+      // order for name of the field to sort (e.g. major name)
+      // orderDirection: 1 or null value for ascending, -1 for descending
+      const { searchText, top, skip, filters, searchFields, order, orderDirection } = req.body;
       const client = await MongoClient.connect(process.env.MONGO_URL);
       const collegeSearchResult = await getCollegeInfo(
         searchText,
@@ -37,6 +39,8 @@ export default async (req: NextApiRequest, resolve: NextApiResponse) => {
         skip,
         filters,
         searchFields,
+        order,
+        orderDirection,
         client
       );
       resolve.status(200).send(collegeSearchResult);
@@ -87,6 +91,8 @@ export const getCollegeInfo = (
   skip,
   filters,
   searchFields,
+  order,
+  orderDirection,
   client: MongoClient
 ): Promise<Object> => {
   return new Promise(async (res, err) => {
@@ -97,11 +103,17 @@ export const getCollegeInfo = (
       let orderExpression = [];
       let filterExpression = createFilterExpression(filters);
 
-      if (searchFuzzyText === "*") {
-        orderExpression = createOrderExpression("ADM_RATE", 1);
+      if (searchFuzzyText === "*" && order === null) {
+        orderExpression = createOrderExpression("ADM_RATE", orderDirection);
         if (Object.keys(filters).length === 0) {
           filterExpression = "ADM_RATE gt 0 and ADM_RATE_ALL gt 0 and APPLCN gt 8000";
         }
+      }
+
+      // case for adding major sorts
+      if (order !== null) {
+        orderExpression = createOrderExpression(order, orderDirection);
+        filterExpression = filterExpression.concat(" and " + order + " gt 0");
       }
 
       const searchResults = await searchClient.search(searchFuzzyText, {
