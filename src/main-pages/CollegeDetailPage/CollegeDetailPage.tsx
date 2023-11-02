@@ -153,21 +153,25 @@ const CollegeDetailPage = ({
   }
 
   const handleAddCollege = async () => {
-    // add to college list
-    openNotification();
-    const response = await fetch(`/api/CST/add-college-to-list`, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id: session.user.uid,
-        college_title: data.title,
-        tier: collegeTier,
-      }),
-    });
-    const responseJson = await response.json();
-    setAddedToList(!addedToList);
+    if (session) {
+      // add to college list
+      openNotification();
+      const response = await fetch(`/api/CST/add-college-to-list`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: session.user.uid,
+          college_title: data.title,
+          tier: collegeTier,
+        }),
+      });
+      const responseJson = await response.json();
+      setAddedToList(!addedToList);
+    } else {
+      window.open("/auth/login", "_blank");
+    }
   };
 
   // *********************Data Parsing Functions*******************
