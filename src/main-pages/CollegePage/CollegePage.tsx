@@ -35,9 +35,11 @@ const CardsWrapper = styled.div`
 const College = ({
   collegeList,
   questionResponses,
+  loggedIn
 }: {
-  questionResponses: UserResponse[];
-  collegeList: any;
+  questionResponses?: UserResponse[];
+  collegeList?: any;
+  loggedIn?: boolean;
 }) => {
   const [collegeData, setData] = useState([]);
   const [hasMoreData, setHasMore] = useState(true);
@@ -47,9 +49,9 @@ const College = ({
   let collegeListArray = [];
   const [currNumericalSortOrder, setCurrNumericalSortOrder] =
     useState("Least-Greatest");
-  const userResponse = questionResponses.find(
+  const userResponse = loggedIn ?questionResponses.find(
     ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
-  )?.response;
+  )?.response : "notLoggedIn";
 
   const [requestData, setRequest] = useState({
     searchText: "*",
@@ -57,11 +59,14 @@ const College = ({
     skip: 0,
     filters: {},
     searchFields: ["INSTNM"],
-    userTier: userResponse.includes("Level 1")
-      ? 1
-      : userResponse.includes("Level 2")
-      ? 2
-      : 3,
+    userTier:
+      userResponse == "notLoggedIn"
+        ? -1
+        : userResponse.includes("Level 1")
+        ? 1
+        : userResponse.includes("Level 2")
+        ? 2
+        : 3,
   });
   const [prevRequest, setPrevRequest] = useState({
     searchText: "*",
@@ -69,11 +74,14 @@ const College = ({
     skip: 0,
     filters: {},
     searchFields: ["INSTNM"],
-    userTier: userResponse.includes("Level 1")
-      ? 1
-      : userResponse.includes("Level 2")
-      ? 2
-      : 3,
+    userTier:
+      userResponse == "notLoggedIn"
+        ? -1
+        : userResponse.includes("Level 1")
+        ? 1
+        : userResponse.includes("Level 2")
+        ? 2
+        : 3,
   });
 
   function handleSearch(e) {
@@ -108,8 +116,10 @@ const College = ({
     return data;
   }
 
-  for (let i = 0; i < collegeList.length; i++) {
-    collegeListArray[i] = collegeList[i]?.college_name;
+  if (collegeList) {
+    for (let i = 0; i < collegeList.length; i++) {
+      collegeListArray[i] = collegeList[i]?.college_name;
+    }
   }
 
   useEffect(() => {
@@ -389,6 +399,6 @@ const College = ({
 
 export default connect((state) => {
   return {
-    questionResponses: state.questionResponses,
+    questionResponses: state?.questionResponses
   };
 })(College);
