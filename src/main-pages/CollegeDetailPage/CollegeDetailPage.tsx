@@ -170,7 +170,7 @@ const CollegeDetailPage = ({
       const responseJson = await response.json();
       setAddedToList(!addedToList);
     } else {
-      window.open("/auth/login", "_blank");
+      window.open("/auth/signup", "_blank");
     }
   };
 
