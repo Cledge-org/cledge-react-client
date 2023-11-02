@@ -450,8 +450,7 @@ const CollegeDetailPage = ({
             <Tab className="mx-4" label="Financials" />
             <Tab className="mx-4" label="Student" />
             <Tab className="mx-4" label="Campus Life" />
-            <Tab className="ms-4" label="Insights" />
-            {/* <Tab label="Insights" /> */}
+            {loggedIn ? <Tab className="ms-4" label="Insights" /> : ""}
           </Tabs>
         </div>
       </div>
