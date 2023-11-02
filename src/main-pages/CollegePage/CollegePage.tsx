@@ -49,7 +49,7 @@ const College = ({
   let collegeListArray = [];
   const [currNumericalSortOrder, setCurrNumericalSortOrder] =
     useState("Least-Greatest");
-  const userResponse = loggedIn ?questionResponses.find(
+  const userResponse = loggedIn ? questionResponses.find(
     ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
   )?.response : "notLoggedIn";
 
