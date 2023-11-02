@@ -395,15 +395,19 @@ const CollegeDetailPage = ({
                 {data.title}
               </h1>
               <div className="w-100 d-flex flex-row align-items-center">
-                <div className={styles.collegeFitContainer}>
-                  {userTier >= data?.["college_fit_metric"]?.safety
-                    ? "Safety School"
-                    : userTier < data?.["college_fit_metric"]?.target
-                    ? "Reach School"
-                    : "Fit School"}
-                </div>
+                {!loggedIn ? (
+                  <div className={styles.collegeFitContainer + " mr-3"}>
+                    {userTier >= data?.["college_fit_metric"]?.safety
+                      ? "Safety School"
+                      : userTier < data?.["college_fit_metric"]?.target
+                      ? "Reach School"
+                      : "Fit School"}
+                  </div>
+                ) : (
+                  ""
+                )}
                 <h6
-                  className="text-secondary ms-3"
+                  className="text-secondary"
                   style={{ fontSize: "1.2em", marginBottom: 0 }}
                 >
                   {data?.["college_type"] == "Public"
