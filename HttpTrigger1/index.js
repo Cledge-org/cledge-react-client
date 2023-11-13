@@ -29,9 +29,9 @@ module.exports = async function (context, req) {
 
         for (let college of documents) {
             console.log(`Processing data for: ${college.college_name}`);
+            let studentTiers = [];
             // Iterate through each student profile
             for (let studentProfile of college.studentProfiles) {
-                console.log(`Processing student profile ID: ${studentProfile.id}`);
                 let studentInsightsObj = {};
                 let allECTierArrayStudent = [];
 
@@ -55,7 +55,6 @@ module.exports = async function (context, req) {
                 if (allECTierArrayStudent.length != 0) {
                     userECTier = await calculateOverallECTier(allECTierArrayStudent);
                 }
-                console.log(`The overal EC tier for student: ${userECTier.toString()}`)
 
 
                 let totalGPA = 0;
@@ -68,13 +67,12 @@ module.exports = async function (context, req) {
                     }
 
                 }
-                
+
                 let userGPA = totalGPA / totalTerms;
 
                 // TODO: Add the courses tier here - right now defaulting to 5 
                 let ovTier = overallAcademicTier(12, 2, userGPA, 5)
 
-                console.log(`The overall academic tier for student: ${ovTier.toString()}`)
 
                 studentInsightsObj = {
                     id: studentProfile.id,
@@ -82,8 +80,61 @@ module.exports = async function (context, req) {
                     ecTier: userECTier,
                     academicTier: ovTier,
                 }
-                console.log(`The student insights object: ${JSON.stringify(studentInsightsObj)}`)
+
+                studentTiers.push(studentInsightsObj);
             }
+            // Need to find the medien of studentTiers
+
+            let ecTierArray = [];
+            let academicTierArray = [];
+            for (let student of studentTiers) {
+                ecTierArray.push(student.ecTier);
+                academicTierArray.push(student.academicTier);
+            }
+
+            function calculateMedian(array) {
+                if (array.length === 0) return 0;
+
+                array.sort((a, b) => a - b);
+
+                if (array.length % 2 === 0) {
+                    return (array[array.length / 2 - 1] + array[array.length / 2]) / 2;
+                } else {
+                    return array[Math.floor(array.length / 2)];
+                }
+            }
+
+            let medianECTier = calculateMedian(ecTierArray);
+            let medianAcademicTier = calculateMedian(academicTierArray);
+
+            // Make a new students object and place it into the college-insights collection
+            let collegeInsightsObj = {
+                college_id: college.college_id,
+                college_name: college.college_name,
+                ecTier: medianECTier,
+                academicTier: medianAcademicTier,
+                students: studentTiers
+            }
+
+            console.log(`The college insights object: ${JSON.stringify(collegeInsightsObj)}`)
+            const collegeInsightsCollection = database.collection('college-insights');
+            const filter = { college_id: collegeInsightsObj.college_id };
+            const update = { $set: collegeInsightsObj };
+            const options = { upsert: true };
+            try {
+                const result = await collegeInsightsCollection.updateOne(filter, update, options);
+                // Check the result and log appropriate message
+                if (result.matchedCount && result.modifiedCount) {
+                    console.log(`Successfully updated the document with college_id: ${collegeInsightsObj.college_id}.`);
+                } else if (result.upsertedCount) {
+                    console.log(`No existing document found, inserted a new document with college_id: ${collegeInsightsObj.college_id}.`);
+                } else {
+                    console.log(`Document with college_id: ${collegeInsightsObj.college_id} was not updated.`);
+                }
+            } catch (error) {
+                console.error(`Error when updating or inserting the document: ${error}`);
+            }
+
         }
 
         console.log(documents)
