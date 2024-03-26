@@ -402,7 +402,9 @@ const ApplicationProfilePage: NextApplicationPage<{
         method: 'POST',
         body: JSON.stringify({
           userId: session.data.user.uid,
-          activities: activityData.activities,
+          activities: userActivities.activities,
+          overallTier: userActivities.overallTier,
+          totalPoints: userActivities.totalPoints,
           responses: activityResponses,
           insertionId: session.data.user.uid
         }),

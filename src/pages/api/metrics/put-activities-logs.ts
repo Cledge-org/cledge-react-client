@@ -9,11 +9,11 @@ export const config = {
 };
 
 export default async (req: NextApiRequest, resolve: NextApiResponse) => {
-  const { userId, activities, insertionId, responses } = JSON.parse(
+  const { userId, activities, insertionId, responses, totalPoints, overallTier } = JSON.parse(
     req.body
   );
   try {
-    const result = await updateActivitiesLog(userId, activities, insertionId, responses);
+    const result = await updateActivitiesLog(userId, activities, insertionId, responses, totalPoints, overallTier);
     resolve.status(200).send(result);
   } catch (e) {
     resolve.status(500).send(e);
@@ -24,7 +24,9 @@ export const updateActivitiesLog = (
   userId: string,
   activities: Activities | undefined,
   insertionId: string,
-  responses: any
+  responses: any,
+  totalPoints: number,
+  overallTier: number,
 ): Promise<void> => {
   if (activities !== undefined && activities._id && userId) {
     // Document should not have _id field when sent to database
@@ -33,7 +35,9 @@ export const updateActivitiesLog = (
   const currDate = new Date().toLocaleDateString();
   const activitiesObj = {
     activities,
-    responses
+    responses,
+    totalPoints,
+    overallTier
   };
   return new Promise(async (res, err) => {
     try {
@@ -68,7 +72,6 @@ export const updateActivitiesLog = (
         });
       }
   
-      console.log("PUT EXTRACURRICULAR LOG : " + JSON.stringify(activitiesObj));
       res();
       client.close();
     } catch (e) {
