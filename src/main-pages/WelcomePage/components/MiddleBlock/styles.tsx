@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const CardWrapper = styled.div`
-  margin-top: 36px;
+  margin-top: 0px;
   width: 100%;
   padding: 1rem 0;
   display: flex;
@@ -10,7 +10,7 @@ export const CardWrapper = styled.div`
   justify-content: space-evenly;
 
   @media screen and (min-width: 768px) {
-    padding: 5.5rem 0;
+    padding: 2rem 1rem;
   }
 `;
 
@@ -71,7 +71,7 @@ export const PartnerCard = styled.div`
 `;
 export const MiddleBlockSection = styled("section")`
   position: relative;
-  padding: 7.5rem 0;
+  padding: 7.5rem 0 0 0;
   text-align: center;
   display: flex;
   justify-content: center;

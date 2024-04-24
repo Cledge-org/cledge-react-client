@@ -20,6 +20,7 @@ const UWRightContentBlock = ({
   icon,
   video,
   id,
+  style,
 }: UWContentBlockProps) => {
   const scrollTo = (id: string) => {
     const element = document.getElementById(id) as HTMLDivElement;
@@ -29,7 +30,7 @@ const UWRightContentBlock = ({
   };
   const windowSize = useWindowSize();
   return (
-    <RightBlockContainer style={{ maxWidth: "none" }}>
+    <RightBlockContainer style={style}>
       <Row
         justify={id === "intro" ? "space-around" : "space-between"}
         align="middle"
