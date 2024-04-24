@@ -384,6 +384,7 @@ const DashboardPage = ({
           </Row>
           
         </Container>
+        <Footer />
       </div>   
   );
 };
