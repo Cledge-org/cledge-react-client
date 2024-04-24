@@ -4,65 +4,44 @@ export const GettingStartedSteps = [
     fadeDirection: "right",
     title: (
       <>
-        Create your profile with <span className="cl-blue">Cledge</span>.
+        College Finder & <span className="cl-blue">Insights</span>
       </>
     ),
-    icon: "images/Step 1 Landing.svg",
+    content: "“No more wasting hours browsing.” Cledge takes the best of college counseling combined with data analytics to provide you with the most relavant and credible resources relating to the application process.",
+
+    icon: "images/college_finder_landing.svg",
   },
   {
     id: "mission2",
     fadeDirection: "left",
     title: (
       <>
-        Get personalized help based off what you tell us and what type of
-        applicant <span className="cl-yellow">you are</span>.
+        Essay <span className="cl-yellow">Brainstorming</span> & Support
       </>
     ),
-    icon: "images/Step 2 Landing.svg",
+    content: "Essays are the most important factor when applying to college in today's competitive environment. Let us do the heavy lifting so that you can focus on being your most creative and authentic self. ",
+    icon: "images/essay_assist_landing.svg",
   },
   {
     id: "mission3",
     fadeDirection: "right",
     title: (
       <>
-        Go above and beyond and find more{" "}
-        <span className="cl-blue">colleges that fit your needs</span>.
+        Application <span className="cl-blue">Guidance</span> & Management
       </>
     ),
-    icon: "images/Step 3 Landing.svg",
+    content: "Managing the application process can be hard. However, Cledge offers you an edge by intelligently tracking your deadlines and offering you next steps.",
+    icon: "images/rafiki.svg",
   },
   {
     id: "mission4",
     fadeDirection: "left",
     title: (
       <>
-        Get questions answered by <span className="cl-yellow">your</span>{" "}
-        assigned <span className="cl-yellow">college counselor</span> and{" "}
-        <span className="cl-yellow">AI</span> advisor.
+        Cledge Vetted <span className="cl-blue">Councilers</span> & <span className="cl-yellow">Mentors</span>
       </>
     ),
-    icon: "images/Step 4 Landing.svg",
-  },
-  {
-    id: "mission5",
-    fadeDirection: "right",
-    title: (
-      <>
-        Get <span className="cl-blue">specific</span> metrics on how to
-        improve <span className="cl-blue">your application</span>.
-      </>
-    ),
-    icon: "images/Step 5 Landing.svg",
-  },
-  {
-    id: "mission6",
-    fadeDirection: "left",
-    title: (
-      <>
-        Get into the college that is the best fit for{" "}
-        <span className="cl-blue">you</span>!
-      </>
-    ),
-    icon: "images/Step 6 Landing.svg",
+    content: "Having a human face to help with your application is important. Cledge offers you access to a network of vetted advisors who can help you with that. Our advisors have gone to schools such as Stanford, ",
+    icon: "images/Step 2 Landing.svg",
   },
 ];

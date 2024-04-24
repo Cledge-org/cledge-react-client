@@ -1,0 +1,89 @@
+// Assuming the primary colors are defined
+$primary-color: #1139CB;
+$secondary-color: #6B22A5;
+$button-color: #F7BC76;
+$text-color-dark: #0B1142;
+$white: #FFF;
+
+.main-background {
+  background: linear-gradient(92deg, $primary-color 0%, $secondary-color 100%);
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.gradient-overlay {
+  width: 1060.86px;
+  height: 869.65px;
+  position: absolute;
+  background: rgba($white, 0.10);
+  border-radius: 70px;
+  // Apply transforms as needed
+}
+
+// header styles
+.logo {
+  color: $white;
+  font-size: 32px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+}
+
+.login-button, .sign-up-button {
+  padding: 10px 30px;
+  border-radius: 4px;
+  font-size: 18px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  word-wrap: break-word;
+
+  &.login-button {
+    background: none;
+    color: $white;
+  }
+
+  &.sign-up-button {
+    background: $button-color;
+    color: $text-color-dark;
+  }
+}
+
+// main content styles
+.hero-section {
+  h1 {
+    color: $white;
+    font-size: 64px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+  }
+  
+  p {
+    width: 520px;
+    color: $white;
+    font-size: 18px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    line-height: 28px;
+    word-wrap: break-word;
+  }
+
+  .sign-up-free-button {
+    background: $button-color;
+    color: $text-color-dark;
+    font-size: 18px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 10px 30px;
+  }
+
+  .learn-more-button {
+    background: rgba($primary-color, 0.7);
+    color: $white;
+    font-size: 18px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 10px 26px;
+  }
+}

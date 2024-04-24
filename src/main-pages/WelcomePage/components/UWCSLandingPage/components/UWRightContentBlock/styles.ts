@@ -29,6 +29,8 @@ export const RightBlockContainer = styled("section")`
   position: relative;
   width: 100%;
 
+  padding: 4rem 0 4rem 0;
+
   @media only screen and (max-width: 768px) {
     padding: 4rem 0 0 0;
   }

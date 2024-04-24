@@ -45,3 +45,18 @@
   border: 2px solid;
   border-radius: 12px;
 }
+
+
+.responsive-header {
+  color: white;
+  font-size: 5rem; /* Default font size */
+  font-weight: 800;
+  word-wrap: break-word;
+}
+
+/* Media query for screens narrower than 768px */
+@media (max-width: 767px) {
+  .responsive-text {
+    font-size: 3rem; /* Smaller font size for mobile screens */
+  }
+}

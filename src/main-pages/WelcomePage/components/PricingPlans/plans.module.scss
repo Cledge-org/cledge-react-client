@@ -1,0 +1,72 @@
+// Plans.scss
+.plans-section {
+    background-color: #FDEBD0; // Example background color, you should match with the screenshot
+    padding: 50px 0;
+  
+    h2 {
+      margin-bottom: 30px;
+    }
+  
+    .plan-card {
+      margin-bottom: 30px;
+      border: none;
+      border-radius: 10px;
+      transition: transform 0.3s ease-in-out;
+  
+      &.popular {
+        // Styles for the most popular card
+        background-color: #5A2A82; // Example color, you should pick from the screenshot
+        color: #fff;
+        
+        button {
+          background-color: #4E148C; // Adjusted for contrast
+          border-color: #4E148C;
+        }
+  
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+  
+      .card-header {
+        padding: 20px;
+        background-color: #fff;
+        border-bottom: none;
+      }
+  
+      .card-body {
+        padding: 20px;
+        background-color: #fff;
+      }
+  
+      .description {
+        font-size: 16px;
+        margin-bottom: 20px;
+      }
+  
+      .features {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 20px;
+        
+        li {
+          margin-bottom: 10px;
+          &::before {
+            content: '✓';
+            color: #4E148C; // Example color, match with the screenshot
+            margin-right: 10px;
+          }
+        }
+      }
+  
+      button {
+        width: 100%;
+        padding: 10px 0;
+        border-radius: 30px;
+        border: 2px solid #4E148C; // Example color, match with the screenshot
+        background-color: transparent;
+        color: #4E148C; // Example color, match with the screenshot
+    }
+    
+}
+}
