@@ -55,21 +55,23 @@ const MiddleBlockContent = ({
           <ContentWrapper className="container-margin">
             <Col lg={24} md={24} sm={24} xs={24}>
               <h6>{title}</h6>
-              {id !== "partner" && <p>{content}</p>}
+              {id !== "partner" && <p dangerouslySetInnerHTML={{ __html: content.replace('\n', '<br /> <br />') }} />}
             </Col>
           </ContentWrapper>
         </Row>
           {id === "goal" ? (
-            <CardWrapper>
-              {schools.map((school, index) => (
-                <Card key={index}>
-                  <img
-                    src={"./images/school_icon/" + school.image}
-                    alt={school.name}
-                  ></img>
-                </Card>
-              ))}
-            </CardWrapper>
+      
+              <CardWrapper>
+                {schools.map((school, index) => (
+                  <Card key={index}>
+                    <img
+                      src={"./images/school_icon/" + school.image}
+                      alt={school.name}
+                    ></img>
+                  </Card>
+                ))}
+              </CardWrapper>
+           
           ) : (
             <CardWrapper>
               <PartnerCard>
@@ -109,6 +111,7 @@ const MiddleBlockContent = ({
               </PartnerCard>
             </CardWrapper>
           )}
+
     </MiddleBlockSection>
   );
 };

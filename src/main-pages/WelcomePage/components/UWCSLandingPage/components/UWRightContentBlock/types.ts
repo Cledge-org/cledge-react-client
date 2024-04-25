@@ -1,3 +1,4 @@
+import { CSSProperties } from "react";
 export interface UWContentBlockProps {
   icon?: string;
   title: any;
@@ -9,4 +10,5 @@ export interface UWContentBlockProps {
   type?: string;
   video?: JSX.Element;
   width?: number;
+  style?: CSSProperties;
 }

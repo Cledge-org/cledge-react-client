@@ -7,7 +7,7 @@ import ProductContent from "./content/ProductContent.json";
 import ContactContent from "./content/ContactContent.json";
 import MiddleBlockContent from "./content/MiddleBlockContent.json";
 import PartnerContent from "./content/PartnerContent.json";
-import {  useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Footer from "./components/Footer/Footer";
 import styled from "styled-components";
 import { Fade, FadeProps } from "react-awesome-reveal";
@@ -22,6 +22,8 @@ import classNames from "classnames";
 import { useRouter } from "next/router";
 import LeftContentBlock from "src/main-pages/WelcomePage/components/ContentBlock/components/LeftContentBlock/LeftContentBlock";
 import { GettingStartedSteps } from "src/main-pages/WelcomePage/content/GettingStartedSteps";
+import Image from 'next/image'
+import Pricing from './components/PricingPlans/Pricing';
 
 const MiddleBlock = dynamic(
   () => import("./components/MiddleBlock/MiddleBlock")
@@ -247,6 +249,8 @@ const CarouselDiv = styled.div`
 
 const WelcomePage = ({ data }) => {
   const slideShowRef = useRef(null);
+
+  const learnMore = useRef(null);
   const [currFeature, setCurrFeature] = useState(0);
   const windowOrigin = useLocation();
   if (windowOrigin.includes("uw")) {
@@ -258,7 +262,7 @@ const WelcomePage = ({ data }) => {
   const router = useRouter();
   return (
     <PageErrorBoundary>
-      <Container className="bg-light-blue">
+      <Container className="bg-white">
         <Intro
           className="container-margin"
           style={{
@@ -266,167 +270,102 @@ const WelcomePage = ({ data }) => {
           }}
         >
           <Fade triggerOnce={true} className="w-100" direction="right">
-            <div
-              style={{
-                color: "white",
-                width: "100%",
-                marginBottom: "10vh",
-              }}
-              className={classNames(
-                `d-flex flex-column justify-content-center ${
-                  isMobile ? "px-3" : "px-5"
-                }`
-              )}
-            >
-              <div
-                className="w-100 d-flex flex-column justify-content-center align-items-center"
-                style={{
-                  marginTop: isMobile ? "6rem" : null,
-                }}
-              >
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: isMobile ? "48px" : "96px",
-                    textAlign: "center",
-                    lineHeight: "1.25em",
-                  }}
-                >
-                  Meet the Future of
-                </div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: isMobile ? "48px" : "96px",
-                    textAlign: "center",
-                    lineHeight: "1.25em",
-                  }}
-                  className="mb-4"
-                >
-                  College Advising.
-                </div>
-                {isMobile ? null : (
-                  <div
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: isMobile ? "15px" : "25px",
-                      textAlign: "center",
-                      lineHeight: "1.6em",
-                    }}
-                    className="my-3"
-                  >
-                    Maximize your chances to get into your best-fit colleges. We
-                    use AI
-                    <br />
-                    and data driven tools to give you an edge on your
-                    application.
-                  </div>
-                )}
-                <Button
-                  key="buy-now-btn"
+            <div className="d-flex flex-row gap-4">
+              <div className=" w-100 w-md-50 me-4">
+                <div style={{ color: 'white', fontSize: isMobile ? '3rem' : '4rem', fontWeight: '800', wordWrap: 'break-word' }}>Meet the Future of <br />College Advising</div>
+                <p style={{ color: 'white', marginTop: '3rem', marginBottom: '3rem', fontWeight: '450', wordWrap: 'break-word' }}>Navigate the maze of college admissions with ease. From pinpointing your ideal college matches to crafting a standout application, our intelligent platform and advisors are your allies in unlocking the door to your educational future. Ready to transform your college journey? Dive in and discover the Cledge advantage today!</p>
+                <Button className="me-4"
                   color="#F7BC76"
-                  fixedWidth={true}
-                  className={classNames(`${isMobile ? "w-50" : "w-25 mt-4"}`)}
                   onClick={() => {
-                    router.push("/auth/signup");
+                    window.open('https://forms.gle/EyAzS5GMZGcffnGs8', '_blank');
+                  }}
+                >Sign Up Waitlist</Button>
+                <Button
+                  color="#7B95F4"
+                  onClick={() => {
+                    learnMore.current.scrollIntoView({ behavior: "smooth" });
                   }}
                 >
-                  Sign Up For Free
+                  Learn More
                 </Button>
+              </div>
+              <div className="justify-content-center d-none d-md-flex " style={{ width: '50%' }}>
+                <Image src="/images/amico.svg"
+                  alt="Cledge"
+                  width={700}
+                  height={700}
+                />
               </div>
             </div>
           </Fade>
         </Intro>
-        <div className="d-flex center-child w-100 px-5 py-5 bg-dark-blue">
-            <Fade triggerOnce={true} direction="right">
-              <CarouselDiv>
-                  <FormCarousel
-                    collegeData={data.collegeData}
-                    questionData={data.checkinQuestions.chunks[0].questions}
-                  />
-              </CarouselDiv>
-            </Fade>
-        </div>
+        {/* <div className="d-flex center-child w-100 px-5 py-5 bg-dark-blue">
+          <Fade triggerOnce={true} direction="right">
+            <CarouselDiv>
+              <FormCarousel
+                collegeData={data.collegeData}
+                questionData={data.checkinQuestions.chunks[0].questions}
+              />
+            </CarouselDiv>
+          </Fade>
+        </div> */}
 
         <div className="pb-5 pt-5">
-          <h6 className="text-center py-2 pt-4 mt-4">How it Works:</h6>
-          {GettingStartedSteps.map((block, _i) => (
-            <Fade
-              triggerOnce={true}
-              direction={block.fadeDirection as FadeProps["direction"]}
-            >
+          <div className="d-flex flex-column justify-content-center">
+            <h6 ref={learnMore} className="text-center py-2 pt-3 mt-2" style={{ color: '#506BED' }}>Start Using Cledge Today</h6>
+            <Image src="/images/arrow_landing.svg"
+              alt="down arrow"
+              width={40}
+              height={40}
+            />
+          </div>
+          <div style={{ display: 'grid', gridTemplateRows: '1fr' }}>
+            {GettingStartedSteps.map((block, _i) => (
+              <Fade
+                triggerOnce={true}
+                direction={block.fadeDirection as FadeProps["direction"]}
+              >
+                {_i % 2 === 0 ? (
                   <LeftContentBlock
                     title={
                       <div>
-                        <StepNumber isMobile={isMobile} step={(_i + 1)+""} />
+                        <StepNumber isMobile={isMobile} step={(_i + 1) + ""} />
                         <br />
                         <div style={{ fontSize: isMobile ? 22 : 32 }}>
                           {block.title}
                         </div>
                       </div>
                     }
-                    content={""}
+                    content={block.content}
+                    icon={block.icon}
+                    id={block.id}
+                    isMobile={isMobile}
+                  />
+                ) : (
+                  <UWRightContentBlock
+                    title={
+                      <div>
+                        <StepNumber isMobile={isMobile} step={(_i + 1) + ""} />
+                        <br />
+                        <div style={{ fontSize: isMobile ? 22 : 32 }}>
+                          {block.title}
+                        </div>
+                      </div>
+                    }
+                    content={block.content}
                     icon={block.icon}
                     id={block.id}
                   />
-            </Fade>
-          ))}
+
+                )}
+              </Fade>
+            ))}
+          </div>
         </div>
-        {/* <BlobBlock>
-          <Fade direction="right" className="center-child w-100">
-            <div className="BlobContainer flex-wrap">
-              <div
-                className="d-flex flex-column justify-content-end ps-5"
-                style={{
-                  color: "white",
-                  width: width < 800 ? "100%" : "50%",
-                  height: width < 800 ? "50%" : "75%",
-                }}
-              >
-                <div
-                  className="center-child px-3 fw-bold"
-                  style={{
-                    width: "fit-content",
-                    background:
-                      "linear-gradient(92.92deg, #506BED -8.48%, #F7BC76 95.28%)",
-                    borderRadius: "13px",
-                  }}
-                >
-                  New
-                </div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: width < 800 ? "18px" : "52px",
-                  }}
-                >
-                  Cledge is now available for University of Washington CS
-                  Admissions
-                </div>
-              </div>
-              <div
-                className="d-flex flex-row-reverse align-items-end pe-5"
-                style={{
-                  width: width < 800 ? "100%" : "50%",
-                  height: width < 800 ? "50%" : "75%",
-                }}
-              >
-                <Button
-                  key="subscribe-btn"
-                  color="#F7BC76"
-                  fixedWidth={false}
-                  className={width < 800 ? "w-75 mb-3" : "w-25"}
-                  onClick={() => {
-                    window.open("https://uw.cledge.org", "_blank");
-                  }}
-                >
-                  Learn More
-                </Button>
-              </div>
-            </div>
-          </Fade>
-        </BlobBlock> */}
-        <Metric id="metric" className="d-flex bg-dark-blue">
+
+        <Pricing />
+
+        {/* <Metric id="metric" className="d-flex bg-dark-blue">
           <div>
             <h2 className="title ">100+ metrics</h2>
             <p>used to give you personalized feedback</p>
@@ -444,13 +383,25 @@ const WelcomePage = ({ data }) => {
               increased confidence in college related decisions using Cledge
             </p>
           </div>
-        </Metric>
+        </Metric> */}
         <MiddleBlock
           id="goal"
           title={MiddleBlockContent.title}
           content={MiddleBlockContent.text}
           width={width}
         />
+
+        <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', marginBottom: '5rem'}}>
+            <Button
+              className="me-4"
+              color="#F7BC76"
+              onClick={() => {
+                window.open('https://forms.gle/EyAzS5GMZGcffnGs8', '_blank');
+              }}
+            >
+              Sign up for Waitlist!
+            </Button>
+        </div>
       </Container>
       <UWLandingFooter />
     </PageErrorBoundary>
@@ -459,12 +410,12 @@ const WelcomePage = ({ data }) => {
 
 export default WelcomePage;
 
-const StepNumber = styled.div.attrs({ className: "bg-cl-blue cl-white" })<{
+const StepNumber = styled.div.attrs({ className: "bg-cl-blue cl-white" }) <{
   step: string;
   isMobile: boolean;
 }>`
-  width: ${props => props.isMobile ? 70 : 100}px;
-  height: ${props => props.isMobile ? 70 : 100}px;
+  width: ${props => props.isMobile ? 50 : 50}px;
+  height: ${props => props.isMobile ? 50 : 50}px;
   border-radius: 8px;
   display: flex;
   justify-content: center;

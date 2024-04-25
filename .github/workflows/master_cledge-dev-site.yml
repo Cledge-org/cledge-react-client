@@ -62,6 +62,6 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: "cledge-test-site"
-          slot-name: "Production"
+          slot-name: "production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_TESTSITE }}
           package: .

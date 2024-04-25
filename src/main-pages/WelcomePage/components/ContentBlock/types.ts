@@ -1,3 +1,5 @@
+import { CSSProperties } from "react";
+
 export interface ContentBlockProps {
   icon?: string;
   title: React.ReactNode;
@@ -9,4 +11,6 @@ export interface ContentBlockProps {
   type?: string;
   video?: JSX.Element;
   width?: number;
+  style?: CSSProperties;
+  isMobile?: boolean;
 }
