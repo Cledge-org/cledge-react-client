@@ -24,16 +24,18 @@ import classNames from "classnames";
 import { Map, Marker, ZoomControl } from "pigeon-maps";
 import { useSession } from "next-auth/react";
 import { Button } from "@mui/material";
-import { Container } from 'react-bootstrap';
+import { Container } from "react-bootstrap";
 
 const CollegeDetailPage = ({
   questionResponses,
   collegeData,
   collegeList,
+  loggedIn,
 }: {
-  questionResponses: UserResponse[];
+  questionResponses?: UserResponse[];
   collegeData: any;
-  collegeList: any;
+  collegeList?: any;
+  loggedIn?: any;
 }) => {
   const [value, setValue] = React.useState(0);
   const data = JSON.parse(collegeData);
@@ -43,13 +45,17 @@ const CollegeDetailPage = ({
   const [accountInfo, setAccountInfo] = React.useState(null);
 
   let collegeListArray = [];
-  for (let i = 0; i < collegeList.length; i++) {
-    collegeListArray[i] = collegeList[i]?.college_name;
+
+  if (collegeList) {
+    for (let i = 0; i < collegeList.length; i++) {
+      collegeListArray[i] = collegeList[i]?.college_name;
+    }
   }
+
   let onList = collegeListArray.includes(data.title);
 
   const [addedToList, setAddedToList] = useState(onList);
-  const [premium, setPremium] = React.useState(true);
+  const [premium, setPremium] = React.useState(loggedIn);
 
   React.useEffect(() => {
     if (session) {
@@ -64,7 +70,9 @@ const CollegeDetailPage = ({
     });
     const accountInfoJSON = await accountInfoResponse.json();
     setAccountInfo(accountInfoJSON);
-    setPremium(accountInfoJSON.premium === true);
+    if (!loggedIn) {
+      setPremium(false);
+    } else setPremium(accountInfoJSON.premium === true);
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -93,10 +101,11 @@ const CollegeDetailPage = ({
       <Button
         variant="contained"
         style={{
-          textTransform: "none"
+          textTransform: "none",
         }}
         onClick={() => {
-              router.push("/college-list/");}}
+          router.push("/college-list/");
+        }}
       >
         View My List
       </Button>
@@ -104,38 +113,47 @@ const CollegeDetailPage = ({
 
     notification.open({
       message: "Success",
-      description: "Successfully added this college to your list", btn,
+      description: "Successfully added this college to your list",
+      btn,
       duration: 4,
-      placement: "bottomRight"
+      placement: "bottomRight",
     });
   };
 
-  const userResponse = questionResponses.find(
-    ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
-  )?.response;
+  const userResponse = loggedIn
+    ? questionResponses.find(
+        ({ questionId }) => questionId == "627e8fe7e97c3c14537dc7f5"
+      )?.response
+    : "notLoggedIn";
 
-  const userTier = userResponse.includes("Level 1")
-    ? 1
-    : userResponse.includes("Level 2")
-    ? 2
-    : 3;
+  const userTier =
+    userResponse == "notLoggedIn"
+      ? -1
+      : userResponse.includes("Level 1")
+      ? 1
+      : userResponse.includes("Level 2")
+      ? 2
+      : 3;
 
-    {userTier >= data?.["college_fit_metric"]?.safety
-                    ? "Safety School"
-                    : userTier < data?.["college_fit_metric"]?.target
-                    ? "Reach School"
-                    : "Fit School"}
+  {
+    userTier >= data?.["college_fit_metric"]?.safety
+      ? "Safety School"
+      : userTier < data?.["college_fit_metric"]?.target
+      ? "Reach School"
+      : "Fit School";
+  }
 
-    let collegeTier = 0;
-    if (userTier >= data?.["college_fit_metric"]?.safety) {
-      collegeTier = 0;
-    } else if (userTier < data?.["college_fit_metric"]?.target) {
-      collegeTier = 2;
-    } else {
-      collegeTier = 1;
-    }
+  let collegeTier = 0;
+  if (userTier >= data?.["college_fit_metric"]?.safety) {
+    collegeTier = 0;
+  } else if (userTier < data?.["college_fit_metric"]?.target) {
+    collegeTier = 2;
+  } else {
+    collegeTier = 1;
+  }
 
-    const handleAddCollege = async () => {
+  const handleAddCollege = async () => {
+    if (session) {
       // add to college list
       openNotification();
       const response = await fetch(`/api/CST/add-college-to-list`, {
@@ -146,12 +164,15 @@ const CollegeDetailPage = ({
         body: JSON.stringify({
           user_id: session.user.uid,
           college_title: data.title,
-          tier: collegeTier
+          tier: collegeTier,
         }),
       });
       const responseJson = await response.json();
       setAddedToList(!addedToList);
-    };
+    } else {
+      window.open("/auth/signup", "_blank");
+    }
+  };
 
   // *********************Data Parsing Functions*******************
   function parsePercent(data) {
@@ -195,10 +216,10 @@ const CollegeDetailPage = ({
   function singlePaywall(data) {
     if (!premium)
       return (
-        <div 
+        <div
           style={{ cursor: "pointer" }}
           onClick={() => {
-            router.push("/auth/premium")
+            router.push("/auth/premium");
           }}
         >
           <LockIcon style={{ color: "#070452" }} />
@@ -215,10 +236,10 @@ const CollegeDetailPage = ({
   const BlockPaywallCover = () => {
     if (!premium)
       return (
-        <div 
+        <div
           className={styles.paywallBlock}
           onClick={() => {
-            router.push("/auth/premium")
+            router.push("/auth/premium");
           }}
           style={{ cursor: "pointer" }}
         >
@@ -374,15 +395,19 @@ const CollegeDetailPage = ({
                 {data.title}
               </h1>
               <div className="w-100 d-flex flex-row align-items-center">
-                <div className={styles.collegeFitContainer}>
-                  {userTier >= data?.["college_fit_metric"]?.safety
-                    ? "Safety School"
-                    : userTier < data?.["college_fit_metric"]?.target
-                    ? "Reach School"
-                    : "Fit School"}
-                </div>
+                {!loggedIn ? (
+                  <div className={styles.collegeFitContainer + " mr-3"}>
+                    {userTier >= data?.["college_fit_metric"]?.safety
+                      ? "Safety School"
+                      : userTier < data?.["college_fit_metric"]?.target
+                      ? "Reach School"
+                      : "Fit School"}
+                  </div>
+                ) : (
+                  ""
+                )}
                 <h6
-                  className="text-secondary ms-3"
+                  className="text-secondary"
                   style={{ fontSize: "1.2em", marginBottom: 0 }}
                 >
                   {data?.["college_type"] == "Public"
@@ -397,22 +422,24 @@ const CollegeDetailPage = ({
             </div>
             <div className="mt-5">
               <Button
-                variant={addedToList ? "contained" :"outlined"}
+                variant={addedToList ? "contained" : "outlined"}
                 style={{
                   textTransform: "none",
                   background: addedToList ? "red" : "",
                 }}
                 onClick={!addedToList ? handleAddCollege : handleRemoveCollege}
               >
-                {addedToList ?
+                {addedToList ? (
                   <div>
                     <FaBookmark></FaBookmark>
                     <text> Remove From My List</text>
-                  </div> :
+                  </div>
+                ) : (
                   <div>
                     <FiBookmark></FiBookmark>
                     <text> Save to my list</text>
-                  </div>}  
+                  </div>
+                )}
               </Button>
             </div>
           </div>
@@ -423,8 +450,7 @@ const CollegeDetailPage = ({
             <Tab className="mx-4" label="Financials" />
             <Tab className="mx-4" label="Student" />
             <Tab className="mx-4" label="Campus Life" />
-            <Tab className="ms-4" label="Insights"/>
-            {/* <Tab label="Insights" /> */}
+            {loggedIn ? <Tab className="ms-4" label="Insights" /> : ""}
           </Tabs>
         </div>
       </div>
@@ -555,7 +581,11 @@ const CollegeDetailPage = ({
                 sub2data={data["calendar_system"]}
                 sub3="Average GPA"
                 // sub3data={data["avg_gpa"]}
-                sub3data={data["avg_gpa"] === undefined ? "Coming Soon!" : data["avg_gpa"]}
+                sub3data={
+                  data["avg_gpa"] === undefined
+                    ? "Coming Soon!"
+                    : data["avg_gpa"]
+                }
                 sub4="Most popular Area of Study"
                 sub4data={(() => {
                   let d = data["study_disciplines"];
@@ -2066,11 +2096,14 @@ const CollegeDetailPage = ({
           </Row>
         ) : value == 6 ? (
           <Row>
-            <Container className="d-flex flex-column align-items-center justify-content-center" style={{ height: '75vh' }}>
+            <Container
+              className="d-flex flex-column align-items-center justify-content-center"
+              style={{ height: "75vh" }}
+            >
               <h1 className="display-4 mb-4">Coming Soon!</h1>
             </Container>
           </Row>
-        ) : value == 7 ?(
+        ) : value == 7 ? (
           <></>
         ) : (
           <></>
@@ -2082,7 +2115,7 @@ const CollegeDetailPage = ({
 
 export default connect((state) => {
   return {
-    questionResponses: state.questionResponses,
+    questionResponses: state?.questionResponses,
   };
 })(CollegeDetailPage);
 
