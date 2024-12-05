@@ -9,6 +9,7 @@ import { Button } from "@mui/material";
 import { useSession } from "next-auth/react";
 import CollegeListSubTitle from "src/main-pages/CollegeList/components/CollegeListSubTitle";
 import { notification } from "antd";
+import Footer from "src/common/components/Footer/Footer";
 
 
 const CollegeListPage: NextApplicationPage<{
@@ -226,6 +227,7 @@ const CollegeListPage: NextApplicationPage<{
           </div>
         </DragDropContext>
       </div>
+      <Footer />
     </div>
   );
 };
